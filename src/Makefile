@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.16 1987/11/07 12:44:50 ian Exp $
+# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.17 1989/05/11 14:58:29 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -76,8 +76,8 @@ file:		$(OBJS)
 lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS) | tee $@
 magic:		magdir
-#		exclude RCS or SCCS dirs:
-		cat magdir/[a-z]* >$@
+#		magdir/Makefile's "install" mv's magic to here for testing.
+		cd magdir; make install
 
 ascmagic.o:	names.h
 
