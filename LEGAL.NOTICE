@@ -1,32 +1,25 @@
-Written by Ian Darwin,
-Box 603, Station F, Toronto, CANADA M4Y 2L8.
-Uucp: {utzoo|ihnp4}!darwin!ian.
-Internet: ian@sq.com (proposed).
+/*
+ * Copyright (c) Ian F. Darwin 1986, 1987.
+ * Written by Ian F. Darwin.
+ *
+ * This software is not subject to any license of the American Telephone
+ * and Telegraph Company or of the Regents of the University of California.
+ *
+ * Permission is granted to anyone to use this software for any purpose on
+ * any computer system, and to alter it and redistribute it freely, subject
+ * to the following restrictions:
+ *
+ * 1. The author is not responsible for the consequences of use of this
+ *    software, no matter how awful, even if they arise from flaws in it.
+ *
+ * 2. The origin of this software must not be misrepresented, either by
+ *    explicit claim or by omission.  Since few users ever read sources,
+ *    credits must appear in the documentation.
+ *
+ * 3. Altered versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.  Since few users
+ *    ever read sources, credits must appear in the documentation.
+ *
+ * 4. This notice may not be removed or altered.
+ */
 
-Copyright (c) 1986, Ian Darwin. All rights reserved, except as noted below.
-
-This program may be used for its intended purpose on any computer system.
-
-	*** Unmodified copies ***
-of the source may be freely copied for this purpose
-provided this notice is maintained.
-	*** Redistribution of modified source copies is prohibited; ***
-distribute the original source with your changes as diff listings
-or as RCS archives (or SCCS if you can find a way to mail them).
-Please send me your changes; if I like 'em I'll incorporate them.
-
-Binary copies may also be distributed; if they are derived from
-modified source then you must inform every recipient of the
-origin of the program and that the source is available from the author.
-
-The module is_tar.c is adapted by John Gilmore from his public
-domain POSIX-standards-like tar program, and is not covered
-by the above restrictions. 
-
-The module strtok.c is by Henry Spencer at the University of Toronto
-and is not covered by the above restrictions.
-
-The module strtol is a quick hack and is not covered by the above.
-
-This software is not subject to any license by American Telephone and
-Telegraph or of the Regents of the University of California.
