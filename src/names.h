@@ -43,7 +43,7 @@
 char *types[] = {
 	"c program text",
 	"fortran program text",
-	"makefile commands text" ,
+	"make commands text" ,
 	"pl/1 program text",
 	"assembler program text",
 	"english text",
