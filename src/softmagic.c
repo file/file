@@ -31,11 +31,14 @@
 #include <time.h>
 #include <sys/types.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.35 1997/04/13 18:28:30 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.36 1998/02/15 23:18:53 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));

@@ -31,6 +31,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #ifndef major
 # if defined(__SVR4) || defined(_SVR4_SOURCE)
 #  include <sys/mkdev.h>
@@ -51,7 +54,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: fsmagic.c,v 1.25 1997/01/15 19:28:35 christos Exp $";
+	"@(#)$Id: fsmagic.c,v 1.26 1998/02/15 23:18:53 christos Exp $";
 #endif	/* lint */
 
 int
@@ -89,12 +92,20 @@ struct stat *sb;
 		ckfputs("directory", stdout);
 		return 1;
 	case S_IFCHR:
+#ifdef HAVE_ST_RDEV
 		(void) printf("character special (%ld/%ld)",
 			(long) major(sb->st_rdev), (long) minor(sb->st_rdev));
+#else
+		(void) printf("character special");
+#endif
 		return 1;
 	case S_IFBLK:
+#ifdef HAVE_ST_RDEV
 		(void) printf("block special (%ld/%ld)",
 			(long) major(sb->st_rdev), (long) minor(sb->st_rdev));
+#else
+		(void) printf("block special");
+#endif
 		return 1;
 	/* TODO add code to handle V7 MUX and Blit MUX files */
 #ifdef	S_IFIFO

@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <memory.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,7 +37,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.21 1997/01/15 17:23:24 christos Exp $";
+	"@(#)$Id: ascmagic.c,v 1.22 1998/02/15 23:18:53 christos Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */

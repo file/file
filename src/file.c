@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.38 1997/01/15 19:28:35 christos Exp $";
+	"@(#)$Id: file.c,v 1.39 1998/02/15 23:18:53 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -53,9 +53,9 @@ static char *moduleid =
 #include "file.h"
 
 #ifdef S_IFLNK
-# define USAGE  "Usage: %s [-vczL] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-vbczL] [-f namefile] [-m magicfiles] file...\n"
 #else
-# define USAGE  "Usage: %s [-vcz] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-vbcz] [-f namefile] [-m magicfiles] file...\n"
 #endif
 
 #ifndef MAGIC
@@ -65,6 +65,7 @@ static char *moduleid =
 int 			/* Global command-line options 		*/
 	debug = 0, 	/* debugging 				*/
 	lflag = 0,	/* follow Symlinks (BSD only) 		*/
+	bflag = 0,	/* brief output format	 		*/
 	zflag = 0;	/* follow (uncompress) compressed files */
 
 int			/* Misc globals				*/
@@ -103,12 +104,15 @@ char *argv[];
 	if (!(magicfile = getenv("MAGIC")))
 		magicfile = MAGIC;
 
-	while ((c = getopt(argc, argv, "vcdf:Lm:z")) != EOF)
+	while ((c = getopt(argc, argv, "vbcdf:Lm:z")) != EOF)
 		switch (c) {
 		case 'v':
 			(void) fprintf(stdout, "%s-%d.%d\n", progname,
 				       FILE_VERSION_MAJOR, patchlevel);
 			return 1;
+		case 'b':
+			++bflag;
+			break;
 		case 'c':
 			++check;
 			break;
@@ -302,7 +306,7 @@ int wid;
 		inname = stdname;
 	}
 
-	if (wid > 0)
+	if (wid > 0 && !bflag)
 	     (void) printf("%s:%*s ", inname, 
 			   (int) (wid - strlen(inname)), "");
 

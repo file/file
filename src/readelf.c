@@ -8,6 +8,9 @@
 #include <unistd.h>
 #include <errno.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "readelf.h"
 #include "file.h"
 
@@ -288,19 +291,21 @@ tryelf(fd, buf, nbytes)
 		if ((u.c[sizeof(long) - 1] + 1) == elfhdr.e_ident[5]) {
 #ifdef notyet
 			if (elfhdr.e_type == ET_CORE) 
-				dophn_core(fd, elfhdr.e_phoff, elfhdr.e_phnum, 
-				      elfhdr.e_phentsize, buf);
+				dophn_core(fd, elfhdr.e_phoff[1],
+					   elfhdr.e_phnum, 
+					   elfhdr.e_phentsize, buf);
 			else
 #endif
 			{
 #ifdef notyet
 				if (elfhdr.e_type == ET_EXEC) {
-					dophn_exec(fd, elfhdr.e_phoff,
-					    elfhdr.e_phnum, 
-					      elfhdr.e_phentsize, buf);
+					dophn_exec(fd, elfhdr.e_phoff[1],
+						   elfhdr.e_phnum, 
+						   elfhdr.e_phentsize, buf);
 				}
 #endif
-				doshn(fd, elfhdr.e_shoff, elfhdr.e_shnum,
+				doshn(fd, elfhdr.e_shoff[1],
+				      elfhdr.e_shnum,
 				      elfhdr.e_shentsize, buf);
 			}
 		}

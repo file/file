@@ -4,13 +4,18 @@
  *		   information if recognized
  *	uncompress(method, old, n, newch) - uncompress old into new, 
  *					    using method, return sizeof new
- * $Id: compress.c,v 1.9 1995/05/20 22:09:21 christos Exp $
+ * $Id: compress.c,v 1.10 1998/02/15 23:18:53 christos Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
+#endif
 
 #include "file.h"
 
