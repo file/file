@@ -55,13 +55,14 @@
 0	string		\377\037	compacted data
 0	short		0145405		huf output
 
-# Squeeze and Crunch...
-# These numbers were gleaned from the Unix versions of the programs to
-# handle these formats.  Note that I can only uncrunch, not crunch, and
-# I didn't have a crunched file handy, so the crunch number is untested.
-#				Keith Waclena <keith@cerberus.uchicago.edu>
-0	leshort		0x76FF		squeezed data (CP/M, DOS)
-0	leshort		0x76FE		crunched data (CP/M, DOS)
+# squeeze and crunch
+# Michael Haardt <michael@cantor.informatik.rwth-aachen.de>
+0	leshort		0xFF76		squeezed data,
+>4	string		x		original name %s
+0	leshort		0xFE76		crunched data,
+>2	string		x		original name %s
+0	leshort		0xFD76		LZH compressed data,
+>2	string		x		original name %s
 
 # Freeze
 0	string		\037\237	frozen file 2.1
