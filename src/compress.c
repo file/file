@@ -56,7 +56,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.35 2003/11/11 20:01:45 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.36 2004/03/22 19:11:54 christos Exp $")
 #endif
 
 
@@ -357,9 +357,21 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 	default: /* parent */
 		(void) close(fdin[0]);
 		(void) close(fdout[1]);
-		if (swrite(fdin[1], old, n) != (ssize_t)n) {
-			n = 0;
-			goto err;
+		/* fork again, to avoid blocking because both pipes filled */
+		switch (fork()) {
+		case 0: /* child */
+			(void)close(fdout[0]);
+			if (swrite(fdin[1], old, n) != n)
+				exit(1);
+			exit(0);
+			/*NOTREACHED*/
+
+		case -1:
+			exit(1);
+			/*NOTREACHED*/
+
+		default:  /* parent */
+			break;
 		}
 		(void) close(fdin[1]);
 		fdin[1] = -1;
@@ -369,7 +381,8 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 		}
 		if ((r = sread(fdout[0], *newch, HOWMANY)) <= 0) {
 			free(*newch);
-			r = 0;
+			n = 0;
+			newch[0] = '\0';
 			goto err;
 		} else {
 			n = r;
@@ -380,7 +393,12 @@ err:
 		if (fdin[1] != -1)
 			(void) close(fdin[1]);
 		(void) close(fdout[0]);
-		(void) wait(NULL);
+#ifdef WNOHANG
+		while (waitpid(-1, NULL, WNOHANG) != -1)
+			continue;
+#else
+		(void)wait(NULL);
+#endif
 		return n;
 	}
 }
