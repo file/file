@@ -1,6 +1,7 @@
 
 #ifdef BUILTIN_ELF
 #include <sys/types.h>
+#include <string.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -236,7 +237,7 @@ tryelf(fd, buf, nbytes)
 	 * one is found or else the binary is stripped.
 	 */
 	if (buf[EI_MAG0] != ELFMAG0 || buf[EI_MAG1] != ELFMAG1
-	    && buf[EI_MAG2] != ELFMAG2 || buf[EI_MAG3] != ELFMAG3)
+	    || buf[EI_MAG2] != ELFMAG2 || buf[EI_MAG3] != ELFMAG3)
 	    return;
 
 

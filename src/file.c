@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.37 1997/01/15 17:23:24 christos Exp $";
+	"@(#)$Id: file.c,v 1.38 1997/01/15 19:28:35 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -79,8 +79,10 @@ int lineno;		/* line number in the magic file	*/
 
 
 static void	unwrap		__P((char *fn));
+#if 0
 static int	byteconv4	__P((int, int, int));
 static short	byteconv2	__P((int, int, int));
+#endif
 
 /*
  * main - parse arguments and handle options
@@ -211,6 +213,7 @@ char *fn;
 }
 
 
+#if 0
 /*
  * byteconv4
  * Input:
@@ -273,6 +276,7 @@ byteconv2(from, same, big_endian)
   else
     return ntohs(from);		/* msb -> lsb conversion on lsb */
 }
+#endif
 
 /*
  * process - process input file

@@ -35,7 +35,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.33 1997/01/15 17:23:24 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.34 1997/01/15 19:28:35 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -249,7 +249,8 @@ struct magic *m;
 			*rt = '\0';
 		(void) printf(m->desc, pp);
 		t = m->offset + sizeof(time_t);
-		return;
+		break;
+
 	default:
 		error("invalid m->type (%d) in mprint().\n", m->type);
 		/*NOTREACHED*/
@@ -273,7 +274,6 @@ struct magic *m;
 		return 1;
 	case STRING:
 		{
-			size_t len;
 			char *ptr;
 
 			/* Null terminate and eat the return */
@@ -311,7 +311,7 @@ int32 offset;
 char *str;
 int len;
 {
-	(void) fprintf(stderr, "mget @%ld: ", offset);
+	(void) fprintf(stderr, "mget @%d: ", offset);
 	showstr(stderr, (char *) str, len);
 	(void) fputc('\n', stderr);
 	(void) fputc('\n', stderr);
@@ -441,21 +441,21 @@ struct magic *m;
 	switch (m->reln) {
 	case 'x':
 		if (debug)
-			(void) fprintf(stderr, "%lu == *any* = 1\n", v);
+			(void) fprintf(stderr, "%u == *any* = 1\n", v);
 		matched = 1;
 		break;
 
 	case '!':
 		matched = v != l;
 		if (debug)
-			(void) fprintf(stderr, "%lu != %lu = %d\n",
+			(void) fprintf(stderr, "%u != %u = %d\n",
 				       v, l, matched);
 		break;
 
 	case '=':
 		matched = v == l;
 		if (debug)
-			(void) fprintf(stderr, "%lu == %lu = %d\n",
+			(void) fprintf(stderr, "%u == %u = %d\n",
 				       v, l, matched);
 		break;
 
@@ -463,13 +463,13 @@ struct magic *m;
 		if (m->flag & UNSIGNED) {
 			matched = v > l;
 			if (debug)
-				(void) fprintf(stderr, "%lu > %lu = %d\n",
+				(void) fprintf(stderr, "%u > %u = %d\n",
 					       v, l, matched);
 		}
 		else {
 			matched = (int32) v > (int32) l;
 			if (debug)
-				(void) fprintf(stderr, "%ld > %ld = %d\n",
+				(void) fprintf(stderr, "%d > %d = %d\n",
 					       v, l, matched);
 		}
 		break;
@@ -478,13 +478,13 @@ struct magic *m;
 		if (m->flag & UNSIGNED) {
 			matched = v < l;
 			if (debug)
-				(void) fprintf(stderr, "%lu < %lu = %d\n",
+				(void) fprintf(stderr, "%u < %u = %d\n",
 					       v, l, matched);
 		}
 		else {
 			matched = (int32) v < (int32) l;
 			if (debug)
-				(void) fprintf(stderr, "%ld < %ld = %d\n",
+				(void) fprintf(stderr, "%d < %d = %d\n",
 					       v, l, matched);
 		}
 		break;
@@ -492,14 +492,14 @@ struct magic *m;
 	case '&':
 		matched = (v & l) == l;
 		if (debug)
-			(void) fprintf(stderr, "((%lx & %lx) == %lx) = %d\n",
+			(void) fprintf(stderr, "((%x & %x) == %x) = %d\n",
 				       v, l, l, matched);
 		break;
 
 	case '^':
 		matched = (v & l) != l;
 		if (debug)
-			(void) fprintf(stderr, "((%lx & %lx) != %lx) = %d\n",
+			(void) fprintf(stderr, "((%x & %x) != %x) = %d\n",
 				       v, l, l, matched);
 		break;
 
