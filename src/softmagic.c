@@ -34,14 +34,14 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.30 1995/05/20 22:09:21 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.31 1996/06/22 22:04:22 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
 static int mget		__P((union VALUETYPE *,
 			     unsigned char *, struct magic *, int));
 static int mcheck	__P((union VALUETYPE *, struct magic *));
-static void mprint	__P((union VALUETYPE *, struct magic *));
+static long mprint	__P((union VALUETYPE *, struct magic *));
 static void mdebug	__P((long, char *, int));
 static int mconvert	__P((union VALUETYPE *, struct magic *));
 
@@ -98,6 +98,13 @@ int nbytes;
 	int cont_level = 0;
 	int need_separator = 0;
 	union VALUETYPE p;
+	static long *tmpoff = NULL;
+	static size_t tmplen = 0;
+	long oldoff = 0;
+
+	if (tmpoff == NULL)
+		if ((tmpoff = (long *) malloc(tmplen = 20)) == NULL)
+			error("out of memory\n");
 
 	for (magindex = 0; magindex < nmagic; magindex++) {
 		/* if main entry matches, print it... */
@@ -113,7 +120,7 @@ int nbytes;
 			    continue;
 		}
 
-		mprint(&p, &magic[magindex]);
+		tmpoff[cont_level] = mprint(&p, &magic[magindex]);
 		/*
 		 * If we printed something, we'll need to print
 		 * a blank before we print something else.
@@ -121,7 +128,10 @@ int nbytes;
 		if (magic[magindex].desc[0])
 			need_separator = 1;
 		/* and any continuations that match */
-		cont_level++;
+		if (++cont_level >= tmplen)
+			if ((tmpoff = (long *) realloc(tmpoff,
+						       tmplen += 20)) == NULL)
+				error("out of memory\n");
 		while (magic[magindex+1].cont_level != 0 && 
 		       ++magindex < nmagic) {
 			if (cont_level >= magic[magindex].cont_level) {
@@ -131,6 +141,10 @@ int nbytes;
 					 * "cont_level" continuations.
 					 */
 					cont_level = magic[magindex].cont_level;
+				}
+				if (magic[magindex].flag & ADD) {
+					oldoff=magic[magindex].offset;
+					magic[magindex].offset += tmpoff[cont_level-1];
 				}
 				if (mget(&p, s, &magic[magindex], nbytes) &&
 				    mcheck(&p, &magic[magindex])) {
@@ -149,7 +163,7 @@ int nbytes;
 						(void) putchar(' ');
 						need_separator = 0;
 					}
-					mprint(&p, &magic[magindex]);
+					tmpoff[cont_level] = mprint(&p, &magic[magindex]);
 					if (magic[magindex].desc[0])
 						need_separator = 1;
 
@@ -158,7 +172,14 @@ int nbytes;
 					 * at a higher level,
 					 * process them.
 					 */
-					cont_level++;
+					if (++cont_level >= tmplen)
+						if ((tmpoff = 
+						    (long *) realloc(tmpoff,
+						    tmplen += 20)) == NULL)
+							error("out of memory\n");
+				}
+				if (magic[magindex].flag & ADD) {
+					 magic[magindex].offset = oldoff;
 				}
 			}
 		}
@@ -167,13 +188,14 @@ int nbytes;
 	return 0;			/* no match at all */
 }
 
-static void
+static long
 mprint(p, m)
 union VALUETYPE *p;
 struct magic *m;
 {
 	char *pp, *rt;
 	unsigned long v;
+	long t=0 ;
 
 
   	switch (m->type) {
@@ -181,6 +203,7 @@ struct magic *m;
 		v = p->b;
 		v = signextend(m, v) & m->mask;
 		(void) printf(m->desc, (unsigned char) v);
+		t = m->offset + sizeof(char);
 		break;
 
   	case SHORT:
@@ -189,6 +212,7 @@ struct magic *m;
 		v = p->h;
 		v = signextend(m, v) & m->mask;
 		(void) printf(m->desc, (unsigned short) v);
+		t = m->offset + sizeof(short);
 		break;
 
   	case LONG:
@@ -197,16 +221,19 @@ struct magic *m;
 		v = p->l;
 		v = signextend(m, v) & m->mask;
 		(void) printf(m->desc, (unsigned long) v);
+		t = m->offset + sizeof(long);
   		break;
 
   	case STRING:
 		if (m->reln == '=') {
 			(void) printf(m->desc, m->value.s);
+			t = m->offset + strlen(m->value.s);
 		}
 		else {
 			(void) printf(m->desc, p->s);
+			t = m->offset + strlen(p->s);
 		}
-		return;
+		break;
 
 	case DATE:
 	case BEDATE:
@@ -215,11 +242,13 @@ struct magic *m;
 		if ((rt = strchr(pp, '\n')) != NULL)
 			*rt = '\0';
 		(void) printf(m->desc, pp);
+		t = m->offset + sizeof(time_t);
 		return;
 	default:
 		error("invalid m->type (%d) in mprint().\n", m->type);
 		/*NOTREACHED*/
 	}
+	return(t);
 }
 
 /*
@@ -230,8 +259,6 @@ mconvert(p, m)
 union VALUETYPE *p;
 struct magic *m;
 {
-	char *rt;
-
 	switch (m->type) {
 	case BYTE:
 	case SHORT:
@@ -239,11 +266,16 @@ struct magic *m;
 	case DATE:
 		return 1;
 	case STRING:
-		/* Null terminate and eat the return */
-		p->s[sizeof(p->s) - 1] = '\0';
-		if ((rt = strchr(p->s, '\n')) != NULL)
-			*rt = '\0';
-		return 1;
+		{
+			size_t len;
+
+			/* Null terminate and eat the return */
+			p->s[sizeof(p->s) - 1] = '\0';
+			len = strlen(p->s);
+			if (len > 0 && p->s[len - 1] == '\n')
+				p->s[len - 1] = '\0';
+			return 1;
+		}
 	case BESHORT:
 		p->h = (short)((p->hs[0]<<8)|(p->hs[1]));
 		return 1;
