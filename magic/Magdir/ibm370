@@ -1,0 +1,5 @@
+#
+# magic.ibm370:
+#
+0	short		0x15d		ibm 370 pure executable
+>12	long		>0		not stripped

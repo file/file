@@ -1,0 +1,27 @@
+#
+# magic.vax: Vax magic...
+#
+0	long		0x3c61723e	VAX 5.0 archive
+0	long		0x65ff0000	VAX 3.0 archive
+0	long		0x836e		VAX double precision APL workspace
+0	long		0x836f		VAX single precision APL workspace
+0	short		0x178		vax executable
+0	short		0x17d		vax pure executable
+# Michael R. Wayne  ***  TMC & Associates  ***  INTERNET: wayne@ford-vax.arpa
+# From: dupuy@amsterdam.columbia.edu (Alexander Dupuy)
+# Byte-swapped VAXen
+# Here are a few lines you can add to /etc/magic on your sun workstations in
+# order to recognize VAX executables and objects.... you could do something
+# similar (in reverse) for your vaxen, but since 4.3+NFS' file(1) doesn't look
+# for /etc/magic, I've never bothered.  It really should be built in to file(1)
+# so you would see the state of setuid/setgid/sticky bits.  Or actually, there
+# should be support for checking that sort of thing in /etc/magic.
+#
+0	long		00700200000	VAX executable
+>16	long		&0x7fffffff	not stripped
+0	long		01000200000	VAX pure executable
+>16	long		&0x7fffffff	not stripped
+0	long		01300200000	VAX demand-paged pure executable
+>16	long		&0x7fffffff	not stripped
+0	long		0101557		VAX single precision APL workspace
+0	long		0101556		VAX double precision APL workspace

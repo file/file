@@ -1,0 +1,9 @@
+#
+# magic.tex: 
+#
+0	short	0173402	DVI File
+>16	string	>\0	(%s)
+0	short	0173531	Packed TeX Font
+>4	string	>\0	(%s)
+2	string	\000\022	Metafont Font Metric
+>34	string	>\0	(%s)
