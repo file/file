@@ -1,12 +1,15 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		12
+#define	patchlevel		13
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.12 1993/10/27 20:59:05 christos Exp $
+ * $Id: patchlevel.h,v 1.13 1994/01/21 01:27:01 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.12  1993/10/27 20:59:05  christos
+ * Revision 1.13  1994/01/21 01:27:01  christos
+ * Fixed null termination bug from Don Seeley at BSDI in ascmagic.c
+ *
+ * Revision 1.12  1993/10/27  20:59:05  christos
  * Changed -z flag to understand gzip format too.
  * Moved builtin compression detection to a table, and move
  * the compress magic entry out of the source.
