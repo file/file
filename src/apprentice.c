@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.77 2004/06/04 14:40:19 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.78 2004/07/24 20:38:56 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -213,6 +213,7 @@ file_delmagic(struct magic *p, int type, size_t entries)
 		break;
 	case 1:
 		p--;
+		/*FALLTHROUGH*/
 	case 0:
 		free(p);
 		break;

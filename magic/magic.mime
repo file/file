@@ -11,9 +11,102 @@
 # Localstuff:  file(1) magic for locally observed files
 # Add any locally observed files here.
 
+# Real Audio (Magic .ra\0375)
+0	belong		0x2e7261fd	audio/x-pn-realaudio
+0	string		.RMF		application/vnd.rn-realmedia
+
+#video/x-pn-realvideo
+#video/vnd.rn-realvideo
+#application/vnd.rn-realmedia
+#	sigh, there are many mimes for that but the above are the most common.
+
+# Taken from magic, converted to magic.mime
+# mime types according to http://www.geocities.com/nevilo/mod.htm:
+#	audio/it	.it
+#	audio/x-zipped-it	.itz
+#	audio/xm	fasttracker modules
+#	audio/x-s3m	screamtracker modules
+#	audio/s3m	screamtracker modules
+#	audio/x-zipped-mod	mdz
+#	audio/mod	mod
+#	audio/x-mod	All modules (mod, s3m, 669, mtm, med, xm, it, mdz, stm, itz, xmz, s3z)
+
+# Taken from loader code from mikmod version 2.14
+# by Steve McIntyre (stevem@chiark.greenend.org.uk)
+# <doj@cubic.org> added title printing on 2003-06-24
+0	string	MAS_UTrack_V00
+>14	string	>/0		audio/x-mod
+#audio/x-tracker-module
+
+#0	string	UN05		MikMod UNI format module sound data
+
+0	string	Extended\ Module: audio/x-mod
+#audio/x-tracker-module
+##>17	string	>\0		Title: "%s"
+
+21	string/c	!SCREAM!	audio/x-mod
+#audio/x-screamtracker-module
+21	string	BMOD2STM	audio/x-mod
+#audio/x-screamtracker-module
+1080	string	M.K.		audio/x-mod
+#audio/x-protracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	M!K!		audio/x-mod
+#audio/x-protracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	FLT4		audio/x-mod
+#audio/x-startracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	FLT8		audio/x-mod
+#audio/x-startracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	4CHN		audio/x-mod
+#audio/x-fasttracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	6CHN		audio/x-mod
+#audio/x-fasttracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	8CHN		audio/x-mod
+#audio/x-fasttracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	CD81		audio/x-mod
+#audio/x-oktalyzer-tracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	OKTA		audio/x-mod
+#audio/x-oktalyzer-tracker-module
+#>0	string	>\0		Title: "%s"
+# Not good enough.
+#1082	string	CH
+#>1080	string	>/0		%.2s-channel Fasttracker "oktalyzer" module sound data
+1080	string	16CN		audio/x-mod
+#audio/x-taketracker-module
+#>0	string	>\0		Title: "%s"
+1080	string	32CN		audio/x-mod
+#audio/x-taketracker-module
+#>0	string	>\0		Title: "%s"
+
+# Impuse tracker module (it)
+0	string		IMPM		audio/x-mod
+#>4	string		>\0		"%s"
+#>40	leshort		!0		compatible w/ITv%x
+#>42	leshort		!0		created w/ITv%x
+
 #------------------------------------------------------------------------------
 # end local stuff
 #------------------------------------------------------------------------------
+
+# xml based formats!
+
+# svg
+
+0	string		\<?xml
+#			text/xml
+>38	string		\<\!DOCTYPE\040svg	image/svg+xml
+
+
+# xml
+0	string		\<?xml			text/xml
+
 
 #------------------------------------------------------------------------------
 # Java
@@ -61,6 +154,8 @@
 #					IFF/8SVX audio data
 8	string		8SVX		audio/x-aiff	
 
+
+
 # Creative Labs AUDIO stuff
 #					Standard MIDI data
 0	string	MThd			audio/unknown	
@@ -100,7 +195,7 @@
 #MP3 with ID3 tag
 0	string		ID3		audio/mpeg
 # Ogg/Vorbis
-0	string		OggS		audio/ogg
+0	string		OggS		application/ogg
 
 #------------------------------------------------------------------------------
 # c-lang:  file(1) magic for C programs or various scripts
@@ -383,6 +478,18 @@
 #0	string		CI		color icon
 #0	string		CP		color pointer
 #0	string		BA		bitmap array
+
+# CDROM Filesystems
+32769    string    CD001     application/x-iso9660
+
+# Newer StuffIt archives (grant@netbsd.org)
+0	string		StuffIt			application/x-stuffit
+#>162	string		>0			: %s
+
+# BinHex is the Macintosh ASCII-encoded file format (see also "apple")
+# Daniel Quinlan, quinlan@yggdrasil.com
+11	string	must\ be\ converted\ with\ BinHex\ 4	application/mac-binhex40
+##>41	string	x					\b, version %.3s
 
 
 #------------------------------------------------------------------------------
@@ -788,3 +895,13 @@
 # From: stephane.loeuillet@tiscali.f
 # http://www.djvuzone.org/
 0	string		AT&TFORM	image/x.djvu
+
+# Danny Milosavljevic <danny.milo@gmx.net>
+# this are adrift (adventure game standard) game files, extension .taf
+# depending on version magic continues with 0x93453E6139FA (V 4.0)
+# 0x9445376139FA (V 3.90)
+# 0x9445366139FA (V 3.80)
+# this is from source (http://www.adrift.org.uk/) and I have some taf
+# files, and checked them.
+#0       belong          0x3C423FC9
+#>4      belong          0x6A87C2CF application/x-adrift

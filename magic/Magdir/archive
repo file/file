@@ -189,7 +189,12 @@
 >20	byte		x		- header level %d
 
 # RAR archiver (Greg Roelofs, newt@uchicago.edu)
-0	string		Rar!		RAR archive data
+0	string		Rar!		RAR archive data,
+>44	byte		x		v%0x,
+>35	byte		0		os: MS-DOS
+>35	byte		1		os: OS/2
+>35	byte		2		os: Win32
+>35	byte		3		os: Unix
 
 # SQUISH archiver (Greg Roelofs, newt@uchicago.edu)
 0	string		SQSH		squished archive data (Acorn RISCOS)
@@ -305,3 +310,11 @@
 >5	leshort &0x8000		\b, solid
 # Date in MS-DOS format (whatever that is)
 #>18	lelong	x		Created on
+
+# sfArk : compression program for Soundfonts (sf2) by Dirk Jagdmann
+# <doj@cubic.org>
+0x1A	string	sfArk		sfArk compressed Soundfont
+>0x15	string	2
+>>0x1	string	>\0		Version %s
+>>0x2A	string	>\0		: %s
+
