@@ -40,7 +40,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.23 1997/01/15 19:28:35 christos Exp $";
+	"@(#)$Id: print.c,v 1.24 1997/04/13 18:28:30 christos Exp $";
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -91,7 +91,9 @@ struct magic *m;
 	    case LEDATE:
 	    case BEDATE:
 		    {
-			    char *rt, *pp = ctime((time_t*) &m->value.l);
+			    time_t t = m->value.l;
+			    char *rt, *pp = ctime(&t);
+
 			    if ((rt = strchr(pp, '\n')) != NULL)
 				    *rt = '\0';
 			    (void) fprintf(stderr, "%s,", pp);
