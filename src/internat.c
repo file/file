@@ -10,6 +10,7 @@
 #include "file.h"
 
 #include <string.h>
+#include <memory.h>
 
 #define F 0
 #define T 1
@@ -63,7 +64,7 @@ internatmagic(buf, nbytes)
 	 */
 
 	for (i = 0; i < nbytes;) {
-		cp = memchr(buf, '\n', nbytes - i);
+		cp = (unsigned char *) memchr(buf, '\n', nbytes - i);
 		if (cp == NULL) {
 			/* Don't fail if we hit the end of buffer. */
 			if (i + MAXLINELEN >= nbytes)
