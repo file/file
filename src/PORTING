@@ -1,5 +1,5 @@
 Portability of the new file(1) command.
-@(#) $Header: /p/file/cvsroot/file/src/Attic/PORTING,v 1.6 1990/10/03 17:57:04 ian Exp $
+@(#) $Id: PORTING,v 1.7 1992/06/30 13:22:30 ian Exp $
 
 Read this file only if the program doesn't compile on your system.
 
