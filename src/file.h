@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Ident$
+ * @(#)$Id: file.h,v 1.10 1992/09/08 14:58:34 ian Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -30,10 +30,13 @@
 #define MAXMAGIS 1000		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
-#define ckfputs(str,fil) {if (fputs(str,fil)==EOF) error(ckfmsg,"");}
+#define ckfputs(str,fil) 	if (fputs(str,fil)==EOF)		\
+					error("write failed.\n");	\
+				else					\
+					str[0] = str[0]
 
 struct magic {
-	short contflag;		
+	short flag;		
 #define CONT	1		/* if '>0' appears,  */
 #define INDIR	2		/* if '>(...)' appears,  */
 	struct {
@@ -49,6 +52,7 @@ struct magic {
 #define				SHORT	2
 #define				LONG	4
 #define				STRING	5
+#define				DATE	6
 	union VALUETYPE {
 		char b;
 		short h;
@@ -60,36 +64,54 @@ struct magic {
 	char desc[MAXDESC];	/* description */
 };
 
-#if	defined(__STDC__) || defined(__cplusplus)
-int apprentice(char *fn, int check);
-int ascmagic(unsigned char *buf, int nbytes);
-void error(char *fmt, char *d);
-FILE *efopen(char *fn, char *mode);
-int fsmagic(char *fn);
-int is_compress(unsigned char *p, int *b);
-int is_tar(unsigned char *buf);
-void mdump(struct magic *m);
-int parse(char *l, int *ndx, int check);
-void process(char *inname);
-void showstr(char *s);
-int softmagic(unsigned char *buf, int nbytes);
-void tryit(unsigned char *buf, int nb);
-int uncompress(unsigned char *old, unsigned char **newch, int n);
-void warning(char *f, char *d);
-#else
-int apprentice();
-int ascmagic();
-void error();
-FILE *efopen();
-int fsmagic();
-int is_compress();
-int is_tar();
-void mdump();
-int parse();
-void process();
-void showstr();
-int softmagic();
-void tryit();
-int uncompress();
-void warning();
+#include <stdio.h>	/* Include that here, to make sure __P gets defined */
+
+#ifndef __P
+# if __STDC__ || __cplusplus
+#  define __P(a) a
+# else
+#  define __P(a) ()
+#  define const
+# endif
+#endif
+
+extern int   apprentice		__P((char *, int));
+extern int   ascmagic		__P((unsigned char *, int));
+extern void  error		__P((const char *, ...));
+struct stat;
+extern int   fsmagic		__P((const char *, struct stat *));
+extern int   is_compress	__P((const unsigned char *, int *));
+extern int   is_tar		__P((unsigned char *));
+extern void  magwarn		__P((const char *, ...));
+extern void  mdump		__P((struct magic *));
+extern void  process		__P((const char *, int));
+extern void  showstr		__P((const char *));
+extern int   softmagic		__P((unsigned char *, int));
+extern void  tryit		__P((unsigned char *, int));
+extern int   uncompress		__P((const unsigned char *, unsigned char **, int));
+
+
+
+extern int errno;		/* Some unixes don't define this..	*/
+
+extern char *progname;		/* the program name 			*/
+extern char *magicfile;		/* name of the magic file		*/
+extern int lineno;		/* current line number in magic file	*/
+
+extern struct magic *magic;	/* array of magic entries		*/
+extern int nmagic;		/* number of valid magic[]s 		*/
+
+
+extern int debug;		/* enable debugging?			*/
+extern int zflag;		/* process compressed files?		*/
+extern int lflag;		/* follow symbolic links?		*/
+
+extern int optind;		/* From getopt(3)			*/
+extern char *optarg;
+
+#if !defined(__STDC__) || defined(sun)
+extern int errno, sys_nerr;
+extern char *sys_errlist[];
+#define strerror(e) \
+	(((e) >= 0 && (e) < sys_nerr) ? sys_errlist[(e)] : "Unknown error")
 #endif
