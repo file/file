@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.88 2003/12/23 17:32:41 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.89 2004/03/03 17:21:05 christos Exp $")
 #endif	/* lint */
 
 
@@ -103,7 +103,7 @@ private struct magic_set *magic;
 
 private void unwrap(char *);
 private void usage(void);
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 private void help(void);
 #endif
 #if 0
@@ -449,13 +449,13 @@ private void
 usage(void)
 {
 	(void)fprintf(stderr, USAGE, progname, progname);
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 	(void)fputs("Try `file --help' for more information.\n", stderr);
 #endif
 	exit(1);
 }
 
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 private void
 help(void)
 {
