@@ -1,0 +1,5 @@
+#
+# time zone data, from Daniel Quinlan (quinlan@yggdrasil.com)
+# this will work on Linux, SunOS, and others
+27	byte		1		time zone data
+27	byte		2		time zone data
