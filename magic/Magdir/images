@@ -283,8 +283,6 @@
 0	string	PDS_			PDS image data
 0	string	LBLSIZE=		PDS (VICAR) image data
 
-0	string		GSTIm		GNU SmallTalk image file
-
 # pM8x: ATARI STAD compressed bitmap format
 #
 # from Oskar Schirmer <schirmer@scara.com> Feb 2, 2001
