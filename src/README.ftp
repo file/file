@@ -1,9 +1,0 @@
-This directory has two files, dist.src and dist.magic.
-They are both shar (shell archive) files; to unpack, just
-run them through /bin/sh. 
-
-dist.src contains only the source code, Makefile, and various odds and ends.
-
-dist.magic contains only the pieces to make up /etc/magic.
-
-See README, LEGAL.NOTICE, and PORTING for more information.
