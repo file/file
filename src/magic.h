@@ -42,7 +42,7 @@
 
 typedef struct magic_set *magic_t;
 
-magic_t magic_open(int flags);
+magic_t magic_open(int);
 void magic_close(magic_t);
 
 const char *magic_file(magic_t, const char *);
