@@ -54,7 +54,7 @@
 .Fn magic_file "magic_t cookie, const char *filename"
 .Ft const char *
 .Fn magic_buffer "magic_t cookie, const void *buffer, size_t length"
-.Ft void
+.Ft int
 .Fn magic_setflags "magic_t cookie, int flags"
 .Ft int
 .Fn magic_check "magic_t cookie, const char *filename"
@@ -93,6 +93,12 @@ Return a mime string, instead of a textual description.
 Return all matches, not just the first.
 .It Dv MAGIC_CHECK
 Check the magic database for consistency and print warnings to stderr.
+.It Dv MAGIC_PRESERVE_ATIME
+On systems that support
+.Xr utime 2
+or
+.Xr utimes 2 ,
+attempt to preserve the access time of files analyzed.
 .El
 .Pp
 The
@@ -158,7 +164,8 @@ before any magic queries can performed.
 The function
 .Fn magic_open
 returns a magic cookie on success and NULL on failure setting errno to
-an appropriate value.
+an appropriate value. It will set errno to EINVAL if an unsupported
+value for flags was given.
 The
 .Fn magic_load ,
 .Fn magic_compile ,
@@ -173,6 +180,15 @@ functions return a string on success and NULL on failure. The
 .Fn magic_error
 function returns a textual description of the errors of the above
 functions, or NULL if there was no error.
+Finally,
+.Fn magic_setflags
+returns -1 on systems that don't support
+.Xr utime 2 ,
+or
+.Xr utimes 2
+when
+.Dv MAGIC_PRESERVE_ATIME
+is set.
 .Sh FILES
 .Bl -tag -width __MAGIC__.mime.mgc -compact
 .It Pa __MAGIC__.mime
