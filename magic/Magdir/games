@@ -1,0 +1,26 @@
+#------------------------------------------------------------------------------
+# games:  file(1) for games
+
+# Thomas M. Ott (ThMO)
+1	string	=WAD		DOOM data,
+>0	string	=I		main wad
+>0	string	=P		patch wad
+>0	byte	x		unknown junk
+
+# Fabio Bonelli <fabiobonelli@libero.it>
+# Quake II - III data files
+0       string  IDP2        	Quake II 3D Model file,
+>20     long    x               %lu skin(s),
+>8      long    x               (%lu x
+>12     long    x 		%lu),
+>40     long    x               %lu frame(s),
+>16     long    x               Frame size %lu bytes,
+>24     long  	x               %lu vertices/frame,
+>28     long    x            	%lu texture coordinates,
+>32     long    x               %lu triangles/frame
+
+0       string  IBSP            Quake
+>4      long    0x26            II Map file (BSP)
+>4      long    0x2E      	III Map file (BSP)
+
+0       string  IDS2            Quake II SP2 sprite file

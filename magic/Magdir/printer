@@ -90,3 +90,23 @@
 # From <mike@flyn.org>
 # These are the /etc/magic entries to decode data sent to an Epson printer.
 0       string          \x1B\x40\x1B\x28\x52\x08\x00\x00REMOTE1P        Epson Stylus Color 460 data
+
+
+#------------------------------------------------------------------------------
+# zenographics:  file(1) magic for Zenographics ZjStream printer data
+# Rick Richardson  rickr@mn.rr.com
+0	string		JZJZ
+>0x12	string		ZZ		Zenographics ZjStream printer data (big-endian)
+0	string		ZJZJ
+>0x12	string		ZZ		Zenographics ZjStream printer data (little-endian)
+
+
+#------------------------------------------------------------------------------
+# Oak Technologies printer stream
+# Rick Richardson <rickr@mn.rr.com>
+0       string          OAK
+>0x07	byte		0
+>0x0b	byte		0	Oak Technologies printer stream
+
+# This would otherwise be recognized as PostScript - nick@debian.org
+0	string		%!VMF 		SunClock's Vector Map Format data

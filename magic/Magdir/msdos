@@ -4,7 +4,7 @@
 #
 
 # .BAT files (Daniel Quinlan, quinlan@yggdrasil.com)
-0	string	@echo\ off	MS-DOS batch file text
+0	string/c	@echo\ off	MS-DOS batch file text
 
 # XXX - according to Microsoft's spec, at an offset of 0x3c in a
 # PE-format executable is the offset in the file of the PE header;
@@ -144,9 +144,10 @@
 #
 
 #
-# Windows NT Registry files.
+# Windows Registry files.
 #
-0	string		regf		Windows NT Registry file
+0	string		regf		Windows NT registry file
+0	string		CREG		Windows 95 registry file
 
 # Popular applications
 2080	string	Microsoft\ Word\ 6.0\ Document	%s
@@ -159,7 +160,7 @@
 0       string  PO^Q`				Microsoft Word 6.0 Document
 #
 0	string	\376\067\0\043			Microsoft Office Document
-0	string	\320\317\021\340\241\261	Microsoft Office Document
+0	string	\320\317\021\340\241\261\032\341	Microsoft Office Document
 0	string	\333\245-\0\0\0			Microsoft Office Document
 #
 2080	string	Microsoft\ Excel\ 5.0\ Worksheet	%s
@@ -309,3 +310,19 @@
 
 # TNEF magic From "Joomy" <joomy@se-ed.net> 
 0	leshort		0x223e9f78	TNEF
+
+# HtmlHelp files (.chm)
+0	string  ITSF\003\000\000\000\x60\000\000\000\001\000\000\000	MS Windows HtmlHelp Data
+
+# GFA-BASIC (Wolfram Kleff)
+2	string		GFA-BASIC3	GFA-BASIC 3 data
+
+# DJGPP compiled files
+# v >2, uses DPMI & small(2k) stub (Robert vd Boon, rjvdboon@europe.com)
+0x200	string		go32stub	DOS-executable compiled w/DJGPP
+>0x20c	string		>0		(stub v%.4s)
+>>0x8b2	string		djp		[compressed w/%s
+>>>&1	string		>\0		%.4s]
+>>0x8ad	string		UPX		[compressed w/%s
+>>>&1	string		>\0		%.4s]
+>>0x1c	string		pmodedj		stubbed with %s

@@ -32,7 +32,9 @@
 0	string		!<arch>\ndebian
 >8	string		debian-split	part of multipart Debian package
 >8	string		debian-binary	Debian binary package
->68	string		>\n		(format %s)
+>68	string		>\0		(format %s)
+>81	string		bz2		\b, uses bzip2 compression
+>84	string		gz		\b, uses gzip compression
 >136	ledate		x		created: %s
 
 # other archives
@@ -256,3 +258,20 @@
 0       string          PAR\0	PARity archive data
 >48	leshort		=0	- Index file
 >48	leshort		>0	- file number %d
+
+# Felix von Leitner <felix-file@fefe.de>
+0	string	d8:announce	BitTorrent file
+
+# ACE archive (Nikolay Petrov, nik@techlab.office1.bg)
+7	string		**ACE**		Winace archive data
+
+# Atari MSA archive - Teemu Hukkanen <tjhukkan@iki.fi>
+0       beshort 0x0e0f          Atari MSA archive data
+>2      beshort x       \b, %d sectors per track
+>4      beshort 0       \b, 1 sided
+>4      beshort 1       \b, 2 sided
+>6      beshort x       \b, starting track: %d
+>8      beshort x       \b, ending track: %d
+
+# Alternate ZIP string (amc@arwen.cs.berkeley.edu)
+0	string		PK00PK\003\004	Zip archive data
