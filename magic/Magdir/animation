@@ -158,3 +158,13 @@
 # conti_count   4 bit	0
 0	belong&0xFF5FFF1F	0x47400010	MPEG transport stream data
 >188	byte			!0x47		CORRUPTED
+
+# DIF digital video file format <mpruett@sgi.com>
+0	belong&0xffffff00	0x1f070000      DIF
+>4	byte			&0x01		(DVCPRO) movie file
+>4	byte			^0x01		(DV) movie file
+>3	byte			&0x80		(PAL)
+>3	byte			^0x80		(NTSC)
+
+# Microsoft Advanced Streaming Format (ASF) <mpruett@sgi.com>
+0	belong			0x3026b275	Microsoft ASF
