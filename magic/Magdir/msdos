@@ -358,3 +358,7 @@
 
 # Outlook Personal Folders
 0	lelong	0x4E444221	Microsoft Outlook binary email folder
+
+# From: Dirk Jagdmann <doj@cubic.org>
+0	lelong	0x00035f3f	Windows 3.x help file
+
