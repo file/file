@@ -62,7 +62,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.39 2003/03/26 16:31:20 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.40 2003/03/27 19:09:57 christos Exp $")
 #endif	/* lint */
 
 protected int
@@ -78,14 +78,14 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	 * On 4.2BSD and similar systems, use lstat() to identify symlinks.
 	 */
 #ifdef	S_IFLNK
-	if ((ms->flags & MAGIC_SYMLINK) != 0)
+	if ((ms->flags & MAGIC_SYMLINK) == 0)
 		ret = lstat(fn, sb);
 	else
 #endif
 	ret = stat(fn, sb);	/* don't merge into if; see "ret =" above */
 
 	if (ret) {
-		if (file_printf(ms, "can't stat `%s' (%s)",
+		if (file_printf(ms, "Can't stat `%s' (%s)",
 		    fn, strerror(errno)) == -1)
 			return -1;
 		return 1;
