@@ -20,8 +20,13 @@ in magic(4) format please(!), to the  author, Ian Darwin,
 LEGAL.NOTICE - read this first.
 README - read this second (you are currently reading this file).
 PORTING - read this next.
-Makefile - read this next, fix it if needed, type "make"
-	to compile, "make test" to try it (expect some diffs!).
+Makefile - read this next, adapt it as needed (particularly
+	the man page layouts), type "make" to compile, 
+	"make test" to try it out against your old version.
+	Expect some diffs, particularly since your original
+	file(1) may not grok the imbedded-space ("\ ") in
+	the current magic file, or may even not use the
+	magic file.
 apprentice.c - parses /etc/magic to learn magic
 ascmagic.c - third & last set of tests, based on hardwired assumptions.
 core - not included in distribution due to mailer limitations.
@@ -36,5 +41,6 @@ is_tar.c - knows about tarchives (courtesy of John Gilmore).
 magdir - directory of /etc/magic pieces
 names.h - header file for ascmagic.c
 softmagic.c - 2nd set of tests, based on /etc/magic
-strtok.c - in case you need it (from Henry Spencer).
-strtol.c - in case you need it
+strtok.c, getopt.c - in case you them (courtesy of Henry Spencer).
+strtol.c, strchr.c - in case you need them - public domain.
+tst - simple test suite, built from tst/Makefile
