@@ -46,7 +46,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: fsmagic.c,v 1.16 1992/09/08 15:36:42 ian Exp $";
+	"@(#)$Id: fsmagic.c,v 1.17 1992/09/11 11:33:41 ian Exp $";
 #endif	/* lint */
 
 int
@@ -110,7 +110,7 @@ struct stat *sb;
 
 			/* If dangling symlink, say so and quit early. */
 			if (stat(buf, &tstatbuf) < 0) {
-				ckfputs("dangling symbolic link", stdout);
+				printf("dangling symbolic link to %s", fn);
 				return 1;
 			}
 
