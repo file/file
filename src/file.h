@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.33 2000/08/07 17:40:14 christos Exp $
+ * @(#)$Id: file.h,v 1.34 2000/11/13 00:30:49 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -155,7 +155,7 @@ static const char *rcsid(const char *p) { \
 	return rcsid(p = id); \
 }
 #else
-#define FILE_RCSID(id) static char *rcsid[] = id;
+#define FILE_RCSID(id) static char rcsid[] = id;
 #endif
 
 #endif /* __file_h__ */
