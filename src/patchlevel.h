@@ -1,11 +1,17 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		24
+#define	patchlevel		25
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.24 1998/02/15 23:20:38 christos Exp $
+ * $Id: patchlevel.h,v 1.25 1998/06/27 14:04:04 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.25  1998/06/27 14:04:04  christos
+ * OLF patch Guy Harris
+ * Recognize java/html (debian linux)
+ * Const poisoning (debian linux)
+ * More magic!
+ *
  * Revision 1.24  1998/02/15 23:20:38  christos
  * Autoconf patch: Felix von Leitner <leitner@math.fu-berlin.de>
  * More magic fixes
