@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.18 1991/01/23 13:56:37 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.19 1991/02/25 10:02:28 ian Exp $";
 #endif	/* lint */
 
 extern char *ckfmsg;
@@ -168,7 +168,14 @@ int top;		/* true if called from top level */
 		goto readit;
 	}
 		
-	(void) printf("%s:\t", inname);
+	/* Try to make everything line up... This behaviour is not
+	 * perfect, but was copied from the SunOS4.1 (and other vendors,
+	 * but not Lotus Development) distributed file(1) commands.
+	 */
+	if (strlen(inname)<7)
+		(void) printf("%s:\t\t", inname);
+	else
+		(void) printf("%s:\t", inname);
 
 	/*
 	 * first try judging the file based on its filesystem status
