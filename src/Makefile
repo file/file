@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.20 1991/01/23 13:33:18 ian Exp $
+# @(#)$Ident: Makefile,v 1.20 91/01/23 13:33:18 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -27,7 +27,7 @@ MAGIC	= /usr/local/lib/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
 COPTS	= -g # -O		# gcc allows both
 CFLAGS	= $(COPTS) $(DEFS)
-LDFLAGS	= $(COPTS) -Bstatic	# SunOS gdb can't yet accept shared libs
+LDFLAGS	= $(COPTS) # -Bstatic	# older gdb couldn't handle shared libs
 SHAR	= bundle
 OFILE	= /usr/bin/file		# old or distributed version, for comparison
 # Where new binary lives; typically /usr/local (BSD), /usr/lbin (USG).
@@ -54,17 +54,19 @@ MANFEXT	= 5
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
 # Delete any of LOCALSRCS and LOCALOBJS that are in your C library.
-LOCALSRCS = getopt.c strtol.c strtok.c strchr.c
+LOCALSRCS = # getopt.c strtol.c strtok.c strchr.c
+LOCALOBJS = # getopt.o strtol.o strtok.o strchr.o
+
 SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 	compress.c is_tar.c \
 	print.c $(LOCALSRCS)
-LOCALOBJS = getopt.o strtol.o strtok.o strchr.o
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	compress.o is_tar.o \
 	print.o $(LOCALOBJS)
 
 ALLSRC = LEGAL.NOTICE README PORTING $(SRCS) *.h \
-	Makefile file.1 magic.4 Magdir/[a-z]* NEWMAGIC tst/Makefile
+	Makefile file.1 magic.4 tst/Makefile
+ALLMAGIC =   Magdir/Makefile Magdir/[a-z]* NEWMAGIC
 
 all:		file magic
 
@@ -97,11 +99,15 @@ clean:
 		rm -f *.o core file magic lint
 		(cd tst; make clean)
 
-dist:		$(ALLSRC)
+dist:		dist.src dist.magic
+
+dist.src:	$(ALLSRC)
 #		Some versions of shar can't handle a single file from
 #		a subdirectory, so we manually insert mkdir as needed.
+#		The point is to exclude all the generable targets in tst.
 #		Put the extra "mkdir" AFTER the ": to unbundle..." line.
-		(echo mkdir Magdir tst; $(SHAR) $(ALLSRC) ) > $@
+		(echo mkdir tst   ; $(SHAR) $(ALLSRC)) > $@
 
 dist.magic:	Magdir
-		(echo mkdir Magdir; $(SHAR) Magdir/Makefile Magdir/[a-z]*) >$@
+#		As above, but to exclude Magdir/RCS from being shipped.
+		(echo mkdir Magdir; $(SHAR) $(ALLMAGIC)) >$@
