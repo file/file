@@ -38,12 +38,14 @@ Magdir/archive \
 Magdir/asterix \
 Magdir/att3b \
 Magdir/audio \
+Magdir/audio.orig \
 Magdir/bFLT \
 Magdir/blender \
 Magdir/blit \
 Magdir/bout \
 Magdir/bsdi \
 Magdir/c-lang \
+Magdir/c64 \
 Magdir/cddb \
 Magdir/chi \
 Magdir/chord \
@@ -76,6 +78,7 @@ Magdir/frame \
 Magdir/freebsd \
 Magdir/fsav \
 Magdir/games \
+Magdir/gcc \
 Magdir/gimp \
 Magdir/gnu \
 Magdir/grace \
@@ -102,6 +105,7 @@ Magdir/linux \
 Magdir/lisp \
 Magdir/mach \
 Magdir/macintosh \
+Magdir/macintosh.orig \
 Magdir/magic \
 Magdir/mail.news \
 Magdir/maple \
@@ -153,6 +157,7 @@ Magdir/sc \
 Magdir/sccs \
 Magdir/sendmail \
 Magdir/sequent \
+Magdir/sgi \
 Magdir/sgml \
 Magdir/sharc \
 Magdir/sinclair \
@@ -176,15 +181,18 @@ Magdir/typeset \
 Magdir/unknown \
 Magdir/uuencode \
 Magdir/varied.out \
+Magdir/varied.script \
 Magdir/vax \
 Magdir/vicar \
 Magdir/visx \
 Magdir/vms \
 Magdir/vmware \
 Magdir/vorbis \
+Magdir/vorbis.orig \
 Magdir/vxl \
 Magdir/wordprocessors \
 Magdir/xdelta \
 Magdir/xenix \
+Magdir/xwindows \
 Magdir/zilog \
 Magdir/zyxel
