@@ -65,6 +65,8 @@
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>	/* for long options (is this portable?)*/
+#else
+#undef HAVE_GETOPT_LONG
 #endif
 
 #include <netinet/in.h>		/* for byte swapping */
@@ -72,7 +74,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.89 2004/03/03 17:21:05 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.90 2004/03/03 17:24:28 christos Exp $")
 #endif	/* lint */
 
 
