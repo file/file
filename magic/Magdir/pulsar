@@ -1,3 +1,4 @@
+
 #------------------------------------------------------------------------------
 # pulsar:  file(1) magic for Pulsar POP3 daemon binary files
 #
@@ -8,3 +9,4 @@
 0	belong	0x1ee7f11e	Pulsar POP3 daemon mailbox cache file.
 >4	ubelong	x		Version: %d.
 >8	ubelong	x		\b%d
+
