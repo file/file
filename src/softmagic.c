@@ -31,13 +31,10 @@
 #include <time.h>
 #include <sys/types.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.38 1998/09/12 13:21:01 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.39 1999/02/14 17:16:12 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));

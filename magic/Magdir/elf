@@ -12,6 +12,9 @@
 0	string		\177ELF		ELF
 >4	byte		0		invalid class
 >4	byte		1		32-bit
+# only for MIPS R3000_BE
+>>18	beshort		8
+>>>36   belong          &0x20           N32
 >4	byte		2		64-bit
 >5	byte		0		invalid byte order
 >5	byte		1		LSB
@@ -66,6 +69,24 @@
 >>36	lelong		1		MathCoPro/FPU/MAU Required
 >8	string		>\0		(%s)
 >5	byte		2		MSB
+# only for MIPS R3000_BE
+>>18    beshort		8
+# only for 32-bit
+>>>4	byte		1
+>>>>36  belong&0xf0000000       0x00000000      mips-1
+>>>>36  belong&0xf0000000       0x10000000      mips-2
+>>>>36  belong&0xf0000000       0x20000000      mips-3
+>>>>36  belong&0xf0000000       0x30000000      mips-4
+>>>>36  belong&0xf0000000       0x40000000      mips-5
+>>>>36  belong&0xf0000000       0x50000000      mips-6
+# only for 64-bit
+>>>4	byte		2
+>>>>48  belong&0xf0000000       0x00000000      mips-1
+>>>>48  belong&0xf0000000       0x10000000      mips-2
+>>>>48  belong&0xf0000000       0x20000000      mips-3
+>>>>48  belong&0xf0000000       0x30000000      mips-4
+>>>>48  belong&0xf0000000       0x40000000      mips-5
+>>>>48  belong&0xf0000000       0x50000000      mips-6
 >>16	beshort		0		no file type,
 >>16	beshort		1		relocatable,
 >>16	beshort		2		executable,
@@ -90,6 +111,10 @@
 >>18	beshort		16		nCUBE,
 >>18	beshort		17		Fujitsu VPP500,
 >>18	beshort		18		SPARC32PLUS,
+>>>36	belong&0xffff00	&0x000100	V8+ Required,
+>>>36	belong&0xffff00	&0x000200	Sun UltraSPARC1 Extensions Required,
+>>>36	belong&0xffff00	&0x000400	HaL R1 Extensions Required,
+>>>36	belong&0xffff00	&0x000800	Sun UltraSPARC3 Extensions Required,
 >>18	beshort		20		PowerPC or cisco 4500,
 >>18	beshort		21		cisco 7500,
 >>18	beshort		24		cisco SVIP,

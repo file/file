@@ -25,6 +25,7 @@
  * 4. This notice may not be removed or altered.
  */
 
+#include "file.h"
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -34,12 +35,13 @@
 # include <varargs.h>
 #endif
 #include <stdlib.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <time.h>
-#include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.27 1999/01/13 15:44:09 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.28 1999/02/14 17:16:10 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -122,7 +124,7 @@ ckfputs(str, fil)
 
 /*VARARGS*/
 void
-#if __STDC__
+#ifdef __STDC__
 ckfprintf(FILE *f, const char *fmt, ...)
 #else
 ckfprintf(va_alist)
@@ -130,7 +132,7 @@ ckfprintf(va_alist)
 #endif
 {
 	va_list va;
-#if __STDC__
+#ifdef __STDC__
 	va_start(va, fmt);
 #else
 	FILE *f;
@@ -150,7 +152,7 @@ ckfprintf(va_alist)
  */
 /*VARARGS*/
 void
-#if __STDC__
+#ifdef __STDC__
 error(const char *f, ...)
 #else
 error(va_alist)
@@ -158,7 +160,7 @@ error(va_alist)
 #endif
 {
 	va_list va;
-#if __STDC__
+#ifdef __STDC__
 	va_start(va, f);
 #else
 	const char *f;
@@ -177,7 +179,7 @@ error(va_alist)
 
 /*VARARGS*/
 void
-#if __STDC__
+#ifdef __STDC__
 magwarn(const char *f, ...)
 #else
 magwarn(va_alist)
@@ -185,7 +187,7 @@ magwarn(va_alist)
 #endif
 {
 	va_list va;
-#if __STDC__
+#ifdef __STDC__
 	va_start(va, f);
 #else
 	const char *f;

@@ -33,6 +33,7 @@
 >>0x36	string	FAT			\b, %s
 >>>0x39	string	12			(%s bit)
 >>>0x39	string	16			(%s bit)
+>0x52	string	FAT32			\b, FAT (32 bit)
 >>>43	string		>NO\ NAME	label: %.11s,
 >>>43	string		<NO\ NAME	label: %.11s,
 >>>43	string		NO\ NAME	unlabeled,
@@ -60,3 +61,18 @@
 >4	lelong&0xFFFFFF00	!0	unknown mode
 
 0x18b	string	OS/2	OS/2 Boot Manager
+
+9564	lelong		0x00011954	Unix Fast File system,
+>8404	string		x		last mounted on %s,
+>9504	ledate		x		last checkd at %s,
+>8224	ledate		x		last writen at %s,
+>8228	lelong		x		number of blocks %d,
+>8232	lelong		x		number of data blocks %d,
+>8236	lelong		x		number of cylinder groups %d,
+>8240	lelong		x		number of basic blocks %d,
+>8244	lelong		x		number of fragment blocks %d,
+>8248	lelong		x		minimum percentage of free blocks %d,
+>8252	lelong		x		rotational delay %dms,
+>8256	lelong		x		disk rotational speed %drps,
+>8320	lelong		0		TIME optimization
+>8320	lelong		1		SPACE optimization

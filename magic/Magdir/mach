@@ -1,12 +1,12 @@
 #------------------------------------------------------------------------------
 # mach file description
 #
-0	belong		0xcafebabe	mach-o fat file
+0	belong		0xcafebabe	Mach-O fat file
 >4	belong		1		with 1 architecture
 >4	belong		>1
 >>4	belong		x		with %ld architectures		
 #
-0	belong		0xfeedface	mach-o
+0	belong		0xfeedface	Mach-O
 >12	belong		1		object
 >12	belong		2		executable
 >12	belong		3		shared library
@@ -22,6 +22,11 @@
 >4	belong		4		ns32032
 >4	belong		5		ns32332
 >4	belong		6		for m68k architecture
+# from NeXTstep 3.0 <mach/machine.h>
+# i.e. mc680x0_all, ignore
+# >>8	belong		1		(mc68030)
+>>8	belong		2		(mc68040)
+>>8	belong		3		(mc68030 only)
 >4	belong		7		i386
 >4	belong		8		mips
 >4	belong		9		ns32532

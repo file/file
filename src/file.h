@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.28 1999/01/13 15:44:05 christos Exp $
+ * @(#)$Id: file.h,v 1.29 1999/02/14 17:16:06 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -29,11 +29,15 @@
 #ifndef __file_h__
 #define __file_h__
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 typedef int int32;
 typedef unsigned int uint32;
 
 #ifndef HOWMANY
-# define HOWMANY 8192		/* how much of the file to look at */
+# define HOWMANY 16384		/* how much of the file to look at */
 #endif
 #define MAXMAGIS 1000		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
@@ -80,7 +84,7 @@ struct magic {
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 
 #ifndef __P
-# if __STDC__ || __cplusplus
+# if defined(__STDC__) || defined(__cplusplus)
 #  define __P(a) a
 # else
 #  define __P(a) ()
@@ -106,7 +110,7 @@ extern int   zmagic		__P((unsigned char *, int));
 extern void  ckfprintf		__P((FILE *, const char *, ...));
 extern uint32 signextend	__P((struct magic *, unsigned int32));
 extern int internatmagic	__P((unsigned char *, int));
-extern void tryelf		__P((int, char *, int));
+extern void tryelf		__P((int, unsigned char *, int));
 
 
 extern int errno;		/* Some unixes don't define this..	*/
@@ -122,29 +126,20 @@ extern int nmagic;		/* number of valid magic[]s 		*/
 extern int debug;		/* enable debugging?			*/
 extern int zflag;		/* process compressed files?		*/
 extern int lflag;		/* follow symbolic links?		*/
+extern int sflag;		/* read/analyze block special files?	*/
 
 extern int optind;		/* From getopt(3)			*/
 extern char *optarg;
 
-#if defined(sun) || defined(__sun__) || defined (__sun)
-# if defined(__svr4) || defined (__SVR4) || defined(__svr4__)
-#  define SOLARIS
-# else
-#  define SUNOS
-# endif
-#endif
-
-
-#if !defined(__STDC__) || defined(SUNOS) || defined(__convex__)
+#ifndef HAVE_STRERROR
 extern int sys_nerr;
 extern char *sys_errlist[];
 #define strerror(e) \
 	(((e) >= 0 && (e) < sys_nerr) ? sys_errlist[(e)] : "Unknown error")
-#define strtoul(a, b, c)	strtol(a, b, c)
 #endif
 
-#ifndef MAXPATHLEN
-#define	MAXPATHLEN	512
+#ifndef HAVE_STRTOUL
+#define strtoul(a, b, c)	strtol(a, b, c)
 #endif
 
 #ifdef __STDC__

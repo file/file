@@ -25,35 +25,36 @@
  * 4. This notice may not be removed or altered.
  */
 
+#include "file.h"
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <stdlib.h>
-#ifdef HAVE_CONFIG_H
-#include "config.h"
+/* Since major is a function on SVR4, we can't use `ifndef major'.  */
+#ifdef MAJOR_IN_MKDEV
+# include <sys/mkdev.h>
+# define HAVE_MAJOR
 #endif
-#ifndef major
-# if defined(__SVR4) || defined(_SVR4_SOURCE)
-#  include <sys/mkdev.h>
-# endif
+#ifdef MAJOR_IN_SYSMACROS
+# include <sys/sysmacros.h>
+# define HAVE_MAJOR
 #endif
-#ifndef	major			/* if `major' not defined in types.h, */
-#include <sys/sysmacros.h>	/* try this one. */
+#ifdef major			/* Might be defined in sys/types.h.  */
+# define HAVE_MAJOR
 #endif
-#ifndef	major	/* still not defined? give up, manual intervention needed */
-		/* If cc tries to compile this, read and act on it. */
-		/* On most systems cpp will discard it automatically */
-		Congratulations, you have found a portability bug.
-		Please grep /usr/include/sys and edit the above #include 
-		to point at the file that defines the "major" macro.
-#endif	/*major*/
-
-#include "file.h"
+  
+#ifndef HAVE_MAJOR
+# define major(dev)  (((dev) >> 8) & 0xff)
+# define minor(dev)  ((dev) & 0xff)
+#endif
+#undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.28 1999/01/13 15:44:06 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.29 1999/02/14 17:16:08 christos Exp $")
 #endif	/* lint */
 
 int
@@ -91,6 +92,13 @@ struct stat *sb;
 		ckfputs("directory", stdout);
 		return 1;
 	case S_IFCHR:
+		/* 
+		 * If -s has been specified, treat character special files
+		 * like ordinary files.  Otherwise, just report that they
+		 * are block special files and go on to the next file.
+		 */
+		if (sflag)
+			break;
 #ifdef HAVE_ST_RDEV
 # ifdef dv_unit
 		(void) printf("character special (%d/%d/%d)",
@@ -106,6 +114,13 @@ struct stat *sb;
 #endif
 		return 1;
 	case S_IFBLK:
+		/* 
+		 * If -s has been specified, treat block special files
+		 * like ordinary files.  Otherwise, just report that they
+		 * are block special files and go on to the next file.
+		 */
+		if (sflag)
+			break;
 #ifdef HAVE_ST_RDEV
 # ifdef dv_unit
 		(void) printf("block special (%d/%d/%d)",
@@ -124,6 +139,11 @@ struct stat *sb;
 #ifdef	S_IFIFO
 	case S_IFIFO:
 		ckfputs("fifo (named pipe)", stdout);
+		return 1;
+#endif
+#ifdef	S_IFDOOR
+	case S_IFDOOR:
+		ckfputs("door", stdout);
 		return 1;
 #endif
 #ifdef	S_IFLNK
@@ -195,8 +215,17 @@ struct stat *sb;
 
 	/*
 	 * regular file, check next possibility
+	 *
+	 * If stat() tells us the file has zero length, report here that
+	 * the file is empty, so we can skip all the work of opening and 
+	 * reading the file.
+	 * But if the -s option has been given, we skip this optimization,
+	 * since on some systems, stat() reports zero size for raw disk
+	 * partitions.  (If the block special device really has zero length,
+	 * the fact that it is empty will be detected and reported correctly
+	 * when we read the file.)
 	 */
-	if (sb->st_size == 0) {
+	if (!sflag && sb->st_size == 0) {
 		ckfputs("empty", stdout);
 		return 1;
 	}
