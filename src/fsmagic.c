@@ -46,7 +46,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: fsmagic.c,v 1.21 1992/11/09 11:53:31 ian Exp $";
+	"@(#)$Id: fsmagic.c,v 1.22 1993/02/19 12:09:04 ian Exp $";
 #endif	/* lint */
 
 int
@@ -112,11 +112,32 @@ struct stat *sb;
 			buf[nch] = '\0';	/* readlink(2) forgets this */
 
 			/* If broken symlink, say so and quit early. */
-			if (stat(buf, &tstatbuf) < 0) {
+			if (*buf == '/') {
+			    if (stat(buf, &tstatbuf) < 0) {
 				ckfprintf(stdout,
 					"broken symbolic link to %s", buf);
 				return 1;
+			    }
 			}
+			else {
+			    char *tmp;
+			    char buf2[BUFSIZ+BUFSIZ+4];
+
+			    if ((tmp = strrchr(fn,  '/')) == NULL) {
+				tmp = buf; /* in current directory anyway */
+			    }
+			    else {
+				strcpy (buf2, fn);  /* take directory part */
+				buf2[tmp-fn+1] = '\0';
+				strcat (buf2, buf); /* plus (relative) symlink */
+				tmp = buf2;
+			    }
+			    if (stat(tmp, &tstatbuf) < 0) {
+				ckfprintf(stdout,
+					"broken symbolic link to %s", buf);
+				return 1;
+			    }
+                        }
 
 			/* Otherwise, handle it. */
 			if (lflag) {
