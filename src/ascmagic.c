@@ -38,7 +38,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.26 2000/04/11 02:32:35 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.27 2000/04/23 04:28:19 christos Exp $")
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -118,7 +118,7 @@ int nbytes;	/* size actually read */
 	}
 
 	/* all else fails, but it is ASCII... */
-	ckfputs(iflag ? "text/plain, ASCII" : "ASCII test", stdout);
+	ckfputs(iflag ? "text/plain, ASCII" : "ASCII text", stdout);
 	if (has_escapes) {
 		ckfputs(" (with escape sequences)", stdout);
 	}
