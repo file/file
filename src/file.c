@@ -50,7 +50,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.42 1998/09/12 13:17:52 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.43 1999/01/13 15:44:03 christos Exp $")
 #endif	/* lint */
 
 
@@ -94,8 +94,8 @@ int main __P((int, char *[]));
  */
 int
 main(argc, argv)
-int argc;
-char *argv[];
+	int argc;
+	char *argv[];
 {
 	int c;
 	int check = 0, didsomefiles = 0, errflg = 0, ret = 0, app = 0;

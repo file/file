@@ -1,7 +1,7 @@
 # Generated automatically from Makefile.in by configure.
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.57 1998/06/27 14:01:39 christos Exp $
+# @(#)$Id: Makefile,v 1.58 1999/01/13 15:43:58 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -22,14 +22,14 @@
 #    ever read sources, credits must appear in the documentation.
 #
 # 4. This notice may not be removed or altered.
-VERSION	= 3.25
+VERSION	= 3.26
 SHELL	= /bin/sh
 #MAGIC	= /etc/magic
 prefix = /usr/local
 INSTALLCMD = /usr/bin/install -c
 MAGICDIR = ${prefix}/share
 MAGIC	= $(MAGICDIR)/magic
-DEFS	= -DMAGIC='"$(MAGIC)"' -DBUILTIN_ELF -DHAVE_CONFIG_H
+DEFS	= -DMAGIC='"$(MAGIC)"' -DBUILTIN_ELF -DELFCORE -DHAVE_CONFIG_H
 CPPFLAGS = $(DEFS)
 CC	= gcc
 #COPTS	= -O -g		# newer compilers allow both; else drop -O
@@ -85,8 +85,9 @@ HDRS = file.h names.h patchlevel.h readelf.h tar.h
 
 AUTOSRC=configure configure.in install-sh config.h.in Makefile.in
 ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) $(HDRS) \
-	 Makefile.std file.man magic.man magic2mime $(AUTOSRC)
-ALLMAGIC =   Magdir/Makefile Magdir/Localstuff Magdir/Header Magdir/[a-z]*
+	 Makefile.std file.man magic.man magic2mime $(AUTOSRC) \
+	 Localstuff Header
+ALLMAGIC =   Magdir/[a-z]*
 
 all:		file magic file.${MANCEXT} magic.${MANFEXT}
 
@@ -102,9 +103,8 @@ file:		$(OBJS)
 		$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
 lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS) | tee $@
-magic:		Magdir
-#		Magdir/Makefile's "install" mv's magic to here for testing.
-		cd Magdir; $(MAKE) install
+magic:		Header Localstuff Magdir
+		cat Header Localstuff Magdir/[a-z]* > $@
 
 ascmagic.o:	names.h
 
