@@ -18,6 +18,16 @@
 >>>16	string		Query		- type %s
 >>>16	string		ExitServer	- type %s
 
+# DOS EPS Binary File Header
+# From: Ed Sznyter <ews@Black.Market.NET>
+0       belong          0xC5D0D3C6      DOS EPS Binary File
+>4      long            >0              Postscript starts at byte %d
+>>8     long            >0              length %d
+>>>12   long            >0              Metafile starts at byte %d
+>>>>16  long            >0              length %d
+>>>20   long            >0              TIFF starts at byte %d
+>>>>24  long            >0              length %d
+
 # Adobe's PostScript Printer Description (PPD) files
 #       Yves Arrouye <arrouye@marin.fdn.fr>
 #

@@ -44,7 +44,7 @@
 # Creative Labs AUDIO stuff
 0	string	MThd			Standard MIDI data
 >9 	byte	>0			(format %d)
->11	byte	>1			using %d channels
+>11	byte	>1			using %d tracks
 0	string	CTMF			Creative Music (CMF) data
 0	string	SBI			SoundBlaster instrument data
 0	string	Creative\ Voice\ File	Creative Labs voice data

@@ -34,3 +34,14 @@
 0	string		\\setlength	LaTeX document text
 0	string		\\documentstyle	LaTeX document text
 0	string		\\chapter	LaTeX document text
+0	string		\\documentclass	LaTeX 2e document text
+0	string		\\relax		LaTeX auxiliary file
+0	string		\\contentsline	LaTeX  table of contents
+
+# Index and glossary files
+0	string		\\indexentry	LaTeX raw index file
+0	string		\\begin{theindex}	LaTeX sorted index
+0	string		\\glossaryentry	LaTeX raw glossary
+0	string		\\begin{theglossary}	LaTeX sorted glossary
+0	string		This\ is\ makeindex	Makeindex log file
+# End of TeX

@@ -1,6 +1,7 @@
+# Generated automatically from Makefile.in by configure.
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.56 1997/11/05 16:03:18 christos Exp $
+# @(#)$Id: Makefile,v 1.57 1998/06/27 14:01:39 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -21,21 +22,26 @@
 #    ever read sources, credits must appear in the documentation.
 #
 # 4. This notice may not be removed or altered.
-VERSION	= 3.23
+VERSION	= 3.25
 SHELL	= /bin/sh
 #MAGIC	= /etc/magic
-MAGIC	= /usr/local/etc/magic
-DEFS	= -DMAGIC='"$(MAGIC)"' -DBUILTIN_ELF # -Dvoid=int
-CC	= cc
-COPTS	= -O -g		# newer compilers allow both; else drop -O
+prefix = /usr/local
+INSTALLCMD = /usr/bin/install -c
+MAGICDIR = ${prefix}/share
+MAGIC	= $(MAGICDIR)/magic
+DEFS	= -DMAGIC='"$(MAGIC)"' -DBUILTIN_ELF -DHAVE_CONFIG_H
+CPPFLAGS = $(DEFS)
+CC	= gcc
+#COPTS	= -O -g		# newer compilers allow both; else drop -O
 # For truly antique environments, use this for (dummy) include files:
-COPTS	= -O # -Ilocalinc
-CFLAGS	= $(COPTS) $(DEFS)
-LDFLAGS	= $(COPTS) # -Bstatic	# older gdb couldn't handle shared libs
+#COPTS	= -O # -Ilocalinc
+#CFLAGS	= $(COPTS) $(DEFS)
+CFLAGS = -g -O2
+#LDFLAGS	= $(COPTS) # -Bstatic	# older gdb couldn't handle shared libs
 SHAR	= bundle
 OFILE	= /usr/bin/file		# old or distributed version, for comparison
 # Where new binary lives; typically /usr/local (BSD), /usr/lbin (USG).
-BINDIR	= /usr/local/bin
+BINDIR	= ${prefix}/bin
 # For installing our man pages; 
 # MANCxxx is manual section for Commands, MANFxxx is section for file formats.
 # MANxDIR is directory names; MANxEXT is the filename extention. Usual values:
@@ -54,9 +60,9 @@ BINDIR	= /usr/local/bin
 # MANCDIR			/usr/man/local/man1
 # MANCEXT			1
 
-MANCDIR	= /usr/local/man/man1
+MANCDIR	= ${prefix}/man/man1
 MANCEXT	= 1
-MANFDIR	= /usr/local/man/man4
+MANFDIR	= ${prefix}/man/man4
 MANFEXT	= 4
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
@@ -75,9 +81,11 @@ SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	compress.o is_tar.o readelf.o internat.o \
 	print.o $(LOCALOBJS)
+HDRS = file.h names.h patchlevel.h readelf.h tar.h
 
-ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
-	 Makefile file.man magic.man 
+AUTOSRC=configure configure.in install-sh config.h.in Makefile.in
+ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) $(HDRS) \
+	 Makefile.std file.man magic.man magic2mime $(AUTOSRC)
 ALLMAGIC =   Magdir/Makefile Magdir/Localstuff Magdir/Header Magdir/[a-z]*
 
 all:		file magic file.${MANCEXT} magic.${MANFEXT}
@@ -103,8 +111,11 @@ ascmagic.o:	names.h
 compress.o apprentice.o ascmagic.o file.o fsmagic.o print.o softmagic.o: file.h
 
 install:	file magic
-		cp file	$(BINDIR)/file
-		cp magic $(MAGIC)
+		-mkdir $(BINDIR) $(MAGICDIR) $(MANCDIR) $(MANFDIR)
+		$(INSTALLCMD) file	$(BINDIR)/file
+		$(INSTALLCMD) magic $(MAGIC)
+		$(INSTALLCMD) file.${MANCEXT} $(MANCDIR)/file.$(MANCEXT)
+		$(INSTALLCMD) magic.${MANFEXT} $(MANFDIR)/magic.$(MANFEXT)
 
 install.man: file.${MANCEXT} magic.${MANFEXT}
 		cp file.${MANCEXT} $(MANCDIR)/file.$(MANCEXT)
@@ -112,7 +123,8 @@ install.man: file.${MANCEXT} magic.${MANFEXT}
 
 clean:
 		rm -f *.o core file magic lint dist.* MANIFEST \
-		      magic.${MANFEXT} file.${MANCEXT}
+		      magic.${MANFEXT} file.${MANCEXT} \
+		      config.h config.status config.cache config.log
 clobber:
 		cd tst; $(MAKE) clean
 

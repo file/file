@@ -104,3 +104,42 @@
 >3	string		=7		\b, compression block size 700k
 >3	string		=8		\b, compression block size 800k
 >3	string		=9		\b, compression block size 900k
+
+# lzop from <markus.oberhumer@jk.uni-linz.ac.at>
+0	string		\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a	lzop compressed data
+>9	beshort		<0x0940
+>>9	byte&0xf0	=0x00		- version 0.
+>>9	beshort&0x0fff	x		\b%03x,
+>>13	byte		1		LZO1X-1,
+>>13	byte		2		LZO1X-1(15),
+>>13	byte		3		LZO1X-999,
+## >>22	bedate		>0		last modified: %s,
+>>14	byte		=0x00		os: MS-DOS
+>>14	byte		=0x01		os: Amiga
+>>14	byte		=0x02		os: VMS
+>>14	byte		=0x03		os: Unix
+>>14	byte		=0x05		os: Atari
+>>14	byte		=0x06		os: OS/2
+>>14	byte		=0x07		os: MacOS
+>>14	byte		=0x0A		os: Tops/20
+>>14	byte		=0x0B		os: WinNT
+>>14	byte		=0x0E		os: Win32
+>9	beshort		>0x0939
+>>9	byte&0xf0	=0x00		- version 0.
+>>9	byte&0xf0	=0x10		- version 1.
+>>9	byte&0xf0	=0x20		- version 2.
+>>9	beshort&0x0fff	x		\b%03x,
+>>15	byte		1		LZO1X-1,
+>>15	byte		2		LZO1X-1(15),
+>>15	byte		3		LZO1X-999,
+## >>25	bedate		>0		last modified: %s,
+>>17	byte		=0x00		os: MS-DOS
+>>17	byte		=0x01		os: Amiga
+>>17	byte		=0x02		os: VMS
+>>17	byte		=0x03		os: Unix
+>>17	byte		=0x05		os: Atari
+>>17	byte		=0x06		os: OS/2
+>>17	byte		=0x07		os: MacOS
+>>17	byte		=0x0A		os: Tops/20
+>>17	byte		=0x0B		os: WinNT
+>>17	byte		=0x0E		os: Win32

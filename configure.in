@@ -12,4 +12,7 @@ AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 AC_STRUCT_ST_RDEV
 
+dnl Checks for headers
+AC_HEADER_SYS_WAIT
+
 AC_OUTPUT(Makefile config.h)
