@@ -17,14 +17,14 @@
 #endif
 #include "file.h"
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.11 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.12 1998/06/27 13:57:23 christos Exp $")
 #endif
 
 
 static struct {
-   char *magic;
+   const char *magic;
    int   maglen;
-   char *argv[3];
+   const char *const argv[3];
    int	 silent;
 } compr[] = {
     { "\037\235", 2, { "uncompress", "-c", NULL }, 0 },	/* compressed */
@@ -97,7 +97,8 @@ int n;
 		if (compr[method].silent)
 		    (void) close(2);
 
-		execvp(compr[method].argv[0], compr[method].argv);
+		execvp(compr[method].argv[0],
+		       (char *const *)compr[method].argv);
 		error("could not execute `%s' (%s).\n", 
 		      compr[method].argv[0], strerror(errno));
 		/*NOTREACHED*/

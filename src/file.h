@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.26 1998/06/27 13:23:39 christos Exp $
+ * @(#)$Id: file.h,v 1.27 1998/06/27 13:57:23 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -88,7 +88,7 @@ struct magic {
 # endif
 #endif
 
-extern int   apprentice		__P((char *, int));
+extern int   apprentice		__P((const char *, int));
 extern int   ascmagic		__P((unsigned char *, int));
 extern void  error		__P((const char *, ...));
 extern void  ckfputs		__P((const char *, FILE *));
@@ -112,7 +112,7 @@ extern void tryelf		__P((int, char *, int));
 extern int errno;		/* Some unixes don't define this..	*/
 
 extern char *progname;		/* the program name 			*/
-extern char *magicfile;		/* name of the magic file		*/
+extern const char *magicfile;	/* name of the magic file		*/
 extern int lineno;		/* current line number in magic file	*/
 
 extern struct magic *magic;	/* array of magic entries		*/

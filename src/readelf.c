@@ -15,7 +15,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.7 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.8 1998/06/27 13:57:23 christos Exp $")
 #endif
 
 static void
@@ -239,7 +239,8 @@ tryelf(fd, buf, nbytes)
 	 * Instead we traverse thru all section headers until a symbol table
 	 * one is found or else the binary is stripped.
 	 */
-	if (buf[EI_MAG0] != ELFMAG0 || buf[EI_MAG1] != ELFMAG1
+	if (buf[EI_MAG0] != ELFMAG0
+	    || (buf[EI_MAG1] != ELFMAG1 && buf[EI_MAG1] != OLFMAG1)
 	    || buf[EI_MAG2] != ELFMAG2 || buf[EI_MAG3] != ELFMAG3)
 	    return;
 

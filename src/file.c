@@ -48,7 +48,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.40 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.41 1998/06/27 13:57:23 christos Exp $")
 #endif	/* lint */
 
 
@@ -73,7 +73,7 @@ int			/* Misc globals				*/
 
 struct  magic *magic;	/* array of magic entries		*/
 
-char *magicfile;	/* where magic be found 		*/
+const char *magicfile;	/* where magic be found 		*/
 
 char *progname;		/* used throughout 			*/
 int lineno;		/* line number in the magic file	*/
@@ -84,6 +84,8 @@ static void	unwrap		__P((char *fn));
 static int	byteconv4	__P((int, int, int));
 static short	byteconv2	__P((int, int, int));
 #endif
+
+int main __P((int, char *[]));
 
 /*
  * main - parse arguments and handle options

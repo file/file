@@ -23,6 +23,18 @@
 #
 0	string		\007\001\000	Linux/i386 object file
 >20	lelong		>0x1020		\b, DLL library
+# Linux-8086 stuff:
+0	string		\01\03\020\04	Linux-8086 impure executable
+>28	long		!0		not stripped
+0	string		\01\03\040\04	Linux-8086 executable
+>28	long		!0		not stripped
+#
+0	string		\243\206\001\0	Linux-8086 object file
+#
+0	string		\01\03\020\20	Minix-386 impure executable
+>28	long		!0		not stripped
+0	string		\01\03\040\20	Minix-386 executable
+>28	long		!0		not stripped
 # message catalogs, from Mitchum DSouza <m.dsouza@mrc-apu.cam.ac.uk>
 0	string		*nazgul*	Linux compiled message catalog
 >8	lelong		>0		\b, version %ld
@@ -66,7 +78,7 @@
 #
 # Linux kernel boot images, from Albert Cahalan <acahalan@cs.uml.edu>
 # and others such as Axel Kohlmeyer <akohlmey@rincewind.chemie.uni-ulm.de>
-# and Nicolas Lichtmaier <nick@debian.org>
+# and Nicolás Lichtmaier <nick@debian.org>
 # All known start with: b8 c0 07 8e d8 b8 00 90 8e c0 b9 00 01 29 f6 29
 514		string	HdrS		Linux kernel
 >518		leshort	>0
@@ -88,5 +100,5 @@
 0		belong	0xb8c0078e	Linux kernel
 >0x1e3		string	Loading		version 1.3.79 or older
 >0x1e9		string	Loading		from prehistoric times
-# LSM entries - Nicolas Lichtmaier <nick@feedback.com.ar>
+# LSM entries - Nicolás Lichtmaier <nick@feedback.net.ar>
 0	string	Begin3	Linux Software Map entry text

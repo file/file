@@ -33,4 +33,30 @@
 >>0x36	string	FAT			\b, %s
 >>>0x39	string	12			(%s bit)
 >>>0x39	string	16			(%s bit)
+>>>43	string		>NO\ NAME	label: %.11s,
+>>>43	string		<NO\ NAME	label: %.11s,
+>>>43	string		NO\ NAME	unlabeled,
+>>>19	leshort		>0		%d sectors
+>>>19	leshort		0		
+>>>>32	lelong		x		%d sectors
 >0x200	lelong	0x82564557		\b, BSD disklabel
+
+# Minix filesystems - Juan Cespedes <cespedes@debian.org>
+0x410	leshort		0x137f		Minix filesystem
+0x410	leshort		0x138f		Minix filesystem, 30 char names
+0x410	leshort		0x2468		Minix filesystem, version 2
+0x410	leshort		0x2478		Minix filesystem, version 2, 30 char names
+
+# romfs filesystems - Juan Cespedes <cespedes@debian.org>
+0	string		-rom1fs-\0	romfs filesystem, version 1
+>8	belong	x			%d bytes,
+>16	string	x			named %s.
+
+# netboot image - Juan Cespedes <cespedes@debian.org>
+0	lelong		0x1b031336L	Netboot image,
+>4	lelong&0xFFFFFF00	0
+>>4	lelong&0x100	0x000		mode 2
+>>4	lelong&0x100	0x100		mode 3
+>4	lelong&0xFFFFFF00	!0	unknown mode
+
+0x18b	string	OS/2	OS/2 Boot Manager

@@ -9,10 +9,11 @@
 0	leshort	0x602	ALAN text adventure code data
 >2	byte	<10	version 2.6%d
 
+# Conflicts with too much other stuff!
 # Infocom 
-0	byte	<9	Infocom game data (Z-machine %d,
->3	leshort	<0x7fff	Release %3d,
->18	string	>\0	Serial %.6s)
+#0	byte	<9	Infocom game data (Z-machine %d,
+#>3	leshort	<0x7fff	Release %3d,
+#>18	string	>\0	Serial %.6s)
 
 # TADS (Text Adventure Development System)
 0	string	TADS	TADS game data

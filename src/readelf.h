@@ -1,6 +1,6 @@
 /*
  * readelf.h 
- * @(#)$Id: readelf.h,v 1.4 1997/01/15 17:23:24 christos Exp $
+ * @(#)$Id: readelf.h,v 1.5 1998/06/27 13:57:23 christos Exp $
  *
  * Provide elf data structures for non-elf machines, allowing file
  * non-elf hosts to determine if an elf binary is stripped.
@@ -91,6 +91,9 @@ typedef struct {
 #define	ELFMAG2		'L'
 #define	ELFMAG3		'F'
 #define	ELFMAG		"\177ELF"
+
+#define	OLFMAG1		'O'
+#define	OLFMAG		"\177OLF"
 
 typedef struct {
     Elf32_Word	p_type;

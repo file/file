@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.26 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.27 1998/06/27 13:57:23 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -50,11 +50,11 @@ static void eatsize	__P((char **));
 
 static int maxmagic = 0;
 
-static int apprentice_1	__P((char *, int));
+static int apprentice_1	__P((const char *, int));
 
 int
 apprentice(fn, check)
-char *fn;			/* list of magic files */
+const char *fn;			/* list of magic files */
 int check;			/* non-zero? checking-only run. */
 {
 	char *p, *mfn;
@@ -93,7 +93,7 @@ int check;			/* non-zero? checking-only run. */
 
 static int
 apprentice_1(fn, check)
-char *fn;			/* name of magic file */
+const char *fn;			/* name of magic file */
 int check;			/* non-zero? checking-only run. */
 {
 	static const char hdr[] =

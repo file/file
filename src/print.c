@@ -39,7 +39,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.25 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.26 1998/06/27 13:57:23 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -48,10 +48,10 @@ void
 mdump(m)
 struct magic *m;
 {
-	static char *typ[] = {   "invalid", "byte", "short", "invalid",
-				 "long", "string", "date", "beshort",
-				 "belong", "bedate", "leshort", "lelong",
-				 "ledate" };
+	static const char *typ[] = { "invalid", "byte", "short", "invalid",
+				     "long", "string", "date", "beshort",
+				     "belong", "bedate", "leshort", "lelong",
+				     "ledate" };
 	(void) fputc('[', stderr);
 	(void) fprintf(stderr, ">>>>>>>> %d" + 8 - (m->cont_level & 7),
 		       m->offset);
