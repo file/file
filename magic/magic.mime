@@ -647,17 +647,17 @@
 #
 # Executables
 #
-0       string          \177ELF 
->4      byte            0
->4      byte            1
->4      byte            2
->5      byte            0
->5      byte            1
->>16    leshort         0
->>16    leshort         1               application/x-object
->>16    leshort         2               application/x-executable
->>16    leshort         3               application/x-sharedlib
->>16    leshort         4               application/x-coredump
+0	string		\177ELF 
+>16	leshort		0		application/octet-stream
+>16	leshort		1		application/x-object
+>16	leshort		2		application/x-executable
+>16	leshort		3		application/x-sharedlib
+>16	leshort		4		application/x-coredump
+>16	beshort		0		application/octet-stream
+>16	beshort		1		application/x-object
+>16	beshort		2		application/x-executable
+>16	beshort		3		application/x-sharedlib
+>16	beshort		4		application/x-coredump
 #
 # DOS
 0		string			MZ				application/x-dosexec

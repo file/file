@@ -199,6 +199,7 @@ Magdir/vxl \
 Magdir/wordprocessors \
 Magdir/xdelta \
 Magdir/xenix \
+Magdir/xo65 \
 Magdir/xwindows \
 Magdir/zilog \
 Magdir/zyxel
