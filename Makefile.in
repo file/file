@@ -72,7 +72,7 @@ bin_PROGRAMS = file
 data_DATA = magic magic.mime magic.mgc magic.mime.mgc
 
 MAGIC = @datadir@/magic
-CPPFLAGS = -DMAGIC='"$(MAGIC)"'
+AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
 @FSECT5_TRUE@man_MAGIC = @FSECT5_TRUE@magic.5
 @FSECT5_FALSE@man_MAGIC = @FSECT5_FALSE@magic.4
 fsect = @fsect@
@@ -255,6 +255,7 @@ PROGRAMS =  $(bin_PROGRAMS)
 
 
 DEFS = @DEFS@ -I. -I$(srcdir) -I.
+CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 file_OBJECTS =  file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
