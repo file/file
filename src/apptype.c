@@ -31,7 +31,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apptype.c,v 1.3 2003/06/10 18:28:37 christos Exp $")
+FILE_RCSID("@(#)$Id: apptype.c,v 1.4 2003/10/14 19:17:17 christos Exp $")
 #endif /* lint */
 
 #ifdef __EMX__
@@ -47,32 +47,31 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const void *buf,
     size_t nb)
 {
 	APPTYPE         rc, type;
-	char            path[_MAX_PATH], drive[_MAX_DRIVE], dir[_MAX_DIR], fname[_MAX_FNAME],
-	                ext[_MAX_EXT];
+	char            path[_MAX_PATH], drive[_MAX_DRIVE], dir[_MAX_DIR],
+			fname[_MAX_FNAME], ext[_MAX_EXT];
 	char           *filename;
 	FILE           *fp;
 
 	if (fn)
 		filename = strdup(fn);
 	else if ((filename = tempnam("./", "tmp")) == NULL) {
-		error("can't create tempnam (%s).\n", strerror(errno));
+		file_error(ms, errno, "Can't create tempnam");
+		return -1;
 	}
 	/* qualify the filename to prevent extraneous searches */
 	_splitpath(filename, drive, dir, fname, ext);
-	sprintf(path, "%s%s%s%s", drive,
+	(void)sprintf(path, "%s%s%s%s", drive,
 		(*dir == '\0') ? "./" : dir,
 		fname,
 		(*ext == '\0') ? "." : ext);
 
 	if (fn == NULL) {
 		if ((fp = fopen(path, "wb")) == NULL) {
-			file_error("Can't open tmp file `%s' (%s)", path,
-			    strerror(errno));
+			file_error(ms, errno, "Can't open tmp file `%s'", path);
 			return -1;
 		}
 		if (fwrite(buf, 1, nb, fp) != nb) {
-			file_error("Can't write tmp file `%s' (%s)", path,
-			    strerror(errno));
+			file_error(ms, errno, "Can't write tmp file `%s'", path);
 			return -1;
 		}
 		(void)fclose(fp);

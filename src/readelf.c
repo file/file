@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.33 2003/09/16 15:38:46 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.34 2003/10/14 19:17:17 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -222,7 +222,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	ssize_t bufsize;
 
 	if (size != ph_size) {
-		file_error(ms, "Corrupted program header size");
+		file_error(ms, 0, "Corrupted program header size");
 		return -1;
 	}
 	/*
@@ -543,7 +543,7 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
 	Elf64_Shdr sh64;
 
 	if (size != sh_size) {
-		file_error(ms, "Corrupted section header size");
+		file_error(ms, 0, "Corrupted section header size");
 		return -1;
 	}
 
@@ -587,7 +587,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	off_t savedoffset;
 
 	if (size != ph_size) {
-		file_error(ms, "Corrupted program header size");
+		file_error(ms, 0, "Corrupted program header size");
 		return -1;
 	}
 	if (lseek(fd, off, SEEK_SET) == (off_t)-1) {

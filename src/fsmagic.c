@@ -62,13 +62,18 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.41 2003/05/23 21:31:58 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.42 2003/10/14 19:17:17 christos Exp $")
 #endif	/* lint */
 
 protected int
 file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 {
 	int ret = 0;
+#ifdef	S_IFLNK
+	char buf[BUFSIZ+4];
+	int nch;
+	struct stat tstatbuf;
+#endif
 
 	if (fn == NULL)
 		return 0;
@@ -85,6 +90,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	ret = stat(fn, sb);	/* don't merge into if; see "ret =" above */
 
 	if (ret) {
+		if (ms->flags & MAGIC_ERROR) {
+			file_error(ms, errno, "Can't stat `%s'", fn);
+			return -1;
+		}
 		if (file_printf(ms, "Can't stat `%s' (%s)",
 		    fn, strerror(errno)) == -1)
 			return -1;
@@ -189,69 +198,84 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 #endif
 #ifdef	S_IFLNK
 	case S_IFLNK:
-		{
-			char buf[BUFSIZ+4];
-			int nch;
-			struct stat tstatbuf;
-
-			if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
-				if (file_printf(ms,
-				    "unreadable symlink `%s' (%s)", 
-				    strerror(errno)) == -1)
-					return -1;
-				return 1;
+		if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
+			if (ms->flags & MAGIC_ERROR) {
+			    file_error(ms, errno, "unreadable symlink `%s'",
+				fn);
+			    return -1;
 			}
-			buf[nch] = '\0';	/* readlink(2) forgets this */
+			if (file_printf(ms,
+			    "unreadable symlink `%s' (%s)", fn,
+			    strerror(errno)) == -1)
+				return -1;
+			return 1;
+		}
+		buf[nch] = '\0';	/* readlink(2) forgets this */
 
-			/* If broken symlink, say so and quit early. */
-			if (*buf == '/') {
-			    if (stat(buf, &tstatbuf) < 0) {
+		/* If broken symlink, say so and quit early. */
+		if (*buf == '/') {
+		    if (stat(buf, &tstatbuf) < 0) {
+			    if (ms->flags & MAGIC_ERROR) {
+				    file_error(ms, errno, 
+					"broken symbolic link to `%s'", buf);
+				    return -1;
+			    } 
+			    if (file_printf(ms, "broken symbolic link to `%s'",
+				buf) == -1)
+				    return -1;
+			    return 1;
+		    }
+		}
+		else {
+			char *tmp;
+			char buf2[BUFSIZ+BUFSIZ+4];
+
+			if ((tmp = strrchr(fn,  '/')) == NULL) {
+				tmp = buf; /* in current directory anyway */
+			} else {
+				if (tmp - fn + 1 > BUFSIZ) {
+					if (ms->flags & MAGIC_ERROR) {
+						file_error(ms, 0, 
+						    "path too long: `%s'", buf);
+						return -1;
+					}
+					if (file_printf(ms,
+					    "path too long: `%s'", fn) == -1)
+						return -1;
+					return 1;
+				}
+				(void)strcpy(buf2, fn);  /* take dir part */
+				buf2[tmp - fn + 1] = '\0';
+				(void)strcat(buf2, buf); /* plus (rel) link */
+				tmp = buf2;
+			}
+			if (stat(tmp, &tstatbuf) < 0) {
+				if (ms->flags & MAGIC_ERROR) {
+					file_error(ms, errno, 
+					    "broken symbolic link to `%s'",
+					    buf);
+					return -1;
+				}
 				if (file_printf(ms,
 				    "broken symbolic link to `%s'", buf) == -1)
 					return -1;
 				return 1;
-			    }
-			}
-			else {
-			    char *tmp;
-			    char buf2[BUFSIZ+BUFSIZ+4];
-
-			    if ((tmp = strrchr(fn,  '/')) == NULL) {
-				tmp = buf; /* in current directory anyway */
-			    }
-			    else {
-				if (tmp - fn + 1 > BUFSIZ) {
-				    file_printf(ms, "path too long: `%s'", fn);
-				    return -1;
-				}
-				strcpy(buf2, fn);  /* take directory part */
-				buf2[tmp-fn+1] = '\0';
-				strcat(buf2, buf); /* plus (relative) symlink */
-				tmp = buf2;
-			    }
-			    if (stat(tmp, &tstatbuf) < 0) {
-				if (file_printf(ms,
-				    "broken symbolic link to `%s'",
-				    buf) == -1)
-					return -1;
-				return 1;
-			    }
-                        }
-
-			/* Otherwise, handle it. */
-			if ((ms->flags & MAGIC_SYMLINK) != 0) {
-				const char *p;
-				ms->flags &= MAGIC_SYMLINK;
-				p = magic_file(ms, buf);
-				ms->flags |= MAGIC_SYMLINK;
-				return p != NULL ? 1 : -1;
-			} else { /* just print what it points to */
-				if (file_printf(ms, "symbolic link to `%s'",
-				    buf) == -1)
-					return -1;
 			}
 		}
-		return 1;
+
+		/* Otherwise, handle it. */
+		if ((ms->flags & MAGIC_SYMLINK) != 0) {
+			const char *p;
+			ms->flags &= MAGIC_SYMLINK;
+			p = magic_file(ms, buf);
+			ms->flags |= MAGIC_SYMLINK;
+			return p != NULL ? 1 : -1;
+		} else { /* just print what it points to */
+			if (file_printf(ms, "symbolic link to `%s'",
+			    buf) == -1)
+				return -1;
+		}
+	return 1;
 #endif
 #ifdef	S_IFSOCK
 #ifndef __COHERENT__
@@ -264,7 +288,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	case S_IFREG:
 		break;
 	default:
-		file_error(ms, "invalid mode 0%o", sb->st_mode);
+		file_error(ms, 0, "invalid mode 0%o", sb->st_mode);
 		return -1;
 		/*NOTREACHED*/
 	}

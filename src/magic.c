@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.12 2003/10/09 15:15:23 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.13 2003/10/14 19:17:17 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -112,6 +112,7 @@ magic_open(int flags)
 		return NULL;
 	}
 	ms->haderr = 0;
+	ms->error = -1;
 	ms->mlist = NULL;
 	return ms;
 }
@@ -246,7 +247,7 @@ magic_file(struct magic_set *ms, const char *inname)
 	 * try looking at the first HOWMANY bytes
 	 */
 	if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
-		file_error(ms, "Cannot read `%s' %s", inname, strerror(errno));
+		file_error(ms, errno, "Cannot read `%s'", inname);
 		goto done;
 	}
 
