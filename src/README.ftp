@@ -1,0 +1,5 @@
+This directory has two files, dist.src.Z and dist.magic.Z.
+They are both compressed shar (shell archive) files; uncompress
+and run through /bin/sh. dist.src contains the source code,
+Makefile, and various odds and ends. Magic contains only
+the pieces to make up /etc/magic.
