@@ -11,6 +11,7 @@
 extern char *progname;
 extern char *magicfile;
 extern int debug, nmagic;	/* number of valid magic[]s */
+extern void showstr();
 
 mdump(m)
 struct magic *m;
@@ -22,7 +23,7 @@ struct magic *m;
 		m->reln,
 		0);
 	if (m->type == STRING)
-		(void) printf("%s",m->value.s);
+		showstr(m->value.s);
 	else
 		(void) printf("%d",m->value.l);
 	(void) printf("\t%s", m->desc);
