@@ -5,7 +5,7 @@
  * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
  *
  * @(#)list.c 1.18 9/23/86 Public Domain - gnu
- * $Id: is_tar.c,v 1.17 2002/07/03 18:26:38 christos Exp $
+ * $Id: is_tar.c,v 1.18 2003/03/23 04:06:05 christos Exp $
  *
  * Comments changed and some code/comments reformatted
  * for file command by Ian Darwin.
@@ -18,12 +18,12 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.17 2002/07/03 18:26:38 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.18 2003/03/23 04:06:05 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
 
-static int from_oct(int, char *);	/* Decode octal number */
+private int from_oct(int, char *);	/* Decode octal number */
 
 /*
  * Return 
@@ -31,8 +31,8 @@ static int from_oct(int, char *);	/* Decode octal number */
  *	1 for old UNIX tar file,
  *	2 for Unix Std (POSIX) tar file.
  */
-int
-is_tar(unsigned char *buf, int nbytes)
+protected int
+file_is_tar(const unsigned char *buf, size_t nbytes)
 {
 	union record *header = (union record *)buf;
 	int	i;
@@ -74,7 +74,7 @@ is_tar(unsigned char *buf, int nbytes)
  *
  * Result is -1 if the field is invalid (all blank, or nonoctal).
  */
-static int
+private int
 from_oct(int digs, char *where)
 {
 	int	value;

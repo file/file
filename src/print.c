@@ -26,6 +26,8 @@
  */
 
 #include "file.h"
+#include <stdio.h>
+#include <errno.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -35,21 +37,21 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.39 2002/07/09 15:46:23 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.40 2003/03/23 04:06:05 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
 
 #ifndef COMPILE_ONLY
-void
-mdump(struct magic *m)
+protected void
+file_mdump(struct magic *m)
 {
-	static const char *typ[] = { "invalid", "byte", "short", "invalid",
+	private const char *typ[] = { "invalid", "byte", "short", "invalid",
 				     "long", "string", "date", "beshort",
 				     "belong", "bedate", "leshort", "lelong",
 				     "ledate", "pstring", "ldate", "beldate",
 				     "leldate", "regex" };
-	static const char optyp[] = { '@', '&', '|', '^', '+', '-', 
+	private const char optyp[] = { '@', '&', '|', '^', '+', '-', 
 				      '*', '/', '%' };
 	(void) fputc('[', stderr);
 	(void) fprintf(stderr, ">>>>>>>> %d" + 8 - (m->cont_level & 7),
@@ -105,17 +107,19 @@ mdump(struct magic *m)
 		case STRING:
 		case PSTRING:
 		case REGEX:
-			showstr(stderr, m->value.s, -1);
+			file_showstr(stderr, m->value.s, -1);
 			break;
 		case DATE:
 		case LEDATE:
 		case BEDATE:
-			(void)fprintf(stderr, "%s,", fmttime(m->value.l, 1));
+			(void)fprintf(stderr, "%s,",
+			    file_fmttime(m->value.l, 1));
 			break;
 		case LDATE:
 		case LELDATE:
 		case BELDATE:
-			(void)fprintf(stderr, "%s,", fmttime(m->value.l, 0));
+			(void)fprintf(stderr, "%s,",
+			    file_fmttime(m->value.l, 0));
 			break;
 		default:
 			(void) fputs("*bad*", stderr);
@@ -126,72 +130,23 @@ mdump(struct magic *m)
 }
 #endif
 
-/*
- * ckfputs - fputs, but with error checking
- * ckfprintf - fprintf, but with error checking
- */
-void
-ckfputs(const char *str, FILE *fil)
-{
-	if (fputs(str,fil) == EOF)
-		error("write failed.\n");
-}
-
 /*VARARGS*/
-void
-ckfprintf(FILE *f, const char *fmt, ...)
+protected void
+file_magwarn(const char *f, ...)
 {
 	va_list va;
-
-	va_start(va, fmt);
-	(void) vfprintf(f, fmt, va);
-	if (ferror(f))
-		error("write failed.\n");
-	va_end(va);
-}
-
-/*
- * error - print best error message possible and exit
- */
-/*VARARGS*/
-void
-error(const char *f, ...)
-{
-	va_list va;
-
 	va_start(va, f);
+
 	/* cuz we use stdout for most, stderr here */
 	(void) fflush(stdout); 
 
-	if (progname != NULL) 
-		(void) fprintf(stderr, "%s: ", progname);
-	(void) vfprintf(stderr, f, va);
-	va_end(va);
-	exit(1);
-}
-
-/*VARARGS*/
-void
-magwarn(const char *f, ...)
-{
-	va_list va;
-
-	va_start(va, f);
-	/* cuz we use stdout for most, stderr here */
-	(void) fflush(stdout); 
-
-	if (progname != NULL) 
-		(void) fprintf(stderr, "%s: %s, %d: ", 
-			       progname, magicfile, lineno);
 	(void) vfprintf(stderr, f, va);
 	va_end(va);
 	fputc('\n', stderr);
 }
 
-
-#ifndef COMPILE_ONLY
-char *
-fmttime(long v, int local)
+protected char *
+file_fmttime(long v, int local)
 {
 	char *pp, *rt;
 	time_t t = (time_t)v;
@@ -201,9 +156,9 @@ fmttime(long v, int local)
 		pp = ctime(&t);
 	} else {
 #ifndef HAVE_DAYLIGHT
-		static int daylight = 0;
+		private int daylight = 0;
 #ifdef HAVE_TM_ISDST
-		static time_t now = (time_t)0;
+		private time_t now = (time_t)0;
 
 		if (now == (time_t)0) {
 			struct tm *tm1;
@@ -223,4 +178,3 @@ fmttime(long v, int local)
 		*rt = '\0';
 	return pp;
 }
-#endif

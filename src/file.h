@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.45 2003/02/08 18:33:53 christos Exp $
+ * @(#)$Id: file.h,v 1.46 2003/03/23 04:06:05 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -39,15 +39,23 @@
 #include <config.h>
 #endif
 
+#include <stdio.h>	/* Include that here, to make sure __P gets defined */
 #include <errno.h>
-#include <stdio.h>
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
-#elif defined(HAVE_INTTYPES_H)
+#endif
+#ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
 /* Do this here and now, because struct stat gets re-defined on solaris */
 #include <sys/stat.h>
+
+
+#define private static
+#ifndef protected
+#define protected
+#endif
+#define public
 
 #ifndef HOWMANY
 # define HOWMANY 65536		/* how much of the file to look at */
@@ -131,48 +139,50 @@ struct magic {
 /* list of magic entries */
 struct mlist {
 	struct magic *magic;		/* array of magic entries */
-	uint32_t nmagic;		/* number of entries in array */
+	uint32_t nmagic;			/* number of entries in array */
+	int mapped;  /* allocation type: 0 => apprentice_file
+		      *                  1 => apprentice_map + malloc
+		      *                  2 => apprentice_map + mmap */
 	struct mlist *next, *prev;
 };
 
-extern int   apprentice(const char *, int);
-extern int   ascmagic(unsigned char *, int);
-extern void  error(const char *, ...);
-extern void  ckfputs(const char *, FILE *);
+struct magic_set {
+    struct mlist *mlist;
+    struct cont {
+	size_t len;
+	int32_t *off;
+    } c;
+    struct out {
+	char *buf;
+	char *ptr;
+	size_t len;
+	size_t size;
+    } o;
+    int flags;
+    int haderr;
+};
+
 struct stat;
-extern int   fsmagic(const char *, struct stat *);
-extern char *fmttime(long, int);
-extern int   is_compress(const unsigned char *, int *);
-extern int   is_tar(unsigned char *, int);
-extern void  magwarn(const char *, ...);
-extern void  mdump(struct magic *);
-extern void  process(const char *, int);
-extern void  showstr(FILE *, const char *, int);
-extern int   softmagic(unsigned char *, int);
-extern int   tryit(const char *, unsigned char *, int, int);
-extern int   zmagic(const char *, unsigned char *, int);
-extern void  ckfprintf(FILE *, const char *, ...);
-extern uint32_t signextend(struct magic *, unsigned int32);
-extern void tryelf(int, unsigned char *, int);
-extern int pipe2file(int, void *, size_t);
-
-
-extern char *progname;		/* the program name 			*/
-extern const char *magicfile;	/* name of the magic file		*/
-extern int lineno;		/* current line number in magic file	*/
-
-extern struct mlist mlist;	/* list of arrays of magic entries	*/
-
-extern int debug;		/* enable debugging?			*/
-extern int zflag;		/* process compressed files?		*/
-extern int lflag;		/* follow symbolic links?		*/
-extern int sflag;		/* read/analyze block special files?	*/
-extern int iflag;		/* Output types as mime-types		*/
-
-#ifdef NEED_GETOPT
-extern int optind;		/* From getopt(3)			*/
-extern char *optarg;
-#endif
+protected char *file_fmttime(long, int);
+protected int file_buf(struct magic_set *, const void *buf, size_t);
+protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
+protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
+protected int file_printf(struct magic_set *, const char *, ...);
+protected int file_reset(struct magic_set *);
+protected int file_tryelf(struct magic_set *, int, const unsigned char *, size_t);
+protected int file_zmagic(struct magic_set *, const unsigned char *, size_t);
+protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
+protected int file_is_tar(const unsigned char *, size_t);
+protected int file_softmagic(struct magic_set *, const unsigned char *, size_t);
+protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
+protected uint32_t file_signextend(struct magic_set *, struct magic *, uint32_t);
+protected void file_badread(struct magic_set *);
+protected void file_badseek(struct magic_set *);
+protected void file_oomem(struct magic_set *);
+protected void file_error(struct magic_set *, const char *, ...);
+protected void file_magwarn(const char *, ...);
+protected void file_mdump(struct magic *);
+protected void file_showstr(FILE *, const char *, int);
 
 #ifndef HAVE_STRERROR
 extern int sys_nerr;
@@ -193,5 +203,6 @@ extern char *sys_errlist[];
 static const char *rcsid(const char *p) { \
 	return rcsid(p = id); \
 }
+#else
 
 #endif /* __file_h__ */
