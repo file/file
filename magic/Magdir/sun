@@ -8,6 +8,7 @@
 >>20	belong		<4096		shared library
 >>20	belong		=4096		dynamically linked executable
 >>20	belong		>4096		dynamically linked executable
+>0	byte		^0x80		executable
 >16	belong		>0		not stripped
 0	belong&0777777	0600410		sparc pure
 >0	byte		&0x80		dynamically linked executable
