@@ -26,19 +26,29 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.10 1992/05/21 16:16:41 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.11 1992/05/22 17:58:06 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
 extern char *magicfile;	/* name of current /etc/magic or clone */
 extern int debug, nmagic;
-extern FILE *efopen();
 extern struct magic magic[];
 static int magindex;
+#if	defined(__STDC__) || defined(__cplusplus)
+static int match(unsigned char *s);
+static int mcheck(unsigned char	*s, struct magic *m);
+static void mprint(struct magic *m, unsigned char *s);
+#else
+static int match();
+static int mcheck();
+static void mprint();
+#endif
 
 /*
  * softmagic - lookup one file in database 
@@ -46,6 +56,7 @@ static int magindex;
  * Passed the name and FILE * of one file to be typed.
  */
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
+int
 softmagic(buf, nbytes)
 unsigned char *buf;
 int nbytes;
@@ -61,6 +72,7 @@ int nbytes;
  * go through the whole list, stopping if you find a match.
  * Be sure to process every continuation of this match.
  */
+static int
 match(s)
 unsigned char	*s;
 {
@@ -94,13 +106,13 @@ unsigned char	*s;
 	return 0;				/* no match at all */
 }
 
-
-mprint(m,s)
+static void
+mprint(m, s)
 struct magic *m;
 unsigned char *s;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
-	char *pp, *strchr();
+	char *pp;
 
   	switch (m->type) {
   	case BYTE:
@@ -126,7 +138,7 @@ unsigned char *s;
 	}
 }
 
-int
+static int
 mcheck(s, m)
 unsigned char	*s;
 struct magic *m;
