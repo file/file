@@ -119,3 +119,22 @@
 >14	beshort		=1			single song,
 >14	beshort		>1			%d songs,
 >16	beshort		>0			default song: %d
+
+
+# IRCAM <mpruett@sgi.com>
+0	belong		0x64a30400		IRCAM file (NeXT)
+0	belong		0x64a30200		IRCAM file (Sun)
+0	belong		0x64a30300		IRCAM file (MIPS little-endian)
+0	belong		0x0001a364		IRCAM file
+
+# NIST SPHERE <mpruett@sgi.com>
+0	string		NIST_1A\n\ \ \ 1024\n	NIST SPHERE file
+
+# Sample Vision <mpruett@sgi.com>
+0	string		SOUND\ SAMPLE\ DATA\ 	Sample Vision file
+
+# Audio Visual Research <mpruett@sgi.com>
+0	string		2BIT			Audio Visual Research file
+
+# From Felix von Leitner <leitner@fefe.de>
+0	string		OggS	Ogg-Vorbis compressed sound file
