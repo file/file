@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.10 1999/02/14 17:16:10 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.11 1999/10/31 22:23:04 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -147,7 +147,7 @@ doshn(class, swap, fd, off, num, size)
 	for ( ; num; num--) {
 		if (read(fd, sh_addr, size) == -1)
 			error("read failed (%s).\n", strerror(errno));
-		if (shs_type == SHT_SYMTAB || shs_type == SHT_DYNSYM) {
+		if (shs_type == SHT_SYMTAB /* || shs_type == SHT_DYNSYM */) {
 			(void) printf (", not stripped");
 			return;
 		}

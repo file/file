@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#if __STDC__
+#ifdef __STDC__
 # include <stdarg.h>
 #else
 # include <varargs.h>
@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.28 1999/02/14 17:16:10 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.29 1999/10/31 22:23:04 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))

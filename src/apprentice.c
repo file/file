@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.28 1998/09/12 13:17:52 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.29 1999/10/31 22:23:03 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -182,7 +182,7 @@ int *ndx, check;
 	struct magic *m;
 	char *t, *s;
 
-#define ALLOC_INCR	20
+#define ALLOC_INCR	200
 	if (nd+1 >= maxmagic){
 	    maxmagic += ALLOC_INCR;
 	    if ((magic = (struct magic *) realloc(magic, 
@@ -291,7 +291,10 @@ int *ndx, check;
 	}
 
 	/* get type, skip it */
-	if (strncmp(l, "byte", NBYTE)==0) {
+	if (strncmp(l, "char", NBYTE)==0) {	/* HP/UX compat */
+		m->type = BYTE;
+		l += NBYTE;
+	} else if (strncmp(l, "byte", NBYTE)==0) {
 		m->type = BYTE;
 		l += NBYTE;
 	} else if (strncmp(l, "short", NSHORT)==0) {
@@ -346,6 +349,10 @@ int *ndx, check;
 	case '=':
   		m->reln = *l;
   		++l;
+		if (*l == '=') {
+		   /* HP compat: ignore &= etc. */
+		   ++l;
+		}
 		break;
 	case '!':
 		if (m->type != STRING) {

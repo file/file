@@ -25,6 +25,9 @@
  * 4. This notice may not be removed or altered.
  */
 #include "file.h"
+#ifdef __CYGWIN__
+#include <errno.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,7 +55,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.46 1999/02/14 17:16:05 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.47 1999/10/31 22:23:03 christos Exp $")
 #endif	/* lint */
 
 
@@ -120,6 +123,8 @@ main(argc, argv)
 		case 'v':
 			(void) fprintf(stdout, "%s-%d.%d\n", progname,
 				       FILE_VERSION_MAJOR, patchlevel);
+			(void) fprintf(stdout, "magic file from %s\n",
+				       magicfile);
 			return 1;
 		case 'b':
 			++bflag;

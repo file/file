@@ -6,6 +6,9 @@
  *					    using method, return sizeof new
  */
 #include "file.h"
+#ifdef __CYGWIN__
+#include <errno.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -16,7 +19,7 @@
 #include <sys/wait.h>
 #endif
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.13 1999/02/14 17:16:01 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.14 1999/10/31 22:23:03 christos Exp $")
 #endif
 
 

@@ -136,25 +136,46 @@
 0	belong&0377777777	042600507	NetBSD/pmax core
 >12	string			>\0		from '%s'
 
-0	belong&0377777777	043000413	NetBSD/vax demand paged
+0	belong&0377777777	043000413	NetBSD/vax 1k demand paged
 >0	byte			&0x80		
 >>20	lelong			<4096		shared library
 >>20	lelong			=4096		dynamically linked executable
 >>20	lelong			>4096		dynamically linked executable
 >0	byte			^0x80		executable
 >16	lelong			>0		not stripped
-0	belong&0377777777	043000410	NetBSD/vax pure
+0	belong&0377777777	043000410	NetBSD/vax 1k pure
 >0	byte			&0x80		dynamically linked executable
 >0	byte			^0x80		executable
 >16	lelong			>0		not stripped
-0	belong&0377777777	043000407	NetBSD/vax
+0	belong&0377777777	043000407	NetBSD/vax 1k
 >0	byte			&0x80		dynamically linked executable
 >0	byte			^0x80
 >>0	byte			&0x40		position independent
 >>20	lelong			!0		executable
 >>20	lelong			=0		object file
 >16	lelong			>0		not stripped
-0	belong&0377777777	043000507	NetBSD/vax core
+0	belong&0377777777	043000507	NetBSD/vax 1k core
+>12	string			>\0		from '%s'
+
+0	belong&0377777777	045400413	NetBSD/vax 4k demand paged
+>0	byte			&0x80		
+>>20	lelong			<4096		shared library
+>>20	lelong			=4096		dynamically linked executable
+>>20	lelong			>4096		dynamically linked executable
+>0	byte			^0x80		executable
+>16	lelong			>0		not stripped
+0	belong&0377777777	045400410	NetBSD/vax 4k pure
+>0	byte			&0x80		dynamically linked executable
+>0	byte			^0x80		executable
+>16	lelong			>0		not stripped
+0	belong&0377777777	045400407	NetBSD/vax 4k
+>0	byte			&0x80		dynamically linked executable
+>0	byte			^0x80
+>>0	byte			&0x40		position independent
+>>20	lelong			!0		executable
+>>20	lelong			=0		object file
+>16	lelong			>0		not stripped
+0	belong&0377777777	045400507	NetBSD/vax 4k core
 >12	string			>\0		from '%s'
 
 # NetBSD/alpha does not support (and has never supported) a.out objects,
