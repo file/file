@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.54 2003/10/27 18:09:08 christos Exp $
+.\" $Id: file.man,v 1.55 2005/02/09 19:07:30 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -103,7 +103,13 @@ magic file
 .I __MAGIC__.mgc ,
 or 
 .I __MAGIC__
-if the compile file does not exist.
+if the compile file does not exist. In addition
+.B file
+will look in
+.I $HOME/.magic.mgc ,
+or
+.I $HOME/.magic
+for magic entries.
 .PP
 If a file does not match any of the entries in the magic file,
 it is examined to see if it seems to be a text file.
@@ -281,6 +287,10 @@ Local additions to magic wisdom.
 The environment variable
 .B MAGIC
 can be used to set the default magic number file name.
+If that variable is set, then
+.B file
+will not attempt to open
+.B $HOME/.magic .
 .B file
 adds ".mime" and/or ".mgc" to the value of this variable as appropriate.
 .SH SEE ALSO
