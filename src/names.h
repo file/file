@@ -10,7 +10,7 @@
  *
  * See LEGAL.NOTICE
  *
- * $Id: names.h,v 1.14 1998/06/27 13:57:23 christos Exp $
+ * $Id: names.h,v 1.15 1998/09/12 13:17:52 christos Exp $
  */
 
 /* these types are used to index the table 'types': keep em in sync! */
@@ -26,6 +26,7 @@
 #define	L_NEWS	9		/* Usenet Netnews */
 #define	L_JAVA	10		/* Java code */
 #define	L_HTML	11		/* HTML */
+#define	L_BCPL	12		/* BCPL */
 
 static const char *types[] = {
 	"C program text",
@@ -40,6 +41,7 @@ static const char *types[] = {
 	"news text",
 	"Java program text",
 	"HTML document text",
+	"BCPL program text",
 	"can't happen error on names.h/types",
 	0};
 
@@ -86,6 +88,8 @@ static struct names {
 	/* These must be sorted by eye for optimal hit rate */
 	/* Add to this list only after substantial meditation */
 	{"import",	L_JAVA},
+	{"\"libhdr\"",	L_BCPL},
+	{"\"LIBHDR\"",	L_BCPL},
 	{"//",		L_CC},
 	{"template",	L_CC},
 	{"virtual",	L_CC},

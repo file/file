@@ -31,13 +31,15 @@
 #include <sys/param.h>	/* for MAXPATHLEN */
 #include <sys/stat.h>
 #include <fcntl.h>	/* for open() */
-#if (__COHERENT__ >= 0x420)
-# include <sys/utime.h>
-#else
-# ifdef USE_UTIMES
-#  include <sys/time.h>
+#ifdef RESTORE_TIME
+# if (__COHERENT__ >= 0x420)
+#  include <sys/utime.h>
 # else
-#  include <utime.h>
+#  ifdef USE_UTIMES
+#   include <sys/time.h>
+#  else
+#   include <utime.h>
+#  endif
 # endif
 #endif
 #include <unistd.h>	/* for read() */
@@ -48,7 +50,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.41 1998/06/27 13:57:23 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.42 1998/09/12 13:17:52 christos Exp $")
 #endif	/* lint */
 
 
@@ -356,6 +358,9 @@ int wid;
 #ifdef RESTORE_TIME
 		/*
 		 * Try to restore access, modification times if read it.
+		 * This is really *bad* because it will modify the status
+		 * time of the file... And of course this will affect
+		 * backup programs
 		 */
 # ifdef USE_UTIMES
 		struct timeval  utsbuf[2];

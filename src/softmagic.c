@@ -37,7 +37,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.37 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.38 1998/09/12 13:21:01 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -349,17 +349,32 @@ int nbytes;
 		mdump(m);
 	}
 
-	if (!mconvert(p, m))
-		return 0;
-
 	if (m->flag & INDIR) {
 
 		switch (m->in.type) {
 		case BYTE:
 			offset = p->b + m->in.offset;
 			break;
+		case BESHORT:
+		        offset = (short)((p->hs[0]<<8)|(p->hs[1]))+
+			          m->in.offset;
+			break;
+		case LESHORT:
+		        offset = (short)((p->hs[1]<<8)|(p->hs[0]))+
+			         m->in.offset;
+			break;
 		case SHORT:
 			offset = p->h + m->in.offset;
+			break;
+		case BELONG:
+		        offset = (int32)((p->hl[0]<<24)|(p->hl[1]<<16)|
+					 (p->hl[2]<<8)|(p->hl[3]))+
+			         m->in.offset;
+			break;
+		case LELONG:
+		        offset = (int32)((p->hl[3]<<24)|(p->hl[2]<<16)|
+					 (p->hl[1]<<8)|(p->hl[0]))+
+			         m->in.offset;
 			break;
 		case LONG:
 			offset = p->l + m->in.offset;
@@ -375,10 +390,9 @@ int nbytes;
 			mdebug(offset, (char *) p, sizeof(union VALUETYPE));
 			mdump(m);
 		}
-
-		if (!mconvert(p, m))
-			return 0;
 	}
+	if (!mconvert(p, m))
+	  return 0;
 	return 1;
 }
 
