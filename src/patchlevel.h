@@ -1,11 +1,18 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		31
+#define	patchlevel		32
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.31 2000/05/14 17:58:36 christos Exp $
+ * $Id: patchlevel.h,v 1.32 2000/08/05 18:24:18 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.32  2000/08/05 18:24:18  christos
+ * Correct indianness detection in elf (Charles Hannum)
+ * FreeBSD elf core support (Guy Harris)
+ * Use gzip in systems that don't have uncompress (Anthon van der Neut)
+ * Internationalization/EBCDIC support (Eric Fisher)
+ * Many many magic changes
+ *
  * Revision 1.31  2000/05/14 17:58:36  christos
  * - new magic for claris files
  * - new magic for mathematica and maple files
@@ -22,7 +29,7 @@
  * - magic fixes
  *
  * Revision 1.29  1999/11/28 20:02:29  christos
- * new string/[Bcb] magic from anton, and adjustments to the magic files to
+ * new string/[Bcb] magic from anthon, and adjustments to the magic files to
  * use it.
  *
  * Revision 1.28  1999/10/31 22:11:48  christos
