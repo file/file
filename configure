@@ -1553,7 +1553,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=file
- VERSION=3.38
+ VERSION=4.00
 
 
 cat >>confdefs.h <<_ACEOF
