@@ -87,6 +87,7 @@
 >24	string	@		\b, OS/2 or MS Windows
 >>0xe7	string	LH/2\ Self-Extract	\b, %s
 >>0xe9	string	PKSFX2		\b, %s
+>>122	string	Windows\ self-extracting\ ZIP	\b, %s
 >0x1c	string	RJSX\xff\xff	\b, ARJ SFX
 >0x1c	string	diet\xf9\x9c	\b, diet compressed
 >0x1e	string	Copyright\ 1989-1990\ PKWARE\ Inc.	\b, PKSFX
@@ -149,11 +150,15 @@
 2080	string	Microsoft\ Word\ 6.0\ Document	%s
 2080	string	Documento\ Microsoft\ Word\ 6 Spanish Microsoft Word 6 document data
 # Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Word)
-2112	string	MSWordDoc	Microsoft Word document data
+2112	string	MSWordDoc			Microsoft Word document data
 #
-0	belong	0x31be0000	Microsoft Word Document
+0	belong	0x31be0000			Microsoft Word Document
 #
-0       string  PO^Q`           Microsoft Word 6.0 Document
+0       string  PO^Q`				Microsoft Word 6.0 Document
+#
+0	string	\376\067\0\043			Microsoft Office Document
+0	string	\320\317\021\340\241\261	Microsoft Office Document
+0	string	\333\245-\0\0\0			Microsoft Office Document
 #
 2080	string	Microsoft\ Excel\ 5.0\ Worksheet	%s
 #
@@ -176,3 +181,6 @@
 
 # Help files
 0	string	?_\3\0		MS Windows Help Data
+
+# Microsoft CAB distribution format  Dale Worley <root@dworley.ny.mediaone.net>
+0	string		MSCF\000\000\000\000	Microsoft CAB file
