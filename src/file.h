@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.23 1996/06/22 22:04:22 christos Exp $
+ * @(#)$Id: file.h,v 1.24 1997/01/15 17:23:24 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -26,6 +26,12 @@
  * 4. This notice may not be removed or altered.
  */
 
+#ifndef __file_h__
+#define __file_h__
+
+typedef int int32;
+typedef unsigned int uint32;
+
 #ifndef HOWMANY
 # define HOWMANY 8192		/* how much of the file to look at */
 #endif
@@ -41,9 +47,9 @@ struct magic {
 	short cont_level;	/* level of ">" */
 	struct {
 		char type;	/* byte short long */
-		long offset;	/* offset from indirection */
+		int32 offset;	/* offset from indirection */
 	} in;
-	long offset;		/* offset to magic number */
+	int32 offset;		/* offset to magic number */
 	unsigned char reln;	/* relation (0=eq, '>'=gt, etc) */
 	char type;		/* int, short, long or string. */
 	char vallen;		/* length of string value, if any */
@@ -61,12 +67,12 @@ struct magic {
 	union VALUETYPE {
 		unsigned char b;
 		unsigned short h;
-		unsigned long l;
+		uint32 l;
 		char s[MAXstring];
 		unsigned char hs[2];	/* 2 bytes of a fixed-endian "short" */
 		unsigned char hl[4];	/* 2 bytes of a fixed-endian "long" */
 	} value;		/* either number or string */
-	unsigned long mask;	/* mask before comparison with value */
+	uint32 mask;	/* mask before comparison with value */
 	char nospflag;		/* supress space character */
 	char desc[MAXDESC];	/* description */
 };
@@ -98,7 +104,7 @@ extern int   softmagic		__P((unsigned char *, int));
 extern int   tryit		__P((unsigned char *, int, int));
 extern int   zmagic		__P((unsigned char *, int));
 extern void  ckfprintf		__P((FILE *, const char *, ...));
-extern unsigned long signextend	__P((struct magic *, unsigned long));
+extern uint32 signextend	__P((struct magic *, unsigned int32));
 
 
 
@@ -119,7 +125,16 @@ extern int lflag;		/* follow symbolic links?		*/
 extern int optind;		/* From getopt(3)			*/
 extern char *optarg;
 
-#if !defined(__STDC__) || defined(sun) || defined(__sun__) || defined(__convex__)
+#if defined(sun) || defined(__sun__) || defined (__sun)
+# if defined(__svr4) || defined (__SVR4) || defined(__svr4__)
+#  define SOLARIS
+# else
+#  define SUNOS
+# endif
+#endif
+
+
+#if !defined(__STDC__) || defined(SUNOS) || defined(__convex__)
 extern int sys_nerr;
 extern char *sys_errlist[];
 #define strerror(e) \
@@ -130,3 +145,5 @@ extern char *sys_errlist[];
 #ifndef MAXPATHLEN
 #define	MAXPATHLEN	512
 #endif
+
+#endif /* __file_h__ */

@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.27 1996/06/22 22:05:07 christos Exp $
+.\" $Id: file.man,v 1.28 1997/01/15 17:23:24 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -248,7 +248,7 @@ the process running
 .RE
 .PP
 Changes by Ian Darwin and various authors including
-Christos Zoulas (christos@ee.cornell.edu), 1990-1992.
+Christos Zoulas (christos@deshaw.com), 1990-1992.
 .SH LEGAL NOTICE
 Copyright (c) Ian F. Darwin, Toronto, Canada,
 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993.
@@ -360,6 +360,6 @@ This manual page, and particularly this section, is too long.
 .SH AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
-.B tesla.ee.cornell.edu
+.B ftp.deshaw.com
 in the directory
-.I /pub/file-X.YY.tar.gz
+.I /pub/file/file-X.YY.tar.gz
