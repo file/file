@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.17 2003/12/23 17:32:30 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.18 2004/03/22 19:12:51 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -240,6 +240,11 @@ magic_file(struct magic_set *ms, const char *inname)
 		if (sb.st_mode & 0111)
 			if (file_printf(ms, "executable, ") == -1)
 				return NULL;
+		if (sb.st_mode & 0100000)
+			if (file_printf(ms, "regular file, ") == -1)
+				return NULL;
+		if (file_printf(ms, "no read permission") == -1)
+			return NULL;
 		return file_getbuffer(ms);
 	}
 
@@ -253,10 +258,13 @@ magic_file(struct magic_set *ms, const char *inname)
 
 	if (nbytes == 0) {
 		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/x-empty" : "empty") == -1) {
-			(void)close(fd);
-		    goto done;
-		}
+		    "application/x-empty" : "empty") == -1)
+			goto done;
+		goto gotit;
+	} else if (nbytes == 1) {
+		if (file_printf(ms, "very short file (no magic)") == -1)
+			goto done;
+		goto gotit;
 	} else {
 		buf[nbytes] = '\0';	/* null-terminate it */
 #ifdef __EMX__
@@ -266,7 +274,7 @@ magic_file(struct magic_set *ms, const char *inname)
 		case 0:
 			break;
 		default:
-			return file_getbuffer(ms);
+			goto gotit;
 		}
 #endif
 		if (file_buffer(ms, buf, (size_t)nbytes) == -1)
