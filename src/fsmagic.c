@@ -26,7 +26,11 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
 #ifndef	major			/* if `major' not defined in types.h, */
 #include <sys/sysmacros.h>	/* try this one. */
 #endif
@@ -37,32 +41,19 @@
 		Please grep /usr/include/sys and edit the above #include 
 		to point at the file that defines the "major" macro.
 #endif	/*major*/
-#include <sys/stat.h>
-
-#ifdef	S_IFLNK		/* If system has symlinks, probably need these */
-#if	defined(__STDC__) || defined(__cplusplus)
-int lstat(char *path, struct stat *buf);
-int readlink(char *path, char *buf, int bufsiz);
-#endif	/* new C */
-#endif
 
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.14 1992/05/22 17:51:52 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.15 1992/09/08 15:04:34 ian Exp $";
 #endif	/* lint */
 
-extern char *progname;
-extern char *ckfmsg, *magicfile;
-extern int debug;
-
 int
-fsmagic(fn)
-char *fn;
+fsmagic(fn, sb)
+const char *fn;
+struct stat *sb;
 {
-	extern struct stat statbuf;
-	extern followLinks;
 	int ret = 0;
 
 	/*
@@ -70,32 +61,32 @@ char *fn;
 	 * On 4.2BSD and similar systems, use lstat() to identify symlinks.
 	 */
 #ifdef	S_IFLNK
-	if (!followLinks)
-		ret = lstat(fn, &statbuf);
+	if (!lflag)
+		ret = lstat(fn, sb);
 	else
 #endif
-	ret = stat(fn, &statbuf);
+	ret = stat(fn, sb);
 
 	if (ret) {
-			warning("can't stat", "");
-			return -1;
-		}
+		error("can't stat `%s' (%s).\n", fn, strerror(errno));
+		/*NOTREACHED*/
+	}
 
-	if (statbuf.st_mode & S_ISUID) ckfputs("setuid ", stdout);
-	if (statbuf.st_mode & S_ISGID) ckfputs("setgid ", stdout);
-	if (statbuf.st_mode & S_ISVTX) ckfputs("sticky ", stdout);
+	if (sb->st_mode & S_ISUID) ckfputs("setuid ", stdout);
+	if (sb->st_mode & S_ISGID) ckfputs("setgid ", stdout);
+	if (sb->st_mode & S_ISVTX) ckfputs("sticky ", stdout);
 	
-	switch (statbuf.st_mode & S_IFMT) {
+	switch (sb->st_mode & S_IFMT) {
 	case S_IFDIR:
 		ckfputs("directory", stdout);
 		return 1;
 	case S_IFCHR:
 		(void) printf("character special (%d/%d)",
-			major(statbuf.st_rdev), minor(statbuf.st_rdev));
+			major(sb->st_rdev), minor(sb->st_rdev));
 		return 1;
 	case S_IFBLK:
 		(void) printf("block special (%d/%d)",
-			major(statbuf.st_rdev), minor(statbuf.st_rdev));
+			major(sb->st_rdev), minor(sb->st_rdev));
 		return 1;
 	/* TODO add code to handle V7 MUX and Blit MUX files */
 #ifdef	S_IFIFO
@@ -111,8 +102,9 @@ char *fn;
 			struct stat tstatbuf;
 
 			if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
-				error("readlink failed", "");
-				return 0;
+				error("readlink failed (%s).\n", 
+				      strerror(errno));
+				/*NOTREACHED*/
 			}
 			buf[nch] = '\0';	/* readlink(2) forgets this */
 
@@ -123,8 +115,8 @@ char *fn;
 			}
 
 			/* Otherwise, handle it. */
-			if (followLinks) {
-				process(buf);
+			if (lflag) {
+				process(buf, strlen(buf));
 				return 1;
 			} else { /* just print what it points to */
 				ckfputs("symbolic link to ", stdout);
@@ -141,13 +133,14 @@ char *fn;
 	case S_IFREG:
 		break;
 	default:
-		warning("invalid st_mode %d in statbuf!", statbuf.st_mode);
+		error("invalid mode 0%o.\n", sb->st_mode);
+		/*NOTREACHED*/
 	}
 
 	/*
 	 * regular file, check next possibility
 	 */
-	if (statbuf.st_size == 0) {
+	if (sb->st_size == 0) {
 		ckfputs("empty", stdout);
 		return 1;
 	}
