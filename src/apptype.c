@@ -24,22 +24,23 @@
  * 
  */
 
-#ifdef __EMX__
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$Id: apptype.c,v 1.3 2003/06/10 18:28:37 christos Exp $")
+#endif /* lint */
+
+#ifdef __EMX__
 #include <io.h>
 #define INCL_DOSSESMGR
 #define INCL_DOSERRORS
 #define INCL_DOSFILEMGR
 #include <os2.h>
 typedef ULONG   APPTYPE;
-
-#include "file.h"
-
-#ifndef	lint
-FILE_RCSID("@(#)$Id: apptype.c,v 1.2 2003/03/24 14:53:31 christos Exp $")
-#endif /* lint */
 
 protected int
 file_os2_apptype(struct magic_set *ms, const char *fn, const void *buf,
