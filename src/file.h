@@ -57,19 +57,33 @@ struct magic {
 #if	defined(__STDC__) || defined(__cplusplus)
 int apprentice(char *fn, int check);
 int ascmagic(unsigned char *buf, int nbytes);
-void error(char *fmt, ...);
+void error(char *fmt, char *d);
+FILE *efopen(char *fn, char *mode);
 int fsmagic(char *fn);
 int is_compress(unsigned char *p, int *b);
 int is_tar(unsigned char *buf);
 void mdump(struct magic *m);
-parse(char *l, int *ndx, int check);
+int parse(char *l, int *ndx, int check);
 void process(char *inname);
 void showstr(char *s);
 int softmagic(unsigned char *buf, int nbytes);
 void tryit(unsigned char *buf, int nb);
-uncompress(unsigned char *old, unsigned char **newch, int n);
-void warning(char *f, ...);
+int uncompress(unsigned char *old, unsigned char **newch, int n);
+void warning(char *f, char *d);
 #else
-/* error	"Non-ANSI externs not written yet" */
-extern void error(), exit();
+int apprentice();
+int ascmagic();
+void error();
+FILE *efopen();
+int fsmagic();
+int is_compress();
+int is_tar();
+void mdump();
+int parse();
+void process();
+void showstr();
+int softmagic();
+void tryit();
+int uncompress();
+void warning();
 #endif
