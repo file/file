@@ -2,11 +2,24 @@
 #------------------------------------------------------------------------------
 # sniffer:  file(1) magic for packet capture files
 #
-# From: guy@netapp.com (Guy Harris)
+# From: guy@alum.mit.edu (Guy Harris)
 #
-# Microsoft Network Monitor capture files.
+
+#
+# Microsoft Network Monitor 1.x capture files.
 #
 0	string		RTSS		NetMon capture file
+>4	byte		x		- version %d
+>5	byte		x		\b.%d
+>6	leshort		0		(Unknown)
+>6	leshort		1		(Ethernet)
+>6	leshort		2		(Token Ring)
+>6	leshort		3		(FDDI)
+
+#
+# Microsoft Network Monitor 2.x capture files.
+#
+0	string		GMBU		NetMon capture file
 >4	byte		x		- version %d
 >5	byte		x		\b.%d
 >6	leshort		0		(Unknown)
@@ -32,13 +45,20 @@
 >32	byte		7		(Internetwork Analyzer)
 >32	byte		9		(FDDI)
 >32	byte		10		(ATM)
+
 #
 # Cinco Networks NetXRay capture files.
 # Sorry, make that "Network General Sniffer Basic capture files."
 # Sorry, make that "Network Associates Sniffer Basic capture files."
+# Sorry, make that "Network Associates Sniffer Basic, and Windows
+# Sniffer Pro", capture files."
 #
 0	string		XCP\0		NetXRay capture file
 >4	string		>\0		- version %s
+>44	leshort		0		(Ethernet)
+>44	leshort		1		(Token Ring)
+>44	leshort		2		(FDDI)
+
 #
 # "libpcap" capture files.
 # (We call them "tcpdump capture file(s)" for now, as "tcpdump" is
@@ -83,3 +103,24 @@
 >20	lelong		13		(BSD/OS SLIP
 >20	lelong		14		(BSD/OS PPP
 >16	lelong		x		\b, capture length %d)
+
+#
+# AIX "iptrace" capture files.
+#
+0	string		iptrace\ 2.0	"iptrace" capture file
+
+#
+# Novell LANalyzer capture files.
+#
+0	leshort		0x1001		LANalyzer capture file
+0	leshort		0x1007		LANalyzer capture file
+
+#
+# HP-UX "nettl" capture files.
+#
+0	string		\x54\x52\x00\x64\x00	"nettl" capture file
+
+#
+# RADCOM WAN/LAN Analyzer capture files.
+#
+0	string		\x42\xd2\x00\x34\x12\x66\x22\x88	RADCOM WAN/LAN Analyzer capture file
