@@ -1,6 +1,8 @@
 
 2003-10-08 12:40  Christos Zoulas  <christos@zoulas.com>
 
+	* handle error conditions from compile as fatal
+	  (Antti Kantee) <pooka@netbsd.org>
 	* handle magic filename parsing sanely
 	* more magic fixes.
 	* fix a memory leak (Illes Marton) <illes.marton@balabit.hu>
