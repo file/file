@@ -36,7 +36,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.16 1993/10/27 21:00:54 christos Exp $";
+	"@(#)$Id: ascmagic.c,v 1.17 1994/01/21 01:25:30 christos Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -80,6 +80,7 @@ int nbytes;	/* size actually read */
 	/* look for tokens from names.h - this is expensive! */
 	/* make a copy of the buffer here because strtok() will destroy it */
 	s = (unsigned char*) memcpy(nbuf, buf, nbytes);
+	s[nbytes] = '\0';
 	has_escapes = (memchr(s, '\033', nbytes) != NULL);
 	while ((token = strtok((char*)s, " \t\n\r\f")) != NULL) {
 		s = NULL;	/* make strtok() keep on tokin' */
