@@ -58,8 +58,31 @@
 0	byte		26		'arc' archive
 >1	byte		0		(empty)
 >1	byte		1		(old format)
+# >>>>> ZOO <<<<<
+#
 # Rahul Dhesi's zoo archive format, from keith@cerberus.uchicago.edu.
-20	long		0xdca7c4fd	Rahul Dhesi's "zoo" archive
+#20	belong		0xdca7c4fd	Rahul Dhesi's "zoo" archive
+# [GRR:  don't know if all of these versions exist, or if some are missing...]
+0	string		ZOO 			Zoo archive
+>4	string		1.00			(v%4s)
+>4	string		1.10			(v%4s)
+>4	string		1.20			(v%4s)
+>4	string		1.30			(v%4s)
+>4	string		1.40			(v%4s)
+>4	string		1.50			(v%4s)
+>4	string		1.60			(v%4s)
+>4	string		1.70			(v%4s)
+>4	string		1.71			(v%4s)
+>4	string		2.00			(v%4s)
+>4	string		2.01			(v%4s)
+>4	string		2.10			(v%4s)
+# [newer, smarter "file" programs]
+>32	string		\001\000		(modify: v1.0+)
+>32	string		\001\004		(modify: v1.4+)
+>32	string		\002\000		(modify: v2.0+)
+>70	string		\001\000		(extract: v1.0+)
+>70	string		\002\001		(extract: v2.1+)
+
 # ZIP archiver
 0	string		PK		zip archive file 
 >4	byte		x		- version
@@ -102,3 +125,9 @@
 >7	byte		8		os: NeXT
 >7	byte		9		os: VAX/VMS
 >3	byte		>0		%d]
+# >>>>> SQUISH <<<<<
+#
+0	string		SQSH		squished archive (Acorn RISCOS)
+
+0	byte		0x1a		RISC OS archive
+

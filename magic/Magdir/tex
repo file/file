@@ -23,3 +23,16 @@
 2	string		\000\021	TeX font metric data
 2	string		\000\022	TeX font metric data
 >34	string	>\0	(%s)
+# Texinfo and GNU Info, from Daniel Quinlan (quinlan@yggdrasil.com)
+0	string		\\input\ texinfo	Texinfo source text
+0	string		This\ is\ Info\ file	GNU Info text
+#
+# correct TeX magic for Linux (and maybe more)
+# from Peter Tobias (tobias@server.et-inf.fho-emden.de)
+#
+0	leshort		0x02f7		TeX DVI File
+>16	string		>\0		(%s)
+0	leshort		0x59f7		TeX packed font data
+>3	string		>\0		(%s)
+2	string		\000\022	TeX font metric data
+>33	string		>\0		(%s)

@@ -5,11 +5,11 @@
 #
 # rle
 #
-0       short           0xcc52          Utah Raster Toolkit RLE
->2      short           >0              lower left corner: %d
->4      short           >0              lower right corner: %d
->6      short           >0              %d x
->8      short           >0              %d
+0       beshort         0xcc52          Utah Raster Toolkit RLE
+>2      beshort         >0              lower left corner: %d
+>4      beshort         >0              lower right corner: %d
+>6      beshort         >0              %d x
+>8      beshort         >0              %d
 >10     byte&0x1        =0x1            CLEARFIRST
 >10     byte&0x2        =0x2            NO_BACKGROUND
 >10     byte&0x4        =0x4            ALPHA

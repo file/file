@@ -11,5 +11,3 @@
 0	string		!<arch>		archive
 >8	string		__.SYMDEF	random library
 0	string		-h-		Software Tools format archive text
-# Rahul Dhesi's zoo archive format, from keith@cerberus.uchicago.edu.
-20	long		0xdca7c4fd	Rahul Dhesi's "zoo" archive

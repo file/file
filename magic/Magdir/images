@@ -51,7 +51,6 @@
 >6      string          2.0            	Version 2.0
 0	string		GKSM		GKS Metafile
 8	string		ILBM		IFF ILBM file
-6	string		JFIF		JPEG picture
 0       string          ARF_BEGARF     	PHIGS clear text archive
 
 # From: <u31b3hs@pool.informatik.rwth-aachen.de> (Michael Haardt)
@@ -64,4 +63,22 @@
 >30	long		0x31		(mono)
 >30	long		0x33		(color)
 
-4	string		Research,	Digifax-G3-Fi
+4	string		Research,	Digifax-G3-File
+>29	byte		1		, fine resolution
+>29	byte		0		, normal resolution
+
+
+0	beshort		0xffd8			JPEG picture
+>6	string		JFIF			JFIF standard
+
+#
+# animation formats, originally from vax@ccwf.cc.utexas.edu (VaX#n8)
+#
+0	belong		0x000001b3		MPEG file
+
+4	leshort		0xAF11			FLI file
+>6	leshort		x			, %d frames
+>8	leshort		x			, width=%d pixels
+>10	leshort		x			, height=%d pixels
+>12	leshort		x			, depth=%d
+>16	leshort		x			, ticks/frame=%d

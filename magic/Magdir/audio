@@ -36,8 +36,22 @@
 8	string		AIFF		AIFF audio data
 8	string		AIFC		AIFF-C audio data
 8	string		8SVX		IFF/8SVX audio data
-# Bytes 0-3 of Waveform (*.wav) audio files are "RIFF"
-8	string		WAVE		Waveform audio data
-0	string		Creative\ Voice\ File	Soundblaster audio data
-0	long		0x4e54524b	MultiTrack sound data file
->4	long		x		- version %ld
+# Creative Labs AUDIO stuff
+0	string  MThd			Standard MIDI data
+>9 	byte	>0			(format %d)
+>11	byte	>1			using %d channels
+0	string  CTMF			Creative Music (CMF) data
+0	string  SBI			SoundBlaster instrument data
+0	string	Creative\ Voice\ File	Creative Labs voice data
+# is this next line right?  it came this way...
+>19	byte	0x1A
+>23	byte	>0			- version %d
+>22	byte	>0			\b.%d
+# Microsoft WAVE format
+0	string		RIFF		Microsoft RIFF
+>8	string		WAVE		- WAVE format
+>34	short		>0		%d bit
+>22	short		=1		Mono
+>22	short		=2		Stereo
+>22	short		>2		%d Channels
+>24	long		>0		%d Hz
