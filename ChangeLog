@@ -1,0 +1,10 @@
+2003-03-26 11:00  Christos Zoulas  <christos@zoulas.com>
+
+	* Pass lint
+	* make NULL in magic_file mean stdin
+	* Fix "-" argument to file to pass NULL to magic_file
+	* avoid pointer casts by using memcpy
+	* rename magic_buf -> magic_buffer
+	* keep only the first error
+	* manual page: new sentence, new line
+	* fix typo in api function (magic_buf -> magic_buffer)
