@@ -30,3 +30,11 @@
 # Freeze
 0	string		\037\237	Frozen file 2.1
 0	string		\037\236	Frozen file 1.0 (or gzip 0.5)
+#
+# Standard unix compress
+#
+0	string		\037\235	compressed data
+>2	byte&0x80	>0		block compressed
+>2	byte&0x1f	x		%d bits
+
+0	string		\037\240	LZH compressed data
