@@ -8,7 +8,13 @@ data_DATA = magic magic.mime magic.mgc
 MAGIC	 = @datadir@/magic
 CPPFLAGS = -DMAGIC='"$(MAGIC)"'
 
-man_MANS = file.1 magic.4
+if FSECT5
+man_MAGIC = magic.5
+else
+man_MAGIC = magic.4
+endif
+fsect = @fsect@
+man_MANS = file.1 $(man_MAGIC)
 
 file_SOURCES = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 	compress.c is_tar.c readelf.c print.c \
@@ -33,17 +39,20 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 magic.mgc: magic file
 	./file -C -m magic
 
+magic.mgc: magic file
+	./file -C -m ./magic
+
 file.1:	Makefile file.man
 	@rm -f $@
 	sed -e s@__CSECTION__@1@g \
-	    -e s@__FSECTION__@4@g \
+	    -e s@__FSECTION__@${fsect}@g \
 	    -e s@__VERSION__@${VERSION}@g \
 	    -e s@__MAGIC__@${MAGIC}@g $(srcdir)/file.man > $@
 
-magic.4: Makefile magic.man
+magic.${fsect}: Makefile magic.man
 	@rm -f $@
 	sed -e s@__CSECTION__@1@g \
-	    -e s@__FSECTION__@4@g \
+	    -e s@__FSECTION__@${fsect}@g \
 	    -e s@__VERSION__@${VERSION}@g \
 	    -e s@__MAGIC__@${MAGIC}@g $(srcdir)/magic.man > $@
 

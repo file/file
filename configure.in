@@ -31,6 +31,23 @@ fi], [
   AC_DEFINE(ELFCORE)
 ])
 
+AC_MSG_CHECKING(for file formats in man section 5)
+AC_ARG_ENABLE(fsect-man5,
+[  --enable-fsect-man5      enable file formats in man section 5],
+[if test "${enableval}" = yes; then
+  AC_MSG_RESULT(yes)
+  fsect=5
+else
+  AC_MSG_RESULT(no)
+  fsect=4
+fi], [
+  # disable by default
+  AC_MSG_RESULT(no)
+  fsect=4
+])
+AC_SUBST(fsect)
+AM_CONDITIONAL(FSECT5, test x$fsect = x5)
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
