@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.9 2003/07/10 17:41:24 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.10 2003/07/10 21:07:14 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -87,13 +87,15 @@ magic_open(int flags)
 {
 	struct magic_set *ms;
 
+	if ((ms = malloc(sizeof(struct magic_set))) == NULL)
+		return NULL;
+
 	if (magic_setflags(ms, flags) == -1) {
+		free(ms);
 		errno = EINVAL;
 		return NULL;
 	}
 
-	if ((ms = malloc(sizeof(struct magic_set))) == NULL)
-		return NULL;
 	ms->o.ptr = ms->o.buf = malloc(ms->o.size = 1024);
 	ms->o.len = 0;
 	if (ms->o.buf == NULL) {
