@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.84 2003/10/09 15:15:23 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.85 2003/10/09 16:29:53 christos Exp $")
 #endif	/* lint */
 
 
@@ -479,6 +479,7 @@ help(void)
 "  -n, --no-buffer            do not buffer output\n"
 "  -N, --no-pad               do not pad output\n"
 "  -p, --preserve-date        preserve access times on files\n"
+"  -r, --raw                  don't translate unprintable chars to \\ooo\n"
 "  -s, --special-files        treat special (block/char devices) files as\n"
 "                             ordinary ones\n"
 "      --help                 display this help and exit\n"
