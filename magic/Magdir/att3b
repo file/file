@@ -7,11 +7,12 @@
 #
 # 3B20
 #
-0	beshort		0550		3b20 COFF executable
->12	belong		>0		not stripped
+# The 3B20 conflicts with SCCS.
+#0	beshort		0550		3b20 COFF executable
+#>12	belong		>0		not stripped
 #>22	beshort		>0		- version %ld
-0	beshort		0551		3b20 COFF executable (TV)
->12	belong		>0		not stripped
+#0	beshort		0551		3b20 COFF executable (TV)
+#>12	belong		>0		not stripped
 #>22	beshort		>0		- version %ld
 #
 # WE32K

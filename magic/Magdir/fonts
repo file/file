@@ -33,3 +33,15 @@
 0	string		flc		FIGlet controlfile
 >3	string		>2a		version %-2.2s
 
+# libGrx graphics lib fonts, from Albert Cahalan (acahalan@cs.uml.edu)
+# Used with djgpp (DOS Gnu C++), sometimes Linux or Turbo C++
+0	belong		0x14025919	libGrx font data,
+>8	leshort		x		%dx
+>10	leshort		x		\b%d
+>40	string		x		%s
+# Misc. DOS VGA fonts, from Albert Cahalan (acahalan@cs.uml.edu)
+0	belong		0xff464f4e	DOS code page font data collection
+7	belong		0x00454741	DOS code page font data
+7	belong		0x00564944	DOS code page font data (from Linux?)
+4098	string		DOSFONT		DOSFONT2 encrypted font data
+

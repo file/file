@@ -4,3 +4,13 @@
 #
 0x438	leshort	0xEF53			Linux/i386 ext2 filesystem
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
+0x1FE	leshort	0xAA55			x86 boot sector
+>2	string	OSBS			\b, OS/BS MBR
+>0x8C	string	Invalid\ partition\ table	\b, MS-DOS MBR
+>0	string	\0\0\0\0		\b, extended partition table
+>0	leshort 0x3CEB			\b, system
+>>3	string	>\0			%s
+>>0x36	string	FAT			\b, %s
+>>>0x39	string	12			(%s bit)
+>>>0x39	string	16			(%s bit)
+>0x200	lelong	0x82564557		\b, BSD disklabel

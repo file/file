@@ -1,6 +1,6 @@
 #  Digital UNIX - Info
 #
-0	string	^!<arch>\n_______64E	Alpha archive
+0	string	!<arch>\n________64E	Alpha archive
 >22	string	X			-- out of date
 #
 # Alpha COFF Based Executables

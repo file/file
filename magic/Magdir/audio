@@ -88,3 +88,35 @@
 0	string		MAS_U		ULT(imate) Module sound data
 0x2c	string		SCRM		ScreamTracker III Module sound data
 0	string		Extended Module	Extended Module sound data
+
+# Gravis UltraSound patches
+# From <ache@nagual.ru>
+
+0	string		GF1PATCH110\0ID#000002\0	GUS patch
+0	string		GF1PATCH100\0ID#000002\0	Old GUS	patch
+
+#
+# Taken from loader code from mikmod version 2.14
+# by Steve McIntyre (stevem@chiark.greenend.org.uk)
+0	string	JN		extended 669 module data
+0	string	MAS_UTrack_V00
+>14	string	>/0		ultratracker V1.%.1s module sound data
+0	string	UN05		MikMod UNI format module sound data
+0	string	Extended\ Module: Fasttracker II module sound data
+21	string	!SCREAM!	Screamtracker 2 module sound data
+1080	string	M.K.		4-channel Protracker module sound data
+1080	string	M!K!		4-channel Protracker module sound data
+1080	string	FLT4		4-channel Startracker module sound data
+1080	string	4CHN		4-channel Fasttracker module sound data
+1080	string	6CHN		6-channel Fasttracker module sound data
+1080	string	8CHN		8-channel Fasttracker module sound data
+1080	string	CD81		8-channel Oktalyzer module sound data
+1080	string	OKTA		8-channel Oktalyzer module sound data
+1082	string	CH
+>1080	string	>/0		%.2s-channel Fasttracker "oktalyzer" module sound data
+1080	string	16CN		16-channel Taketracker module sound data
+1080	string	32CN		32-channel Taketracker module sound data
+
+# TOC sound files -Trevor Johnson <trevor@jpj.net>
+#
+0       string          TOC             TOC sound file

@@ -6,10 +6,85 @@
 # .BAT files (Daniel Quinlan, quinlan@yggdrasil.com)
 0	string	@echo\ off	MS-DOS batch file text
 
+# XXX - according to Microsoft's spec, at an offset of 0x3c in a
+# PE-format executable is the offset in the file of the PE header;
+# unfortunately, that's a little-endian offset, and there's no way
+# to specify an indirect offset with a specified byte order.
+# So, for now, we assume the standard MS-DOS stub, which puts the
+# PE header at 0x80 = 128.
+#
+# Required OS version and subsystem version were 4.0 on some NT 3.51
+# executables built with Visual C++ 4.0, so it's not clear that
+# they're interesting.  The user version was 0.0, but there's
+# probably some linker directive to set it.  The linker version was
+# 3.0, except for one ".exe" which had it as 4.20 (same damn linker!).
+#
+128	string		PE\0\0	MS Windows PE
+>150	leshort&0x0100	>0	32-bit
+>132	leshort		0x0	unknown processor
+>132	leshort		0x14c	Intel 80386
+>132	leshort		0x166	MIPS R4000
+>132	leshort		0x184	Alpha
+>132	leshort		0x268	Motorola 68000
+>132	leshort		0x1f0	PowerPC
+>132	leshort		0x290	PA-RISC
+>148	leshort		>27
+>>220	leshort		0	unknown subsystem
+>>220	leshort		1	native
+>>220	leshort		2	GUI
+>>220	leshort		3	console
+>>220	leshort		7	POSIX
+>150	leshort&0x2000	=0	executable
+#>>136	ledate		x	stamp %s,
+>>150	leshort&0x0001	>0	not relocatable
+#>>150	leshort&0x0004	=0	with line numbers,
+#>>150	leshort&0x0008	=0	with local symbols,
+#>>150	leshort&0x0200	=0	with debug symbols,
+>>150	leshort&0x1000	>0	system file
+#>>148	leshort		>0
+#>>>154	byte		x	linker %d
+#>>>155	byte		x	\b.%d,
+#>>148	leshort		>27
+#>>>192	leshort		x	requires OS %d
+#>>>194	leshort		x	\b.%d,
+#>>>196	leshort		x	user version %d
+#>>>198	leshort		x	\b.%d,
+#>>>200	leshort		x	subsystem version %d
+#>>>202	leshort		x	\b.%d,
+>150	leshort&0x2000	>0	DLL
+#>>136	ledate		x	stamp %s,
+>>150	leshort&0x0001	>0	not relocatable
+#>>150	leshort&0x0004	=0	with line numbers,
+#>>150	leshort&0x0008	=0	with local symbols,
+#>>150	leshort&0x0200	=0	with debug symbols,
+>>150	leshort&0x1000	>0	system file
+#>>148	leshort		>0
+#>>>154	byte		x	linker %d
+#>>>155	byte		x	\b.%d,
+#>>148	leshort		>27
+#>>>192	leshort		x	requires OS %d
+#>>>194	leshort		x	\b.%d,
+#>>>196	leshort		x	user version %d
+#>>>198	leshort		x	\b.%d,
+#>>>200	leshort		x	subsystem version %d
+#>>>202	leshort		x	\b.%d,
+0	leshort		0x14c	MS Windows COFF Intel 80386 object file
+#>4	ledate		x	stamp %s
+0	leshort		0x166	MS Windows COFF MIPS R4000 object file
+#>4	ledate		x	stamp %s
+0	leshort		0x184	MS Windows COFF Alpha object file
+#>4	ledate		x	stamp %s
+0	leshort		0x268	MS Windows COFF Motorola 68000 object file
+#>4	ledate		x	stamp %s
+0	leshort		0x1f0	MS Windows COFF PowerPC object file
+#>4	ledate		x	stamp %s
+0	leshort		0x290	MS Windows COFF PA-RISC object file
+#>4	ledate		x	stamp %s
+
 # .EXE formats (Greg Roelofs, newt@uchicago.edu)
 #
 0	string	MZ		MS-DOS executable (EXE)
->24	string	@		\b, OS/2 or Windows
+>24	string	@		\b, OS/2 or MS Windows
 >1638	string	-lh5-		\b, LHa SFX archive v2.13S
 >7195	string	Rar!		\b, RAR self-extracting archive
 #
@@ -55,19 +130,34 @@
 #0	byte		0xf0		MS-DOS program library data
 #
 
+#
+# Windows NT Registry files.
+#
+0	string		regf		Windows NT Registry file
+
 # Popular applications
 2080	string	Microsoft\ Word\ 6.0\ Document	%s
+2080	string	Documento\ Microsoft\ Word\ 6 Spanish Microsoft Word 6 document data
+# Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Word)
+2112	string	MSWordDoc	Microsoft Word document data
 #
 0	belong	0x31be0000	Microsoft Word Document
 #
 2080	string	Microsoft\ Excel\ 5.0\ Worksheet	%s
 #
+# Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Excel)
+2114	string	Biff5		Microsoft Excel 5.0 Worksheet
+#
 0	belong	0x00001a00	Lotus 1-2-3
->4	belong	0x00100400	wk3 document
->4	belong	0x02100400	wk4 document
->4	belong	0x07800100	fm3 or fmb document
->4	belong	0x07800000	fm3 or fmb document
+>4	belong	0x00100400	wk3 document data
+>4	belong	0x02100400	wk4 document data
+>4	belong	0x07800100	fm3 or fmb document data
+>4	belong	0x07800000	fm3 or fmb document data
 #
 0	belong	0x00000200 	Lotus 1-2-3
->4	belong	0x06040600	wk1 document
->4	belong	0x06800200	fmt document
+>4	belong	0x06040600	wk1 document data
+>4	belong	0x06800200	fmt document data
+
+# WordPerfect documents - Trevor Johnson <trevor@jpj.net>
+#
+1       string          WPC             WordPerfect document
