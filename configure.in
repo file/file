@@ -68,6 +68,7 @@ AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 AC_STRUCT_ST_RDEV
 AC_STRUCT_TIMEZONE_DAYLIGHT
+AC_SYS_LARGEFILE
 
 dnl FIXME: only found in standard headers!
 AC_CHECK_TYPE(uint8_t, unsigned char)
@@ -89,6 +90,9 @@ AC_CHECK_SIZEOF_STDC_HEADERS(uint32_t, 0)
 AC_CHECK_SIZEOF_STDC_HEADERS(uint64_t, 0)
 
 dnl Checks for functions
-AC_CHECK_FUNCS(mmap strerror strtoul)
+AC_CHECK_FUNCS(mmap strerror strtoul mkstemp)
+
+dnl Checks for libraries
+AC_CHECK_LIB(z,gzopen)
 
 AC_OUTPUT(Makefile)

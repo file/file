@@ -19,6 +19,9 @@
 /* Define if we have a global "int" variable "daylight".  */
 #undef HAVE_DAYLIGHT
 
+/* Define if we have a mkstemp */
+#undef HAVE_MKSTEMP
+
 /* Define to `unsigned char' if standard headers don't define.  */
 #undef uint8_t
 

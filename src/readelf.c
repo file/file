@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.17 2000/08/05 19:00:12 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.18 2001/10/20 17:44:53 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -410,6 +410,12 @@ tryelf(fd, buf, nbytes)
 	} u;
 	int class;
 	int swap;
+
+	/*
+	 * If we can't seek, it must be a pipe, socket or fifo.
+	 */
+	if((lseek(fd, (off_t)0, SEEK_SET) == (off_t)-1) && (errno == ESPIPE))
+		fd = pipe2file(fd, buf, nbytes);
 
 	/*
 	 * ELF executables have multiple section headers in arbitrary
