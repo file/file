@@ -56,7 +56,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.32 2003/05/23 21:31:58 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.33 2003/10/14 19:17:17 christos Exp $")
 #endif
 
 
@@ -200,8 +200,8 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 	errno = r;
 #endif
 	if (tfd == -1) {
-		file_error(ms, "Can't create temporary file for pipe copy (%s)",
-		    strerror(errno));
+		file_error(ms, errno,
+		    "Can't create temporary file for pipe copy");
 		return -1;
 	}
 
@@ -215,14 +215,12 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 
 	switch (r) {
 	case -1:
-		file_error(ms, "Error copying from pipe to temp file (%s)",
-		    strerror(errno));
+		file_error(ms, errno, "Error copying from pipe to temp file");
 		return -1;
 	case 0:
 		break;
 	default:
-		file_error(ms, "Error while writing to temp file (%s)",
-		    strerror(errno));
+		file_error(ms, errno, "Error while writing to temp file");
 		return -1;
 	}
 
@@ -232,8 +230,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 	 * can still access the phantom inode.
 	 */
 	if ((fd = dup2(tfd, fd)) == -1) {
-		file_error(ms, "Couldn't dup destcriptor for temp file (%s)",
-		    strerror(errno));
+		file_error(ms, errno, "Couldn't dup destcriptor for temp file");
 		return -1;
 	}
 	(void)close(tfd);
@@ -296,13 +293,13 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 
 	rc = inflateInit2(&z, -15);
 	if (rc != Z_OK) {
-		file_error(ms, "zlib: %s", z.msg);
+		file_error(ms, 0, "zlib: %s", z.msg);
 		return 0;
 	}
 
 	rc = inflate(&z, Z_SYNC_FLUSH);
 	if (rc != Z_OK && rc != Z_STREAM_END) {
-		file_error(ms, "zlib: %s", z.msg);
+		file_error(ms, 0, "zlib: %s", z.msg);
 		return 0;
 	}
 
@@ -332,7 +329,7 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 #endif
 
 	if (pipe(fdin) == -1 || pipe(fdout) == -1) {
-		file_error(ms, "Cannot create pipe (%s)", strerror(errno));	
+		file_error(ms, errno, "Cannot create pipe");	
 		return 0;
 	}
 	switch (fork()) {
@@ -354,7 +351,7 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 		exit(1);
 		/*NOTREACHED*/
 	case -1:
-		file_error(ms, "Could not fork (%s)", strerror(errno));
+		file_error(ms, errno, "Could not fork");
 		return 0;
 
 	default: /* parent */

@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.58 2003/10/09 15:15:23 christos Exp $
+ * @(#)$Id: file.h,v 1.59 2003/10/14 19:17:17 christos Exp $
  */
 
 #ifndef __file_h__
@@ -187,6 +187,7 @@ struct magic_set {
 	char *pbuf;
 	size_t psize;
     } o;
+    int error;
     int flags;
     int haderr;
 };
@@ -209,7 +210,7 @@ protected void file_delmagic(struct magic *, int type, size_t entries);
 protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);
 protected void file_oomem(struct magic_set *);
-protected void file_error(struct magic_set *, const char *, ...);
+protected void file_error(struct magic_set *, int, const char *, ...);
 protected void file_magwarn(const char *, ...);
 protected void file_mdump(struct magic *);
 protected void file_showstr(FILE *, const char *, size_t);

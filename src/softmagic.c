@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.60 2003/06/10 18:28:37 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.61 2003/10/14 19:17:17 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -315,7 +315,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		break;
 
 	default:
-		file_error(ms, "invalid m->type (%d) in mprint()", m->type);
+		file_error(ms, 0, "invalid m->type (%d) in mprint()", m->type);
 		return -1;
 	}
 	return(t);
@@ -587,7 +587,7 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_REGEX:
 		return 1;
 	default:
-		file_error(ms, "invalid type %d in mconvert()", m->type);
+		file_error(ms, 0, "invalid type %d in mconvert()", m->type);
 		return 0;
 	}
 }
@@ -1074,7 +1074,7 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (rc) {
 			free(p->buf);
 			regerror(rc, &rx, errmsg, sizeof(errmsg));
-			file_error(ms, "regex error %d, (%s)", rc, errmsg);
+			file_error(ms, 0, "regex error %d, (%s)", rc, errmsg);
 			return -1;
 		} else {
 			rc = regexec(&rx, p->buf, 0, 0, 0);
@@ -1083,7 +1083,7 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		}
 	}
 	default:
-		file_error(ms, "invalid type %d in mcheck()", m->type);
+		file_error(ms, 0, "invalid type %d in mcheck()", m->type);
 		return -1;
 	}
 
@@ -1157,7 +1157,8 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 
 	default:
 		matched = 0;
-		file_error(ms, "can't happen: invalid relation `%c'", m->reln);
+		file_error(ms, 0, "can't happen: invalid relation `%c'",
+		    m->reln);
 		return -1;
 	}
 

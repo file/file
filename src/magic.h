@@ -41,6 +41,7 @@
 #define	MAGIC_CHECK		0x040	/* Print warnings to stderr */
 #define	MAGIC_PRESERVE_ATIME	0x080	/* Restore access time on exit */
 #define	MAGIC_RAW		0x100	/* Don't translate unprintable chars */
+#define	MAGIC_ERROR		0x200	/* Handle ENOENT etc as real errors */
 
 #ifdef __cplusplus
 extern "C" {
