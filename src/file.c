@@ -34,21 +34,31 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.16 1990/10/03 17:49:09 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.17 1991/01/23 13:23:23 ian Exp $";
 #endif	/* lint */
+
 extern char *ckfmsg;
-int 	debug = 0, 	/* huh? */
+
+int 			/* Global command-line options */
+	debug = 0, 	/* debugging */
 	followLinks = 0, /* follow Symlinks (BSD only) */
-	nbytes = 0,	/* number of bytes read from a datafile */
+	zflag = 0;	/* follow (uncompress) compressed files */
+
+int			/* Misc globals */
 	nmagic = 0;	/* number of valid magic[]s */
+
+static int nbytes = 0;	/* number of bytes read from a datafile */
+
 FILE *efopen();
+
+char *				/* global, read in apprentice.c */
 #ifdef MAGIC
-char *magicfile = MAGIC;	/* where magic be found */
+	magicfile = MAGIC;	/* where magic be found */
 #else
-char *magicfile = "/etc/magic";	/* where magic be found */
+	magicfile = "/etc/magic";	/* where magic be found */
 #endif
-char *progname;
-struct stat statbuf;
+char *progname;		/* used throughout */
+struct stat statbuf;	/* global, used in a few places */
 struct utimbuf {	/* for utime(2), belongs in a .h file */
 	time_t actime;	/* access time */
 	time_t modtime;	/* modification time */
@@ -68,7 +78,7 @@ char *argv[];
 
 	progname = argv[0];
 
-	while ((c = getopt(argc, argv, "cdf:Lm:")) != EOF)
+	while ((c = getopt(argc, argv, "cdf:Lm:z")) != EOF)
 		switch (c) {
 		case 'c':
 			++check;
@@ -85,6 +95,9 @@ char *argv[];
 			break;
 		case 'm':
 			magicfile = optarg;
+			break;
+		case 'z':
+			zflag++;
 			break;
 		case '?':
 		default:
@@ -177,30 +190,14 @@ readit:
 		if (nbytes == 0) {
 			ckfputs("empty", stdout);
 		} else
-		/*
-		 * try tests in /etc/magic (or surrogate magic file)
-		 */
-		if (softmagic(buf) == 1)
-			/*NULLBODY*/;
-		else if (ascmagic(buf) == 1)
-			/*
-			 * try known keywords, check for ascii-ness too.
-			 */
-			/*NULLBODY*/;
-		else {
-			/*
-			 * abandon hope, all ye who remain here
-			 */
-			ckfputs("data", stdout);
-		}
+			try(buf, nbytes);
 		if (strcmp("-", inname) != 0) {
 			/*
-			 * Restore access, modification times if we read it.
+			 * Try to restore access, modification times if read it.
 			 */
 			utbuf.actime = statbuf.st_atime;
 			utbuf.modtime = statbuf.st_mtime;
-			(void) utime(inname, &utbuf);
-			/* we don't care if we lack perms */
+			(void) utime(inname, &utbuf); /* don't care if loses */
 			(void) close(fd);
 		}
 	}
@@ -208,4 +205,24 @@ readit:
 	(void) putchar('\n');
 }
 
-
+try(buf, nbytes)
+char *buf;
+int nbytes;
+{
+	/*
+	 * try tests in /etc/magic (or surrogate magic file)
+	 */
+	if (softmagic(buf, nbytes) == 1)
+		/*NULLBODY*/;
+	else if (ascmagic(buf, nbytes) == 1)
+		/*
+		 * try known keywords, check for ascii-ness too.
+		 */
+		/*NULLBODY*/;
+	else {
+		/*
+		 * abandon hope, all ye who remain here
+		 */
+		ckfputs("data", stdout);
+	}
+}
