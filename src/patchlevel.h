@@ -1,11 +1,14 @@
 #define	FILE_VERSION_MAJOR	4
-#define	patchlevel		11
+#define	patchlevel		12
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.54 2004/11/21 05:52:05 christos Exp $
+ * $Id: patchlevel.h,v 1.55 2004/11/24 18:57:47 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.55  2004/11/24 18:57:47  christos
+ * Re-do the autoconf stuff once more; passes make dist now.
+ *
  * Revision 1.54  2004/11/21 05:52:05  christos
  * ready for 4.11
  *
