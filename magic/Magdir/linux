@@ -24,7 +24,7 @@
 0	string		\007\001\000	Linux/i386 object file
 >20	lelong		>0x1020		\b, DLL library
 # message catalogs, from Mitchum DSouza <m.dsouza@mrc-apu.cam.ac.uk>
-0	string		*nazgul*	compiled message catalog
+0	string		*nazgul*	Linux compiled message catalog
 >8	lelong		>0		\b, version %ld
 # core dump file, from Bill Reynolds <bill@goshawk.lanl.gov>
 216	lelong		0421		Linux/i386 core file
