@@ -141,4 +141,7 @@
 
 # SGI SoundTrack <mpruett@sgi.com>
 0	string		_SGI_SoundTrack		SGI SoundTrack project file
-0	string		ID3	MP3 file with ID3 2.0 tag
+# ID3 version 2 tags <waschk@informatik.uni-rostock.de>
+0	string		ID3	MP3 file with ID3 version 2.
+>3	ubyte	<0xff	\b%d.
+>4	ubyte	<0xff	\b%d tag
