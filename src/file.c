@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.10 1987/10/05 21:47:05 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.11 1987/10/05 22:04:55 ian Exp $";
 #endif	/* lint */
 extern char *ckfmsg;
 int 	debug = 0, 	/* huh? */
@@ -61,7 +61,7 @@ int argc;
 char *argv[];
 {
 	int c;
-	int check = 0, errflg = 0, ret = 0;
+	int check = 0, didsomefiles = 0, errflg = 0, ret = 0;
 	extern int optind;
 	extern char *optarg;
 
@@ -77,6 +77,7 @@ char *argv[];
 			break;
 		case 'f':
 			unwrap(optarg);
+			++didsomefiles;
 			break;
 		case 'm':
 			magicfile = optarg;
@@ -95,8 +96,10 @@ char *argv[];
 	if (check)
 		exit(ret);
 
-	if (optind == argc)
-		(void)fprintf(stderr, USAGE, progname);
+	if (optind == argc) {
+		if (!didsomefiles)
+			(void)fprintf(stderr, USAGE, progname);
+	}
 	else
 		for (; optind < argc; optind++)
 			process(argv[optind]);
