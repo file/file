@@ -1,4 +1,4 @@
-data_DATA = magic magic.mime magic.mgc magic.mime.mgc
+pkgdata_DATA = magic magic.mime magic.mgc magic.mime.mgc
 
 EXTRA_DIST = magic2mime Localstuff Header magic.mime $(magic_FRAGMENTS)
 
