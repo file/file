@@ -4,6 +4,26 @@
 #
 0x438	leshort	0xEF53			Linux/i386 ext2 filesystem
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
+# Sun disk labels
+# From /usr/include/sun/dklabel.h:
+0774	beshort		0xdabe		Sun disk label
+>0	string		x		'%s
+>>31  	string		>\0		\b%s
+>>>63  	string		>\0		\b%s
+>>>>95 	string		>\0		\b%s
+>0	string		x		\b'
+>0734	short		>0		%d rpm,
+>0736	short		>0		%d phys cys,
+>0740	short		>0		%d alts/cyl,
+>0746	short		>0		%d interleave,
+>0750	short		>0		%d data cyls,
+>0752	short		>0		%d alt cyls,
+>0754	short		>0		%d heads/partition,
+>0756	short		>0		%d sectors/track,
+>0764	long		>0		start cyl %ld,
+>0770	long		x		%ld blocks
+# Is there a boot block written 1 sector in?
+>512    belong&077777777	0600407	\b, boot block present
 0x1FE	leshort	0xAA55			x86 boot sector
 >2	string	OSBS			\b, OS/BS MBR
 >0x8C	string	Invalid\ partition\ table	\b, MS-DOS MBR

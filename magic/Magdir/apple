@@ -1,9 +1,12 @@
 
 #------------------------------------------------------------------------------
-# apple:  file(1) magic for Apple II file formats
+# apple:  file(1) magic for Apple file formats
 #
 0	string		FiLeStArTfIlEsTaRt	binscii (apple ][) text
 0	string		\x0aGL			Binary II (apple ][) data
 0	string		\x76\xff		Squeezed (apple ][) data
 0	string		NuFile			NuFile archive (apple ][) data
 0	string		N\xf5F\xe9l\xe5		NuFile archive (apple ][) data
+0	belong		0x00051600		AppleSingle encoded Macintosh file
+0	belong		0x00051607		AppleDouble encoded Macintosh file
+
