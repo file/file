@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.94 2004/09/11 19:15:57 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.95 2004/09/27 15:28:37 christos Exp $")
 #endif	/* lint */
 
 
@@ -310,6 +310,7 @@ main(int argc, char *argv[])
 			process(argv[optind], wid);
 	}
 
+	magic_close(magic);
 	return 0;
 }
 

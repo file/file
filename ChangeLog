@@ -1,3 +1,9 @@
+2004-09-27 11:30  christos Zoulas  <christos@zoulas.com>
+
+	* Remove 3rd and 4th copyright clause; approved by Ian Darwin.
+
+	* Fix small memory leaks; caught by: Tamas Sarlos 
+	    <stamas@csillag.ilab.sztaki.hu>
 
 2004-07-24 16:33  Christos Zoulas  <christos@zoulas.com>
 
