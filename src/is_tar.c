@@ -5,7 +5,7 @@
  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
  *
  * @(#)list.c 1.18 9/23/86 Public Domain - gnu
- * $Id: is_tar.c,v 1.7 1992/09/08 15:32:19 ian Exp $
+ * $Id: is_tar.c,v 1.8 1993/09/16 21:09:35 christos Exp $
  *
  * Comments changed and some code/comments reformatted
  * for file command by Ian Darwin.
@@ -31,13 +31,17 @@ static long from_oct();
  *	2 for Unix Std (POSIX) tar file.
  */
 int
-is_tar(buf)
+is_tar(buf, nbytes)
 unsigned char *buf;
+int nbytes;
 {
 	register union record *header = (union record *)buf;
 	register int	i;
 	register long	sum, recsum;
 	register char	*p;
+
+	if (nbytes < sizeof(union record))
+		return 0;
 
 	recsum = from_oct(8,  header->header.chksum);
 
