@@ -31,6 +31,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 /*
  * Like printf, only we print to a buffer and advance it.
@@ -134,4 +135,40 @@ file_reset(struct magic_set *ms)
 	ms->o.ptr = ms->o.buf;
 	ms->haderr = 0;
 	return 0;
+}
+
+protected const char *
+file_getbuffer(struct magic_set *ms)
+{
+	char *nbuf, *op, *np;
+	size_t nsize;
+
+	if (ms->haderr)
+		return NULL;
+
+	if (ms->flags & MAGIC_RAW)
+		return ms->o.buf;
+
+	nsize = ms->o.len * 4 + 1;
+	if (ms->o.psize < nsize) {
+		if ((nbuf = realloc(ms->o.pbuf, nsize)) == NULL) {
+			file_oomem(ms);
+			return NULL;
+		}
+		ms->o.psize = nsize;
+		ms->o.pbuf = nbuf;
+	}
+
+	for (np = ms->o.pbuf, op = ms->o.buf; *op; op++) {
+		if (isprint((unsigned char)*op)) {
+			*np++ = *op;	
+		} else {
+			*np++ = '\\';
+			*np++ = ((*op >> 6) & 3) + '0';
+			*np++ = ((*op >> 3) & 7) + '0';
+			*np++ = ((*op >> 0) & 7) + '0';
+		}
+	}
+	*np = '\0';
+	return ms->o.pbuf;
 }

@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.83 2003/10/08 17:09:26 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.84 2003/10/09 15:15:23 christos Exp $")
 #endif	/* lint */
 
 
@@ -128,7 +128,7 @@ main(int argc, char *argv[])
 	int flags = 0;
 	char *mime, *home, *usermagic;
 	struct stat sb;
-#define OPTSTRING	"bcCdf:F:ikLm:nNpsvz"
+#define OPTSTRING	"bcCdf:F:ikLm:nNprsvz"
 #ifdef HAVE_GETOPT_LONG
 	int longindex;
 	private struct option long_options[] =
@@ -150,6 +150,7 @@ main(int argc, char *argv[])
 		{"preserve-date", 0, 0, 'p'},
 #endif
 		{"uncompress", 0, 0, 'z'},
+		{"raw", 0, 0, 'r'},
 		{"no-buffer", 0, 0, 'n'},
 		{"no-pad", 0, 0, 'N'},
 		{"special-files", 0, 0, 's'},
@@ -242,6 +243,9 @@ main(int argc, char *argv[])
 			flags |= MAGIC_PRESERVE_ATIME;
 			break;
 #endif
+		case 'r':
+			flags |= MAGIC_RAW;
+			break;
 		case 's':
 			flags |= MAGIC_DEVICES;
 			break;

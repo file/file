@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.11 2003/10/08 16:37:27 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.12 2003/10/09 15:15:23 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -98,8 +98,15 @@ magic_open(int flags)
 		free(ms);
 		return NULL;
 	}
+	ms->o.pbuf = malloc(ms->o.psize = 1024);
+	if (ms->o.pbuf == NULL) {
+		free(ms->o.buf);
+		free(ms);
+		return NULL;
+	}
 	ms->c.off = malloc((ms->c.len = 10) * sizeof(*ms->c.off));
 	if (ms->c.off == NULL) {
+		free(ms->o.pbuf);
 		free(ms->o.buf);
 		free(ms);
 		return NULL;
@@ -216,7 +223,7 @@ magic_file(struct magic_set *ms, const char *inname)
 	case 0:
 		break;
 	default:
-		return ms->o.buf;
+		return file_getbuffer(ms);
 	}
 
 #ifndef	STDIN_FILENO
@@ -232,7 +239,7 @@ magic_file(struct magic_set *ms, const char *inname)
 		if (sb.st_mode & 0111)
 			if (file_printf(ms, "executable, ") == -1)
 				return NULL;
-		return ms->o.buf;
+		return file_getbuffer(ms);
 	}
 
 	/*
@@ -258,7 +265,7 @@ magic_file(struct magic_set *ms, const char *inname)
 		case 0:
 			break;
 		default:
-			return ms->o.buf;
+			return file_getbuffer(ms);
 		}
 #endif
 		if (file_buffer(ms, buf, (size_t)nbytes) == -1)
@@ -279,7 +286,7 @@ magic_file(struct magic_set *ms, const char *inname)
 	}
 
 	close_and_restore(ms, inname, fd, &sb);
-	return ms->haderr ? NULL : ms->o.buf;
+	return file_getbuffer(ms);
 done:
 	close_and_restore(ms, inname, fd, &sb);
 	return NULL;
@@ -298,7 +305,7 @@ magic_buffer(struct magic_set *ms, const void *buf, size_t nb)
 	if (file_buffer(ms, buf, nb) == -1) {
 		return NULL;
 	}
-	return ms->haderr ? NULL : ms->o.buf;
+	return file_getbuffer(ms);
 }
 
 public const char *
