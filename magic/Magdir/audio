@@ -67,7 +67,8 @@
 >83	byte		1		(song)
 
 # Real Audio (Magic .ra\0375)
-0	belong		0x2e7261fd	realaudio sound file
+0	belong		0x2e7261fd	RealAudio sound file
+0	string		.RMF		RealMedia file
 
 # MTM/669/FAR/S3M/ULT/XM format checking [Aaron Eppert, aeppert@dialin.ind.net]
 # Oct 31, 1995
@@ -109,3 +110,9 @@
 # TOC sound files -Trevor Johnson <trevor@jpj.net>
 #
 0       string          TOC             TOC sound file
+
+# sidfiles <pooka@iki.fi>
+0	string		PSID			PlaySID v2.2+ (AMIGA) sidtune,
+0	string		SIDPLAY\ INFOFILE	Sidplay info file
+>14	beshort		=1			single song,
+>14	beshort		>1			%d songs,

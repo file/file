@@ -47,11 +47,49 @@
 #
 #
 12	belong	0x061561	Berkeley DB 2.X Hash/Big Endian
->16	belong	>0		(Version %d)
+>16	belong	>0		(Version %d,
+>0	belong  x		Logical sequence number: file - %d,
+>4	belong  x		offset - %d,
+>20	belong	x		Bucket Size %d,
+>24	belong	x		Overflow Point %d,
+>28	belong	x		Last Freed %d,
+>32	belong	x		Max Bucket %d,
+>36	belong	x		High Mask 0x%x,
+>40	belong	x		Low Mask 0x%x,
+>44	belong	x		Fill Factor %d,
+>48	belong	x		Number of Keys %d)
+#
+# DB2.X formats from Khimenko Victor <khim@sch57.msk.ru>
+#
 12	lelong	0x061561	Berkeley DB 2.X Hash/Little Endian
->16	lelong	>0		(Version %d)
-
+>16	lelong	>0		(Version %d,
+>0	lelong  x		Logical sequence number: file - %d,
+>4	lelong  x		offset - %d,
+>20	lelong	x		Bucket Size %d,
+>24	lelong	x		Overflow Point %d,
+>28	lelong	x		Last Freed %d,
+>32	lelong	x		Max Bucket %d,
+>36	lelong	x		High Mask 0x%x,
+>40	lelong	x		Low Mask 0x%x,
+>44	lelong	x		Fill Factor %d,
+>48	lelong	x		Number of Keys %d)
+#
+#
 12	belong	0x053162	Berkeley DB 2.X Btree/Big Endian
->16	belong	>0		(Version %d)
+>16	belong	>0		(Version %d, 
+>0	belong  x		Logical sequence number: file - %d,
+>4	belong  x		offset - %d,
+>20	belong	x		Page Size %d,
+>24	belong	x		Maxkey %d,
+>28	belong	x		Minkey %d,
+>32	belong	x		Free Page %d)
+#
+#
 12	lelong	0x053162	Berkeley DB 2.X Btree/Little Endian
->16	lelong	>0		(Version %d)
+>16	lelong	>0		(Version %d,
+>0	lelong  x		Logical sequence number: file - %d,
+>4	lelong  x		offset - %d,
+>20	lelong	x		Page Size %d,
+>24	lelong	x		Maxkey %d,
+>28	lelong	x		Minkey %d,
+>32	lelong	x		Free Page %d)

@@ -19,3 +19,7 @@
 # BeOS and MAcOS PEF executables
 # From: hplus@zilker.net (Jon Watte)
 0	string		Joy!peffpwpc	header for PowerPC PEF executable
+#
+# ava assembler/linker Uros Platise <uros.platise@ijs.si>
+0       string          avaobj  AVR assembler object code
+>7      string          >\0     version '%s'

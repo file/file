@@ -7,7 +7,20 @@
 # merging several one- and two-line files into here.
 #
 # little magic: PCX (first byte is 0x0a)
-# no magic: Targa
+
+# Targa - matches `povray', `ppmtotga' and `xv' outputs
+# by Philippe De Muyter <phdm@macqel.be>
+# at 2, byte ImgType must be 1, 2, 3, 9, 10 or 11
+# at 1, byte CoMapType must be 1 if ImgType is 1 or 9, 0 otherwise
+# at 3, leshort Index is 0 for povray, ppmtotga and xv outputs
+# `xv' recognizes only a subset of the following (RGB with pixelsize = 24)
+# `tgatoppm' recognizes a superset (Index may be anything)
+1	belong&0xfff7ffff	0x01010000	Targa image data - Map
+>2	byte&8			8		- RLE
+1	belong&0xfff7ffff	0x00020000	Targa image data - RGB
+>2	byte&8			8		- RLE
+1	belong&0xfff7ffff	0x00030000	Targa image data - Mono
+>2	byte&8			8		- RLE
 
 # PBMPLUS images
 # The next byte following the magic is always whitespace.
@@ -117,19 +130,6 @@
 1	string		PC\ Research,\ Inc	group 3 fax data
 >29	byte		0		\b, normal resolution (204x98 DPI)
 >29	byte		1		\b, fine resolution (204x196 DPI)
-
-# JPEG images
-# SunOS 5.5.1 had
-#
-#	0	string		\377\330\377\340	JPEG file
-#	0	string		\377\330\377\356	JPG file
-#
-# both of which turn into "JPEG image data" here.
-#
-0	beshort		0xffd8		JPEG image data
->6	string		JFIF		\b, JFIF standard
-# HSI is Handmade Software's proprietary JPEG encoding scheme
-0	string		hsi1		JPEG image data, HSI proprietary
 
 # PC bitmaps (OS/2, Windoze BMP files)  (Greg Roelofs, newt@uchicago.edu)
 0	string		BM		PC bitmap data
