@@ -1,0 +1,36 @@
+#
+# magic.pdp: PDP 11
+#
+0	long		0x39bed		PDP-11 old archive
+0	long		0x39bee		PDP-11 4.0 archive
+0	long		0x836c		PDP-11 double precision APL workspace
+0	long		0x836d		PDP-11 single precision APL workspace
+
+0	short		0177555		very old PDP-11 archive
+0	short		0177545		old PDP-11 archive
+
+0	short		0407		PDP-11 executable
+>8	short		>0		not stripped
+
+0	short		0401		PDP-11 unix-rt ldp
+0	short		0405		PDP-11 old overlay
+
+0	short		0410		PDP-11 pure executable
+>8	short		>0		not stripped
+#>2	short		>0		- version %ld
+
+0	short		0411		PDP-11 separate I&D executable
+>8	short		>0		not stripped
+#>2	short		>0		- version %ld
+
+0	long		0413		PDP-11 demand paged pure executable
+>16	long		>0		not stripped
+#>2	short		>0		- version %ld
+
+0	long		0420		PDP-11 demand paged (first page unmapped) pure executable
+>16	long		>0		not stripped
+#>2	short		>0		- version %ld
+0	short		0437		PDP-11 kernel overlay
+
+0	short		0xff65		PDP-11/pre System V/old Sun ar archive
+>8	string		__.SYMDEF	random library

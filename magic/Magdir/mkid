@@ -1,0 +1,3 @@
+# ID is the binary tags database produced by mkid(1).
+0	string		\311\304	ID tags data
+>2	short		>0		version %d

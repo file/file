@@ -1,0 +1,8 @@
+# Motorola
+0	short		0520		mc68k executable
+>12	long		>0		not stripped
+0	short		0521		mc68k executable (shared)
+>12	long		>0		not stripped
+0	short		0522		mc68k executable (shared demand paged)
+>12	long		>0		not stripped
+

@@ -1,0 +1,18 @@
+# ELF
+0	string		ELF		ELF
+>4	byte		1		32-bit
+>5	byte		1		LSB
+>5	byte		2		MSB
+>16	short		0		unknown type
+>16	short		1		relocatable
+>16	short		2		executable
+>16	short		3		dynamic lib
+>16	short		4		core file
+>18	short		0		unknown machine
+>18	short		1		WE32100
+>18	short		2		SPARC
+>18	short		3		80386
+>18	short		4		M68000
+>18	short		5		M88000
+>20	long		1		Version 1
+>36	long		1		MathCoPro/FPU/MAU Required
