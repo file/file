@@ -30,7 +30,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.7 1987/11/06 11:25:31 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.8 1990/10/03 17:53:10 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -94,25 +94,28 @@ struct magic *m;
 char *s;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
+	register long v;
 	char *pp, *strchr();
 
-	switch (m->type) {
-	case BYTE:
-		(void) printf(m->desc, p->b);
-		break;
-	case SHORT:
-		(void) printf(m->desc, p->h);
-		break;
-	case LONG:
-		(void) printf(m->desc, p->l);
-		break;
-	case STRING:
+	if (m->type == STRING) {
 		if ((pp=strchr(p->s, '\n')) != NULL)
 			*pp = '\0';
 		(void) printf(m->desc, p->s);
-		break;
-	default:
-		warning("invalid m->type (%d) in mprint()", m->type);
+	} else {
+		switch (m->type) {
+		case BYTE:
+			v = p->b; break;
+		case SHORT:
+			v = p->h; break;
+		case LONG:
+			v = p->l; break;
+		default:
+			warning("invalid m->type (%d) in mprint()", m->type);
+			v = 0L;
+		}
+		if (m->mask != 0)
+			v &= m->mask;
+		(void) printf(m->desc, v);
 	}
 }
 
@@ -158,6 +161,9 @@ struct magic *m;
 		return 0;
 	}
 
+	if (m->mask != 0L)
+		v &= m->mask;
+
 	switch (m->reln) {
 	case '=':
 		return v == l;
@@ -166,7 +172,11 @@ struct magic *m;
 	case '<':
 		return v < l;
 	case '&':
-		return v & l;
+		return (v & l) == l;
+	case '^':
+		return (v & l) != l;
+	case 'x':
+		return 1;
 	default:
 		warning("mcheck: can't happen: invalid relation %d", m->reln);
 		return 0;

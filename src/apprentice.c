@@ -31,7 +31,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.8 1987/11/06 21:14:34 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.9 1990/10/03 17:52:59 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -103,7 +103,7 @@ int *ndx, check;
 	if (nd+1 >= MAXMAGIS){
 		if (warned++ == 0)
 			warning(
-"magic table overflow - increase MAXMAGIS beyond %d in file/apprentice.c\n",
+"magic table overflow - increase MAXMAGIS beyond %d in file/file.h\n",
 			MAXMAGIS);
 		return -1;
 	}
@@ -143,9 +143,15 @@ int *ndx, check;
 		warning("type %s invalid", l);
 		return -1;
 	}
+	if (*l == '&') {
+		++l;
+		m->mask = strtol(l, &l, 0);
+	} else
+		m->mask = 0L;
 	EATAB;
 
-	if (*l == '>' || *l == '<' || *l == '&' || *l == '=') {
+	if (*l == '>' || *l == '<' || *l == '='
+	    || (m->type != STRING && (*l == '&' || *l == '^' || *l == 'x'))) {
 		m->reln = *l;
 		++l;
 	} else
@@ -156,28 +162,31 @@ int *ndx, check;
  * TODO finish this macro and start using it!
  * #define offsetcheck {if (offset > HOWMANY-1) warning("offset too big"); }
  */
-	switch(m->type) {
-	/*
-	 * Do not remove the casts below.  They are vital.
-	 * When later compared with the data, the sign extension must
-	 * have happened.
-	 */
-	case BYTE:
-		m->value.l = (char) strtol(l,&l,0);
-		break;
-	case SHORT:
-		m->value.l = (short) strtol(l,&l,0);
-		break;
-	case LONG:
-		m->value.l = (long) strtol(l,&l,0);
-		break;
-	case STRING:
+	if (m->type == STRING) {
 		l = getstr(l, m->value.s, sizeof(m->value.s), &slen);
 		m->vallen = slen;
-		break;
-	default:
-		warning("can't happen: m->type=%d\n", m->type);
-		return -1;
+	} else {
+		if (m->reln != 'x') {
+			switch(m->type) {
+			/*
+			 * Do not remove the casts below.  They are vital.
+			 * When later compared with the data, the sign
+			 * extension must have happened.
+			 */
+			case BYTE:
+				m->value.l = (char) strtol(l,&l,0);
+				break;
+			case SHORT:
+				m->value.l = (short) strtol(l,&l,0);
+				break;
+			case LONG:
+				m->value.l = (long) strtol(l,&l,0);
+				break;
+			default:
+				warning("can't happen: m->type=%d\n", m->type);
+				return -1;
+			}
+		}
 	}
 
 	/*
@@ -208,11 +217,12 @@ int	plen, *slen;
 {
 	char	*origs = s, *origp = p;
 	char	*pmax = p + plen - 1;
-	register char	c;
+	register int	c;
 	register int	val;
 
 	while((c = *s++) != '\0') {
-		if (isspace(c)) break;
+		if (isspace(c))
+			break;
 		if (p >= pmax) {
 			fprintf(stderr, "String too long: %s\n", origs);
 			break;
