@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.36 1993/09/23 20:26:25 christos Exp $
+# @(#)$Id: Makefile,v 1.37 1993/09/23 21:47:01 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -100,7 +100,7 @@ magic:		Magdir
 
 ascmagic.o:	names.h
 
-apprentice.o ascmagic.o file.o fsmagic.o print.o softmagic.o: file.h
+compress.o apprentice.o ascmagic.o file.o fsmagic.o print.o softmagic.o: file.h
 
 install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 		cp file		$(BINDIR)/file

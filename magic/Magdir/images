@@ -28,8 +28,8 @@
 0	string		GIF		GIF picture
 >3	string		87a		- version %s
 >3	string		89a		- version %s
->6	short		>0		%d x
->8	short		>0		%d,
+>6	leshort		>0		%hd x
+>8	leshort		>0		%hd,
 >10	byte		&0x40		interlaced,
 >10	byte&0x07	=0x00		2 colors
 >10	byte&0x07	=0x01		4 colors

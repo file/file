@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.21 1993/09/23 20:26:40 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.22 1993/09/23 21:47:01 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -102,7 +102,7 @@ int nbytes;
 	for (magindex = 0; magindex < nmagic; magindex++) {
 		/* if main entry matches, print it... */
 		if (!mget(&p, s, &magic[magindex], nbytes) ||
-		    !mcheck(&p, &magic[magindex], nbytes)) {
+		    !mcheck(&p, &magic[magindex])) {
 			    /* 
 			     * main entry didn't match,
 			     * flush its continuations
@@ -133,7 +133,7 @@ int nbytes;
 					cont_level = magic[magindex].cont_level;
 				}
 				if (mget(&p, s, &magic[magindex], nbytes) &&
-				    mcheck(&p, &magic[magindex], nbytes)) {
+				    mcheck(&p, &magic[magindex])) {
 					/*
 					 * This continuation matched.
 					 * Print its message, with
@@ -176,20 +176,17 @@ struct magic *m;
 
   	switch (m->type) {
   	case BYTE:
- 		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p->b & m->mask : p->b);
+ 		(void) printf(m->desc, p->b);
   		break;
   	case SHORT:
   	case BESHORT:
   	case LESHORT:
- 		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p->h & m->mask : p->h);
+ 		(void) printf(m->desc, p->h);
   		break;
   	case LONG:
   	case BELONG:
   	case LELONG:
- 		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p->l & m->mask : p->l);
+ 		(void) printf(m->desc, p->l);
   		break;
   	case STRING:
 		if (m->reln == '=') {
@@ -261,7 +258,7 @@ char *str;
 int len;
 {
 	(void) fprintf(stderr, "mget @%d: ", offset);
-	showstr(stderr, (char *) p, sizeof(p));
+	showstr(stderr, (char *) str, len);
 	(void) fputc('\n', stderr);
 	(void) fputc('\n', stderr);
 }
@@ -281,7 +278,7 @@ int nbytes;
 	memcpy(p, s + offset, sizeof(p));
 
 	if (debug) {
-		mdebug(offset, (char *) p, sizeof(p);
+		mdebug(offset, (char *) p, sizeof(p));
 		mdump(m);
 	}
 
@@ -308,7 +305,7 @@ int nbytes;
 		memcpy(p, s + offset, sizeof(p));
 
 		if (debug) {
-			mdebug(offset, (char *) p, sizeof(p);
+			mdebug(offset, (char *) p, sizeof(p));
 			mdump(m);
 		}
 
@@ -324,7 +321,6 @@ union VALUETYPE* p;
 struct magic *m;
 {
 	register long l = m->value.l;
-	register long mask = m->mask;
 	register long v;
 
 	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
@@ -410,21 +406,6 @@ struct magic *m;
 			(void) fprintf(stderr, "((%x & %x) != %x) = %d\n",
 				       v, l, l, (v & l) != l);
 		return (v & l) != l;
-	case MASK | '=':
-		if (debug)
-			(void) fprintf(stderr, "((%x & %x) == %x) = %d\n", 
-				       v, mask, l, (v & mask) == l);
-		return (v & mask) == l;
-	case MASK | '>':
-		if (debug)
-			(void) fprintf(stderr, "((%x & %x) > %x) = %d\n", 
-				       v, mask, l, (v & mask) > l);
-		return (v & mask) > l;
-	case MASK | '<':
-		if (debug)
-			(void) fprintf(stderr, "((%x & %x) < %x) = %d\n", 
-				       v, mask, l, (v & mask) < l);
-		return (v & mask) < l;
 	default:
 		error("mcheck: can't happen: invalid relation %d.\n", m->reln);
 		return 0;/*NOTREACHED*/
