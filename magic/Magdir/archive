@@ -320,3 +320,6 @@
 >>0x1	string	>\0		Version %s
 >>0x2A	string	>\0		: %s
 
+# DR-DOS 7.03 Packed File *.??_
+0	string	Packed\ File\  Personal		NetWare Packed File
+>12	string	x    				\b, was "%.12s"
