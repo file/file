@@ -24,9 +24,10 @@
 
 SHELL	= /bin/sh
 #MAGIC	= /etc/magic
-MAGIC	= /usr/local/lib/magic
+MAGIC	= /usr/local/etc/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
-COPTS	= -g # -O		# gcc allows both
+CC	= cc
+COPTS	= -O # -g		# gcc allows both
 CFLAGS	= $(COPTS) $(DEFS)
 LDFLAGS	= $(COPTS) # -Bstatic	# older gdb couldn't handle shared libs
 SHAR	= bundle
@@ -42,15 +43,18 @@ BINDIR	= /usr/local/bin
 # MANCEXT	1		1		1
 # MANFEXT	5		5		4
 # --- possible alternative for 4BSD ---
+# MANCDIR			/usr/local/man/man1
+# MANCEXT			1
+# or
 # MANCDIR			/usr/man/manl
 # MANCEXT			l
 # --- possible alternative for USG ---
 # MANCDIR			/usr/man/local/man1
 # MANCEXT			1
 
-MANCDIR	= /usr/man/manl
-MANFDIR	= /usr/man/man5
-MANCEXT	= l
+MANCDIR	= /usr/local/man/manl
+MANFDIR	= /usr/local/man/man5
+MANCEXT	= 1
 MANFEXT	= 5
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
@@ -71,10 +75,11 @@ ALLMAGIC =   Magdir/Makefile Magdir/[a-z]* NEWMAGIC
 
 all:		file magic
 
+TESTFILES = * tst/*
 try:		all $(OFILE)
 		cd tst; make
-		time $(OFILE) -m ./magic * tst/* >/tmp/t1
-		time ./file -m ./magic * tst/* >/tmp/t2
+		time $(OFILE) $(TESTFILES) >/tmp/t1 # can't use ./magic
+		time ./file -m ./magic $(TESTFILES) >/tmp/t2
 		-diff -b /tmp/t[12]
 		what ./file >lastnocore
 
