@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.43 2002/07/03 18:57:52 christos Exp $
+ * @(#)$Id: file.h,v 1.44 2002/07/09 14:12:40 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -59,6 +59,10 @@
 
 #define CHECK	1
 #define COMPILE	2
+
+#ifndef __GNUC__
+#define __attribute__(a)
+#endif
 
 struct magic {
 	uint16_t cont_level;	/* level of ">" */

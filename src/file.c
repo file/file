@@ -58,7 +58,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.66 2002/07/03 19:00:41 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.67 2002/07/09 14:12:40 christos Exp $")
 #endif	/* lint */
 
 
@@ -105,7 +105,7 @@ int lineno;		/* line number in the magic file	*/
 
 static void	unwrap(char *fn);
 static void	usage(void);
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 static void	help(void);
 #endif
 #if 0
@@ -126,7 +126,7 @@ main(int argc, char **argv)
 	char *mime, *home, *usermagic;
 	struct stat sb;
 #define OPTSTRING	"bcdf:ikm:nsvzCL"
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 	int longindex;
 	static struct option long_options[] =
 	{
@@ -179,14 +179,14 @@ main(int argc, char **argv)
 			}
 		}
 
-#ifndef HAVE_GETOPT_H
+#ifndef HAVE_GETOPT_LONG
 	while ((c = getopt(argc, argv, OPTSTRING)) != -1)
 #else
 	while ((c = getopt_long(argc, argv, OPTSTRING, long_options,
 	    &longindex)) != -1)
 #endif
 		switch (c) {
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 		case 0 :
 			if (longindex == 1)
 				help();
@@ -523,13 +523,13 @@ usage(void)
 {
 	(void)fprintf(stderr, USAGE, progname);
 	(void)fprintf(stderr, "Usage: %s -C [-m magic]\n", progname);
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 	(void)fputs("Try `file --help' for more information.\n", stderr);
 #endif
 	exit(1);
 }
 
-#ifdef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_LONG
 static void
 help(void)
 {

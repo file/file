@@ -67,6 +67,9 @@
 /* The number of bytes in a uint64_t.  */
 #define SIZEOF_UINT64_T 0
 
+/* Define if you have the getopt_long function.  */
+#undef HAVE_GETOPT_LONG
+
 /* Define if you have the mkstemp function.  */
 #undef HAVE_MKSTEMP
 
