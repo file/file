@@ -76,6 +76,7 @@ AC_SYS_LARGEFILE
 AC_CHECK_TYPE_STDC(uint8_t, unsigned char)
 AC_CHECK_TYPE_STDC(uint16_t, unsigned short)
 AC_CHECK_TYPE_STDC(uint32_t, unsigned int)
+AC_CHECK_TYPE_STDC(int32_t, int)
 AC_C_LONG_LONG
 if test $ac_cv_c_long_long = yes; then
   long64='unsigned long long';
