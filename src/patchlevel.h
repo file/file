@@ -1,12 +1,17 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		18
+#define	patchlevel		19
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.18 1995/05/20 22:09:21 christos Exp $
+ * $Id: patchlevel.h,v 1.19 1995/10/27 23:14:46 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.18  1995/05/20 22:09:21  christos
+ * Revision 1.19  1995/10/27 23:14:46  christos
+ * Ability to parse colon separated list of magic files
+ * New LEGAL.NOTICE
+ * Various magic file changes
+ *
+ * Revision 1.18  1995/05/20  22:09:21  christos
  * Passed incorrect argument to eatsize().
  * Use %ld and %lx where appropriate.
  * Remove unused variables
