@@ -39,7 +39,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.40 2001/04/27 23:59:51 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.41 2001/06/10 02:06:20 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -93,6 +93,35 @@ static int maxmagic = 0;
 
 struct mlist mlist;
 
+#ifdef COMPILE_ONLY
+const char *magicfile;
+char *progname;
+int lineno;
+
+int main __P((int, char *[]));
+
+int
+main(argc, argv)
+	int argc;
+	char *argv[];
+{
+	int ret;
+
+	if ((progname = strrchr(argv[0], '/')) != NULL)
+		progname++;
+	else
+		progname = argv[0];
+
+	if (argc != 2) {
+		(void)fprintf(stderr, "usage: %s file\n", progname);
+		exit(1);
+	}
+	magicfile = argv[1];
+
+	exit(apprentice(magicfile, COMPILE));
+}
+#endif /* COMPILE_ONLY */
+
 
 /*
  * Handle one file.
@@ -114,6 +143,7 @@ apprentice_1(fn, action)
 		else
 			return rv;
 	}
+#ifndef COMPILE_ONLY
 	if ((rv = apprentice_map(&magic, &nmagic, fn, action)) != 0)
 		(void)fprintf(stderr, "%s: Using regular magic file `%s'\n",
 		    progname, fn);
@@ -143,6 +173,7 @@ apprentice_1(fn, action)
 	mlist.prev = ml;
 
 	return rv;
+#endif /* COMPILE_ONLY */
 }
 
 
