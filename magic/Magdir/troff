@@ -1,6 +1,9 @@
+
+#------------------------------------------------------------------------------
+# troff:  file(1) magic for *roff
 #
-# magic.troff
 # updated by Daniel Quinlan (quinlan@yggdrasil.com)
+
 # troff input
 0	string		.\\"		troff or preprocessor input text
 0	string		'\\"		troff or preprocessor input text
@@ -19,5 +22,6 @@
 >>7	string		-12		(12pt)
 >4	string		X100		for xditview at 100dpi
 >>8	string		-12		(12pt)
+
 # output data formats
 0	string		\100\357	very old (C/A/T) troff output data

@@ -1,5 +1,6 @@
-#
-# Sun rasterfiles
+
+#------------------------------------------------------------------------------
+# sunraster:  file(1) magic for Sun rasterfiles
 #
 # XXX - byte order?  What about the 386i?
 #

@@ -1,3 +1,7 @@
+
+#------------------------------------------------------------------------------
+# mail.news:  file(1) magic for mail and news
+#
 # Unfortunately, saved netnews also has From line added in some news software.
 #0	string		From 		mail text
 # There are tests to ascmagic.c to cope with mail and news.

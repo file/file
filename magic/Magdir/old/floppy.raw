@@ -1,1 +1,5 @@
+
+#------------------------------------------------------------------------------
+# floppy.raw:  file(1) magic for raw floppies (whose format?)
+#
 0	string	\366\366\366\366	Formatted floppy w/ no filesystem data

@@ -1,5 +1,8 @@
+
+#------------------------------------------------------------------------------
+# html:  file(1) magic for HTML (HyperText Markup Language) docs
 #
-# HTML magic, from Daniel Quinlan <quinlan@yggdrasil.com>
+# from Daniel Quinlan <quinlan@yggdrasil.com>
 #
 0	string		\<HEAD		HTML document text (old type)
 0	string		\<head		HTML document text (old type)

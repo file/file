@@ -1,49 +1,32 @@
-# PostScript
-0	string		%!		PostScript document
->2	string		PS-Adobe-	conforming
->>11	string		>\0		at level %s
-# Some pc's have the annoying habit of adding a ^D
-0	string		\004%!		PostScript document
->3	string		PS-Adobe-	conforming
->>12	string		>\0		at level %s
-# PCL (HP print format followed by DeskJets and LaserJets)
-# from Daniel Quinlan (quinlan@yggdrasil.com)
-0	string		\033E\033	PCL (LaserJet) printer data
-# Tell file about magic for IMAGEN printer-ready files:
-0	string	@document(		Imagen printer
-# this only works if "language xxx" is first item in Imagen header.
->10	string	language\ impress	(imPRESS data)
->10	string	language\ daisy		(daisywheel text)
->10	string	language\ diablo		(daisywheel text)
->10	string	language\ printer	(line printer emulation)
->10	string	language\ tektronix	(Tektronix 4014 emulation)
-# Add any other languages that your Imagen uses - remember
-# to keep the word `text' if the file is human-readable.
+
+#------------------------------------------------------------------------------
+# printer:  file(1) magic for printer-formatted files
 #
-# Now magic for IMAGEN font files...
-0	string		Rast		RST-format raster font data
->45	string		>0		face %
+
 # PostScript
 0	string		%!		PostScript document
 >2	string		PS-Adobe-	conforming
 >>11	string		>\0		at level %s
-# Some pc's have the annoying habit of adding a ^D
+# Some pc's have the annoying habit of adding a ^D as a document separator
 0	string		\004%!		PostScript document
 >3	string		PS-Adobe-	conforming
 >>12	string		>\0		at level %s
+
 # PCL (HP print format followed by DeskJets and LaserJets)
 # from Daniel Quinlan (quinlan@yggdrasil.com)
 0	string		\033E\033	PCL (LaserJet) printer data
-# Tell file about magic for IMAGEN printer-ready files:
+
+# IMAGEN printer-ready files:
 0	string	@document(		Imagen printer
 # this only works if "language xxx" is first item in Imagen header.
 >10	string	language\ impress	(imPRESS data)
 >10	string	language\ daisy		(daisywheel text)
->10	string	language\ diablo		(daisywheel text)
+>10	string	language\ diablo	(daisywheel text)
 >10	string	language\ printer	(line printer emulation)
 >10	string	language\ tektronix	(Tektronix 4014 emulation)
 # Add any other languages that your Imagen uses - remember
 # to keep the word `text' if the file is human-readable.
+# [GRR 950115:  missing "postscript" or "ultrascript" (whatever it was called)]
 #
 # Now magic for IMAGEN font files...
 0	string		Rast		RST-format raster font data

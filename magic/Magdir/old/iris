@@ -1,5 +1,6 @@
-#
-# magic.iris: Magic for mips from an iris4d
+
+#------------------------------------------------------------------------------
+# iris:  file(1) magic for mips from an iris4d
 #
 # Dunno what byte-order munging is needed; all of SGI's *current*
 # machines and OSes run in big-endian mode on the MIPS machines,

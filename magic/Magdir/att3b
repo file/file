@@ -1,5 +1,6 @@
-#
-# AT&T 3B machines
+
+#------------------------------------------------------------------------------
+# att3b:  file(1) magic for AT&T 3B machines
 #
 # The `versions' should be un-commented if they work for you.
 # (Was the problem just one of endianness?)

@@ -1,5 +1,7 @@
+
+#------------------------------------------------------------------------------
+# pgp:  file(1) magic for Pretty Good Privacy
 #
-# pgp (pretty good protection)
 0       beshort         0x9900                  pgp key public ring
 0       beshort         0x9501                  pgp key security ring
 0       beshort         0x9500                  pgp key security ring

@@ -1,3 +1,7 @@
+
+#------------------------------------------------------------------------------
+# varied.out:  file(1) magic for various USG systems
+#
 #	Herewith many of the object file formats used by USG systems.
 #	Most have been moved to files for a particular processor,
 #	and deleted if they duplicate other entries.

@@ -1,5 +1,6 @@
-#
-# Zilog Z8000.
+
+#------------------------------------------------------------------------------
+# zilog:  file(1) magic for Zilog Z8000.
 #
 # Was it big-endian or little-endian?  My Product Specification doesn't
 # say.

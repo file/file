@@ -1,3 +1,7 @@
+
+#------------------------------------------------------------------------------
+# zyxel:  file(1) magic for ZyXEL modems
+#
 # From <rob@pe1chl.ampr.org>
 # These are the /etc/magic entries to decode datafiles as used for the
 # ZyXEL U-1496E DATA/FAX/VOICE modems.  (This header conforms to a

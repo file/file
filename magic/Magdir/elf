@@ -1,5 +1,7 @@
+
+#------------------------------------------------------------------------------
+# elf:  file(1) magic for ELF executables
 #
-# ELF
 # Missing MIPS image type and flags
 #
 # Question marks on processor types flag "should not happen because the

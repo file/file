@@ -1,5 +1,9 @@
+
+#------------------------------------------------------------------------------
+# timezone:  file(1) magic for timezone data
 #
-# time zone data, from Daniel Quinlan (quinlan@yggdrasil.com)
+# from Daniel Quinlan (quinlan@yggdrasil.com)
 # this will work on Linux, SunOS, and others
-27	byte		1		time zone data
-27	byte		2		time zone data
+27	byte		1		timezone data
+27	byte		2		timezone data
+# [GRR 950115:  these will catch a fair number of random binary files, too...]
