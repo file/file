@@ -28,12 +28,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <sys/types.h>
 
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.13 1992/09/08 16:16:29 ian Exp $";
+	"@(#)$Id: softmagic.c,v 1.14 1992/09/09 15:04:16 ian Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *));
