@@ -3,19 +3,29 @@
 
    Copyright (C) Brett Funderburg, Deepfile Corp. Austin, TX, US 2003
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice immediately at the beginning of the file, without modification,
+      this list of conditions, and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. The name of the author may not be used to endorse or promote products
+      derived from this software without specific prior written permission.
+    
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR
+   ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
 */
 
 #include <Python.h>
@@ -49,8 +59,7 @@ static PyObject* py_magic_open(PyObject* self, PyObject* args)
         return NULL;
 
     if(!(cookie = magic_open(flags))) {
-        PyErr_SetString(magic_error_obj, "failure initializing magic
-cookie");
+        PyErr_SetString(magic_error_obj, "failure initializing magic cookie");
         return NULL;
     }
 
@@ -76,29 +85,39 @@ static PyObject* py_magic_error(PyObject* self, PyObject* args)
 {
     magic_cookie_hnd* hnd = (magic_cookie_hnd*)self;
     const char* message = NULL;
-    PyObject* result = NULL;
+    PyObject* result = Py_None;
 
     message = magic_error(hnd->cookie);
 
     if(message != NULL)
         result = PyString_FromString(message);
-    else {
+    else
         Py_INCREF(Py_None);
-        result = Py_None;
-    }
 
     return result;
 }
 
+static char _magic_errno__doc__[] =
+"Returns a numeric error code. If return value is 0, an internal \
+ magic error occurred. If return value is non-zero, the value is \
+ an OS error code. Use the errno module or os.strerror() can be used \
+ to provide detailed error information.\n";
+static PyObject* py_magic_errno(PyObject* self, PyObject* args)
+{
+    magic_cookie_hnd* hnd = (magic_cookie_hnd*)self;
+    return PyInt_FromLong(magic_errno(hnd->cookie));
+}
+
 static char _magic_file__doc__[] =
 "Returns a textual description of the contents of the argument passed \
- as a filename or None if an error occurred.\n";
+ as a filename or None if an error occurred and the MAGIC_ERROR flag \
+ is set. A call to errno() will return the numeric error code.\n";
 static PyObject* py_magic_file(PyObject* self, PyObject* args)
 {
     magic_cookie_hnd* hnd = (magic_cookie_hnd*)self;
     char* filename = NULL;
     const char* message = NULL;
-    PyObject* result = NULL;
+    PyObject* result = Py_None;
 
     if(!(PyArg_ParseTuple(args, "s", &filename)))
         return NULL;
@@ -108,22 +127,22 @@ static PyObject* py_magic_file(PyObject* self, PyObject* args)
     if(message != NULL)
         result = PyString_FromString(message);
     else
-        PyErr_SetString(PyExc_RuntimeError,
-                "failure determining file type");
+        Py_INCREF(Py_None);
 
     return result;
 }
 
 static char _magic_buffer__doc__[] =
 "Returns a textual description of the contents of the argument passed \
- as a buffer or None if an error occurred.\n";
+ as a buffer or None if an error occurred and the MAGIC_ERROR flag \
+ is set. A call to errno() will return the numeric error code.\n";
 static PyObject* py_magic_buffer(PyObject* self, PyObject* args)
 {
     magic_cookie_hnd* hnd = (magic_cookie_hnd*)self;
     void* buffer = NULL;
     int buffer_length = 0;
     const char* message = NULL;
-    PyObject* result = NULL;
+    PyObject* result = Py_None;
 
     if(!(PyArg_ParseTuple(args, "s#", (char**)&buffer, &buffer_length)))
         return NULL;
@@ -133,8 +152,7 @@ static PyObject* py_magic_buffer(PyObject* self, PyObject* args)
     if(message != NULL)
         result = PyString_FromString(message);
     else
-        PyErr_SetString(PyExc_RuntimeError,
-                "failure determining buffer type");
+        Py_INCREF(Py_None);
 
     return result;
 }
@@ -158,10 +176,9 @@ static PyObject* py_magic_setflags(PyObject* self, PyObject* args)
 }
 
 static char _magic_check__doc__[] =
-"Check the validity of entries in the colon separated list of database
-files \
- passed as argument or the default database file if no argument.\n \
- Returns 0 on success and -1 on failure.\n";
+"Check the validity of entries in the colon separated list of \
+ database files passed as argument or the default database file \
+ if no argument.\n Returns 0 on success and -1 on failure.\n";
 static PyObject* py_magic_check(PyObject* self, PyObject* args)
 {
     magic_cookie_hnd* hnd = (magic_cookie_hnd*)self;
@@ -197,7 +214,7 @@ static PyObject* py_magic_compile(PyObject* self, PyObject* args)
 }
 
 static char _magic_load__doc__[] =
-"Must be used to load entries in the colon separated list of database files \
+"Must be called to load entries in the colon separated list of database files \
  passed as argument or the default database file if no argument before \
  any magic queries can be performed.\n \
  Returns 0 on success and -1 on failure.\n";
@@ -234,6 +251,8 @@ static PyMethodDef magic_cookie_hnd_methods[] = {
       METH_VARARGS, _magic_compile__doc__ },
     { "load", (PyCFunction)py_magic_load,
       METH_VARARGS, _magic_load__doc__ },
+    { "errno", (PyCFunction)py_magic_errno,
+      METH_NOARGS, _magic_errno__doc__ },
     { NULL, NULL }
 };
 
@@ -288,6 +307,7 @@ static struct const_vals {
     { "MAGIC_CONTINUE", MAGIC_CONTINUE },
     { "MAGIC_CHECK", MAGIC_CHECK },
     { "MAGIC_PRESERVE_ATIME", MAGIC_PRESERVE_ATIME },
+    { "MAGIC_ERROR", MAGIC_ERROR},
     { NULL }
 };
 
