@@ -100,7 +100,7 @@
 #MP3 with ID3 tag
 0	string		ID3		audio/mpeg
 # Ogg/Vorbis
-0	string		OggS		audio/x-ogg
+0	string		OggS		application/ogg
 
 #------------------------------------------------------------------------------
 # c-lang:  file(1) magic for C programs or various scripts
