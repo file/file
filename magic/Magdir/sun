@@ -64,6 +64,20 @@
 0	belong		0x080456	SunOS core file
 >4	belong		432		(SPARC)
 >>132	string		>\0		from '%s'
+>>116	belong		=3		(quit)
+>>116	belong		=4		(illegal instruction)
+>>116	belong		=5		(trace trap)
+>>116	belong		=6		(abort)
+>>116	belong		=7		(emulator trap)
+>>116	belong		=8		(arithmetic exception)
+>>116	belong		=9		(kill)
+>>116	belong		=10		(bus error)
+>>116	belong		=11		(segmentation violation)
+>>116	belong		=12		(bad argument to system call)
+>>116	belong		=29		(resource lost)
+>>120	belong		x		(T=%dK,
+>>124	belong		x		D=%dK,
+>>128	belong		x		S=%dK)
 >4	belong		826		(68K)
 >>128	string		>\0		from '%s'
 >4	belong		456		(SPARC 4.x BCP)
