@@ -1,4 +1,6 @@
+#
 # Alliant FX series a.out files:
+#
 0	short		0420		0420 Alliant virtual executable
 >2	short		&0x0020		common library
 >16	long		>0		not stripped
