@@ -46,7 +46,7 @@ char *types[] = {
 	"make commands text" ,
 	"pl/1 program text",
 	"assembler program text",
-	"english text",
+	"English text",
 	"pascal program text",
 	"mail text",
 	"news text",
