@@ -1,12 +1,18 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		14
+#define	patchlevel		15
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.14 1994/05/03 17:58:23 christos Exp $
+ * $Id: patchlevel.h,v 1.15 1995/01/21 21:03:35 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.14  1994/05/03 17:58:23  christos
+ * Revision 1.15  1995/01/21 21:03:35  christos
+ * Added CSECTION for the file man page
+ * Added version flag -v
+ * Fixed bug with -f input flag (from iorio@violet.berkeley.edu)
+ * Lots of magic fixes and reorganization...
+ *
+ * Revision 1.14  1994/05/03  17:58:23  christos
  * changes from mycroft@gnu.ai.mit.edu (Charles Hannum) for unsigned
  *
  * Revision 1.13  1994/01/21  01:27:01  christos
