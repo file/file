@@ -27,28 +27,18 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.11 1992/05/22 17:58:06 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.12 1992/09/08 15:00:32 ian Exp $";
 #endif	/* lint */
 
-extern char *progname;
-extern char *magicfile;	/* name of current /etc/magic or clone */
-extern int debug, nmagic;
-extern struct magic magic[];
-static int magindex;
-#if	defined(__STDC__) || defined(__cplusplus)
-static int match(unsigned char *s);
-static int mcheck(unsigned char	*s, struct magic *m);
-static void mprint(struct magic *m, unsigned char *s);
-#else
-static int match();
-static int mcheck();
-static void mprint();
-#endif
+static int match	__P((unsigned char *));
+static int mcheck	__P((unsigned char	*, struct magic *));
+static void mprint	__P((struct magic *, unsigned char *));
 
 /*
  * softmagic - lookup one file in database 
@@ -61,7 +51,6 @@ softmagic(buf, nbytes)
 unsigned char *buf;
 int nbytes;
 {
-	magindex = 0;
 	if (match(buf))
 		return 1;
 
@@ -76,12 +65,13 @@ static int
 match(s)
 unsigned char	*s;
 {
+	int magindex = 0;
 	while (magindex < nmagic) {
 		/* if main entry matches, print it... */
 		if (mcheck(s, &magic[magindex])) {
 			mprint(&magic[magindex],s);
 			/* and any continuations that match */
-			while (magic[magindex+1].contflag &&
+			while (magic[magindex+1].flag &&
 				magindex < nmagic) {
 				++magindex;
 				if (mcheck(s, &magic[magindex])) {
@@ -95,8 +85,8 @@ unsigned char	*s;
 			}
 			return 1;		/* all through */
 		} else {
-			/* main entry didn't match, flush its continuations */
-			while (magic[magindex+1].contflag &&
+			/* main entry didn't match, flush its continuation */
+			while (magic[magindex+1].flag &&
 				magindex < nmagic) {
 				++magindex;
 			}
@@ -112,7 +102,7 @@ struct magic *m;
 unsigned char *s;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
-	char *pp;
+	char *pp, *rt;
 
   	switch (m->type) {
   	case BYTE:
@@ -132,9 +122,15 @@ unsigned char *s;
 			*pp = '\0';
 		(void) printf(m->desc, p->s);
 		break;
-	default:
-		warning("invalid m->type (%d) in mprint()", m->type);
+	case DATE:
+		pp = ctime((time_t*) &p->l);
+		if ((rt = strchr(pp, '\n')) != NULL)
+			*rt = '\0';
+		(void) printf(m->desc, pp);
 		break;
+	default:
+		error("invalid m->type (%d) in mprint().\n", m->type);
+		/*NOTREACHED*/
 	}
 }
 
@@ -164,6 +160,7 @@ struct magic *m;
 	case SHORT:
 		v = p->h; break;
 	case LONG:
+	case DATE:
 		v = p->l; break;
 	case STRING:
 		l = 0;
@@ -172,6 +169,7 @@ struct magic *m;
 		 * but ignoring any nulls.  bcmp doesn't give -/+/0
 		 * and isn't universally available anyway.
 		 */
+		v = 0;
 		{
 			register unsigned char *a = (unsigned char*)m->value.s;
 			register unsigned char *b = (unsigned char*)p->s;
@@ -183,8 +181,8 @@ struct magic *m;
 		}
 		break;
 	default:
-		warning("invalid type %d in mcheck()", m->type);
-		return 0;
+		error("invalid type %d in mcheck().\n", m->type);
+		return -1;/*NOTREACHED*/
 	}
 
 	if (m->mask != 0L)
@@ -211,7 +209,7 @@ struct magic *m;
 	case MASK | '<':
 		return (v & mask) < l;
 	default:
-		warning("mcheck: can't happen: invalid relation %d", m->reln);
-		return 0;
+		error("mcheck: can't happen: invalid relation %d.\n", m->reln);
+		return -1;/*NOTREACHED*/
 	}
 }
