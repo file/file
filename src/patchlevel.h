@@ -1,11 +1,21 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		30
+#define	patchlevel		31
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.30 2000/04/11 02:41:17 christos Exp $
+ * $Id: patchlevel.h,v 1.31 2000/05/14 17:58:36 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.31  2000/05/14 17:58:36  christos
+ * - new magic for claris files
+ * - new magic for mathematica and maple files
+ * - new magic for msvc files
+ * - new -k flag to keep going matching all possible entries
+ * - add the word executable on #! magic files, and fix the usage of
+ *   the word script
+ * - lots of other magic fixes
+ * - fix typo test -> text
+ *
  * Revision 1.30  2000/04/11 02:41:17  christos
  * - add support for mime output (-i)
  * - make sure we free memory in case realloc fails

@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.40 1999/11/28 20:02:30 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.41 2000/05/14 17:58:36 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -102,6 +102,9 @@ int nbytes;
 	static int32 *tmpoff = NULL;
 	static size_t tmplen = 0;
 	int32 oldoff = 0;
+	int returnval = 0; /* if a match is found it is set to 1*/
+	extern int kflag;
+	int firstline = 1; /* a flag to print X\n  X\n- X */
 
 	if (tmpoff == NULL)
 		if ((tmpoff = (int32 *) malloc(tmplen = 20)) == NULL)
@@ -119,6 +122,11 @@ int nbytes;
 			    	   magic[magindex + 1].cont_level != 0)
 			    	   magindex++;
 			    continue;
+		}
+
+		if (! firstline) { /* we found another match */
+			/* put a newline and '-' to do some simple formatting*/
+			printf("\n- ");
 		}
 
 		tmpoff[cont_level] = mprint(&p, &magic[magindex]);
@@ -184,9 +192,13 @@ int nbytes;
 				}
 			}
 		}
-		return 1;		/* all through */
+		firstline = 0;
+		returnval = 1;
+		if (!kflag) {
+			return 1; /* don't keep searching */
+		}			
 	}
-	return 0;			/* no match at all */
+	return returnval;  /* This is hit if -k is set or there is no match */
 }
 
 static int32

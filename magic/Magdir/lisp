@@ -16,3 +16,6 @@
 # Files produced by GNU gettext
 0	long	0xDE120495		GNU-format message catalog data
 0	long	0x950412DE		GNU-format message catalog data
+
+#.com and .bin for MIT scheme 
+0	string	\372\372\372\372	MIT scheme (library?)

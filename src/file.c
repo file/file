@@ -58,14 +58,14 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.50 2000/04/23 04:31:44 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.51 2000/05/14 17:58:36 christos Exp $")
 #endif	/* lint */
 
 
 #ifdef S_IFLNK
-# define USAGE  "Usage: %s [-bcinvzL] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-bciknvzL] [-f namefile] [-m magicfiles] file...\n"
 #else
-# define USAGE  "Usage: %s [-bcinvz] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-bciknvz] [-f namefile] [-m magicfiles] file...\n"
 #endif
 
 #ifndef MAGIC
@@ -83,7 +83,8 @@ int 			/* Global command-line options 		*/
 	zflag = 0,	/* follow (uncompress) compressed files */
 	sflag = 0,	/* read block special files		*/
 	iflag = 0,
-	nobuffer = 0;   /* Do not buffer stdout */
+	nobuffer = 0,   /* Do not buffer stdout */
+	kflag = 0;	/* Keep going after the first match	*/
 
 int			/* Misc globals				*/
 	nmagic = 0;	/* number of valid magic[]s 		*/
@@ -129,22 +130,13 @@ main(argc, argv)
 	if (!(magicfile = getenv("MAGIC")))
 		magicfile = default_magicfile;
 
-	while ((c = getopt(argc, argv, "bcdinf:m:svzL")) != EOF)
+	while ((c = getopt(argc, argv, "bcdf:ikm:nsvzL")) != EOF)
 		switch (c) {
-		case 'v':
-			(void) fprintf(stdout, "%s-%d.%d\n", progname,
-				       FILE_VERSION_MAJOR, patchlevel);
-			(void) fprintf(stdout, "magic file from %s\n",
-				       magicfile);
-			return 1;
 		case 'b':
 			++bflag;
 			break;
 		case 'c':
 			++check;
-			break;
-		case 'n':
-			++nobuffer;
 			break;
 		case 'd':
 			++debug;
@@ -159,20 +151,6 @@ main(argc, argv)
 			unwrap(optarg);
 			++didsomefiles;
 			break;
-#ifdef S_IFLNK
-		case 'L':
-			++lflag;
-			break;
-#endif
-		case 'm':
-			magicfile = optarg;
-			break;
-		case 'z':
-			zflag++;
-			break;
-		case 's':
-			sflag++;
-			break;
 		case 'i':
 			iflag++;
 			if ((mime = malloc(strlen(magicfile) + 5)) != NULL) {
@@ -181,6 +159,32 @@ main(argc, argv)
 				magicfile = mime;
 			}
 			break;
+		case 'k':
+			kflag = 1;
+			break;
+		case 'm':
+			magicfile = optarg;
+			break;
+		case 'n':
+			++nobuffer;
+			break;
+		case 's':
+			sflag++;
+			break;
+		case 'v':
+			(void) fprintf(stdout, "%s-%d.%d\n", progname,
+				       FILE_VERSION_MAJOR, patchlevel);
+			(void) fprintf(stdout, "magic file from %s\n",
+				       magicfile);
+			return 1;
+		case 'z':
+			zflag++;
+			break;
+#ifdef S_IFLNK
+		case 'L':
+			++lflag;
+			break;
+#endif
 		case '?':
 		default:
 			errflg++;

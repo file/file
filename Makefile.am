@@ -47,7 +47,7 @@ magic.4: Makefile magic.man
 magic_FRAGMENTS = Magdir/adventure Magdir/allegro Magdir/alliant Magdir/alpha Magdir/amanda \
 Magdir/amigaos Magdir/animation Magdir/apl Magdir/apple Magdir/applix \
 Magdir/archive Magdir/asterix Magdir/att3b Magdir/audio Magdir/blit \
-Magdir/bsdi Magdir/c-lang Magdir/chi Magdir/cisco Magdir/clipper \
+Magdir/bsdi Magdir/c-lang Magdir/chi Magdir/cisco Magdir/claris Magdir/clipper \
 Magdir/commands Magdir/compress Magdir/console Magdir/convex Magdir/database \
 Magdir/diamond Magdir/diff Magdir/digital Magdir/dump Magdir/elf \
 Magdir/encore Magdir/epoc Magdir/filesystems Magdir/flash Magdir/fonts Magdir/frame \
@@ -55,8 +55,9 @@ Magdir/freebsd Magdir/fsav Magdir/gimp Magdir/gnu Magdir/grace Magdir/hp Magdir/
 Magdir/ibm6000 Magdir/iff Magdir/images Magdir/intel Magdir/interleaf \
 Magdir/island Magdir/ispell Magdir/java Magdir/jpeg Magdir/karma Magdir/lecter \
 Magdir/lex Magdir/lif Magdir/linux Magdir/lisp Magdir/mach Magdir/macintosh \
-Magdir/magic Magdir/mail.news Magdir/mcrypt Magdir/mime Magdir/mirage Magdir/mkid \
-Magdir/mmdf Magdir/modem Magdir/motorola Magdir/msdos Magdir/ncr \
+Magdir/mathematica Magdir/magic Magdir/mail.news Magdir/maple Magdir/mcrypt \
+Magdir/mime Magdir/mirage Magdir/mkid \
+Magdir/mmdf Magdir/modem Magdir/motorola Magdir/msdos Magdir/msvc Magdir/ncr \
 Magdir/netbsd Magdir/netscape Magdir/news Magdir/octave Magdir/olf Magdir/os2 Magdir/os9 \
 Magdir/osf1 Magdir/palm Magdir/pbm Magdir/pdf Magdir/pdp Magdir/pgp Magdir/pkgadd \
 Magdir/project Magdir/plus5 Magdir/printer Magdir/psdbms Magdir/pyramid Magdir/riff \
