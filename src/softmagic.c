@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.57 2003/03/24 01:16:28 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.58 2003/03/26 15:35:30 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -124,6 +124,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			return -1;
 		case 0:
 			flush++;
+			break;
 		default:
 			break;
 		}
@@ -249,7 +250,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 
   	switch (m->type) {
   	case FILE_BYTE:
-		v = file_signextend(ms, m, p->b);
+		v = file_signextend(ms, m, (size_t)p->b);
 		if (file_printf(ms, m->desc, (unsigned char) v) == -1)
 			return -1;
 		t = m->offset + sizeof(char);
@@ -258,7 +259,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
   	case FILE_SHORT:
   	case FILE_BESHORT:
   	case FILE_LESHORT:
-		v = file_signextend(ms, m, p->h);
+		v = file_signextend(ms, m, (size_t)p->h);
 		if (file_printf(ms, m->desc, (unsigned short) v) == -1)
 			return -1;
 		t = m->offset + sizeof(short);
@@ -613,12 +614,12 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		 * (starting at 1), not as bytes-from start-of-file
 		 */
 		unsigned char *b, *last = NULL;
-		if ((b = p->buf = strdup(s)) == NULL) {
+		if ((p->buf = strdup((const char *)s)) == NULL) {
 			file_oomem(ms);
 			return -1;
 		}
-
-		for (; offset && (b = (unsigned char *)strchr(b, '\n')) != NULL;
+		for (b = (unsigned char *)p->buf; offset &&
+		    (b = (unsigned char *)strchr((char *)b, '\n')) != NULL;
 		    offset--, s++)
 			last = b;
 		if (last != NULL)
@@ -633,11 +634,11 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		int32_t have = nbytes - offset;
 		memset(p, 0, sizeof(union VALUETYPE));
 		if (have > 0)
-			memcpy(p, s + offset, have);
+			memcpy(p, s + offset, (size_t)have);
 	}
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
-		mdebug(offset, (char *) p, sizeof(union VALUETYPE));
+		mdebug(offset, (char *)(void *)p, sizeof(union VALUETYPE));
 		file_mdump(m);
 	}
 
@@ -971,7 +972,8 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		memcpy(p, s + offset, sizeof(union VALUETYPE));
 
 		if ((ms->flags & MAGIC_DEBUG) != 0) {
-			mdebug(offset, (char *) p, sizeof(union VALUETYPE));
+			mdebug(offset, (char *)(void *)p,
+			    sizeof(union VALUETYPE));
 			file_mdump(m);
 		}
 	}

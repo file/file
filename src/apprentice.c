@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.54 2003/03/24 01:16:28 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.55 2003/03/26 15:35:30 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -94,13 +94,13 @@ private void byteswap(struct magic *, uint32_t);
 private void bs1(struct magic *);
 private uint16_t swap2(uint16_t);
 private uint32_t swap4(uint32_t);
-private char *mkdbname(struct magic_set *, const char *, char *, size_t);
+private char *mkdbname(const char *, char *, size_t);
 private int apprentice_map(struct magic_set *, struct magic **, uint32_t *,
-    const char *, int);
+    const char *);
 private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
-    const char *, int);
+    const char *);
 
-private int maxmagic = 0;
+private size_t maxmagic = 0;
 
 #ifdef COMPILE_ONLY
 const char *magicfile;
@@ -146,14 +146,13 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 	if (action == FILE_COMPILE) {
 		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
 		if (rv == 0) {
-			rv = apprentice_compile(ms, &magic, &nmagic, fn,
-			    action);
+			rv = apprentice_compile(ms, &magic, &nmagic, fn);
 			free(magic);
 		}
 		return rv;
 	}
 #ifndef COMPILE_ONLY
-	if ((rv = apprentice_map(ms, &magic, &nmagic, fn, action)) == -1) {
+	if ((rv = apprentice_map(ms, &magic, &nmagic, fn)) == -1) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn("Using regular magic file `%s'", fn);
 		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
@@ -320,7 +319,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint32_t v)
 			if (ms->flags & MAGIC_CHECK)
 			    file_magwarn("can't happen: m->type=%d\n",
 				    m->type);
-			return -1;
+			return ~0U;
 		}
 	return v;
 }
@@ -335,6 +334,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 	int i = 0;
 	struct magic *m;
 	char *t;
+	uint32_t val;
 
 #define ALLOC_INCR	200
 	if (*nmagicp + 1 >= maxmagic){
@@ -452,7 +452,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 			break;
 		}
 		if (isdigit((unsigned char)*l)) 
-			m->in_offset = strtoul(l, &t, 0);
+			m->in_offset = (uint32_t)strtoul(l, &t, 0);
 		else
 			t = l;
 		if (*t++ != ')') 
@@ -552,54 +552,55 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 			m->mask_op = FILE_OPINVERSE;
 		++l;
 	}
+	val = (uint32_t)strtoul(l, &l, 0);
 	switch (*l) {
 	case '&':
 		m->mask_op |= FILE_OPAND;
 		++l;
-		m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+		m->mask = file_signextend(ms, m, val);
 		eatsize(&l);
 		break;
 	case '|':
 		m->mask_op |= FILE_OPOR;
 		++l;
-		m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+		m->mask = file_signextend(ms, m, val);
 		eatsize(&l);
 		break;
 	case '^':
 		m->mask_op |= FILE_OPXOR;
 		++l;
-		m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+		m->mask = file_signextend(ms, m, val);
 		eatsize(&l);
 		break;
 	case '+':
 		m->mask_op |= FILE_OPADD;
 		++l;
-		m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+		m->mask = file_signextend(ms, m, val);
 		eatsize(&l);
 		break;
 	case '-':
 		m->mask_op |= FILE_OPMINUS;
 		++l;
-		m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+		m->mask = file_signextend(ms, m, val);
 		eatsize(&l);
 		break;
 	case '*':
 		m->mask_op |= FILE_OPMULTIPLY;
 		++l;
-		m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+		m->mask = file_signextend(ms, m, val);
 		eatsize(&l);
 		break;
 	case '%':
 		m->mask_op |= FILE_OPMODULO;
 		++l;
-		m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+		m->mask = file_signextend(ms, m, val);
 		eatsize(&l);
 		break;
 	case '/':
 		if (FILE_STRING != m->type && FILE_PSTRING != m->type) {
 			m->mask_op |= FILE_OPDIVIDE;
 			++l;
-			m->mask = file_signextend(ms, m, strtoul(l, &l, 0));
+			m->mask = file_signextend(ms, m, val);
 			eatsize(&l);
 		} else {
 			m->mask = 0L;
@@ -650,7 +651,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 			++l;
 			break;
 		}
-		/* FALL THROUGH */
+		/*FALLTHROUGH*/
 	default:
 		if (*l == 'x' && isascii((unsigned char)l[1]) && 
 		    isspace((unsigned char)l[1])) {
@@ -718,7 +719,8 @@ getvalue(struct magic_set *ms, struct magic *m, char **p)
 		return 0;
 	default:
 		if (m->reln != 'x') {
-			m->value.l = file_signextend(ms, m, strtoul(*p, p, 0));
+			m->value.l = file_signextend(ms, m,
+			    (uint32_t)strtoul(*p, p, 0));
 			eatsize(p);
 		}
 		return 0;
@@ -850,13 +852,13 @@ hextoint(int c)
  * Print a string containing C character escapes.
  */
 protected void
-file_showstr(FILE *fp, const char *s, int len)
+file_showstr(FILE *fp, const char *s, size_t len)
 {
 	char	c;
 
 	for (;;) {
 		c = *s++;
-		if (len == -1) {
+		if (len == ~0U) {
 			if (c == '\0')
 				break;
 		}
@@ -933,7 +935,7 @@ eatsize(char **p)
  */
 private int
 apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
-    const char *fn, int action)
+    const char *fn)
 {
 	int fd;
 	struct stat st;
@@ -941,7 +943,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	uint32_t version;
 	int needsbyteswap;
 	char buf[MAXPATHLEN];
-	char *dbname = mkdbname(ms, fn, buf, sizeof(buf));
+	char *dbname = mkdbname(fn, buf, sizeof(buf));
 	void *mm;
 
 	if (dbname == NULL)
@@ -975,7 +977,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	*magicp = mm;
 	(void)close(fd);
 	fd = -1;
-	ptr = (uint32_t *) *magicp;
+	ptr = (uint32_t *)(void *)*magicp;
 	if (*ptr != MAGICNO) {
 		if (swap4(*ptr) != MAGICNO) {
 			file_error(ms, "Bad magic in `%s'", dbname);
@@ -993,7 +995,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		    version, VERSIONNO, dbname);
 		goto error;
 	}
-	*nmagicp = (st.st_size / sizeof(struct magic)) - 1;
+	*nmagicp = (uint32_t)(st.st_size / sizeof(struct magic)) - 1;
 	(*magicp)++;
 	if (needsbyteswap)
 		byteswap(*magicp, *nmagicp);
@@ -1023,11 +1025,11 @@ private const uint32_t ar[] = {
  */
 private int
 apprentice_compile(struct magic_set *ms, struct magic **magicp,
-    uint32_t *nmagicp, const char *fn, int action)
+    uint32_t *nmagicp, const char *fn)
 {
 	int fd;
 	char buf[MAXPATHLEN];
-	char *dbname = mkdbname(ms, fn, buf, sizeof(buf));
+	char *dbname = mkdbname(fn, buf, sizeof(buf));
 
 	if (dbname == NULL) 
 		return -1;
@@ -1043,7 +1045,8 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
 		return -1;
 	}
 
-	if (lseek(fd, sizeof(struct magic), SEEK_SET) != sizeof(struct magic)) {
+	if (lseek(fd, (off_t)sizeof(struct magic), SEEK_SET)
+	    != sizeof(struct magic)) {
 		file_error(ms, "Error seeking `%s' (%s)", dbname,
 		    strerror(errno));
 		return -1;
@@ -1065,14 +1068,14 @@ private const char ext[] = ".mgc";
  * make a dbname
  */
 private char *
-mkdbname(struct magic_set *ms, const char *fn, char *buf, size_t bufsiz)
+mkdbname(const char *fn, char *buf, size_t bufsiz)
 {
 	const char *p;
 	if ((p = strrchr(fn, '/')) != NULL)
 		p++;
 	else
 		p = fn;
-	snprintf(buf, bufsiz, "%s%s", p, ext);
+	(void)snprintf(buf, bufsiz, "%s%s", p, ext);
 	return buf;
 }
 
@@ -1094,8 +1097,8 @@ private uint16_t
 swap2(uint16_t sv)
 {
 	uint16_t rv;
-	uint8_t *s = (uint8_t *) &sv; 
-	uint8_t *d = (uint8_t *) &rv; 
+	uint8_t *s = (uint8_t *)(void *)&sv; 
+	uint8_t *d = (uint8_t *)(void *)&rv; 
 	d[0] = s[1];
 	d[1] = s[0];
 	return rv;
@@ -1108,8 +1111,8 @@ private uint32_t
 swap4(uint32_t sv)
 {
 	uint32_t rv;
-	uint8_t *s = (uint8_t *) &sv; 
-	uint8_t *d = (uint8_t *) &rv; 
+	uint8_t *s = (uint8_t *)(void *)&sv; 
+	uint8_t *d = (uint8_t *)(void *)&rv; 
 	d[0] = s[3];
 	d[1] = s[2];
 	d[2] = s[1];
@@ -1124,8 +1127,8 @@ private void
 bs1(struct magic *m)
 {
 	m->cont_level = swap2(m->cont_level);
-	m->offset = swap4(m->offset);
-	m->in_offset = swap4(m->in_offset);
+	m->offset = swap4((uint32_t)m->offset);
+	m->in_offset = swap4((uint32_t)m->in_offset);
 	if (m->type != FILE_STRING)
 		m->value.l = swap4(m->value.l);
 	m->mask = swap4(m->mask);

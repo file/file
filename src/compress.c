@@ -55,15 +55,15 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.29 2003/03/24 01:16:28 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.30 2003/03/26 15:35:30 christos Exp $")
 #endif
 
 
 private struct {
 	const char *magic;
-	int   maglen;
+	size_t maglen;
 	const char *const argv[3];
-	int	 silent;
+	int silent;
 } compr[] = {
 	{ "\037\235", 2, { "gzip", "-cdq", NULL }, 1 },		/* compressed */
 	/* Uncompress can get stuck; so use gzip first if we have it
@@ -82,10 +82,10 @@ private int ncompr = sizeof(compr) / sizeof(compr[0]);
 
 private int swrite(int, const void *, size_t);
 private int sread(int, void *, size_t);
-private size_t uncompressbuf(struct magic_set *ms, int, const unsigned char *,
+private size_t uncompressbuf(struct magic_set *, size_t, const unsigned char *,
     unsigned char **, size_t);
 #ifdef HAVE_LIBZ
-private size_t uncompressgzipped(struct magic_set *ms, const unsigned char *,
+private size_t uncompressgzipped(struct magic_set *, const unsigned char *,
     unsigned char **, size_t);
 #endif
 
@@ -93,7 +93,6 @@ protected int
 file_zmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 {
 	unsigned char *newbuf;
-	size_t nsz;
 	size_t i;
 
 	if ((ms->flags & MAGIC_COMPRESS) == 0)
@@ -103,7 +102,7 @@ file_zmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		if (nbytes < compr[i].maglen)
 			continue;
 		if (memcmp(buf, compr[i].magic, compr[i].maglen) == 0 &&
-		    (nsz = uncompressbuf(ms, i, buf, &newbuf, nbytes)) != 0) {
+		    uncompressbuf(ms, i, buf, &newbuf, nbytes) != 0) {
 			free(newbuf);
 			if (file_printf(ms, " (") == -1)
 				return -1;
@@ -205,7 +204,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 		r = 1;
 	else {
 		while ((r = sread(fd, buf, sizeof(buf))) > 0)
-			if (swrite(tfd, buf, r) != r)
+			if (swrite(tfd, buf, (size_t)r) != r)
 				break;
 	}
 
@@ -276,7 +275,8 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 	}
 	
 	/* XXX: const castaway, via strchr */
-	z.next_in = (Bytef *)strchr(old + data_start, old[data_start]);
+	z.next_in = (Bytef *)strchr((const char *)old + data_start,
+	    old[data_start]);
 	z.avail_in = n - data_start;
 	z.next_out = *newch;
 	z.avail_out = HOWMANY;
@@ -296,7 +296,7 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 		return 0;
 	}
 
-	n = z.total_out;
+	n = (size_t)z.total_out;
 	inflateEnd(&z);
 	
 	/* let's keep the nul-terminate tradition */
@@ -307,10 +307,11 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 #endif
 
 private size_t
-uncompressbuf(struct magic_set *ms, int method, const unsigned char *old,
+uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
     unsigned char **newch, size_t n)
 {
 	int fdin[2], fdout[2];
+	int r;
 
 	/* The buffer is NUL terminated, and we don't need that. */
 	n--;
@@ -322,7 +323,7 @@ uncompressbuf(struct magic_set *ms, int method, const unsigned char *old,
 
 	if (pipe(fdin) == -1 || pipe(fdout) == -1) {
 		file_error(ms, "Cannot create pipe (%s)", strerror(errno));	
-		return -1;
+		return 0;
 	}
 	switch (fork()) {
 	case 0:	/* child */
@@ -344,7 +345,7 @@ uncompressbuf(struct magic_set *ms, int method, const unsigned char *old,
 		/*NOTREACHED*/
 	case -1:
 		file_error(ms, "Could not fork (%s)", strerror(errno));
-		return -1;
+		return 0;
 
 	default: /* parent */
 		(void) close(fdin[0]);
@@ -359,10 +360,12 @@ uncompressbuf(struct magic_set *ms, int method, const unsigned char *old,
 			n = 0;
 			goto err;
 		}
-		if ((n = sread(fdout[0], *newch, HOWMANY)) <= 0) {
+		if ((r = sread(fdout[0], *newch, HOWMANY)) <= 0) {
 			free(*newch);
-			n = 0;
+			r = 0;
 			goto err;
+		} else {
+			n = r;
 		}
  		/* NUL terminate, as every buffer is handled here. */
  		(*newch)[n++] = '\0';

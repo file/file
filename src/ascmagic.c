@@ -54,7 +54,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.35 2003/03/23 21:16:26 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.36 2003/03/26 15:35:30 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -137,7 +137,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		code = "UTF-8 Unicode";
 		code_mime = "utf-8";
 		type = "text";
-	} else if ((i = looks_unicode(buf, nbytes, ubuf, &ulen))) {
+	} else if ((i = looks_unicode(buf, nbytes, ubuf, &ulen)) != 0) {
 		if (i == 1)
 			code = "Little-endian UTF-16 Unicode";
 		else
@@ -256,7 +256,7 @@ subtype_identified:
 			n_cr++;
 			last_line_end = i;
 		}
-		if (ubuf[i] == '\n' && (i - 1 <  0    || ubuf[i - 1] != '\r')) {
+		if (ubuf[i] == '\n' && ((int)i - 1 < 0 || ubuf[i - 1] != '\r')){
 			n_lf++;
 			last_line_end = i;
 		}
@@ -600,7 +600,8 @@ looks_unicode(const unsigned char *buf, size_t nbytes, unichar *ubuf,
 
 		if (ubuf[*ulen - 1] == 0xfffe)
 			return 0;
-		if (ubuf[*ulen - 1] < 128 && text_chars[ubuf[*ulen - 1]] != T)
+		if (ubuf[*ulen - 1] < 128 &&
+		    text_chars[(size_t)ubuf[*ulen - 1]] != T)
 			return 0;
 	}
 

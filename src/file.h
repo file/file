@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.48 2003/03/24 01:16:28 christos Exp $
+ * @(#)$Id: file.h,v 1.49 2003/03/26 15:35:30 christos Exp $
  */
 
 #ifndef __file_h__
@@ -80,7 +80,9 @@
 #define FILE_COMPILE	2
 
 #ifndef __GNUC__
+#ifndef __attribute__
 #define __attribute__(a)
+#endif
 #endif
 
 struct magic {
@@ -172,8 +174,8 @@ struct magic_set {
 };
 
 struct stat;
-protected char *file_fmttime(long, int);
-protected int file_buffer(struct magic_set *, const void *buf, size_t);
+protected char *file_fmttime(uint32_t, int);
+protected int file_buffer(struct magic_set *, const void *, size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_printf(struct magic_set *, const char *, ...);
@@ -191,7 +193,7 @@ protected void file_oomem(struct magic_set *);
 protected void file_error(struct magic_set *, const char *, ...);
 protected void file_magwarn(const char *, ...);
 protected void file_mdump(struct magic *);
-protected void file_showstr(FILE *, const char *, int);
+protected void file_showstr(FILE *, const char *, size_t);
 
 #ifndef HAVE_STRERROR
 extern int sys_nerr;

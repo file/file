@@ -46,7 +46,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.42 2003/03/24 01:16:28 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.43 2003/03/26 15:35:30 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -84,9 +84,10 @@ file_mdump(struct magic *m)
 	if (m->mask_op & FILE_OPINVERSE)
 		(void) fputc('~', stderr);
 	if (m->mask) {
-		((m->mask_op&0x7F) < SZOF(optyp)) ? 
-			(void) fputc(optyp[m->mask_op&0x7F], stderr) :
-			(void) fputc('?', stderr);
+		if ((m->mask_op & 0x7F) < SZOF(optyp)) 
+			fputc(optyp[m->mask_op&0x7F], stderr);
+		else
+			fputc('?', stderr);
 		if(FILE_STRING != m->type || FILE_PSTRING != m->type)
 			(void) fprintf(stderr, "%.8x", m->mask);
 		else {
@@ -116,7 +117,7 @@ file_mdump(struct magic *m)
 		case FILE_STRING:
 		case FILE_PSTRING:
 		case FILE_REGEX:
-			file_showstr(stderr, m->value.s, -1);
+			file_showstr(stderr, m->value.s, ~0U);
 			break;
 		case FILE_DATE:
 		case FILE_LEDATE:
@@ -155,7 +156,7 @@ file_magwarn(const char *f, ...)
 }
 
 protected char *
-file_fmttime(long v, int local)
+file_fmttime(uint32_t v, int local)
 {
 	char *pp, *rt;
 	time_t t = (time_t)v;
