@@ -38,7 +38,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.36 2001/03/14 14:33:56 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.37 2001/03/14 14:35:29 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -810,6 +810,7 @@ apprentice_map(magicp, nmagicp, fn, action)
 		goto error;
 	}
 	(void)close(fd);
+	fd = -1;
 	ptr = (uint32 *) *magicp;
 	if (*ptr != MAGICNO) {
 		if (swap4(*ptr) != MAGICNO) {
