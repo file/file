@@ -43,6 +43,7 @@ Magdir/blender \
 Magdir/blit \
 Magdir/bout \
 Magdir/bsdi \
+Magdir/cad \
 Magdir/c-lang \
 Magdir/c64 \
 Magdir/cddb \
@@ -140,6 +141,7 @@ Magdir/pdp \
 Magdir/perl \
 Magdir/pgp \
 Magdir/pkgadd \
+Magdir/plan9 \
 Magdir/plus5 \
 Magdir/printer \
 Magdir/project \

@@ -163,10 +163,19 @@
 # \003.  Most of them start with non-null values at hex offset 0x34 or so.
 #0	string	\3\0\0\0\0\0\0\0\0\0\0\0	DL version 3
 
-# SGI and Apple formats
+# SGI formats
 0	string		MOVI		Silicon Graphics movie file
+
+# Apple Quicktime: Scan for all known top-level QT atom markers
 4	string		moov		Apple QuickTime movie file (moov)
 4	string		mdat		Apple QuickTime movie file (mdat)
+4	string		ftyp		Apple QuickTime movie file (ftyp)
+4	string		free		Apple QuickTime movie file (free)
+4	string		junk		Apple QuickTime movie file (junk)
+4	string		pnot		Apple QuickTime movie file (pnot)
+4	string		skip		Apple QuickTime movie file (skip)
+4	string		wide		Apple QuickTime movie file (wide)
+4	string		pict		Apple QuickTime movie file (pict)
 
 # iso 13818 transport stream
 #

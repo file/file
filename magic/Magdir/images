@@ -479,3 +479,7 @@
 >0x0020		string	>0.6.1		file version %s
 >0x0020		string	<0.6.1		file version %s
 
+# DCX is multi-page PCX, using a simple header of up to 1024
+# offsets for the respective PCX components.
+# From: Joerg Wunsch <joerg_wunsch@uriah.heep.sax.de>
+0	lelong	987654321	DCX multi-page PCX image data
