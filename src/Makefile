@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /p/file/cvsroot/file/src/Attic/Makefile,v 1.13 1987/11/06 21:26:21 ian Exp $
+# @(#)$Header: /p/file/cvsroot/file/src/Attic/Makefile,v 1.14 1987/11/07 12:36:10 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -64,7 +64,7 @@ ALLSRC = LEGAL.NOTICE README PORTING $(SRCS) *.h \
 
 all:		file magic
 
-test:		all $(OFILE)
+try:		all $(OFILE)
 		cd tst; make
 		time $(OFILE) -m ./magic * tst/* >/tmp/t1
 		time ./file -m ./magic * tst/* >/tmp/t2

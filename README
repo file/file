@@ -23,7 +23,7 @@ PORTING - read this only if the program won't compile.
 Makefile - read this next, adapt it as needed (particularly
 	the location of the old existing file command and
 	the man page layouts), type "make" to compile, 
-	"make test" to try it out against your old version.
+	"make try" to try it out against your old version.
 	Expect some diffs, particularly since your original
 	file(1) may not grok the imbedded-space ("\ ") in
 	the current magic file, or may even not use the
