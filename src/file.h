@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.40 2002/06/11 17:15:52 christos Exp $
+ * @(#)$Id: file.h,v 1.41 2002/06/11 17:31:46 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -130,6 +130,12 @@ struct mlist {
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 #include <errno.h>
+/*
+ * Include it here, so that we don't run into problems with silly OS's that
+ * do #define renaming for large file support (Hi Solaris).
+ */
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #ifndef __P
 # if defined(__STDC__) || defined(__cplusplus)
@@ -144,7 +150,6 @@ extern int   apprentice		__P((const char *, int));
 extern int   ascmagic		__P((unsigned char *, int));
 extern void  error		__P((const char *, ...));
 extern void  ckfputs		__P((const char *, FILE *));
-struct stat;
 extern int   fsmagic		__P((const char *, struct stat *));
 extern char *fmttime		__P((long, int));
 extern int   is_compress	__P((const unsigned char *, int *));

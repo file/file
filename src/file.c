@@ -26,13 +26,10 @@
  */
 
 #include "file.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
 #include <sys/param.h>	/* for MAXPATHLEN */
-#include <sys/stat.h>
 #include <fcntl.h>	/* for open() */
 #ifdef RESTORE_TIME
 # if (__COHERENT__ >= 0x420)
@@ -61,7 +58,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.63 2002/06/11 17:15:52 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.64 2002/06/11 17:31:46 christos Exp $")
 #endif	/* lint */
 
 

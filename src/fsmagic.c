@@ -26,10 +26,7 @@
  */
 
 #include "file.h"
-#include <stdio.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -54,7 +51,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.33 2000/08/05 17:36:48 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.34 2002/06/11 17:31:46 christos Exp $")
 #endif	/* lint */
 
 int

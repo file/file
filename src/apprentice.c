@@ -26,23 +26,19 @@
  */
 
 #include "file.h"
-#include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #include <string.h>
 #include <ctype.h>
-#include <errno.h>
 #include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.46 2002/05/16 18:45:56 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.47 2002/06/11 17:31:46 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -942,6 +938,7 @@ apprentice_map(magicp, nmagicp, fn, action)
 	uint32 version;
 	int needsbyteswap;
 	char *dbname = mkdbname(fn);
+	void *mm;
 
 	if (dbname == NULL)
 		return -1;
@@ -956,24 +953,25 @@ apprentice_map(magicp, nmagicp, fn, action)
 	}
 
 #ifdef QUICK
-	if ((*magicp = mmap(0, (size_t)st.st_size, PROT_READ|PROT_WRITE,
+	if ((mm = mmap(0, (size_t)st.st_size, PROT_READ|PROT_WRITE,
 	    MAP_PRIVATE|MAP_FILE, fd, (off_t)0)) == MAP_FAILED) {
 		(void)fprintf(stderr, "%s: Cannot map `%s' (%s)\n",
 		    progname, dbname, strerror(errno));
 		goto error;
 	}
 #else
-	if ((*magicp = malloc((size_t)st.st_size)) == NULL) {
+	if ((mm = malloc((size_t)st.st_size)) == NULL) {
 		(void) fprintf(stderr, "%s: Out of memory (%s).\n", progname,
 		     strerror(errno));
 		goto error;
 	}
-	if (read(fd, *magicp, (size_t)st.st_size) != (size_t)st.st_size) {
+	if (read(fd, mm, (size_t)st.st_size) != (size_t)st.st_size) {
 		(void) fprintf(stderr, "%s: Read failed (%s).\n", progname,
 		    strerror(errno));
 		goto error;
 	}
 #endif
+	*magicp = mm;
 	(void)close(fd);
 	fd = -1;
 	ptr = (uint32 *) *magicp;
@@ -1005,11 +1003,11 @@ apprentice_map(magicp, nmagicp, fn, action)
 error:
 	if (fd != -1)
 		(void)close(fd);
-	if (*magicp) {
+	if (mm) {
 #ifdef QUICK
-		(void)munmap(*magicp, (size_t)st.st_size);
+		(void)munmap(mm, (size_t)st.st_size);
 #else
-		free(*magicp);
+		free(mm);
 #endif
 	} else {
 		*magicp = NULL;

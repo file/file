@@ -1,20 +1,17 @@
 #include "file.h"
 
 #ifdef BUILTIN_ELF
-#include <sys/types.h>
 #include <string.h>
-#include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <errno.h>
 
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.20 2002/05/16 18:57:11 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.21 2002/06/11 17:31:46 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
