@@ -1,3 +1,8 @@
+2003-04-02 13:50  Christos Zoulas  <christos@zoulas.com>
+
+	* Magic additions (Alex Ott)
+	* Fix bug that broke VPATH compilation (Peter Breitenlohner)
+
 2003-03-28 16:03  Christos Zoulas  <christos@zoulas.com>
 
 	* remove packed attribute from magic struct.
