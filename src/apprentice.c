@@ -38,13 +38,22 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.35 2001/03/13 13:44:55 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.36 2001/03/14 14:33:56 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
 		      isspace((unsigned char) *l))  ++l;}
 #define LOWCASE(l) (isupper((unsigned char) (l)) ? \
 			tolower((unsigned char) (l)) : (l))
+/*
+ * Work around a bug in headers on Digital Unix.
+ * At least confirmed for: OSF1 V4.0 878
+ */
+#if defined(__osf__) && defined(__DECC)
+#ifdef MAP_FAILED
+#undef MAP_FAILED
+#endif
+#endif
 
 #ifndef MAP_FAILED
 #define MAP_FAILED (void *) -1
