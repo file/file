@@ -28,6 +28,9 @@
 #include "file.h"
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
@@ -39,7 +42,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.43 2001/07/23 00:02:32 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.44 2001/08/01 14:03:19 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
