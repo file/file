@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.60 2003/07/10 17:01:38 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.61 2003/08/10 14:25:14 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -914,6 +914,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	char buf[MAXPATHLEN];
 	char *dbname = mkdbname(fn, buf, sizeof(buf));
 	void *mm;
+	int rv;
 
 	if (dbname == NULL)
 		return -1;
@@ -933,6 +934,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		file_error(ms, "Cannot map `%s' (%s)", dbname, strerror(errno));
 		goto error;
 	}
+	rv = 2;
 #else
 	if ((mm = malloc((size_t)st.st_size)) == NULL) {
 		file_oomem(ms);
@@ -942,6 +944,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		file_error(ms, "Read failed (%s)", strerror(errno));
 		goto error;
 	}
+	rv = 1;
 #endif
 	*magicp = mm;
 	(void)close(fd);
@@ -968,7 +971,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	(*magicp)++;
 	if (needsbyteswap)
 		byteswap(*magicp, *nmagicp);
-	return 0;
+	return rv;
 
 error:
 	if (fd != -1)
