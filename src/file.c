@@ -56,7 +56,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.56 2001/03/11 20:29:16 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.57 2001/04/27 23:59:52 christos Exp $")
 #endif	/* lint */
 
 
@@ -458,8 +458,6 @@ static void
 usage()
 {
 	(void)fprintf(stderr, USAGE, progname);
-#ifdef QUICK
 	(void)fprintf(stderr, "Usage: %s -C [-m magic]\n", progname);
-#endif
 	exit(1);
 }

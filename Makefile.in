@@ -72,7 +72,7 @@ bin_PROGRAMS = file
 data_DATA = magic magic.mime magic.mgc
 
 MAGIC = @datadir@/magic
-CPPFLAGS = -DMAGIC='"$(MAGIC)"' -DQUICK
+CPPFLAGS = -DMAGIC='"$(MAGIC)"'
 
 man_MANS = file.1 magic.4
 
