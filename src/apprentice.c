@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.50 2003/02/27 20:47:46 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.51 2003/03/11 14:52:56 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1042,7 +1042,10 @@ mkdbname(const char *fn)
 {
 	static const char ext[] = ".mgc";
 	static char *buf = NULL;
-	size_t len = strlen(fn) + sizeof(ext) + 1;
+	const char *tail = strrchr(fn, '/');
+	size_t len;
+	tail = tail == NULL ? fn : ++tail;
+	len = strlen(tail) + sizeof(ext) + 1;
 	if (buf == NULL)
 		buf = malloc(len);
 	else
@@ -1052,7 +1055,7 @@ mkdbname(const char *fn)
 		    strerror(errno));
 		return NULL;
 	}
-	(void)strcpy(buf, fn);
+	(void)strcpy(buf, tail);
 	(void)strcat(buf, ext);
 	return buf;
 }
