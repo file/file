@@ -137,7 +137,7 @@ libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
 libmagic_la_LDFLAGS = -version-info 1:0:0
 
 file_SOURCES = file.c
-file_LDFLAGS = -lmagic
+file_LDADD = libmagic.la
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -154,8 +154,8 @@ PROGRAMS = $(bin_PROGRAMS)
 
 am_file_OBJECTS = file.$(OBJEXT)
 file_OBJECTS = $(am_file_OBJECTS)
-file_LDADD = $(LDADD)
-file_DEPENDENCIES =
+file_DEPENDENCIES = libmagic.la
+file_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
