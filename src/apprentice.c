@@ -33,7 +33,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.17 1993/09/16 20:49:29 christos Exp $";
+	"@(#)$Id: apprentice.c,v 1.18 1993/09/23 20:19:42 christos Exp $";
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -164,9 +164,11 @@ int *ndx, check;
 		s = l;
 		if (*l == '+' || *l == '-') l++;
 		if (isdigit((unsigned char)*l)) {
-		    m->in.offset = strtol(l, &t, 0);
-		    if (*s == '-') m->in.offset = - m->in.offset;
+			m->in.offset = strtol(l, &t, 0);
+			if (*s == '-') m->in.offset = - m->in.offset;
 		}
+		else
+			t = l;
 		if (*t++ != ')') 
 			magwarn("missing ')' in indirect offset");
 		l = t;
