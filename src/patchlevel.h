@@ -1,12 +1,21 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		9
+#define	patchlevel		10
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.9 1993/03/24 14:23:40 ian Exp $
+ * $Id: patchlevel.h,v 1.10 1993/09/23 21:56:23 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.9  1993/03/24 14:23:40  ian
+ * Revision 1.10  1993/09/23 21:56:23  christos
+ * Passed purify. Fixed indirections. Fixed byte order printing.
+ * Fixed segmentation faults caused by referencing past the end
+ * of the magic buffer. Fixed bus errors caused by referencing
+ * unaligned shorts or longs.
+ *
+ * Revision 1.9  1993/03/24  14:23:40  ian
+ * Batch of minor changes from several contributors.
+ *
+ * Revision 1.9  1993/03/24  14:23:40  ian
  * Batch of minor changes from several contributors.
  *
  * Revision 1.8  93/02/19  15:01:26  ian
