@@ -39,7 +39,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.17 1992/09/11 17:42:09 ian Exp $";
+	"@(#)$Id: print.c,v 1.18 1993/02/19 14:22:47 ian Exp $";
 #endif  /* lint */
 
 void
@@ -49,7 +49,9 @@ struct magic *m;
 	static char *offs[] = {  "absolute", "offset", 
 				 "indirect", "indirect-offset" };
 	static char *typ[] = {   "invalid", "byte", "short", "invalid",
-				 "long", "string", "date" };
+				 "long", "string", "date", "beshort",
+				 "belong", "bedate", "leshort", "lelong",
+				 "ledate" };
 	(void) fprintf(stderr, "[%s,%d,%s,%s%c,",
 		(m->flag >= 0 && m->flag < 4 ? offs[m->flag]: "*bad*"),
 		m->offset,
