@@ -6,4 +6,5 @@
 0	long		0406		68k Blit mpx/mux executable
 0	short		0406		VAX-order2 68k Blit mpx/mux executable
 0	short		03001		VAX-order 68k Blit mpx/mux executable
-# Need values for WE32 DMD executables.
+# Need more values for WE32 DMD executables.
+0	short		0520		tty630 layers executable
