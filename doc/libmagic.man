@@ -111,6 +111,9 @@ The
 function returns a textual description of the contents of the
 .Ar filename
 argument, or NULL if an error occurred.
+If the
+.Ar filename
+is NULL, then stdin is used.
 .Pp
 The
 .Fn magic_buffer
