@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.30 1992/09/11 11:55:35 ian Exp $
+# @(#)$Id: Makefile,v 1.31 1993/02/19 14:11:26 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -27,9 +27,9 @@ SHELL	= /bin/sh
 MAGIC	= /usr/local/etc/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
 CC	= cc
-COPTS	= -O # -g		# gcc allows both
+COPTS	= -O -g		# newer compilers allow both; else drop -O
 # For truly antique environments, use this for (dummy) include files:
-#COPTS	= -O -Ilocalinc
+COPTS	= -O # -Ilocalinc
 CFLAGS	= $(COPTS) $(DEFS)
 LDFLAGS	= $(COPTS) # -Bstatic	# older gdb couldn't handle shared libs
 SHAR	= bundle
@@ -55,9 +55,9 @@ BINDIR	= /usr/local/bin
 # MANCEXT			1
 
 MANCDIR	= /usr/local/man/man1
-MANFDIR	= /usr/local/man/man5
 MANCEXT	= 1
-MANFEXT	= 5
+MANFDIR	= /usr/local/man/man4
+MANFEXT	= 4
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
 # Uncomment any of these that is missing from your "standard" library.
@@ -78,7 +78,7 @@ OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 
 ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
 	Makefile file.1 magic.4 tst/Makefile
-ALLMAGIC =   Magdir/Makefile Magdir/[a-z]* # NEWMAGIC
+ALLMAGIC =   Magdir/Makefile Magdir/Localstuff Magdir/Header Magdir/[a-z]*
 
 all:		file magic
 
@@ -113,7 +113,12 @@ clean:
 clobber:
 		cd tst; make clean
 
+send:		dist
+		ftp ftp.cs
+
 dist:		dist.src dist.magic
+		@echo Now check this patchlevel!
+		ident patchlevel.h
 
 dist.src:	$(ALLSRC) TARGETS
 #		Some versions of shar can't handle a single file from
@@ -121,6 +126,10 @@ dist.src:	$(ALLSRC) TARGETS
 #		The point is to exclude all the generable targets in tst.
 		(echo mkdir localinc localinc/sys localsrc tst; \
 			$(SHAR) $(ALLSRC) TARGETS) > $@
+
+new:		$(ALLSRC)
+		echo $?
+		touch new
 
 TARGETS:	$(ALLSRC)
 		ident $(ALLSRC) > TARGETS
