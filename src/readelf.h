@@ -1,6 +1,6 @@
 /*
  * readelf.h 
- * @(#)$Id: readelf.h,v 1.3 1996/10/25 18:11:51 christos Exp $
+ * @(#)$Id: readelf.h,v 1.4 1997/01/15 17:23:24 christos Exp $
  *
  * Provide elf data structures for non-elf machines, allowing file
  * non-elf hosts to determine if an elf binary is stripped.
@@ -59,6 +59,7 @@ typedef struct {
 } Elf64_Ehdr;
 
 /* e_type */
+#define ET_EXEC		2
 #define ET_CORE		4
 
 /* sh_type */
@@ -137,11 +138,17 @@ typedef struct {
     Elf64_Off	sh_entsize;
 } Elf64_Shdr;
 
+/* Notes used in ET_CORE */
+#define NT_PRSTATUS	1
+#define NT_PRFPREG	2
+#define NT_PRPSINFO	3
+#define NT_TASKSTRUCT	4
 
-typedef struct {
-    Elf32_Word	n_namesz;
-    Elf32_Word	n_descsz;
-    Elf32_Word	n_type;
+/* Note header in a PT_NOTE section */
+typedef struct elf_note {
+  Elf32_Word	n_namesz;	/* Name size */
+  Elf32_Word	n_descsz;	/* Content size */
+  Elf32_Word	n_type;		/* Content type */
 } Elf32_Nhdr;
 
 typedef struct {

@@ -35,15 +35,15 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.32 1996/10/25 19:50:35 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.33 1997/01/15 17:23:24 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
 static int mget		__P((union VALUETYPE *,
 			     unsigned char *, struct magic *, int));
 static int mcheck	__P((union VALUETYPE *, struct magic *));
-static long mprint	__P((union VALUETYPE *, struct magic *));
-static void mdebug	__P((long, char *, int));
+static int32 mprint	__P((union VALUETYPE *, struct magic *));
+static void mdebug	__P((int32, char *, int));
 static int mconvert	__P((union VALUETYPE *, struct magic *));
 
 /*
@@ -99,12 +99,12 @@ int nbytes;
 	int cont_level = 0;
 	int need_separator = 0;
 	union VALUETYPE p;
-	static long *tmpoff = NULL;
+	static int32 *tmpoff = NULL;
 	static size_t tmplen = 0;
-	long oldoff = 0;
+	int32 oldoff = 0;
 
 	if (tmpoff == NULL)
-		if ((tmpoff = (long *) malloc(tmplen = 20)) == NULL)
+		if ((tmpoff = (int32 *) malloc(tmplen = 20)) == NULL)
 			error("out of memory\n");
 
 	for (magindex = 0; magindex < nmagic; magindex++) {
@@ -130,7 +130,7 @@ int nbytes;
 			need_separator = 1;
 		/* and any continuations that match */
 		if (++cont_level >= tmplen)
-			if ((tmpoff = (long *) realloc(tmpoff,
+			if ((tmpoff = (int32 *) realloc(tmpoff,
 						       tmplen += 20)) == NULL)
 				error("out of memory\n");
 		while (magic[magindex+1].cont_level != 0 && 
@@ -175,7 +175,7 @@ int nbytes;
 					 */
 					if (++cont_level >= tmplen)
 						if ((tmpoff = 
-						    (long *) realloc(tmpoff,
+						    (int32 *) realloc(tmpoff,
 						    tmplen += 20)) == NULL)
 							error("out of memory\n");
 				}
@@ -189,14 +189,14 @@ int nbytes;
 	return 0;			/* no match at all */
 }
 
-static long
+static int32
 mprint(p, m)
 union VALUETYPE *p;
 struct magic *m;
 {
 	char *pp, *rt;
-	unsigned long v;
-	long t=0 ;
+	uint32 v;
+	int32 t=0 ;
 
 
   	switch (m->type) {
@@ -221,8 +221,8 @@ struct magic *m;
   	case LELONG:
 		v = p->l;
 		v = signextend(m, v) & m->mask;
-		(void) printf(m->desc, (unsigned long) v);
-		t = m->offset + sizeof(long);
+		(void) printf(m->desc, (uint32) v);
+		t = m->offset + sizeof(int32);
   		break;
 
   	case STRING:
@@ -231,6 +231,11 @@ struct magic *m;
 			t = m->offset + strlen(m->value.s);
 		}
 		else {
+			if (*m->value.s == '\0') {
+				char *cp = strchr(p->s,'\n');
+				if (cp)
+					*cp = '\0';
+			}
 			(void) printf(m->desc, p->s);
 			t = m->offset + strlen(p->s);
 		}
@@ -282,7 +287,7 @@ struct magic *m;
 		return 1;
 	case BELONG:
 	case BEDATE:
-		p->l = (long)
+		p->l = (int32)
 		    ((p->hl[0]<<24)|(p->hl[1]<<16)|(p->hl[2]<<8)|(p->hl[3]));
 		return 1;
 	case LESHORT:
@@ -290,7 +295,7 @@ struct magic *m;
 		return 1;
 	case LELONG:
 	case LEDATE:
-		p->l = (long)
+		p->l = (int32)
 		    ((p->hl[3]<<24)|(p->hl[2]<<16)|(p->hl[1]<<8)|(p->hl[0]));
 		return 1;
 	default:
@@ -302,7 +307,7 @@ struct magic *m;
 
 static void
 mdebug(offset, str, len)
-long offset;
+int32 offset;
 char *str;
 int len;
 {
@@ -319,7 +324,7 @@ unsigned char	*s;
 struct magic *m;
 int nbytes;
 {
-	long offset = m->offset;
+	int32 offset = m->offset;
 
 	if (offset + sizeof(union VALUETYPE) <= nbytes)
 		memcpy(p, s + offset, sizeof(union VALUETYPE));
@@ -328,7 +333,7 @@ int nbytes;
 		 * the usefulness of padding with zeroes eludes me, it
 		 * might even cause problems
 		 */
-		long have = nbytes - offset;
+		int32 have = nbytes - offset;
 		memset(p, 0, sizeof(union VALUETYPE));
 		if (have > 0)
 			memcpy(p, s + offset, have);
@@ -378,8 +383,8 @@ mcheck(p, m)
 union VALUETYPE* p;
 struct magic *m;
 {
-	register unsigned long l = m->value.l;
-	register unsigned long v;
+	register uint32 l = m->value.l;
+	register uint32 v;
 	int matched;
 
 	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
@@ -462,7 +467,7 @@ struct magic *m;
 					       v, l, matched);
 		}
 		else {
-			matched = (long) v > (long) l;
+			matched = (int32) v > (int32) l;
 			if (debug)
 				(void) fprintf(stderr, "%ld > %ld = %d\n",
 					       v, l, matched);
@@ -477,7 +482,7 @@ struct magic *m;
 					       v, l, matched);
 		}
 		else {
-			matched = (long) v < (long) l;
+			matched = (int32) v < (int32) l;
 			if (debug)
 				(void) fprintf(stderr, "%ld < %ld = %d\n",
 					       v, l, matched);
