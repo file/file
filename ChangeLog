@@ -1,3 +1,9 @@
+2004-04-12 10:55  Christos Zoulas  <christos@zoulas.com>
+
+	* make sure that magic formats match magic types during compilation
+
+	* fix broken sgi magic file
+
 2004-04-06 20:36  Christos Zoulas  <christos@zoulas.com>
 
 	* detect present of mbstate_t Petter Reinholdtsen <pere@hungry.com>
