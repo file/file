@@ -42,7 +42,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/fsmagic.c,v 1.10 1990/10/03 17:51:19 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/fsmagic.c,v 1.11 1991/01/23 12:12:20 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -60,7 +60,7 @@ char *fn;
 
 	/*
 	 * Fstat is cheaper but fails for files you don't have read perms on.
-	 * On 4.2BSD and similar systems, use lstat() so identify symlinks.
+	 * On 4.2BSD and similar systems, use lstat() to identify symlinks.
 	 */
 #ifdef	S_IFLNK
 	if (!followLinks)
@@ -101,12 +101,21 @@ char *fn;
 		{
 			char buf[BUFSIZ+4];
 			register int nch;
+			struct stat tstatbuf;
 
 			if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
 				error("readlink failed");
 				return 0;
 			}
 			buf[nch] = '\0';	/* readlink(2) forgets this */
+
+			/* If dangling symlink, say so and quit early. */
+			if (stat(buf, tstatbuf) < 0) {
+				ckfputs("dangling symbolic link", stdout);
+				return 1;
+			}
+
+			/* Otherwise, handle it. */
 			if (followLinks) {
 				process(buf, 0);
 				return 1;
