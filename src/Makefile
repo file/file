@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.17 1989/05/11 14:58:29 ian Exp $
+# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.18 1990/10/03 18:10:02 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -24,7 +24,7 @@
 
 MAGIC	= /etc/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
-COPTS	= -O # -g
+COPTS	= -O -g
 CFLAGS	= $(COPTS) $(DEFS)
 SHAR	= bundle
 OFILE	= /usr/bin/file.orig	# old or distributed version, for comparison
@@ -97,6 +97,7 @@ dist:		$(ALLSRC)
 #		Some versions of shar can't handle a single file from
 #		a subdirectory, so we manually insert mkdir as needed.
 #		Put the extra "mkdir" AFTER the ": to unbundle..." line.
-		$(SHAR) $(ALLSRC) | sed -e '1a\
-		mkdir magdir tst' >$@
+		(echo mkdir magdir tst; $(SHAR) $(ALLSRC) ) > $@
 
+dist.magic:	magdir
+		(echo mkdir magdir; $(SHAR) magdir/Makefile magdir/[a-z]*) >$@
