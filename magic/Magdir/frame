@@ -1,4 +1,6 @@
-# Magic number for FrameMaker files
-# Thanks to Berry Kercheval
+# Magic number for FrameMaker files. Thanks to Berry Kercheval for some.
+# $Header: /home/glen/git/file/cvs/file/magic/Magdir/frame,v 1.2 1990/08/05 14:48:13 ian Exp $
 #
-0	string		\<MakerFile	FrameMaker document
+0	string		\<MakerFile	FrameMaker document data
+0	string		\<MIFFile	Frame Maker MIF file text
+0	string		\<MML		Frame Maker MML file text
