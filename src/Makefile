@@ -20,7 +20,7 @@ OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o is_tar.o \
 	print.o $(LOCALOBJS)
 
 ALLSRC = LEGAL.NOTICE README PORTING TODO $(SRCS) *.h \
-	Makefile file.[15] magdir tst/Makefile
+	Makefile file.[15] magdir/[a-z]* tst/Makefile
 
 all:		file magic
 
@@ -28,14 +28,16 @@ test:		all
 		cd tst; make
 		time $(OFILE) -m ./magic * tst/* >/tmp/t1
 		time ./file -m ./magic * tst/* >/tmp/t2
-		diff -b /tmp/t[12]
+		-diff -b /tmp/t[12]
+		what ./file >lastnocore
 
 file:		$(OBJS)
 		cc $(CFLAGS) $(OBJS) -o $@
 lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS)
 magic:		magdir
-		cat magdir/[a-z]* >$@ # exclude RCS or SCCS dirs
+		# exclude RCS or SCCS dirs:
+		cat magdir/[a-z]* >$@
 
 ascmagic.o:	names.h
 
@@ -52,8 +54,4 @@ clean:
 		(cd tst; make clean)
 
 dist:		$(ALLSRC)
-		$(SHAR) $(ALLSRC) >dist
-		touch update	# kludge
-update:		$(ALLSRC)
-		(echo mkdir tst; $(SHAR) $?; echo touch $@) | mail $(OTHERS)
-		touch $@
+		(echo mkdir magdir tst; $(SHAR) $(ALLSRC) ) >$@
