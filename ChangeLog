@@ -1,5 +1,13 @@
 
+2003-11-11 15:03  Christos Zoulas  <christos@zoulas.com>
+
+	* Include file.h first, because it includes config.h
+	  breaks largefile test macros otherwise.
+	  (Paul Eggert <eggert@CS.UCLA.EDU> via
+	   Lars Hecking <lhecking@nmrc.ie>)
+
 2003-10-14 21:39  Christos Zoulas  <christos@zoulas.com>
+
 	* Python bindings (Brett Funderburg) <brettf@deepfile.com>
 	* Don't lookup past the end of the buffer
 	  (Chad Hanson) <chanson@tcs-sec.com>
