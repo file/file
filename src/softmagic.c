@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.25 1994/05/03 17:58:23 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.26 1994/06/06 05:27:29 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -198,8 +198,6 @@ struct magic *m;
 			(void) printf(m->desc, m->value.s);
 		}
 		else {
-			if ((rt = strchr(p->s, '\n')) != NULL)
-				*rt = '\0';
 			(void) printf(m->desc, p->s);
 		}
 		return;
@@ -229,13 +227,19 @@ mconvert(p, m)
 union VALUETYPE *p;
 struct magic *m;
 {
+	char *rt;
 
 	switch (m->type) {
 	case BYTE:
 	case SHORT:
 	case LONG:
 	case DATE:
+		return 1;
 	case STRING:
+		/* Null terminate and eat the return */
+		p->s[sizeof(p->s) - 1] = '\0';
+		if ((rt = strchr(p->s, '\n')) != NULL)
+			*rt = '\0';
 		return 1;
 	case BESHORT:
 		p->h = (short)((p->hs[0]<<8)|(p->hs[1]));
@@ -387,46 +391,66 @@ struct magic *m;
 	switch (m->reln) {
 	case 'x':
 		if (debug)
-			(void) fprintf(stderr, "%d == *any* = 1\n", v);
+			(void) fprintf(stderr, "%lu == *any* = 1\n", v);
 		matched = 1;
 		break;
 
 	case '!':
-		if (debug)
-			(void) fprintf(stderr, "%d != %d = %d\n", v, l, v != l);
 		matched = v != l;
+		if (debug)
+			(void) fprintf(stderr, "%lu != %lu = %d\n",
+				       v, l, matched);
 		break;
 
 	case '=':
-		if (debug)
-			(void) fprintf(stderr, "%d == %d = %d\n", v, l, v == l);
 		matched = v == l;
+		if (debug)
+			(void) fprintf(stderr, "%lu == %lu = %d\n",
+				       v, l, matched);
 		break;
 
 	case '>':
-		if (debug)
-			(void) fprintf(stderr, "%d > %d = %d\n", v, l, v > l);
-		matched = v > l;
+		if (m->flag & UNSIGNED) {
+			matched = v > l;
+			if (debug)
+				(void) fprintf(stderr, "%lu > %lu = %d\n",
+					       v, l, matched);
+		}
+		else {
+			matched = (long) v > (long) l;
+			if (debug)
+				(void) fprintf(stderr, "%ld > %ld = %d\n",
+					       v, l, matched);
+		}
 		break;
 
 	case '<':
-		if (debug)
-			(void) fprintf(stderr, "%d < %d = %d\n", v, l, v < l);
-		matched = v < l;
+		if (m->flag & UNSIGNED) {
+			matched = v < l;
+			if (debug)
+				(void) fprintf(stderr, "%lu < %lu = %d\n",
+					       v, l, matched);
+		}
+		else {
+			matched = (long) v < (long) l;
+			if (debug)
+				(void) fprintf(stderr, "%ld < %ld = %d\n",
+					       v, l, matched);
+		}
 		break;
 
 	case '&':
-		if (debug)
-			(void) fprintf(stderr, "((%x & %x) == %x) = %d\n",
-				       v, l, l, (v & l) == l);
 		matched = (v & l) == l;
+		if (debug)
+			(void) fprintf(stderr, "((%lx & %lx) == %lx) = %d\n",
+				       v, l, l, matched);
 		break;
 
 	case '^':
-		if (debug)
-			(void) fprintf(stderr, "((%x & %x) != %x) = %d\n",
-				       v, l, l, (v & l) != l);
 		matched = (v & l) != l;
+		if (debug)
+			(void) fprintf(stderr, "((%lx & %lx) != %lx) = %d\n",
+				       v, l, l, matched);
 		break;
 
 	default:
