@@ -156,6 +156,15 @@ type specifier. To that number the value of
 .I y
 is added and the result is used as an offset in the file. The default type
 if one is not specified is long.
+.PP
+Sometimes you do not know the exact offset as this depends on the length of
+preceding fields. You can specify an offset relative to the end of the
+last uplevel field (of course this may only be done for sublevel tests, i.e.
+test beginning with 
+.B >
+). Such a relative offset is specified using
+.B &
+as a prefix to the offset.
 .SH BUGS
 The formats 
 .IR long ,
@@ -191,4 +200,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.12 1995/01/21 21:03:35 christos Exp $
+.\" @(#)$Id: magic.man,v 1.13 1996/06/22 22:04:22 christos Exp $
