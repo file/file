@@ -1,13 +1,16 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.18 1993/01/05 13:57:48 ian Exp $
+@(#) $Id: README,v 1.19 1993/04/05 10:18:56 ian Exp $
 
-This is Release 3.0 of Ian Darwin's (copyright but distributable)
-file(1) command.  Release 3.0 is scheduled for inclusion in the
+This is Release 3.x of Ian Darwin's (copyright but distributable)
+file(1) command.  Release 3.x is scheduled for inclusion in the
 4.4 BSD (Berkeley Software Distribution) of UNIX-like
 software, and is the standard "file" command for Linux, 386bsd,
-and other systems.
+and other systems. (See "patchlevel.h" for the exact release number).
 
 UNIX is a trademark of UNIX System Laboratories.
+
+The prime contributor to Release 3.8 was Guy Harris, who put in megachanges
+including byte-order independance.
 
 The prime contributor to Release 3.0 was Christos Zoulas, who put
 in hundreds of lines of source code changes, including his own
