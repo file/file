@@ -1,9 +1,9 @@
-#
-# magic.pdp: PDP-11 executable/object and APL workspace
+
+#------------------------------------------------------------------------------
+# pdp:  file(1) magic for PDP-11 executable/object and APL workspace
 #
 0	lelong		0101555		PDP-11 single precision APL workspace
 0	lelong		0101554		PDP-11 double precision APL workspace
-
 #
 # PDP-11 a.out
 #

@@ -1,5 +1,6 @@
-#
-# magic.linux
+
+#------------------------------------------------------------------------------
+# linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Rik Faith <faith@cs.unc.edu>,
 # Peter Tobias <tobias@server.et-inf.fho-emden.de>, and Daniel Quinlan
@@ -20,7 +21,7 @@
 >220	string		>\0		- core dump of '%s'
 #
 # LILO boot/chain loaders, from Daniel Quinlan <quinlan@yggdrasil.com>
-# this can be overrided by the DOS executable (COM) entry
+# this can be overridden by the DOS executable (COM) entry
 2	string		LILO		LILO boot/chain loader
 #
 # Debian Packages, from Peter Tobias <tobias@server.et-inf.fho-emden.de>

@@ -1,8 +1,22 @@
+
+#------------------------------------------------------------------------------
+# ms-dos:  file(1) magic for MS-DOS files
 #
-# Various MS-DOS magic numbers
-#
-0	string		MZ		DOS executable (EXE)
-0	string		LZ		DOS executable (built-in)
-0	byte		0xe9		DOS executable (COM)
-0	byte		0xeb		DOS executable (COM)
+
+# .EXE formats (Greg Roelofs, newt@uchicago.edu)
+# [GRR:  some company sells a self-extractor/displayer for image data(!)]
+0	string		MZ		MS-DOS executable (EXE)
+>24	string		@		(OS/2 or Windows format)
+>7195	string		Rar!		(RAR self-extracting archive)
+# [GRR 950115:  file 3.14 apparently has a buffer-size limitation; offsets
+#  bigger than 8161 bytes are ignored (sigh)]
+>13297	string		PK\003\004	(PKZIP SFX archive v1.93a)
+>15770	string		PK\003\004	(PKZIP SFX archive v2.04g)
+>25115	string		PK\003\004	(Info-ZIP SFX archive v5.12)
+>26331	string		PK\003\004	(Info-ZIP SFX archive v5.12 w/decryption)
+
+# miscellaneous formats
+0	string		LZ		MS-DOS executable (built-in)
+0	byte		0xe9		MS-DOS executable (COM)
+0	byte		0xeb		MS-DOS executable (COM)
 0	byte		0xf0		MS-DOS program library

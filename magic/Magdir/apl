@@ -1,4 +1,5 @@
-#
-# magic.apl:
+
+#------------------------------------------------------------------------------
+# apl:  file(1) magic for APL
 #
 0	long		0100554		APL workspace (Ken's original?)

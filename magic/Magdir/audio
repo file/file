@@ -1,5 +1,8 @@
+
+#------------------------------------------------------------------------------
+# audio:  file(1) magic for sound formats
 #
-# Sound formats, from Jan Nicolai Langfeldt <janl@ifi.uio.no>,
+# from Jan Nicolai Langfeldt <janl@ifi.uio.no>,
 #
 
 # Sun/NeXT audio data
@@ -16,6 +19,7 @@
 >20	belong		2		stereo,
 >20	belong		4		quad,
 >16	belong		x		%d Hz
+
 # DEC systems (e.g. DECstation 5000) use a variant of the Sun/NeXT format
 # that uses little-endian encoding and has a different magic number
 # (0x0064732E in little-endian encoding).
@@ -32,22 +36,32 @@
 >20	lelong		2		stereo,
 >20	lelong		4		quad,
 >16	lelong		x		%d Hz
+
 # Bytes 0-3 of AIFF, AIFF-C, & 8SVX audio files are "FORM"
 8	string		AIFF		AIFF audio data
 8	string		AIFC		AIFF-C audio data
 8	string		8SVX		IFF/8SVX audio data
+
 # Creative Labs AUDIO stuff
-0	string  MThd			Standard MIDI data
+0	string	MThd			Standard MIDI data
 >9 	byte	>0			(format %d)
 >11	byte	>1			using %d channels
-0	string  CTMF			Creative Music (CMF) data
-0	string  SBI			SoundBlaster instrument data
+0	string	CTMF			Creative Music (CMF) data
+0	string	SBI			SoundBlaster instrument data
 0	string	Creative\ Voice\ File	Creative Labs voice data
 # is this next line right?  it came this way...
 >19	byte	0x1A
 >23	byte	>0			- version %d
 >22	byte	>0			\b.%d
-# Microsoft WAVE format
+
+# [GRR 950115:  is this also Creative Labs?  Guessing that first line
+#  should be string instead of unknown-endian long...]
+#0	long		0x4e54524b	MultiTrack sound data
+0	string		NTRK		MultiTrack sound data
+>4	long		x		- version %ld
+
+# Microsoft WAVE format (*.wav)
+# [GRR 950115:  probably all of the shorts and longs should be leshort/lelong]
 0	string		RIFF		Microsoft RIFF
 >8	string		WAVE		- WAVE format
 >34	short		>0		%d bit

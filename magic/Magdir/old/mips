@@ -1,5 +1,7 @@
+
+#------------------------------------------------------------------------------
+# mips:  file(1) magic for RISC (MIPS) DECstation
 #
-# RISC MIPS decstation
 # Should this be "leshort", given that DEC ran the DECstations in
 # little-endian mode?
 #

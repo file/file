@@ -1,3 +1,6 @@
+
+#------------------------------------------------------------------------------
+# lisp:  file(1) magic for lisp programs
 #
 # various lisp types, from Daniel Quinlan (quinlan@yggdrasil.com)
 0	string	;;			Lisp/Scheme program text
