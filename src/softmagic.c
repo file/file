@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.14 1992/09/09 15:04:16 ian Exp $";
+	"@(#)$Id: softmagic.c,v 1.15 1992/09/11 10:09:26 ian Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *));
@@ -119,15 +119,17 @@ unsigned char *s;
  			      (m->reln & MASK) ? p->l & m->mask : p->l);
   		break;
   	case STRING:
-		if ((pp=strchr(p->s, '\n')) != NULL)
-			*pp = '\0';
+		if ((rt=strchr(p->s, '\n')) != NULL)
+			*rt = '\0';
 		(void) printf(m->desc, p->s);
+		*rt = '\n';
 		break;
 	case DATE:
 		pp = ctime((time_t*) &p->l);
 		if ((rt = strchr(pp, '\n')) != NULL)
 			*rt = '\0';
 		(void) printf(m->desc, pp);
+		*rt = '\n';
 		break;
 	default:
 		error("invalid m->type (%d) in mprint().\n", m->type);
