@@ -1,4 +1,4 @@
-.TH FILE 1 "Public Domain"
+.TH FILE 1 "Copyright but distributable"
 .SH NAME
 .I file
 \- determine file type
@@ -9,19 +9,19 @@
 ]
 [
 .B -f
-file ]
+namefile ]
 [
 .B -m 
 magicfile ]
 file ...
 .SH DESCRIPTION
 .I File
-performs a series of tests on each argument in an attempt to classify it.
+tests each argument in an attempt to classify it.
 There are three sets of tests, performed in this order:
 filesystem tests, magic number tests, and language tests.
-The program prints the 
+The
 .I first
-type that matches the file, and goes on to the next file argument if any.
+test that succeeds causes the file type to be printed.
 .PP
 The type printed will usually contain one of the words
 .B text
@@ -67,7 +67,7 @@ in the standard include directory.
 These files have a `magic number' stored in a particular place
 near the beginning of the file that tells the \s-1UNIX\s0 operating system
 that the file is a binary executable, and which of several types thereof.
-The concept of `magic number' has been applied by extention to data files.
+The concept of `magic number' has been applied by extension to data files.
 Any file with some invariant identifier at a fixed
 offset into the file can usually be described in this way.
 The information in these files is read from the magic file
@@ -107,11 +107,15 @@ to debug a new magic file.
 .PP
 The 
 .B -f
-.I file
+.I namefile
 option specifies that the names of the files to be examined
-is to come from 
-.I file
-rather than (or in addition to) the argument list.
+are to be read (one per line) from 
+.I namefile
+before the argument list.
+Either 
+.I namefile
+or at least one filename argument must be present;
+to test the standard input, use ``-'' as a filename argument.
 .SH FILES
 .I /etc/magic
 \- default list of magic numbers
@@ -141,10 +145,10 @@ in an existing magic file would have to be changed to
 .br
 >10	string	language\e impress	(imPRESS data)
 .PP
-The SUN Microsystems implementation of System V compatibility
+The Sun Microsystems implementation of System V compatibility
 includes a file(1) command that has some extentions.
-My version differs from SUN's only in minor ways.
-The significant one is the `&' operator, which SUN's program expects as,
+My version differs from Sun's only in minor ways.
+The significant one is the `&' operator, which Sun's program expects as,
 for example,
 .br
 >16	long&0x7fffffff	>0		not stripped
@@ -197,11 +201,21 @@ ever read sources, credits must appear in the documentation.
 .PP
 4. This notice may not be removed or altered.
 .PP
-The file
+A few support files (\fIgetopt\fP, \fIstrtok\fP)
+distributed with this package
+are by Henry Spencer and are subject to the same terms as above.
+.PP
+A few simple support files (\fIstrtol\fP, \fIstrchr\fP)
+distributed with this package
+are in the public domain; they are so marked.
+.PP
+The files
+.I tar.h
+and
 .I is_tar.c
-was written by John Gilmore from his public-domain
+were written by John Gilmore from his public-domain
 .I tar
-program, and is not covered by the above restrictions.
+program, and are not covered by the above restrictions.
 .SH MAGIC DIRECTORY
 The order of entries in the magic file is significant.
 Depending on what system you are using, the order that
