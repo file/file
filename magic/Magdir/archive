@@ -228,3 +228,9 @@
 2       string          -pm2-           PMarc archive data [pm2]
 2       string          -pms-           PMarc SFX archive (CP/M, DOS)
 5       string          -pc1-           PopCom compressed executable (CP/M)
+
+# From rafael@icp.inpg.fr (Rafael Laboissiere) 
+# The Project Revision Control System (see
+# http://www.XCF.Berkeley.EDU/~jmacd/prcs.html) generates a packaged project
+# file which is recognized by the following entry:
+0	leshort		0xeb81	PRCS packaged project
