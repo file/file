@@ -28,7 +28,9 @@
 #include <stdio.h>
 #include "file.h"
 
-#define USAGE		"usage: %s [-f file] [-m magicfile] file...\n"
+#ifndef	lint
+static char *moduleid = "$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.5 1987/09/16 10:12:01 ian Exp $";
+#endif	/* lint */
 
 extern char *progname;
 extern char *magicfile;	/* name of current /etc/magic or clone */

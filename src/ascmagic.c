@@ -31,6 +31,10 @@
 #include "file.h"
 #include "names.h"
 
+#ifndef	lint
+static char *moduleid = "$Header: /p/file/cvsroot/file/src/ascmagic.c,v 1.4 1987/09/16 10:11:40 ian Exp $";
+#endif	/* lint */
+
 char ckfmsg[] = "write error on output";
 
 			/* an optimisation over plain strcmp() */

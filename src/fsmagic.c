@@ -40,7 +40,9 @@
 #include <sys/stat.h>
 #include "file.h"
 
-#define USAGE		"usage: %s [-f file] [-m magicfile] file...\n"
+#ifndef	lint
+static char *moduleid = "$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.5 1987/09/16 10:11:48 ian Exp $";
+#endif	/* lint */
 
 extern char *progname;
 extern char *ckfmsg, *magicfile;
