@@ -76,7 +76,7 @@
 >8320	lelong		0		TIME optimization
 >8320	lelong		1		SPACE optimization
 
-9564	belong		0x00011954	Unix Fast File system (little-endian),
+9564	belong		0x00011954	Unix Fast File system (big-endian),
 >8404	string		x		last mounted on %s,
 >9504	bedate		x		last checkd at %s,
 >8224	bedate		x		last writen at %s,
