@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.18 2001/10/20 17:44:53 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.19 2002/05/16 15:01:41 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -170,9 +170,14 @@ dophn_exec(class, swap, fd, off, num, size)
 	size_t size;
 {
 	Elf32_Phdr ph32;
+	Elf32_Nhdr *nh32;
 	Elf64_Phdr ph64;
+	Elf64_Nhdr *nh64;
 	char *linking_style = "statically";
 	char *shared_libraries = "";
+	char nbuf[BUFSIZ];
+	int bufsize;
+	size_t offset, nameoffset;
 
 	if (lseek(fd, off, SEEK_SET) == -1)
 		error("lseek failed (%s).\n", strerror(errno));
@@ -187,6 +192,112 @@ dophn_exec(class, swap, fd, off, num, size)
 			break;
 		case PT_INTERP:
 			shared_libraries = " (uses shared libs)";
+			break;
+		case PT_NOTE:
+			/*
+			 * This is a PT_NOTE section; loop through all the notes
+			 * in the section.
+			 */
+			if (lseek(fd, (off_t) ph_offset, SEEK_SET) == -1)
+				error("lseek failed (%s).\n", strerror(errno));
+			bufsize = read(fd, nbuf, BUFSIZ);
+			if (bufsize == -1)
+				error(": " "read failed (%s).\n",
+				    strerror(errno));
+			offset = 0;
+			for (;;) {
+				if (offset >= bufsize)
+					break;
+				if (class == ELFCLASS32)
+					nh32 = (Elf32_Nhdr *)&nbuf[offset];
+				else
+					nh64 = (Elf64_Nhdr *)&nbuf[offset];
+				offset += nh_size;
+	
+				if (offset + nh_namesz >= bufsize) {
+					/*
+					 * We're past the end of the buffer.
+					 */
+					break;
+				}
+
+				nameoffset = offset;
+				offset += nh_namesz;
+				offset = ((offset + 3)/4)*4;
+
+				if (offset + nh_descsz >= bufsize)
+					break;
+
+				if (nh_namesz == 4 &&
+				    strcmp(&nbuf[nameoffset], "GNU") == 0 &&
+				    nh_type == NT_GNU_VERSION &&
+				    nh_descsz == 16) {
+					uint32_t *desc =
+					    (uint32_t *)&nbuf[offset];
+
+					printf(", for GNU/");
+					switch (getu32(swap, desc[0])) {
+					case GNU_OS_LINUX:
+						printf("Linux");
+						break;
+					case GNU_OS_HURD:
+						printf("Hurd");
+						break;
+					case GNU_OS_SOLARIS:
+						printf("Solaris");
+						break;
+					default:
+						printf("<unknown>");
+					}
+					printf(" %d.%d.%d",
+					    getu32(swap, desc[1]),
+					    getu32(swap, desc[2]),
+					    getu32(swap, desc[3]));
+				}
+
+				if (nh_namesz == 7 &&
+				    strcmp(&nbuf[nameoffset], "NetBSD") == 0 &&
+				    nh_type == NT_NETBSD_VERSION &&
+				    nh_descsz == 4) {
+					printf(", for NetBSD");
+					/*
+					 * Version number is stuck at 199905,
+					 * and hence is basically content-free.
+					 */
+				}
+
+				if (nh_namesz == 8 &&
+				    strcmp(&nbuf[nameoffset], "FreeBSD") == 0 &&
+				    nh_type == NT_FREEBSD_VERSION &&
+				    nh_descsz == 4) {
+					uint32_t desc = getu32(swap,
+					    *(uint32_t *)&nbuf[offset]);
+					printf(", for FreeBSD");
+					/*
+					 * Contents is __FreeBSD_version,
+					 * whose relation to OS versions is
+					 * defined by a huge table in the
+					 * Porters' Handbook.  Happily, the
+					 * first three digits are the version
+					 * number, at least in versions of
+					 * FreeBSD that use this note.
+					 */
+
+					printf(" %d.%d", desc / 100000,
+					    desc / 10000 % 10);
+					if (desc / 1000 % 10 > 0)
+						printf(".%d",
+						    desc / 1000 % 10);
+				}
+
+				if (nh_namesz == 8 &&
+				    strcmp(&nbuf[nameoffset], "OpenBSD") == 0 &&
+				    nh_type == NT_OPENBSD_VERSION &&
+				    nh_descsz == 4) {
+					printf(", for OpenBSD");
+					/* Content of note is always 0 */
+				}
+			}
 			break;
 		}
 	}
@@ -230,6 +341,17 @@ size_t	prpsoffsets64[] = {
  * *do* have that binary, the debugger will probably tell you what
  * signal it was.)
  */
+
+#define	OS_STYLE_SVR4		0
+#define	OS_STYLE_FREEBSD	1
+#define	OS_STYLE_NETBSD		2
+
+static const char *os_style_names[] = {
+	"SVR4",
+	"FreeBSD",
+	"NetBSD",
+};
+
 static void
 dophn_core(class, swap, fd, off, num, size)
 	int class;
@@ -248,7 +370,7 @@ dophn_core(class, swap, fd, off, num, size)
 	int i, j;
 	char nbuf[BUFSIZ];
 	int bufsize;
-	int is_freebsd;
+	int os_style = -1;
 
 	/*
 	 * Loop through all the program headers.
@@ -283,7 +405,7 @@ dophn_core(class, swap, fd, off, num, size)
 
 			/*
 			 * Check whether this note has the name "CORE" or
-			 * "FreeBSD".
+			 * "FreeBSD", or "NetBSD-CORE".
 			 */
 			if (offset + nh_namesz >= bufsize) {
 				/*
@@ -310,17 +432,50 @@ dophn_core(class, swap, fd, off, num, size)
 			 * doesn't include the terminating null in the
 			 * name....
 			 */
-			if ((nh_namesz == 4 &&
-			      strncmp(&nbuf[nameoffset], "CORE", 4) == 0) ||
-			    (nh_namesz == 5 &&
-			      strcmp(&nbuf[nameoffset], "CORE") == 0))
-				is_freebsd = 0;
-			else if ((nh_namesz == 8 &&
-			      strcmp(&nbuf[nameoffset], "FreeBSD") == 0))
-				is_freebsd = 1;
-			else
-				continue;
-			if (nh_type == NT_PRPSINFO) {
+			if (os_style == -1) {
+				if ((nh_namesz == 4 &&
+				     strncmp(&nbuf[nameoffset],
+					    "CORE", 4) == 0) ||
+				    (nh_namesz == 5 &&
+				     strcmp(&nbuf[nameoffset],
+				     	    "CORE") == 0)) {
+					os_style = OS_STYLE_SVR4;
+				} else
+				if ((nh_namesz == 8 &&
+				     strcmp(&nbuf[nameoffset],
+				     	    "FreeBSD") == 0)) {
+					os_style = OS_STYLE_FREEBSD;
+				} else
+				if ((nh_namesz >= 11 &&
+				     strncmp(&nbuf[nameoffset],
+				     	     "NetBSD-CORE", 11) == 0)) {
+					os_style = OS_STYLE_NETBSD;
+				} else
+					continue;
+				printf(", %s-style", os_style_names[os_style]);
+			}
+
+			if (os_style == OS_STYLE_NETBSD &&
+			    nh_type == NT_NETBSD_CORE_PROCINFO) {
+				uint32_t signo;
+
+				/*
+				 * Extract the program name.  It is at
+				 * offset 0x7c, and is up to 32-bytes,
+				 * including the terminating NUL.
+				 */
+				printf(", from '%.31s'", &nbuf[offset + 0x7c]);
+				
+				/*
+				 * Extract the signal number.  It is at
+				 * offset 0x08.
+				 */
+				memcpy(&signo, &nbuf[offset + 0x08],
+				    sizeof(signo));
+				printf(" (signal %u)", getu32(swap, signo));
+			} else
+			if (os_style != OS_STYLE_NETBSD &&
+			    nh_type == NT_PRPSINFO) {
 				/*
 				 * Extract the program name.  We assume
 				 * it to be 16 characters (that's what it
