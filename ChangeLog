@@ -1,3 +1,7 @@
+2003-04-02 17:30  Christos Zoulas  <christos@zoulas.com>
+
+	* cleanup namespace in magic.h
+
 2003-04-02 13:50  Christos Zoulas  <christos@zoulas.com>
 
 	* Magic additions (Alex Ott)
