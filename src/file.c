@@ -30,11 +30,11 @@
 #include <sys/stat.h>
 #include "file.h"
 
-#define USAGE		"usage: %s [-f namefile] [-m magicfile] file...\n"
+#define USAGE		"usage: %s [-c] [-f namefile] [-m magicfile] file...\n"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.11 1987/10/05 22:04:55 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.12 1987/11/06 21:03:16 ian Exp $";
 #endif	/* lint */
 extern char *ckfmsg;
 int 	debug = 0, 	/* huh? */
