@@ -7,3 +7,9 @@
 #	and deleted if they duplicate other entries.
 #
 0	short		0610		Perkin-Elmer executable
+# AMD 29K
+0	beshort		0572		amd 29k coff noprebar executable
+0	beshort		01572		amd 29k coff prebar executable
+0	beshort		0160007		amd 29k coff archive
+# Cray
+6	beshort		0407		unicos (cray) executable

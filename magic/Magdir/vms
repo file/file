@@ -3,7 +3,6 @@
 # vms:  file(1) magic for VMS executables (experimental)
 #
 # VMS .exe formats, both VAX and AXP (Greg Roelofs, newt@uchicago.edu)
-# This file should be renamed to "vms" eventually...
 
 # GRR 950122:  I'm just guessing on these, based on inspection of the headers
 # of three executables each for Alpha and VAX architectures.  The VAX files
@@ -12,8 +11,8 @@
 #   00000  b0 00 30 00 44 00 60 00  00 00 00 00 30 32 30 35  ..0.D.`.....0205
 #   00010  01 01 00 00 ff ff ff ff  ff ff ff ff 00 00 00 00  ................
 #
-0	string	\xb0\x00\x30\x00	VMS VAX executable
->44032	string	PK\003\004		(Info-ZIP SFX archive v5.12 w/decryption)
+0	string	\xb0\0\x30\0	VMS VAX executable
+>44032	string	PK\003\004	\b, Info-ZIP SFX archive v5.12 w/decryption
 #
 # The AXP files all looked like this, except that the byte at offset 0x22
 # was 06 in some of them and 07 in others:
@@ -25,4 +24,4 @@
 #   00040  00 00 00 00 ff ff ff ff  ff ff ff ff 02 00 00 00  ................
 #
 0	belong	0x03000000	VMS Alpha executable
->75264	string	PK\003\004	(Info-ZIP SFX archive v5.12 w/decryption)
+>75264	string	PK\003\004	\b, Info-ZIP SFX archive v5.12 w/decryption
