@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.70 2004/11/20 23:50:13 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.71 2004/11/21 06:09:43 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -647,7 +647,13 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		return 0;
 	}
 
-	if (offset + sizeof(*p) <= nbytes)
+	if (offset >= nbytes) {
+		(void)memset(p, '\0', sizeof(*p));
+		return 0;
+	}
+	if (nbytes - offset < sizeof(*p))
+		nbytes = nbytes - offset;
+	else
 		nbytes = sizeof(*p);
 
 	(void)memcpy(p, s + offset, nbytes);
@@ -657,7 +663,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 	 * might even cause problems
 	 */
 	if (nbytes < sizeof(*p))
-		(void)memset(p + nbytes, 0, sizeof(*p) - nbytes);
+		(void)memset(p + nbytes, '\0', sizeof(*p) - nbytes);
 	return 0;
 }
 
