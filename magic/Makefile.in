@@ -472,10 +472,10 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 	done >> $@
 
 magic.mgc: magic
-	$(top_builddir)/src/file -C -m magic
+	$(top_builddir)/src/file -C -m $(srcdir)/magic
 
 magic.mime.mgc: magic.mime
-	$(top_builddir)/src/file -C -m magic.mime
+	$(top_builddir)/src/file -C -m $(srcdir)/magic.mime
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
