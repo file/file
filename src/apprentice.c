@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.66 2003/10/08 16:47:31 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.67 2003/10/08 17:18:28 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -958,7 +958,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	int needsbyteswap;
 	char buf[MAXPATHLEN];
 	char *dbname = mkdbname(fn, buf, sizeof(buf));
-	void *mm;
+	void *mm = NULL;
 
 	if (dbname == NULL)
 		return -1;
