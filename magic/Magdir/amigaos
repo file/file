@@ -53,3 +53,5 @@
 >35	byte		1		os: OS/2
 >35	byte		2		os: Win32
 >35	byte		3		os: Unix
+
+0	belong		0x000003fa	AmigaOS shared library

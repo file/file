@@ -43,8 +43,12 @@
 
 # Creative Labs AUDIO stuff
 0	string	MThd			Standard MIDI data
->9 	byte	>0			(format %d)
->11	byte	>1			using %d tracks
+>8 	beshort	x			(format %d)
+>10	beshort	x			using %d track
+>10	beshort		>1		\bs
+>12	beshort&0x7fff	x		at 1/%d
+>12	beshort&0x8000	>0		SMPTE
+
 0	string	CTMF			Creative Music (CMF) data
 0	string	SBI			SoundBlaster instrument data
 0	string	Creative\ Voice\ File	Creative Labs voice data
