@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.80 2003/07/10 21:10:16 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.81 2003/09/12 19:39:44 christos Exp $")
 #endif	/* lint */
 
 
@@ -215,7 +215,7 @@ main(int argc, char *argv[])
 			action = FILE_COMPILE;
 			break;
 		case 'd':
-			flags |= MAGIC_DEBUG;
+			flags |= MAGIC_DEBUG|MAGIC_CHECK;
 			break;
 		case 'f':
 			if(action)

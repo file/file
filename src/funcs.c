@@ -76,10 +76,6 @@ file_error(struct magic_set *ms, const char *f, ...)
 	if (ms->haderr)
 	    return;
 	va_start(va, f);
-
-	/* cuz we use stdout for most, stderr here */
-	(void) fflush(stdout); 
-
 	(void) vsnprintf(ms->o.buf, ms->o.size, f, va);
 	ms->haderr++;
 	va_end(va);

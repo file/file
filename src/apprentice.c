@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.63 2003/09/12 19:19:22 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.64 2003/09/12 19:39:44 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -263,10 +263,11 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		return -1;
 	}
 
-	/* parse it */
-	if (action == FILE_CHECK)	/* print silly verbose header for USG compat. */
+	/* print silly verbose header for USG compat. */
+	if (action == FILE_CHECK)
 		(void)fprintf(stderr, "%s\n", hdr);
 
+	/* parse it */
 	for (lineno = 1; fgets(line, BUFSIZ, f) != NULL; lineno++) {
 		if (line[0]=='#')	/* comment, do not parse */
 			continue;
@@ -682,8 +683,12 @@ getvalue(struct magic_set *ms, struct magic *m, char **p)
 	case FILE_PSTRING:
 	case FILE_REGEX:
 		*p = getstr(ms, *p, m->value.s, sizeof(m->value.s), &slen);
-		if (*p == NULL)
+		if (*p == NULL) {
+			if (ms->flags & MAGIC_CHECK)
+				file_magwarn("Cannot get string from `%s'",
+				    m->value.s);
 			return -1;
+		}
 		m->vallen = slen;
 		return 0;
 	default:
