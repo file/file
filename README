@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-$Header: /p/file/cvsroot/file/README,v 1.8 1987/11/07 12:37:46 ian Exp $
+@(#) $Header: /p/file/cvsroot/file/README,v 1.9 1987/11/07 12:38:30 ian Exp $
 
 This is Ian Darwin's (copyright but distributable) file(1)
 command. It follows the USG (Sys V) model of the file command,
