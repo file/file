@@ -10,7 +10,7 @@
  *
  * See LEGAL.NOTICE
  *
- * $Id: names.h,v 1.9 1992/09/08 15:32:20 ian Exp $
+ * $Id: names.h,v 1.10 1993/03/24 14:22:56 ian Exp $
  */
 
 /* these types are used to index the table 'types': keep em in sync! */
@@ -85,5 +85,6 @@ static struct names {
 	{"Newsgroups:",	L_NEWS},
 	{"Path:",	L_NEWS},
 	{"Organization:",L_NEWS},
-	0};
+	{0}
+	};
 #define NNAMES ((sizeof(names)/sizeof(struct names)) - 1)
