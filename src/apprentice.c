@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.30 1999/11/28 20:02:28 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.31 2000/04/11 02:06:57 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -185,15 +185,17 @@ int *ndx, check;
 #define ALLOC_INCR	200
 	if (nd+1 >= maxmagic){
 	    maxmagic += ALLOC_INCR;
-	    if ((magic = (struct magic *) realloc(magic, 
-						  sizeof(struct magic) * 
-						  maxmagic)) == NULL) {
+	    if ((m = (struct magic *) realloc(magic, sizeof(struct magic) * 
+					      maxmagic)) == NULL) {
 		(void) fprintf(stderr, "%s: Out of memory.\n", progname);
+		if (magic)
+			free(magic);
 		if (check)
 			return -1;
 		else
 			exit(1);
 	    }
+	    magic = m;
 	    memset(&magic[*ndx], 0, sizeof(struct magic) * ALLOC_INCR);
 	}
 	m = &magic[*ndx];
