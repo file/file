@@ -44,6 +44,13 @@
 0	string/b	#!\ /bin/bash	Bourne-Again shell script text executable
 0	string/b	#!\ /usr/local/bin/bash	Bourne-Again shell script text executable
 
+# using env
+0	string		#!/usr/bin/env		a
+>15	string		>\0			%s script text executable
+0	string		#!\ /usr/bin/env	a
+>16	string		>\0			%s script text executable
+
+
 # generic shell magic
 0	string		#!\ /			a
 >3	string		>\0			%s script text executable

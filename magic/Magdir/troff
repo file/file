@@ -11,7 +11,7 @@
 0	string		\\"		troff or preprocessor input text
 
 # ditroff intermediate output text
-0	string		x\ T		ditroff text
+0	string		x\ T		ditroff output text
 >4	string		cat		for the C/A/T phototypesetter
 >4	string		ps		for PostScript
 >4	string		dvi		for DVI

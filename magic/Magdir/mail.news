@@ -19,3 +19,6 @@
 0	string		Received:	RFC 822 mail text
 0	string		MIME-Version:	MIME entity text
 #0	string		Content-	MIME entity text
+
+# TNEF files...
+0	lelong		0x223E9F78	Transport Neutral Encapsulation Format
