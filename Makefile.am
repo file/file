@@ -51,7 +51,7 @@ Magdir/bsdi Magdir/c-lang Magdir/chi Magdir/cisco Magdir/clipper \
 Magdir/commands Magdir/compress Magdir/convex Magdir/database \
 Magdir/diamond Magdir/diff Magdir/digital Magdir/dump Magdir/elf \
 Magdir/encore Magdir/filesystems Magdir/flash Magdir/fonts Magdir/frame \
-Magdir/freebsd Magdir/gimp Magdir/gnu Magdir/grace Magdir/hp Magdir/ibm370 \
+Magdir/freebsd Magdir/fsav Magdir/gimp Magdir/gnu Magdir/grace Magdir/hp Magdir/ibm370 \
 Magdir/ibm6000 Magdir/iff Magdir/images Magdir/intel Magdir/interleaf \
 Magdir/island Magdir/ispell Magdir/java Magdir/jpeg Magdir/karma Magdir/lecter \
 Magdir/lex Magdir/lif Magdir/linux Magdir/lisp Magdir/mach Magdir/macintosh \
