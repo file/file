@@ -20,8 +20,16 @@
 >12	long		>0		not stripped
 0	short		0560		WE32000 executable
 >12	long		>0		not stripped
+>18	short		^00010000	- N/A on 3b2/300 w/paging
+>18	short		&00020000	- 32100 required
+>18	short		&00040000	and mau hardware required
+>20	short		0443		(target shared library)
+>20	short		0410		(swapped)
+>20	short		0413		(paged)
+>22	short		>0		- version %ld
 0	short		0561		WE32000 executable (TV)
 >12	long		>0		not stripped
+#
 0	short		0610		Perkin-Elmer executable
 #
 # Motorola/UniSoft Application Binary Interface (ABI)
