@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.59 2003/06/10 18:28:37 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.60 2003/07/10 17:01:38 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -126,7 +126,7 @@ main(int argc, char *argv[])
 	}
 	magicfile = argv[1];
 
-	exit(apprentice(magicfile, COMPILE, MAGIC_CHECK));
+	exit(file_apprentice(magicfile, COMPILE, MAGIC_CHECK) == -1 ? 1 : 0);
 }
 #endif /* COMPILE_ONLY */
 

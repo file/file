@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.77 2003/03/27 22:46:51 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.78 2003/07/10 17:01:38 christos Exp $")
 #endif	/* lint */
 
 
@@ -279,8 +279,9 @@ main(int argc, char *argv[])
 			    strerror(errno));
 			return 1;
 		}
-		return action == FILE_CHECK ? magic_check(magic, magicfile) :
+		c = action == FILE_CHECK ? magic_check(magic, magicfile) :
 		    magic_compile(magic, magicfile);
+		return c == -1 ? 1 : 0;
 	default:
 		load(magicfile, flags);
 		break;
