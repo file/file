@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.11 1987/10/06 20:15:52 ian Exp $
+# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.12 1987/11/06 11:34:45 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -27,9 +27,9 @@ DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
 COPTS	= -O # -g
 CFLAGS	= $(COPTS) $(DEFS)
 SHAR	= bundle
-OFILE	= /usr/bin/file.sun	# old or distributed version, for comparison
+OFILE	= /usr/bin/file.orig	# old or distributed version, for comparison
 # Where new binary lives; typically /usr/local (BSD), /usr/lbin (USG).
-BINDIR	= /usr/local/bin
+BINDIR	= /usr/local
 # For installing our man pages; 
 # MANCxxx is manual section for Commands, MANFxxx is section for file formats.
 # MANxDIR is directory names; MANxEXT is the filename extention. Usual values:
