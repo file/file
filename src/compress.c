@@ -55,7 +55,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.27 2003/03/23 21:16:26 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.28 2003/03/23 21:24:07 christos Exp $")
 #endif
 
 
@@ -108,7 +108,10 @@ file_zmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 			if (file_printf(ms, " (") == -1)
 				return -1;
 			ms->flags &= ~MAGIC_COMPRESS;
-			(void)magic_buf(ms, buf, nbytes);
+			if (file_buf(ms, buf, nbytes) == -1) {
+				ms->flags |= MAGIC_COMPRESS;
+				return -1;
+			}
 			ms->flags |= MAGIC_COMPRESS;
 			if (file_printf(ms, ")") == -1)
 				return -1;
