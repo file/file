@@ -33,7 +33,8 @@
 #define USAGE		"usage: %s [-f file] [-m magicfile] file...\n"
 
 #ifndef	lint
-static char *moduleid = "$Header: /p/file/cvsroot/file/src/file.c,v 1.8 1987/09/11 22:06:52 ian Exp $";
+static char *moduleid = 
+	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.9 1987/09/16 14:44:56 ian Exp $";
 #endif	/* lint */
 extern char *ckfmsg;
 int 	debug = 0, 	/* huh? */

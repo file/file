@@ -32,7 +32,8 @@
 #include "names.h"
 
 #ifndef	lint
-static char *moduleid = "$Header: /p/file/cvsroot/file/src/ascmagic.c,v 1.4 1987/09/16 10:11:40 ian Exp $";
+static char *moduleid = 
+	"@(#)$Header: /p/file/cvsroot/file/src/ascmagic.c,v 1.5 1987/09/16 14:44:45 ian Exp $";
 #endif	/* lint */
 
 char ckfmsg[] = "write error on output";

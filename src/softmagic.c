@@ -29,7 +29,8 @@
 #include "file.h"
 
 #ifndef	lint
-static char *moduleid = "$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.5 1987/09/16 10:12:01 ian Exp $";
+static char *moduleid = 
+	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.6 1987/09/16 14:45:23 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;

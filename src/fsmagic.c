@@ -41,7 +41,8 @@
 #include "file.h"
 
 #ifndef	lint
-static char *moduleid = "$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.5 1987/09/16 10:11:48 ian Exp $";
+static char *moduleid = 
+	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.6 1987/09/16 14:45:07 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
