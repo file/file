@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.76 2004/05/12 14:53:01 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.77 2004/06/04 14:40:19 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -102,9 +102,6 @@ private size_t maxmagic = 0;
 private size_t magicsize = sizeof(struct magic);
 
 #ifdef COMPILE_ONLY
-const char *magicfile;
-char *progname;
-int lineno;
 
 int main(int, char *[]);
 
@@ -112,6 +109,8 @@ int
 main(int argc, char *argv[])
 {
 	int ret;
+	struct magic_set *ms;
+	char *progname;
 
 	if ((progname = strrchr(argv[0], '/')) != NULL)
 		progname++;
@@ -119,12 +118,19 @@ main(int argc, char *argv[])
 		progname = argv[0];
 
 	if (argc != 2) {
-		(void)fprintf(stderr, "usage: %s file\n", progname);
-		exit(1);
+		(void)fprintf(stderr, "Usage: %s file\n", progname);
+		return 1;
 	}
-	magicfile = argv[1];
 
-	exit(file_apprentice(magicfile, COMPILE, MAGIC_CHECK) == -1 ? 1 : 0);
+	if ((ms = magic_open(MAGIC_CHECK)) == NULL) {
+		(void)fprintf(stderr, "%s: %s\n", progname, strerror(errno));
+		return 1;
+	}
+	ret = magic_compile(ms, argv[1]) == -1 ? 1 : 0;
+	if (ret == 1)
+		(void)fprintf(stderr, "%s: %s\n", progname, magic_error(ms));
+	magic_close(ms);
+	return ret;
 }
 #endif /* COMPILE_ONLY */
 
