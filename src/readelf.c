@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.11 1999/10/31 22:23:04 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.12 2000/04/11 02:32:35 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -250,7 +250,7 @@ dophn_core(class, swap, fd, off, num, size)
 			error("lseek failed (%s).\n", strerror(errno));
 		bufsize = read(fd, nbuf, BUFSIZ);
 		if (bufsize == -1)
-			error("read failed (%s).\n", strerror(errno));
+			error(": " "read failed (%s).\n", strerror(errno));
 		offset = 0;
 		for (;;) {
 			if (offset >= bufsize)

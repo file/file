@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.30 1999/11/28 20:02:29 christos Exp $
+ * @(#)$Id: file.h,v 1.31 2000/04/11 02:32:35 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -121,7 +121,6 @@ extern uint32 signextend	__P((struct magic *, unsigned int32));
 extern int internatmagic	__P((unsigned char *, int));
 extern void tryelf		__P((int, unsigned char *, int));
 
-
 extern int errno;		/* Some unixes don't define this..	*/
 
 extern char *progname;		/* the program name 			*/
@@ -136,6 +135,7 @@ extern int debug;		/* enable debugging?			*/
 extern int zflag;		/* process compressed files?		*/
 extern int lflag;		/* follow symbolic links?		*/
 extern int sflag;		/* read/analyze block special files?	*/
+extern int iflag;		/* Output types as mime-types		*/
 
 extern int optind;		/* From getopt(3)			*/
 extern char *optarg;

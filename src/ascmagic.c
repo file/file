@@ -38,7 +38,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.25 1999/11/28 20:02:29 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.26 2000/04/11 02:32:35 christos Exp $")
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -61,10 +61,11 @@ int nbytes;	/* size actually read */
 	 */
 	switch (is_tar(buf, nbytes)) {
 	case 1:
-		ckfputs("tar archive", stdout);
+		ckfputs(iflag ? "application/x-tar" : "tar archive", stdout);
 		return 1;
 	case 2:
-		ckfputs("POSIX tar archive", stdout);
+		ckfputs(iflag ? "application/x-tar, POSIX"
+				: "POSIX tar archive", stdout);
 		return 1;
 	}
 
@@ -80,13 +81,14 @@ int nbytes;	/* size actually read */
 			++tp;	/* skip leading whitespace */
 		if ((isascii(*tp) && (isalnum(*tp) || *tp=='\\') &&
 		    isascii(tp[1]) && (isalnum(tp[1]) || tp[1] == '"'))) {
-			ckfputs("troff or preprocessor input text", stdout);
+			ckfputs(iflag ? "text/troff" 
+				: "troff or preprocessor input text", stdout);
 			return 1;
 		}
 	}
 	if ((*buf == 'c' || *buf == 'C') && 
 	    isascii(buf[1]) && isspace(buf[1])) {
-		ckfputs("fortran program text", stdout);
+		ckfputs(iflag ? "text/fortran" : "fortran program text", stdout);
 		return 1;
 	}
 
@@ -106,7 +108,7 @@ int nbytes;	/* size actually read */
 		s = NULL;	/* make strtok() keep on tokin' */
 		for (p = names; p < names + NNAMES; p++) {
 			if (STREQ(p->name, token)) {
-				ckfputs(types[p->type], stdout);
+				ckfputs(iflag ? types[p->type].mime : types[p->type].human, stdout);
 				if (has_escapes)
 					ckfputs(" (with escape sequences)", 
 						stdout);
@@ -116,11 +118,9 @@ int nbytes;	/* size actually read */
 	}
 
 	/* all else fails, but it is ASCII... */
-	ckfputs("ASCII text", stdout);
+	ckfputs(iflag ? "text/plain, ASCII" : "ASCII test", stdout);
 	if (has_escapes) {
 		ckfputs(" (with escape sequences)", stdout);
 	}
 	return 1;
 }
-
-

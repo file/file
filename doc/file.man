@@ -1,12 +1,12 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.33 1999/02/14 17:16:07 christos Exp $
+.\" $Id: file.man,v 1.34 2000/04/11 02:32:35 christos Exp $
 .SH NAME
 file
 \- determine file type
 .SH SYNOPSIS
 .B file
 [
-.B \-bcnsvzL
+.B \-bcinsvzL
 ]
 [
 .B \-f
@@ -19,6 +19,7 @@ file ...
 This manual page documents version __VERSION__ of the
 .B file
 command.
+.PP
 .B File
 tests each argument in an attempt to classify it.
 There are three sets of tests, performed in this order:
@@ -124,6 +125,14 @@ Either
 or at least one filename argument must be present;
 to test the standard input, use ``-'' as a filename argument.
 .TP 8
+.B \-i
+Causes the file command to output mime type strings rather than the more
+traditional human readable ones. Thus it may say "text/plain, ASCII" rather
+than "ASCII text". In order for this option to work, file changes the way
+it handles files recognised by the command it's self (such as many of the
+text file types, directories etc), and makes use of an alternative "magic" file.
+(See "FILES" section, below).
+.TP 8
 .B \-m list
 Specify an alternate list of files containing magic numbers.
 This can be a single file, or a colon-separated list of files.
@@ -167,6 +176,11 @@ since on some systems it reports a zero size for raw disk partitions.
 .SH FILES
 .I __MAGIC__
 \- default list of magic numbers
+.PP
+.I __MAGIC__.mime
+\- default list of magic numbers, used to output mime types when the -i option
+is specified.
+
 .SH ENVIRONMENT
 The environment variable
 .B MAGIC
@@ -252,6 +266,12 @@ $ file -s /dev/hda{,1,2,3,4,5,6,7,8,9,10}
 /dev/hda8:  Linux/i386 swap file
 /dev/hda9:  empty
 /dev/hda10: empty
+
+$ file -i file.c file /dev/hda
+file.c:      text/x-c
+file:        application/x-executable, dynamically linked (uses shared libs), not stripped
+/dev/hda:    application/x-not-regular-file
+
 .fi
 .SH HISTORY
 There has been a 
@@ -299,6 +319,10 @@ the process running
 .PP
 Changes by Ian Darwin and various authors including
 Christos Zoulas (christos@astron.com), 1990-1999.
+.PP
+Altered by Chris Lowth, chris@lowth.com, 2000:
+Handle the "-i" option to output mime type strings and using an alternative
+magic file and internal logic.
 .SH LEGAL NOTICE
 Copyright (c) Ian F. Darwin, Toronto, Canada,
 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993.
