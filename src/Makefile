@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.26 1992/09/08 16:15:50 ian Exp $
+# @(#)$Id: Makefile,v 1.27 1992/09/08 16:19:25 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -102,7 +102,7 @@ install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 		cp magic.4	$(MANFDIR)/magic.$(MANFEXT)
 
 clean:
-		rm -f *.o core file magic lint dist.* TARGETS
+		rm -f *.o core file magic lint dist.* TARGETS lastnocore
 		(cd tst; make clean)
 
 dist:		dist.src dist.magic
