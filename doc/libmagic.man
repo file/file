@@ -50,6 +50,8 @@
 .Fn magic_close "magic_t cookie"
 .Ft const char *
 .Fn magic_error "magic_t cookie"
+.Ft int
+.Fn magic_errno "magic_t cookie"
 .Ft const char *
 .Fn magic_file "magic_t cookie, const char *filename"
 .Ft const char *
@@ -101,6 +103,9 @@ or
 attempt to preserve the access time of files analyzed.
 .It Dv MAGIC_RAW
 Don't translate unprintable characters to a \eooo octal representation.
+.It Dv MAGIC_ERROR
+Treat operating system errors while trying to open files and follow symlinks
+as real errors, instead of printing them in the magic buffer.
 .El
 .Pp
 The
@@ -113,6 +118,12 @@ The
 .Fn magic_error
 function returns a textual explanation of the last error, or NULL if there was
 no error.
+.Pp
+The
+.Fn magic_errno
+function returns the last operating system error number (
+.Xr errno 3 )
+that was encountered by a system call.
 .Pp
 The
 .Fn magic_file
