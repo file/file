@@ -38,7 +38,3 @@
 # Freeze
 0	short		0x1f9f		Frozen file 2.1
 0	short		0x1f9e		Frozen file 1.0
-#
-# GNU gzip compressor (V0.8 and above) - from martin@d255s004.zfe.siemens.de
-#
-0	short		017613		gzip compressed
