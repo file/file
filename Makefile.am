@@ -69,7 +69,7 @@ magic_FRAGMENTS = Magdir/adventure Magdir/allegro Magdir/alliant \
     Magdir/pgp Magdir/pkgadd Magdir/plus5 Magdir/printer Magdir/project \
     Magdir/psdbms Magdir/pyramid Magdir/python Magdir/riff Magdir/rpm \
     Magdir/rtf Magdir/sc Magdir/sccs Magdir/sendmail Magdir/sequent \
-    Magdir/sgml Magdir/sniffer Magdir/softquad Magdir/spectrum \
+    Magdir/sgml Magdir/sketch Magdir/sniffer Magdir/softquad Magdir/spectrum \
     Magdir/sun Magdir/teapot Magdir/terminfo Magdir/tex Magdir/ti-8x \
     Magdir/timezone Magdir/troff Magdir/typeset Magdir/unknown \
     Magdir/uuencode Magdir/varied.out Magdir/vax Magdir/vicar Magdir/visx \
