@@ -1,3 +1,9 @@
+2004-04-06 20:36  Christos Zoulas  <christos@zoulas.com>
+
+	* detect present of mbstate_t Petter Reinholdtsen <pere@hungry.com>
+
+	* magic fixes
+
 2004-03-22 15:25  Christos Zoulas  <christos@zoulas.com>
 
 	* Lots of mime fixes
