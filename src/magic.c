@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.18 2004/03/22 19:12:51 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.19 2004/03/22 20:37:13 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -293,7 +293,7 @@ magic_file(struct magic_set *ms, const char *inname)
 		}
 #endif
 	}
-
+gotit:
 	close_and_restore(ms, inname, fd, &sb);
 	return file_getbuffer(ms);
 done:
