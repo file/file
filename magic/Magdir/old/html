@@ -1,9 +1,12 @@
 #
 # HTML magic, from Daniel Quinlan <quinlan@yggdrasil.com>
 #
-0	string		\<HEAD\>		HTML document text
-0	string		\<head\>		HTML document text
-0	string		\<TITLE\>		HTML document text
-0	string		\<title\>		HTML document text
-0	string		\<h1\>			Untitled HTML document text
-0	string		\<H1\>			Untitled HTML document text
+0	string		\<HEAD		HTML document text (old type)
+0	string		\<head		HTML document text (old type)
+0	string		\<TITLE		HTML document text (old type)
+0	string		\<title		HTML document text (old type)
+0       string          \<html          HTML document text
+0       string          \<HTML          HTML document text
+0	string		\<!		HTML document text
+0	string		\<h1		Untitled HTML document text
+0	string		\<H1		Untitled HTML document text
