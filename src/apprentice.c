@@ -51,8 +51,6 @@ char *fn;
 /*
  * parse one line from magic file, put into magic[index++] if valid
  */
-
-
 parse(l, ndx)
 char *l;
 int *ndx;
