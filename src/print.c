@@ -35,12 +35,15 @@
 #endif
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 #include "file.h"
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.18 1993/02/19 14:22:47 ian Exp $";
+	"@(#)$Id: print.c,v 1.19 1993/09/16 21:15:59 christos Exp $";
 #endif  /* lint */
+
+#define SZOF(a)	(sizeof(a) / sizeof(a[0]))
 
 void
 mdump(m)
@@ -52,25 +55,62 @@ struct magic *m;
 				 "long", "string", "date", "beshort",
 				 "belong", "bedate", "leshort", "lelong",
 				 "ledate" };
-	(void) fprintf(stderr, "[%s,%d,%s,%s%c,",
-		(m->flag >= 0 && m->flag < 4 ? offs[m->flag]: "*bad*"),
-		m->offset,
-		(m->type >= 0 && m->type < 7 ? 
-				typ[(unsigned char) m->type] : "*bad*"),
-		m->reln & MASK ? "&" : "",
-		m->reln & ~MASK);
+	(void) fprintf(stderr, "[%s,%d,",
+		(m->flag >= 0 && m->flag < SZOF(offs) ? offs[m->flag]: "*bad*"),
+		m->offset);
+
+
 	if (m->flag & INDIR)
-	    (void) fprintf(stderr, "(%s,%d)",
+	    (void) fprintf(stderr, "(%s,%d),",
 		(m->in.type >= 0 && 
-		m->in.type < 6 ? typ[(unsigned char) m->in.type] : "*bad*"),
+		 m->in.type < SZOF(typ) ? 
+		    typ[(unsigned char) m->in.type] : "*bad*"),
 		m->in.offset);
 
-	if (m->type == STRING)
-		showstr(m->value.s);
+	(void) fputs((m->type >= 0 && m->type < SZOF(typ)) ? 
+			typ[(unsigned char) m->type] : 
+			"*bad*", 
+		     stderr);
+
+	if (m->reln & MASK)
+	    (void) fprintf(stderr, ",%x&%c", m->mask, m->reln & ~MASK);
+	else if (m->reln == 'x')
+	    (void) fputs(",*any*", stderr);
 	else
-		(void) fprintf(stderr, "%d",m->value.l);
-	(void) fprintf(stderr, ",%s", m->desc);
-	(void) fputs("]\n", stderr);
+	    (void) fprintf(stderr, ",%c", m->reln);
+
+	if (m->reln != 'x') {
+	    switch (m->type) {
+	    case BYTE:
+	    case SHORT:
+	    case LONG:
+	    case LESHORT:
+	    case LELONG:
+	    case BESHORT:
+	    case BELONG:
+		    (void) fprintf(stderr, "%d", m->value.l);
+		    break;
+	    case STRING:
+		    showstr(stderr, m->value.s, -1);
+		    break;
+	    case DATE:
+	    case LEDATE:
+	    case BEDATE:
+		    {
+			    char *rt, *pp = ctime((time_t*) &m->value.l);
+			    if ((rt = strchr(pp, '\n')) != NULL)
+				    *rt = '\0';
+			    (void) fprintf(stderr, "%s,", pp);
+			    if (rt)
+				    *rt = '\n';
+		    }
+		    break;
+	    default:
+		    (void) fputs("*bad*", stderr);
+		    break;
+	    }
+	}
+	(void) fprintf(stderr, ",\"%s\"]\n", m->desc);
 }
 
 /*
