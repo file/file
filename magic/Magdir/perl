@@ -13,5 +13,6 @@
 0	string		eval\ "exec\ /usr/local/bin/perl	perl script text executable
 
 # a couple more, by me
-0	regex		package		Perl5 module source text (via regex)
+# XXX: christos matches
+#0	regex		package		Perl5 module source text (via regex)
 0	string		package		Perl5 module source text
