@@ -202,7 +202,7 @@
 
 # XPM icons (Greg Roelofs, newt@uchicago.edu)
 # ideally should go into "images", but entries below would tag XPM as C source
-0	string		/*\ XPM		image/x-xpm	7bit
+0	string		/*\ XPM		image/x-xpmi 7bit
 
 # 3DS (3d Studio files)
 16	beshort		0x3d3d		image/x-3ds

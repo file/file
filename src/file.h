@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.64 2004/11/20 23:50:12 christos Exp $
+ * @(#)$Id: file.h,v 1.65 2005/01/07 19:17:26 christos Exp $
  */
 
 #ifndef __file_h__
@@ -241,13 +241,13 @@ struct magic_set {
 
 struct stat;
 protected char *file_fmttime(uint32_t, int);
-protected int file_buffer(struct magic_set *, const void *, size_t);
+protected int file_buffer(struct magic_set *, int, const void *, size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_printf(struct magic_set *, const char *, ...);
 protected int file_reset(struct magic_set *);
 protected int file_tryelf(struct magic_set *, int, const unsigned char *, size_t);
-protected int file_zmagic(struct magic_set *, const unsigned char *, size_t);
+protected int file_zmagic(struct magic_set *, int, const unsigned char *, size_t);
 protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t);
