@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.13 1987/11/12 12:57:50 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.14 1987/11/12 13:11:06 ian Exp $";
 #endif	/* lint */
 extern char *ckfmsg;
 int 	debug = 0, 	/* huh? */
@@ -140,7 +140,7 @@ char	*inname;
 	struct utimbuf utbuf;
 
 	if (strcmp("-", inname) == 0) {
-		/* Standard input */
+		(void) printf("standard input:\t");
 		if (fstat(0, &statbuf)<0)
 			warning("cannot fstat; ");
 		fd = 0;
