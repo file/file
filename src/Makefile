@@ -22,6 +22,7 @@
 #
 # 4. This notice may not be removed or altered.
 
+SHELL	= /bin/sh
 #MAGIC	= /etc/magic
 MAGIC	= /usr/local/lib/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
@@ -78,7 +79,7 @@ try:		all $(OFILE)
 		what ./file >lastnocore
 
 file:		$(OBJS)
-		cc $(CFLAGS) $(OBJS) -o $@
+		$(CC) $(CFLAGS) $(OBJS) -o $@
 lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS) | tee $@
 magic:		Magdir
