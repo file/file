@@ -21,6 +21,7 @@
 >3	byte		&0x02		continuation,
 >3	byte		&0x04		extra field,
 >3	byte		&0x08		original filename,
+>>10    string          x               `%s',
 >3	byte		&0x10		comment,
 >3	byte		&0x20		encrypted,
 >4	ledate		x		last modified: %s,
