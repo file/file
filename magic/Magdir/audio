@@ -1,0 +1,23 @@
+# Sound formats, from Jan Nicolai Langfeldt <janl@ifi.uio.no>
+0       string          .snd            audio data:
+>12     long            1               8-bit u-law,
+>12     long            2               8-bit linear PCM,
+>12     long            3               16-bit linear PCM,
+>12     long            4               24-bit linear PCM,
+>12     long            5               32-bit linear PCM,
+>12     long            6               32-bit floating point,
+>12     long            7               64-bit floating point,
+>12	long		23		compressed (G.721 ADPCM),
+>20     long            1               mono,
+>20     long            2               stereo,
+>20     long            4               quad,
+>16     long            x               %d Hz
+8       long            0x41494646      AIFF sound data file
+0       long            0x4e54524b      MultiTrack sound data file
+>4      long            x               - version %ld
+>20     string          U               with mipsucode members
+>21     string          L               with mipsel members
+>21     string          B               with mipseb members
+>19     string          L               and a EL hash tabl
+>19     string          B               and a EB hash tabl
+>22     string          X               -- out of date

@@ -1,0 +1,59 @@
+
+Path: sq!geac!torsqnt!tmsoft!robohack!druid!darcy
+From: darcy@druid.uucp (D'Arcy J.M. Cain)
+Newsgroups: comp.graphics
+Subject: Re: File Formats
+Message-ID: <1990Jul12.183149.3002@druid.uucp>
+Date: 12 Jul 90 18:31:49 GMT
+References: <8437@arctic.nprdc.arpa>
+Reply-To: darcy@druid.UUCP (D'Arcy J.M. Cain)
+Organization: D'Arcy Cain Consulting, West Hill, Ontario
+Lines: 47
+
+In article <8437@arctic.nprdc.arpa> armfield@nprdc.navy.mil
+(Sylvia Armfield) writes:
+>   I still haven't figured out how to identify the following file formats:
+>           CGM
+>
+There is more than one type of CGM file.  I can help you out with the clear
+text encoding and the binary encoding.  The other encoding is character.  It
+is described in ISO 8632-2.  In any case all CGM files start with the same
+thing, the BEGIN METAFILE statement.  The only difference is in how this
+element is encoded.
+
+In clear text encoding the element is simply the ASCII string "BEGMF".  In
+binary encoding you have to read in the first two bytes as a word.  The
+MSB is followed in the file by the LSB.  This word is bitmapped to include
+the following information:
+   15 - 12:  Element class
+   11 - 5:   Element ID
+   4 - 0:    Parameter list length
+
+BEGIN METAFILE is a "Delimiter Element" making it class 0.  The element
+ID within that class is 1.  The parameter list length is variable so it
+must be ANDed out when comparing.  The bit pattern is then:
+
+       0 0 0 0 0 0 0 0 0 0 1 x x x x x
+
+To check it simply AND the word with 0xffe0 and compare it with 0x0020.  In
+reading the standard I get the impression that it is actually legal to add
+padding characters (nulls) to the beginning of the file.  I rather doubt that
+anyone would actually do this but it may be appropriate to read in words till
+a non zero word is read and compare this word.  You can read in full words
+since all elements are constrained to start on a word boundary.
+
+If you want the full description of the CGM format it is available from
+ANSI as the following ISO standards:
+
+  ISO 8632-1     Functional specification
+  ISO 8632-2     Character encoding
+  ISO 8632-3     Binary encoding
+  ISO 8632-4     Clear text encoding
+
+HTH
+
+-- 
+D'Arcy J.M. Cain (darcy@druid)     |   Government:
+D'Arcy Cain Consulting             |   Organized crime with an attitude
+West Hill, Ontario, Canada         |
+(416) 281-6094                     |

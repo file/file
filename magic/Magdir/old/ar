@@ -1,0 +1,26 @@
+#
+# "ar", for all kinds of archives.
+0	string		!<arch>		current ar archive
+>8	string		__.SYMDEF	random library
+>0	long		=65538		- pre SR9.5
+>0	long		=65539		- post SR9.5
+>0	short		2		- object archive
+>0	short		3		- shared library module
+>0	short		4		- debug break-pointed module
+>0	short		5		- absolute code program module
+0	string		\<ar>		System V Release 1 ar archive
+0	string		=<ar>		archive
+0	long		0xff6d		obsolete ar archive
+0	long		0x213c6172	archive file
+0	long		0177555		very old archive
+0	short		0177555		very old PDP-11 archive
+0	long		0177545		old archive
+0	short		0177545		old PDP-11 archive
+0	string		=<ar>		archive
+0	string		-h-		Software Tools format archive text
+# "arc" archiver
+0	byte		26		'arc' archive
+>1	byte		0		(empty)
+>1	byte		1		(old format)
+# Rahul Dhesi's zoo archive format, from keith@cerberus.uchicago.edu.
+20	long		0xdca7c4fd	Rahul Dhesi's "zoo" archive
