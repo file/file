@@ -1,3 +1,9 @@
+2003-06-10 17:03  Christos Zoulas  <christos@zoulas.com>
+
+	* make sure we don't access uninitialized memory.
+	* pass lint
+	* #ifdef __cplusplus in magic.h
+
 2003-05-25 19:23  Christos Zoulas  <christos@zoulas.com>
 
 	* rename cvs magic file to revision to deal with

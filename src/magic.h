@@ -40,8 +40,12 @@
 #define	MAGIC_CONTINUE	0x20	/* Return all matches, not just the first */
 #define	MAGIC_CHECK	0x40	/* Print warnings to stderr */
 
-typedef struct magic_set *magic_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct magic_set *magic_t;
 magic_t magic_open(int);
 void magic_close(magic_t);
 
@@ -55,4 +59,8 @@ int magic_load(magic_t, const char *);
 int magic_compile(magic_t, const char *);
 int magic_check(magic_t, const char *);
 
+#ifdef __cplusplus
+};
 #endif
+
+#endif /* _MAGIC_H */

@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.59 2003/05/23 21:31:59 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.60 2003/06/10 18:28:37 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -53,9 +53,9 @@ private int mget(struct magic_set *, union VALUETYPE *, const unsigned char *,
     struct magic *, size_t);
 private int mcheck(struct magic_set *, union VALUETYPE *, struct magic *);
 private int32_t mprint(struct magic_set *, union VALUETYPE *, struct magic *);
-private void mdebug(int32_t, const char *, size_t);
+private void mdebug(uint32_t, const char *, size_t);
 private int mconvert(struct magic_set *, union VALUETYPE *, struct magic *);
-private int check_mem(struct magic_set *, int);
+private int check_mem(struct magic_set *, unsigned int);
 
 /*
  * softmagic - lookup one file in database 
@@ -226,7 +226,7 @@ done:
 }
 
 private int
-check_mem(struct magic_set *ms, int level)
+check_mem(struct magic_set *ms, unsigned int level)
 {
 	size_t len;
 
@@ -594,7 +594,7 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 
 
 private void
-mdebug(int32_t offset, const char *str, size_t len)
+mdebug(uint32_t offset, const char *str, size_t len)
 {
 	(void) fprintf(stderr, "mget @%d: ", offset);
 	file_showstr(stderr, str, len);
