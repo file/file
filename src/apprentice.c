@@ -33,7 +33,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.15 1993/02/19 14:10:50 ian Exp $";
+	"@(#)$Id: apprentice.c,v 1.16 1993/02/19 14:22:42 ian Exp $";
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -120,13 +120,14 @@ int *ndx, check;
 	}
 	m = &magic[*ndx];
 	m->flag = 0;
+	m->cont_level = 0;
 
-	if (*l == '>') {
+	while (*l == '>') {
 		++l;		/* step over */
-		m->flag |= CONT;
+		m->cont_level++; 
 	}
 
-	if ((m->flag & CONT) && *l == '(') {
+	if (m->cont_level != 0 && *l == '(') {
 		++l;		/* step over */
 		m->flag |= INDIR;
 	}
@@ -176,11 +177,17 @@ int *ndx, check;
 		++l;
 	EATAB;
 
-#define NBYTE	4
-#define NSHORT	5
-#define NLONG	4
-#define NSTRING 6
-#define NDATE	4
+#define NBYTE		4
+#define NSHORT		5
+#define NLONG		4
+#define NSTRING 	6
+#define NDATE		4
+#define NBESHORT	7
+#define NBELONG		6
+#define NBEDATE		6
+#define NLESHORT	7
+#define NLELONG		6
+#define NLEDATE		6
 
 	/* get type, skip it */
 	if (strncmp(l, "byte", NBYTE)==0) {
@@ -198,6 +205,24 @@ int *ndx, check;
 	} else if (strncmp(l, "date", NDATE)==0) {
 		m->type = DATE;
 		l += NDATE;
+	} else if (strncmp(l, "beshort", NBESHORT)==0) {
+		m->type = BESHORT;
+		l += NBESHORT;
+	} else if (strncmp(l, "belong", NBELONG)==0) {
+		m->type = BELONG;
+		l += NBELONG;
+	} else if (strncmp(l, "bedate", NBEDATE)==0) {
+		m->type = BEDATE;
+		l += NBEDATE;
+	} else if (strncmp(l, "leshort", NLESHORT)==0) {
+		m->type = LESHORT;
+		l += NLESHORT;
+	} else if (strncmp(l, "lelong", NLELONG)==0) {
+		m->type = LELONG;
+		l += NLELONG;
+	} else if (strncmp(l, "ledate", NLEDATE)==0) {
+		m->type = LEDATE;
+		l += NLEDATE;
 	} else {
 		magwarn("type %s invalid", l);
 		return -1;
@@ -213,14 +238,14 @@ int *ndx, check;
 	switch (*l) {
 	case '>':
 	case '<':
-	/* Old-style anding: "0 byte &0x80 dynamically linked" - not working */
+	/* Old-style anding: "0 byte &0x80 dynamically linked" */
 	case '&':
+	case '^':
 	case '=':
   		m->reln = *l;
   		++l;
 		break;
 	case '!':
-	case '^':
 		if (m->type != STRING) {
 			m->reln = *l;
 			++l;
@@ -246,23 +271,6 @@ int *ndx, check;
 	 * #define offsetcheck {if (offset > HOWMANY-1) 
 	 *	magwarn("offset too big"); }
 	 */
-
-	/* 
-	 * if the relation was ``&'',
-	 * change it to a MASK op relation.
-	 */
-	EATAB;
-	if (m->reln == '&') {
-		if (*l == '>' || *l == '<' || *l == '=') {
-			m->reln = *l | MASK;
-			++l;
-		} else
-			m->reln = '=' | MASK;
-		m->mask = m->value.l;
-		EATAB;
-		if (getvalue(m, &l))
-			return -1;
-	}
 
 	/*
 	 * now get last part - the description
@@ -315,10 +323,16 @@ char **p;
 				m->value.l = (char) strtol(*p,p,0);
 				break;
 			case SHORT:
+			case BESHORT:
+			case LESHORT:
 				m->value.l = (short) strtol(*p,p,0);
 				break;
 			case DATE:
+			case BEDATE:
+			case LEDATE:
 			case LONG:
+			case BELONG:
+			case LELONG:
 				m->value.l = (long) strtol(*p,p,0);
 				break;
 			default:
