@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.60 2004/03/22 19:12:15 christos Exp $
+ * @(#)$Id: file.h,v 1.61 2004/05/12 14:53:01 christos Exp $
  */
 
 #ifndef __file_h__
@@ -113,6 +113,50 @@ struct magic {
 #define				FILE_BELDATE	15
 #define				FILE_LELDATE	16
 #define				FILE_REGEX	17
+
+#define				FILE_FORMAT_NAME	\
+/* 0 */ 			"invalid 0",		\
+/* 1 */				"byte",			\
+/* 2 */ 			"short",		\
+/* 3 */ 			"invalid 3",		\
+/* 4 */ 			"long",			\
+/* 5 */ 			"string",		\
+/* 6 */ 			"date",			\
+/* 7 */ 			"beshort",		\
+/* 8 */ 			"belong",		\
+/* 9 */ 			"bedate"		\
+/* 10 */ 			"leshort",		\
+/* 11 */ 			"lelong",		\
+/* 12 */ 			"ledate",		\
+/* 13 */ 			"pstring",		\
+/* 14 */ 			"ldate",		\
+/* 15 */ 			"beldate",		\
+/* 16 */ 			"leldate",		\
+/* 17 */ 			"regex",
+
+#define	FILE_FMT_NUM	"cduxXi"
+#define FILE_FMT_STR	"s"	
+
+#define				FILE_FORMAT_STRING	\
+/* 0 */ 			NULL,			\
+/* 1 */				FILE_FMT_NUM,		\
+/* 2 */ 			FILE_FMT_NUM,		\
+/* 3 */ 			NULL,			\
+/* 4 */ 			FILE_FMT_NUM,		\
+/* 5 */ 			FILE_FMT_STR,		\
+/* 6 */ 			FILE_FMT_STR,		\
+/* 7 */ 			FILE_FMT_NUM,		\
+/* 8 */ 			FILE_FMT_NUM,		\
+/* 9 */ 			FILE_FMT_STR,		\
+/* 10 */ 			FILE_FMT_NUM,		\
+/* 11 */ 			FILE_FMT_NUM,		\
+/* 12 */ 			FILE_FMT_STR,		\
+/* 13 */ 			FILE_FMT_STR,		\
+/* 14 */ 			FILE_FMT_STR,		\
+/* 15 */ 			FILE_FMT_STR,		\
+/* 16 */ 			FILE_FMT_STR,		\
+/* 17 */ 			FILE_FMT_STR,
+
 	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
 	uint8_t mask_op;	/* operator for mask */
