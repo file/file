@@ -26,15 +26,21 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>	/* for open() */
+#include <utime.h>
+#include <unistd.h>	/* for read() */
+
 #include "file.h"
 
 #define USAGE		"usage: %s [-c] [-f namefile] [-m magicfile] file...\n"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.19 1991/02/25 10:02:28 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.20 1992/05/22 17:50:52 ian Exp $";
 #endif	/* lint */
 
 extern char *ckfmsg;
@@ -49,7 +55,11 @@ int			/* Misc globals */
 
 static int nbytes = 0;	/* number of bytes read from a datafile */
 
-FILE *efopen();
+#if	defined(__STDC__) || defined(__cplusplus)
+static void unwrap(char *fn);
+#else
+static void unwrap();
+#endif
 
 char *				/* global, read in apprentice.c */
 #ifdef MAGIC
@@ -59,10 +69,13 @@ char *				/* global, read in apprentice.c */
 #endif
 char *progname;		/* used throughout */
 struct stat statbuf;	/* global, used in a few places */
-struct utimbuf {	/* for utime(2), belongs in a .h file */
+#if	0
+/* Just here for very old systems that don't have it in any .h file */
+struct utimbuf {	/* for utime(2), now usually in a .h file */
 	time_t actime;	/* access time */
 	time_t modtime;	/* modification time */
 };
+#endif	/* 0 */
 
 /*
  * main - parse arguments and handle options
@@ -121,7 +134,7 @@ char *argv[];
 	}
 	else
 		for (; optind < argc; optind++)
-			process(argv[optind], 1);
+			process(argv[optind]);
 
 	return 0;
 }
@@ -129,6 +142,7 @@ char *argv[];
 /*
  * unwrap -- read a file of filenames, do each one.
  */
+static void
 unwrap(fn)
 char *fn;
 {
@@ -142,7 +156,7 @@ char *fn;
 	else {
 		while (fgets(buf, FILENAMELEN, f) != NULL) {
 			buf[strlen(buf)-1] = '\0';
-			process(buf, 1);
+			process(buf);
 		}
 		(void) fclose(f);
 	}
@@ -152,9 +166,9 @@ char *fn;
  * process - process input file
  */
 /*ARGSUSED1*/		/* why is top no longer used? */
-process(inname, top)
+void
+process(inname)
 char	*inname;
-int top;		/* true if called from top level */
 {
 	int	fd;
 	unsigned char	buf[HOWMANY];
@@ -163,7 +177,7 @@ int top;		/* true if called from top level */
 	if (strcmp("-", inname) == 0) {
 		(void) printf("standard input:\t");
 		if (fstat(0, &statbuf)<0)
-			warning("cannot fstat; ");
+			warning("cannot fstat; ", "");
 		fd = 0;
 		goto readit;
 	}
@@ -187,25 +201,27 @@ int top;		/* true if called from top level */
 		/* We can't open it, but we were able to stat it. */
 		if (statbuf.st_mode & 0002) ckfputs("writeable, ", stdout);
 		if (statbuf.st_mode & 0111) ckfputs("executable, ", stdout);
-		warning("can't read");
+		warning("can't read", "");
 	} else {
 readit:
 		/*
 		 * try looking at the first HOWMANY bytes
 		 */
 		if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1)
-			warning("read failed");
+			warning("read failed", "");
 		if (nbytes == 0) {
 			ckfputs("empty", stdout);
 		} else
-			try(buf, nbytes);
+			tryit(buf, nbytes);
 		if (strcmp("-", inname) != 0) {
 			/*
 			 * Try to restore access, modification times if read it.
 			 */
 			utbuf.actime = statbuf.st_atime;
 			utbuf.modtime = statbuf.st_mtime;
+#if			!defined(__STDC__) && !defined(__cplusplus)
 			(void) utime(inname, &utbuf); /* don't care if loses */
+#endif
 			(void) close(fd);
 		}
 	}
@@ -213,7 +229,8 @@ readit:
 	(void) putchar('\n');
 }
 
-try(buf, nb)
+void
+tryit(buf, nb)
 unsigned char *buf;
 int nb;
 {
