@@ -27,13 +27,19 @@
  */
 
 #define HOWMANY	1024		/* how much of the file to look at */
-#define MAXMAGIS 600		/* max entries in /etc/magic */
+#define MAXMAGIS 1000		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
 #define ckfputs(str,fil) {if (fputs(str,fil)==EOF) error(ckfmsg,"");}
 
 struct magic {
-	short contflag;		/* 1 if '>0' appears */
+	short contflag;		
+#define CONT	1		/* if '>0' appears,  */
+#define INDIR	2		/* if '>(...)' appears,  */
+	struct {
+		char type;	/* byte short long */
+		long offset;	/* offset from indirection */
+	} in;
 	long offset;		/* offset to magic number */
 #define	MASK	0200		/* this is a masked op, like & v1 = v2 */
 	unsigned char reln;	/* relation (0=eq, '>'=gt, etc) */
