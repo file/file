@@ -58,6 +58,8 @@
 >3	byte		>0		8x%d
 # Linux swap file, from Daniel Quinlan <quinlan@yggdrasil.com>
 4086	string		SWAP-SPACE	Linux/i386 swap file
+# according to man page of mkswap (8) March 1999
+4086	string		SWAPSPACE2	Linux/i386 swap file (new style)
 # ECOFF magic for OSF/1 and Linux (only tested under Linux though)
 #
 #	from Erik Troan (ewt@redhat.com) examining od dumps, so this
