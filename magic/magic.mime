@@ -100,7 +100,7 @@
 #MP3 with ID3 tag
 0	string		ID3		audio/mpeg
 # Ogg/Vorbis
-0	string		OggS		application/ogg
+0	string		OggS		audio/ogg
 
 #------------------------------------------------------------------------------
 # c-lang:  file(1) magic for C programs or various scripts
@@ -405,6 +405,7 @@
 0	string		Forward\ to 	message/rfc822	7bit
 0	string		Pipe\ to 	message/rfc822	7bit
 0	string		Return-Path:	message/rfc822	7bit
+0	string		Received:	message/rfc822
 0	string		Path:		message/news	8bit
 0	string		Xref:		message/news	8bit
 0	string		From:		message/rfc822	7bit
@@ -464,8 +465,8 @@
 #>34	string		>\0		(%s)
 
 # Texinfo and GNU Info, from Daniel Quinlan (quinlan@yggdrasil.com)
-#0	string		\\input\ texinfo	Texinfo source text
-#0	string		This\ is\ Info\ file	GNU Info text
+0	string		\\input\ texinfo		text/x-texinfo
+0	string		This\ is\ Info\ file	text/x-info
 
 # correct TeX magic for Linux (and maybe more)
 # from Peter Tobias (tobias@server.et-inf.fho-emden.de)
@@ -623,3 +624,164 @@
 #>>12   leshort    0	application/x-dbf
 #
 #0	leshort		0x0006		application/x-dbt
+
+# Debian has entries for the old PGP formats:
+# pgp:  file(1) magic for Pretty Good Privacy
+# see http://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
+0       beshort         0x9900                  text/PGP key public ring
+0       beshort         0x9501                  text/PGP key security ring
+0       beshort         0x9500                  text/PGP key security ring
+0       beshort         0xa600                  text/PGP encrypted data
+0       string          -----BEGIN\040PGP       text/PGP armored data 
+>15     string          PUBLIC\040KEY\040BLOCK- public key block
+>15     string          MESSAGE-                message
+>15     string          SIGNED\040MESSAGE-      signed message
+>15     string          PGP\040SIGNATURE-       signature
+0       beshort         0x8501                  data
+#
+# GnuPG Magic:
+# 
+0       beshort         0x9901                  text/GnuPG key public ring
+0       beshort         0x8501                  text/OpenPGP data
+
+# flash:        file(1) magic for Macromedia Flash file format
+#
+# See
+#
+#       http://www.macromedia.com/software/flash/open/
+#
+0	string		FWS             
+>3	byte		x			application/x-shockwave-flash
+
+# The following paramaters are created for Namazu.
+# <http://www.namazu.org/>
+#
+# 1999/08/13
+#0	string		\<!--\ MHonArc		text/html; x-type=mhonarc
+0	string		BZh			application/x-bzip2
+
+# 1999/09/09
+# VRML (suggested by Masao Takaku)
+0	string		#VRML\ V1.0\ ascii	model/vrml
+0	string		#VRML\ V2.0\ utf8	model/vrml
+
+#------------------------------------------------------------------------------
+# ichitaro456: file(1) magic for Just System Word Processor Ichitaro
+#
+# Contributor kenzo-:
+# Reversed-engineered JS Ichitaro magic numbers
+#
+
+0	string		DOC
+>43	byte		0x14		application/ichitaro4
+>144	string	JDASH		application/ichitaro4
+
+0	string		DOC
+>43	byte		0x15		application/ichitaro5
+
+0	string		DOC
+>43	byte		0x16		application/ichitaro6
+
+#------------------------------------------------------------------------------
+# office97: file(1) magic for MicroSoft Office files
+#
+# Contributor kenzo-:
+# Reversed-engineered MS Office magic numbers
+#
+
+#0       string          \320\317\021\340\241\261\032\341
+#>48     byte            0x1B            application/excel
+
+2080	string	Microsoft\ Excel\ 5.0\ Worksheet	application/excel
+2114	string	Biff5					application/excel
+
+0       string	\224\246\056		application/msword
+
+0	belong	0x31be0000		application/msword
+
+0	string	PO^Q`			application/msword
+
+0	string	\320\317\021\340\241\261\032\341
+>546	string	bjbj			application/msword
+>546	string	jbjb			application/msword
+
+512	string	R\0o\0o\0t\0\ \0E\0n\0t\0r\0y	application/msword
+
+2080	string	Microsoft\ Word\ 6.0\ Document	application/msword
+2080	string	Documento\ Microsoft\ Word\ 6	application/msword
+2112	string	MSWordDoc			application/msword
+
+#0	string	\320\317\021\340\241\261\032\341	application/powerpoint
+0	string	\320\317\021\340\241\261\032\341	application/msword
+
+0       string  #\ PaCkAgE\ DaTaStReAm  application/x-svr4-package
+
+
+# WinNT/WinCE PE files (Warner Losh, imp@village.org)
+#
+128		string	PE\000\000	application/octet-stream
+0		string	PE\000\000	application/octet-stream
+
+# miscellaneous formats
+0		string	LZ		application/octet-stream
+
+
+# .EXE formats (Greg Roelofs, newt@uchicago.edu)
+#
+0		string	MZ
+>24		string	@		application/octet-stream
+
+0		string	MZ
+>30		string	Copyright\ 1989-1990\ PKWARE\ Inc.	application/x-zip
+
+0		string	MZ
+>30		string	PKLITE\ Copr.	application/x-zip
+
+0		string	MZ
+>36		string	LHa's\ SFX	application/x-lha
+
+0		string	MZ		application/octet-stream
+
+# LHA archiver
+2		string	-lh
+>6		string	-		application/x-lha
+
+
+# Zoo archiver
+20		lelong	0xfdc4a7dc	application/x-zoo
+
+# ARC archiver
+0       	lelong&0x8080ffff	0x0000081a	application/x-arc
+0		lelong&0x8080ffff	0x0000091a	application/x-arc
+0		lelong&0x8080ffff	0x0000021a	application/x-arc
+0		lelong&0x8080ffff	0x0000031a	application/x-arc
+0		lelong&0x8080ffff	0x0000041a	application/x-arc
+0		lelong&0x8080ffff	0x0000061a	application/x-arc
+
+# Microsoft Outlook's Transport Neutral Encapsulation Format (TNEF)
+0		lelong	0x223e9f78	application/ms-tnef
+
+
+#
+# QuickTime format
+# Contributer: Peter Breton
+#
+
+0	string		MOVI		video/quicktime
+4	string		moov		video/quicktime
+4	string		mdat		video/quicktime
+
+# Video Formate
+0       string          RIFF
+# AVI == Audio Video Interleave
+>8      string          AVI\            
+#>0xbc   string         >\0             video/x-%s
+
+>>0xbc  string          DIV3            video/x-DivX-3
+>>0xbc  string          div3            video/x-divX-3
+>>0xbc  string          DIV4            video/x-DivX-4
+>>0x70  string          DX50            video/x-DIVX-5
+>>0x70  string          MP4             video/x-MPEG-4
+>>0xbc  string          DIVX            video/x-DivX
+>8      string          WAVE            audio/x-wav
+
