@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.23 1992/09/08 22:32:35 ian Exp $";
+	"@(#)$Id: file.c,v 1.24 1992/09/11 11:44:31 ian Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -267,11 +267,3 @@ int nb;
 		ckfputs("data", stdout);
 }
 
-void
-ckfputs(str, fil) 	
-    const char *str;
-    FILE *fil;
-{
-	if (fputs(str,fil) == EOF)
-		error("write failed.\n");
-}
