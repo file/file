@@ -54,14 +54,13 @@
 >4	belong		x		- version %ld
 
 # Microsoft WAVE format (*.wav)
-# [GRR 950115:  probably all of the shorts and longs should be leshort/lelong]
 0	string		RIFF		Microsoft RIFF
 >8	string		WAVE		\b, WAVE audio data
->>34	short		>0		\b, %d bit
->>22	short		=1		\b, mono
->>22	short		=2		\b, stereo
->>22	short		>2		\b, %d channels
->>24	long		>0		%d Hz
+>>34	leshort		>0		\b, %d bit
+>>22	leshort		=1		\b, mono
+>>22	leshort		=2		\b, stereo
+>>22	leshort		>2		\b, %d channels
+>>24	lelong		>0		%d Hz
 # AVI == Audio Video Interleave
 >8      string          AVI\            \b, AVI data
 
@@ -73,9 +72,6 @@
 >45	byte		x		%d instruments
 >83	byte		0		(module)
 >83	byte		1		(song)
-
-# Real Audio (Magic .ra\0375)
-0	belong		0x2e7261fd	realaudio sound file
 
 # Real Audio (Magic .ra\0375)
 0	belong		0x2e7261fd	realaudio sound file
