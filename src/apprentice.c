@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.57 2003/03/28 21:02:03 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.58 2003/05/23 21:31:58 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -377,7 +377,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
         }
 
 	/* get offset, then skip over it */
-	m->offset = (int) strtoul(l, &t, 0);
+	m->offset = (uint32_t)strtoul(l, &t, 0);
         if (l == t)
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn("offset %s invalid", l);
@@ -1007,7 +1007,7 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
 		return -1;
 	}
 
-	if (write(fd, ar, sizeof(ar)) != sizeof(ar)) {
+	if (write(fd, ar, sizeof(ar)) != (ssize_t)sizeof(ar)) {
 		file_error(ms, "Error writing `%s' (%s)", dbname,
 		    strerror(errno));
 		return -1;
@@ -1020,8 +1020,8 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
 		return -1;
 	}
 
-	if (write(fd, *magicp,  sizeof(struct magic) * *nmagicp) 
-	    != sizeof(struct magic) * *nmagicp) {
+	if (write(fd, *magicp, (sizeof(struct magic) * *nmagicp)) 
+	    != (ssize_t)(sizeof(struct magic) * *nmagicp)) {
 		file_error(ms, "Error writing `%s' (%s)", dbname,
 		    strerror(errno));
 		return -1;
@@ -1038,12 +1038,12 @@ private const char ext[] = ".mgc";
 private char *
 mkdbname(const char *fn, char *buf, size_t bufsiz)
 {
+#ifdef notdef
 	const char *p;
 	if ((p = strrchr(fn, '/')) != NULL)
-		p++;
-	else
-		p = fn;
-	(void)snprintf(buf, bufsiz, "%s%s", p, ext);
+		fn = ++p;
+#endif
+	(void)snprintf(buf, bufsiz, "%s%s", fn, ext);
 	return buf;
 }
 

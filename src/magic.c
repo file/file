@@ -64,7 +64,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.6 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.7 2003/05/23 21:31:58 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -190,7 +190,7 @@ magic_file(struct magic_set *ms, const char *inname)
 	int	fd = 0;
 	unsigned char buf[HOWMANY+1];	/* one extra for terminating '\0' */
 	struct stat	sb;
-	int nbytes = 0;	/* number of bytes read from a datafile */
+	ssize_t nbytes = 0;	/* number of bytes read from a datafile */
 
 	if (file_reset(ms) == -1)
 		return NULL;
@@ -225,18 +225,22 @@ magic_file(struct magic_set *ms, const char *inname)
 	 */
 	if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
 		file_error(ms, "Cannot read `%s' %s", inname, strerror(errno));
+		(void)close(fd);
 		return NULL;
 	}
 
 	if (nbytes == 0) {
 		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/x-empty" : "empty") == -1)
+		    "application/x-empty" : "empty") == -1) {
+			(void)close(fd);
 			return NULL;
+		}
 	} else {
 		buf[nbytes++] = '\0';	/* null-terminate it */
 #ifdef __EMX__
 		switch (file_os2_apptype(ms, inname, buf, nbytes)) {
 		case -1:
+			(void)close(fd);
 			return NULL;
 		case 0:
 			break;
@@ -244,8 +248,10 @@ magic_file(struct magic_set *ms, const char *inname)
 			return ms->o.buf;
 		}
 #endif
-		if (file_buffer(ms, buf, (size_t)nbytes) == -1)
+		if (file_buffer(ms, buf, (size_t)nbytes) == -1) {
+			(void)close(fd);
 			return NULL;
+		}
 #ifdef BUILTIN_ELF
 		if (nbytes > 5) {
 			/*
@@ -261,6 +267,7 @@ magic_file(struct magic_set *ms, const char *inname)
 #endif
 	}
 
+	close(fd);
 	return ms->haderr ? NULL : ms->o.buf;
 }
 

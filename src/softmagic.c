@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.58 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.59 2003/05/23 21:31:59 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -105,8 +105,8 @@ private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
     const unsigned char *s, size_t nbytes)
 {
-	int magindex = 0;
-	int cont_level = 0;
+	uint32_t magindex = 0;
+	unsigned int cont_level = 0;
 	int need_separator = 0;
 	union VALUETYPE p;
 	int32_t oldoff = 0;
@@ -439,7 +439,7 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_PSTRING:
 		{
 			char *ptr1 = p->s, *ptr2 = ptr1 + 1;
-			int n = *p->s;
+			unsigned int n = *p->s;
 			if (n >= sizeof(p->s))
 				n = sizeof(p->s) - 1;
 			while (n--)
@@ -606,7 +606,7 @@ private int
 mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
     struct magic *m, size_t nbytes)
 {
-	int32_t offset = m->offset;
+	uint32_t offset = m->offset;
 
 	if (m->type == FILE_REGEX) {
 		/*
@@ -631,10 +631,9 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		 * the usefulness of padding with zeroes eludes me, it
 		 * might even cause problems
 		 */
-		int32_t have = nbytes - offset;
 		memset(p, 0, sizeof(union VALUETYPE));
-		if (have > 0)
-			memcpy(p, s + offset, (size_t)have);
+		if (offset < nbytes)
+			memcpy(p, s + offset, nbytes - offset);
 	}
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
@@ -966,7 +965,8 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 			break;
 		}
 
-		if (offset + sizeof(union VALUETYPE) > nbytes)
+		if (nbytes < sizeof(union VALUETYPE) ||
+		    nbytes - sizeof(union VALUETYPE) < offset)
 			return 0;
 
 		memcpy(p, s + offset, sizeof(union VALUETYPE));

@@ -62,7 +62,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.40 2003/03/27 19:09:57 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.41 2003/05/23 21:31:58 christos Exp $")
 #endif	/* lint */
 
 protected int
@@ -220,6 +220,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				tmp = buf; /* in current directory anyway */
 			    }
 			    else {
+				if (tmp - fn + 1 > BUFSIZ) {
+				    file_printf(ms, "path too long: `%s'", fn);
+				    return -1;
+				}
 				strcpy(buf2, fn);  /* take directory part */
 				buf2[tmp-fn+1] = '\0';
 				strcat(buf2, buf); /* plus (relative) symlink */

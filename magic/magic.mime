@@ -200,6 +200,9 @@
 
 0		string			PK\003\004		application/x-zip
 
+# RAR archiver (Greg Roelofs, newt@uchicago.edu)
+0	string		Rar!		application/x-rar
+
 # According to gzip.h, this is the correct byte order for packed data.
 0	string		\037\036	application/octet-stream
 #
@@ -255,7 +258,7 @@
 0	lelong&0x8080ffff	0x0000041a	application/x-arc	squeezed
 0	lelong&0x8080ffff	0x0000061a	application/x-arc	crunched
 
-0	leshort	0xea60	application/octet-stream	x-arj
+0	leshort	0xea60	application/x-arj
 
 # LHARC/LHA archiver (Greg Roelofs, newt@uchicago.edu)
 2	string	-lh0-	application/x-lharc	lh0
@@ -306,6 +309,7 @@
 0	string		\<!doctype\ HTML	text/html
 0	string		\<!DOCTYPE\ HTML	text/html
 0	string		\<!doctype\ html	text/html
+0	string		\<!doctype\ HTML	text/html
 
 #------------------------------------------------------------------------------
 # images:  file(1) magic for image formats (see also "c-lang" for XPM bitmaps)
@@ -545,6 +549,7 @@
 
 # MNG Video Format, <URL:http://www.libpng.org/pub/mng/spec/>
 0	string		\x8aMNG			video/x-mng
+0	string		\x8aJNG			video/x-jng
 
 #------------------------------------------------------------------------------
 # Hierarchical Data Format, used to facilitate scientific data exchange
@@ -554,3 +559,65 @@
 
 # Adobe Photoshop
 0	string		8BPS			image/x-photoshop
+
+# Felix von Leitner <felix-file@fefe.de>
+0	string		d8:announce		application/x-bittorrent
+
+
+# lotus 1-2-3 document
+0	belong	0x00001a00	application/x-123
+0	belong	0x00000200 	application/x-123
+
+# MS Access database
+4	string	Standard\ Jet\ DB	application/msaccess
+
+## magic for XBase files
+#0      byte       0x02	
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x03	
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x04	
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x05	
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x30
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x43
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x7b
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x83	
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x8b
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0x8e	
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0xb3
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0      byte       0xf5
+#>8     leshort	  >0
+#>>12   leshort    0	application/x-dbf
+#
+#0	leshort		0x0006		application/x-dbt

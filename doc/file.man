@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.48 2003/03/27 22:47:13 christos Exp $
+.\" $Id: file.man,v 1.49 2003/05/23 21:31:57 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -153,20 +153,20 @@ Any file that cannot be identified as having been written
 in any of the character sets listed above is simply said to be ``data''.
 .SH OPTIONS
 .TP 8
-.B \-b
+.B "\-b, \-\-brief"
 Do not prepend filenames to output lines (brief mode).
 .TP 8
-.B \-c
+.B "\-c, \-\-checking\-printout"
 Cause a checking printout of the parsed form of the magic file.
 This is usually used in conjunction with 
 .B \-m
 to debug a new magic file before installing it.
 .TP 8
-.B \-C
+.B "\-C, \-\-compile"
 Write a magic.mgc output file that contains a pre-parsed version of
 file.
 .TP 8
-.BI \-f " namefile"
+.BI "\-f, \-\-files\-from" " namefile"
 Read the names of the files to be examined from 
 .I namefile
 (one per line) 
@@ -176,11 +176,11 @@ Either
 or at least one filename argument must be present;
 to test the standard input, use ``\-'' as a filename argument.
 .TP 8
-.BI \-F " separator"
+.BI "\-F, \-\-separator" " separator"
 Use the specified string as the separator between the filename and the
 file result returned. Defaults to ``:''.
 .TP 8
-.B \-i
+.B "\-i, \-\-mime"
 Causes the file command to output mime type strings rather than the more
 traditional human readable ones. Thus it may say
 ``text/plain; charset=us-ascii''
@@ -192,27 +192,28 @@ text file types, directories etc), and makes use of an alternative
 ``magic'' file.
 (See ``FILES'' section, below).
 .TP 8
-.B \-k
+.B "\-k, \-\-keep\-going"
 Don't stop at the first match, keep going.
 .TP 8
-.B \-L
+.B "\-L, \-\-dereference"
 option causes symlinks to be followed, as the like-named option in
 .BR ls (1).
 (on systems that support symbolic links).
 .TP 8
-.BI \-m " list"
+.BI "\-m, \-\-magic\-file" " list"
 Specify an alternate list of files containing magic numbers.
 This can be a single file, or a colon-separated list of files.
+If a compiled magic file is found alongside, it will be used instead.
 .TP 8
-.B \-n
+.B "\-n, \-\-no\-buffer"
 Force stdout to be flushed after checking each file.
 This is only useful if checking a list of files.
 It is intended to be used by programs that want filetype output from a pipe.
 .TP 8
-.B \-N
+.B "\-N, \-\-no\-pad"
 Don't pad filenames so that they align in the output.
 .TP 8
-.B \-s
+.B "\-s, \-\-special\-files"
 Normally,
 .B file
 only attempts to read and determine the type of argument files which
@@ -233,25 +234,32 @@ to disregard the file size as reported by
 .BR stat (2)
 since on some systems it reports a zero size for raw disk partitions.
 .TP 8
-.B \-v
+.B "\-v, \-\-version"
 Print the version of the program and exit.
 .TP 8
-.B \-z
+.B "\-z, \-\-uncompress"
 Try to look inside compressed files.
+.TP 8
+.B "\-\-help"
+Print a help message and exit.
 .SH FILES
+.TP
 .I __MAGIC__.mgc
-\- default compiled list of magic numbers
-.PP
+Default compiled list of magic numbers
+.TP
 .I __MAGIC__
-\- default list of magic numbers
-.PP
+Default list of magic numbers
+.TP
 .I __MAGIC__.mime.mgc
-\- default compiled list of magic numbers, used to output mime types when
+Default compiled list of magic numbers, used to output mime types when
 the -i option is specified.
-.PP
+.TP
 .I __MAGIC__.mime
-\- default list of magic numbers, used to output mime types when the -i option
+Default list of magic numbers, used to output mime types when the -i option
 is specified.
+.TP
+.I /etc/magic
+Local additions to magic wisdom.
 
 .SH ENVIRONMENT
 The environment variable
