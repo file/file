@@ -1,9 +1,15 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.30 2003/03/23 04:36:37 christos Exp $
+@(#) $Id: README,v 1.31 2003/03/24 15:01:39 christos Exp $
 
-This is Release 3.x of Ian Darwin's (copyright but distributable)
+This is Release 4.x of Ian Darwin's (copyright but distributable)
 file(1) command. This version is the standard "file" command for Linux,
 *BSD, and other systems. (See "patchlevel.h" for the exact release number).
+
+The major feature of 4.x is the refactoring of the code into a library,
+and the re-write of the file command in terms of that library. The library
+itself, libmagic can be used by 3rd party programs that wish to identify
+file types without having to fork() and exec() file. The prime contributor
+for 4.0 was M\xe5ns Rullg\xe5rd.
 
 UNIX is a trademark of UNIX System Laboratories.
 
