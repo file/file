@@ -39,9 +39,6 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 magic.mgc: magic file
 	./file -C -m magic
 
-magic.mgc: magic file
-	./file -C -m ./magic
-
 file.1:	Makefile file.man
 	@rm -f $@
 	sed -e s@__CSECTION__@1@g \
