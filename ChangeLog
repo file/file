@@ -1,3 +1,11 @@
+2003-03-27 13:10  Christos Zoulas  <christos@zoulas.com>
+
+	* separate tar detection and run it before softmagic.
+	* fix reversed symlink test.
+	* fix version printing.
+	* make separator a string instead of a char.
+	* update manual page and sort options.
+
 2003-03-26 11:00  Christos Zoulas  <christos@zoulas.com>
 
 	* Pass lint
