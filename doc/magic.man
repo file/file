@@ -65,7 +65,7 @@ A two-byte value (on most systems) in big-endian byte order.
 A four-byte value (on most systems) in big-endian byte order.
 .IP bedate
 A four-byte value (on most systems) in big-endian byte order,
-interpreted as a unix date.
+interpreted as a Unix date.
 .IP leshort
 A two-byte value (on most systems) in little-endian byte order.
 .IP lelong
@@ -240,4 +240,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.26 2003/05/23 21:31:57 christos Exp $
+.\" @(#)$Id: magic.man,v 1.27 2003/09/12 19:43:30 christos Exp $
