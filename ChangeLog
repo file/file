@@ -1,4 +1,8 @@
 
+2005-03-14 00:00 Giuliano Bertoletti <gb@symbolic.it>
+
+	* Avoid NULL pointer dereference in time conversion.
+
 2005-03-06 00:00  Joerg Walter <jwalt@mail.garni.ch>
 	
 	* Add indirect magic offset support, and search mode.
