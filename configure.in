@@ -61,6 +61,7 @@ AC_HEADER_SYS_WAIT
 AC_HEADER_STDINT
 AC_CHECK_HEADERS(fcntl.h locale.h)
 AC_CHECK_HEADERS(sys/mman.h sys/stat.h sys/types.h)
+AC_CHECK_HEADERS(stdint.h inttypes.h)
 AC_CHECK_HEADERS(unistd.h)
 AC_CHECK_HEADERS(getopt.h)
 AC_CHECK_HEADERS(locale.h)
@@ -76,6 +77,7 @@ AC_SYS_LARGEFILE
 AC_CHECK_TYPE_STDC(uint8_t, unsigned char)
 AC_CHECK_TYPE_STDC(uint16_t, unsigned short)
 AC_CHECK_TYPE_STDC(uint32_t, unsigned int)
+AC_CHECK_TYPE_STDC(int32_t, int)
 AC_C_LONG_LONG
 if test $ac_cv_c_long_long = yes; then
   long64='unsigned long long';
@@ -91,7 +93,7 @@ AC_CHECK_SIZEOF_STDC_HEADERS(uint32_t, 0)
 AC_CHECK_SIZEOF_STDC_HEADERS(uint64_t, 0)
 
 dnl Checks for functions
-AC_CHECK_FUNCS(mmap strerror strtoul mkstemp)
+AC_CHECK_FUNCS(mmap strerror strtoul mkstemp getopt_long)
 
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)
