@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.65 2003/10/08 16:37:27 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.66 2003/10/08 16:47:31 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -146,10 +146,10 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 
 	if (action == FILE_COMPILE) {
 		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
-		if (rv == 0) {
-			rv = apprentice_compile(ms, &magic, &nmagic, fn);
-			free(magic);
-		}
+		if (rv != 0)
+			return -1;
+		rv = apprentice_compile(ms, &magic, &nmagic, fn);
+		free(magic);
 		return rv;
 	}
 #ifndef COMPILE_ONLY
@@ -157,6 +157,8 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn("Using regular magic file `%s'", fn);
 		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
+		if (rv != 0)
+			return -1;
 		mapped = 0;
 	}
 
