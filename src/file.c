@@ -77,7 +77,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.92 2004/03/22 21:34:39 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.93 2004/04/07 14:23:55 christos Exp $")
 #endif	/* lint */
 
 
@@ -453,7 +453,7 @@ byteconv2(int from, int same, int big_endian)
 size_t
 file_mbswidth(const char *s)
 {
-#ifdef HAVE_WCHAR_H
+#if defined(HAVE_WCHAR_H) && defined(HAVE_MBRTOWC) && defined(HAVE_WCWIDTH)
 	size_t bytesconsumed, old_n, n, width = 0;
 	mbstate_t state;
 	wchar_t nextchar;
