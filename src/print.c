@@ -39,7 +39,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Header: /p/file/cvsroot/file/src/print.c,v 1.13 1992/09/08 14:59:31 ian Exp $";
+	"@(#)$Id: print.c,v 1.14 1992/09/08 15:36:44 ian Exp $";
 #endif  /* lint */
 
 void

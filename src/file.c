@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.21 1992/09/08 15:01:52 ian Exp $";
+	"@(#)$Id: file.c,v 1.22 1992/09/08 15:36:41 ian Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
