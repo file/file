@@ -39,7 +39,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.15 1992/09/11 11:44:51 ian Exp $";
+	"@(#)$Id: print.c,v 1.16 1992/09/11 12:37:28 ian Exp $";
 #endif  /* lint */
 
 void
@@ -107,7 +107,6 @@ ckfprintf(va_alist)
 	if (ferror(f))
 		error("write failed.\n");
 	va_end(va);
-	exit(1);
 }
 
 /*
