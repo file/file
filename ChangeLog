@@ -1,3 +1,8 @@
+2003-07-10 12:03  Christos Zoulas  <christos@zoulas.com>
+
+	* don't exit with -1 on error; always exit 1 (Michael Leisner)
+	* restore utimes code.
+
 2003-06-10 17:03  Christos Zoulas  <christos@zoulas.com>
 
 	* make sure we don't access uninitialized memory.
