@@ -1,4 +1,7 @@
 # SoftQuad troff magic numbers
-# SoftQuad @(#)magic	1.2 86/09/15
 0	short		0125252		SoftQuad DESC or font file binary
 >2	short		>0		- version %d
+0	string		"X "		SoftQuad Troff intermediate file
+>2	string		impr		- for IMAGEN printer
+>2	string		ps		- for PostScript output
+>2	string		hp		- for Hewlett-Packard LaserJet family
