@@ -38,7 +38,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.37 2001/03/14 14:35:29 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.38 2001/03/27 01:12:28 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -828,7 +828,7 @@ apprentice_map(magicp, nmagicp, fn, action)
 	if (version != VERSIONNO) {
 		(void)fprintf(stderr, 
 		    "%s: version mismatch (%d != %d) in `%s'\n",
-		    progname, version, VERSION, dbname);
+		    progname, version, VERSIONNO, dbname);
 		goto error;
 	}
 	*nmagicp = (st.st_size / sizeof(struct magic)) - 1;
