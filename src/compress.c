@@ -1,7 +1,7 @@
 /*
  * compress routines:
  *	is_compress() returns 0 if uncompressed, number of bits if compressed.
- *	uncompress(old, n, new) - uncompress old into new, return sizeof new
+ *	uncompress(old, n, newch) - uncompress old into new, return sizeof new
  */
 
 /* Check for compression, return nbits. Algorithm, in magic(4) format:
@@ -23,12 +23,12 @@ int *b;
 }
 
 int
-uncompress(old, n, new)
-unsigned char *old, **new;
+uncompress(old, n, newch)
+unsigned char *old, **newch;
 int n;
 {
-	*new = old;	/* TODO write this */
-	**new = 0;	/* prevent infinite loop, skeleton version only */
+	*newch = old;	/* TODO write this */
+	**newch = 0;	/* prevent infinite loop, skeleton version only */
 	return n;
 }
 	
