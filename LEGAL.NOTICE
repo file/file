@@ -1,0 +1,29 @@
+Written by Ian Darwin,
+Box 603, Station F, Toronto, CANADA M4Y 2L8.
+Uucp: {utzoo|ihnp4}!darwin!ian.
+Internet: ian@sq.com (proposed).
+
+Copyright (c) 1986, Ian Darwin. All rights reserved, except as noted below.
+
+This program may be used for its intended purpose on any computer system.
+
+	*** Unmodified copies ***
+of the source may be freely copied for this purpose
+provided this notice is maintained.
+	*** Redistribution of modified source copies is prohibited; ***
+distribute the original source with your changes as diff listings
+or as RCS archives (or SCCS if you can find a way to mail them).
+Please send me your changes; if I like 'em I'll incorporate them.
+
+Binary copies may also be distributed; if they are derived from
+modified source then you must inform every recipient of the
+origin of the program and that the source is available from the author.
+
+The module is_tar.c is by Fred Blonder at the University of Maryland
+and appeared as part of his fixes to the UNIX file(1) program
+in net.sources; it is not covered by the above restrictions.
+
+The module strtok.c is by Henry Spencer at the University of Toronto
+and is not covered by the above restrictions.
+
+The module strtol is a quick hack and is not covered by the above.
