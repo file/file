@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.27 1992/09/08 16:19:25 ian Exp $
+# @(#)$Id: Makefile,v 1.28 1992/09/09 15:05:19 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -28,6 +28,8 @@ MAGIC	= /usr/local/etc/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
 CC	= cc
 COPTS	= -O # -g		# gcc allows both
+# For truly antique environments, use this for (dummy) include files:
+#COPTS	= -O -Ilocalinc
 CFLAGS	= $(COPTS) $(DEFS)
 LDFLAGS	= $(COPTS) # -Bstatic	# older gdb couldn't handle shared libs
 SHAR	= bundle
@@ -58,13 +60,14 @@ MANCEXT	= 1
 MANFEXT	= 5
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
-# Delete any of LOCALSRCS and LOCALOBJS that are in your C library.
-LOCALSRCS = # getopt.c strtol.c strtok.c strchr.c
-LOCALOBJS = # getopt.o strtol.o strtok.o strchr.o
+LOCALSRCS = # localsrc/getopt.c localsrc/strtol.c \
+		localsrc/strtok.c localsrc/strchr.c
+LOCALOBJS = # localsrc/getopt.o localsrc/strtol.o \
+		localsrc/strtok.o localsrc/strchr.o
 
 SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 	compress.c is_tar.c \
-	print.c $(LOCALSRCS)
+	print.c $(LOCALSRCS) localinc
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	compress.o is_tar.o \
 	print.o $(LOCALOBJS)
