@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.18 1990/10/03 18:10:02 ian Exp $
+# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.19 1991/01/23 13:30:21 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -22,14 +22,16 @@
 #
 # 4. This notice may not be removed or altered.
 
-MAGIC	= /etc/magic
+#MAGIC	= /etc/magic
+MAGIC	= /usr/local/lib/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
-COPTS	= -O -g
+COPTS	= -g # -O		# gcc allows both
 CFLAGS	= $(COPTS) $(DEFS)
+LDFLAGS	= $(COPTS) -Bstatic	# SunOS gdb can't yet accept shared libs
 SHAR	= bundle
-OFILE	= /usr/bin/file.orig	# old or distributed version, for comparison
+OFILE	= /usr/bin/file		# old or distributed version, for comparison
 # Where new binary lives; typically /usr/local (BSD), /usr/lbin (USG).
-BINDIR	= /usr/local
+BINDIR	= /usr/local/bin
 # For installing our man pages; 
 # MANCxxx is manual section for Commands, MANFxxx is section for file formats.
 # MANxDIR is directory names; MANxEXT is the filename extention. Usual values:
@@ -53,14 +55,16 @@ MANFEXT	= 5
 # There are no system-dependant configuration options (except maybe CFLAGS).
 # Delete any of LOCALSRCS and LOCALOBJS that are in your C library.
 LOCALSRCS = getopt.c strtol.c strtok.c strchr.c
-SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c is_tar.c \
+SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
+	compress.c is_tar.c \
 	print.c $(LOCALSRCS)
 LOCALOBJS = getopt.o strtol.o strtok.o strchr.o
-OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o is_tar.o \
+OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
+	compress.o is_tar.o \
 	print.o $(LOCALOBJS)
 
 ALLSRC = LEGAL.NOTICE README PORTING $(SRCS) *.h \
-	Makefile file.1 magic.4 magdir/[a-z]* tst/Makefile
+	Makefile file.1 magic.4 Magdir/[a-z]* NEWMAGIC tst/Makefile
 
 all:		file magic
 
@@ -75,9 +79,9 @@ file:		$(OBJS)
 		cc $(CFLAGS) $(OBJS) -o $@
 lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS) | tee $@
-magic:		magdir
-#		magdir/Makefile's "install" mv's magic to here for testing.
-		cd magdir; make install
+magic:		Magdir
+#		Magdir/Makefile's "install" mv's magic to here for testing.
+		cd Magdir; make install
 
 ascmagic.o:	names.h
 
@@ -97,7 +101,7 @@ dist:		$(ALLSRC)
 #		Some versions of shar can't handle a single file from
 #		a subdirectory, so we manually insert mkdir as needed.
 #		Put the extra "mkdir" AFTER the ": to unbundle..." line.
-		(echo mkdir magdir tst; $(SHAR) $(ALLSRC) ) > $@
+		(echo mkdir Magdir tst; $(SHAR) $(ALLSRC) ) > $@
 
-dist.magic:	magdir
-		(echo mkdir magdir; $(SHAR) magdir/Makefile magdir/[a-z]*) >$@
+dist.magic:	Magdir
+		(echo mkdir Magdir; $(SHAR) Magdir/Makefile Magdir/[a-z]*) >$@
