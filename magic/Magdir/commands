@@ -38,3 +38,8 @@
 0       string          eval\ "exec\ /usr/local/bin/perl        perl commands text
 0	string		#!/bin/rc	Plan 9 rc Shell script text
 0	string		#!\ /bin/rc	Plan 9 rc Shell script text
+# bash shell magic, from Peter Tobias (tobias@server.et-inf.fho-emden.de)
+0	string		#!/bin/bash	Bourne-Again Shell script text
+0	string		#!\ /bin/bash	Bourne-Again Shell script text
+0	string		#!/usr/local/bin/bash	Bourne-Again Shell script text
+0	string		#!\ /usr/local/bin/bash	Bourne-Again Shell script text

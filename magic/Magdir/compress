@@ -38,3 +38,7 @@
 >2	byte&0x1f	x		%d bits
 
 0	string		\037\240	LZH compressed data
+
+# >>>>> HPACK <<<<<   [from Peter Gutmann, pgut1@cs.aukuni.ac.nz]
+#
+0	string		HPAK			HPACK archive

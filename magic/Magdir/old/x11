@@ -7,3 +7,6 @@
 # 0	lelong	00000004	X11 little-endian snf font
 #
 0	long	00000004	X11 snf font
+# some X11 fonts, from Daniel Quinlan (quinlan@yggdrasil.com)
+0	string	\001fcp			X11 font data
+0	string	D1.0\015\012\000\000	X11 Speedo font data

@@ -1,3 +1,7 @@
 0	string	FONT	ASCII vfont text
 0	short	0436	Berkeley vfont data
 0	short	017001	byte-swapped Berkeley vfont data
+# PostScript fonts (must precede PostScript entry), quinlan@yggdrasil.com
+0	string		%!PS-AdobeFont-1.0	PostScript Type 1 font text
+>20	string		>\0		(%s)
+6	string		%!PS-AdobeFont-1.0	PostScript Type 1 font program data
