@@ -138,3 +138,4 @@
 
 # From Felix von Leitner <leitner@fefe.de>
 0	string		OggS	Ogg-Vorbis compressed sound file
+0	string		ID3	mp3 file with ID3 2.0 tag
