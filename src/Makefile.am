@@ -1,6 +1,7 @@
 MAGIC	 = $(pkgdatadir)/magic
 lib_LTLIBRARIES = libmagic.la
 include_HEADERS = magic.h
+EXTRA_DIST = test.c
 
 bin_PROGRAMS = file
 

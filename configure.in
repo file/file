@@ -130,5 +130,5 @@ AC_CHECK_FUNCS(mmap strerror strtoul mbrtowc mkstemp getopt_long utimes utime wc
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)
 
-AC_CONFIG_FILES([Makefile src/Makefile magic/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile magic/Makefile doc/Makefile python/Makefile])
 AC_OUTPUT
