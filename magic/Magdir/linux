@@ -35,9 +35,6 @@
 >28	long		!0		not stripped
 0	string		\01\03\040\20	Minix-386 executable
 >28	long		!0		not stripped
-# message catalogs, from Mitchum DSouza <m.dsouza@mrc-apu.cam.ac.uk>
-0	string		*nazgul*	Linux compiled message catalog
->8	lelong		>0		\b, version %ld
 # core dump file, from Bill Reynolds <bill@goshawk.lanl.gov>
 216	lelong		0421		Linux/i386 core file
 >220	string		>\0		of '%s'
