@@ -8,6 +8,9 @@
 .B \-c
 ]
 [
+.B \-L
+]
+[
 .B \-f
 namefile ]
 [
@@ -117,6 +120,10 @@ Either
 .I namefile
 or at least one filename argument must be present;
 to test the standard input, use ``-'' as a filename argument.
+.PP
+The 
+.B \-L
+option causes symlinks to be followed, as the like-named option in ls(1).
 .SH FILES
 .I /etc/magic
 \- default list of magic numbers
