@@ -2,10 +2,14 @@
  * is_tar() -- figure out whether file is a tar archive.
  *
  * Stolen (by the author!) from the public domain tar program:
- * Pubic Domain version written 26 Aug 1985 by John Gilmore (ihnp4!hoptoad!gnu).
+ * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
  *
  * @(#)list.c 1.18 9/23/86 Public Domain - gnu
+ *
+ * Comments changed and some code/comments reformatted
+ * for file command by Ian Darwin.
  */
+
 #include <ctype.h>
 #include <sys/types.h>
 #include "tar.h"
@@ -15,7 +19,10 @@
 long from_oct();			/* Decode octal number */
 
 /*
- * Return 1 for old tar file, 0 if the checksum is bad, 2 for Unix Std tar file.
+ * Return 
+ *	0 if the checksum is bad (i.e., probably not a tar archive), 
+ *	1 for old UNIX tar file,
+ *	2 for Unix Std (POSIX) tar file.
  */
 int
 is_tar(header)
@@ -42,7 +49,8 @@ is_tar(header)
 		sum -= 0xFF & header->header.chksum[i];
 	sum += ' '* sizeof header->header.chksum;	
 
-	if (sum != recsum) return 0;	/* Not a tar archive */
+	if (sum != recsum)
+		return 0;	/* Not a tar archive */
 	
 	if (0==strcmp(header->header.magic, TMAGIC)) 
 		return 2;		/* Unix Standard tar archive */
