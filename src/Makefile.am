@@ -1,9 +1,9 @@
+include "../Makefile.inc"
 lib_LTLIBRARIES = libmagic.la
 include_HEADERS = magic.h
 
 bin_PROGRAMS = file
 
-MAGIC	 = $(datadir)/magic
 AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
 
 libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
