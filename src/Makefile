@@ -24,7 +24,7 @@ ALLSRC = LEGAL.NOTICE README PORTING TODO $(SRCS) *.h \
 
 all:		file magic
 
-run:		all
+test:		all
 		cd tst; make
 		time $(OFILE) -m ./magic * tst/* >/tmp/t1
 		time ./file -m ./magic * tst/* >/tmp/t2
