@@ -30,7 +30,7 @@
 #
 # Motorola S-Records, from Gerd Truschinski <gt@freebsd.first.gmd.de>
 0   string      S0          Motorola S-Record; binary data in text format
- 
+
 # ATARI ST relocatable PRG
 #
 # from Oskar Schirmer <schirmer@scara.com> Feb 3, 2001
