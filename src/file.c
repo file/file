@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.72 2003/03/24 01:16:28 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.73 2003/03/24 01:34:21 christos Exp $")
 #endif	/* lint */
 
 
@@ -81,11 +81,6 @@ FILE_RCSID("@(#)$Id: file.c,v 1.72 2003/03/24 01:16:28 christos Exp $")
 #else
 # define USAGE  "Usage: %s [-bciknsvz] [-f namefile] [-m magicfiles] file...\n"
 #endif
-
-#ifdef __EMX__
-private char *apptypeName = NULL;
-int os2_apptype (const char *fn, char *buf, int nb);
-#endif /* __EMX__ */
 
 #ifndef MAGIC
 # define MAGIC "/etc/magic"

@@ -36,9 +36,14 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.4 2003/03/24 01:16:28 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.5 2003/03/24 01:34:21 christos Exp $")
 #endif	/* lint */
 
+#ifdef __EMX__
+private char *apptypeName = NULL;
+protected int file_os2_apptype(struct magic_set *ms, const char *fn,
+    const void *buf, size_t nb);
+#endif /* __EMX__ */
 
 #ifndef MAGIC
 # define MAGIC "/etc/magic"
@@ -190,12 +195,22 @@ magic_file(struct magic_set *ms, const char *inname)
 		return NULL;
 	}
 
-	if (nbytes == 0){
+	if (nbytes == 0) {
 		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
 		    "application/x-empty" : "empty") == -1)
 			return NULL;
 	} else {
 		buf[nbytes++] = '\0';	/* null-terminate it */
+#ifdef __EMX__
+		switch (file_os2_apptype(ms, inname, buf, nbytes)) {
+		case -1:
+			return NULL;
+		case 0:
+			break;
+		default:
+			return ms->o.buf;
+		}
+#endif
 		if (file_buffer(ms, buf, nbytes) == -1)
 			return NULL;
 #ifdef BUILTIN_ELF

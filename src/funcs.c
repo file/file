@@ -31,6 +31,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+
 /*
  * Like printf, only we print to a buffer and advance it.
  */
