@@ -243,3 +243,6 @@
 
 # Visio drawings
 03000	string	Visio\ (TM)\ Drawing			%s
+
+# Tgif files
+0	string	\%TGIF\ x 		Tgif file version %s
