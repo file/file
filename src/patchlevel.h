@@ -1,11 +1,19 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		27
+#define	patchlevel		28
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.27 1999/02/14 17:21:41 christos Exp $
+ * $Id: patchlevel.h,v 1.28 1999/10/31 22:11:48 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.28  1999/10/31 22:11:48  christos
+ * - add "char" type for compatibility with HP/UX
+ * - recognize HP/UX syntax &=n etc.
+ * - include errno.h for CYGWIN
+ * - conditionalize the S_IS* macros
+ * - revert the SHT_DYNSYM test that broke the linux stripped binaries test
+ * - lots of Magdir changes
+ *
  * Revision 1.27  1999/02/14 17:21:41  christos
  * Automake support and misc cleanups from Rainer Orth
  * Enable reading character and block special files from Dale R. Worley
