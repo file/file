@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.15 2000/08/05 18:14:12 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.16 2000/08/05 18:18:50 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -382,8 +382,8 @@ dophn_core(class, swap, fd, off, num, size)
 					/*
 					 * Well, that worked.
 					 */
-					printf(", from '%.16s' %d",
-					    &nbuf[offset + prpsoffsets(i)], i);
+					printf(", from '%.16s'",
+					    &nbuf[offset + prpsoffsets(i)]);
 					break;
 
 				tryanother:
