@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.41 2004/07/24 20:38:56 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.42 2004/07/24 20:57:22 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -150,6 +150,9 @@ getu64(int swap, uint64_t value)
 #define ph_filesz	(size_t)((class == ELFCLASS32	\
 			 ? getu32(swap, ph32.p_filesz)	\
 			 : getu64(swap, ph64.p_filesz)))
+#define ph_memsz	(size_t)((class == ELFCLASS32	\
+			 ? getu32(swap, ph32.p_memsz)	\
+			 : getu64(swap, ph64.p_memsz)))
 #define nh_size		(class == ELFCLASS32		\
 			 ? sizeof nh32			\
 			 : sizeof nh64)
@@ -253,8 +256,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			file_badseek(ms);
 			return -1;
 		}
-		bufsize = read(fd, nbuf,
-		    ((ph_filesz < BUFSIZ) ? ph_filesz : BUFSIZ));
+		bufsize = read(fd, nbuf, sizeof(nbuf));
 		if (bufsize == -1) {
 			file_badread(ms);
 			return -1;
@@ -691,9 +693,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				file_badseek(ms);
 				return -1;
 			}
-			bufsize = read(fd, nbuf,
-			    ((ph_filesz < sizeof(nbuf)) ?
-			    ph_filesz : sizeof(nbuf)));
+			bufsize = read(fd, nbuf, sizeof(nbuf));
 			if (bufsize == -1) {
 				file_badread(ms);
 				return -1;
