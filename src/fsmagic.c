@@ -57,7 +57,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.30 1999/10/31 22:23:03 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.31 2000/04/11 02:32:35 christos Exp $")
 #endif	/* lint */
 
 int
@@ -86,15 +86,23 @@ struct stat *sb;
 		return 1;
 	}
 
+	if (iflag) {
+		if ((sb->st_mode & S_IFMT) != S_IFREG) {
+			ckfputs("application/x-not-regular-file", stdout);
+			return 1;
+		}
+	}
+	else {
 #ifdef S_ISUID
-	if (sb->st_mode & S_ISUID) ckfputs("setuid ", stdout);
+		if (sb->st_mode & S_ISUID) ckfputs("setuid ", stdout);
 #endif
 #ifdef S_ISGID
-	if (sb->st_mode & S_ISGID) ckfputs("setgid ", stdout);
+		if (sb->st_mode & S_ISGID) ckfputs("setgid ", stdout);
 #endif
 #ifdef S_ISVTX
-	if (sb->st_mode & S_ISVTX) ckfputs("sticky ", stdout);
+		if (sb->st_mode & S_ISVTX) ckfputs("sticky ", stdout);
 #endif
+	}
 	
 	switch (sb->st_mode & S_IFMT) {
 	case S_IFDIR:
@@ -239,7 +247,7 @@ struct stat *sb;
 	 * when we read the file.)
 	 */
 	if (!sflag && sb->st_size == 0) {
-		ckfputs("empty", stdout);
+		ckfputs(iflag ? "application/x-empty" : "empty", stdout);
 		return 1;
 	}
 	return 0;

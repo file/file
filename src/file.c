@@ -52,20 +52,21 @@
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
+#include <locale.h>
 
 #include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.48 1999/11/28 20:02:29 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.49 2000/04/11 02:32:35 christos Exp $")
 #endif	/* lint */
 
 
 #ifdef S_IFLNK
-# define USAGE  "Usage: %s [-bcnvzL] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-bcinvzL] [-f namefile] [-m magicfiles] file...\n"
 #else
-# define USAGE  "Usage: %s [-bcnvz] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-bcinvz] [-f namefile] [-m magicfiles] file...\n"
 #endif
 
 #ifndef MAGIC
@@ -82,13 +83,16 @@ int 			/* Global command-line options 		*/
 	bflag = 0,	/* brief output format	 		*/
 	zflag = 0,	/* follow (uncompress) compressed files */
 	sflag = 0,	/* read block special files		*/
+	iflag = 0,
 	nobuffer = 0;   /* Do not buffer stdout */
+
 int			/* Misc globals				*/
 	nmagic = 0;	/* number of valid magic[]s 		*/
 
 struct  magic *magic;	/* array of magic entries		*/
 
 const char *magicfile;	/* where magic be found 		*/
+const char *default_magicfile = MAGIC;
 
 char *progname;		/* used throughout 			*/
 int lineno;		/* line number in the magic file	*/
@@ -112,6 +116,9 @@ main(argc, argv)
 {
 	int c;
 	int check = 0, didsomefiles = 0, errflg = 0, ret = 0, app = 0;
+	char *mime;
+
+	setlocale(LC_CTYPE, ""); /* makes islower etc work for other langs */
 
 #ifdef LC_CTYPE
 	setlocale(LC_CTYPE, ""); /* makes islower etc work for other langs */
@@ -123,9 +130,9 @@ main(argc, argv)
 		progname = argv[0];
 
 	if (!(magicfile = getenv("MAGIC")))
-		magicfile = MAGIC;
+		magicfile = default_magicfile;
 
-	while ((c = getopt(argc, argv, "bcdnf:m:svzL")) != EOF)
+	while ((c = getopt(argc, argv, "bcdinf:m:svzL")) != EOF)
 		switch (c) {
 		case 'v':
 			(void) fprintf(stdout, "%s-%d.%d\n", progname,
@@ -168,6 +175,14 @@ main(argc, argv)
 			break;
 		case 's':
 			sflag++;
+			break;
+		case 'i':
+			iflag++;
+			if ((mime = malloc(strlen(magicfile) + 5)) != NULL) {
+				(void)strcpy(mime, magicfile);
+				(void)strcat(mime, ".mime");
+				magicfile = mime;
+			}
 			break;
 		case '?':
 		default:
@@ -370,7 +385,7 @@ int wid;
 	}
 
 	if (nbytes == 0)
-		ckfputs("empty", stdout);
+		ckfputs(iflag ? "application/x-empty" : "empty", stdout);
 	else {
 		buf[nbytes++] = '\0';	/* null-terminate it */
 		match = tryit(buf, nbytes, zflag);

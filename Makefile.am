@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = foreign no-dependencies
 
 bin_PROGRAMS = file
 
-data_DATA = magic
+data_DATA = magic magic.mime
 
 MAGIC	 = @datadir@/magic
 CPPFLAGS = -DMAGIC='"$(MAGIC)"'
@@ -59,7 +59,7 @@ Magdir/magic Magdir/mail.news Magdir/mcrypt Magdir/mime Magdir/mirage Magdir/mki
 Magdir/mmdf Magdir/modem Magdir/motorola Magdir/msdos Magdir/ncr \
 Magdir/netbsd Magdir/news Magdir/octave Magdir/olf Magdir/os2 Magdir/os9 \
 Magdir/osf1 Magdir/palm Magdir/pbm Magdir/pdf Magdir/pdp Magdir/pgp Magdir/pkgadd \
-Magdir/plus5 Magdir/printer Magdir/psdbms Magdir/pyramid Magdir/riff \
+Magdir/project Magdir/plus5 Magdir/printer Magdir/psdbms Magdir/pyramid Magdir/riff \
 Magdir/rpm Magdir/rtf Magdir/sc Magdir/sccs Magdir/sendmail Magdir/sequent \
 Magdir/sgi Magdir/sgml Magdir/sniffer Magdir/softquad Magdir/spectrum Magdir/sun \
 Magdir/teapot Magdir/terminfo Magdir/tex Magdir/ti-8x Magdir/timezone \

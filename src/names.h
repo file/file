@@ -10,8 +10,13 @@
  *
  * See LEGAL.NOTICE
  *
- * $Id: names.h,v 1.16 1999/01/13 15:44:08 christos Exp $
+ * $Id: names.h,v 1.17 2000/04/11 02:32:35 christos Exp $
  */
+
+/*
+	modified by Chris Lowth - 9 April 2000
+	to add mime type strings to the types table.
+*/
 
 /* these types are used to index the table 'types': keep em in sync! */
 #define	L_C	0		/* first and foremost on UNIX */
@@ -28,22 +33,26 @@
 #define	L_HTML	11		/* HTML */
 #define	L_BCPL	12		/* BCPL */
 
-static const char *types[] = {
-	"C program text",
-	"C++ program text",
-	"FORTRAN program text",
-	"make commands text" ,
-	"PL/1 program text",
-	"assembler program text",
-	"English text",
-	"Pascal program text",
-	"mail text",
-	"news text",
-	"Java program text",
-	"HTML document text",
-	"BCPL program text",
-	"can't happen error on names.h/types",
-	0};
+static const struct {
+	char *human;
+	char *mime;
+} types[] = {
+	{ "C program text",				"text/x-c", },
+	{ "C++ program text",				"text/x-c++" },
+	{ "FORTRAN program text",			"text/x-fortran" },
+	{ "make commands text",				"text/x-makefile" },
+	{ "PL/1 program text",				"text/x-pl1" },
+	{ "assembler program text",			"text/x-asm" },
+	{ "English text",				"text/plain, English" },
+	{ "Pascal program text",			"text/x-pascal" },
+	{ "mail text",					"text/x-mail" },
+	{ "news text",					"text/x-news" },
+	{ "Java program text",				"text/x-java" },
+	{ "HTML document text",				"text/html", },
+	{ "BCPL program text",				"text/x-bcpl" },
+	{ "can't happen error on names.h/types",	"error/x-error" },
+	{ 0, 0}
+};
 
 /*
  * XXX - how should we distinguish Java from C++?
