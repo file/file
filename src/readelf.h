@@ -1,6 +1,6 @@
 /*
  * readelf.h 
- * @(#)$Id: readelf.h,v 1.2 1996/10/05 18:13:09 christos Exp $
+ * @(#)$Id: readelf.h,v 1.3 1996/10/25 18:11:51 christos Exp $
  *
  * Provide elf data structures for non-elf machines, allowing file
  * non-elf hosts to determine if an elf binary is stripped.
@@ -136,5 +136,25 @@ typedef struct {
     Elf64_Off	sh_addralign;
     Elf64_Off	sh_entsize;
 } Elf64_Shdr;
+
+
+typedef struct {
+    Elf32_Word	n_namesz;
+    Elf32_Word	n_descsz;
+    Elf32_Word	n_type;
+} Elf32_Nhdr;
+
+typedef struct {
+    Elf64_Word	n_namesz;
+    Elf64_Word	n_descsz;
+    Elf64_Word	n_type;
+} Elf64_Nhdr;
+
+#define	NT_PRSTATUS	1
+#define	NT_PRFPREG	2
+#define	NT_PRPSINFO	3
+#define	NT_PRXREG	4
+#define	NT_PLATFORM	5
+#define	NT_AUXV		6
 
 #endif
