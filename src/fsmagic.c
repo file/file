@@ -54,13 +54,13 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.32 2000/05/14 22:58:54 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.33 2000/08/05 17:36:48 christos Exp $")
 #endif	/* lint */
 
 int
 fsmagic(fn, sb)
-const char *fn;
-struct stat *sb;
+	const char *fn;
+	struct stat *sb;
 {
 	int ret = 0;
 
@@ -168,7 +168,7 @@ struct stat *sb;
 	case S_IFLNK:
 		{
 			char buf[BUFSIZ+4];
-			register int nch;
+			int nch;
 			struct stat tstatbuf;
 
 			if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
@@ -249,4 +249,3 @@ struct stat *sb;
 	}
 	return 0;
 }
-

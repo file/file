@@ -5,7 +5,7 @@
  * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
  *
  * @(#)list.c 1.18 9/23/86 Public Domain - gnu
- * $Id: is_tar.c,v 1.12 1999/02/14 17:16:08 christos Exp $
+ * $Id: is_tar.c,v 1.13 2000/08/05 17:36:48 christos Exp $
  *
  * Comments changed and some code/comments reformatted
  * for file command by Ian Darwin.
@@ -18,7 +18,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.12 1999/02/14 17:16:08 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.13 2000/08/05 17:36:48 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
@@ -33,13 +33,13 @@ static int from_oct __P((int, char *));	/* Decode octal number */
  */
 int
 is_tar(buf, nbytes)
-unsigned char *buf;
-int nbytes;
+	unsigned char *buf;
+	int nbytes;
 {
-	register union record *header = (union record *)buf;
-	register int	i;
-	register int	sum, recsum;
-	register char	*p;
+	union record *header = (union record *)buf;
+	int	i;
+	int	sum, recsum;
+	char	*p;
 
 	if (nbytes < sizeof(union record))
 		return 0;
@@ -78,12 +78,12 @@ int nbytes;
  */
 static int
 from_oct(digs, where)
-	register int	digs;
-	register char	*where;
+	int	digs;
+	char	*where;
 {
-	register int	value;
+	int	value;
 
-	while (isspace((unsigned char)*where)) {		/* Skip spaces */
+	while (isspace((unsigned char)*where)) {	/* Skip spaces */
 		where++;
 		if (--digs <= 0)
 			return -1;		/* All blank field */

@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.41 2000/05/14 17:58:36 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.42 2000/08/05 17:36:49 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -54,8 +54,8 @@ static int mconvert	__P((union VALUETYPE *, struct magic *));
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
 int
 softmagic(buf, nbytes)
-unsigned char *buf;
-int nbytes;
+	unsigned char *buf;
+	int nbytes;
 {
 	if (match(buf, nbytes))
 		return 1;
@@ -92,8 +92,8 @@ int nbytes;
  */
 static int
 match(s, nbytes)
-unsigned char	*s;
-int nbytes;
+	unsigned char	*s;
+	int nbytes;
 {
 	int magindex = 0;
 	int cont_level = 0;
@@ -203,8 +203,8 @@ int nbytes;
 
 static int32
 mprint(p, m)
-union VALUETYPE *p;
-struct magic *m;
+	union VALUETYPE *p;
+	struct magic *m;
 {
 	char *pp, *rt;
 	uint32 v;
@@ -277,8 +277,8 @@ struct magic *m;
  */
 static int
 mconvert(p, m)
-union VALUETYPE *p;
-struct magic *m;
+	union VALUETYPE *p;
+	struct magic *m;
 {
 	switch (m->type) {
 	case BYTE:
@@ -321,9 +321,9 @@ struct magic *m;
 
 static void
 mdebug(offset, str, len)
-int32 offset;
-char *str;
-int len;
+	int32 offset;
+	char *str;
+	int len;
 {
 	(void) fprintf(stderr, "mget @%d: ", offset);
 	showstr(stderr, (char *) str, len);
@@ -333,10 +333,10 @@ int len;
 
 static int
 mget(p, s, m, nbytes)
-union VALUETYPE* p;
-unsigned char	*s;
-struct magic *m;
-int nbytes;
+	union VALUETYPE* p;
+	unsigned char	*s;
+	struct magic *m;
+	int nbytes;
 {
 	int32 offset = m->offset;
 
@@ -408,11 +408,11 @@ int nbytes;
 
 static int
 mcheck(p, m)
-union VALUETYPE* p;
-struct magic *m;
+	union VALUETYPE* p;
+	struct magic *m;
 {
-	register uint32 l = m->value.l;
-	register uint32 v;
+	uint32 l = m->value.l;
+	uint32 v;
 	int matched;
 
 	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
@@ -448,9 +448,9 @@ struct magic *m;
 		 * but ignoring any nulls.  bcmp doesn't give -/+/0
 		 * and isn't universally available anyway.
 		 */
-		register unsigned char *a = (unsigned char*)m->value.s;
-		register unsigned char *b = (unsigned char*)p->s;
-		register int len = m->vallen;
+		unsigned char *a = (unsigned char*)m->value.s;
+		unsigned char *b = (unsigned char*)p->s;
+		int len = m->vallen;
 		l = 0;
 		v = 0;
 		if (0L == m->mask) { /* normal string: do it fast */

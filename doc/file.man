@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.35 2000/05/14 17:58:36 christos Exp $
+.\" $Id: file.man,v 1.36 2000/08/05 17:36:48 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -31,7 +31,7 @@ test that succeeds causes the file type to be printed.
 The type printed will usually contain one of the words
 .B text
 (the file contains only
-.SM ASCII
+printing characters and a few common control
 characters and is probably safe to read on an
 .SM ASCII
 terminal),
@@ -49,7 +49,7 @@ or the program itself,
 .B "preserve these keywords" .
 People depend on knowing that all the readable files in a directory
 have the word ``text'' printed.
-Don't do as Berkeley did \- change ``shell commands text''
+Don't do as Berkeley did and change ``shell commands text''
 to ``shell script''.
 .PP
 The filesystem tests are based on examining the return from a
@@ -62,7 +62,7 @@ Any known file types appropriate to the system you are running on
 implement them)
 are intuited if they are defined in
 the system header file
-.IR sys/stat.h  .
+.IR <sys/stat.h>  .
 .PP
 The magic number tests are used to check for files with data in
 particular fixed formats.
@@ -79,14 +79,36 @@ that the file is a binary executable, and which of several types thereof.
 The concept of `magic number' has been applied by extension to data files.
 Any file with some invariant identifier at a small fixed
 offset into the file can usually be described in this way.
-The information in these files is read from the magic file
+The information identifying these files is read from the magic file
 .I __MAGIC__.
 .PP
-If an argument appears to be an
-.SM ASCII 
-file,
+If a file does not match any of the entries in the magic file,
+it is examined to see if it seems to be a text file.
+ASCII, ISO-8859-x, non-ISO 8-bit extended-ASCII character sets
+(such as those used on Macintosh and IBM PC systems),
+UTF-8-encoded Unicode, UTF-16-encoded Unicode, and EBCDIC
+character sets can be distinguished by the different
+ranges and sequences of bytes that constitute printable text
+in each set.
+If a file passes any of these tests, its character set is reported.
+ASCII, ISO-8859-x, UTF-8, and extended-ASCII files are identified
+as ``text'' because they will be mostly readable on nearly any terminal;
+UTF-16 and EBCDIC are only ``character data'' because, while
+they contain text, it is text that will require translation
+before it can be read.
+In addition,
 .B file
-attempts to guess its language.
+will attempt to determine other characteristics of text-type files.
+If the lines of a file are terminated by CR, CRLF, or NEL, instead
+of the Unix-standard LF, this will be reported.
+Files that contain embedded escape sequences or overstriking
+will also be identified.
+.PP
+Once
+.B file
+has determined the character set used in a text-type file,
+it will
+attempt to determine in what language the file is written.
 The language tests look for particular strings (cf
 .IR names.h )
 that can appear anywhere in the first few blocks of a file.
@@ -102,8 +124,10 @@ two groups, so they are performed last.
 The language test routines also test for some miscellany
 (such as 
 .BR tar (1)
-archives) and determine whether an unknown file should be
-labelled as `ascii text' or `data'. 
+archives).
+.PP
+Any file that cannot be identified as having been written
+in any of the character sets listed above is simply said to be ``data''.
 .SH OPTIONS
 .TP 8
 .B \-b
@@ -123,15 +147,18 @@ before the argument list.
 Either 
 .I namefile
 or at least one filename argument must be present;
-to test the standard input, use ``-'' as a filename argument.
+to test the standard input, use ``\-'' as a filename argument.
 .TP 8
 .B \-i
 Causes the file command to output mime type strings rather than the more
-traditional human readable ones. Thus it may say "text/plain, ASCII" rather
-than "ASCII text". In order for this option to work, file changes the way
+traditional human readable ones. Thus it may say
+``text/plain; charset=us-ascii''
+rather
+than ``ASCII text''. In order for this option to work, file changes the way
 it handles files recognised by the command it's self (such as many of the
-text file types, directories etc), and makes use of an alternative "magic" file.
-(See "FILES" section, below).
+text file types, directories etc), and makes use of an alternative
+``magic'' file.
+(See ``FILES'' section, below).
 .TP 8
 .B \-k
 Don't stop at the first match, keep going.
@@ -280,7 +307,7 @@ file:        application/x-executable, dynamically linked (uses shared libs), no
 There has been a 
 .B file
 command in every \s-1UNIX\s0 since at least Research Version 6
-(man page dated January, 1975).
+(man page dated January 16, 1975).
 The System V version introduced one significant major change:
 the external list of magic number types.
 This slowed the program down slightly but made it a lot more flexible.
@@ -324,8 +351,12 @@ Changes by Ian Darwin and various authors including
 Christos Zoulas (christos@astron.com), 1990-1999.
 .PP
 Altered by Chris Lowth, chris@lowth.com, 2000:
-Handle the "-i" option to output mime type strings and using an alternative
+Handle the ``-i'' option to output mime type strings and using an alternative
 magic file and internal logic.
+.PP
+Altered by Eric Fischer (enf@pobox.com), July, 2000,
+to identify character codes and attempt to identify the languages
+of non-ASCII files.
 .SH LEGAL NOTICE
 Copyright (c) Ian F. Darwin, Toronto, Canada,
 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993.
@@ -355,14 +386,16 @@ misrepresented as being the original software.  Since few users
 ever read sources, credits must appear in the documentation.
 .PP
 4. This notice may not be removed or altered.
-.PP
-A few support files (\fIgetopt\fP, \fIstrtok\fP)
-distributed with this package
-are by Henry Spencer and are subject to the same terms as above.
-.PP
-A few simple support files (\fIstrtol\fP, \fIstrchr\fP)
-distributed with this package
-are in the public domain; they are so marked.
+.\" .PP
+.\" A few support files (\fIgetopt\fP, \fIstrtok\fP)
+.\" distributed with this package
+.\" are by Henry Spencer and are subject to the same terms as above.
+.\" .PP
+.\" A few simple support files (\fIstrtol\fP, \fIstrchr\fP)
+.\" distributed with this package
+.\" are in the public domain; they are so marked.
+.\"
+.\" enf: commented out because these support files don't seem to be included
 .PP
 The files
 .I tar.h
@@ -385,11 +418,11 @@ with the flexibility of the System V version.
 .B File
 uses several algorithms that favor speed over accuracy,
 thus it can be misled about the contents of
-.SM ASCII
+text
 files.
 .PP
 The support for
-.SM ASCII
+text
 files (primarily for programming languages)
 is simplistic, inefficient and requires recompilation to update.
 .PP
@@ -428,10 +461,11 @@ The program should provide a way to give an estimate
 of ``how good'' a guess is.
 We end up removing guesses (e.g. ``From '' as first 5 chars of file) because
 they are not as good as other guesses (e.g. ``Newsgroups:'' versus
-"Return-Path:").  Still, if the others don't pan out, it should be
+``Return-Path:'').  Still, if the others don't pan out, it should be
 possible to use the first guess.  
 .PP
 This program is slower than some vendors' file commands.
+The new support for multiple character codes makes it even slower.
 .PP
 This manual page, and particularly this section, is too long.
 .SH AVAILABILITY
