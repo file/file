@@ -19,16 +19,18 @@
 # at decimal offsets 2 and 22, respectively, but they are XOR'ed with
 # 255 (hex FF)! DL format SUCKS BIG ROCKS.
 #
-0	byte		1			DL file version 1 , medium format (160x100, 4 images/screen)
->42	byte		x			, %d screens
->43	byte		x			, %d commands
-0	byte		2			DL file version 2
->1	byte		1			, large format (320x200,1 image/screen)
->1	byte		2			, medium format (160x100,4 images/screen)
->1	byte		>2			, unknown format
->42	byte		x			, %d screens
->43	byte		x			, %d commands
+# All this stuff is commented out because of many conflicts.
+#
+#0	byte		1			DL file version 1 , medium format (160x100, 4 images/screen)
+#>42	byte		x			, %d screens
+#>43	byte		x			, %d commands
+#0	byte		2			DL file version 2
+#>1	byte		1			, large format (320x200,1 image/screen)
+#>1	byte		2			, medium format (160x100,4 images/screen)
+#>1	byte		>2			, unknown format
+#>42	byte		x			, %d screens
+#>43	byte		x			, %d commands
 # This is total guesswork here.
 # Based on empirical evidence, version 3's have several nulls following it.
 # Most of them start with non-null values at hex offset 0x34 or so.
-0	string		\3\0\0\0\0\0\0\0\0\0\0\0	DL file version 3
+#0	string		\3\0\0\0\0\0\0\0\0\0\0\0	DL file version 3
