@@ -12,9 +12,14 @@
 >4	byte		0		invalid class
 >4	byte		1		32-bit
 # only for MIPS - in the future, the ABI field of e_flags should be used.
+>>18	leshort		8
+>>>36	lelong		&0x20		N32
+>>18	leshort		10
+>>>36	lelong		&0x20		N32
 >>18	beshort		8
+>>>36	belong		&0x20		N32
 >>18	beshort		10
->>>36   belong          &0x20           N32
+>>>36	belong		&0x20		N32
 >4	byte		2		64-bit
 >5	byte		0		invalid byte order
 >5	byte		1		LSB

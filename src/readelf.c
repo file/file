@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.31 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.32 2003/05/23 21:31:59 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -219,7 +219,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	Elf64_Phdr ph64;
 	size_t offset;
 	unsigned char nbuf[BUFSIZ];
-	int bufsize;
+	ssize_t bufsize;
 
 	if (size != ph_size) {
 		file_error(ms, "Corrupted program header size");
@@ -256,7 +256,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 		}
 		offset = 0;
 		for (;;) {
-			if (offset >= bufsize)
+			if (offset >= (size_t)bufsize)
 				break;
 			offset = donote(ms, nbuf, offset, (size_t)bufsize,
 			    class, swap, 4);
@@ -465,7 +465,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 			return size;
 		return size;
 	} else if (os_style != OS_STYLE_NETBSD && nh_type == NT_PRPSINFO) {
-		int i, j;
+		size_t i, j;
 		unsigned char c;
 		/*
 		 * Extract the program name.  We assume
@@ -634,7 +634,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			}
 			offset = 0;
 			for (;;) {
-				if (offset >= bufsize)
+				if (offset >= (size_t)bufsize)
 					break;
 				offset = donote(ms, nbuf, offset,
 				    (size_t)bufsize, class, swap, ph_align);

@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.32 2003/03/29 21:40:53 ian Exp $
+@(#) $Id: README,v 1.33 2003/05/23 21:31:56 christos Exp $
 
 This is Release 4.x of Ian Darwin's (copyright but distributable)
 file(1) command. This version is the standard "file" command for Linux,
@@ -39,7 +39,7 @@ In addition, the /etc/magic file is built from a subdirectory
 for easier(?) maintenance.  I will act as a clearinghouse for
 magic numbers assigned to all sorts of data files that
 are in reasonable circulation. Send your magic numbers,
-in magic(4) format please, to the maintainer, Christos Zoulas.
+in magic(5) format please, to the maintainer, Christos Zoulas.
 
 LEGAL.NOTICE - read this first.
 README - read this second (you are currently reading this file).

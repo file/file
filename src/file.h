@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.54 2003/04/04 21:59:27 christos Exp $
+ * @(#)$Id: file.h,v 1.55 2003/05/23 21:31:58 christos Exp $
  */
 
 #ifndef __file_h__
@@ -125,9 +125,9 @@ struct magic {
 #define				FILE_OPMODULO	7
 #define				FILE_OPINVERSE	0x80
 	/* Word 4 */
-	int32_t offset;		/* offset to magic number */
+	uint32_t offset;	/* offset to magic number */
 	/* Word 5 */
-	int32_t in_offset;	/* offset from indirection */
+	uint32_t in_offset;	/* offset from indirection */
 	/* Word 6 */
 	uint32_t mask;	/* mask before comparison with value */
 	/* Word 7 */

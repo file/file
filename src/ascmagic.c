@@ -54,7 +54,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.37 2003/03/27 18:34:21 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.38 2003/05/23 21:31:58 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -105,6 +105,10 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 
 	while (nbytes > 1 && buf[nbytes - 1] == '\0')
 		nbytes--;
+
+	/* nbuf and ubuf relies on this */
+	if (nbytes > HOWMANY)
+		nbytes = HOWMANY;
 
 	/*
 	 * Then try to determine whether it's any character code we can

@@ -1,3 +1,13 @@
+2003-05-23 17:03  Christos Zoulas  <christos@zoulas.com>
+
+	* documentation fixes from Michael Piefel <piefel@debian.org>
+	* magic fixes (various)
+	* revert basename magic in .mgc name determination
+	* buffer protection in uncompress,
+	  signness issues,
+	  close files
+	  Maciej W. Rozycki <macro@ds2.pg.gda.pl
+
 2003-04-21 20:12  Christos Zoulas  <christos@zoulas.com>
 
 	* fix zsh magic

@@ -56,7 +56,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.31 2003/03/26 16:25:25 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.32 2003/05/23 21:31:58 christos Exp $")
 #endif
 
 
@@ -81,8 +81,8 @@ private struct {
 private int ncompr = sizeof(compr) / sizeof(compr[0]);
 
 
-private int swrite(int, const void *, size_t);
-private int sread(int, void *, size_t);
+private ssize_t swrite(int, const void *, size_t);
+private ssize_t sread(int, void *, size_t);
 private size_t uncompressbuf(struct magic_set *, size_t, const unsigned char *,
     unsigned char **, size_t);
 #ifdef HAVE_LIBZ
@@ -129,7 +129,7 @@ error:
 /*
  * `safe' write for sockets and pipes.
  */
-private int
+private ssize_t
 swrite(int fd, const void *buf, size_t n)
 {
 	int rv;
@@ -154,7 +154,7 @@ swrite(int fd, const void *buf, size_t n)
 /*
  * `safe' read for sockets and pipes.
  */
-private int
+private ssize_t
 sread(int fd, void *buf, size_t n)
 {
 	int rv;
@@ -205,7 +205,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 		return -1;
 	}
 
-	if (swrite(tfd, startbuf, nbytes) != nbytes)
+	if (swrite(tfd, startbuf, nbytes) != (ssize_t)nbytes)
 		r = 1;
 	else {
 		while ((r = sread(fd, buf, sizeof(buf))) > 0)
@@ -256,25 +256,30 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
     unsigned char **newch, size_t n)
 {
 	unsigned char flg = old[3];
-	int data_start = 10;
+	size_t data_start = 10;
 	z_stream z;
 	int rc;
 
-	if (flg & FEXTRA)
+	if (flg & FEXTRA) {
+		if (data_start+1 >= n)
+			return 0;
 		data_start += 2 + old[data_start] + old[data_start + 1] * 256;
+	}
 	if (flg & FNAME) {
-		while(old[data_start])
+		while(data_start < n && old[data_start])
 			data_start++;
 		data_start++;
 	}
 	if(flg & FCOMMENT) {
-		while(old[data_start])
+		while(data_start < n && old[data_start])
 			data_start++;
 		data_start++;
 	}
 	if(flg & FHCRC)
 		data_start += 2;
 
+	if (data_start >= n)
+		return 0;
 	if ((*newch = (unsigned char *)malloc(HOWMANY + 1)) == NULL) {
 		return 0;
 	}
@@ -355,7 +360,7 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 	default: /* parent */
 		(void) close(fdin[0]);
 		(void) close(fdout[1]);
-		if (swrite(fdin[1], old, n) != n) {
+		if (swrite(fdin[1], old, n) != (ssize_t)n) {
 			n = 0;
 			goto err;
 		}

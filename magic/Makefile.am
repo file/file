@@ -16,10 +16,10 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 	done >> $@
 
 magic.mgc: magic
-	$(top_builddir)/src/file -C -m $(srcdir)/magic
+	$(top_builddir)/src/file -C -m magic
 
 magic.mime.mgc: magic.mime
-	$(top_builddir)/src/file -C -m $(srcdir)/magic.mime
+	$(top_builddir)/src/file -C -m magic.mime
 
 magic_FRAGMENTS = \
 Magdir/acorn \
@@ -52,6 +52,7 @@ Magdir/citrus \
 Magdir/claris \
 Magdir/clipper \
 Magdir/commands \
+Magdir/communications \
 Magdir/compress \
 Magdir/console \
 Magdir/convex \
@@ -68,12 +69,14 @@ Magdir/editors \
 Magdir/elf \
 Magdir/encore \
 Magdir/epoc \
+Magdir/fcs \
 Magdir/filesystems \
 Magdir/flash \
 Magdir/fonts \
 Magdir/frame \
 Magdir/freebsd \
 Magdir/fsav \
+Magdir/games \
 Magdir/gimp \
 Magdir/gnu \
 Magdir/grace \
@@ -108,6 +111,7 @@ Magdir/mcrypt \
 Magdir/mime \
 Magdir/mips \
 Magdir/mirage \
+Magdir/misctools \
 Magdir/mkid \
 Magdir/mlssa \
 Magdir/mmdf \
@@ -121,6 +125,7 @@ Magdir/netbsd \
 Magdir/netscape \
 Magdir/news \
 Magdir/nitpicker \
+Magdir/ocaml \
 Magdir/octave \
 Magdir/olf \
 Magdir/os2 \
@@ -150,6 +155,7 @@ Magdir/sendmail \
 Magdir/sequent \
 Magdir/sgml \
 Magdir/sharc \
+Magdir/sinclair \
 Magdir/sketch \
 Magdir/smalltalk \
 Magdir/sniffer \
@@ -177,7 +183,7 @@ Magdir/vms \
 Magdir/vmware \
 Magdir/vorbis \
 Magdir/vxl \
-Magdir/wordperfect \
+Magdir/wordprocessors \
 Magdir/xdelta \
 Magdir/xenix \
 Magdir/zilog \
