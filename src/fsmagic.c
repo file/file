@@ -26,9 +26,6 @@
  */
 
 #include "file.h"
-#ifdef __CYGWIN__
-#include <errno.h>
-#endif
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -57,7 +54,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.31 2000/04/11 02:32:35 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.32 2000/05/14 22:58:54 christos Exp $")
 #endif	/* lint */
 
 int

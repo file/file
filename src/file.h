@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.31 2000/04/11 02:32:35 christos Exp $
+ * @(#)$Id: file.h,v 1.32 2000/05/14 22:58:53 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -91,6 +91,7 @@ struct magic {
 
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
+#include <errno.h>
 
 #ifndef __P
 # if defined(__STDC__) || defined(__cplusplus)
@@ -120,8 +121,6 @@ extern void  ckfprintf		__P((FILE *, const char *, ...));
 extern uint32 signextend	__P((struct magic *, unsigned int32));
 extern int internatmagic	__P((unsigned char *, int));
 extern void tryelf		__P((int, unsigned char *, int));
-
-extern int errno;		/* Some unixes don't define this..	*/
 
 extern char *progname;		/* the program name 			*/
 extern const char *magicfile;	/* name of the magic file		*/

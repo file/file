@@ -25,9 +25,6 @@
  * 4. This notice may not be removed or altered.
  */
 #include "file.h"
-#ifdef __CYGWIN__
-#include <errno.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,7 +55,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.51 2000/05/14 17:58:36 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.52 2000/05/14 22:58:53 christos Exp $")
 #endif	/* lint */
 
 
