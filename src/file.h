@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.20 1995/03/25 22:08:07 christos Exp $
+ * @(#)$Id: file.h,v 1.21 1995/04/28 17:29:13 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -26,7 +26,9 @@
  * 4. This notice may not be removed or altered.
  */
 
-#define HOWMANY	8192		/* how much of the file to look at */
+#ifndef HOWMANY
+# define HOWMANY 8192		/* how much of the file to look at */
+#endif
 #define MAXMAGIS 1000		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */

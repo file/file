@@ -36,7 +36,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.18 1995/03/25 22:08:07 christos Exp $";
+	"@(#)$Id: ascmagic.c,v 1.19 1995/04/28 17:29:13 christos Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -77,13 +77,13 @@ int nbytes;	/* size actually read */
 		while (isascii(*tp) && isspace(*tp))
 			++tp;	/* skip leading whitespace */
 		if ((isascii(*tp) && (isalnum(*tp) || *tp=='\\') &&
-		    isascii(*(tp+1)) && (isalnum(*(tp+1)) || *tp=='"'))) {
+		    isascii(tp[1]) && (isalnum(tp[1]) || tp[1] == '"'))) {
 			ckfputs("troff or preprocessor input text", stdout);
 			return 1;
 		}
 	}
 	if ((*buf == 'c' || *buf == 'C') && 
-	    isascii(*(buf + 1)) && isspace(*(buf + 1))) {
+	    isascii(buf[1]) && isspace(buf[1])) {
 		ckfputs("fortran program text", stdout);
 		return 1;
 	}
@@ -93,7 +93,7 @@ int nbytes;	/* size actually read */
 	s = (unsigned char*) memcpy(nbuf, buf, nbytes);
 	s[nbytes] = '\0';
 	has_escapes = (memchr(s, '\033', nbytes) != NULL);
-	while ((token = strtok((char*)s, " \t\n\r\f")) != NULL) {
+	while ((token = strtok((char *) s, " \t\n\r\f")) != NULL) {
 		s = NULL;	/* make strtok() keep on tokin' */
 		for (p = names; p < names + NNAMES; p++) {
 			if (STREQ(p->name, token)) {
@@ -108,7 +108,7 @@ int nbytes;	/* size actually read */
 
 
 	for (i = 0; i < nbytes; i++) {
-		if (!isascii(*(buf+i)))
+		if (!isascii(buf[i]))
 			return 0;	/* not all ascii */
 	}
 

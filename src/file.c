@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.31 1995/03/25 22:08:07 christos Exp $";
+	"@(#)$Id: file.c,v 1.32 1995/04/28 17:29:13 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -42,6 +42,10 @@ static char *moduleid =
 #include <utime.h>
 #endif
 #include <unistd.h>	/* for read() */
+
+#ifdef HAVE_ELF
+#include <elf.h>
+#endif
 
 #include "patchlevel.h"
 #include "file.h"
@@ -66,7 +70,7 @@ int			/* Misc globals				*/
 
 struct  magic *magic;	/* array of magic entries		*/
 
-char *magicfile = MAGIC;/* where magic be found 		*/
+char *magicfile;	/* where magic be found 		*/
 
 char *progname;		/* used throughout 			*/
 int lineno;		/* line number in the magic file	*/
@@ -89,6 +93,9 @@ char *argv[];
 		progname++;
 	else
 		progname = argv[0];
+
+	if (!(magicfile = getenv("MAGIC")))
+		magicfile = MAGIC;
 
 	while ((c = getopt(argc, argv, "vcdf:Lm:z")) != EOF)
 		switch (c) {
@@ -254,14 +261,46 @@ int wid;
 	if (nbytes == 0) 
 		ckfputs("empty", stdout);
 	else {
-		buf[nbytes++] = '\0';	/* NULL terminate */
-		if (nbytes < sizeof(union VALUETYPE)) {
-		    /* The following is to handle *very* short files */
-		    memset(buf + nbytes, 0, sizeof(union VALUETYPE) - nbytes);
-		    nbytes = sizeof(union VALUETYPE);
-		}
+		buf[nbytes++] = '\0';   /* NULL terminate */
 		tryit(buf, nbytes, zflag);
 	}
+
+#ifdef HAVE_ELF
+	/*
+	 * ELF executables have multiple section headers in arbitrary
+	 * file locations and thus file(1) cannot determine it from easily.
+	 * Instead we traverse thru all section headers until a symbol table
+	 * one is found or else the binary is stripped.
+	 * XXX: This will not work for binaries of a different byteorder.
+	 *	Should come up with a better fix.
+	 */
+
+	if (nbytes > sizeof (Elf32_Ehdr) &&
+	    buf[EI_MAG0] == ELFMAG0 &&
+	    buf[EI_MAG1] == ELFMAG1 &&
+	    buf[EI_MAG2] == ELFMAG2 &&
+	    buf[EI_MAG3] == ELFMAG3 ) {
+
+		Elf32_Ehdr elfhdr;
+		int stripped = 1;
+ 
+		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
+ 
+		if (lseek(fd, elfhdr.e_shoff, SEEK_SET)<0)
+		  error("lseek failed (%s).\n", strerror(errno));
+ 
+		for ( ; elfhdr.e_shnum ; elfhdr.e_shnum--) {
+			if (read(fd, buf, elfhdr.e_shentsize)<0)
+				error("read failed (%s).\n", strerror(errno));
+			if (((Elf32_Shdr *)&buf)->sh_type == SHT_SYMTAB) {
+				stripped = 0;
+				break;
+			}
+		}
+		if (stripped)
+		  (void) printf (" - stripped");
+	}
+#endif
 
 	if (inname != stdname) {
 		/*
