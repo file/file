@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.67 2004/09/11 19:15:58 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.68 2004/10/12 14:55:09 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -422,27 +422,27 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		return 1;
 	case FILE_STRING:
 		{
-			int n;
+			size_t len;
 
 			/* Null terminate and eat *trailing* return */
 			p->s[sizeof(p->s) - 1] = '\0';
-			n = strlen(p->s) - 1;
-			if (p->s[n] == '\n')
-				p->s[n] = '\0';
+			len = strlen(p->s);
+			if (len && p->s[len - 1] == '\n')
+				p->s[len - 1] = '\0';
 			return 1;
 		}
 	case FILE_PSTRING:
 		{
 			char *ptr1 = p->s, *ptr2 = ptr1 + 1;
-			unsigned int n = *p->s;
-			if (n >= sizeof(p->s))
-				n = sizeof(p->s) - 1;
-			while (n--)
+			size_t len = *p->s;
+			if (len >= sizeof(p->s))
+				len = sizeof(p->s) - 1;
+			while (len--)
 				*ptr1++ = *ptr2++;
 			*ptr1 = '\0';
-			n = strlen(p->s) - 1;
-			if (p->s[n] == '\n')
-				p->s[n] = '\0';
+			len = strlen(p->s);
+			if (len && p->s[len - 1] == '\n')
+				p->s[len - 1] = '\0';
 			return 1;
 		}
 	case FILE_BESHORT:
