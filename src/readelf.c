@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.14 2000/08/05 17:36:49 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.15 2000/08/05 18:14:12 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -196,9 +196,9 @@ dophn_exec(class, swap, fd, off, num, size)
 #ifdef ELFCORE
 size_t	prpsoffsets32[] = {
 	8,		/* FreeBSD */
-	84,		/* SunOS 5.x */
-	32,		/* Linux (I forget which kernel version) */
 	28,		/* Linux 2.0.36 */
+	32,		/* Linux (I forget which kernel version) */
+	84,		/* SunOS 5.x */
 };
 
 size_t	prpsoffsets64[] = {
@@ -372,7 +372,9 @@ dophn_core(class, swap, fd, off, num, size)
 							 * character is also
 							 * wrong.
 							 */
-							if (!isprint(c))
+#define isquote(c) (strchr("'\"`", (c)) != NULL)
+							if (!isprint(c) ||
+							     isquote(c))
 								goto tryanother;
 						}
 					}
@@ -380,8 +382,8 @@ dophn_core(class, swap, fd, off, num, size)
 					/*
 					 * Well, that worked.
 					 */
-					printf(", from '%.16s'",
-					    &nbuf[offset + prpsoffsets(i)]);
+					printf(", from '%.16s' %d",
+					    &nbuf[offset + prpsoffsets(i)], i);
 					break;
 
 				tryanother:
