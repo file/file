@@ -168,6 +168,7 @@ TAR_EXTERN char		read_error_flag;
 /*
  * Declarations of functions available to the world.
  */
+/*LINTLIBRARY*/
 union record *findrec();
 void userec();
 union record *endofrecs();
