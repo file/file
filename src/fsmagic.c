@@ -42,7 +42,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.12 1991/01/23 13:56:40 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.13 1992/05/21 16:19:53 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -110,7 +110,6 @@ char *fn;
 			buf[nch] = '\0';	/* readlink(2) forgets this */
 
 			/* If dangling symlink, say so and quit early. */
-/*###113 [lint] stat arg. 2 used inconsistently llib-lc(661) :: fsmagic.c(113)%%%*/
 			if (stat(buf, &tstatbuf) < 0) {
 				ckfputs("dangling symbolic link", stdout);
 				return 1;
