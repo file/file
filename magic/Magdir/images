@@ -460,3 +460,22 @@
 # Squeak images and - etoffi@softhome.net
 0 string \146\031\0\0  Squeak image data
 0 string 'From\040Squeak  Squeak program text
+
+# partimage: file(1) magic for PartImage files (experimental, incomplete)
+# Author: Hans-Joachim Baader <hjb@pro-linux.de>
+0		string	PaRtImAgE-VoLuMe	PartImage
+>0x0020		string	0.6.1		file version %s
+>>0x0060	lelong	>-1		volume %ld
+#>>0x0064 8 byte identifier
+#>>0x007c reserved
+>>0x0200	string	>\0		type %s
+>>0x1400	string	>\0		device %s,
+>>0x1600	string	>\0		original filename %s,
+# Some fields omitted
+>>0x2744	lelong	0		not compressed
+>>0x2744	lelong	1		gzip compressed
+>>0x2744	lelong	2		bzip2 compressed
+>>0x2744	lelong	>2		compressed with unknown algorithm
+>0x0020		string	>0.6.1		file version %s
+>0x0020		string	<0.6.1		file version %s
+
