@@ -24,6 +24,7 @@
  *
  * 4. This notice may not be removed or altered.
  */
+#include "file.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,15 +43,16 @@
 #  endif
 # endif
 #endif
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>	/* for read() */
+#endif
 
 #include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
-#include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.45 1999/01/14 16:21:21 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.46 1999/02/14 17:16:05 christos Exp $")
 #endif	/* lint */
 
 
@@ -64,11 +66,16 @@ FILE_RCSID("@(#)$Id: file.c,v 1.45 1999/01/14 16:21:21 christos Exp $")
 # define MAGIC "/etc/magic"
 #endif
 
+#ifndef MAXPATHLEN
+#define	MAXPATHLEN	512
+#endif
+
 int 			/* Global command-line options 		*/
 	debug = 0, 	/* debugging 				*/
 	lflag = 0,	/* follow Symlinks (BSD only) 		*/
 	bflag = 0,	/* brief output format	 		*/
 	zflag = 0,	/* follow (uncompress) compressed files */
+	sflag = 0,	/* read block special files		*/
 	nobuffer = 0;   /* Do not buffer stdout */
 int			/* Misc globals				*/
 	nmagic = 0;	/* number of valid magic[]s 		*/
@@ -108,7 +115,7 @@ main(argc, argv)
 	if (!(magicfile = getenv("MAGIC")))
 		magicfile = MAGIC;
 
-	while ((c = getopt(argc, argv, "bcdnf:m:vzL")) != EOF)
+	while ((c = getopt(argc, argv, "bcdnf:m:svzL")) != EOF)
 		switch (c) {
 		case 'v':
 			(void) fprintf(stdout, "%s-%d.%d\n", progname,
@@ -146,6 +153,9 @@ main(argc, argv)
 			break;
 		case 'z':
 			zflag++;
+			break;
+		case 's':
+			sflag++;
 			break;
 		case '?':
 		default:

@@ -2,10 +2,10 @@
  * is_tar() -- figure out whether file is a tar archive.
  *
  * Stolen (by the author!) from the public domain tar program:
- * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
+ * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
  *
  * @(#)list.c 1.18 9/23/86 Public Domain - gnu
- * $Id: is_tar.c,v 1.11 1999/01/13 15:44:07 christos Exp $
+ * $Id: is_tar.c,v 1.12 1999/02/14 17:16:08 christos Exp $
  *
  * Comments changed and some code/comments reformatted
  * for file command by Ian Darwin.
@@ -18,16 +18,12 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.11 1999/01/13 15:44:07 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.12 1999/02/14 17:16:08 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
 
-#if	defined(__STDC__) || defined(__cplusplus)
-static int from_oct(int, char*);	/* Decode octal number */
-#else
-static int from_oct();
-#endif
+static int from_oct __P((int, char *));	/* Decode octal number */
 
 /*
  * Return 

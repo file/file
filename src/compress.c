@@ -5,19 +5,18 @@
  *	uncompress(method, old, n, newch) - uncompress old into new, 
  *					    using method, return sizeof new
  */
+#include "file.h"
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#include <string.h>
-#ifdef HAVE_CONFIG_H
-#include "config.h"
 #endif
+#include <string.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
-#include "file.h"
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.12 1998/06/27 13:57:23 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.13 1999/02/14 17:16:01 christos Exp $")
 #endif
 
 

@@ -1,6 +1,6 @@
 /*
  * readelf.h 
- * @(#)$Id: readelf.h,v 1.6 1998/09/12 13:21:01 christos Exp $
+ * @(#)$Id: readelf.h,v 1.7 1999/02/14 17:16:11 christos Exp $
  *
  * Provide elf data structures for non-elf machines, allowing file
  * non-elf hosts to determine if an elf binary is stripped.
@@ -9,23 +9,25 @@
 #ifndef __fake_elf_h__
 #define __fake_elf_h__
 
-typedef unsigned int	Elf32_Addr;
-typedef unsigned int	Elf32_Off;
-typedef unsigned short	Elf32_Half;
-typedef unsigned int	Elf32_Word;
-typedef unsigned char	Elf32_Char;
+typedef uint32_t	Elf32_Addr;
+typedef uint32_t	Elf32_Off;
+typedef uint16_t	Elf32_Half;
+typedef uint32_t	Elf32_Word;
+typedef uint8_t		Elf32_Char;
 
-#ifdef __GNUC__
-typedef	unsigned long long Elf64_Addr;
-typedef	unsigned long long Elf64_Off;
+#if SIZEOF_UINT64_T != 8
+#define USE_ARRAY_FOR_64BIT_TYPES
+typedef	uint32_t 	Elf64_Addr[2];
+typedef	uint32_t 	Elf64_Off[2];
+typedef uint32_t 	Elf64_Xword[2];
 #else
-/* XXX: We need 64 bit numbers here */
-typedef unsigned int	Elf64_Addr[2];
-typedef unsigned int	Elf64_Off[2];
+typedef	uint64_t 	Elf64_Addr;
+typedef	uint64_t 	Elf64_Off;
+typedef uint64_t 	Elf64_Xword;
 #endif
-typedef unsigned short	Elf64_Half;
-typedef unsigned int	Elf64_Word;
-typedef unsigned char	Elf64_Char;
+typedef uint16_t	Elf64_Half;
+typedef uint32_t	Elf64_Word;
+typedef uint8_t		Elf64_Char;
 
 #define EI_NIDENT	16
 
@@ -70,6 +72,7 @@ typedef struct {
 /* sh_type */
 #define SHT_SYMTAB	2
 #define SHT_NOTE	7
+#define SHT_DYNSYM	11
 
 /* elf type */
 #define ELFDATANONE	0		/* e_ident[EI_DATA] */
@@ -110,6 +113,17 @@ typedef struct {
     Elf32_Word	p_flags;
     Elf32_Word	p_align;
 } Elf32_Phdr;
+
+typedef struct {
+    Elf64_Word	p_type;
+    Elf64_Word	p_flags;
+    Elf64_Off	p_offset;
+    Elf64_Addr	p_vaddr;
+    Elf64_Addr	p_paddr;
+    Elf64_Xword	p_filesz;
+    Elf64_Xword	p_memsz;
+    Elf64_Xword	p_align;
+} Elf64_Phdr;
 
 #define	PT_NULL		0		/* p_type */
 #define	PT_LOAD		1
@@ -154,9 +168,9 @@ typedef struct {
 
 /* Note header in a PT_NOTE section */
 typedef struct elf_note {
-  Elf32_Word	n_namesz;	/* Name size */
-  Elf32_Word	n_descsz;	/* Content size */
-  Elf32_Word	n_type;		/* Content type */
+    Elf32_Word	n_namesz;	/* Name size */
+    Elf32_Word	n_descsz;	/* Content size */
+    Elf32_Word	n_type;		/* Content type */
 } Elf32_Nhdr;
 
 typedef struct {
