@@ -3,4 +3,4 @@ AUTOMAKE_OPTIONS = foreign no-dependencies
 
 EXTRA_DIST = LEGAL.NOTICE MAINT PORTING
 
-SUBDIRS = src magic doc
+SUBDIRS = src magic doc python

@@ -90,7 +90,7 @@ AUTOMAKE_OPTIONS = foreign no-dependencies
 
 EXTRA_DIST = LEGAL.NOTICE MAINT PORTING
 
-SUBDIRS = src magic doc
+SUBDIRS = src magic doc python
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
