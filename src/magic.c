@@ -42,14 +42,14 @@
 #include <sys/mman.h>
 #endif
 
-#if defined(HAVE_UTIME)
+#if defined(HAVE_UTIMES)
+# include <sys/time.h>
+#elif defined(HAVE_UTIME)
 # if defined(HAVE_SYS_UTIME_H)
 #  include <sys/utime.h>
 # elif defined(HAVE_UTIME_H)
 #  include <utime.h>
 # endif
-#elif defined(HAVE_UTIMES)
-# include <sys/time.h>
 #endif
 
 #ifdef HAVE_UNISTD_H
@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.21 2004/06/04 14:40:20 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.22 2004/07/24 19:55:17 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
