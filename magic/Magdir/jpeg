@@ -10,6 +10,7 @@
 #
 0	beshort		0xffd8		JPEG image data
 >6	string		JFIF		\b, JFIF standard
+>6	string		Exif		\b, EXIF standard
 # The following added by Erik Rossen <rossen@freesurf.ch> 1999-09-06
 # in a vain attempt to add image size reporting for JFIF.  Note that these
 # tests are not fool-proof since some perfectly valid JPEGs are currently
