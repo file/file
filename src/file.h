@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.13 1992/09/11 17:41:54 ian Exp $
+ * @(#)$Id: file.h,v 1.14 1993/02/19 14:22:44 ian Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -33,8 +33,8 @@
 
 struct magic {
 	short flag;		
-#define CONT	1		/* if '>0' appears,  */
-#define INDIR	2		/* if '>(...)' appears,  */
+#define INDIR	1		/* if '>(...)' appears,  */
+	short cont_level;	/* level of ">" */
 	struct {
 		char type;	/* byte short long */
 		long offset;	/* offset from indirection */
@@ -49,11 +49,19 @@ struct magic {
 #define				LONG	4
 #define				STRING	5
 #define				DATE	6
+#define				BESHORT	7
+#define				BELONG	8
+#define				BEDATE	9
+#define				LESHORT	10
+#define				LELONG	11
+#define				LEDATE	12
 	union VALUETYPE {
 		char b;
 		short h;
 		long l;
 		char s[MAXstring];
+		unsigned char hs[2];	/* 2 bytes of a fixed-endian "short" */
+		unsigned char hl[4];	/* 2 bytes of a fixed-endian "long" */
 	} value;		/* either number or string */
 	long mask;		/* mask before comparison with value */
 	char nospflag;		/* supress space character */
