@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.10 2003/07/10 21:07:14 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.11 2003/10/08 16:37:27 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -73,10 +73,6 @@ private char *apptypeName = NULL;
 protected int file_os2_apptype(struct magic_set *ms, const char *fn,
     const void *buf, size_t nb);
 #endif /* __EMX__ */
-
-#ifndef MAGIC
-# define MAGIC "/etc/magic"
-#endif
 
 private void free_mlist(struct mlist *);
 private void close_and_restore(const struct magic_set *, const char *, int,
@@ -113,25 +109,6 @@ magic_open(int flags)
 	return ms;
 }
 
-/*
- * load a magic file
- */
-public int
-magic_load(struct magic_set *ms, const char *magicfile)
-{
-	struct mlist *ml;
-
-	if (magicfile == NULL)
-		magicfile = (ms->flags & MAGIC_MIME) ? MAGIC ".mime" : MAGIC;
-
-	ml = file_apprentice(ms, magicfile, 0);
-	if (ml == NULL) 
-		return -1;
-	free_mlist(ms->mlist);
-	ms->mlist = ml;
-	return 0;
-}
-
 private void
 free_mlist(struct mlist *mlist)
 {
@@ -143,19 +120,7 @@ free_mlist(struct mlist *mlist)
 	for (ml = mlist->next; ml != mlist;) {
 		struct mlist *next = ml->next;
 		struct magic *mg = ml->magic;
-		switch (ml->mapped) {
-		case 0:
-			free(mg);
-			break;
-		case 1:
-			mg--;
-			free(mg);
-			break;
-		case 2:
-			mg--;
-			(void)munmap(mg, sizeof(*mg) * (ml->nmagic + 1));
-			break;
-		}
+		file_delmagic(mg, ml->mapped, ml->nmagic);
 		free(ml);
 		ml = next;
 	}
@@ -172,12 +137,25 @@ magic_close(ms)
 	free(ms);
 }
 
+/*
+ * load a magic file
+ */
+public int
+magic_load(struct magic_set *ms, const char *magicfile)
+{
+	struct mlist *ml = file_apprentice(ms, magicfile, FILE_LOAD);
+	if (ml) {
+		free_mlist(ms->mlist);
+		ms->mlist = ml;
+		return 0;
+	}
+	return -1;
+}
+
 public int
 magic_compile(struct magic_set *ms, const char *magicfile)
 {
 	struct mlist *ml = file_apprentice(ms, magicfile, FILE_COMPILE);
-	if(ml == NULL)
-		return -1;
 	free_mlist(ml);
 	return ml ? 0 : -1;
 }
@@ -186,8 +164,6 @@ public int
 magic_check(struct magic_set *ms, const char *magicfile)
 {
 	struct mlist *ml = file_apprentice(ms, magicfile, FILE_CHECK);
-	if(ml == NULL)
-		return -1;
 	free_mlist(ml);
 	return ml ? 0 : -1;
 }
