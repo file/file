@@ -33,19 +33,23 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.20 1995/03/25 22:08:07 christos Exp $";
+	"@(#)$Id: apprentice.c,v 1.21 1995/04/28 17:29:13 christos Exp $";
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
 		      isspace((unsigned char) *l))  ++l;}
+#define LOWCASE(l) (isupper((unsigned char) (l)) ? \
+			tolower((unsigned char) (l)) : (l))
 
 
 static int getvalue	__P((struct magic *, char **));
 static int hextoint	__P((int));
 static char *getstr	__P((char *, char *, int, int *));
 static int parse	__P((char *, int *, int));
+static void eatsize	__P((char **));
 
 static int maxmagic = 0;
+
 
 int
 apprentice(fn, check)
@@ -186,13 +190,16 @@ int *ndx, check;
 		 * read [.lbs][+-]nnnnn)
 		 */
 		if (*l == '.') {
-			switch (*++l) {
+			l++;
+			switch (LOWCASE(*l)) {
 			case 'l':
 				m->in.type = LONG;
 				break;
+			case 'h':
 			case 's':
 				m->in.type = SHORT;
 				break;
+			case 'c':
 			case 'b':
 				m->in.type = BYTE;
 				break;
@@ -279,6 +286,7 @@ int *ndx, check;
 	if (*l == '&') {
 		++l;
 		m->mask = signextend(m, strtoul(l, &l, 0));
+		eatsize(&l);
 	} else
 		m->mask = ~0L;
 	EATAB;
@@ -360,8 +368,10 @@ char **p;
 		*p = getstr(*p, m->value.s, sizeof(m->value.s), &slen);
 		m->vallen = slen;
 	} else
-		if (m->reln != 'x')
+		if (m->reln != 'x') {
 			m->value.l = signextend(m, strtoul(*p, p, 0));
+			eatsize(&p);
+		}
 	return 0;
 }
 
@@ -548,4 +558,31 @@ int len;
 			}
 		}
 	}
+}
+
+/*
+ * eatsize(): Eat the size spec from a number [eg. 10UL]
+ */
+static void
+eatsize(p)
+char **p;
+{
+	char *l = *p;
+
+	if (LOWCASE(*l) == 'u') 
+		l++;
+
+	switch (LOWCASE(*l)) {
+	case 'l':    /* long */
+	case 's':    /* short */
+	case 'h':    /* short */
+	case 'b':    /* char/byte */
+	case 'c':    /* char/byte */
+		l++;
+		/*FALLTHROUGH*/
+	default:
+		break;
+	}
+
+	*p = l;
 }

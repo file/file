@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.24 1995/01/21 21:03:35 christos Exp $
+.\" $Id: file.man,v 1.25 1995/04/28 17:29:13 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -129,6 +129,10 @@ option causes symlinks to be followed, as the like-named option in
 .SH FILES
 .I __MAGIC__
 \- default list of magic numbers
+.SH ENVIRONMENT
+The environment variable
+.B MAGIC
+can be used to set the default magic number file.
 .SH SEE ALSO
 .IR magic (__FSECTION__)
 \- description of magic file format.

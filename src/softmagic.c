@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.27 1995/03/25 22:08:07 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.28 1995/04/28 17:29:13 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -287,11 +287,20 @@ struct magic *m;
 int nbytes;
 {
 	long offset = m->offset;
-	if (offset + sizeof(union VALUETYPE) > nbytes)
-	    return 0;
+	long diff = (offset + sizeof(union VALUETYPE)) - nbytes;
+	if (diff >= 0)
+		memcpy(p, s + offset, sizeof(union VALUETYPE));
+	else {
+		/* Not enough space; zeropad */
+		long have = sizeof(union VALUETYPE) + diff;
+		if (have > 0)
+			memcpy(p, s + offset, have);
+		else
+			have = 0;
 
+		memset(p + have, 0, sizeof(union VALUETYPE) - have);
+	}
 
-	memcpy(p, s + offset, sizeof(union VALUETYPE));
 
 	if (debug) {
 		mdebug(offset, (char *) p, sizeof(union VALUETYPE));
