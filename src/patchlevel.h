@@ -1,11 +1,15 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		26
+#define	patchlevel		27
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.26 1998/09/12 13:19:39 christos Exp $
+ * $Id: patchlevel.h,v 1.27 1999/02/14 17:21:41 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.27  1999/02/14 17:21:41  christos
+ * Automake support and misc cleanups from Rainer Orth
+ * Enable reading character and block special files from Dale R. Worley
+ *
  * Revision 1.26  1998/09/12 13:19:39  christos
  * - add support for bi-endian indirect offsets (Richard Verhoeven)
  * - add recognition for bcpl (Joseph Myers)

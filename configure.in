@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(file.c)
-AM_INIT_AUTOMAKE(file, 3.26)
+AM_INIT_AUTOMAKE(file, 3.27)
 AM_CONFIG_HEADER(config.h)
 
 AC_MSG_CHECKING(for builtin ELF support)
