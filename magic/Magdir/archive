@@ -170,7 +170,7 @@
 2	string		-lz5-		LHarc 1.x archive data [lz5]
 #	[never seen any but the last; -lh4- reported in comp.compression:]
 2	string		-lzs-		LHa 2.x? archive data [lzs]
-2	string		-lh -		LHa 2.x? archive data [lh ]
+2	string		-lh\40-		LHa 2.x? archive data [lh ]
 2	string		-lhd-		LHa 2.x? archive data [lhd]
 2	string		-lh2-		LHa 2.x? archive data [lh2]
 2	string		-lh3-		LHa 2.x? archive data [lh3]
