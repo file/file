@@ -51,7 +51,7 @@
 #### PA-RISC 1.1
 0	belong 		0x02100106	PA-RISC1.1 relocatable object
 0	belong 		0x02100107	PA-RISC1.1 executable
->168	belong		&=0x00000004	dynamically linked
+>168	belong		&0x00000004	dynamically linked
 >(144)	belong		0x054ef630	dynamically linked
 >96	belong		>0		- not stripped
 
@@ -75,17 +75,17 @@
 0	belong		0x02140106	PA-RISC2.0 relocatable object
 
 0       belong		0x02140107	PA-RISC2.0 executable
->168	belong		&=0x00000004	dynamically linked
+>168	belong		&0x00000004	dynamically linked
 >(144)	belong		0x054ef630	dynamically linked
 >96	belong		>0		- not stripped
 
 0       belong		0x02140108	PA-RISC2.0 shared executable
->168	belong		&=0x00000004	dynamically linked
+>168	belong		&0x00000004	dynamically linked
 >(144)	belong		0x054ef630	dynamically linked
 >96	belong		>0		- not stripped
 
 0       belong		0x0214010b	PA-RISC2.0 demand-load executable
->168	belong		&=0x00000004	dynamically linked
+>168	belong		&0x00000004	dynamically linked
 >(144)	belong		0x054ef630	dynamically linked
 >96	belong		>0		- not stripped
 
