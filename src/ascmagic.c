@@ -36,7 +36,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.14 1993/03/24 17:34:34 ian Exp $";
+	"@(#)$Id: ascmagic.c,v 1.15 1993/09/16 21:06:33 christos Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -79,8 +79,8 @@ int nbytes;	/* size actually read */
 
 	/* look for tokens from names.h - this is expensive! */
 	/* make a copy of the buffer here because strtok() will destroy it */
-	s = (unsigned char*) memcpy(nbuf, buf, HOWMANY);
-	has_escapes = (memchr(s, '\033', HOWMANY) != NULL);
+	s = (unsigned char*) memcpy(nbuf, buf, nbytes);
+	has_escapes = (memchr(s, '\033', nbytes) != NULL);
 	while ((token = strtok((char*)s, " \t\n\r\f")) != NULL) {
 		s = NULL;	/* make strtok() keep on tokin' */
 		for (p = names; p < names + NNAMES; p++) {
@@ -94,7 +94,7 @@ int nbytes;	/* size actually read */
 		}
 	}
 
-	switch (is_tar(buf)) {
+	switch (is_tar(buf, nbytes)) {
 	case 1:
 		ckfputs("tar archive", stdout);
 		return 1;
@@ -103,12 +103,12 @@ int nbytes;	/* size actually read */
 		return 1;
 	}
 
-	if (i = is_compress(buf, &isblock)) {
+	if ((i = is_compress(buf, &isblock)) != 0) {
 		if (zflag) {
 			unsigned char *newbuf;
 			int newsize;
 
-			if (newsize = uncompress(buf, &newbuf, nbytes)) {
+			if ((newsize = uncompress(buf, &newbuf, nbytes)) != 0) {
 			    tryit(newbuf, newsize);
 			    free(newbuf);
 			}
