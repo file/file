@@ -26,13 +26,16 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include "magic.h"
 #include "file.h"
+#include "magic.h"
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
+#ifndef	lint
+FILE_RCSID("@(#)$Id: funcs.c,v 1.11 2003/11/11 20:01:46 christos Exp $")
+#endif	/* lint */
 /*
  * Like printf, only we print to a buffer and advance it.
  */

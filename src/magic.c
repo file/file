@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#include "magic.h"
 #include "file.h"
+#include "magic.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.15 2003/10/15 01:51:24 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.16 2003/11/11 20:01:46 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__

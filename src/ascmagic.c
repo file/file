@@ -41,8 +41,8 @@
  * international characters, now subsumed into this file.
  */
 
-#include "magic.h"
 #include "file.h"
+#include "magic.h"
 #include <stdio.h>
 #include <string.h>
 #include <memory.h>
@@ -54,7 +54,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.38 2003/05/23 21:31:58 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.39 2003/11/11 20:01:45 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
