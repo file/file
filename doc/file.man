@@ -1,5 +1,5 @@
 .TH FILE 1 "Copyright but distributable"
-.\# $Id: file.man,v 1.20 1993/01/05 12:20:09 ian Exp $
+.\# $Id: file.man,v 1.21 1993/01/05 14:55:13 ian Exp $
 .SH NAME
 .I file
 \- determine file type
@@ -211,7 +211,7 @@ Altered by Rob McMahon, cudcv@warwick.ac.uk, 1989, to extend the `&' operator
 from simple `x&y != 0' to `x&y op z'.
 .PP
 Changes by Ian Darwin and various authors including
-Christos Zoulos (christos@ee.cornell.edu), 1990-1992.
+Christos Zoulas (christos@ee.cornell.edu), 1990-1992.
 .SH LEGAL NOTICE
 Copyright (c) Ian F. Darwin, Toronto, Canada,
 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993.
