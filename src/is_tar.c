@@ -49,12 +49,12 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.19 2003/03/23 21:16:26 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.20 2003/03/26 15:35:30 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
 
-private int from_oct(int, char *);	/* Decode octal number */
+private int from_oct(int, const char *);	/* Decode octal number */
 
 /*
  * Return 
@@ -65,10 +65,10 @@ private int from_oct(int, char *);	/* Decode octal number */
 protected int
 file_is_tar(const unsigned char *buf, size_t nbytes)
 {
-	union record *header = (union record *)buf;
+	const union record *header = (const union record *)(const void *)buf;
 	int	i;
 	int	sum, recsum;
-	char	*p;
+	const char	*p;
 
 	if (nbytes < sizeof(union record))
 		return 0;
@@ -106,7 +106,7 @@ file_is_tar(const unsigned char *buf, size_t nbytes)
  * Result is -1 if the field is invalid (all blank, or nonoctal).
  */
 private int
-from_oct(int digs, char *where)
+from_oct(int digs, const char *where)
 {
 	int	value;
 

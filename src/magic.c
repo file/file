@@ -1,3 +1,31 @@
+/*
+ * Copyright (c) Christos Zoulas 2003.
+ * All Rights Reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice immediately at the beginning of the file, without modification,
+ *    this list of conditions, and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *  
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 
 #include "magic.h"
 #include "file.h"
@@ -36,7 +64,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.5 2003/03/24 01:34:21 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.6 2003/03/26 15:35:30 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -176,10 +204,15 @@ magic_file(struct magic_set *ms, const char *inname)
 		return ms->o.buf;
 	}
 
-	if ((fd = open(inname, O_RDONLY)) < 0) {
+#ifndef	STDIN_FILENO
+#define	STDIN_FILENO	0
+#endif
+	if (inname == NULL)
+		fd = STDIN_FILENO;
+	else if ((fd = open(inname, O_RDONLY)) < 0) {
 		/* We can't open it, but we were able to stat it. */
 		if (sb.st_mode & 0002)
-			if (file_printf(ms, "writeable, ") == -1)
+			if (file_printf(ms, "writable, ") == -1)
 				return NULL;
 		if (sb.st_mode & 0111)
 			if (file_printf(ms, "executable, ") == -1)
@@ -211,7 +244,7 @@ magic_file(struct magic_set *ms, const char *inname)
 			return ms->o.buf;
 		}
 #endif
-		if (file_buffer(ms, buf, nbytes) == -1)
+		if (file_buffer(ms, buf, (size_t)nbytes) == -1)
 			return NULL;
 #ifdef BUILTIN_ELF
 		if (nbytes > 5) {
@@ -223,7 +256,7 @@ magic_file(struct magic_set *ms, const char *inname)
 			 * information from the ELF headers that can't easily
 			 * be extracted with rules in the magic file.
 			 */
-			file_tryelf(ms, fd, buf, nbytes);
+			file_tryelf(ms, fd, buf, (size_t)nbytes);
 		}
 #endif
 	}
@@ -233,7 +266,7 @@ magic_file(struct magic_set *ms, const char *inname)
 
 
 public const char *
-magic_buf(struct magic_set *ms, const void *buf, size_t nb)
+magic_buffer(struct magic_set *ms, const void *buf, size_t nb)
 {
 	if (file_reset(ms) == -1)
 		return NULL;

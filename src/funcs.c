@@ -39,7 +39,7 @@ protected int
 file_printf(struct magic_set *ms, const char *fmt, ...)
 {
 	va_list ap;
-	int len;
+	size_t len;
 	char *buf;
 
 	va_start(ap, fmt);
@@ -69,21 +69,14 @@ file_printf(struct magic_set *ms, const char *fmt, ...)
  */
 /*VARARGS*/
 protected void
-#ifdef __STDC__
 file_error(struct magic_set *ms, const char *f, ...)
-#else
-error(va_alist)
-	va_dcl
-#endif
 {
 	va_list va;
-#ifdef __STDC__
+	/* Only the first error is ok */
+	if (ms->haderr)
+	    return;
 	va_start(va, f);
-#else
-	const char *f;
-	va_start(va);
-	f = va_arg(va, const char *);
-#endif
+
 	/* cuz we use stdout for most, stderr here */
 	(void) fflush(stdout); 
 
