@@ -73,6 +73,8 @@ interpreted as a UNIX date.
 A four-byte value (on most systems) in little-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
+.IP regex
+A regular expression to be matched with the string at that position in the file.
 .RE
 .PP
 The numeric types may optionally be followed by
@@ -235,4 +237,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.21 2003/02/27 20:47:46 christos Exp $
+.\" @(#)$Id: magic.man,v 1.22 2003/03/07 14:59:04 christos Exp $
