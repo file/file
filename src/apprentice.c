@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.80 2004/11/13 08:11:39 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.81 2004/11/20 23:50:12 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -73,6 +73,9 @@ FILE_RCSID("@(#)$Id: apprentice.c,v 1.80 2004/11/13 08:11:39 christos Exp $")
 #ifndef MAXPATHLEN
 #define MAXPATHLEN	1024
 #endif
+
+#define IS_STRING(t) ((t) == FILE_STRING || (t) == FILE_PSTRING || \
+    (t) == FILE_BESTRING16 || (t) == FILE_LESTRING16)
 
 private int getvalue(struct magic_set *ms, struct magic *, char **);
 private int hextoint(int);
@@ -370,6 +373,8 @@ file_signextend(struct magic_set *ms, struct magic *m, uint32_t v)
 			break;
 		case FILE_STRING:
 		case FILE_PSTRING:
+		case FILE_BESTRING16:
+		case FILE_LESTRING16:
 			break;
 		case FILE_REGEX:
 			break;
@@ -542,6 +547,8 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 #define NBELDATE	7
 #define NLELDATE	7
 #define NREGEX		5
+#define NBESTRING16	10
+#define NLESTRING16	10
 
 	if (*l == 'u') {
 		++l;
@@ -599,7 +606,13 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 		l += NLELDATE;
 	} else if (strncmp(l, "regex", NREGEX)==0) {
 		m->type = FILE_REGEX;
-		l += sizeof("regex");
+		l += NREGEX;
+	} else if (strncmp(l, "bestring16", NBESTRING16)==0) {
+		m->type = FILE_BESTRING16;
+		l += NBESTRING16;
+	} else if (strncmp(l, "lestring16", NLESTRING16)==0) {
+		m->type = FILE_LESTRING16;
+		l += NLESTRING16;
 	} else {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "type `%s' invalid", l);
@@ -608,14 +621,13 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 	/* New-style anding: "0 byte&0x80 =0x80 dynamically linked" */
 	/* New and improved: ~ & | ^ + - * / % -- exciting, isn't it? */
 	if (*l == '~') {
-		if (FILE_STRING != m->type && FILE_PSTRING != m->type)
+		if (!IS_STRING(m->type))
 			m->mask_op = FILE_OPINVERSE;
 		++l;
 	}
 	if ((t = strchr(fops,  *l)) != NULL) {
 		uint32_t op = (uint32_t)(t - fops);
-		if (op != FILE_OPDIVIDE ||
-		    (FILE_STRING != m->type && FILE_PSTRING != m->type)) {
+		if (op != FILE_OPDIVIDE || !IS_STRING(m->type)) {
 			++l;
 			m->mask_op |= op;
 			val = (uint32_t)strtoul(l, &l, 0);
@@ -666,7 +678,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 		}
 		break;
 	case '!':
-		if (m->type != FILE_STRING && m->type != FILE_PSTRING) {
+		if (!IS_STRING(m->type)) {
 			m->reln = *l;
 			++l;
 			break;
@@ -784,6 +796,8 @@ getvalue(struct magic_set *ms, struct magic *m, char **p)
 	int slen;
 
 	switch (m->type) {
+	case FILE_BESTRING16:
+	case FILE_LESTRING16:
 	case FILE_STRING:
 	case FILE_PSTRING:
 	case FILE_REGEX:
@@ -1210,7 +1224,7 @@ bs1(struct magic *m)
 	m->cont_level = swap2(m->cont_level);
 	m->offset = swap4((uint32_t)m->offset);
 	m->in_offset = swap4((uint32_t)m->in_offset);
-	if (m->type != FILE_STRING)
+	if (IS_STRING(m->type))
 		m->value.l = swap4(m->value.l);
 	m->mask = swap4(m->mask);
 }
