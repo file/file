@@ -12,4 +12,4 @@ libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
 libmagic_la_LDFLAGS = -version-info 1:0:0
 
 file_SOURCES = file.c
-file_LDFLAGS = -lmagic
+file_LDADD = libmagic.la
