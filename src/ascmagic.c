@@ -54,7 +54,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.39 2003/11/11 20:01:45 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.40 2003/11/20 00:25:39 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -170,8 +170,10 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		while (ISSPC(*tp))
 			++tp;	/* skip leading whitespace */
 		if ((tp[0] == '\\' && tp[1] == '\"') ||
-		    (isascii(tp[0]) && isalnum(tp[0]) &&
-		     isascii(tp[1]) && isalnum(tp[1]) &&
+		    (isascii((unsigned char)tp[0]) &&
+		     isalnum((unsigned char)tp[0]) &&
+		     isascii((unsigned char)tp[1]) &&
+		     isalnum((unsigned char)tp[1]) &&
 		     ISSPC(tp[2]))) {
 			subtype_mime = "text/troff";
 			subtype = "troff or preprocessor input";
