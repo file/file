@@ -35,7 +35,6 @@
  */
 
 #include "file.h"
-#include <stdio.h>
 #include <string.h>
 #include <memory.h>
 #include <ctype.h>
@@ -46,7 +45,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.30 2001/07/26 13:15:49 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.31 2002/06/11 17:31:46 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;

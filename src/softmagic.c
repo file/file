@@ -26,17 +26,15 @@
  */
 
 #include "file.h"
-#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/types.h>
 #include <regex.h>
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.49 2002/06/11 17:15:52 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.50 2002/06/11 17:31:46 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((struct magic *, uint32, unsigned char *, int));

@@ -6,14 +6,11 @@
  *					    using method, return sizeof new
  */
 #include "file.h"
-#include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #include <string.h>
-#include <errno.h>
-#include <sys/types.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
@@ -22,7 +19,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.23 2002/05/16 18:57:10 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.24 2002/06/11 17:31:46 christos Exp $")
 #endif
 
 
