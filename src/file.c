@@ -52,14 +52,13 @@
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
-#include <locale.h>
 
 #include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.49 2000/04/11 02:32:35 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.50 2000/04/23 04:31:44 christos Exp $")
 #endif	/* lint */
 
 
@@ -117,8 +116,6 @@ main(argc, argv)
 	int c;
 	int check = 0, didsomefiles = 0, errflg = 0, ret = 0, app = 0;
 	char *mime;
-
-	setlocale(LC_CTYPE, ""); /* makes islower etc work for other langs */
 
 #ifdef LC_CTYPE
 	setlocale(LC_CTYPE, ""); /* makes islower etc work for other langs */
