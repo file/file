@@ -34,15 +34,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
-#ifdef QUICK
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef QUICK
 #include <sys/mman.h>
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.44 2001/08/01 14:03:19 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.45 2001/10/20 16:19:44 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
