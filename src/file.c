@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.25 1992/09/11 13:15:16 ian Exp $";
+	"@(#)$Id: file.c,v 1.26 1993/02/19 14:22:45 ian Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -186,7 +186,7 @@ int wid;
 {
 	int	fd = 0;
 	static  const char stdname[] = "standard input";
-	unsigned char	buf[HOWMANY];
+	unsigned char	buf[HOWMANY+1];	/* one extra for terminating '\0' */
 	struct utimbuf  utbuf;
 	struct stat	sb;
 	int nbytes = 0;	/* number of bytes read from a datafile */
@@ -233,8 +233,10 @@ int wid;
 
 	if (nbytes == 0) 
 		ckfputs("empty", stdout);
-	else
+	else {
+		buf[nbytes] = '\0';	/* null-terminate it */
 		tryit(buf, nbytes);
+	}
 
 	if (inname != stdname) {
 		/*
