@@ -15,7 +15,7 @@ unsigned char *p;
 int *b;
 {
 
-	if (*p != '\037' || *(p+1) != '\235')
+	if (*p != '\037' || *(/*signed*/ char*)(p+1) != '\235')
 		return 0;	/* not compress()ed */
 
 	*b = *(p+2) & 0x80;
