@@ -25,9 +25,10 @@ long from_oct();			/* Decode octal number */
  *	2 for Unix Std (POSIX) tar file.
  */
 int
-is_tar(header)
-	register union record *header;
+is_tar(buf)
+unsigned char *buf;
 {
+	register union record *header = (union record *)buf;
 	register int	i;
 	register long	sum, recsum;
 	register char	*p;
