@@ -35,22 +35,29 @@
 		/* On most systems cpp will discard it automatically */
 		Congratulations, you have found a portability bug.
 		Please grep /usr/include/sys and edit the above #include 
-		to point at the file that defines the `major' macro.
+		to point at the file that defines the "major" macro.
 #endif	/*major*/
 #include <sys/stat.h>
+
+#ifdef	S_IFLNK		/* If system has symlinks, probably need these */
+#if	defined(__STDC__) || defined(__cplusplus)
+int lstat(char *path, struct stat *buf);
+int readlink(char *path, char *buf, int bufsiz);
+#endif	/* new C */
+#endif
+
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/fsmagic.c,v 1.13 1992/05/21 16:19:53 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/fsmagic.c,v 1.14 1992/05/22 17:51:52 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
 extern char *ckfmsg, *magicfile;
 extern int debug;
-extern FILE *efopen();
 
-
+int
 fsmagic(fn)
 char *fn;
 {
@@ -70,7 +77,7 @@ char *fn;
 	ret = stat(fn, &statbuf);
 
 	if (ret) {
-			warning("can't stat");
+			warning("can't stat", "");
 			return -1;
 		}
 
@@ -104,7 +111,7 @@ char *fn;
 			struct stat tstatbuf;
 
 			if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
-				error("readlink failed");
+				error("readlink failed", "");
 				return 0;
 			}
 			buf[nch] = '\0';	/* readlink(2) forgets this */
@@ -117,7 +124,7 @@ char *fn;
 
 			/* Otherwise, handle it. */
 			if (followLinks) {
-				process(buf, 0);
+				process(buf);
 				return 1;
 			} else { /* just print what it points to */
 				ckfputs("symbolic link to ", stdout);
