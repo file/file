@@ -72,14 +72,17 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.75 2003/03/26 16:31:19 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.76 2003/03/27 22:33:18 christos Exp $")
 #endif	/* lint */
 
 
 #ifdef S_IFLNK
-# define USAGE  "Usage: %s [-bciknsvzL] [-f namefile] [-m magicfiles] file...\n"
+#define SYMLINKFLAG "L"
 #else
-# define USAGE  "Usage: %s [-bciknsvz] [-f namefile] [-m magicfiles] file...\n"
+#define SYMLINKFLAG ""
+#endif
+
+# define USAGE  "Usage: %s [-bciknNsvz" SYMLINKFLAG "] [-f namefile] [-m magicfiles] [-F separator] file...\n"
 #endif
 
 #ifndef MAGIC
@@ -98,7 +101,7 @@ private int 		/* Global command-line options 		*/
 
 private const char *magicfile = 0;	/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
-private char separator = ':';	/* Default field separator	*/
+private char *separator = ":";	/* Default field separator	*/
 
 private char *progname;		/* used throughout 		*/
 
@@ -219,7 +222,7 @@ main(int argc, char *argv[])
 			++didsomefiles;
 			break;
 		case 'F':
-			separator = *optarg;
+			separator = optarg;
 			break;
 		case 'i':
 			flags |= MAGIC_MIME;
@@ -245,7 +248,7 @@ main(int argc, char *argv[])
 			flags |= MAGIC_DEVICES;
 			break;
 		case 'v':
-			(void) fprintf(stdout, "%s-%d.%d\n", progname,
+			(void) fprintf(stdout, "%s-%d.%.2d\n", progname,
 				       FILE_VERSION_MAJOR, patchlevel);
 			(void) fprintf(stdout, "magic file from %s\n",
 				       magicfile);
@@ -367,7 +370,7 @@ process(const char *inname, int wid)
 	int std_in = strcmp(inname, "-") == 0;
 
 	if (wid > 0 && !bflag)
-		(void) printf("%s%c%*s ", std_in ? "/dev/stdin" : inname,
+		(void) printf("%s%s%*s ", std_in ? "/dev/stdin" : inname,
 		    separator, (int) (nopad ? 0 : (wid - strlen(inname))), "");
 
 	type = magic_file(magic, std_in ? NULL : inname);
@@ -462,7 +465,7 @@ help(void)
 "                               conjunction with -m to debug a new magic file\n"
 "                               before installing it\n"
 "  -f, --files-from FILE      read the filenames to be examined from FILE\n"
-"  -F, --separator char       use char as separator instead of `:'\n"
+"  -F, --separator string     use string as separator instead of `:'\n"
 "  -i, --mime                 output mime type strings\n"
 "  -k, --keep-going           don't stop at the first match\n"
 "  -L, --dereference          causes symlinks to be followed\n"
