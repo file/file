@@ -20,7 +20,7 @@
 >>16	leshort		2		executable,
 >>16	leshort		3		shared object,
 # Core handling from Peter Tobias <tobias@server.et-inf.fho-emden.de>
-+# corrections by Christian 'Dr. Disk' Hechelmann <drdisk@ds9.au.s.shuttle.de>
+# corrections by Christian 'Dr. Disk' Hechelmann <drdisk@ds9.au.s.shuttle.de>
 >>16	leshort		4		core file
 >>>(0x38+0xcc) string	>\0		of '%s'
 >>>(0x38+0x10) lelong	>0		(signal %d),
@@ -74,7 +74,9 @@
 >>18	beshort		18		SPARC32PLUS,
 >>18	beshort		20		PowerPC or cisco 4500,
 >>18	beshort		21		cisco 7500,
+>>18	beshort		24		cisco SVIP,
 >>18	beshort		25		cisco 7200,
+>>18	beshort		36		cisco 12000,
 >>18	beshort		0x9026		Alpha,
 >>20	belong		0		invalid version
 >>20	belong		1		version 1

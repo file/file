@@ -55,10 +55,9 @@
 0	string		\377\037	compacted data
 0	short		0145405		huf output
 
-# Bzip2 from marcsoft@magic.metawire.com
-0	string		BZh		bzip2 compressed data,
->3	byte		x		format v. %c,
->4	byte		x		block size indicator %c
+# bzip2
+0	string		BZh		bzip2 compressed data
+>3	byte		>47		\b, block size = %c00k
 
 # squeeze and crunch
 # Michael Haardt <michael@cantor.informatik.rwth-aachen.de>
