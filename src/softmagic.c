@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <time.h>
 #include <sys/types.h>
 
@@ -34,7 +35,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.31 1996/06/22 22:04:22 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.32 1996/10/25 19:50:35 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -268,12 +269,12 @@ struct magic *m;
 	case STRING:
 		{
 			size_t len;
+			char *ptr;
 
 			/* Null terminate and eat the return */
 			p->s[sizeof(p->s) - 1] = '\0';
-			len = strlen(p->s);
-			if (len > 0 && p->s[len - 1] == '\n')
-				p->s[len - 1] = '\0';
+			if ((ptr = strchr(p->s, '\n')) != NULL)
+				*ptr = '\0';
 			return 1;
 		}
 	case BESHORT:
@@ -421,7 +422,7 @@ struct magic *m;
 			register int len = m->vallen;
 
 			while (--len >= 0)
-				if ((v = *b++ - *a++) != 0)
+				if ((v = *b++ - *a++) != '\0')
 					break;
 		}
 		break;
