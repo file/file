@@ -1,14 +1,17 @@
 Portability of the new file(1) command.
-@(#) $Id: PORTING,v 1.8 1992/09/08 15:28:03 ian Exp $
+@(#) $Id: PORTING,v 1.9 1992/09/09 16:38:12 ian Exp $
 
 Read this file only if the program doesn't compile on your system.
 
 This version, reluctanly, includes <stdlib.h>, which won't exist
 on older systems or those that aren't even close to the ANSI C
-standard. You could try creating a null "stdlib.h", I suppose.
+standard. There is a null "stdlib.h", and some other bogus headers,
+in subdirectory "localinc"; if you get complaints about missing
+stdlib.h and others, uncomment the line with COPTS=-Ilocalinc
+in the Makefile, and try again.
 
-I have tried to make a program that doesn't need any command-line
-defines (-D) to specify what version of UNIX is in use,
+Beyond that, I have tried to make a program that doesn't need any
+command-line defines (-D) to specify what version of UNIX is in use,
 by using the definitions available in the system #include
 files. For example, the lstat(2) call is normally found in
 4BSD systems, but might be grafted into some other variant
@@ -19,6 +22,8 @@ to see how it's done.
 I've also tried to include source for all the non-portable library routines
 I used (getopt, str*).   Non-portable here means `not in every
 reasonably standard UNIX out there: V7, System V, 4BSD'.
+These are in subdirectory "localsrc", and not used unless you
+need them; again, see the Makefile.
 
 There is one area that just might cause problems. On System
 V, they moved the definition of major() and minor() out of
@@ -37,7 +42,7 @@ and	2) let me know the name of the system, the release number,
 
 If you are running the old Ritchie PDP-11 C compiler or
 some other compiler that doesn't know about `void', you will have
-to include `-Dvoid=int' in the Makefile.
+to include `-Dvoid=int' in the variable COPTS in the Makefile.
 
 Other than this, there should be no portability problems,
 but one never knows these days. Please let me know of any
