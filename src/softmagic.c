@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.62 2003/10/14 19:29:55 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.63 2003/10/15 01:51:24 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -634,6 +634,40 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		memset(p, 0, sizeof(union VALUETYPE));
 		if (offset < nbytes)
 			memcpy(p, s + offset, nbytes - offset);
+	}
+
+	/* Verify we have enough data to match magic type */
+	switch (m->type) {
+		case FILE_BYTE:
+			if (nbytes < (offset + 1)) /* should alway be true */
+				return 0;
+			break;
+
+		case FILE_SHORT:
+		case FILE_BESHORT:
+		case FILE_LESHORT:
+			if (nbytes < (offset + 2))
+				return 0;
+			break;
+
+		case FILE_LONG:
+		case FILE_BELONG:
+		case FILE_LELONG:
+		case FILE_DATE:
+		case FILE_BEDATE:
+		case FILE_LEDATE:
+		case FILE_LDATE:
+		case FILE_BELDATE:
+		case FILE_LELDATE:
+			if (nbytes < (offset + 4))
+				return 0;
+			break;
+
+		case FILE_STRING:
+		case FILE_PSTRING:
+			if (nbytes < (offset + m->vallen))
+				return 0;
+			break;
 	}
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {

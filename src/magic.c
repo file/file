@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.14 2003/10/14 19:29:55 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.15 2003/10/15 01:51:24 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -269,7 +269,7 @@ magic_file(struct magic_set *ms, const char *inname)
 			return file_getbuffer(ms);
 		}
 #endif
-		if (file_buffer(ms, buf, (size_t)nbytes) == -1)
+		if (file_buffer(ms, buf, (size_t)nbytes - 1) == -1)
 			goto done;
 #ifdef BUILTIN_ELF
 		if (nbytes > 5) {
