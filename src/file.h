@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.63 2004/11/13 08:11:39 christos Exp $
+ * @(#)$Id: file.h,v 1.64 2004/11/20 23:50:12 christos Exp $
  */
 
 #ifndef __file_h__
@@ -108,6 +108,8 @@ struct magic {
 #define				FILE_BELDATE	15
 #define				FILE_LELDATE	16
 #define				FILE_REGEX	17
+#define				FILE_BESTRING16	18
+#define				FILE_LESTRING16	19
 
 #define				FILE_FORMAT_NAME	\
 /* 0 */ 			"invalid 0",		\
@@ -127,7 +129,9 @@ struct magic {
 /* 14 */ 			"ldate",		\
 /* 15 */ 			"beldate",		\
 /* 16 */ 			"leldate",		\
-/* 17 */ 			"regex",
+/* 17 */ 			"regex",		\
+/* 18 */			"bestring16",		\
+/* 19 */			"lestring16",
 
 #define	FILE_FMT_NUM	"cduxXi"
 #define FILE_FMT_STR	"s"	
@@ -150,7 +154,9 @@ struct magic {
 /* 14 */ 			FILE_FMT_STR,		\
 /* 15 */ 			FILE_FMT_STR,		\
 /* 16 */ 			FILE_FMT_STR,		\
-/* 17 */ 			FILE_FMT_STR,
+/* 17 */ 			FILE_FMT_STR,		\
+/* 18 */			FILE_FMT_STR,		\
+/* 19 */			FILE_FMT_STR,
 
 	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
