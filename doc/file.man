@@ -8,6 +8,9 @@
 .B \-c
 ]
 [
+.B \-z
+]
+[
 .B \-L
 ]
 [
@@ -101,6 +104,10 @@ Use
 .B \-m
 .I file
 to specify an alternate file of magic numbers.
+.PP
+The
+.B \-z
+tries to look inside compressed files.
 .PP
 The
 .B \-c
