@@ -58,7 +58,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.67 2002/07/09 14:12:40 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.68 2003/02/08 18:33:53 christos Exp $")
 #endif	/* lint */
 
 
@@ -88,7 +88,8 @@ int 			/* Global command-line options 		*/
 	zflag = 0,	/* follow (uncompress) compressed files */
 	sflag = 0,	/* read block special files		*/
 	iflag = 0,
-	nobuffer = 0,   /* Do not buffer stdout */
+	nopad = 0,	/* Don't pad output			*/
+	nobuffer = 0,   /* Do not buffer stdout 		*/
 	kflag = 0;	/* Keep going after the first match	*/
 
 int			/* Misc globals				*/
@@ -98,6 +99,8 @@ struct  magic *magic;	/* array of magic entries		*/
 
 const char *magicfile = 0;	/* where the magic is		*/
 const char *default_magicfile = MAGIC;
+
+char separator = ':';	/* Default field separator		*/
 
 char *progname;		/* used throughout 			*/
 int lineno;		/* line number in the magic file	*/
@@ -125,7 +128,7 @@ main(int argc, char **argv)
 	int action = 0, didsomefiles = 0, errflg = 0, ret = 0, app = 0;
 	char *mime, *home, *usermagic;
 	struct stat sb;
-#define OPTSTRING	"bcdf:ikm:nsvzCL"
+#define OPTSTRING	"bcdf:F:ikm:nNsvzCL"
 #ifdef HAVE_GETOPT_LONG
 	int longindex;
 	static struct option long_options[] =
@@ -136,6 +139,7 @@ main(int argc, char **argv)
 		{"checking-printout", 0, 0, 'c'},
 		{"debug", 0, 0, 'd'},
 		{"files-from", 1, 0, 'f'},
+		{"separator", 1, 0, 'F'},
 		{"mime", 0, 0, 'i'},
 		{"keep-going", 0, 0, 'k'},
 #ifdef S_IFLNK
@@ -144,6 +148,7 @@ main(int argc, char **argv)
 		{"magic-file", 1, 0, 'm'},
 		{"uncompress", 0, 0, 'z'},
 		{"no-buffer", 0, 0, 'n'},
+		{"no-pad", 0, 0, 'N'},
 		{"special-files", 0, 0, 's'},
 		{"compile", 0, 0, 'C'},
 		{0, 0, 0, 0},
@@ -214,6 +219,9 @@ main(int argc, char **argv)
 			unwrap(optarg);
 			++didsomefiles;
 			break;
+		case 'F':
+			separator = *optarg;
+			break;
 		case 'i':
 			iflag++;
 			if ((mime = malloc(strlen(magicfile) + 6)) != NULL) {
@@ -230,6 +238,9 @@ main(int argc, char **argv)
 			break;
 		case 'n':
 			++nobuffer;
+			break;
+		case 'N':
+			++nopad;
 			break;
 		case 's':
 			sflag++;
@@ -404,8 +415,8 @@ process(const char *inname, int wid)
 	}
 
 	if (wid > 0 && !bflag)
-	     (void) printf("%s:%*s ", inname, 
-			   (int) (wid - strlen(inname)), "");
+	     (void) printf("%s%c%*s", inname, separator,
+			   (int) (nopad ? 0 : 1 + (wid - strlen(inname))), "");
 
 	if (inname != stdname) {
 		/*
