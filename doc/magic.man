@@ -11,31 +11,10 @@
 .\" Here's a manual page for the format accepted by the "file" made by adding
 .\" the changes I posted to the S5R2 version.
 .\"
-.de TH
-.PD
-.nr IN \\n()Mu
-.if t .ds ]H \\$1\^(\^\\$2\^)
-.if n .ds ]H \\$1(\\$2)
-.if \\n()s .ds ]D
-.if \\n()t .ds ]D UNIX System V
-.if n .ds ]D UNIX System V
-.ds ]L
-.if !\\$3 .ds ]L (\^\\$3\^)
-.if !\\$4 .ds ]D \\$4
-.wh 0 }H
-.wh -\\n(:mu }F
-.em }M
-.if \\n(nl .bp
-.nr )I \\n()Mu
-.nr )R 0
-.}E
-.DT
-.if n \{.na
-.nh \}
-.if t \{.bd S 3 3
-.hy 14 \}
-..
-.TH MAGIC 4
+.\" Modified for Ian Darwin's version of the file command.
+.\" @(#)$Header: /p/file/cvsroot/file/doc/magic.man,v 1.2 1987/09/16 22:53:46 ian Exp $
+.\"
+.TH MAGIC 4 "Public Domain"
 .SH NAME
 magic \- file command's magic number file
 .SH DESCRIPTION
@@ -65,9 +44,9 @@ The type of the data to be tested.  The possible values are:
 .IP byte \w'message'u+2n
 A one-byte value.
 .IP short
-A two-byte value.
+A two-byte value (on most systems).
 .IP long
-A four-byte value.
+A four-byte value (on most systems).
 .IP string
 A string of bytes.
 .RE
@@ -136,13 +115,19 @@ line which does not begin with a
 .B >
 terminates this.
 .SH BUGS
+The formats 
+.I long
+and
+.I short
+are system-dependant; perhaps they should be specified as a number
+of bytes, since the files being recognized typically come from
+a system on which they are invariant.
+.PP
 There should be more than one level of subtests, with the level indicated by
 the number of
 .B >
 at the beginning of the line.
 .SH SEE ALSO
-file(1) in the
-\f2\s-1UNIX\s+1 System User Reference Manual\fR.
-.\"	%W% of %G%
-
+.IR file (1)
+\- the command that reads this file.
 
