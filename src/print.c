@@ -31,7 +31,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.8 1987/11/06 17:26:01 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.9 1987/11/06 21:29:50 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -61,6 +61,8 @@ struct magic *m;
 /*
  * error - print best error message possible and exit
  */
+/*ARGSUSED1*/
+/*VARARGS*/
 void
 error(s1, s2)
 char *s1, *s2;
@@ -69,6 +71,7 @@ char *s1, *s2;
 	exit(1);
 }
 
+/*ARGSUSED1*/
 /*VARARGS*/
 warning(f, a)
 char *f, *a;
