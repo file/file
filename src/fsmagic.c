@@ -43,11 +43,9 @@ char *fn;
 			return -1;
 		}
 
-#ifdef	PRINT_STAT_BITS
 	if (statbuf.st_mode & S_ISUID) ckfputs("suid ", stdout);
 	if (statbuf.st_mode & S_ISGID) ckfputs("sgid ", stdout);
 	if (statbuf.st_mode & S_ISVTX) ckfputs("sticky ", stdout);
-#endif	/* PRINT_STAT_BITS */
 	
 	switch (statbuf.st_mode & S_IFMT) {
 	case S_IFDIR:
