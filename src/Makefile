@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.47 1995/04/28 17:28:38 christos Exp $
+# @(#)$Id: Makefile,v 1.48 1995/05/20 22:09:44 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -21,7 +21,7 @@
 #    ever read sources, credits must appear in the documentation.
 #
 # 4. This notice may not be removed or altered.
-VERSION	= 3.17
+VERSION	= 3.18
 SHELL	= /bin/sh
 #MAGIC	= /etc/magic
 MAGIC	= /usr/local/etc/magic
