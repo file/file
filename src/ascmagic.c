@@ -36,7 +36,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.13 1993/03/24 14:22:13 ian Exp $";
+	"@(#)$Id: ascmagic.c,v 1.14 1993/03/24 17:34:34 ian Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -48,8 +48,9 @@ unsigned char *buf;
 int nbytes;	/* size actually read */
 {
 	int i, isblock, has_escapes = 0;
-	unsigned char *s, *token;
+	unsigned char *s;
 	char nbuf[HOWMANY+1];	/* one extra for terminating '\0' */
+	char *token;
 	register struct names *p;
 
 	/* these are easy, do them first */
@@ -78,18 +79,12 @@ int nbytes;	/* size actually read */
 
 	/* look for tokens from names.h - this is expensive! */
 	/* make a copy of the buffer here because strtok() will destroy it */
-	s = (unsigned char*)memcpy(nbuf, buf, HOWMANY);
-	while ((token = (unsigned char*)strtok((char*)s," \t\n\r\f")) != NULL) {
-		if (!has_escapes) {
-			for (s = (unsigned char*)token; *s != NULL; s++)
-				if (*s == '\033') {
-					has_escapes++;
-					break;
-				}
-		}
+	s = (unsigned char*) memcpy(nbuf, buf, HOWMANY);
+	has_escapes = (memchr(s, '\033', HOWMANY) != NULL);
+	while ((token = strtok((char*)s, " \t\n\r\f")) != NULL) {
 		s = NULL;	/* make strtok() keep on tokin' */
 		for (p = names; p < names + NNAMES; p++) {
-			if (STREQ(p->name, (char*)token)) {
+			if (STREQ(p->name, token)) {
 				ckfputs(types[p->type], stdout);
 				if (has_escapes)
 					ckfputs(" (with escape sequences)", 
@@ -108,12 +103,12 @@ int nbytes;	/* size actually read */
 		return 1;
 	}
 
-	if ((i = is_compress(buf, &isblock))) {
+	if (i = is_compress(buf, &isblock)) {
 		if (zflag) {
 			unsigned char *newbuf;
 			int newsize;
 
-			if ((newsize = uncompress(buf, &newbuf, nbytes))) {
+			if (newsize = uncompress(buf, &newbuf, nbytes)) {
 			    tryit(newbuf, newsize);
 			    free(newbuf);
 			}
@@ -128,9 +123,6 @@ int nbytes;	/* size actually read */
 	for (i = 0; i < nbytes; i++) {
 		if (!isascii(*(buf+i)))
 			return 0;	/* not all ascii */
-		if (*(buf+i) == '\033')	/* ascii ESCAPE */
-			has_escapes++;
-			/* do NOT break here - must check all bytes */
 	}
 
 	/* all else fails, but it is ascii... */
