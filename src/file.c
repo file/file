@@ -62,6 +62,9 @@
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
+#ifdef HAVE_WCHAR_T
+#include <wchar.h>
+#endif
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>	/* for long options (is this portable?)*/
@@ -74,7 +77,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.90 2004/03/03 17:24:28 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.91 2004/03/22 19:12:15 christos Exp $")
 #endif	/* lint */
 
 
@@ -304,7 +307,7 @@ main(int argc, char *argv[])
 	else {
 		int i, wid, nw;
 		for (wid = 0, i = optind; i < argc; i++) {
-			nw = strlen(argv[i]);
+			nw = file_mbswidth(argv[i]);
 			if (nw > wid)
 				wid = nw;
 		}
@@ -354,7 +357,7 @@ unwrap(char *fn)
 		}
 
 		while (fgets(buf, MAXPATHLEN, f) != NULL) {
-			cwid = strlen(buf) - 1;
+			cwid = file_mbswidth(buf) - 1;
 			if (cwid > wid)
 				wid = cwid;
 		}
@@ -363,7 +366,7 @@ unwrap(char *fn)
 	}
 
 	while (fgets(buf, MAXPATHLEN, f) != NULL) {
-		buf[strlen(buf)-1] = '\0';
+		buf[file_mbswidth(buf)-1] = '\0';
 		process(buf, wid);
 		if(nobuffer)
 			(void) fflush(stdout);
@@ -380,7 +383,7 @@ process(const char *inname, int wid)
 
 	if (wid > 0 && !bflag)
 		(void) printf("%s%s%*s ", std_in ? "/dev/stdin" : inname,
-		    separator, (int) (nopad ? 0 : (wid - strlen(inname))), "");
+		    separator, (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
 
 	type = magic_file(magic, std_in ? NULL : inname);
 	if (type == NULL)
@@ -446,6 +449,40 @@ byteconv2(int from, int same, int big_endian)
 		return ntohs(from);	/* msb -> lsb conversion on lsb */
 }
 #endif
+
+size_t
+file_mbswidth(const char *s)
+{
+#ifdef HAVE_WCHAR_H
+	size_t bytesconsumed, old_n, n, width = 0;
+	mbstate_t state;
+	wchar_t nextchar;
+	(void)memset(&state, 0, sizeof(mbstate_t));
+	old_n = n = strlen(s);
+
+	while (n > 0) {
+		bytesconsumed = mbrtowc(&nextchar, s, n, &state);
+		if (bytesconsumed == (size_t)(-1) ||
+		    bytesconsumed == (size_t)(-2)) {
+			/* Something went wrong, return something reasonable */
+			return old_n;
+		}
+		if (s[0] == '\n') {
+			/*
+			 * do what strlen() would do, so that caller
+			 * is always right
+			 */
+			width++;
+		} else
+			width += wcwidth(nextchar);
+
+		s += bytesconsumed, n -= bytesconsumed;
+	}
+	return width;
+#else
+	return strlen(s);
+#endif
+}
 
 private void
 usage(void)
