@@ -36,7 +36,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.2 2003/03/23 21:16:26 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.3 2003/03/23 21:24:07 christos Exp $")
 #endif	/* lint */
 
 
@@ -196,7 +196,7 @@ magic_file(struct magic_set *ms, const char *inname)
 			return NULL;
 	} else {
 		buf[nbytes++] = '\0';	/* null-terminate it */
-		if (file_buf(ms, buf, nbytes) == -1)
+		if (file_buffer(ms, buf, nbytes) == -1)
 			return NULL;
 #ifdef BUILTIN_ELF
 		if (nbytes > 5) {
@@ -226,7 +226,7 @@ magic_buf(struct magic_set *ms, const void *buf, size_t nb)
 	 * The main work is done here!
 	 * We have the file name and/or the data buffer to be identified. 
 	 */
-	if (file_buf(ms, buf, nb) == -1) {
+	if (file_buffer(ms, buf, nb) == -1) {
 		return NULL;
 	}
 	return ms->haderr ? NULL : ms->o.buf;

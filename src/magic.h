@@ -46,7 +46,7 @@ magic_t magic_open(int flags);
 void magic_close(magic_t);
 
 const char *magic_file(magic_t, const char *);
-const char *magic_buf(magic_t, const void *, size_t);
+const char *magic_buffer(magic_t, const void *, size_t);
 
 const char *magic_error(magic_t);
 void magic_setflags(magic_t, int);
