@@ -1,20 +1,5 @@
-.\" From: guy@sun.uucp (Guy Harris)
-.\" Newsgroups: net.bugs.usg
-.\" Subject: /etc/magic's format isn't well documented
-.\" Message-ID: <2752@sun.uucp>
-.\" Date: 3 Sep 85 08:19:07 GMT
-.\" Date-Received: 4 Sep 85 18:11:43 GMT
-.\" Distribution: net
-.\" Organization: Sun Microsystems, Inc.
-.\" Lines: 136
-.\" 
-.\" Here's a manual page for the format accepted by the "file" made by adding
-.\" the changes I posted to the S5R2 version.
-.\"
-.\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Header: /home/glen/git/file/cvs/file/doc/magic.man,v 1.2 1987/09/16 22:53:46 ian Exp $
-.\"
-.TH MAGIC 4 "Public Domain"
+.TH MAGIC FILES "Public Domain"
+.\" install as magic.4 on USG, magic.5 on V7 or Berkeley systems.
 .SH NAME
 magic \- file command's magic number file
 .SH DESCRIPTION
@@ -130,4 +115,17 @@ at the beginning of the line.
 .SH SEE ALSO
 .IR file (1)
 \- the command that reads this file.
-
+.\"
+.\" From: guy@sun.uucp (Guy Harris)
+.\" Newsgroups: net.bugs.usg
+.\" Subject: /etc/magic's format isn't well documented
+.\" Message-ID: <2752@sun.uucp>
+.\" Date: 3 Sep 85 08:19:07 GMT
+.\" Organization: Sun Microsystems, Inc.
+.\" Lines: 136
+.\" 
+.\" Here's a manual page for the format accepted by the "file" made by adding
+.\" the changes I posted to the S5R2 version.
+.\"
+.\" Modified for Ian Darwin's version of the file command.
+.\" @(#)$Header: /home/glen/git/file/cvs/file/doc/magic.man,v 1.3 1987/10/05 22:13:38 ian Exp $
