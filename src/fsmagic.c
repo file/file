@@ -30,7 +30,6 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <sys/stat.h>
 #include <stdlib.h>
 /* Since major is a function on SVR4, we can't use `ifndef major'.  */
 #ifdef MAJOR_IN_MKDEV
@@ -52,7 +51,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.35 2002/07/03 18:26:37 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.36 2002/07/03 19:00:41 christos Exp $")
 #endif	/* lint */
 
 int
