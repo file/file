@@ -1,11 +1,19 @@
+#define	FILE_VERSION_MAJOR	3
+#define	patchlevel		8
+
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.7 1993/01/05 14:57:27 ian Exp $
+ * $Id: patchlevel.h,v 1.8 1993/02/19 15:01:26 ian Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.7  1993/01/05 14:57:27  ian
- * Couple of nits picked by Christos (again, thanks).
+ * Revision 1.8  1993/02/19 15:01:26  ian
+ * Numerous changes from Guy Harris too numerous to mention but including
+ * byte-order independance, fixing "old-style masking", etc. etc. A bugfix
+ * for broken symlinks from martin@@d255s004.zfe.siemens.de.
  *
+ * Revision 1.7  93/01/05  14:57:27  ian
+ * Couple of nits picked by Christos (again, thanks).
+ * 
  * Revision 1.6  93/01/05  13:51:09  ian
  * Lotsa work on the Magic directory.
  * 
@@ -14,5 +22,3 @@
  * 
  */
 
-#define	FILE_VERSION_MAJOR	3
-#define	patchlevel		7
