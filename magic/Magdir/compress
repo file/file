@@ -46,10 +46,8 @@
 >2	belong		>1		\b, %d characters originally
 >2	belong		=1		\b, %d character originally
 #
-# This magic number is byte-order-independent.  XXX - Does that mean this
-# is big-endian, little-endian, either, or that you can't tell?
-# this short is valid for SunOS
-0	short		017437		old packed data
+# This magic number is byte-order-independent.
+0	short		0x1f1f		old packed data
 
 # XXX - why *two* entries for "compacted data", one of which is
 # byte-order independent, and one of which is byte-order dependent?

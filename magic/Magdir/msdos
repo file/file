@@ -264,9 +264,9 @@
 # Acroread or something  files wrongly identified as G3  .pfm
 # these have the form \000 \001 any? \002 \000 \000
 # or \000 \001 any? \022 \000 \000
-0	string  \000\001 pfm?
->3	string  \022\000\000Copyright\  yes
->3	string  \002\000\000Copyright\  yes
+#0	string  \000\001 pfm?
+#>3	string  \022\000\000Copyright\  yes
+#>3	string  \002\000\000Copyright\  yes
 #>3	string  >\0     oops, not a font file. Cancel that.
 #it clashes with ttf files so put it lower down.
 

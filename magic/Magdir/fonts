@@ -55,3 +55,7 @@
 
 0	string		\007\001\001\000Copyright\ (c)\ 199	Adobe Multiple Master font
 0	string		\012\001\001\000Copyright\ (c)\ 199	Adobe Multiple Master font
+
+# Opentype font data from Avi Bercovich
+0	string		OTTO		OpenType font data 
+
