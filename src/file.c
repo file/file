@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.85 2003/10/09 16:29:53 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.86 2003/10/27 18:09:41 christos Exp $")
 #endif	/* lint */
 
 
@@ -126,7 +126,7 @@ main(int argc, char *argv[])
 	int c;
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0;
-	char *mime, *home, *usermagic;
+	char *home, *usermagic;
 	struct stat sb;
 #define OPTSTRING	"bcCdf:F:ikLm:nNprsvz"
 #ifdef HAVE_GETOPT_LONG
