@@ -34,7 +34,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.53 2003/02/14 21:39:26 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.54 2003/02/25 13:04:32 christos Exp $")
 #endif	/* lint */
 
 static int match(struct magic *, uint32_t, unsigned char *, int);
@@ -138,7 +138,7 @@ match(struct magic *magic, uint32_t nmagic, unsigned char *s, int nbytes)
 		/* and any continuations that match */
 		if (++cont_level >= tmplen)
 			if ((tmpoff = (int32_t *) realloc(tmpoff,
-			    (tmplen += 20) * sizeof(*tmpoff)) == NULL)
+			    (tmplen += 20) * sizeof(*tmpoff))) == NULL)
 				error("out of memory\n");
 		while (magic[magindex+1].cont_level != 0 && 
 		       ++magindex < nmagic) {
