@@ -2,6 +2,7 @@
  * compress routines:
  *	is_compress() returns 0 if uncompressed, number of bits if compressed.
  *	uncompress(old, n, newch) - uncompress old into new, return sizeof new
+ * $Id: compress.c,v 1.6 1992/09/08 15:32:17 ian Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>

@@ -8,12 +8,9 @@
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
  *
- * This software is not subject to any license of the American Telephone
- * and Telegraph Company or of the Regents of the University of California.
+ * See LEGAL.NOTICE
  *
- * Permission is granted to anyone to use this software for any purpose on
- * any computer system, and to alter it and redistribute it freely, subject
- * to the terms in the accompanying LEGAL.NOTICE file.
+ * $Id: names.h,v 1.9 1992/09/08 15:32:20 ian Exp $
  */
 
 /* these types are used to index the table 'types': keep em in sync! */
