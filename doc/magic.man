@@ -36,7 +36,14 @@ A two-byte value (on most systems) in this machine's native byte order.
 .IP long
 A four-byte value (on most systems) in this machine's native byte order.
 .IP string
-A string of bytes.
+A string of bytes. The string type specification can be optionally followed
+by /[Bbc]*. The ``B'' flag compacts whitespace in the target, which must
+contain at least one whitespace character. If the magic has "n" consecutive
+blanks, the target needs at least "n" consecutive blanks to match. The ``b''
+flag treats every blank in the target as an optional blank. Finally the ``c''
+flag, specifies case insensitive matching: lowercase characters in the magic
+match both lower and upper case characters in the targer, whereas upper case
+characters in the magic, only much uppercase characters in the target.
 .IP date
 A four-byte value interpreted as a unix date.
 .IP beshort
@@ -205,4 +212,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.15 1998/08/13 17:32:24 christos Exp $
+.\" @(#)$Id: magic.man,v 1.16 1999/11/28 20:02:29 christos Exp $

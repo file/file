@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.29 1999/10/31 22:23:03 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.30 1999/11/28 20:02:28 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -336,6 +336,28 @@ int *ndx, check;
 		++l;
 		m->mask = signextend(m, strtoul(l, &l, 0));
 		eatsize(&l);
+	} else if (STRING == m->type) {
+		m->mask = 0L;
+		if (*l == '/') { 
+			while (!isspace(*++l)) {
+				switch (*l) {
+				case CHAR_IGNORE_LOWERCASE:
+					m->mask |= STRING_IGNORE_LOWERCASE;
+					break;
+				case CHAR_COMPACT_BLANK:
+					m->mask |= STRING_COMPACT_BLANK;
+					break;
+				case CHAR_COMPACT_OPTIONAL_BLANK:
+					m->mask |=
+					    STRING_COMPACT_OPTIONAL_BLANK;
+					break;
+				default:
+					magwarn("string extension %c invalid",
+					    *l);
+					return -1;
+				}
+			}
+		}
 	} else
 		m->mask = ~0L;
 	EATAB;

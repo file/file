@@ -1,11 +1,15 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		28
+#define	patchlevel		29
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.28 1999/10/31 22:11:48 christos Exp $
+ * $Id: patchlevel.h,v 1.29 1999/11/28 20:02:29 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.29  1999/11/28 20:02:29  christos
+ * new string/[Bcb] magic from anton, and adjustments to the magic files to
+ * use it.
+ *
  * Revision 1.28  1999/10/31 22:11:48  christos
  * - add "char" type for compatibility with HP/UX
  * - recognize HP/UX syntax &=n etc.

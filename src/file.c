@@ -49,13 +49,16 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>	/* for read() */
 #endif
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 #include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.47 1999/10/31 22:23:03 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.48 1999/11/28 20:02:29 christos Exp $")
 #endif	/* lint */
 
 
@@ -109,6 +112,10 @@ main(argc, argv)
 {
 	int c;
 	int check = 0, didsomefiles = 0, errflg = 0, ret = 0, app = 0;
+
+#ifdef LC_CTYPE
+	setlocale(LC_CTYPE, ""); /* makes islower etc work for other langs */
+#endif
 
 	if ((progname = strrchr(argv[0], '/')) != NULL)
 		progname++;
