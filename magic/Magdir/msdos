@@ -277,10 +277,6 @@
 0	string		!<spell>	MKS Spell hash list (old format)
 0	string		!<spell2>	MKS Spell hash list
 0	string		AH		Halo(TM) bitmapped font file
-0	leshort		0x601A		Atari ST contiguous executable
->14	lelong		&gt;0		- not stripped
-0	leshort		0x601B		Atari ST non-contig executable
->14	lelong		&gt;0		- not stripped
 0	lelong		0x08086b70	TurboC BGI file
 0	lelong		0x08084b50	TurboC Font file
 
