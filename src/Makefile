@@ -55,7 +55,7 @@ test:		all
 		time $(OFILE) -m ./magic * tst/* >/tmp/t1
 		time ./file -m ./magic * tst/* >/tmp/t2
 		-diff -b /tmp/t[12]
-		ident ./file >lastnocore
+		what ./file >lastnocore
 
 file:		$(OBJS)
 		cc $(CFLAGS) $(OBJS) -o $@
