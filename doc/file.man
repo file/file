@@ -26,7 +26,7 @@ test that succeeds causes the file type to be printed.
 The type printed will usually contain one of the words
 .B text
 (the file contains only ASCII characters and is 
-moderately safe to read on an ASCII terminal),
+probably safe to read on an ASCII terminal),
 .B executable
 (the file contains the result of compiling a program
 in a form understandable to some \s-1UNIX\s0 kernel or another),
@@ -39,8 +39,8 @@ When modifying the file
 .I /etc/magic
 or the program itself, 
 .B "preserve these keywords" .
-People depend on knowing that all the files in a directory
-that are readable contain the word ``text''.
+People depend on knowing that all the readable files in a directory
+have the word ``text'' printed.
 Don't do as one computer vendor did \- change ``shell commands text''
 to ``shell script''.
 .PP
@@ -50,9 +50,9 @@ system call.
 The program checks to see if the file is empty,
 or if it's some sort of special file.
 Any known file types appropriate to the system you are running on
-(sockets and symbolic links on 4.2BSD, named pipes (fifos) on System V)
+(sockets and symbolic links on 4.2BSD, named pipes (FIFOs) on System V)
 are intuited if they are defined in
-the appropriate system header file
+the system header file
 .I sys/stat.h  .
 .PP
 The magic number tests are used to check for files with data in
@@ -68,7 +68,7 @@ These files have a `magic number' stored in a particular place
 near the beginning of the file that tells the \s-1UNIX\s0 operating system
 that the file is a binary executable, and which of several types thereof.
 The concept of `magic number' has been applied by extension to data files.
-Any file with some invariant identifier at a fixed
+Any file with some invariant identifier at a small fixed
 offset into the file can usually be described in this way.
 The information in these files is read from the magic file
 .I /etc/magic .
@@ -139,7 +139,7 @@ is that this version treats any white space
 as a delimiter, so that spaces in pattern strings must be escaped.
 For example,
 .br
->10	string	language impress	(imPRESS data)
+>10	string	language impress\ 	(imPRESS data)
 .br
 in an existing magic file would have to be changed to
 .br
@@ -157,8 +157,25 @@ would be entered in my version as
 .br
 >16	long	&0x7fffffff	not stripped
 .br
-which is a little less general (it simply tests (location 16)&0x7ffffff
-and returns its truth value as a C expression).
+which is a little less general; it simply tests (location 16)&0x7ffffff
+and returns its truth value as a C expression.
+.SH MAGIC DIRECTORY
+The magic file entries have been collected from various sources,
+mainly USENET, and contributed by various authors.
+Ian Darwin (address below) will collect additional
+or corrected magic file entries.
+A consolidation of magic file entries 
+will be distributed periodically.
+.PP
+The order of entries in the magic file is significant.
+Depending on what system you are using, the order that
+they are put together may be incorrect.
+If your old
+.I file
+command uses a magic file,
+keep the old magic file around for comparison purposes
+(rename it to 
+.IR /etc/magic.orig ).
 .SH HISTORY
 There has been a 
 .I file
@@ -173,6 +190,8 @@ was written by Ian Darwin without looking at anybody else's source code.
 .PP
 John Gilmore revised the code extensively, making it better than
 the first version.
+Geoff Collyer found several inadequacies
+and provided some magic file entries.
 The program has undergone continued evolution since.
 .SH NOTICE
 Copyright (c) Ian F. Darwin,  1986 and 1987.
@@ -220,21 +239,6 @@ and
 were written by John Gilmore from his public-domain
 .I tar
 program, and are not covered by the above restrictions.
-.SH MAGIC DIRECTORY
-The order of entries in the magic file is significant.
-Depending on what system you are using, the order that
-they are put together may be incorrect.
-If your old
-.I file
-command uses a magic file,
-keep the old magic file around for comparison purposes
-(rename it to 
-.IR /etc/magic.orig ).
-.PP
-The author of this progam will be glad to receive additional
-or corrected magic file entries.
-.PP
-A consolidation of magic file entries will be distributed periodically.
 .SH BUGS
 There must be a way to automate the construction of the Magic
 file from all the glop in magdir. What is it?
@@ -259,8 +263,8 @@ It might be advisable to allow upper-case letters in keywords
 for e.g., troff commands vs man page macros.
 Regular expression support would make this easy.
 .PP
-The program doesn't grok Fortran.
-It should be able to figure Fortran by seeing some keywords which 
+The program doesn't grok \s-2FORTRAN\s0.
+It should be able to figure \s-2FORTRAN\s0 by seeing some keywords which 
 appear indented at the start of line.
 Regular expression support would make this easy.
 .PP
