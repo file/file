@@ -1,11 +1,31 @@
-# Makefile for file(1) cmd. Copyright (c) Darwin 86/09/01 - see LEGAL.NOTICE.
+# Makefile for file(1) cmd. 
+# Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
+#
+# This software is not subject to any license of the American Telephone
+# and Telegraph Company or of the Regents of the University of California.
+#
+# Permission is granted to anyone to use this software for any purpose on
+# any computer system, and to alter it and redistribute it freely, subject
+# to the following restrictions:
+#
+# 1. The author is not responsible for the consequences of use of this
+#    software, no matter how awful, even if they arise from flaws in it.
+#
+# 2. The origin of this software must not be misrepresented, either by
+#    explicit claim or by omission.  Since few users ever read sources,
+#    credits must appear in the documentation.
+#
+# 3. Altered versions must be plainly marked as such, and must not be
+#    misrepresented as being the original software.  Since few users
+#    ever read sources, credits must appear in the documentation.
+#
+# 4. This notice may not be removed or altered.
 
 MAGIC	= /etc/magic
 DEFS	= -DMAGIC='"$(MAGIC)"' # -Dvoid=int
 COPTS	= -O # -g
 CFLAGS	= $(COPTS) $(DEFS)
 SHAR	= bundle
-OTHERS	= darwin!ian		# people to whom we mail updates
 OFILE	= /usr/bin/file.orig	# old or distributed version, for comparison
 BINDIR	= /usr/local		# where new binary lives
 MANDIR	= /usr/man/local	# for our man pages
@@ -19,8 +39,8 @@ LOCALOBJS = strtol.o strtok.o
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o is_tar.o \
 	print.o $(LOCALOBJS)
 
-ALLSRC = LEGAL.NOTICE README PORTING TODO $(SRCS) *.h \
-	Makefile file.[15] magdir/[a-z]* tst/Makefile
+ALLSRC = LEGAL.NOTICE README PORTING $(SRCS) *.h \
+	Makefile file.1 magic.4 magdir/[a-z]* tst/Makefile
 
 all:		file magic
 
@@ -47,10 +67,10 @@ install:	all
 		cp file $(BINDIR)/file
 		cp magic $(MAGIC)
 		cp file.1 $(MANDIR)/man1
-		cp file.5 $(MANDIR)/man5
+		cp magic.4 $(MANDIR)/man4 # maybe 5 on some systems.
 
 clean:
-		rm -f *.o file magic errs lintout
+		rm -f *.o file magic lint.out
 		(cd tst; make clean)
 
 dist:		$(ALLSRC)
