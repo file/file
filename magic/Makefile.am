@@ -146,6 +146,7 @@ Magdir/plus5 \
 Magdir/printer \
 Magdir/project \
 Magdir/psdbms \
+Magdir/psion \
 Magdir/pulsar \
 Magdir/pyramid \
 Magdir/python \
