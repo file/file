@@ -33,7 +33,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.21 1995/04/28 17:29:13 christos Exp $";
+	"@(#)$Id: apprentice.c,v 1.22 1995/05/20 22:09:21 christos Exp $";
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -151,8 +151,9 @@ int *ndx, check;
 	struct magic *m;
 	char *t, *s;
 
+#define ALLOC_INCR	20
 	if (nd+1 >= maxmagic){
-	    maxmagic += 20;
+	    maxmagic += ALLOC_INCR;
 	    if ((magic = (struct magic *) realloc(magic, 
 						  sizeof(struct magic) * 
 						  maxmagic)) == NULL) {
@@ -162,6 +163,7 @@ int *ndx, check;
 		else
 			exit(1);
 	    }
+	    memset(&magic[*ndx], 0, sizeof(struct magic) * ALLOC_INCR);
 	}
 	m = &magic[*ndx];
 	m->flag = 0;
@@ -370,7 +372,7 @@ char **p;
 	} else
 		if (m->reln != 'x') {
 			m->value.l = signextend(m, strtoul(*p, p, 0));
-			eatsize(&p);
+			eatsize(p);
 		}
 	return 0;
 }

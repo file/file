@@ -1,12 +1,19 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		17
+#define	patchlevel		18
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.17 1995/04/28 17:29:13 christos Exp $
+ * $Id: patchlevel.h,v 1.18 1995/05/20 22:09:21 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.17  1995/04/28 17:29:13  christos
+ * Revision 1.18  1995/05/20 22:09:21  christos
+ * Passed incorrect argument to eatsize().
+ * Use %ld and %lx where appropriate.
+ * Remove unused variables
+ * ELF support for both big and little endian
+ * Fixes for small files again.
+ *
+ * Revision 1.17  1995/04/28  17:29:13  christos
  * - Incorrect nroff detection fix from der Mouse
  * - Lost and incorrect magic entries.
  * - Added ELF stripped binary detection [in C; ugh]

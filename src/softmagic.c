@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.29 1995/04/28 19:13:08 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.30 1995/05/20 22:09:21 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -273,7 +273,7 @@ long offset;
 char *str;
 int len;
 {
-	(void) fprintf(stderr, "mget @%d: ", offset);
+	(void) fprintf(stderr, "mget @%ld: ", offset);
 	showstr(stderr, (char *) str, len);
 	(void) fputc('\n', stderr);
 	(void) fputc('\n', stderr);
@@ -287,18 +287,18 @@ struct magic *m;
 int nbytes;
 {
 	long offset = m->offset;
-	long diff = nbytes - (offset + sizeof(union VALUETYPE));
-	if (diff >= 0)
+
+	if (offset + sizeof(union VALUETYPE) <= nbytes)
 		memcpy(p, s + offset, sizeof(union VALUETYPE));
 	else {
-		/* Not enough space; zeropad */
-		long have = sizeof(union VALUETYPE) + diff;
+		/*
+		 * the usefulness of padding with zeroes eludes me, it
+		 * might even cause problems
+		 */
+		long have = nbytes - offset;
+		memset(p, 0, sizeof(union VALUETYPE));
 		if (have > 0)
 			memcpy(p, s + offset, have);
-		else
-			have = 0;
-
-		memset(p + have, 0, sizeof(union VALUETYPE) - have);
 	}
 
 
