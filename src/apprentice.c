@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.55 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.56 2003/03/26 16:25:25 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -334,6 +334,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 	int i = 0;
 	struct magic *m;
 	char *t;
+	private const char *fops = FILE_OPS;
 	uint32_t val;
 
 #define ALLOC_INCR	200
@@ -369,7 +370,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
         }
 
 	/* get offset, then skip over it */
-	m->offset = (int) strtoul(l,&t,0);
+	m->offset = (int) strtoul(l, &t, 0);
         if (l == t)
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn("offset %s invalid", l);
@@ -552,54 +553,13 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 			m->mask_op = FILE_OPINVERSE;
 		++l;
 	}
-	val = (uint32_t)strtoul(l, &l, 0);
-	switch (*l) {
-	case '&':
-		m->mask_op |= FILE_OPAND;
-		++l;
-		m->mask = file_signextend(ms, m, val);
-		eatsize(&l);
-		break;
-	case '|':
-		m->mask_op |= FILE_OPOR;
-		++l;
-		m->mask = file_signextend(ms, m, val);
-		eatsize(&l);
-		break;
-	case '^':
-		m->mask_op |= FILE_OPXOR;
-		++l;
-		m->mask = file_signextend(ms, m, val);
-		eatsize(&l);
-		break;
-	case '+':
-		m->mask_op |= FILE_OPADD;
-		++l;
-		m->mask = file_signextend(ms, m, val);
-		eatsize(&l);
-		break;
-	case '-':
-		m->mask_op |= FILE_OPMINUS;
-		++l;
-		m->mask = file_signextend(ms, m, val);
-		eatsize(&l);
-		break;
-	case '*':
-		m->mask_op |= FILE_OPMULTIPLY;
-		++l;
-		m->mask = file_signextend(ms, m, val);
-		eatsize(&l);
-		break;
-	case '%':
-		m->mask_op |= FILE_OPMODULO;
-		++l;
-		m->mask = file_signextend(ms, m, val);
-		eatsize(&l);
-		break;
-	case '/':
-		if (FILE_STRING != m->type && FILE_PSTRING != m->type) {
-			m->mask_op |= FILE_OPDIVIDE;
+	if ((t = strchr(fops,  *l)) != NULL) {
+		uint32_t op = (uint32_t)(t - fops);
+		if (op != FILE_OPDIVIDE ||
+		    (FILE_STRING != m->type && FILE_PSTRING != m->type)) {
 			++l;
+			m->mask_op |= op;
+			val = (uint32_t)strtoul(l, &l, 0);
 			m->mask = file_signextend(ms, m, val);
 			eatsize(&l);
 		} else {
@@ -625,10 +585,11 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 				}
 			}
 		}
-		break;
 	}
-	/* We used to set mask to all 1's here, instead let's just not do anything 
-	   if mask = 0 (unless you have a better idea) */
+	/*
+	 * We used to set mask to all 1's here, instead let's just not do
+	 * anything if mask = 0 (unless you have a better idea)
+	 */
 	EATAB;
   
 	switch (*l) {

@@ -50,12 +50,13 @@
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
+#undef HAVE_LIBZ
 #ifdef HAVE_LIBZ
 #include <zlib.h>
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.30 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.31 2003/03/26 16:25:25 christos Exp $")
 #endif
 
 
@@ -92,8 +93,9 @@ private size_t uncompressgzipped(struct magic_set *, const unsigned char *,
 protected int
 file_zmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 {
-	unsigned char *newbuf;
-	size_t i;
+	unsigned char *newbuf = NULL;
+	size_t i, nsz;
+	int rv = 0;
 
 	if ((ms->flags & MAGIC_COMPRESS) == 0)
 		return 0;
@@ -102,23 +104,26 @@ file_zmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		if (nbytes < compr[i].maglen)
 			continue;
 		if (memcmp(buf, compr[i].magic, compr[i].maglen) == 0 &&
-		    uncompressbuf(ms, i, buf, &newbuf, nbytes) != 0) {
-			free(newbuf);
-			if (file_printf(ms, " (") == -1)
-				return -1;
+		    (nsz = uncompressbuf(ms, i, buf, &newbuf, nbytes)) != 0) {
 			ms->flags &= ~MAGIC_COMPRESS;
-			if (file_buffer(ms, buf, nbytes) == -1) {
-				ms->flags |= MAGIC_COMPRESS;
-				return -1;
-			}
-			ms->flags |= MAGIC_COMPRESS;
+			rv = -1;
+			if (file_buffer(ms, newbuf, nsz) == -1)
+				goto error;
+			if (file_printf(ms, " (") == -1)
+				goto error;
+			if (file_buffer(ms, buf, nbytes) == -1)
+				goto error;
 			if (file_printf(ms, ")") == -1)
-				return -1;
-			return 1;
+				goto error;
+			rv = 1;
+			break;
 		}
 	}
-
-	return 0;
+error:
+	if (newbuf)
+		free(newbuf);
+	ms->flags |= MAGIC_COMPRESS;
+	return rv;
 }
 
 /*
