@@ -1,4 +1,9 @@
 
+2004-03-09 13:55  Christos Zoulas  <christos@zoulas.com>
+
+	* Fix possible memory leak on error and add missing regfree
+	  (Dmitry V. Levin) <ldv@altlinux.org>
+
 2003-12-23 12:12  Christos Zoulas  <christos@zoulas.com>
 
 	* fix -k flag (Maciej W. Rozycki)
