@@ -43,12 +43,15 @@
 #
 # This magic number is byte-order-independent.  XXX - Does that mean this
 # is big-endian, little-endian, either, or that you can't tell?
+# this short is valid for SunOS
 0	short		017437		old packed data
 
 # XXX - why *two* entries for "compacted data", one of which is
 # byte-order independent, and one of which is byte-order dependent?
 #
 0	short		0x1fff		compacted data
+# This string is valid for SunOS (BE) and a matching "short" is listed
+# in the Ultrix (LE) magic file.
 0	string		\377\037	compacted data
 0	short		0145405		huf output
 

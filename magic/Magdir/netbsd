@@ -8,6 +8,15 @@
 >16	lelong			>0		not stripped
 0	lelong			000000314	BSDI demand paged executable
 >16	lelong			>0		not stripped
+>32	byte			0x6a		(uses shared libs)
+
+0	lelong&077777777	041400314	FreeBSD/i386 demand paged
+>3	byte			&0x80
+>>20	lelong			<4096		shared library
+>>20	lelong			=4096		dynamically linked executable
+>>20	lelong			>4096		dynamically linked executable
+>3	byte			^0x80		executable
+>16	lelong			>0		not stripped
 
 0	lelong			000000407	NetBSD little-endian object file
 >16	lelong			>0		not stripped

@@ -68,6 +68,8 @@
 #
 0	string		!<arch>		current ar archive
 >8	string		__.SYMDEF	random library
+>8	string		debian-split	part of multipart Debian package
+>8	string		debian-binary	Debian binary package
 >0	belong		=65538		- pre SR9.5
 >0	belong		=65539		- post SR9.5
 >0	beshort		2		- object archive

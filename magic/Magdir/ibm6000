@@ -13,4 +13,4 @@
 0	beshort		0x0105		ctab data
 0	beshort		0xfe04		structured file
 0	string		0xabcdef	message catalog
-#0	string		<aiaff>		archive
+0	string		\<aiaff>	archive

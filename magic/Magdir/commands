@@ -41,6 +41,7 @@
 0	string		#!\ /bin/awk		awk commands text
 0	string		#!/usr/bin/awk		awk commands text
 0	string		#!\ /usr/bin/awk	awk commands text
+0	string		BEGIN			awk commands text
 
 # For Larry Wall's perl language.  The ``eval'' line recognizes an
 # outrageously clever hack for USG systems.
