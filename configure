@@ -697,7 +697,7 @@ fi
 
 PACKAGE=file
 
-VERSION=3.36
+VERSION=3.37
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { echo "configure: error: source directory already configured; run "make distclean" there first" 1>&2; exit 1; }
