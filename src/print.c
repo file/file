@@ -31,7 +31,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.5 1987/09/16 14:45:15 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.6 1987/09/16 22:50:15 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -78,7 +78,10 @@ char *f, *a;
 	int myerrno;
 
 	myerrno = errno;
-	(void) printf(f, a);
+	(void) fputs(progname, stderr);
+	(void) putc(':', stderr);
+	(void) putc(' ', stderr);
+	(void) fprintf(stderr, f, a);
 	if (myerrno > 0 && myerrno < sys_nerr)
-		(void) printf(" (%s)", sys_errlist[myerrno]);
+		(void) fprintf(stderr, " (%s)", sys_errlist[myerrno]);
 }
