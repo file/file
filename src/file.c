@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.12 1987/11/06 21:03:16 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.13 1987/11/12 12:57:50 ian Exp $";
 #endif	/* lint */
 extern char *ckfmsg;
 int 	debug = 0, 	/* huh? */
@@ -167,6 +167,9 @@ readit:
 		 */
 		if ((nbytes = read(fd, buf, HOWMANY)) == -1)
 			warning("read failed");
+		if (nbytes == 0) {
+			ckfputs("empty", stdout);
+		} else
 		/*
 		 * try tests in /etc/magic (or surrogate magic file)
 		 */
