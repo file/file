@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.37 2004/03/22 18:44:01 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.38 2004/03/22 19:08:53 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -261,6 +261,8 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				break;
 			offset = donote(ms, nbuf, offset, (size_t)bufsize,
 			    class, swap, 4);
+			if (offset == 0)
+				break;
 
 		}
 	}
@@ -660,6 +662,8 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 					break;
 				offset = donote(ms, nbuf, offset,
 				    (size_t)bufsize, class, swap, align);
+				if (offset == 0)
+					break;
 			}
 			if (lseek(fd, savedoffset + offset, SEEK_SET)
 			    == (off_t)-1) {
