@@ -1,3 +1,29 @@
+2004-03-22 15:25  Christos Zoulas  <christos@zoulas.com>
+
+	* Lots of mime fixes
+	  (Joerg Ostertag) <ostertag@rechengilde.de>
+
+	* FreeBSD ELF version handling
+	  (Edwin Groothuis) <edwin@mavetju.org>
+
+	* correct cleanup in all cases; don't just close the file.
+	  (Christos Zoulas) <christos@zoulas.com>
+
+	* add gettext message catalogue support
+	  (Michael Piefel) <piefel@debian.org>
+
+	* better printout for unreadable files
+	  (Michael Piefel) <piefel@debian.org>
+
+	* compensate for missing MAXPATHLEN
+	  (Michael Piefel) <piefel@debian.org>
+
+	* add wide character string length computation
+	  (Michael Piefel) <piefel@debian.org>
+
+	* Avoid infinite loops caused by bad elf alignments
+	  or name and description note sizes. Reported by
+	  (Mikael Magnusson) <mmikael@comhem.se>
 
 2004-03-09 13:55  Christos Zoulas  <christos@zoulas.com>
 
