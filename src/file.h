@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.32 2000/05/14 22:58:53 christos Exp $
+ * @(#)$Id: file.h,v 1.33 2000/08/07 17:40:14 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -119,7 +119,6 @@ extern int   tryit		__P((unsigned char *, int, int));
 extern int   zmagic		__P((unsigned char *, int));
 extern void  ckfprintf		__P((FILE *, const char *, ...));
 extern uint32 signextend	__P((struct magic *, unsigned int32));
-extern int internatmagic	__P((unsigned char *, int));
 extern void tryelf		__P((int, unsigned char *, int));
 
 extern char *progname;		/* the program name 			*/
