@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.38 1993/09/23 21:55:36 christos Exp $
+# @(#)$Id: Makefile,v 1.40 1993/09/24 18:51:49 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -21,7 +21,7 @@
 #    ever read sources, credits must appear in the documentation.
 #
 # 4. This notice may not be removed or altered.
-VERSION	= 3.10
+VERSION	= 3.11
 SHELL	= /bin/sh
 #MAGIC	= /etc/magic
 MAGIC	= /usr/local/etc/magic
@@ -77,10 +77,10 @@ OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	print.o $(LOCALOBJS)
 
 ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
-	Makefile file.1 magic.4 
+	 Makefile file.man magic.man 
 ALLMAGIC =   Magdir/Makefile Magdir/Localstuff Magdir/Header Magdir/[a-z]*
 
-all:		file magic
+all:		file magic file.${MANCEXT} magic.${MANFEXT}
 
 TESTFILES = * tst/*
 try:		all $(OFILE)
@@ -102,16 +102,30 @@ ascmagic.o:	names.h
 
 compress.o apprentice.o ascmagic.o file.o fsmagic.o print.o softmagic.o: file.h
 
-install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
-		cp file		$(BINDIR)/file
-		cp magic	$(MAGIC)
-		cp file.1	$(MANCDIR)/file.$(MANCEXT)
-		cp magic.4	$(MANFDIR)/magic.$(MANFEXT)
+install:	file magic
+		cp file	$(BINDIR)/file
+		cp magic $(MAGIC)
+
+install.man: file.${MANCEXT} magic.${MANFEXT}
+		cp file.${MANCEXT} $(MANCDIR)/file.$(MANCEXT)
+		cp magic.${MANFEXT} $(MANFDIR)/magic.$(MANFEXT)
 
 clean:
-		rm -f *.o core file magic lint dist.* MANIFEST lastnocore
+		rm -f *.o core file magic lint dist.* MANIFEST \
+		      magic.${MANFEXT} file.${MANCEXT}
 clobber:
 		cd tst; $(MAKE) clean
+
+
+magic.${MANFEXT} :	Makefile magic.man
+		@rm -f $@
+		sed -e s@__SECTION__@${MANFEXT}@g \
+		    -e s@__MAGIC__@${MAGIC}@g magic.man > $@
+
+file.${MANCEXT} :	Makefile file.man
+		@rm -f $@
+		sed -e s@__SECTION__@${MANCEXT}@g \
+		    -e s@__MAGIC__@${MAGIC}@g file.man > $@
 
 send:		dist
 		ftp ftp.cs
