@@ -1,20 +1,20 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.17 1992/09/11 11:54:15 ian Exp $
+@(#) $Id: README,v 1.18 1993/01/05 13:57:48 ian Exp $
 
 This is Release 3.0 of Ian Darwin's (copyright but distributable)
 file(1) command.  Release 3.0 is scheduled for inclusion in the
-4.4 BSD (Berkeley Software Distribution) of UNIX- and UNIX-like
-software (UNIX is a trademark of UNIX System Laboratories and may
-not be used by commercial undertakings without permission in writing
-from USL. Just ask BSD Incorporated, a commercial venture not officially
-connected with the University of California at Berkeley).
+4.4 BSD (Berkeley Software Distribution) of UNIX-like
+software, and is the standard "file" command for Linux, 386bsd,
+and other systems.
+
+UNIX is a trademark of UNIX System Laboratories.
 
 The prime contributor to Release 3.0 was Christos Zoulas, who put
 in hundreds of lines of source code changes, including his own
 ANSIfication of the code (I liked my own ANSIfication better, but
 his (__P()) is the "Berkeley standard" way of doing it, and I wanted UCB
 to include the code...), his HP-like "indirection" (a feature of
-the HP file command, I think), his mods that finally got the
+the HP file command, I think), and his mods that finally got the
 uncompress (-z) mode finished and working.
 
 This release has compiled in numerous environments; see PORTING
