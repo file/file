@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#ifdef __SVR4
+#include <sys/procfs.h>
+#endif
 
 #include "readelf.h"
 #include "file.h"
@@ -32,7 +35,9 @@ doshn(fd, off, num, size, buf)
 	(void) printf (", stripped");
 }
 
-#ifdef notyet
+/*
+ * From: Ken Pizzini <ken@spry.com>
+ */
 static void
 dophn(fd, off, num, size, buf)
 	int fd;
@@ -41,30 +46,48 @@ dophn(fd, off, num, size, buf)
 	size_t size;
 	char *buf;
 {
-	Elf32_Phdr *ph = (Elf32_Phdr *) buf;
+	/* I am not sure if this works for 64 bit elf formats */
+	Elf32_Phdr ph;
+	Elf32_Nhdr nh;
+	off_t off_sv;
+	off_t fname_off;
 
 	if (lseek(fd, off, SEEK_SET) == -1)
 		error("lseek failed (%s).\n", strerror(errno));
 
 	for ( ; num; num--) {
-		if (read(fd, buf, size) == -1)
+		if (read(fd, &ph, sizeof ph) != sizeof ph)
 			error("read failed (%s).\n", strerror(errno));
-		printf("type:%d\n", ph->p_type);
-		if (ph->p_type != PT_NOTE)
+		if (ph.p_type != PT_NOTE)
 			continue;
-		if (lseek(fd, ph->p_offset, SEEK_SET) == -1)
+		off_sv = lseek(fd, ph.p_offset, SEEK_SET);
+		if (off_sv == -1)
 			error("lseek failed (%s).\n", strerror(errno));
-		if (size > BUFSIZ)
-			size = BUFSIZ;
+		if (read(fd, &nh, sizeof nh) != sizeof nh)
+			error("read failed (%s).\n", strerror(errno));
+		if (nh.n_type != NT_PRPSINFO) {
+			if (lseek(fd, off_sv, SEEK_SET) == -1)
+				error("lseek failed (%s).\n", strerror(errno));
+			continue;
+		}
+
+#ifdef __SVR4
+
+#define ALIGN(n)	(((n)+3) & ~3)	/* round up to nearest multiple of 4 */
+#define offsetof(a, b)	(int) &((a *) 0)->b
+
+		fname_off = offsetof(struct prpsinfo, pr_fname) +
+			ALIGN(nh.n_namesz);
+		if (lseek(fd, fname_off, SEEK_CUR) == -1)
+			error("lseek failed (%s).\n", strerror(errno));
 		if (read(fd, buf, size) == -1)
 			error("read failed (%s).\n", strerror(errno));
-		for (size = 0; size < BUFSIZ; size++)
-			if (isalnum(buf[size]))
-				printf("%d %c\n", size, buf[size]);
+		(void) printf ("; from `%s'", buf);
+#endif
 		return;
 	}
 }
-#endif
+
 
 void
 tryelf(fd, buf, nbytes)
@@ -97,12 +120,10 @@ tryelf(fd, buf, nbytes)
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
 
-#ifdef notyet
 		if (elfhdr.e_type == ET_CORE) 
 			dophn(fd, elfhdr.e_phoff, elfhdr.e_phnum, 
 			      elfhdr.e_phentsize, buf);
 		else 
-#endif
 		{
 			/*
 			 * If the system byteorder does not equal the
@@ -125,12 +146,10 @@ tryelf(fd, buf, nbytes)
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
 
-#ifdef notyet
 		if (elfhdr.e_type == ET_CORE) 
 			dophn(fd, elfhdr.e_phoff, elfhdr.e_phnum, 
 			      elfhdr.e_phentsize, buf);
 		else
-#endif
 		{
 			/*
 			 * If the system byteorder does not equal the
