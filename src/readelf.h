@@ -1,6 +1,6 @@
 /*
  * readelf.h 
- * @(#)$Id: readelf.h,v 1.8 2002/05/16 15:01:41 christos Exp $
+ * @(#)$Id: readelf.h,v 1.9 2002/05/16 18:45:56 christos Exp $
  *
  * Provide elf data structures for non-elf machines, allowing file
  * non-elf hosts to determine if an elf binary is stripped.
@@ -8,6 +8,10 @@
  */
 #ifndef __fake_elf_h__
 #define __fake_elf_h__
+
+#if HAVE_STDINT_H
+#include <stdint.h>
+#endif
 
 typedef uint32_t	Elf32_Addr;
 typedef uint32_t	Elf32_Off;
