@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.81 2004/11/20 23:50:12 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.82 2004/11/24 18:56:04 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -89,7 +89,7 @@ private void byteswap(struct magic *, uint32_t);
 private void bs1(struct magic *);
 private uint16_t swap2(uint16_t);
 private uint32_t swap4(uint32_t);
-private char *mkdbname(const char *, char *, size_t);
+private char *mkdbname(const char *, char *, size_t, int);
 private int apprentice_map(struct magic_set *, struct magic **, uint32_t *,
     const char *);
 private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
@@ -1036,7 +1036,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	uint32_t version;
 	int needsbyteswap;
 	char buf[MAXPATHLEN];
-	char *dbname = mkdbname(fn, buf, sizeof(buf));
+	char *dbname = mkdbname(fn, buf, sizeof(buf), 0);
 	void *mm = NULL;
 
 	if (dbname == NULL)
@@ -1127,7 +1127,7 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
 {
 	int fd;
 	char buf[MAXPATHLEN];
-	char *dbname = mkdbname(fn, buf, sizeof(buf));
+	char *dbname = mkdbname(fn, buf, sizeof(buf), 1);
 
 	if (dbname == NULL) 
 		return -1;
@@ -1163,13 +1163,14 @@ private const char ext[] = ".mgc";
  * make a dbname
  */
 private char *
-mkdbname(const char *fn, char *buf, size_t bufsiz)
+mkdbname(const char *fn, char *buf, size_t bufsiz, int strip)
 {
-#ifdef notdef
-	const char *p;
-	if ((p = strrchr(fn, '/')) != NULL)
-		fn = ++p;
-#endif
+	if (strip) {
+		const char *p;
+		if ((p = strrchr(fn, '/')) != NULL)
+			fn = ++p;
+	}
+
 	(void)snprintf(buf, bufsiz, "%s%s", fn, ext);
 	return buf;
 }
