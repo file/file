@@ -1,5 +1,5 @@
 # don't enforce GNU packaging standards
-AUTOMAKE_OPTIONS = foreign
+AUTOMAKE_OPTIONS = foreign no-dependencies
 
 bin_PROGRAMS = file
 
