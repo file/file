@@ -34,7 +34,9 @@
  * 4. This notice may not be removed or altered.
  */
 
+#include "magic.h"
 #include "file.h"
+#include <stdio.h>
 #include <string.h>
 #include <memory.h>
 #include <ctype.h>
@@ -45,7 +47,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.33 2003/02/08 18:33:53 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.34 2003/03/23 04:06:04 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -54,29 +56,29 @@ typedef unsigned long unichar;
 #define ISSPC(x) ((x) == ' ' || (x) == '\t' || (x) == '\r' || (x) == '\n' \
 		  || (x) == 0x85 || (x) == '\f')
 
-static int looks_ascii(const unsigned char *, int, unichar *, int *);
-static int looks_utf8(const unsigned char *, int, unichar *, int *);
-static int looks_unicode(const unsigned char *, int, unichar *, int *);
-static int looks_latin1(const unsigned char *, int, unichar *, int *);
-static int looks_extended(const unsigned char *, int, unichar *, int *);
-static void from_ebcdic(const unsigned char *, int, unsigned char *);
-static int ascmatch(const unsigned char *, const unichar *, int);
+private int looks_ascii(const unsigned char *, size_t, unichar *, size_t *);
+private int looks_utf8(const unsigned char *, size_t, unichar *, size_t *);
+private int looks_unicode(const unsigned char *, size_t, unichar *, size_t *);
+private int looks_latin1(const unsigned char *, size_t, unichar *, size_t *);
+private int looks_extended(const unsigned char *, size_t, unichar *, size_t *);
+private void from_ebcdic(const unsigned char *, size_t, unsigned char *);
+private int ascmatch(const unsigned char *, const unichar *, size_t);
 
-/* int nbytes: size actually read */
-int
-ascmagic(unsigned char *buf, int nbytes)
+
+protected int
+file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 {
-	int i;
+	size_t i;
 	unsigned char nbuf[HOWMANY+1];	/* one extra for terminating '\0' */
 	unichar ubuf[HOWMANY+1];	/* one extra for terminating '\0' */
-	int ulen;
+	size_t ulen;
 	struct names *p;
 
-	char *code = NULL;
-	char *code_mime = NULL;
-	char *type = NULL;
-	char *subtype = NULL;
-	char *subtype_mime = NULL;
+	const char *code = NULL;
+	const char *code_mime = NULL;
+	const char *type = NULL;
+	const char *subtype = NULL;
+	const char *subtype_mime = NULL;
 
 	int has_escapes = 0;
 	int has_backspace = 0;
@@ -93,13 +95,16 @@ ascmagic(unsigned char *buf, int nbytes)
 	 * Do the tar test first, because if the first file in the tar
 	 * archive starts with a dot, we can confuse it with an nroff file.
 	 */
-	switch (is_tar(buf, nbytes)) {
+	switch (file_is_tar(buf, nbytes)) {
 	case 1:
-		ckfputs(iflag ? "application/x-tar" : "tar archive", stdout);
+	        if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
+		    "application/x-tar" : "tar archive") == -1)
+			return -1;
 		return 1;
 	case 2:
-		ckfputs(iflag ? "application/x-tar, POSIX"
-				: "POSIX tar archive", stdout);
+		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
+		    "application/x-tar, POSIX" : "POSIX tar archive") == -1)
+			return -1;
 		return 1;
 	}
 
@@ -190,7 +195,7 @@ ascmagic(unsigned char *buf, int nbytes)
 
 	i = 0;
 	while (i < ulen) {
-		int end;
+		size_t end;
 
 		/*
 		 * skip past any leading space
@@ -211,7 +216,7 @@ ascmagic(unsigned char *buf, int nbytes)
 		 * compare the word thus isolated against the token list
 		 */
 		for (p = names; p < names + NNAMES; p++) {
-			if (ascmatch((unsigned char *)p->name, ubuf + i,
+			if (ascmatch((const unsigned char *)p->name, ubuf + i,
 			    end - i)) {
 				subtype = types[p->type].human;
 				subtype_mime = types[p->type].mime;
@@ -254,29 +259,40 @@ subtype_identified:
 		}
 	}
 
-	if (iflag) {
-		if (subtype_mime)
-			ckfputs(subtype_mime, stdout);
-		else
-			ckfputs("text/plain", stdout);
+	if ((ms->flags & MAGIC_MIME)) {
+		if (subtype_mime) {
+			if (file_printf(ms, subtype_mime) == -1)
+				return -1;
+		} else {
+			if (file_printf(ms, "text/plain") == -1)
+				return -1;
+		}
 
 		if (code_mime) {
-			ckfputs("; charset=", stdout);
-			ckfputs(code_mime, stdout);
+			if (file_printf(ms, "; charset=") == -1)
+				return -1;
+			if (file_printf(ms, code_mime) == -1)
+				return -1;
 		}
 	} else {
-		ckfputs(code, stdout);
+		if (file_printf(ms, code) == -1)
+			return -1;
 
 		if (subtype) {
-			ckfputs(" ", stdout);
-			ckfputs(subtype, stdout);
+			if (file_printf(ms, " ") == -1)
+				return -1;
+			if (file_printf(ms, subtype) == -1)
+				return -1;
 		}
 
-		ckfputs(" ", stdout);
-		ckfputs(type, stdout);
+		if (file_printf(ms, " ") == -1)
+			return -1;
+		if (file_printf(ms, type) == -1)
+			return -1;
 
 		if (has_long_lines)
-			ckfputs(", with very long lines", stdout);
+			if (file_printf(ms, ", with very long lines") == -1)
+				return -1;
 
 		/*
 		 * Only report line terminators if we find one other than LF,
@@ -284,44 +300,56 @@ subtype_identified:
 		 */
 		if ((n_crlf == 0 && n_cr == 0 && n_nel == 0 && n_lf == 0) ||
 		    (n_crlf != 0 || n_cr != 0 || n_nel != 0)) {
-			ckfputs(", with", stdout);
+			if (file_printf(ms, ", with") == -1)
+				return -1;
 
-			if (n_crlf == 0 && n_cr == 0 && n_nel == 0 && n_lf == 0)
-				ckfputs(" no", stdout);
-			else {
+			if (n_crlf == 0 && n_cr == 0 && n_nel == 0 && n_lf == 0)			{
+				if (file_printf(ms, " no") == -1)
+					return -1;
+			} else {
 				if (n_crlf) {
-					ckfputs(" CRLF", stdout);
+					if (file_printf(ms, " CRLF") == -1)
+						return -1;
 					if (n_cr || n_lf || n_nel)
-						ckfputs(",", stdout);
+						if (file_printf(ms, ",") == -1)
+							return -1;
 				}
 				if (n_cr) {
-					ckfputs(" CR", stdout);
+					if (file_printf(ms, " CR") == -1)
+						return -1;
 					if (n_lf || n_nel)
-						ckfputs(",", stdout);
+						if (file_printf(ms, ",") == -1)
+							return -1;
 				}
 				if (n_lf) {
-					ckfputs(" LF", stdout);
+					if (file_printf(ms, " LF") == -1)
+						return -1;
 					if (n_nel)
-						ckfputs(",", stdout);
+						if (file_printf(ms, ",") == -1)
+							return -1;
 				}
 				if (n_nel)
-					ckfputs(" NEL", stdout);
+					if (file_printf(ms, " NEL") == -1)
+						return -1;
 			}
 
-			ckfputs(" line terminators", stdout);
+			if (file_printf(ms, " line terminators") == -1)
+				return -1;
 		}
 
 		if (has_escapes)
-			ckfputs(", with escape sequences", stdout);
+			if (file_printf(ms, ", with escape sequences") == -1)
+				return -1;
 		if (has_backspace)
-			ckfputs(", with overstriking", stdout);
+			if (file_printf(ms, ", with overstriking") == -1)
+				return -1;
 	}
 
 	return 1;
 }
 
-static int
-ascmatch(const unsigned char *s, const unichar *us, int ulen)
+private int
+ascmatch(const unsigned char *s, const unichar *us, size_t ulen)
 {
 	size_t i;
 
@@ -393,7 +421,7 @@ ascmatch(const unsigned char *s, const unichar *us, int ulen)
 #define I 2   /* character appears in ISO-8859 text */
 #define X 3   /* character appears in non-ISO extended ASCII (Mac, IBM PC) */
 
-static char text_chars[256] = {
+private char text_chars[256] = {
 	/*                  BEL BS HT LF    FF CR    */
 	F, F, F, F, F, F, F, T, T, T, T, F, T, T, F, F,  /* 0x0X */
         /*                              ESC          */
@@ -415,8 +443,9 @@ static char text_chars[256] = {
 	I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I   /* 0xfX */
 };
 
-static int
-looks_ascii(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
+private int
+looks_ascii(const unsigned char *buf, size_t nbytes, unichar *ubuf,
+    size_t *ulen)
 {
 	int i;
 
@@ -434,8 +463,8 @@ looks_ascii(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
 	return 1;
 }
 
-static int
-looks_latin1(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
+private int
+looks_latin1(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 {
 	int i;
 
@@ -453,8 +482,9 @@ looks_latin1(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
 	return 1;
 }
 
-static int
-looks_extended(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
+private int
+looks_extended(const unsigned char *buf, size_t nbytes, unichar *ubuf,
+    size_t *ulen)
 {
 	int i;
 
@@ -472,8 +502,8 @@ looks_extended(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
 	return 1;
 }
 
-int
-looks_utf8(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
+private int
+looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 {
 	int i, n;
 	unichar c;
@@ -534,8 +564,9 @@ done:
 	return gotone;   /* don't claim it's UTF-8 if it's all 7-bit */
 }
 
-static int
-looks_unicode(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
+private int
+looks_unicode(const unsigned char *buf, size_t nbytes, unichar *ubuf,
+    size_t *ulen)
 {
 	int bigend;
 	int i;
@@ -596,7 +627,7 @@ looks_unicode(const unsigned char *buf, int nbytes, unichar *ubuf, int *ulen)
  * between old-style and internationalized examples of text.
  */
 
-unsigned char ebcdic_to_ascii[] = {
+private unsigned char ebcdic_to_ascii[] = {
   0,   1,   2,   3, 156,   9, 134, 127, 151, 141, 142,  11,  12,  13,  14,  15,
  16,  17,  18,  19, 157, 133,   8, 135,  24,  25, 146, 143,  28,  29,  30,  31,
 128, 129, 130, 131, 132,  10,  23,  27, 136, 137, 138, 139, 140,   5,   6,   7,
@@ -615,6 +646,7 @@ unsigned char ebcdic_to_ascii[] = {
 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 250, 251, 252, 253, 254, 255
 };
 
+#ifdef notdef
 /*
  * The following EBCDIC-to-ASCII table may relate more closely to reality,
  * or at least to modern reality.  It comes from
@@ -629,7 +661,7 @@ unsigned char ebcdic_to_ascii[] = {
  * cases for the NEL character can be taken out of the code.
  */
 
-unsigned char ebcdic_1047_to_8859[] = {
+private unsigned char ebcdic_1047_to_8859[] = {
 0x00,0x01,0x02,0x03,0x9C,0x09,0x86,0x7F,0x97,0x8D,0x8E,0x0B,0x0C,0x0D,0x0E,0x0F,
 0x10,0x11,0x12,0x13,0x9D,0x0A,0x08,0x87,0x18,0x19,0x92,0x8F,0x1C,0x1D,0x1E,0x1F,
 0x80,0x81,0x82,0x83,0x84,0x85,0x17,0x1B,0x88,0x89,0x8A,0x8B,0x8C,0x05,0x06,0x07,
@@ -647,12 +679,13 @@ unsigned char ebcdic_1047_to_8859[] = {
 0x5C,0xF7,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5A,0xB2,0xD4,0xD6,0xD2,0xD3,0xD5,
 0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0xB3,0xDB,0xDC,0xD9,0xDA,0x9F
 };
+#endif
 
 /*
  * Copy buf[0 ... nbytes-1] into out[], translating EBCDIC to ASCII.
  */
-static void
-from_ebcdic(const unsigned char *buf, int nbytes, unsigned char *out)
+private void
+from_ebcdic(const unsigned char *buf, size_t nbytes, unsigned char *out)
 {
 	int i;
 

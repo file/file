@@ -10,7 +10,7 @@
  *
  * See LEGAL.NOTICE
  *
- * $Id: names.h,v 1.19 2002/05/16 15:01:41 christos Exp $
+ * $Id: names.h,v 1.20 2003/03/23 04:06:05 christos Exp $
  */
 
 /*
@@ -35,8 +35,8 @@
 #define	L_M4	13		/* M4 */
 
 static const struct {
-	char *human;
-	char *mime;
+	const char *human;
+	const char *mime;
 } types[] = {
 	{ "C program",					"text/x-c", },
 	{ "C++ program",				"text/x-c++" },
