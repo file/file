@@ -1,44 +1,81 @@
 /*
- * istar() - see if it is a tar file. Found in code written by
- *	Fred Blonder (301) 454-7690
- *	harpo!seismo!umcp-cs!fred
- *	Fred@Maryland.ARPA
- *	Net.sources, <9@gyre.uucp>, October 1983
- * I changed the calling sequence, added a cast or two, and ran through cb -sj.
+ * is_tar() -- figure out whether file is a tar archive.
+ *
+ * Stolen (by the author!) from the public domain tar program:
+ * Pubic Domain version written 26 Aug 1985 by John Gilmore (ihnp4!hoptoad!gnu).
+ *
+ * @(#)list.c 1.18 9/23/86 Public Domain - gnu
  */
+#include <ctype.h>
+#include <sys/types.h>
+#include "tar.h"
 
-is_tar(buf)	/* Is it a tar file? */
-char *buf;
+#define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
+
+long from_oct();			/* Decode octal number */
+
+/*
+ * Return 1 for old tar file, 0 if the checksum is bad, 2 for Unix Std tar file.
+ */
+int
+is_tar(header)
+	register union record *header;
 {
-	/* This stuff is copied from tar.c. */
-#define TBLOCK	512
-#define NAMSIZ	100
-	register struct header {
-		char	name[NAMSIZ];
-		char	mode[8];
-		char	uid[8];
-		char	gid[8];
-		char	size[12];
-		char	mtime[12];
-		char	chksum[8];
-		char	linkflag;
-		char	linkname[NAMSIZ];
-	};
-	register comp_chksum;
-	register char	*cp;
-	int	header_chksum;
+	register int	i;
+	register long	sum, recsum;
+	register char	*p;
 
-	/* Compute checksum */
-	comp_chksum = 0;
-	for (cp = buf; cp < &buf[TBLOCK]; cp++)
-		comp_chksum += (cp < ((struct header *)buf)->chksum
-		     || cp >= &((struct header *)buf)->chksum[8]) ? 
-		    *cp : ' ';
+	recsum = from_oct(8,  header->header.chksum);
 
-	/* Convert checksum field to integer */
-	(void) sscanf(((struct header *)buf)->chksum, "%o", &header_chksum);
+	sum = 0;
+	p = header->charptr;
+	for (i = sizeof(*header); --i >= 0;) {
+		/*
+		 * We can't use unsigned char here because of old compilers,
+		 * e.g. V7.
+		 */
+		sum += 0xFF & *p++;
+	}
 
-	return (comp_chksum == header_chksum); /* Is checksum correct? */
+	/* Adjust checksum to count the "chksum" field as blanks. */
+	for (i = sizeof(header->header.chksum); --i >= 0;)
+		sum -= 0xFF & header->header.chksum[i];
+	sum += ' '* sizeof header->header.chksum;	
+
+	if (sum != recsum) return 0;	/* Not a tar archive */
+	
+	if (0==strcmp(header->header.magic, TMAGIC)) 
+		return 2;		/* Unix Standard tar archive */
+
+	return 1;			/* Old fashioned tar archive */
 }
 
 
+/*
+ * Quick and dirty octal conversion.
+ *
+ * Result is -1 if the field is invalid (all blank, or nonoctal).
+ */
+long
+from_oct(digs, where)
+	register int	digs;
+	register char	*where;
+{
+	register long	value;
+
+	while (isspace(*where)) {		/* Skip spaces */
+		where++;
+		if (--digs <= 0)
+			return -1;		/* All blank field */
+	}
+	value = 0;
+	while (digs > 0 && isodigit(*where)) {	/* Scan til nonoctal */
+		value = (value << 3) | (*where++ - '0');
+		--digs;
+	}
+
+	if (digs > 0 && *where && !isspace(*where))
+		return -1;			/* Ended on non-space/nul */
+
+	return value;
+}
