@@ -1,6 +1,9 @@
 #
 # magic.dump, dump file format. For new and old dump filesystems
 #
+# No, these shouldn't specify a specific byte order, because the byte
+# order is dependent on the machine that produced the dump.
+#
 24	long	60012		new-fs dump file,
 >4	date	x		Previous dump %s,
 >8	date	x		This dump %s,

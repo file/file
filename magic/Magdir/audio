@@ -1,4 +1,8 @@
 # Sound formats, from Jan Nicolai Langfeldt <janl@ifi.uio.no>
+#
+# XXX -what the hell is the "mips" stuff doing there?  It looks like
+# the archive stuff from "iris"....
+#
 0       string          .snd            audio data:
 >12     long            1               8-bit u-law,
 >12     long            2               8-bit linear PCM,

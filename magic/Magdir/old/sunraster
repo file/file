@@ -1,4 +1,8 @@
+#
 # Sun rasterfiles
+#
+# XXX - byte order?  What about the 386i?
+#
 0	string	\x59\xa6\x6a\x95	rasterfile
 >4	long	>0		%d
 >8	long	>0		x %d

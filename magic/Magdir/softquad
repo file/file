@@ -1,6 +1,9 @@
 # SoftQuad Publishing Software magic numbers
-# $Id: softquad,v 1.7 1993/01/05 12:51:54 ian Exp $
+# $Id: softquad,v 1.8 1993/02/19 14:36:43 ian Exp $
 # Author/Editor and RulesBuilder
+#
+# XXX - byte order?
+#
 0	string		\<!SQ\ DTD>	Compiled SGML rules file
 >9	string		>\0		 Type %s
 0	string		\<!SQ\ A/E>	A/E SGML Document binary
