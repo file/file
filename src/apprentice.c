@@ -29,13 +29,17 @@
 #include <ctype.h>
 #include "file.h"
 
+#ifndef	lint
+static char *moduleid = "$Header: /home/glen/git/file/cvs/file/src/apprentice.c,v 1.6 1987/09/16 10:11:06 ian Exp $";
+#endif	/* lint */
+
 #define MAXSTR		500
 #define	EATAB {while (isascii(*l) && isspace(*l))  ++l;}
 
 
 extern char *progname;
 extern char *magicfile;
-extern int debug, check;	/* options */
+extern int debug;		/* option */
 extern int nmagic;		/* number of valid magic[]s */
 extern long strtol();
 
@@ -43,8 +47,9 @@ struct magic magic[MAXMAGIS];
 
 char *getstr();
 
-apprentice(fn)
-char *fn;
+apprentice(fn, check)
+char *fn;			/* name of magic file */
+int check;		/* non-zero: checking-only run. */
 {
 	FILE *f;
 	char line[MAXSTR+1];
@@ -65,7 +70,7 @@ char *fn;
 		if (strlen(line) <= 1)	/* null line, garbage, etc */
 			continue;
 		line[strlen(line)-1] = '\0'; /* delete newline */
-		(void) parse(line, &nmagic);
+		(void) parse(line, &nmagic, check);
 	}
 
 	(void) fclose(f);
@@ -74,9 +79,9 @@ char *fn;
 /*
  * parse one line from magic file, put into magic[index++] if valid
  */
-parse(l, ndx)
+parse(l, ndx, check)
 char *l;
-int *ndx;
+int *ndx, check;
 {
 	int i = 0, nd = *ndx;
 	int slen;
@@ -132,8 +137,10 @@ int *ndx;
 		m->reln = '=';
 	EATAB;
 
-/* TODO finish this macro and start using it! */
-#define offsetcheck {if (offset > HOWMANY-1) warning("offset too big"); }
+/*
+ * TODO finish this macro and start using it!
+ * #define offsetcheck {if (offset > HOWMANY-1) warning("offset too big"); }
+ */
 	switch(m->type) {
 	/*
 	 * Do not remove the casts below.  They are vital.

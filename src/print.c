@@ -29,6 +29,10 @@
 #include <errno.h>
 #include "file.h"
 
+#ifndef	lint
+static char *moduleid = "$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.4 1987/09/16 10:11:55 ian Exp $";
+#endif	/* lint */
+
 #define MAXSTR		500
 
 extern char *progname;
