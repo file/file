@@ -37,8 +37,8 @@
  *	uncompress(method, old, n, newch) - uncompress old into new, 
  *					    using method, return sizeof new
  */
-#include "magic.h"
 #include "file.h"
+#include "magic.h"
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -56,7 +56,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.34 2003/10/14 19:29:55 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.35 2003/11/11 20:01:45 christos Exp $")
 #endif
 
 

@@ -34,8 +34,8 @@
  * file - find type of a file or files - main program.
  */
 
-#include "magic.h"
 #include "file.h"
+#include "magic.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.86 2003/10/27 18:09:41 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.87 2003/11/11 20:01:45 christos Exp $")
 #endif	/* lint */
 
 
