@@ -102,8 +102,9 @@
 1080	string	8CHN		8-channel Fasttracker module sound data
 1080	string	CD81		8-channel Oktalyzer module sound data
 1080	string	OKTA		8-channel Oktalyzer module sound data
-1082	string	CH
->1080	string	>/0		%.2s-channel Fasttracker "oktalyzer" module sound data
+# Not good enough.
+#1082	string	CH
+#>1080	string	>/0		%.2s-channel Fasttracker "oktalyzer" module sound data
 1080	string	16CN		16-channel Taketracker module sound data
 1080	string	32CN		32-channel Taketracker module sound data
 
