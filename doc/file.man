@@ -171,8 +171,10 @@ The program has undergone continued evolution since.
 .SH NOTICE
 Copyright (c) Ian F. Darwin,  1986 and 1987.
 Written by Ian F. Darwin, {utzoo|ihnp4}!darwin!ian.
-Postal: P.O. Box 603, Station F, Toronto, CANADA M4Y 2L8;
+Postal: P.O. Box 603, Station F, Toronto, Ontario, CANADA M4Y 2L8.
 .I Strtok.c
+and
+.I getopt.c
 written by and copyright by Henry Spencer, utzoo!henry.
 .PP
 This software is not subject to any license of the American Telephone
