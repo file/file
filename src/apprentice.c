@@ -34,9 +34,11 @@ char *fn;
 	if (check)	/* print silly verbose header for USG compat. */
 		(void) printf("cont\toffset\ttype\topcode\tvalue\tdesc\n");
 	while (fgets(line, MAXSTR, f) != NULL) {
-		if (line[0]=='#')
+		if (line[0]=='#')	/* comment, do not parse */
 			continue;
-		line[strlen(line)-1] = '\0'; /* nuke newline */
+		if (strlen(line) <= 1)	/* null line, garbage, etc */
+			continue;
+		line[strlen(line)-1] = '\0'; /* delete newline */
 		(void) parse(line, &nmagic);
 	}
 
