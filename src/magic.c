@@ -36,7 +36,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.3 2003/03/23 21:24:07 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.4 2003/03/24 01:16:28 christos Exp $")
 #endif	/* lint */
 
 
@@ -131,7 +131,7 @@ magic_close(ms)
 public int
 magic_compile(struct magic_set *ms, const char *magicfile)
 {
-	struct mlist *ml = file_apprentice(ms, magicfile, COMPILE);
+	struct mlist *ml = file_apprentice(ms, magicfile, FILE_COMPILE);
 	if(ml == NULL)
 		return -1;
 	free_mlist(ml);
@@ -141,7 +141,7 @@ magic_compile(struct magic_set *ms, const char *magicfile)
 public int
 magic_check(struct magic_set *ms, const char *magicfile)
 {
-	struct mlist *ml = file_apprentice(ms, magicfile, CHECK);
+	struct mlist *ml = file_apprentice(ms, magicfile, FILE_CHECK);
 	if(ml == NULL)
 		return -1;
 	free_mlist(ml);

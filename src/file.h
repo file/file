@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.47 2003/03/23 21:16:26 christos Exp $
+ * @(#)$Id: file.h,v 1.48 2003/03/24 01:16:28 christos Exp $
  */
 
 #ifndef __file_h__
@@ -76,8 +76,8 @@
 #define MAGICNO		0xF11E041C
 #define VERSIONNO	1
 
-#define CHECK	1
-#define COMPILE	2
+#define FILE_CHECK	1
+#define FILE_COMPILE	2
 
 #ifndef __GNUC__
 #define __attribute__(a)
@@ -94,33 +94,33 @@ struct magic {
 	uint8_t vallen;		/* length of string value, if any */
 	uint8_t type;		/* int, short, long or string. */
 	uint8_t in_type;	/* type of indirrection */
-#define 			BYTE	1
-#define				SHORT	2
-#define				LONG	4
-#define				STRING	5
-#define				DATE	6
-#define				BESHORT	7
-#define				BELONG	8
-#define				BEDATE	9
-#define				LESHORT	10
-#define				LELONG	11
-#define				LEDATE	12
-#define				PSTRING	13
-#define				LDATE	14
-#define				BELDATE	15
-#define				LELDATE	16
-#define				REGEX	17
+#define 			FILE_BYTE	1
+#define				FILE_SHORT	2
+#define				FILE_LONG	4
+#define				FILE_STRING	5
+#define				FILE_DATE	6
+#define				FILE_BESHORT	7
+#define				FILE_BELONG	8
+#define				FILE_BEDATE	9
+#define				FILE_LESHORT	10
+#define				FILE_LELONG	11
+#define				FILE_LEDATE	12
+#define				FILE_PSTRING	13
+#define				FILE_LDATE	14
+#define				FILE_BELDATE	15
+#define				FILE_LELDATE	16
+#define				FILE_REGEX	17
 	uint8_t in_op;		/* operator for indirection */
 	uint8_t mask_op;	/* operator for mask */
-#define				OPAND	1
-#define				OPOR	2
-#define				OPXOR	3
-#define				OPADD	4
-#define				OPMINUS	5
-#define				OPMULTIPLY	6
-#define				OPDIVIDE	7
-#define				OPMODULO	8
-#define				OPINVERSE	0x80
+#define				FILE_OPAND	1
+#define				FILE_OPOR	2
+#define				FILE_OPXOR	3
+#define				FILE_OPADD	4
+#define				FILE_OPMINUS	5
+#define				FILE_OPMULTIPLY	6
+#define				FILE_OPDIVIDE	7
+#define				FILE_OPMODULO	8
+#define				FILE_OPINVERSE	0x80
 	int32_t offset;		/* offset to magic number */
 	int32_t in_offset;	/* offset from indirection */
 	union VALUETYPE {
@@ -173,7 +173,7 @@ struct magic_set {
 
 struct stat;
 protected char *file_fmttime(long, int);
-protected int file_buf(struct magic_set *, const void *buf, size_t);
+protected int file_buffer(struct magic_set *, const void *buf, size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_printf(struct magic_set *, const char *, ...);

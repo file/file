@@ -111,7 +111,7 @@ file_badread(struct magic_set *ms)
 }
 
 protected int
-file_buf(struct magic_set *ms, const void *buf, size_t nb)
+file_buffer(struct magic_set *ms, const void *buf, size_t nb)
 {
     int m;
     /* try compression stuff */
