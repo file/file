@@ -149,13 +149,15 @@ then the string after the parenthesis is interpreted as an indirect offset.
 That means that the number after the parenthesis is used as an offset in
 the file. The value at that offset is read, and is used again as an offset
 in the file. Indirect offsets are of the form:
-.BI (( x [.[bsl]][+-][ y ]).
+.BI (( x [.[bslBSL]][+-][ y ]).
 The value of 
 .I x
 is used as an offset in the file. A byte, short or long is read at that offset
 depending on the 
-.B [bsl] 
-type specifier. To that number the value of
+.B [bslBSL] 
+type specifier. The capitalized types interpret the number as a big endian
+value, whereas the small letter versions interpet the number as a little
+endian value. To that number the value of
 .I y
 is added and the result is used as an offset in the file. The default type
 if one is not specified is long.
@@ -203,4 +205,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.14 1996/06/22 22:05:07 christos Exp $
+.\" @(#)$Id: magic.man,v 1.15 1998/08/13 17:32:24 christos Exp $
