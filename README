@@ -20,7 +20,8 @@ in file(5) format please(!), to the  author, Ian Darwin,
 LEGAL.NOTICE - read this first.
 README - read this second (you are currently reading this file).
 PORTING - read this next.
-Makefile - read this next, fix it if needed, type "make".
+Makefile - read this next, fix it if needed, type "make"
+	to compile, "make test" to try it (expect some diffs!).
 apprentice.c - parses /etc/magic to learn magic
 ascmagic.c - third & last set of tests, based on hardwired assumptions.
 core - not included in distribution due to mailer limitations.
