@@ -56,7 +56,7 @@
 0	string	(***********************	Mathematica 3.0 notebook
 
 # other (* matches it is a comment start in these langs
-0	string	(*	Mathematica, or Pascal,  Modula-2 or 3 code
+0	string	(*	Mathematica, or Pascal,  Modula-2 or 3 code text
 
 #########################
 # MatLab v5
