@@ -62,13 +62,16 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.38 2003/03/23 21:16:26 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.39 2003/03/26 16:31:20 christos Exp $")
 #endif	/* lint */
 
 protected int
 file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 {
 	int ret = 0;
+
+	if (fn == NULL)
+		return 0;
 
 	/*
 	 * Fstat is cheaper but fails for files you don't have read perms on.
