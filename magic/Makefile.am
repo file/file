@@ -1,6 +1,6 @@
 data_DATA = magic magic.mime magic.mgc magic.mime.mgc
 
-EXTRA_DIST = magic2mime Localstuff Header $(magic_FRAGMENTS)
+EXTRA_DIST = magic2mime Localstuff Header magic.mime $(magic_FRAGMENTS)
 
 CLEANFILES =  magic magic.mgc magic.mime.mgc
 
@@ -38,11 +38,15 @@ Magdir/archive \
 Magdir/asterix \
 Magdir/att3b \
 Magdir/audio \
+Magdir/bFLT \
 Magdir/blender \
 Magdir/blit \
+Magdir/bout \
 Magdir/bsdi \
 Magdir/c-lang \
+Magdir/cddb \
 Magdir/chi \
+Magdir/chord \
 Magdir/cisco \
 Magdir/citrus \
 Magdir/claris \
@@ -74,8 +78,10 @@ Magdir/gimp \
 Magdir/gnu \
 Magdir/grace \
 Magdir/gringotts \
+Magdir/hdf \
 Magdir/hitachi-sh \
 Magdir/hp \
+Magdir/human68k \
 Magdir/ibm370 \
 Magdir/ibm6000 \
 Magdir/iff \
@@ -103,6 +109,7 @@ Magdir/mime \
 Magdir/mips \
 Magdir/mirage \
 Magdir/mkid \
+Magdir/mlssa \
 Magdir/mmdf \
 Magdir/modem \
 Magdir/motorola \
@@ -148,6 +155,7 @@ Magdir/smalltalk \
 Magdir/sniffer \
 Magdir/softquad \
 Magdir/spectrum \
+Magdir/sql \
 Magdir/sun \
 Magdir/sysex \
 Magdir/teapot \

@@ -1,5 +1,5 @@
+include ../Makefile.inc
 
-MAGIC	 = $(datadir)/magic
 if FSECT5
 man_MAGIC = magic.5
 else
