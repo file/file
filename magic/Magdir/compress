@@ -2,7 +2,9 @@
 # CPL 	- added pack to /etc/magic
 0	short		017436		packed data
 0	short		0145405		huf output
-
+#
+# Formats for "compress"
+#
 0	string		\037\235	compressed data
 # non block compressed
 >2	byte		12		- with 12 bits
@@ -16,3 +18,11 @@
 >2	byte		142		- with 14 bits
 >2	byte		143		- with 15 bits
 >2	byte		144		- with 16 bits
+#
+# Squeeze and Crunch...
+# These numbers were gleaned from the Unix versions of the programs to
+# handle these formats.  Note that I can only uncrunch, not crunch, and
+# I didn't have a crunched file handy, so the crunch number is untested.
+#				Keith Waclena <keith@cerberus.uchicago.edu>
+0	short		0x76FF		squeezed data (CP/M, DOS)
+0	short		0x76FE		crunched data (CP/M, DOS)
