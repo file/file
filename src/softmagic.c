@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.19 1993/09/23 18:24:45 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.20 1993/09/23 18:31:14 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -169,41 +169,43 @@ struct magic *m;
 unsigned char *s;
 int nbytes;
 {
-	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
+	union VALUETYPE p;
 	char *pp, *rt;
 
 	if (m->offset + sizeof(union VALUETYPE) > nbytes)
 	    return;
+
+	memcpy(&p, (union VALUETYPE *)(s+m->offset), sizeof(p));
 	
 
   	switch (m->type) {
   	case BYTE:
  		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p->b & m->mask : p->b);
+ 			      (m->reln & MASK) ? p.b & m->mask : p.b);
   		break;
   	case SHORT:
   	case BESHORT:
   	case LESHORT:
  		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p->h & m->mask : p->h);
+ 			      (m->reln & MASK) ? p.h & m->mask : p.h);
   		break;
   	case LONG:
   	case BELONG:
   	case LELONG:
  		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p->l & m->mask : p->l);
+ 			      (m->reln & MASK) ? p.l & m->mask : p.l);
   		break;
   	case STRING:
-		if ((rt=strchr(p->s, '\n')) != NULL)
+		if ((rt=strchr(p.s, '\n')) != NULL)
 			*rt = '\0';
-		(void) printf(m->desc, p->s);
+		(void) printf(m->desc, p.s);
 		if (rt)
 			*rt = '\n';
 		break;
 	case DATE:
 	case BEDATE:
 	case LEDATE:
-		pp = ctime((time_t*) &p->l);
+		pp = ctime((time_t*) &p.l);
 		if ((rt = strchr(pp, '\n')) != NULL)
 			*rt = '\0';
 		(void) printf(m->desc, pp);
@@ -222,7 +224,7 @@ unsigned char	*s;
 struct magic *m;
 int nbytes;
 {
-	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
+	union VALUETYPE p;
 	register long l = m->value.l;
 	register long mask = m->mask;
 	register long v;
@@ -230,9 +232,11 @@ int nbytes;
 	if (m->offset + sizeof(union VALUETYPE) > nbytes)
 	    return 0;
 
+	memcpy(&p, (union VALUETYPE *)(s+m->offset), sizeof(p));
+
 	if (debug) {
 		(void) fprintf(stderr, "mcheck @%d: ", m->offset);
-		showstr(stderr, (char *) p, 10);
+		showstr(stderr, (char *) &p, 10);
 		(void) fputc('\n', stderr);
 		(void) fputc('\n', stderr);
 		mdump(m);
@@ -245,25 +249,25 @@ int nbytes;
 
 	switch (m->type) {
 	case BYTE:
-		v = p->b; break;
+		v = p.b; break;
 	case SHORT:
-		memcpy(&v, &p->h, sizeof(short));
+		v = p.h; break;
 		break;
 	case LONG:
 	case DATE:
-		memcpy(&v, &p->l, sizeof(long));
+		v = p.l; break;
 		break;
 	case STRING:
 		l = 0;
 		/* What we want here is:
-		 * v = strncmp(m->value.s, p->s, m->vallen);
+		 * v = strncmp(m->value.s, p.s, m->vallen);
 		 * but ignoring any nulls.  bcmp doesn't give -/+/0
 		 * and isn't universally available anyway.
 		 */
 		v = 0;
 		{
 			register unsigned char *a = (unsigned char*)m->value.s;
-			register unsigned char *b = (unsigned char*)p->s;
+			register unsigned char *b = (unsigned char*)p.s;
 			register int len = m->vallen;
 
 			while (--len >= 0)
@@ -272,20 +276,20 @@ int nbytes;
 		}
 		break;
 	case BESHORT:
-		v = (short)((p->hs[0]<<8)|(p->hs[1]));
+		v = (short)((p.hs[0]<<8)|(p.hs[1]));
 		break;
 	case BELONG:
 	case BEDATE:
 		v = (long)
-		    ((p->hl[0]<<24)|(p->hl[1]<<16)|(p->hl[2]<<8)|(p->hl[3]));
+		    ((p.hl[0]<<24)|(p.hl[1]<<16)|(p.hl[2]<<8)|(p.hl[3]));
 		break;
 	case LESHORT:
-		v = (short)((p->hs[1]<<8)|(p->hs[0]));
+		v = (short)((p.hs[1]<<8)|(p.hs[0]));
 		break;
 	case LELONG:
 	case LEDATE:
 		v = (long)
-		    ((p->hl[3]<<24)|(p->hl[2]<<16)|(p->hl[1]<<8)|(p->hl[0]));
+		    ((p.hl[3]<<24)|(p.hl[2]<<16)|(p.hl[1]<<8)|(p.hl[0]));
 		break;
 	default:
 		error("invalid type %d in mcheck().\n", m->type);
