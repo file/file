@@ -120,7 +120,6 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 MAGIC = $(pkgdatadir)/magic
-
 @FSECT5_TRUE@man_MAGIC = magic.5
 @FSECT5_FALSE@man_MAGIC = magic.4
 man_MANS = file.1 $(man_MAGIC) libmagic.3
@@ -135,11 +134,11 @@ DIST_SOURCES =
 
 NROFF = nroff
 MANS = $(man_MANS)
-DIST_COMMON = $(srcdir)/../Makefile.inc Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in
 all: all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in:  Makefile.am $(srcdir)/../Makefile.inc $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  doc/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
@@ -354,7 +353,6 @@ top_distdir = ..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
-	$(mkinstalldirs) $(distdir)/./..
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
