@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.61 2003/10/14 19:17:17 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.62 2003/10/14 19:29:55 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -1157,7 +1157,7 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 
 	default:
 		matched = 0;
-		file_error(ms, 0, "can't happen: invalid relation `%c'",
+		file_error(ms, 0, "cannot happen: invalid relation `%c'",
 		    m->reln);
 		return -1;
 	}

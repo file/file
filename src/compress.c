@@ -56,7 +56,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.33 2003/10/14 19:17:17 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.34 2003/10/14 19:29:55 christos Exp $")
 #endif
 
 
@@ -201,7 +201,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 #endif
 	if (tfd == -1) {
 		file_error(ms, errno,
-		    "Can't create temporary file for pipe copy");
+		    "cannot create temporary file for pipe copy");
 		return -1;
 	}
 
@@ -215,12 +215,12 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 
 	switch (r) {
 	case -1:
-		file_error(ms, errno, "Error copying from pipe to temp file");
+		file_error(ms, errno, "error copying from pipe to temp file");
 		return -1;
 	case 0:
 		break;
 	default:
-		file_error(ms, errno, "Error while writing to temp file");
+		file_error(ms, errno, "error while writing to temp file");
 		return -1;
 	}
 
@@ -230,7 +230,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 	 * can still access the phantom inode.
 	 */
 	if ((fd = dup2(tfd, fd)) == -1) {
-		file_error(ms, errno, "Couldn't dup destcriptor for temp file");
+		file_error(ms, errno, "could not dup descriptor for temp file");
 		return -1;
 	}
 	(void)close(tfd);
@@ -329,7 +329,7 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 #endif
 
 	if (pipe(fdin) == -1 || pipe(fdout) == -1) {
-		file_error(ms, errno, "Cannot create pipe");	
+		file_error(ms, errno, "cannot create pipe");	
 		return 0;
 	}
 	switch (fork()) {
@@ -351,7 +351,7 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 		exit(1);
 		/*NOTREACHED*/
 	case -1:
-		file_error(ms, errno, "Could not fork");
+		file_error(ms, errno, "could not fork");
 		return 0;
 
 	default: /* parent */

@@ -31,7 +31,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apptype.c,v 1.4 2003/10/14 19:17:17 christos Exp $")
+FILE_RCSID("@(#)$Id: apptype.c,v 1.5 2003/10/14 19:29:55 christos Exp $")
 #endif /* lint */
 
 #ifdef __EMX__
@@ -55,7 +55,7 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const void *buf,
 	if (fn)
 		filename = strdup(fn);
 	else if ((filename = tempnam("./", "tmp")) == NULL) {
-		file_error(ms, errno, "Can't create tempnam");
+		file_error(ms, errno, "cannot create tempnam");
 		return -1;
 	}
 	/* qualify the filename to prevent extraneous searches */
@@ -67,11 +67,12 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const void *buf,
 
 	if (fn == NULL) {
 		if ((fp = fopen(path, "wb")) == NULL) {
-			file_error(ms, errno, "Can't open tmp file `%s'", path);
+			file_error(ms, errno, "cannot open tmp file `%s'", path);
 			return -1;
 		}
 		if (fwrite(buf, 1, nb, fp) != nb) {
-			file_error(ms, errno, "Can't write tmp file `%s'", path);
+			file_error(ms, errno, "cannot write tmp file `%s'",
+			    path);
 			return -1;
 		}
 		(void)fclose(fp);

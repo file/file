@@ -42,7 +42,7 @@
 #endif
 #include <stdlib.h>
 #include <sys/stat.h>
-/* Since major is a function on SVR4, we can't use `ifndef major'.  */
+/* Since major is a function on SVR4, we cannot use `ifndef major'.  */
 #ifdef MAJOR_IN_MKDEV
 # include <sys/mkdev.h>
 # define HAVE_MAJOR
@@ -62,7 +62,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.42 2003/10/14 19:17:17 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.43 2003/10/14 19:29:55 christos Exp $")
 #endif	/* lint */
 
 protected int
@@ -91,10 +91,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 
 	if (ret) {
 		if (ms->flags & MAGIC_ERROR) {
-			file_error(ms, errno, "Can't stat `%s'", fn);
+			file_error(ms, errno, "cannot stat `%s'", fn);
 			return -1;
 		}
-		if (file_printf(ms, "Can't stat `%s' (%s)",
+		if (file_printf(ms, "cannot open (%s)",
 		    fn, strerror(errno)) == -1)
 			return -1;
 		return 1;

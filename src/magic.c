@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.13 2003/10/14 19:17:17 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.14 2003/10/14 19:29:55 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -233,7 +233,7 @@ magic_file(struct magic_set *ms, const char *inname)
 	if (inname == NULL)
 		fd = STDIN_FILENO;
 	else if ((fd = open(inname, O_RDONLY)) < 0) {
-		/* We can't open it, but we were able to stat it. */
+		/* We cannot open it, but we were able to stat it. */
 		if (sb.st_mode & 0002)
 			if (file_printf(ms, "writable, ") == -1)
 				return NULL;
@@ -247,7 +247,7 @@ magic_file(struct magic_set *ms, const char *inname)
 	 * try looking at the first HOWMANY bytes
 	 */
 	if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
-		file_error(ms, errno, "Cannot read `%s'", inname);
+		file_error(ms, errno, "cannot read `%s'", inname);
 		goto done;
 	}
 
@@ -278,7 +278,7 @@ magic_file(struct magic_set *ms, const char *inname)
 			 * be an ELF file, and the file is at least 5 bytes
 			 * long, so if it's an ELF file it has at least one
 			 * byte past the ELF magic number - try extracting
-			 * information from the ELF headers that can't easily
+			 * information from the ELF headers that cannot easily
 			 * be extracted with rules in the magic file.
 			 */
 			file_tryelf(ms, fd, buf, (size_t)nbytes);
@@ -313,6 +313,12 @@ public const char *
 magic_error(struct magic_set *ms)
 {
 	return ms->haderr ? ms->o.buf : NULL;
+}
+
+public int
+magic_errno(struct magic_set *ms)
+{
+	return ms->haderr ? ms->error : 0;
 }
 
 public int
