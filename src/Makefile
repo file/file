@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.32 1993/04/05 10:27:30 ian Exp $
+# @(#)$Id: Makefile,v 1.33 1993/04/05 10:37:16 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -77,7 +77,7 @@ OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	print.o $(LOCALOBJS)
 
 ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
-	Makefile file.1 magic.4 tst/Makefile
+	Makefile file.1 magic.4 localsrc/*.c tst/Makefile
 ALLMAGIC =   Magdir/Makefile Magdir/Localstuff Magdir/Header Magdir/[a-z]*
 
 all:		file magic
