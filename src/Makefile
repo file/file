@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.35 1993/04/15 17:26:53 ian Exp $
+# @(#)$Id: Makefile,v 1.36 1993/09/23 20:26:25 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -137,4 +137,4 @@ dist.magic:	Magdir
 		(echo mkdir Magdir; $(SHAR) $(ALLMAGIC)) >$@
 
 tar:		$(ALLSRC) $(ALLMAGIC)
-		tar cvf /dev/rfd0a $(ALLSRC) $(ALLMAGIC)
+		tar cvf file.tar $(ALLSRC) $(ALLMAGIC)
