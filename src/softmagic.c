@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.64 2003/12/31 18:36:22 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.65 2004/03/09 18:49:58 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -1112,6 +1112,7 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			return -1;
 		} else {
 			rc = regexec(&rx, p->buf, 0, 0, 0);
+			regfree(&rx);
 			free(p->buf);
 			return !rc;
 		}
