@@ -1,20 +1,20 @@
 ** README for file(1) Command **
-@(#) $Header: /home/glen/git/file/cvs/file/README,v 1.12 1992/05/21 16:21:33 ian Exp $
+@(#) $Id: README,v 1.13 1992/06/30 13:23:16 ian Exp $
 
-This is Release 1.2 of  Ian Darwin's (copyright but distributable) file(1)
-command. It follows the USG (Sys V) model of the file command, rather than
-the Research (V7) version or the V7-derived Berkeley one. That is, there is
-a file (/etc/magic) that contains much of the ritual information that is the
-source of this program's power. It knows a little more magic (including tar
-archives) than System V; the /etc/magic parsing seems to be compatible with
-the (poorly documented) System V /etc/magic format (with one exception; see
-the man page).
+This is Release 1.5 of Ian Darwin's (copyright but distributable)
+file(1) command. It follows the USG (Sys V) model of the file command,
+rather than the Research (V7) version or the V7-derived 4.[23] Berkeley
+one. That is, the file /etc/magic contains much of the ritual
+information that is the source of this program's power. My version
+knows a little more magic (including tar archives) than System V; the
+/etc/magic parsing seems to be compatible with the (poorly documented)
+System V /etc/magic format (with one exception; see the man page).
 
 In addition, the /etc/magic file is built from a subdirectory
 for easier maintenance.  I will act as a clearinghouse for
 magic numbers assigned to all sorts of data files that
 are in reasonable circulation. Send your magic numbers,
-in magic(4) format please, to the author, Ian Darwin,
+in magic(4) format please, to the author, Ian Darwin.
 
 LEGAL.NOTICE - read this first.
 README - read this second (you are currently reading this file).
@@ -53,8 +53,9 @@ Palgrave, Ontario L0N 1P0
 Canada
 
 E-mail: darwin@cs.toronto.edu
+	ian@sq.com
 	utzoo!ian
 	ian@darwin.uucp
-	uunet!sq!ian. 
+	uunet!sq!ian
 
 Phone: Do not even think of telephoning me about this program.
