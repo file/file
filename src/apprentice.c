@@ -30,12 +30,12 @@
 #include "file.h"
 
 #ifndef	lint
-static char *moduleid = "$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.6 1987/09/16 10:11:06 ian Exp $";
+static char *moduleid = 
+	"@(#)$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.7 1987/09/16 14:43:52 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
 #define	EATAB {while (isascii(*l) && isspace(*l))  ++l;}
-
 
 extern char *progname;
 extern char *magicfile;
@@ -88,9 +88,14 @@ int *ndx, check;
 	static int warned = 0;
 	struct magic *m;
 
+	/*
+	 * TODO malloc the magic structures (linked list?) so this can't happen
+	 */
 	if (nd+1 >= MAXMAGIS){
 		if (warned++ == 0)
-			warning("magic table overflow - increase MAXMAGIS beyond %d in file/apprentice.c\n", MAXMAGIS);
+			warning(
+"magic table overflow - increase MAXMAGIS beyond %d in file/apprentice.c\n",
+			MAXMAGIS);
 		return 0;
 	}
 	m = &magic[*ndx];
