@@ -24,7 +24,6 @@
  *
  * 4. This notice may not be removed or altered.
  */
-#include "file.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,10 +51,11 @@
 
 #include <netinet/in.h>		/* for byte swapping */
 
+#include "file.h"
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.53 2000/08/05 17:36:48 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.54 2000/08/05 18:30:26 christos Exp $")
 #endif	/* lint */
 
 
