@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.32 1995/04/28 17:29:13 christos Exp $";
+	"@(#)$Id: file.c,v 1.33 1995/05/20 22:09:21 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -43,7 +43,7 @@ static char *moduleid =
 #endif
 #include <unistd.h>	/* for read() */
 
-#ifdef HAVE_ELF
+#ifdef __ELF__
 #include <elf.h>
 #endif
 
@@ -216,10 +216,11 @@ int wid;
 	struct utimbuf  utbuf;
 	struct stat	sb;
 	int nbytes = 0;	/* number of bytes read from a datafile */
+	char match = '\0';
 
 	if (strcmp("-", inname) == 0) {
 		if (fstat(0, &sb)<0) {
-			error("cannot fstat `%s' (%s).\n", stdname, 
+			error("cannot fstat `%s' (%s).\n", stdname,
 			      strerror(errno));
 			/*NOTREACHED*/
 		}
@@ -238,7 +239,7 @@ int wid;
 		    putchar('\n');
 		    return;
 	    }
-		
+
 	    if ((fd = open(inname, O_RDONLY)) < 0) {
 		    /* We can't open it, but we were able to stat it. */
 		    if (sb.st_mode & 0002) ckfputs("writeable, ", stdout);
@@ -258,14 +259,13 @@ int wid;
 		/*NOTREACHED*/
 	}
 
-	if (nbytes == 0) 
+	if (nbytes == 0)
 		ckfputs("empty", stdout);
 	else {
-		buf[nbytes++] = '\0';   /* NULL terminate */
-		tryit(buf, nbytes, zflag);
+		buf[nbytes++] = '\0';	/* null-terminate it */
+		match = tryit(buf, nbytes, zflag);
 	}
-
-#ifdef HAVE_ELF
+#ifdef __ELF__
 	/*
 	 * ELF executables have multiple section headers in arbitrary
 	 * file locations and thus file(1) cannot determine it from easily.
@@ -275,30 +275,41 @@ int wid;
 	 *	Should come up with a better fix.
 	 */
 
-	if (nbytes > sizeof (Elf32_Ehdr) &&
+	if (match == 's' && nbytes > sizeof (Elf32_Ehdr) &&
 	    buf[EI_MAG0] == ELFMAG0 &&
 	    buf[EI_MAG1] == ELFMAG1 &&
 	    buf[EI_MAG2] == ELFMAG2 &&
-	    buf[EI_MAG3] == ELFMAG3 ) {
+	    buf[EI_MAG3] == ELFMAG3) {
 
+		union {
+			long l;
+			char c[sizeof (long)];
+		} u;
 		Elf32_Ehdr elfhdr;
 		int stripped = 1;
- 
+
+		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
- 
-		if (lseek(fd, elfhdr.e_shoff, SEEK_SET)<0)
-		  error("lseek failed (%s).\n", strerror(errno));
- 
-		for ( ; elfhdr.e_shnum ; elfhdr.e_shnum--) {
+
+		/*
+		 * If the system byteorder does not equal the object byteorder
+		 * then don't test.
+		 */
+		if ((u.c[sizeof(long) - 1] + 1) == elfhdr.e_ident[5]) {
+		    if (lseek(fd, elfhdr.e_shoff, SEEK_SET)<0)
+			error("lseek failed (%s).\n", strerror(errno));
+
+		    for ( ; elfhdr.e_shnum ; elfhdr.e_shnum--) {
 			if (read(fd, buf, elfhdr.e_shentsize)<0)
-				error("read failed (%s).\n", strerror(errno));
+			    error("read failed (%s).\n", strerror(errno));
 			if (((Elf32_Shdr *)&buf)->sh_type == SHT_SYMTAB) {
-				stripped = 0;
-				break;
+			    stripped = 0;
+			    break;
 			}
+		    }
+		    if (stripped)
+			(void) printf (", stripped");
 		}
-		if (stripped)
-		  (void) printf (" - stripped");
 	}
 #endif
 
@@ -315,25 +326,24 @@ int wid;
 }
 
 
-void
+int
 tryit(buf, nb, zflag)
 unsigned char *buf;
 int nb, zflag;
 {
-	/*
-	 * Try compression stuff
-	 */
-	if (!zflag || zmagic(buf, nb) != 1)
-		/*
-		 * try tests in /etc/magic (or surrogate magic file)
-		 */
-		if (softmagic(buf, nb) != 1)
-			/*
-			 * try known keywords, check for ascii-ness too.
-			 */
-			if (ascmagic(buf, nb) != 1)
-			    /*
-			     * abandon hope, all ye who remain here
-			     */
-			    ckfputs("data", stdout);
+	/* try compression stuff */
+	if (zflag && zmagic(buf, nb))
+		return 'z';
+
+	/* try tests in /etc/magic (or surrogate magic file) */
+	if (softmagic(buf, nb))
+		return 's';
+
+	/* try known keywords, check whether it is ASCII */
+	if (ascmagic(buf, nb))
+		return 'a';
+
+	/* abandon hope, all ye who remain here */
+	ckfputs("data", stdout);
+		return '\0';
 }
