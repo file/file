@@ -14,6 +14,10 @@
 #include "readelf.h"
 #include "file.h"
 
+#ifndef lint
+FILE_RCSID("@(#)$Id: readelf.c,v 1.7 1998/06/27 13:23:39 christos Exp $")
+#endif
+
 static void
 doshn(fd, off, num, size, buf)
 	int fd;

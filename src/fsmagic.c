@@ -53,8 +53,7 @@
 #include "file.h"
 
 #ifndef	lint
-static char *moduleid = 
-	"@(#)$Id: fsmagic.c,v 1.26 1998/02/15 23:18:53 christos Exp $";
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.27 1998/06/27 13:23:39 christos Exp $")
 #endif	/* lint */
 
 int
