@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.49 2003/03/26 15:35:30 christos Exp $
+ * @(#)$Id: file.h,v 1.50 2003/03/26 16:25:25 christos Exp $
  */
 
 #ifndef __file_h__
@@ -80,7 +80,7 @@
 #define FILE_COMPILE	2
 
 #ifndef __GNUC__
-#ifndef __attribute__
+#ifndef __lint__
 #define __attribute__(a)
 #endif
 #endif
@@ -114,14 +114,15 @@ struct magic {
 #define				FILE_REGEX	17
 	uint8_t in_op;		/* operator for indirection */
 	uint8_t mask_op;	/* operator for mask */
-#define				FILE_OPAND	1
-#define				FILE_OPOR	2
-#define				FILE_OPXOR	3
-#define				FILE_OPADD	4
-#define				FILE_OPMINUS	5
-#define				FILE_OPMULTIPLY	6
-#define				FILE_OPDIVIDE	7
-#define				FILE_OPMODULO	8
+#define				FILE_OPS	"&|^+-*%/"
+#define				FILE_OPAND	0
+#define				FILE_OPOR	1
+#define				FILE_OPXOR	2
+#define				FILE_OPADD	3
+#define				FILE_OPMINUS	4
+#define				FILE_OPMULTIPLY	5
+#define				FILE_OPDIVIDE	6
+#define				FILE_OPMODULO	7
 #define				FILE_OPINVERSE	0x80
 	int32_t offset;		/* offset to magic number */
 	int32_t in_offset;	/* offset from indirection */
