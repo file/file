@@ -267,19 +267,20 @@
 >0x412	beshort			x		number of blocks: %d,
 >0x424	pstring			x		volume name: %s
 
-0x400	beshort			0x4244		Macintosh HFS data
->0	beshort			0x4C4B		(bootable)
->0x40a	beshort			&0x8000		(locked)
->0x40a	beshort			^0x0100		(mounted)
->0x40a	beshort			&0x0200		(spared blocks)
->0x40a	beshort			&0x0800		(unclean)
->0x47C	beshort			0x482B		(Embedded HFS+ Volume)
->0x402	beldate-0x7C25B080	x		created: %s,
->0x406	beldate-0x7C25B080	x		last modified: %s,
->0x440	beldate-0x7C25B080	>0		last backup: %s,
->0x414	belong			x		block size: %d,
->0x412	beshort			x		number of blocks: %d,
->0x424	pstring			x		volume name: %s
+# "BD" is has many false positives
+#0x400	beshort			0x4244		Macintosh HFS data
+#>0	beshort			0x4C4B		(bootable)
+#>0x40a	beshort			&0x8000		(locked)
+#>0x40a	beshort			^0x0100		(mounted)
+#>0x40a	beshort			&0x0200		(spared blocks)
+#>0x40a	beshort			&0x0800		(unclean)
+#>0x47C	beshort			0x482B		(Embedded HFS+ Volume)
+#>0x402	beldate-0x7C25B080	x		created: %s,
+#>0x406	beldate-0x7C25B080	x		last modified: %s,
+#>0x440	beldate-0x7C25B080	>0		last backup: %s,
+#>0x414	belong			x		block size: %d,
+#>0x412	beshort			x		number of blocks: %d,
+#>0x424	pstring			x		volume name: %s
 
 0x400	beshort			0x482B		Macintosh HFS Extended
 >&0	beshort			x		version %d data
