@@ -50,7 +50,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.38 2004/09/11 19:15:57 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.39 2004/12/13 20:20:48 christos Exp $")
 #endif
 
 
@@ -321,6 +321,8 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 	if (method == 2)
 		return uncompressgzipped(ms, old, newch, n);
 #endif
+	(void)fflush(stdout);
+	(void)fflush(stderr);
 
 	if (pipe(fdin) == -1 || pipe(fdout) == -1) {
 		file_error(ms, errno, "cannot create pipe");	
