@@ -40,7 +40,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.19 1993/09/16 21:15:59 christos Exp $";
+	"@(#)$Id: print.c,v 1.20 1993/09/23 20:26:25 christos Exp $";
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -72,9 +72,7 @@ struct magic *m;
 			"*bad*", 
 		     stderr);
 
-	if (m->reln & MASK)
-	    (void) fprintf(stderr, ",%x&%c", m->mask, m->reln & ~MASK);
-	else if (m->reln == 'x')
+	if (m->reln == 'x')
 	    (void) fputs(",*any*", stderr);
 	else
 	    (void) fprintf(stderr, ",%c", m->reln);

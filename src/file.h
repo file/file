@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.15 1993/09/16 21:08:06 christos Exp $
+ * @(#)$Id: file.h,v 1.16 1993/09/23 20:26:25 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -40,7 +40,6 @@ struct magic {
 		long offset;	/* offset from indirection */
 	} in;
 	long offset;		/* offset to magic number */
-#define	MASK	0200		/* this is a masked op, like & v1 = v2 */
 	unsigned char reln;	/* relation (0=eq, '>'=gt, etc) */
 	char type;		/* int, short, long or string. */
 	char vallen;		/* length of string value, if any */
