@@ -6,7 +6,7 @@ bin_PROGRAMS = file
 data_DATA = magic magic.mime magic.mgc magic.mime.mgc
 
 MAGIC	 = @datadir@/magic
-CPPFLAGS = -DMAGIC='"$(MAGIC)"'
+AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
 
 if FSECT5
 man_MAGIC = magic.5
