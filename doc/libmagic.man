@@ -179,7 +179,6 @@ that variable is not set, the default database file name is __MAGIC__.
 .Pp
 .Fn magic_load
 adds ".mime" and/or ".mgc" to the database filename as appropriate.
-
 .Sh RETURN VALUES
 The function
 .Fn magic_open
