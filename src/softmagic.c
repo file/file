@@ -30,7 +30,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.6 1987/09/16 14:45:23 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.7 1987/11/06 11:25:31 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -94,6 +94,7 @@ struct magic *m;
 char *s;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
+	char *pp, *strchr();
 
 	switch (m->type) {
 	case BYTE:
@@ -106,6 +107,8 @@ char *s;
 		(void) printf(m->desc, p->l);
 		break;
 	case STRING:
+		if ((pp=strchr(p->s, '\n')) != NULL)
+			*pp = '\0';
 		(void) printf(m->desc, p->s);
 		break;
 	default:
