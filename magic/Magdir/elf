@@ -59,7 +59,7 @@
 >>18	leshort		47		Hitachi H8/300H,
 >>18	leshort		48		Hitachi H8S,
 >>18	leshort		49		Hitachi H8/500,
->>18	leshort		50		Intel Merced Processor,
+>>18	leshort		50		IA-64 (Intel 64 bit architecture)
 >>18	leshort		51		Stanford MIPS-X,
 >>18	leshort		52		Motorola Coldfire,
 >>18	leshort		53		Motorola M68HC12,
