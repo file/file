@@ -32,9 +32,11 @@
 
 #define USAGE		"usage: %s [-f file] [-m magicfile] file...\n"
 
+#ifndef	lint
+static char *moduleid = "$Header: /home/glen/git/file/cvs/file/src/file.c,v 1.8 1987/09/11 22:06:52 ian Exp $";
+#endif	/* lint */
 extern char *ckfmsg;
-int check = 0,		/* check format of magic file */
-	debug = 0, 	/* huh? */
+int 	debug = 0, 	/* huh? */
 	nbytes = 0,	/* number of bytes read from a datafile */
 	nmagic = 0;	/* number of valid magic[]s */
 FILE *efopen();
@@ -58,7 +60,7 @@ int argc;
 char *argv[];
 {
 	int c;
-	int errflg = 0;
+	int check = 0, errflg = 0, ret = 0;
 	extern int optind;
 	extern char *optarg;
 
@@ -88,7 +90,9 @@ char *argv[];
 		exit(2);
 	}
 
-	apprentice(magicfile);
+	ret = apprentice(magicfile, check);
+	if (check)
+		exit(ret);
 
 	if (optind == argc)
 		(void)fprintf(stderr, USAGE, progname);
