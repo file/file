@@ -4,7 +4,6 @@
  *		   information if recognized
  *	uncompress(method, old, n, newch) - uncompress old into new, 
  *					    using method, return sizeof new
- * $Id: compress.c,v 1.10 1998/02/15 23:18:53 christos Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,8 +15,11 @@
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
-
 #include "file.h"
+#ifndef lint
+FILE_RCSID("@(#)$Id: compress.c,v 1.11 1998/06/27 13:23:39 christos Exp $")
+#endif
+
 
 static struct {
    char *magic;

@@ -33,8 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.25 1997/01/15 17:23:24 christos Exp $";
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.26 1998/06/27 13:23:39 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \

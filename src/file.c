@@ -24,11 +24,6 @@
  *
  * 4. This notice may not be removed or altered.
  */
-#ifndef	lint
-static char *moduleid = 
-	"@(#)$Id: file.c,v 1.39 1998/02/15 23:18:53 christos Exp $";
-#endif	/* lint */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,6 +46,11 @@ static char *moduleid =
 
 #include "patchlevel.h"
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$Id: file.c,v 1.40 1998/06/27 13:23:39 christos Exp $")
+#endif	/* lint */
+
 
 #ifdef S_IFLNK
 # define USAGE  "Usage: %s [-vbczL] [-f namefile] [-m magicfiles] file...\n"

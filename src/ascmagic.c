@@ -36,8 +36,7 @@
 #include "names.h"
 
 #ifndef	lint
-static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.22 1998/02/15 23:18:53 christos Exp $";
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.23 1998/06/27 13:23:39 christos Exp $");
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */

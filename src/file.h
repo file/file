@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.25 1997/01/15 19:28:35 christos Exp $
+ * @(#)$Id: file.h,v 1.26 1998/06/27 13:23:39 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -145,6 +145,15 @@ extern char *sys_errlist[];
 
 #ifndef MAXPATHLEN
 #define	MAXPATHLEN	512
+#endif
+
+#ifdef __STDC__
+#define FILE_RCSID(id) \
+static const char *rcsid(const char *p) { \
+	return rcsid(p = id); \
+}
+#else
+#define FILE_RCSID(id) static char *rcsid[] = id;
 #endif
 
 #endif /* __file_h__ */

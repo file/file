@@ -12,6 +12,10 @@
 #include <string.h>
 #include <memory.h>
 
+#ifndef lint
+FILE_RCSID("@(#)$Id: internat.c,v 1.4 1998/06/27 13:23:39 christos Exp $")
+#endif
+
 #define F 0
 #define T 1
 

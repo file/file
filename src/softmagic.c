@@ -37,8 +37,7 @@
 #include "file.h"
 
 #ifndef	lint
-static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.36 1998/02/15 23:18:53 christos Exp $";
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.37 1998/06/27 13:23:39 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -199,7 +198,7 @@ struct magic *m;
 {
 	char *pp, *rt;
 	uint32 v;
-	time_t time;
+	time_t curtime;
 	int32 t=0 ;
 
 
@@ -248,8 +247,8 @@ struct magic *m;
 	case DATE:
 	case BEDATE:
 	case LEDATE:
-		time = p->l;
-		pp = ctime(&time);
+		curtime = p->l;
+		pp = ctime(&curtime);
 		if ((rt = strchr(pp, '\n')) != NULL)
 			*rt = '\0';
 		(void) printf(m->desc, pp);
