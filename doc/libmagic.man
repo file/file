@@ -158,8 +158,15 @@ The
 function must be used to load the the colon
 separated list of database files passed in as
 .Ar filename ,
-or NULL for the default database
+or NULL for the default database file
 before any magic queries can performed.
+.Pp
+The default database file is named by the MAGIC environment variable.  If
+that variable is not set, the default database file name is __MAGIC__.
+.Pp
+.Fn magic_load
+adds ".mime" and/or ".mgc" to the database filename as appropriate.
+
 .Sh RETURN VALUES
 The function
 .Fn magic_open
@@ -192,13 +199,13 @@ is set.
 .Sh FILES
 .Bl -tag -width __MAGIC__.mime.mgc -compact
 .It Pa __MAGIC__.mime
-The non-compiled magic mime database.
+The non-compiled default magic mime database.
 .It Pa __MAGIC__.mime.mgc
-The compiled magic mime database.
+The compiled default magic mime database.
 .It Pa __MAGIC__
-The non-compiled magic database.
+The non-compiled default magic database.
 .It Pa __MAGIC__.mgc
-The compiled magic database.
+The compiled default magic database.
 .El
 .Sh SEE ALSO
 .Xr file __CSECTION__ ,

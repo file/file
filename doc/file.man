@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.50 2003/07/10 17:51:09 christos Exp $
+.\" $Id: file.man,v 1.51 2003/10/08 16:10:15 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -204,6 +204,7 @@ option causes symlinks to be followed, as the like-named option in
 Specify an alternate list of files containing magic numbers.
 This can be a single file, or a colon-separated list of files.
 If a compiled magic file is found alongside, it will be used instead.
+With the \-i or \-\-mime option, the program adds ".mime" to each file name.
 .TP 8
 .B "\-n, \-\-no\-buffer"
 Force stdout to be flushed after checking each file.
@@ -273,7 +274,9 @@ Local additions to magic wisdom.
 .SH ENVIRONMENT
 The environment variable
 .B MAGIC
-can be used to set the default magic number files.
+can be used to set the default magic number file name.
+.B file
+adds ".mime" and/or ".mgc" to the value of this variable as appropriate.
 .SH SEE ALSO
 .BR magic (__FSECTION__)
 \- description of magic file format.
