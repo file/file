@@ -78,7 +78,7 @@ dophn_exec(fd, off, num, size, buf)
 }
 
 size_t	prpsoffsets[] = {
-	100,		/* SunOS 5.x */
+	84,		/* SunOS 5.x */
 	32,		/* Linux */
 };
 
@@ -103,10 +103,6 @@ dophn_core(fd, off, num, size, buf)
 	size_t size;
 	char *buf;
 {
-	/*
-	 * This doesn't work for 64-bit ELF, as the "p_offset" field is
-	 * 64 bits in 64-bit ELF.
-	 */
 	/*
 	 * This doesn't work for 64-bit ELF, as the "p_offset" field is
 	 * 64 bits in 64-bit ELF.
