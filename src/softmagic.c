@@ -25,6 +25,7 @@
  * 4. This notice may not be removed or altered.
  */
 
+#include "file.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -33,10 +34,9 @@
 #include <sys/types.h>
 #include <regex.h>
 
-#include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.48 2002/05/16 18:45:56 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.49 2002/06/11 17:15:52 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((struct magic *, uint32, unsigned char *, int));
