@@ -85,6 +85,15 @@
 #
 0	string	MZ		MS-DOS executable (EXE)
 >24	string	@		\b, OS/2 or MS Windows
+>>0xe7	string	LH/2\ Self-Extract	\b, %s
+>>0xe9	string	PKSFX2		\b, %s
+>0x1c	string	RJSX\xff\xff	\b, ARJ SFX
+>0x1c	string	diet\xf9\x9c	\b, diet compressed
+>0x1e	string	Copyright\ 1989-1990\ PKWARE\ Inc.	\b, PKSFX
+# JM: 0x1e "PKLITE Copr. 1990-92 PKWARE Inc. All Rights Reserved\7\0\0\0"
+>0x1e	string	PKLITE\ Copr.	\b, %.6s compressed
+>0x24	string	LHa's\ SFX	\b, %.15s
+>0x24	string	LHA's\ SFX	\b, %.15s
 >1638	string	-lh5-		\b, LHa SFX archive v2.13S
 >7195	string	Rar!		\b, RAR self-extracting archive
 #
@@ -120,6 +129,7 @@
 # but it isn't feasible to match all COM files since there must be at least
 # two dozen different one-byte "magics".
 #0	byte		0xe9		MS-DOS executable (COM)
+#>6	string	SFX\ of\ LHarc	(%s)
 #0	byte		0x8c		MS-DOS executable (COM)
 # 0xeb conflicts with "sequent" magic
 #0	byte		0xeb		MS-DOS executable (COM)
@@ -162,4 +172,7 @@
 
 # WordPerfect documents - Trevor Johnson <trevor@jpj.net>
 #
-1       string          WPC             WordPerfect document
+1	string	WPC		WordPerfect document
+
+# Help files
+0	string	?_\3\0		MS Windows Help Data
