@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.25 1992/09/08 15:32:49 ian Exp $
+# @(#)$Id: Makefile,v 1.26 1992/09/08 16:15:50 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -52,7 +52,7 @@ BINDIR	= /usr/local/bin
 # MANCDIR			/usr/man/local/man1
 # MANCEXT			1
 
-MANCDIR	= /usr/local/man/manl
+MANCDIR	= /usr/local/man/man1
 MANFDIR	= /usr/local/man/man5
 MANCEXT	= 1
 MANFEXT	= 5
@@ -71,7 +71,7 @@ OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 
 ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
 	Makefile file.1 magic.4 tst/Makefile
-ALLMAGIC =   Magdir/Makefile Magdir/[a-z]* NEWMAGIC
+ALLMAGIC =   Magdir/Makefile Magdir/[a-z]* # NEWMAGIC
 
 all:		file magic
 
@@ -102,7 +102,7 @@ install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 		cp magic.4	$(MANFDIR)/magic.$(MANFEXT)
 
 clean:
-		rm -f *.o core file magic lint
+		rm -f *.o core file magic lint dist.* TARGETS
 		(cd tst; make clean)
 
 dist:		dist.src dist.magic
