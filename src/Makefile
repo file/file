@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.37 1993/09/23 21:47:01 christos Exp $
+# @(#)$Id: Makefile,v 1.38 1993/09/23 21:55:36 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -21,7 +21,7 @@
 #    ever read sources, credits must appear in the documentation.
 #
 # 4. This notice may not be removed or altered.
-
+VERSION	= 3.10
 SHELL	= /bin/sh
 #MAGIC	= /etc/magic
 MAGIC	= /usr/local/etc/magic
@@ -67,7 +67,7 @@ LOCALOBJS = # localsrc/getopt.o localsrc/strtol.o \
 #		localsrc/strtok.o localsrc/strchr.o
 # These are not compiled in unless you use -Ilocalinc, but
 # are not commented out as "make dist" &c use them.
-LOCALINC = localinc/*.h localinc/sys/*.h
+LOCALINC = # localinc/*.h localinc/sys/*.h
 
 SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 	compress.c is_tar.c \
@@ -77,7 +77,7 @@ OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	print.o $(LOCALOBJS)
 
 ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
-	Makefile file.1 magic.4 localsrc/*.c tst/Makefile
+	Makefile file.1 magic.4 
 ALLMAGIC =   Magdir/Makefile Magdir/Localstuff Magdir/Header Magdir/[a-z]*
 
 all:		file magic
@@ -137,4 +137,9 @@ dist.magic:	Magdir
 		(echo mkdir Magdir; $(SHAR) $(ALLMAGIC)) >$@
 
 tar:		$(ALLSRC) $(ALLMAGIC)
-		tar cvf file.tar $(ALLSRC) $(ALLMAGIC)
+		-rm -fr file-${VERSION}
+		-mkdir file-${VERSION} file-${VERSION}/Magdir
+		ln $(ALLSRC) file-${VERSION}
+		ln ${ALLMAGIC} file-${VERSION}/Magdir
+		tar cvf file-${VERSION}.tar file-${VERSION}
+		-rm -fr file-${VERSION}
