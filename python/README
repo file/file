@@ -1,7 +1,9 @@
 
 This directory contains Python bindings to allow you to access the
 libmagic api. At the moment their status is "experimental" and
-they are not built by default.
+they are not built by default. You may need to edit include and library
+search paths in setup.py so that python's distutils build process can 
+find the magic header and lib files.
 
 In order to be able to compile magic-python you need to have python
 and the python-dev packages installed.
