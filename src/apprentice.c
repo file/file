@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.74 2004/03/09 18:52:08 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.75 2004/03/22 18:48:56 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -73,6 +73,10 @@ FILE_RCSID("@(#)$Id: apprentice.c,v 1.74 2004/03/09 18:52:08 christos Exp $")
 
 #ifndef MAP_FILE
 #define MAP_FILE 0
+#endif
+
+#ifndef MAXPATHLEN
+#define MAXPATHLEN	1024
 #endif
 
 private int getvalue(struct magic_set *ms, struct magic *, char **);
