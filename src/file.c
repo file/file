@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.35 1996/06/22 22:04:22 christos Exp $";
+	"@(#)$Id: file.c,v 1.36 1996/10/05 18:13:57 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -43,7 +43,6 @@ static char *moduleid =
 #endif
 #include <unistd.h>	/* for read() */
 
-#include "readelf.h"
 #include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
@@ -335,59 +334,10 @@ int wid;
 		match = tryit(buf, nbytes, zflag);
 	}
 
-	/*
-	 * ELF executables have multiple section headers in arbitrary
-	 * file locations and thus file(1) cannot determine it from easily.
-	 * Instead we traverse thru all section headers until a symbol table
-	 * one is found or else the binary is stripped.
-	 */
-
-	if (match == 's' && nbytes > sizeof (Elf32_Ehdr) &&
-	    buf[EI_MAG0] == ELFMAG0 &&
-	    buf[EI_MAG1] == ELFMAG1 &&
-	    buf[EI_MAG2] == ELFMAG2 &&
-	    buf[EI_MAG3] == ELFMAG3) {
-
-		union {
-			int l;
-			char c[sizeof (int)];
-		} u;
-
-		Elf32_Ehdr elfhdr;
-		int stripped = 1;
-		int be,same;
-		short shnum;
-
-		u.l = 1;
-		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
-
-		/*
-		 * If the system byteorder does not equal the object byteorder
-		 * then need to do byte-swapping.
-		 */
-		be = u.c[sizeof(int) - 1] == 1; /* are we big endian? */
-		same = (u.c[sizeof(int) - 1] + 1) == elfhdr.e_ident[5];
-				/* are we the same endianness? */;
-
-		if (lseek(fd, byteconv4(elfhdr.e_shoff,same,be), SEEK_SET)<0)
-			error("lseek failed (%s).\n", strerror(errno));
-
-		for (shnum = byteconv2(elfhdr.e_shnum,same,be);
-		     shnum; shnum--) {
-		    if (read(fd, buf,
-			     byteconv2(elfhdr.e_shentsize,same,be))<0)
-			error("read failed (%s).\n", strerror(errno));
-		    if (byteconv4(((Elf32_Shdr *)buf)->sh_type,same,be)
-			== SHT_SYMTAB) {
-			stripped = 0;
-			break;
-		    }
-		}
-		if (stripped)
-		    (void) printf (", stripped");
-		else
-		    (void) printf (", not stripped");
-	}
+#ifdef BUILTIN_ELF
+	if (match == 's' && nbytes > 5)
+		tryelf(fd, buf, nbytes);
+#endif
 
 	if (inname != stdname) {
 		/*
