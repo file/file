@@ -24,12 +24,6 @@
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 
-/* Autoheader needs me */
-#define PACKAGE "file"
-
-/* Autoheader needs me */
-#define VERSION "3.27"
-
 /* Define if builtin ELF support is enabled.  */
 #undef BUILTIN_ELF
 
@@ -70,5 +64,15 @@
 /* Define if you have the strtoul function.  */
 #undef HAVE_STRTOUL
 
+/* Define if you have the <locale.h> header file.  */
+#undef HAVE_LOCALE_H
+
 /* Define if you have the <unistd.h> header file.  */
 #undef HAVE_UNISTD_H
+
+/* Name of package */
+#undef PACKAGE
+
+/* Version number of package */
+#undef VERSION
+

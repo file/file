@@ -46,3 +46,6 @@
 7	belong		0x00564944	DOS code page font data (from Linux?)
 4098	string		DOSFONT		DOSFONT2 encrypted font data
 
+# downloadable fonts for browser (prints type) anthon@mnt.org
+0	string		PFR1		PFR1 font
+>102	string		>0		\b: %s

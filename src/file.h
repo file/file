@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.29 1999/02/14 17:16:06 christos Exp $
+ * @(#)$Id: file.h,v 1.30 1999/11/28 20:02:29 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -80,6 +80,15 @@ struct magic {
 	char nospflag;		/* supress space character */
 	char desc[MAXDESC];	/* description */
 };
+
+#define BIT(A)   (1 << (A))
+#define STRING_IGNORE_LOWERCASE		BIT(0)
+#define STRING_COMPACT_BLANK		BIT(1)
+#define STRING_COMPACT_OPTIONAL_BLANK	BIT(2)
+#define CHAR_IGNORE_LOWERCASE		'c'
+#define CHAR_COMPACT_BLANK		'B'
+#define CHAR_COMPACT_OPTIONAL_BLANK	'b'
+
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 

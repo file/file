@@ -38,7 +38,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.24 1999/02/14 17:16:00 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.25 1999/11/28 20:02:29 christos Exp $")
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -93,7 +93,7 @@ int nbytes;	/* size actually read */
 
 	/* Make sure we are dealing with ascii text before looking for tokens */
 	for (i = 0; i < nbytes; i++) {
-		if (!isascii(buf[i]))
+		if (!isascii(buf[i]) && !isalpha(buf[i]))
 			return 0;	/* not all ASCII */
 	}
 
