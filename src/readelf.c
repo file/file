@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.39 2004/03/22 20:28:40 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.40 2004/07/24 19:23:22 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -147,6 +147,9 @@ getu64(int swap, uint64_t value)
 			    getu32(swap, ph32.p_align) : 4) \
 			 : (off_t) (ph64.p_align ?	\
 			    getu64(swap, ph64.p_align) : 4)))
+#define ph_filesz	(size_t)((class == ELFCLASS32	\
+			 ? getu32(swap, ph32.p_filesz)	\
+			 : getu64(swap, ph64.p_filesz)))
 #define nh_size		(class == ELFCLASS32		\
 			 ? sizeof nh32			\
 			 : sizeof nh64)
@@ -250,7 +253,8 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			file_badseek(ms);
 			return -1;
 		}
-		bufsize = read(fd, nbuf, BUFSIZ);
+		bufsize = read(fd, nbuf,
+		    ((ph_filesz < BUFSIZ) ? ph_filesz : BUFSIZ));
 		if (bufsize == -1) {
 			file_badread(ms);
 			return -1;
@@ -313,7 +317,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 	noff = offset;
 	doff = ELF_ALIGN(offset + namesz);
 
-	if (offset + namesz >= size) {
+	if (offset + namesz > size) {
 		/*
 		 * We're past the end of the buffer.
 		 */
@@ -321,7 +325,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 	}
 
 	offset = ELF_ALIGN(doff + descsz);
-	if (offset + descsz >= size) {
+	if (offset + descsz > size) {
 		return offset;
 	}
 
@@ -670,7 +674,9 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				file_badseek(ms);
 				return -1;
 			}
-			bufsize = read(fd, nbuf, sizeof(nbuf));
+			bufsize = read(fd, nbuf,
+			    ((ph_filesz < sizeof(nbuf)) ?
+			    ph_filesz : sizeof(nbuf)));
 			if (bufsize == -1) {
 				file_badread(ms);
 				return -1;
@@ -684,8 +690,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				if (offset == 0)
 					break;
 			}
-			if (lseek(fd, savedoffset + offset, SEEK_SET)
-			    == (off_t)-1) {
+			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
 				file_badseek(ms);
 				return -1;
 			}
