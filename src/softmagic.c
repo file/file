@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.46 2001/07/23 00:02:32 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.47 2002/05/16 15:01:41 christos Exp $")
 #endif	/* lint */
 
 static int match	__P((struct magic *, uint32, unsigned char *, int));
@@ -50,7 +50,7 @@ extern int kflag;
 
 /*
  * softmagic - lookup one file in database 
- * (already read from /etc/magic by apprentice.c).
+ * (already read from MAGIC by apprentice.c).
  * Passed the name and FILE * of one file to be typed.
  */
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */

@@ -44,14 +44,18 @@
 # Core handling from Peter Tobias <tobias@server.et-inf.fho-emden.de>
 # corrections by Christian 'Dr. Disk' Hechelmann <drdisk@ds9.au.s.shuttle.de>
 >>16	leshort		4		core file
->>>(0x38+0xcc) string	>\0		of '%s'
->>>(0x38+0x10) lelong	>0		(signal %d),
+# Core file detection is not reliable.
+#>>>(0x38+0xcc) string	>\0		of '%s'
+#>>>(0x38+0x10) lelong	>0		(signal %d),
 >>16	leshort		&0xff00		processor-specific,
 >>18	leshort		0		no machine,
 >>18	leshort		1		AT&T WE32100 - invalid byte order,
 >>18	leshort		2		SPARC - invalid byte order,
 >>18	leshort		3		Intel 80386,
->>18	leshort		4		Motorola 68000 - invalid byte order,
+>>18	leshort		4		Motorola
+>>>36	lelong		&0x01000000	68000 - invalid byte order,
+>>>36	lelong		&0x00810000	CPU32 - invalid byte order,
+>>>36	lelong		0		68020 - invalid byte order,
 >>18	leshort		5		Motorola 88000 - invalid byte order,
 >>18	leshort		6		Intel 80486,
 >>18	leshort		7		Intel 80860,
@@ -122,7 +126,10 @@
 >>18	beshort		1		AT&T WE32100,
 >>18	beshort		2		SPARC,
 >>18	beshort		3		Intel 80386 - invalid byte order,
->>18	beshort		4		Motorola 68000,
+>>18	beshort		4		Motorola
+>>>36	belong		&0x01000000	68000,
+>>>36	belong		&0x00810000	CPU32,
+>>>36	belong		0		68020,
 >>18	beshort		5		Motorola 88000,
 >>18	beshort		6		Intel 80486 - invalid byte order,
 >>18	beshort		7		Intel 80860,
