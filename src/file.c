@@ -50,14 +50,14 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.44 1999/01/14 15:53:59 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.45 1999/01/14 16:21:21 christos Exp $")
 #endif	/* lint */
 
 
 #ifdef S_IFLNK
-# define USAGE  "Usage: %s [-vbczL] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-bcnvzL] [-f namefile] [-m magicfiles] file...\n"
 #else
-# define USAGE  "Usage: %s [-vbcz] [-f namefile] [-m magicfiles] file...\n"
+# define USAGE  "Usage: %s [-bcnvz] [-f namefile] [-m magicfiles] file...\n"
 #endif
 
 #ifndef MAGIC
@@ -108,7 +108,7 @@ main(argc, argv)
 	if (!(magicfile = getenv("MAGIC")))
 		magicfile = MAGIC;
 
-	while ((c = getopt(argc, argv, "vbcndf:Lm:z")) != EOF)
+	while ((c = getopt(argc, argv, "bcdnf:m:vzL")) != EOF)
 		switch (c) {
 		case 'v':
 			(void) fprintf(stdout, "%s-%d.%d\n", progname,
