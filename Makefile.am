@@ -40,7 +40,7 @@ magic.mgc: magic file
 	./file -C -m magic
 
 magic.mime.mgc: magic.mime file
-	./file -C -m magic.mime
+	./file -C -m $(srcdir)/magic.mime
 
 file.1:	Makefile file.man
 	@rm -f $@
