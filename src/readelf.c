@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.43 2004/09/11 19:15:57 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.44 2004/11/21 05:20:31 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -411,48 +411,67 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 
 		/*
 		 * Contents is __FreeBSD_version, whose relation to OS
-		 * versions is defined by a huge table in the Porters'
-		 * Handbook. For up to 5.x, the first three digits are
-		 * the version number.  For 5.x and higher, the scheme
-		 * is: <major><two digit minor> <0 if release branch,
-		 * otherwise 1>xx
+		 * versions is defined by a huge table in the Porter's
+		 * Handbook.  This is the general scheme:
+		 * 
+		 * Releases:
+		 * 	Mmp000 (before 4.10)
+		 * 	Mmi0p0 (before 5.0)
+		 * 	Mmm0p0
+		 * 
+		 * Development branches:
+		 * 	Mmpxxx (before 4.6)
+		 * 	Mmp1xx (before 4.10)
+		 * 	Mmi1xx (before 5.0)
+		 * 	M000xx (pre-M.0)
+		 * 	Mmm1xx
+		 * 
+		 * M = major version
+		 * m = minor version
+		 * i = minor version increment (491000 -> 4.10)
+		 * p = patchlevel
+		 * x = revision
+		 * 
+		 * The first release of FreeBSD to use ELF by default
+		 * was version 3.0.
 		 */
-		if (desc / 100000 < 5) {
-			if (desc / 10000 % 10 == 9) {
-				if (file_printf(ms, " %d.%d", desc / 100000,
-				    9 + desc / 1000 % 10) == -1)
+		if (desc == 460002) {
+			if (file_printf(ms, " 4.6.2") == -1)
+				return size;
+		} else if (desc < 460100) {
+			if (file_printf(ms, " %d.%d", desc / 100000,
+			    desc / 10000 % 10) == -1)
+				return size;
+			if (desc / 1000 % 10 > 0)
+				if (file_printf(ms, ".%d", desc / 1000 % 10)
+				    == -1)
 					return size;
-			} else {
-				if (file_printf(ms, " %d.%d", desc / 100000,
-				    desc / 10000 % 10) == -1)
+			if ((desc % 1000 > 0) || (desc % 100000 == 0))
+				if (file_printf(ms, " (%d)", desc) == -1)
 					return size;
-				if (desc / 1000 % 10 > 0)
-					if (file_printf(ms, ".%d", desc / 1000 % 10)
-					    == -1)
-						return size;
-			}
-			if (desc / 10000 % 10 > 5) {
-				desc %= 1000;
-				if (desc >= 100) {
-					if (file_printf(ms, "-STABLE (rev %d)",
-				    	desc % 100) == -1)
-						return size;
-				} else if (desc != 0) {
-					if (file_printf(ms, ".%d", desc) == -1)
-						return size;
-				}
+		} else if (desc < 500000) {
+			if (file_printf(ms, " %d.%d", desc / 100000,
+			    desc / 10000 % 10 + desc / 1000 % 10) == -1)
+				return size;
+			if (desc / 100 % 10 > 0) {
+				if (file_printf(ms, " (%d)", desc) == -1)
+					return size;
+			} else if (desc / 10 % 10 > 0) {
+				if (file_printf(ms, ".%d", desc / 10 % 10)
+				    == -1)
+					return size;
 			}
 		} else {
 			if (file_printf(ms, " %d.%d", desc / 100000,
 			    desc / 1000 % 100) == -1)
 				return size;
-			desc %= 1000;
-			if (desc >= 100) {
-				if (file_printf(ms, "-CURRENT (rev %d)",
-				    desc % 100) == -1)
+			if ((desc / 100 % 10 > 0) ||
+			    (desc % 100000 / 100 == 0)) {
+				if (file_printf(ms, " (%d)", desc) == -1)
 					return size;
-			} else if (desc != 0) {
-				if (file_printf(ms, ".%d", desc / 10) == -1)
+			} else if (desc / 10 % 10 > 0) {
+				if (file_printf(ms, ".%d", desc / 10 % 10)
+				    == -1)
 					return size;
 			}
 		}
