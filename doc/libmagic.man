@@ -99,6 +99,8 @@ On systems that support
 or
 .Xr utimes 2 ,
 attempt to preserve the access time of files analyzed.
+.It Dv MAGIC_RAW
+Don't translate unprintable characters to a \eooo octal representation.
 .El
 .Pp
 The
