@@ -34,12 +34,16 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.20 1993/09/23 18:31:14 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.21 1993/09/23 20:26:40 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
-static int mcheck	__P((unsigned char *, struct magic *, int));
-static void mprint	__P((struct magic *, unsigned char *, int));
+static int mget		__P((union VALUETYPE *,
+			     unsigned char *, struct magic *, int));
+static int mcheck	__P((union VALUETYPE *, struct magic *));
+static void mprint	__P((union VALUETYPE *, struct magic *));
+static void mdebug	__P((long, char *, int));
+static int mconvert	__P((union VALUETYPE *, struct magic *));
 
 /*
  * softmagic - lookup one file in database 
@@ -93,124 +97,117 @@ int nbytes;
 	int magindex = 0;
 	int cont_level = 0;
 	int need_separator = 0;
+	union VALUETYPE p;
 
-	while (magindex < nmagic) {
+	for (magindex = 0; magindex < nmagic; magindex++) {
 		/* if main entry matches, print it... */
-		if (mcheck(s, &magic[magindex], nbytes)) {
-			mprint(&magic[magindex],s, nbytes);
-			/*
-			 * If we printed something, we'll need to print
-			 * a blank before we print something else.
-			 */
-			if (magic[magindex].desc[0])
-				need_separator = 1;
-			/* and any continuations that match */
-			cont_level++;
-			while (magic[magindex+1].cont_level != 0 &&
-				magindex < nmagic) {
-				++magindex;
-				if (cont_level >=
-				    magic[magindex].cont_level) {
-					if (cont_level >
-					    magic[magindex].cont_level) {
-						/*
-						 * We're at the end of the
-						 * level-"cont_level"
-						 * continuations.
-						 */
-						cont_level = 
-						  magic[magindex].cont_level;
-					}
-					if (mcheck(s, &magic[magindex], nbytes)) {
-						/*
-						 * This continuation matched.
-						 * Print its message, with
-						 * a blank before it if
-						 * the previous item printed
-						 * and this item isn't empty.
-						 */
-						/* space if previous printed */
-						if (need_separator
-						   && (magic[magindex].nospflag == 0)
-						   && (magic[magindex].desc[0] != '\0')
-						   ) {
-							(void) putchar(' ');
-							need_separator = 0;
-						}
-						mprint(&magic[magindex],s,nbytes);
-						if (magic[magindex].desc[0])
-							need_separator = 1;
+		if (!mget(&p, s, &magic[magindex], nbytes) ||
+		    !mcheck(&p, &magic[magindex], nbytes)) {
+			    /* 
+			     * main entry didn't match,
+			     * flush its continuations
+			     */
+			    while (magindex < nmagic &&
+			    	   magic[magindex + 1].cont_level != 0)
+			    	   magindex++;
+			    continue;
+		}
 
-						/*
-						 * If we see any continuations
-						 * at a higher level,
-						 * process them.
-						 */
-						cont_level++;
+		mprint(&p, &magic[magindex]);
+		/*
+		 * If we printed something, we'll need to print
+		 * a blank before we print something else.
+		 */
+		if (magic[magindex].desc[0])
+			need_separator = 1;
+		/* and any continuations that match */
+		cont_level++;
+		while (magic[magindex+1].cont_level != 0 && 
+		       ++magindex < nmagic) {
+			if (cont_level >= magic[magindex].cont_level) {
+				if (cont_level > magic[magindex].cont_level) {
+					/*
+					 * We're at the end of the level
+					 * "cont_level" continuations.
+					 */
+					cont_level = magic[magindex].cont_level;
+				}
+				if (mget(&p, s, &magic[magindex], nbytes) &&
+				    mcheck(&p, &magic[magindex], nbytes)) {
+					/*
+					 * This continuation matched.
+					 * Print its message, with
+					 * a blank before it if
+					 * the previous item printed
+					 * and this item isn't empty.
+					 */
+					/* space if previous printed */
+					if (need_separator
+					   && (magic[magindex].nospflag == 0)
+					   && (magic[magindex].desc[0] != '\0')
+					   ) {
+						(void) putchar(' ');
+						need_separator = 0;
 					}
+					mprint(&p, &magic[magindex]);
+					if (magic[magindex].desc[0])
+						need_separator = 1;
+
+					/*
+					 * If we see any continuations
+					 * at a higher level,
+					 * process them.
+					 */
+					cont_level++;
 				}
 			}
-			return 1;		/* all through */
-		} else {
-			/* main entry didn't match, flush its continuation */
-			while (magic[magindex+1].cont_level != 0 &&
-				magindex < nmagic) {
-				++magindex;
-			}
 		}
-		++magindex;			/* on to the next */
+		return 1;		/* all through */
 	}
-	return 0;				/* no match at all */
+	return 0;			/* no match at all */
 }
 
 static void
-mprint(m, s, nbytes)
+mprint(p, m)
+union VALUETYPE *p;
 struct magic *m;
-unsigned char *s;
-int nbytes;
 {
-	union VALUETYPE p;
 	char *pp, *rt;
-
-	if (m->offset + sizeof(union VALUETYPE) > nbytes)
-	    return;
-
-	memcpy(&p, (union VALUETYPE *)(s+m->offset), sizeof(p));
-	
 
   	switch (m->type) {
   	case BYTE:
  		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p.b & m->mask : p.b);
+ 			      (m->reln & MASK) ? p->b & m->mask : p->b);
   		break;
   	case SHORT:
   	case BESHORT:
   	case LESHORT:
  		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p.h & m->mask : p.h);
+ 			      (m->reln & MASK) ? p->h & m->mask : p->h);
   		break;
   	case LONG:
   	case BELONG:
   	case LELONG:
  		(void) printf(m->desc,
- 			      (m->reln & MASK) ? p.l & m->mask : p.l);
+ 			      (m->reln & MASK) ? p->l & m->mask : p->l);
   		break;
   	case STRING:
-		if ((rt=strchr(p.s, '\n')) != NULL)
-			*rt = '\0';
-		(void) printf(m->desc, p.s);
-		if (rt)
-			*rt = '\n';
+		if (m->reln == '=') {
+			(void) printf(m->desc, m->value.s);
+		}
+		else {
+			if ((rt = strchr(p->s, '\n')) != NULL)
+				*rt = '\0';
+			(void) printf(m->desc, p->s);
+		}
 		break;
 	case DATE:
 	case BEDATE:
 	case LEDATE:
-		pp = ctime((time_t*) &p.l);
+		pp = ctime((time_t*) &p->l);
 		if ((rt = strchr(pp, '\n')) != NULL)
 			*rt = '\0';
 		(void) printf(m->desc, pp);
-		if (rt)
-			*rt = '\n';
 		break;
 	default:
 		error("invalid m->type (%d) in mprint().\n", m->type);
@@ -218,56 +215,155 @@ int nbytes;
 	}
 }
 
+/*
+ * Convert the byte order of the data we are looking at
+ */
 static int
-mcheck(s, m, nbytes)
+mconvert(p, m)
+union VALUETYPE *p;
+struct magic *m;
+{
+
+	switch (m->type) {
+	case BYTE:
+	case SHORT:
+	case LONG:
+	case DATE:
+	case STRING:
+		return 1;
+	case BESHORT:
+		p->h = (short)((p->hs[0]<<8)|(p->hs[1]));
+		return 1;
+	case BELONG:
+	case BEDATE:
+		p->l = (long)
+		    ((p->hl[0]<<24)|(p->hl[1]<<16)|(p->hl[2]<<8)|(p->hl[3]));
+		return 1;
+	case LESHORT:
+		p->h = (short)((p->hs[1]<<8)|(p->hs[0]));
+		return 1;
+	case LELONG:
+	case LEDATE:
+		p->l = (long)
+		    ((p->hl[3]<<24)|(p->hl[2]<<16)|(p->hl[1]<<8)|(p->hl[0]));
+		return 1;
+	default:
+		error("invalid type %d in mconvert().\n", m->type);
+		return 0;
+	}
+}
+
+
+static void
+mdebug(offset, str, len)
+long offset;
+char *str;
+int len;
+{
+	(void) fprintf(stderr, "mget @%d: ", offset);
+	showstr(stderr, (char *) p, sizeof(p));
+	(void) fputc('\n', stderr);
+	(void) fputc('\n', stderr);
+}
+
+static int
+mget(p, s, m, nbytes)
+union VALUETYPE* p;
 unsigned char	*s;
 struct magic *m;
 int nbytes;
 {
-	union VALUETYPE p;
+	long offset = m->offset;
+	if (offset + sizeof(union VALUETYPE) > nbytes)
+	    return 0;
+
+
+	memcpy(p, s + offset, sizeof(p));
+
+	if (debug) {
+		mdebug(offset, (char *) p, sizeof(p);
+		mdump(m);
+	}
+
+	if (!mconvert(p, m))
+		return 0;
+
+	if (m->flag & INDIR) {
+
+		switch (m->in.type) {
+		case BYTE:
+			offset = p->b + m->in.offset;
+			break;
+		case SHORT:
+			offset = p->h + m->in.offset;
+			break;
+		case LONG:
+			offset = p->l + m->in.offset;
+			break;
+		}
+
+		if (offset + sizeof(union VALUETYPE) > nbytes)
+			return 0;
+
+		memcpy(p, s + offset, sizeof(p));
+
+		if (debug) {
+			mdebug(offset, (char *) p, sizeof(p);
+			mdump(m);
+		}
+
+		if (!mconvert(p, m))
+			return 0;
+	}
+	return 1;
+}
+
+static int
+mcheck(p, m)
+union VALUETYPE* p;
+struct magic *m;
+{
 	register long l = m->value.l;
 	register long mask = m->mask;
 	register long v;
-
-	if (m->offset + sizeof(union VALUETYPE) > nbytes)
-	    return 0;
-
-	memcpy(&p, (union VALUETYPE *)(s+m->offset), sizeof(p));
-
-	if (debug) {
-		(void) fprintf(stderr, "mcheck @%d: ", m->offset);
-		showstr(stderr, (char *) &p, 10);
-		(void) fputc('\n', stderr);
-		(void) fputc('\n', stderr);
-		mdump(m);
-	}
 
 	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
 		fprintf(stderr, "BOINK");
 		return 1;
 	}
 
+
 	switch (m->type) {
 	case BYTE:
-		v = p.b; break;
+		v = p->b;
+		break;
+
 	case SHORT:
-		v = p.h; break;
+	case BESHORT:
+	case LESHORT:
+		v = p->h;
 		break;
+
 	case LONG:
+	case BELONG:
+	case LELONG:
 	case DATE:
-		v = p.l; break;
+	case BEDATE:
+	case LEDATE:
+		v = p->l;
 		break;
+
 	case STRING:
 		l = 0;
 		/* What we want here is:
-		 * v = strncmp(m->value.s, p.s, m->vallen);
+		 * v = strncmp(m->value.s, p->s, m->vallen);
 		 * but ignoring any nulls.  bcmp doesn't give -/+/0
 		 * and isn't universally available anyway.
 		 */
 		v = 0;
 		{
 			register unsigned char *a = (unsigned char*)m->value.s;
-			register unsigned char *b = (unsigned char*)p.s;
+			register unsigned char *b = (unsigned char*)p->s;
 			register int len = m->vallen;
 
 			while (--len >= 0)
@@ -275,25 +371,9 @@ int nbytes;
 					break;
 		}
 		break;
-	case BESHORT:
-		v = (short)((p.hs[0]<<8)|(p.hs[1]));
-		break;
-	case BELONG:
-	case BEDATE:
-		v = (long)
-		    ((p.hl[0]<<24)|(p.hl[1]<<16)|(p.hl[2]<<8)|(p.hl[3]));
-		break;
-	case LESHORT:
-		v = (short)((p.hs[1]<<8)|(p.hs[0]));
-		break;
-	case LELONG:
-	case LEDATE:
-		v = (long)
-		    ((p.hl[3]<<24)|(p.hl[2]<<16)|(p.hl[1]<<8)|(p.hl[0]));
-		break;
 	default:
 		error("invalid type %d in mcheck().\n", m->type);
-		return -1;/*NOTREACHED*/
+		return 0;/*NOTREACHED*/
 	}
 
 	if (m->mask != 0L)
@@ -347,6 +427,6 @@ int nbytes;
 		return (v & mask) < l;
 	default:
 		error("mcheck: can't happen: invalid relation %d.\n", m->reln);
-		return -1;/*NOTREACHED*/
+		return 0;/*NOTREACHED*/
 	}
 }
