@@ -16,6 +16,10 @@
 >12	belong		6		32-bit IEEE floating point,
 >12	belong		7		64-bit IEEE floating point,
 >12	belong		23		8-bit ISDN u-law compressed (CCITT G.721 ADPCM voice data encoding),
+>12	belong		24		compressed (8-bit G.722 ADPCM)
+>12	belong		25		compressed (3-bit G.723 ADPCM),
+>12	belong		26		compressed (5-bit G.723 ADPCM),
+>12	belong		27		8-bit A-law,
 >20	belong		1		mono,
 >20	belong		2		stereo,
 >20	belong		4		quad,

@@ -31,8 +31,15 @@
 >>18	leshort		5		Motorola 88000 - invalid byte order,
 >>18	leshort		6		Intel 80486,
 >>18	leshort		7		Intel 80860,
->>18	leshort		8		MIPS RS3000,
+>>18	leshort		8		MIPS RS3000_BE,
 >>18	leshort		9		Amdahl,
+>>18	leshort		10		MIPS RS3000_LE,
+>>18	leshort		11		RS6000,
+>>18	leshort		15		PA_RISC,
+>>18	leshort		16		nCUBE,
+>>18	leshort		17		VPP500,
+>>18	leshort		18		SPARC32PLUS,
+>>18	leshort		20		PowerPC,
 >>18	leshort		0x9026		Alpha,
 >>20	lelong		0		invalid version
 >>20	lelong		1		version 1
@@ -53,8 +60,15 @@
 >>18	beshort		5		Motorola 88000,
 >>18	beshort		6		Intel 80486 - invalid byte order,
 >>18	beshort		7		Intel 80860,
->>18	beshort		8		MIPS RS3000,
+>>18	beshort		8		MIPS RS3000_BE,
 >>18	beshort		9		Amdahl,
+>>18	beshort		10		MIPS RS3000_LE,
+>>18	beshort		11		RS6000,
+>>18	beshort		15		PA_RISC,
+>>18	beshort		16		nCUBE,
+>>18	beshort		17		VPP500,
+>>18	beshort		18		SPARC32PLUS,
+>>18	beshort		20		PowerPC,
 >>18	beshort		0x9026		Alpha,
 >>20	belong		0		invalid version
 >>20	belong		1		version 1

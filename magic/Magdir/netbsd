@@ -17,6 +17,8 @@
 >>20	lelong			>4096		dynamically linked executable
 >3	byte			^0x80		executable
 >16	lelong			>0		not stripped
+0	string			\0\0\0\0\0\0\300\357\020\0	FreeBSD core
+>1075	string			>\0				from '%s'
 
 0	lelong			000000407	NetBSD little-endian object file
 >16	lelong			>0		not stripped
