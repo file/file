@@ -5,3 +5,6 @@
 # I386 magic number info
 #
 0	short		0565	i386 COFF object
+#
+0	string		Core	alpha core file
+>24	string		>\0	'%s'
