@@ -154,7 +154,9 @@ for example,
 >16	long&0x7fffffff	>0		not stripped
 .br
 would be entered in my version as
+.br
 >16	long	&0x7fffffff	not stripped
+.br
 which is a little less general (it simply tests (location 16)&0x7ffffff
 and returns its truth value as a C expression).
 .SH HISTORY
@@ -174,8 +176,10 @@ the first version.
 The program has undergone continued evolution since.
 .SH NOTICE
 Copyright (c) Ian F. Darwin,  1986 and 1987.
-Written by Ian F. Darwin, {utzoo|ihnp4}!darwin!ian.
-Postal: P.O. Box 603, Station F, Toronto, Ontario, CANADA M4Y 2L8.
+Written by Ian F. Darwin, UUCP address {utzoo | ihnp4}!darwin!ian,
+Internet address ian@sq.com,
+postal address: P.O. Box 603, Station F, Toronto, Ontario, CANADA M4Y 2L8.
+.PP
 .I Strtok.c
 and
 .I getopt.c
@@ -224,7 +228,8 @@ If your old
 .I file
 command uses a magic file,
 keep the old magic file around for comparison purposes
-(rename it to /etc/magic.old).
+(rename it to 
+.IR /etc/magic.orig ).
 .PP
 The author of this progam will be glad to receive additional
 or corrected magic file entries.
