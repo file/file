@@ -1,3 +1,7 @@
+2003-04-21 20:12  Christos Zoulas  <christos@zoulas.com>
+
+	* fix zsh magic
+
 2003-04-04 16:59  Christos Zoulas  <christos@zoulas.com>
 
 	* fix operand sort order in string.
