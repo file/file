@@ -22,7 +22,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.22 2002/05/16 18:45:56 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.23 2002/05/16 18:57:10 christos Exp $")
 #endif
 
 
@@ -106,7 +106,7 @@ swrite(fd, buf, n)
 			return -1;
 		default:
 			n -= rv;
-			buf = ((char *)buf) + rv;
+			buf = ((const char *)buf) + rv;
 			break;
 		}
 	while (n > 0);
