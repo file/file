@@ -5,13 +5,13 @@
 .SH SYNOPSIS
 .B file
 [
-.B -c
+.B \-c
 ]
 [
-.B -f
+.B \-f
 namefile ]
 [
-.B -m 
+.B \-m 
 magicfile ]
 file ...
 .SH DESCRIPTION
@@ -95,19 +95,19 @@ archives) and determine whether an unknown file should be
 labelled as `ascii text' or `data'. 
 .PP
 Use
-.B -m
+.B \-m
 .I file
 to specify an alternate file of magic numbers.
 .PP
 The
-.B -c
+.B \-c
 option causes a checking printout of the parsed form of the magic file.
 This is usually used in conjunction with 
-.B -m
+.B \-m
 to debug a new magic file before installing it.
 .PP
 The 
-.B -f
+.B \-f
 .I namefile
 option specifies that the names of the files to be examined
 are to be read (one per line) from 
@@ -145,21 +145,6 @@ For example,
 in an existing magic file would have to be changed to
 .br
 >10	string	language\e impress	(imPRESS data)
-.PP
-The Sun Microsystems implementation of System V compatibility
-includes a file(1) command that has some extentions.
-My version differs from Sun's only in minor ways.
-The significant one is the `&' operator, which Sun's program expects as,
-for example,
-.br
->16	long&0x7fffffff	>0		not stripped
-.br
-would be entered in my version as
-.br
->16	long	&0x7fffffff	not stripped
-.br
-which is a little less general; it simply tests (location 16)&0x7ffffff
-and returns its truth value as a C expression.
 .SH MAGIC DIRECTORY
 The magic file entries have been collected from various sources,
 mainly USENET, and contributed by various authors.
