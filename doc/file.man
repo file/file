@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.47 2003/03/27 22:42:47 christos Exp $
+.\" $Id: file.man,v 1.48 2003/03/27 22:47:13 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -13,12 +13,12 @@ file
 .I namefile
 ]
 [
-.B \-m 
-.I magicfiles
-]
-[
 .B \-F
 .I separator
+]
+[
+.B \-m 
+.I magicfiles
 ]
 .I file
 \&...
