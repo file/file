@@ -36,7 +36,7 @@ file:		$(OBJS)
 lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS)
 magic:		magdir
-		# exclude RCS or SCCS dirs:
+#		exclude RCS or SCCS dirs:
 		cat magdir/[a-z]* >$@
 
 ascmagic.o:	names.h
