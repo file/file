@@ -110,3 +110,8 @@
 
 # This would otherwise be recognized as PostScript - nick@debian.org
 0	string		%!VMF 		SunClock's Vector Map Format data
+
+#------------------------------------------------------------------------------
+# HP LaserJet 1000 series downloadable firmware file
+0	string	\xbe\xefABCDEFGH	HP LaserJet 1000 series downloadable fir
+mware   

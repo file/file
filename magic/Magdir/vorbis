@@ -19,6 +19,9 @@
 ##>>14		lelong		x		(Serial %lX)
 # --- First vorbis packet - general header ---
 >>28		string		\x01vorbis	\b, Vorbis audio,
+# non-Vorbis content: FLAC (Free Loss-lessy Audio Codec,
+# http://flac.sourceforge.net)
+>>28		string		fLaC		\b, FLAC audio
 >>>35		lelong		!0		UNKNOWN VERSION %lu,
 ##>>>35		lelong		0		version 0,
 >>>35		lelong		0
@@ -29,19 +32,19 @@
 # Minimal, nominal and maximal bitrates specified when encoding
 >>>>48		string		<\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff	\b,
 # The above tests if at least one of these is specified:
->>>>>44		lelong		!-1
+>>>>>52		lelong		!-1
 # Vorbis RC2 has a bug which puts -1000 in the min/max bitrate fields
 # instead of -1.
 # Vorbis 1.0 uses 0 instead of -1.
->>>>>>44	lelong		!-1000
->>>>>>>44	lelong		!0
->>>>>>>>44	lelong		x		>%lu
->>>>>48		lelong		!-1
->>>>>>48	lelong		x		~%lu
->>>>>52		lelong		!-1
 >>>>>>52	lelong		!0
 >>>>>>>52	lelong		!-1000
 >>>>>>>>52	lelong		x		<%lu
+>>>>>48		lelong		!-1
+>>>>>>48	lelong		x		~%lu
+>>>>>44		lelong		!-1
+>>>>>>44	lelong		!-1000
+>>>>>>>44	lelong		!0
+>>>>>>>>44	lelong		x		>%lu
 >>>>>48		string		<\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff	bps
 # -- Second vorbis header packet - the comments
 # A kludge to read the vendor string.  It's a counted string, not a

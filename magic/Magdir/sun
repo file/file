@@ -101,7 +101,8 @@
 >12	belong		7		(IBM channel-to-channel adapter)
 >12	belong		8		(FDDI)
 >12	belong		9		(Unknown)
+
+# Microsoft ICM color profile
+36	string		acspMSFT	Microsoft ICM Color Profile
 # Sun KCMS
 36	string		acsp		Kodak Color Management System, ICC Profile
-
-
