@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.41 2002/06/11 17:31:46 christos Exp $
+ * @(#)$Id: file.h,v 1.42 2002/07/03 18:26:37 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -39,17 +39,16 @@
 #include <config.h>
 #endif
 
-typedef int int32;
-typedef unsigned int uint32;
-typedef short int16;
-typedef unsigned short uint16;
-typedef char int8;
-typedef unsigned char uint8;
+#include <errno.h>
+#include <stdio.h>
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
 
 #ifndef HOWMANY
 # define HOWMANY 16384		/* how much of the file to look at */
 #endif
-#define MAXMAGIS 1000		/* max entries in /etc/magic */
+#define MAXMAGIS 4096		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
 
@@ -60,16 +59,16 @@ typedef unsigned char uint8;
 #define COMPILE	2
 
 struct magic {
-	uint16 cont_level;/* level of ">" */
-	uint8 nospflag;	/* supress space character */
-	uint8 flag;
+	uint16_t cont_level;	/* level of ">" */
+	uint8_t nospflag;	/* supress space character */
+	uint8_t flag;
 #define INDIR	1		/* if '>(...)' appears,  */
 #define	UNSIGNED 2		/* comparison is unsigned */
 #define OFFADD	4		/* if '>&' appears,  */
-	uint8 reln;		/* relation (0=eq, '>'=gt, etc) */
-	uint8 vallen;		/* length of string value, if any */
-	uint8 type;		/* int, short, long or string. */
-	uint8 in_type;		/* type of indirrection */
+	uint8_t reln;		/* relation (0=eq, '>'=gt, etc) */
+	uint8_t vallen;		/* length of string value, if any */
+	uint8_t type;		/* int, short, long or string. */
+	uint8_t in_type;	/* type of indirrection */
 #define 			BYTE	1
 #define				SHORT	2
 #define				LONG	4
@@ -86,8 +85,8 @@ struct magic {
 #define				BELDATE	15
 #define				LELDATE	16
 #define				REGEX	17
-	uint8 in_op;		/* operator for indirection */
-	uint8 mask_op;		/* operator for mask */
+	uint8_t in_op;		/* operator for indirection */
+	uint8_t mask_op;	/* operator for mask */
 #define				OPAND	1
 #define				OPOR	2
 #define				OPXOR	3
@@ -97,20 +96,20 @@ struct magic {
 #define				OPDIVIDE	7
 #define				OPMODULO	8
 #define				OPINVERSE	0x80
-	int32 offset;		/* offset to magic number */
-	int32 in_offset;	/* offset from indirection */
+	int32_t offset;		/* offset to magic number */
+	int32_t in_offset;	/* offset from indirection */
 	union VALUETYPE {
-		unsigned char b;
-		unsigned short h;
-		uint32 l;
+		uint8_t b;
+		uint16_t h;
+		uint32_t l;
 		char s[MAXstring];
 		char *buf;
-		unsigned char hs[2];	/* 2 bytes of a fixed-endian "short" */
-		unsigned char hl[4];	/* 4 bytes of a fixed-endian "long" */
+		uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
+		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
 	} value;		/* either number or string */
-	uint32 mask;	/* mask before comparison with value */
+	uint32_t mask;	/* mask before comparison with value */
 	char desc[MAXDESC];	/* description */
-};
+} __attribute__((__packed__));
 
 #define BIT(A)   (1 << (A))
 #define STRING_IGNORE_LOWERCASE		BIT(0)
@@ -124,47 +123,30 @@ struct magic {
 /* list of magic entries */
 struct mlist {
 	struct magic *magic;		/* array of magic entries */
-	uint32 nmagic;			/* number of entries in array */
+	uint32_t nmagic;		/* number of entries in array */
 	struct mlist *next, *prev;
 };
 
-#include <stdio.h>	/* Include that here, to make sure __P gets defined */
-#include <errno.h>
-/*
- * Include it here, so that we don't run into problems with silly OS's that
- * do #define renaming for large file support (Hi Solaris).
- */
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#ifndef __P
-# if defined(__STDC__) || defined(__cplusplus)
-#  define __P(a) a
-# else
-#  define __P(a) ()
-#  define const
-# endif
-#endif
-
-extern int   apprentice		__P((const char *, int));
-extern int   ascmagic		__P((unsigned char *, int));
-extern void  error		__P((const char *, ...));
-extern void  ckfputs		__P((const char *, FILE *));
-extern int   fsmagic		__P((const char *, struct stat *));
-extern char *fmttime		__P((long, int));
-extern int   is_compress	__P((const unsigned char *, int *));
-extern int   is_tar		__P((unsigned char *, int));
-extern void  magwarn		__P((const char *, ...));
-extern void  mdump		__P((struct magic *));
-extern void  process		__P((const char *, int));
-extern void  showstr		__P((FILE *, const char *, int));
-extern int   softmagic		__P((unsigned char *, int));
-extern int   tryit		__P((const char *, unsigned char *, int, int));
-extern int   zmagic		__P((const char *, unsigned char *, int));
-extern void  ckfprintf		__P((FILE *, const char *, ...));
-extern uint32 signextend	__P((struct magic *, unsigned int32));
-extern void tryelf		__P((int, unsigned char *, int));
-extern int pipe2file		__P((int, void *, size_t));
+extern int   apprentice(const char *, int);
+extern int   ascmagic(unsigned char *, int);
+extern void  error(const char *, ...);
+extern void  ckfputs(const char *, FILE *);
+struct stat;
+extern int   fsmagic(const char *, struct stat *);
+extern char *fmttime(long, int);
+extern int   is_compress(const unsigned char *, int *);
+extern int   is_tar(unsigned char *, int);
+extern void  magwarn(const char *, ...);
+extern void  mdump(struct magic *);
+extern void  process(const char *, int);
+extern void  showstr(FILE *, const char *, int);
+extern int   softmagic(unsigned char *, int);
+extern int   tryit(const char *, unsigned char *, int, int);
+extern int   zmagic(const char *, unsigned char *, int);
+extern void  ckfprintf(FILE *, const char *, ...);
+extern uint32_t signextend(struct magic *, unsigned int32);
+extern void tryelf(int, unsigned char *, int);
+extern int pipe2file(int, void *, size_t);
 
 
 extern char *progname;		/* the program name 			*/
@@ -199,13 +181,9 @@ extern char *sys_errlist[];
 #define QUICK
 #endif
 
-#ifdef __STDC__
 #define FILE_RCSID(id) \
 static const char *rcsid(const char *p) { \
 	return rcsid(p = id); \
 }
-#else
-#define FILE_RCSID(id) static char rcsid[] = id;
-#endif
 
 #endif /* __file_h__ */

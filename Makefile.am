@@ -139,6 +139,7 @@ Magdir/mips \
 Magdir/mirage \
 Magdir/mkid \
 Magdir/mmdf \
+Magdir/mlssa \
 Magdir/modem \
 Magdir/motorola \
 Magdir/msdos \

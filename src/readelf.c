@@ -11,23 +11,21 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.21 2002/06/11 17:31:46 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.22 2002/07/03 18:26:38 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
-static void dophn_core __P((int, int, int, off_t, int, size_t));
+static void dophn_core(int, int, int, off_t, int, size_t);
 #endif
-static void dophn_exec __P((int, int, int, off_t, int, size_t));
-static void doshn __P((int, int, int, off_t, int, size_t));
+static void dophn_exec(int, int, int, off_t, int, size_t);
+static void doshn(int, int, int, off_t, int, size_t);
 
-static uint16_t getu16 __P((int, int));
-static uint32_t getu32 __P((int, uint32_t));
-static uint64_t getu64 __P((int, uint64_t));
+static uint16_t getu16(int, uint16_t);
+static uint32_t getu32(int, uint32_t);
+static uint64_t getu64(int, uint64_t);
 
 static uint16_t
-getu16(swap, value)
-	int swap;
-	uint16_t value;
+getu16(int swap, uint16_t value)
 {
 	union {
 		uint16_t ui;
@@ -46,9 +44,7 @@ getu16(swap, value)
 }
 
 static uint32_t
-getu32(swap, value)
-	int swap;
-	uint32_t value;
+getu32(int swap, uint32_t value)
 {
 	union {
 		uint32_t ui;
@@ -69,9 +65,7 @@ getu32(swap, value)
 }
 
 static uint64_t
-getu64(swap, value)
-	int swap;
-	uint64_t value;
+getu64(int swap, uint64_t value)
 {
 	union {
 		uint64_t ui;
@@ -127,13 +121,7 @@ getu64(swap, value)
 			 : prpsoffsets64[i])
 
 static void
-doshn(class, swap, fd, off, num, size)
-	int class;
-	int swap;
-	int fd;
-	off_t off;
-	int num;
-	size_t size;
+doshn(int class, int swap, int fd, off_t off, int num, size_t size)
 {
 	Elf32_Shdr sh32;
 	Elf64_Shdr sh64;
@@ -158,13 +146,7 @@ doshn(class, swap, fd, off, num, size)
  * otherwise it's statically linked.
  */
 static void
-dophn_exec(class, swap, fd, off, num, size)
-	int class;
-	int swap;
-	int fd;
-	off_t off;
-	int num;
-	size_t size;
+dophn_exec(int class, int swap, int fd, off_t off, int num, size_t size)
 {
 	Elf32_Phdr ph32;
 	Elf32_Nhdr *nh32 = NULL;
@@ -350,13 +332,7 @@ static const char *os_style_names[] = {
 };
 
 static void
-dophn_core(class, swap, fd, off, num, size)
-	int class;
-	int swap;
-	int fd;
-	off_t off;
-	int num;
-	size_t size;
+dophn_core(int class, int swap, int fd, off_t off, int num, size_t size)
 {
 	Elf32_Phdr ph32;
 	Elf32_Nhdr *nh32 = NULL;
@@ -551,14 +527,11 @@ dophn_core(class, swap, fd, off, num, size)
 #endif
 
 void
-tryelf(fd, buf, nbytes)
-	int fd;
-	unsigned char *buf;
-	int nbytes;
+tryelf(int fd, unsigned char *buf, int nbytes)
 {
 	union {
-		int32 l;
-		char c[sizeof (int32)];
+		int32_t l;
+		char c[sizeof (int32_t)];
 	} u;
 	int class;
 	int swap;
@@ -591,7 +564,7 @@ tryelf(fd, buf, nbytes)
 
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
-		swap = (u.c[sizeof(int32) - 1] + 1) != elfhdr.e_ident[5];
+		swap = (u.c[sizeof(int32_t) - 1] + 1) != elfhdr.e_ident[5];
 
 		if (getu16(swap, elfhdr.e_type) == ET_CORE) 
 #ifdef ELFCORE
@@ -628,7 +601,7 @@ tryelf(fd, buf, nbytes)
 
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
-		swap = (u.c[sizeof(int32) - 1] + 1) != elfhdr.e_ident[5];
+		swap = (u.c[sizeof(int32_t) - 1] + 1) != elfhdr.e_ident[5];
 
 		if (getu16(swap, elfhdr.e_type) == ET_CORE) 
 #ifdef ELFCORE
