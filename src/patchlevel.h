@@ -1,11 +1,16 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		23
+#define	patchlevel		24
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.23 1997/11/05 16:03:37 christos Exp $
+ * $Id: patchlevel.h,v 1.24 1998/02/15 23:20:38 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.24  1998/02/15 23:20:38  christos
+ * Autoconf patch: Felix von Leitner <leitner@math.fu-berlin.de>
+ * More magic fixes
+ * Elf64 fixes
+ *
  * Revision 1.23  1997/11/05 16:03:37  christos
  * - correct elf prps offset for SunOS-2.5.1 [guy@netapp.com]
  * - handle 64 bit time_t's correctly [ewt@redhat.com]
