@@ -1,7 +1,7 @@
 
 #------------------------------------------------------------------------------
 # sgi:  file(1) magic for Silicon Graphics (MIPS, IRIS, IRIX, etc.)
-#
+#                         Dec Ultrix (MIPS)
 # all of SGI's *current* machines and OSes run in big-endian mode on the
 # MIPS machines, as far as I know.
 #
@@ -47,8 +47,8 @@
 >20	beshort	05401		(paged)
 >8	belong	>0		not stripped
 >8	belong	0		stripped
->22	byte	x		- version %d
->23	byte	x		.%ld
+>23	byte	x		- version %d
+>22	byte	x		.%ld
 #
 0	beshort	0x6201		MIPSEL-LE COFF executable
 >20	beshort	03401		(impure)
@@ -56,8 +56,8 @@
 >20	beshort	05401		(paged)
 >8	belong	>0		not stripped
 >8	belong	0		stripped
->22	byte	x		- version %ld
->23	byte	x		.%ld
+>23	byte	x		- version %ld
+>22	byte	x		.%ld
 #
 # MIPS 2 additions
 #
@@ -86,7 +86,7 @@
 >8	belong	>0		not stripped
 >8	belong	0		stripped
 >23	byte	x		- version %ld
->23	byte	x		.%ld
+>22	byte	x		.%ld
 #
 0	beshort	0x6601		MIPSEL-LE MIPS-II COFF executable
 >20	beshort	03401		(impure)
@@ -95,7 +95,7 @@
 >8	belong	>0		not stripped
 >8	belong	0		stripped
 >23	byte	x		- version %ld
->23	byte	x		.%ld
+>22	byte	x		.%ld
 #
 # MIPS 3 additions
 #
@@ -124,7 +124,7 @@
 >8	belong	>0		not stripped
 >8	belong	0		stripped
 >23	byte	x		- version %ld
->23	byte	x		.%ld
+>22	byte	x		.%ld
 #
 0	beshort	0x4201		MIPSEL-LE MIPS-III COFF executable
 >20	beshort	03401		(impure)
@@ -133,7 +133,7 @@
 >8	belong	>0		not stripped
 >8	belong	0		stripped
 >23	byte	x		- version %ld
->23	byte	x		.%ld
+>22	byte	x		.%ld
 #
 0	beshort	0x180		MIPSEB Ucode
 0	beshort	0x182		MIPSEL Ucode
