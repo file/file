@@ -185,7 +185,7 @@ depending on the
 .B [bslBSL] 
 type specifier.
 The capitalized types interpret the number as a big endian
-value, whereas the small letter versions interpet the number as a little
+value, whereas the small letter versions interpret the number as a little
 endian value.
 To that number the value of
 .I y
@@ -237,4 +237,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.24 2003/03/26 15:34:50 christos Exp $
+.\" @(#)$Id: magic.man,v 1.25 2003/03/31 17:52:04 christos Exp $
