@@ -32,17 +32,15 @@
 0	string		#!\ /usr/local/bin/nawk	- New Awk script text
 0	string		#!/bin/gawk		- GNU awk script text
 0	string		#!\ /bin/gawk		- GNU awk script text
+0	string		#!/usr/bin/gawk		- GNU awk script text
+0	string		#!\ /usr/bin/gawk	- GNU awk script text
 0	string		#!/usr/local/bin/gawk	- GNU awk script text
 0	string		#!\ /usr/local/bin/gawk	- GNU awk script text
 #
 0	string		#!/bin/awk		Awk Commands text
 0	string		#!\ /bin/awk		Awk Commands text
-0	string		#!\ /			a
->3	string		>\0			%s script text
-0	string		#!/			a
->2	string		>\0			%s script text
-0	string		#!\ 			commands text
->3	string		>\0			for %s
+0	string		#!/usr/bin/awk		Awk Commands text
+0	string		#!\ /usr/bin/awk	Awk Commands text
 
 # For Larry Wall's perl language.  The ``eval'' line recognizes an
 # outrageously clever hack for USG systems.
@@ -64,3 +62,13 @@
 # bash shell magic, from Peter Tobias (tobias@server.et-inf.fho-emden.de)
 0	string		#!/bin/bash	Bourne-Again Shell script text
 0	string		#!\ /bin/bash	Bourne-Again Shell script text
+0	string		#!/usr/local/bin/bash	Bourne-Again Shell script text
+0	string		#!\ /usr/local/bin/bash	Bourne-Again Shell script text
+
+# generic shell magic
+0	string		#!\ /			a
+>3	string		>\0			%s script text
+0	string		#!/			a
+>2	string		>\0			%s script text
+0	string		#!\ 			commands text
+>3	string		>\0			for %s

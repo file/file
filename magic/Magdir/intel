@@ -29,6 +29,7 @@
 0	leshort		=0522		iAPX 286 executable large model (COFF)
 >12	lelong		>0		not stripped
 #>22	leshort		>0		- version %ld
+# SGI labeled the next entry as "iAPX 386 executable" --Dan Quinlan
 0	leshort		=0514		80386 COFF executable
 >12	lelong		>0		not stripped
 >22	leshort		>0		- version %ld

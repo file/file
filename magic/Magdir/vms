@@ -3,6 +3,7 @@
 # vms:  file(1) magic for VMS executables (experimental)
 #
 # VMS .exe formats, both VAX and AXP (Greg Roelofs, newt@uchicago.edu)
+# This file should be renamed to "vms" eventually...
 
 # GRR 950122:  I'm just guessing on these, based on inspection of the headers
 # of three executables each for Alpha and VAX architectures.  The VAX files

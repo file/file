@@ -2,12 +2,10 @@
 #------------------------------------------------------------------------------
 # elf:  file(1) magic for ELF executables
 #
-# Missing MIPS image type and flags
+# We have to check the byte order flag to see what byte order all the
+# other stuff in the header is in.
 #
-# Question marks on processor types flag "should not happen because the
-# byte order is wrong".  We have to check the byte order flag to see what
-# byte order all the other stuff in the header is in.
-#
+# MIPS, i486 added by Daniel Quinlan (quinlan@yggdrasil.com)
 0	string		\177ELF		ELF
 >4	byte		0		invalid class
 >4	byte		1		32-bit
@@ -21,11 +19,13 @@
 >>16	leshort		4		core file
 >>18	leshort		0		unknown machine
 >>18	leshort		1		WE32100 and up
->>18	leshort		2		SPARC?
+>>18	leshort		2		SPARC - invalid byte order
 >>18	leshort		3		i386 (386 and up)
->>18	leshort		4		M68000?
->>18	leshort		5		M88000?
+>>18	leshort		4		M68000 - invalid byte order
+>>18	leshort		5		M88000 - invalud byte order
+>>18	leshort		6		i486
 >>18	leshort		7		i860
+>>18	leshort		8		MIPS
 >>20	lelong		1		Version 1
 >>36	lelong		1		MathCoPro/FPU/MAU Required
 >5	byte		2		MSB
@@ -37,10 +37,11 @@
 >>18	beshort		0		unknown machine
 >>18	beshort		1		WE32100 and up
 >>18	beshort		2		SPARC
->>18	beshort		3		i386 (386 and up)?
+>>18	beshort		3		i386 (386 and up) - invalid byte order
 >>18	beshort		4		M68000
 >>18	beshort		5		M88000
+>>18	beshort		6		i486 - invalid byte order
 >>18	beshort		7		i860
+>>18	beshort		8		MIPS
 >>20	belong		1		Version 1
 >>36	belong		1		MathCoPro/FPU/MAU Required
-

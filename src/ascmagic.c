@@ -36,7 +36,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.17 1994/01/21 01:25:30 christos Exp $";
+	"@(#)$Id: ascmagic.c,v 1.18 1995/03/25 22:08:07 christos Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -53,7 +53,18 @@ int nbytes;	/* size actually read */
 	char *token;
 	register struct names *p;
 
-	/* these are easy, do them first */
+	/*
+	 * Do the tar test first, because if the first file in the tar
+	 * archive starts with a dot, we can confuse it with an nroff file.
+	 */
+	switch (is_tar(buf, nbytes)) {
+	case 1:
+		ckfputs("tar archive", stdout);
+		return 1;
+	case 2:
+		ckfputs("POSIX tar archive", stdout);
+		return 1;
+	}
 
 	/*
 	 * for troff, look for . + letter + letter or .\";
@@ -95,14 +106,6 @@ int nbytes;	/* size actually read */
 		}
 	}
 
-	switch (is_tar(buf, nbytes)) {
-	case 1:
-		ckfputs("tar archive", stdout);
-		return 1;
-	case 2:
-		ckfputs("POSIX tar archive", stdout);
-		return 1;
-	}
 
 	for (i = 0; i < nbytes; i++) {
 		if (!isascii(*(buf+i)))

@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.19 1994/05/03 17:58:23 christos Exp $
+ * @(#)$Id: file.h,v 1.20 1995/03/25 22:08:07 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -121,6 +121,7 @@ extern int sys_nerr;
 extern char *sys_errlist[];
 #define strerror(e) \
 	(((e) >= 0 && (e) < sys_nerr) ? sys_errlist[(e)] : "Unknown error")
+#define strtoul(a, b, c)	strtol(a, b, c)
 #endif
 
 #ifndef MAXPATHLEN

@@ -2,21 +2,37 @@
 #------------------------------------------------------------------------------
 # dos:  file(1) magic for MS-DOS files (formerly "ms-dos")
 #
-# These must come before the Linux/i386 entries.
-
+# These must come before the Linux/i386 entries, with the exception of
+# Linux LILO images.
+#
+# LILO boot/chain loaders, from Daniel Quinlan <quinlan@yggdrasil.com>
+# this can be overridden by the DOS executable (COM) entry
+# XXX - this was moved from "linux"
+2	string		LILO		LILO boot/chain loader
+#
 # .EXE formats (Greg Roelofs, newt@uchicago.edu)
 # [GRR:  some company sells a self-extractor/displayer for image data(!)]
-0	string		MZ		MS-DOS executable (EXE)
->24	string		@		(OS/2 or Windows format)
->1638	string		-lh5-		(LHa SFX archive v2.13S)
->7195	string		Rar!		(RAR self-extracting archive)
-# [GRR 950118:  file 3.14 has a buffer-size limitation; offsets bigger than
-#   8161 bytes are ignored.  To make these work, increase HOWMANY in file.h
-#   to 32K or more.]
->13297	string		PK\003\004	(PKZIP SFX archive v1.93a)
->15770	string		PK\003\004	(PKZIP SFX archive v2.04g)
->25115	string		PK\003\004	(Info-ZIP SFX archive v5.12)
->26331	string		PK\003\004	(Info-ZIP SFX archive v5.12 w/decryption)
+#
+0	string	MZ		MS-DOS executable (EXE)
+>24	string	@		(OS/2 or Windows format)
+>1638	string	-lh5-		(LHa SFX archive v2.13S)
+>7195	string	Rar!		(RAR self-extracting archive)
+#
+# [GRR 950118:  file 3.15 has a buffer-size limitation; offsets bigger than
+#   8161 bytes are ignored.  To make the following entries work, increase
+#   HOWMANY in file.h to 32K at least, and maybe to 70K or more for OS/2,
+#   NT/Win32 and VMS.]
+#
+>13297	string	PK\003\004	(PKZIP SFX archive v1.93a)
+>15770	string	PK\003\004	(PKZIP SFX archive v2.04g)
+# these are the DOS versions:
+>25115	string	PK\003\004	(Info-ZIP SFX archive v5.12)
+>26331	string	PK\003\004	(Info-ZIP SFX archive v5.12 w/decryption)
+# these are the OS/2 versions (OS/2 is flagged above):
+>47031	string	PK\003\004	(Info-ZIP SFX archive v5.12)
+>49845	string	PK\003\004	(Info-ZIP SFX archive v5.12 w/decryption)
+# this is the NT/Win32 version:
+>69120	string	PK\003\004	(Info-ZIP NT SFX archive v5.12 w/decryption)
 
 # miscellaneous formats
 0	string		LZ		MS-DOS executable (built-in)

@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.30 1995/01/21 21:03:35 christos Exp $";
+	"@(#)$Id: file.c,v 1.31 1995/03/25 22:08:07 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -254,7 +254,12 @@ int wid;
 	if (nbytes == 0) 
 		ckfputs("empty", stdout);
 	else {
-		buf[nbytes++] = '\0';	/* null-terminate it */
+		buf[nbytes++] = '\0';	/* NULL terminate */
+		if (nbytes < sizeof(union VALUETYPE)) {
+		    /* The following is to handle *very* short files */
+		    memset(buf + nbytes, 0, sizeof(union VALUETYPE) - nbytes);
+		    nbytes = sizeof(union VALUETYPE);
+		}
 		tryit(buf, nbytes, zflag);
 	}
 
