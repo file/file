@@ -1,15 +1,14 @@
 ** README for file(1) Command **
-@(#) $Header: /p/file/cvsroot/file/README,v 1.10 1989/05/11 15:01:05 ian Exp $
+@(#) $Header: /p/file/cvsroot/file/README,v 1.11 1990/10/03 18:35:35 ian Exp $
 
-This is Ian Darwin's (copyright but distributable) file(1)
-command. It follows the USG (Sys V) model of the file command,
-rather than the Research (V7) version or the V7-derived Berkeley
-one. That is, there is a file (/etc/magic) that contains much
-of the ritual information that is the source of this program's
-power. It knows a little more magic (including tar archives)
-than System V; the /etc/magic parsing seems to be compatible
-with the (poorly documented) System V /etc/magic format (with
-one exception; see the man page).
+This is Release 1.2 of  Ian Darwin's (copyright but distributable) file(1)
+command. It follows the USG (Sys V) model of the file command, rather than
+the Research (V7) version or the V7-derived Berkeley one. That is, there is
+a file (/etc/magic) that contains much of the ritual information that is the
+source of this program's power. It knows a little more magic (including tar
+archives) than System V; the /etc/magic parsing seems to be compatible with
+the (poorly documented) System V /etc/magic format (with one exception; see
+the man page).
 
 In addition, the /etc/magic file is built from a subdirectory
 for easier maintenance.  I will act as a clearinghouse for
