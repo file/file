@@ -1,3 +1,16 @@
+
+#------------------------------------------------------------------------------
+# wordprocessors:  file(1) magic fo word processors.
+#
+####### PWP file format used on Smith Corona Personal Word Processors:
+2	string	\040\040\040\040\040\040\040\040\040\040\040ML4D\040\'92	Smith Corona PWP
+>24	byte	2	\b, single spaced
+>24	byte	3	\b, 1.5 spaced
+>24	byte	4	\b, double spaced
+>25	byte	0x42	\b, letter
+>25	byte	0x54	\b, legal
+>26	byte	0x46	\b, A4
+
 #WordPerfect type files Version 1.6 - PLEASE DO NOT REMOVE THIS LINE
 0	string	\377WPC\020\000\000\000\022\012\001\001\000\000\000\000	(WP) loadable text
 >15	byte	0	Optimized for Intel

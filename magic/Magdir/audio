@@ -8,14 +8,14 @@
 
 # Sun/NeXT audio data
 0	string		.snd		Sun/NeXT audio data:
->12	belong		1		8-bit ISDN u-law,
+>12	belong		1		8-bit ISDN mu-law,
 >12	belong		2		8-bit linear PCM [REF-PCM],
 >12	belong		3		16-bit linear PCM,
 >12	belong		4		24-bit linear PCM,
 >12	belong		5		32-bit linear PCM,
 >12	belong		6		32-bit IEEE floating point,
 >12	belong		7		64-bit IEEE floating point,
->12	belong		23		8-bit ISDN u-law compressed (CCITT G.721 ADPCM voice data encoding),
+>12	belong		23		8-bit ISDN mu-law compressed (CCITT G.721 ADPCM voice data encoding),
 >12	belong		24		compressed (8-bit G.722 ADPCM)
 >12	belong		25		compressed (3-bit G.723 ADPCM),
 >12	belong		26		compressed (5-bit G.723 ADPCM),
@@ -28,14 +28,14 @@
 # DEC systems (e.g. DECstation 5000) use a variant of the Sun/NeXT format
 # that uses little-endian encoding and has a different magic number
 0	lelong		0x0064732E	DEC audio data:
->12	lelong		1		8-bit ISDN u-law,
+>12	lelong		1		8-bit ISDN mu-law,
 >12	lelong		2		8-bit linear PCM [REF-PCM],
 >12	lelong		3		16-bit linear PCM,
 >12	lelong		4		24-bit linear PCM,
 >12	lelong		5		32-bit linear PCM,
 >12	lelong		6		32-bit IEEE floating point,
 >12	lelong		7		64-bit IEEE floating point,
->12	lelong		23		8-bit ISDN u-law compressed (CCITT G.721 ADPCM voice data encoding),
+>12	lelong		23		8-bit ISDN mu-law compressed (CCITT G.721 ADPCM voice data encoding),
 >20	lelong		1		mono,
 >20	lelong		2		stereo,
 >20	lelong		4		quad,
@@ -93,14 +93,15 @@
 >14	string	>/0		ultratracker V1.%.1s module sound data
 0	string	UN05		MikMod UNI format module sound data
 0	string	Extended\ Module: Fasttracker II module sound data
-21	string	!SCREAM!	Screamtracker 2 module sound data
+21	string/c	!SCREAM!	Screamtracker 2 module sound data
+21	string	BMOD2STM	Screamtracker 2 module sound data
 1080	string	M.K.		4-channel Protracker module sound data
 1080	string	M!K!		4-channel Protracker module sound data
 1080	string	FLT4		4-channel Startracker module sound data
 1080	string	4CHN		4-channel Fasttracker module sound data
 1080	string	6CHN		6-channel Fasttracker module sound data
 1080	string	8CHN		8-channel Fasttracker module sound data
-1080	string	CD81		8-channel Oktalyzer module sound data
+1080	string	CD81		8-channel Octalyser module sound data
 1080	string	OKTA		8-channel Oktalyzer module sound data
 # Not good enough.
 #1082	string	CH
@@ -244,3 +245,16 @@
 # From: Dan Fandrich <dan@coneharvesters.com>
 0	string		fLaC		FLAC audio stream data
 
+# (ISDN) VBOX voice message file (Wolfram Kleff)
+0       string          VBOX            VBOX voice message data
+
+# ReBorn Song Files (.rbs)
+# David J. Singer <doc@deadvirgins.org.uk>
+8       string          RB40             RBS Song file
+>29     string          ReBorn           created by ReBorn
+>37     string          Propellerhead    created by ReBirth
+
+# Synthesizer Generator and Kimwitu share their file format
+0	string		A#S#C#S#S#L#V#3	    Synthesizer Generator or Kimwitu data
+# Kimwitu++ uses a slightly different magic
+0	string		A#S#C#S#S#L#HUB	    Kimwitu++ data

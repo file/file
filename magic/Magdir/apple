@@ -28,6 +28,13 @@
 >12	belong	&0x02000000	UseFasterCompression,
 >16	belong	x		version %d
 
+0	string	package4	Newton package,
+>8	byte	8		NOS 1.x,
+>8	byte	9		NOS 2.x,
+>12	belong	&0x80000000	AutoRemove,
+>12	belong	&0x40000000	CopyProtect,
+>12	belong	&0x10000000	NoCompression,
+
 # The following entries for the Apple II are for files that have
 # been transferred as raw binary data from an Apple, without having
 # been encapsulated by any of the above archivers.

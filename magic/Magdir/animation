@@ -118,6 +118,12 @@
 #>3     byte&0x03       1               \b, Emphasis 5
 #>3     byte&0x03       3               \b, Emphasis c
 
+#From: Johan Gade <jgade@diku.dk>
+
+# MPEG-4 Advanced Audio Coding (AAC) file (perhaps also MPEG-2 ACC?)
+16	string		M4A		MPEG-4 Advanced Audio Coding file (ACC)
+
+
 # FLI animation format
 4	leshort		0xAF11			FLI file
 >6	leshort		x			- %d frames,
@@ -194,3 +200,19 @@
 0	string			\x8aMNG		MNG video data,
 >4	belong			!0x0d0a1a0a	CORRUPTED,
 >4	belong			0x0d0a1a0a
+>>16    belong	x				%ld x
+>>20    belong	x				%ld
+
+# JNG Video Format, <URL:http://www.libpng.org/pub/mng/spec/>
+0	string			\x8bJNG		JNG video data,
+>4	belong			!0x0d0a1a0a	CORRUPTED,
+>4	belong			0x0d0a1a0a
+>>16    belong	x				%ld x
+>>20    belong	x				%ld
+
+# Vivo video (Wolfram Kleff)
+3	string		\x0D\x0AVersion:Vivo	Vivo video data
+
+# VRML (Virtual Reality Modelling Language)
+0       string/b        #VRML\ V1.0\ ascii	VRML 1 file
+0	string/b	#VRML\ V2.0\ utf8	ISO/IEC 14772 VRML 97 file

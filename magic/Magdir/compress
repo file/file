@@ -169,3 +169,6 @@
 0	string		7z\274\257\047\034	7z archive data,
 >6	byte		x			version %d
 >7	byte		x			\b.%d
+
+# AFX compressed files (Wolfram Kleff)
+2	string		-afx-		AFX compressed file data

@@ -120,3 +120,8 @@
 #------------------------------------------------------------------------------
 # msx: file(1) magic for MSX game cartridge dumps
 0 beshort 0x4142 MSX game cartridge dump 
+
+# Sony Playstation executables (Adam Sjoegren <asjo@diku.dk>) :
+0	string	PS-X\ EXE	Sony Playstation executable
+#  Area:
+>113	string	x		(%s)
