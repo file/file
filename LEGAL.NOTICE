@@ -19,11 +19,14 @@ Binary copies may also be distributed; if they are derived from
 modified source then you must inform every recipient of the
 origin of the program and that the source is available from the author.
 
-The module is_tar.c is by Fred Blonder at the University of Maryland
-and appeared as part of his fixes to the UNIX file(1) program
-in net.sources; it is not covered by the above restrictions.
+The module is_tar.c is adapted by John Gilmore from his public
+domain POSIX-standards-like tar program, and is not covered
+by the above restrictions. 
 
 The module strtok.c is by Henry Spencer at the University of Toronto
 and is not covered by the above restrictions.
 
 The module strtol is a quick hack and is not covered by the above.
+
+This software is not subject to any license by American Telephone and
+Telegraph or of the Regents of the University of California.
