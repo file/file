@@ -1,7 +1,26 @@
 Portability of the new file(1) command.
-@(#) $Id: PORTING,v 1.9 1992/09/09 16:38:12 ian Exp $
+@(#) $Id: PORTING,v 1.10 1992/09/11 11:53:39 ian Exp $
 
 Read this file only if the program doesn't compile on your system.
+
+This release has been around UNIX; it has been compiled and tested
+in the following environments:
+
+SunOS sqarc 4.1.1 8 sun4
+	No problems.
+ULTRIX squint 4.2 0 RISC
+	No problems.
+A/UX sqmac 3.0a9 SVR22 mc68020
+	No problems.
+AIX sqibm 2 3 000XXXXXX100
+	Had weird "make" problems making "magic" file automatically; just
+	built it by hand. Your mileage may vary.
+SCO sqwang 3.2 2 i386
+	Compiles fine; their weird make can't handle "[a-z]*" as a dependancy,
+	so build magic by hand. Runs fine.
+sqzme sqzme 3.1.1 3 3B2
+	The 3B2 SVR3 needed a few tweaks as well as COPTS = -Ilocalinc
+	in order to compile.
 
 This version, reluctanly, includes <stdlib.h>, which won't exist
 on older systems or those that aren't even close to the ANSI C
@@ -9,6 +28,9 @@ standard. There is a null "stdlib.h", and some other bogus headers,
 in subdirectory "localinc"; if you get complaints about missing
 stdlib.h and others, uncomment the line with COPTS=-Ilocalinc
 in the Makefile, and try again.
+
+You must have either <stdarg.h> or the older <varargs.h>, otherwise you'll
+have to butcher some routines in print.c.
 
 Beyond that, I have tried to make a program that doesn't need any
 command-line defines (-D) to specify what version of UNIX is in use,
