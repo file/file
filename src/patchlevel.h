@@ -1,11 +1,16 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		29
+#define	patchlevel		30
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.29 1999/11/28 20:02:29 christos Exp $
+ * $Id: patchlevel.h,v 1.30 2000/04/11 02:41:17 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.30  2000/04/11 02:41:17  christos
+ * - add support for mime output (-i)
+ * - make sure we free memory in case realloc fails
+ * - magic fixes
+ *
  * Revision 1.29  1999/11/28 20:02:29  christos
  * new string/[Bcb] magic from anton, and adjustments to the magic files to
  * use it.
