@@ -270,7 +270,7 @@
 #   As described in /usr/X11R6/include/X11/XWDFile.h
 #   used by the xwd program.
 #   Bradford Castalia, idaeim, 1/01
-4	belong	7			XWD X-Widows Dump image data
+4	belong	7			XWD X-Windows Dump image data
 >100	string	>\0			\b, "%s"
 >16	belong	x			\b, %dx
 >20	belong	x			\b%dx

@@ -195,3 +195,11 @@
 # RADCOM WAN/LAN Analyzer capture files.
 #
 0	string		\x42\xd2\x00\x34\x12\x66\x22\x88	RADCOM WAN/LAN Analyzer capture file
+
+#
+# NetStumbler log files.  Not really packets, per se, but about as
+# close as you can get.  These are log files from NetStumbler, a
+# Windows program, that scans for 802.11b networks.
+#
+0	string		NetS		NetStumbler log file
+>8	lelong		x		\b, %d stations found
