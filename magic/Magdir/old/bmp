@@ -1,0 +1,9 @@
+0	string		BM			bitmap
+>14	byte		12			(OS/2 1.x format)
+>14	byte		64			(OS/2 2.x format)
+>14	byte		40			(Windows 3.x format)
+0	string		IC			icon
+0	string		PI			pointer
+0	string		CI			color icon
+0	string		CP			color pointer
+0	string		BA			bitmap array
