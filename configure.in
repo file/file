@@ -98,7 +98,7 @@ AC_CHECK_SIZEOF_STDC_HEADERS(uint32_t, 0)
 AC_CHECK_SIZEOF_STDC_HEADERS(uint64_t, 0)
 
 dnl Checks for functions
-AC_CHECK_FUNCS(mmap strerror strtoul mkstemp getopt_long utimes utime)
+AC_CHECK_FUNCS(mmap strerror strtoul mbrtowc mkstemp getopt_long utimes utime wcwidth)
 
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)
