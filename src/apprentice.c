@@ -38,7 +38,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.38 2001/03/27 01:12:28 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.39 2001/04/24 14:40:24 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -57,6 +57,10 @@ FILE_RCSID("@(#)$Id: apprentice.c,v 1.38 2001/03/27 01:12:28 christos Exp $")
 
 #ifndef MAP_FAILED
 #define MAP_FAILED (void *) -1
+#endif
+
+#ifndef MAP_FILE
+#define MAP_FILE 0
 #endif
 
 #ifdef __EMX__

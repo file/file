@@ -62,14 +62,14 @@ magic_FRAGMENTS = Magdir/adventure Magdir/allegro Magdir/alliant \
     Magdir/jpeg Magdir/karma Magdir/lecter Magdir/lex Magdir/lif \
     Magdir/linux Magdir/lisp Magdir/mach Magdir/macintosh Magdir/magic \
     Magdir/mail.news Magdir/maple Magdir/mathematica Magdir/mcrypt \
-    Magdir/mime Magdir/mirage Magdir/mkid Magdir/mmdf Magdir/modem \
+    Magdir/mime Magdir/mips Magdir/mirage Magdir/mkid Magdir/mmdf Magdir/modem \
     Magdir/motorola Magdir/msdos Magdir/msvc Magdir/ncr Magdir/netbsd \
     Magdir/netscape Magdir/news Magdir/octave Magdir/olf Magdir/os2 \
     Magdir/os9 Magdir/osf1 Magdir/palm Magdir/pbm Magdir/pdf Magdir/pdp \
     Magdir/pgp Magdir/pkgadd Magdir/plus5 Magdir/printer Magdir/project \
     Magdir/psdbms Magdir/pyramid Magdir/python Magdir/riff Magdir/rpm \
     Magdir/rtf Magdir/sc Magdir/sccs Magdir/sendmail Magdir/sequent \
-    Magdir/sgi Magdir/sgml Magdir/sniffer Magdir/softquad Magdir/spectrum \
+    Magdir/sgml Magdir/sniffer Magdir/softquad Magdir/spectrum \
     Magdir/sun Magdir/teapot Magdir/terminfo Magdir/tex Magdir/ti-8x \
     Magdir/timezone Magdir/troff Magdir/typeset Magdir/unknown \
     Magdir/uuencode Magdir/varied.out Magdir/vax Magdir/vicar Magdir/visx \

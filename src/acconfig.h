@@ -2,7 +2,7 @@
 #define PACKAGE "file"
 
 /* Autoheader needs me */
-#define VERSION "3.34"
+#define VERSION "3.35"
 
 /* Define if builtin ELF support is enabled.  */
 #undef BUILTIN_ELF
