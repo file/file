@@ -50,13 +50,12 @@
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
-#undef HAVE_LIBZ
 #ifdef HAVE_LIBZ
 #include <zlib.h>
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.36 2004/03/22 19:11:54 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.37 2004/07/24 21:00:56 christos Exp $")
 #endif
 
 
