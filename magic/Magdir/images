@@ -44,6 +44,9 @@
 >4	long		2	rectangular 8-bit image with colormap
 >4      long            3	rectangular 32-bit image (24-bit with matte)
 0	string          zz      MGR bitmap, old format, 1 bit deep, 16 bit aligned
+0	string          xz      MGR bitmap, old format, 1 bit deep, 32 bit aligned
+0	string          yx      MGR bitmap, modern format, squeezed
+
 0	string		%bitmap		FBM pixmap
 >30	long		0x31		(mono)
 >30	long		0x33		(color)
