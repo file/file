@@ -37,7 +37,7 @@
  * appear at fixed offsets into the file. Don't make HOWMANY
  * too high unless you have a very fast CPU.
  *
- * $Id: names.h,v 1.21 2003/03/23 21:16:26 christos Exp $
+ * $Id: names.h,v 1.22 2003/09/25 18:30:26 christos Exp $
  */
 
 /*
@@ -181,6 +181,8 @@ static struct names {
 	{"HREF=",	L_HTML},
 	{"<body",	L_HTML},
 	{"<BODY",	L_HTML},
+	{"<html",	L_HTML},
+	{"<HTML",	L_HTML},
 	{NULL,		0}
 };
 #define NNAMES ((sizeof(names)/sizeof(struct names)) - 1)
