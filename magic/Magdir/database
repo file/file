@@ -72,4 +72,3 @@
 # Round Robin Database Tool by Tobias Oetiker <oetiker@ee.ethz.ch>
 0	string	RRD		RRDTool DB
 >4	string	x		version %s
-

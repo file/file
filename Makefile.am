@@ -53,7 +53,7 @@ magic.${fsect}: Makefile magic.man
 	    -e s@__VERSION__@${VERSION}@g \
 	    -e s@__MAGIC__@${MAGIC}@g $(srcdir)/magic.man > $@
 
-magic_FRAGMENTS = Magdir/adventure Magdir/allegro Magdir/alliant \
+magic_FRAGMENTS = Magdir/adi Magdir/adventure Magdir/allegro Magdir/alliant \
     Magdir/alpha Magdir/amanda Magdir/amigaos Magdir/animation \
     Magdir/apl Magdir/apple Magdir/applix Magdir/archive Magdir/asterix \
     Magdir/att3b Magdir/audio Magdir/blender Magdir/blit Magdir/bsdi \

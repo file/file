@@ -39,7 +39,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.41 2001/06/10 02:06:20 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.42 2001/07/22 21:04:15 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -299,12 +299,16 @@ signextend(m, v)
 		case DATE:
 		case BEDATE:
 		case LEDATE:
+		case LDATE:
+		case BELDATE:
+		case LELDATE:
 		case LONG:
 		case BELONG:
 		case LELONG:
 			v = (int32) v;
 			break;
 		case STRING:
+		case PSTRING:
 			break;
 		default:
 			magwarn("can't happen: m->type=%d\n",
@@ -361,7 +365,7 @@ parse(magicp, nmagicp, l, action)
 	}
 	if (m->cont_level != 0 && *l == '&') {
                 ++l;            /* step over */
-                m->flag |= ADD;
+                m->flag |= OFFADD;
         }
 
 	/* get offset, then skip over it */
@@ -405,12 +409,46 @@ parse(magicp, nmagicp, l, action)
 			}
 			l++;
 		}
-		s = l;
-		if (*l == '+' || *l == '-') l++;
-		if (isdigit((unsigned char)*l)) {
-			m->in_offset = strtoul(l, &t, 0);
-			if (*s == '-') m->in_offset = - m->in_offset;
+		if (*l == '~') {
+			m->in_op = OPINVERSE;
+			l++;
 		}
+		switch (*l) {
+		case '&':
+			m->in_op |= OPAND;
+			l++;
+			break;
+		case '|':
+			m->in_op |= OPOR;
+			l++;
+			break;
+		case '^':
+			m->in_op |= OPXOR;
+			l++;
+			break;
+		case '+':
+			m->in_op |= OPADD;
+			l++;
+			break;
+		case '-':
+			m->in_op |= OPMINUS;
+			l++;
+			break;
+		case '*':
+			m->in_op |= OPMULTIPLY;
+			l++;
+			break;
+		case '/':
+			m->in_op |= OPDIVIDE;
+			l++;
+			break;
+		case '%':
+			m->in_op |= OPMODULO;
+			l++;
+			break;
+		}
+		if (isdigit((unsigned char)*l)) 
+			m->in_offset = strtoul(l, &t, 0);
 		else
 			t = l;
 		if (*t++ != ')') 
@@ -434,6 +472,10 @@ parse(magicp, nmagicp, l, action)
 #define NLESHORT	7
 #define NLELONG		6
 #define NLEDATE		6
+#define NPSTRING	7
+#define NLDATE		5
+#define NBELDATE	7
+#define NLELDATE	7
 
 	if (*l == 'u') {
 		++l;
@@ -477,18 +519,80 @@ parse(magicp, nmagicp, l, action)
 	} else if (strncmp(l, "ledate", NLEDATE)==0) {
 		m->type = LEDATE;
 		l += NLEDATE;
+	} else if (strncmp(l, "pstring", NPSTRING)==0) {
+		m->type = PSTRING;
+		l += NPSTRING;
+	} else if (strncmp(l, "ldate", NLDATE)==0) {
+		m->type = LDATE;
+		l += NLDATE;
+	} else if (strncmp(l, "beldate", NBELDATE)==0) {
+		m->type = BELDATE;
+		l += NBELDATE;
+	} else if (strncmp(l, "leldate", NLELDATE)==0) {
+		m->type = LELDATE;
+		l += NLELDATE;
 	} else {
 		magwarn("type %s invalid", l);
 		return -1;
 	}
 	/* New-style anding: "0 byte&0x80 =0x80 dynamically linked" */
-	if (*l == '&') {
+	/* New and improved: ~ & | ^ + - * / % -- exciting, isn't it? */
+	if (*l == '~') {
+		if (STRING != m->type && PSTRING != m->type)
+			m->mask_op = OPINVERSE;
+		++l;
+	}
+	switch (*l) {
+	case '&':
+		m->mask_op |= OPAND;
 		++l;
 		m->mask = signextend(m, strtoul(l, &l, 0));
 		eatsize(&l);
-	} else if (STRING == m->type) {
-		m->mask = 0L;
-		if (*l == '/') { 
+		break;
+	case '|':
+		m->mask_op |= OPOR;
+		++l;
+		m->mask = signextend(m, strtoul(l, &l, 0));
+		eatsize(&l);
+		break;
+	case '^':
+		m->mask_op |= OPXOR;
+		++l;
+		m->mask = signextend(m, strtoul(l, &l, 0));
+		eatsize(&l);
+		break;
+	case '+':
+		m->mask_op |= OPADD;
+		++l;
+		m->mask = signextend(m, strtoul(l, &l, 0));
+		eatsize(&l);
+		break;
+	case '-':
+		m->mask_op |= OPMINUS;
+		++l;
+		m->mask = signextend(m, strtoul(l, &l, 0));
+		eatsize(&l);
+		break;
+	case '*':
+		m->mask_op |= OPMULTIPLY;
+		++l;
+		m->mask = signextend(m, strtoul(l, &l, 0));
+		eatsize(&l);
+		break;
+	case '%':
+		m->mask_op |= OPMODULO;
+		++l;
+		m->mask = signextend(m, strtoul(l, &l, 0));
+		eatsize(&l);
+		break;
+	case '/':
+		if (STRING != m->type && PSTRING != m->type) {
+			m->mask_op |= OPDIVIDE;
+			++l;
+			m->mask = signextend(m, strtoul(l, &l, 0));
+			eatsize(&l);
+		} else {
+			m->mask = 0L;
 			while (!isspace(*++l)) {
 				switch (*l) {
 				case CHAR_IGNORE_LOWERCASE:
@@ -508,8 +612,10 @@ parse(magicp, nmagicp, l, action)
 				}
 			}
 		}
-	} else
-		m->mask = ~0L;
+		break;
+	}
+	/* We used to set mask to all 1's here, instead let's just not do anything 
+	   if mask = 0 (unless you have a better idea) */
 	EATAB;
   
 	switch (*l) {
@@ -527,7 +633,7 @@ parse(magicp, nmagicp, l, action)
 		}
 		break;
 	case '!':
-		if (m->type != STRING) {
+		if (m->type != STRING && m->type != PSTRING) {
 			m->reln = *l;
 			++l;
 			break;
@@ -589,7 +695,7 @@ getvalue(m, p)
 {
 	int slen;
 
-	if (m->type == STRING) {
+	if (m->type == STRING || m->type == PSTRING) {
 		*p = getstr(*p, m->value.s, sizeof(m->value.s), &slen);
 		m->vallen = slen;
 	} else
