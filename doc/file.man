@@ -243,10 +243,10 @@ is simplistic, inefficient and requires recompilation to update.
 .PP
 Should there be an ``else'' clause to follow a series of continuation lines?
 .PP
-It might be worthwhile to implement recursive file inspection,
+Is it worthwhile to implement recursive file inspection,
 so that compressed files, uuencoded, etc., can say ``compressed
 ascii text'' or ``compressed executable'' or ``compressed tar archive"
-or whatever. 
+or whatever? 
 .PP
 The magic file and keywords should have regular expression support.
 .PP
@@ -262,15 +262,14 @@ Regular expression support would make this easy.
 The list of keywords in 
 .I ascmagic
 probably belongs in the Magic file.
-This could be done simply by using some keyword like `*' for the offset value.
+This could be done by using some keyword like `*' for the offset value.
 .PP
 The program should malloc the magic file structures,
-rather than using an array as at present.
+rather than using a fixed-size array as at present.
 .PP
 The magic file should be compiled into binary 
 (or better yet, fixed-length ASCII strings 
-for use in heterogenous network environments)
-for faster startup.
+for use in heterogenous network environments) for faster startup.
 Then the program would run as fast as the Version 7 program of the same name,
 with the flexibility of the System V version.
 But then there would have to be yet another magic number for the 
@@ -284,9 +283,17 @@ have fetched it.  Complain about conflicts in the magic file entries.
 Make a rule that the magic entries sort based on file offset rather
 than position within the magic file?
 .PP
-The program should provide a way to give an estimate of
-``how good'' a guess is.
+The program should provide a way to give an estimate 
+of ``how good'' a guess is.
 We end up removing guesses (e.g. ``From '' as first 5 chars of file) because
 they are not as good as other guesses (e.g. ``Newsgroups:'' versus
 "Return-Path:").  Still, if the others don't pan out, it should be
 possible to use the first guess.  
+.PP
+Perhaps the program should automatically try all tests with
+byte-swapping done, to avoid having to figure out the byte-swapped values
+when constructing the magic file.
+Of course this will run more slowly, so it should probably be
+an option (-a?).
+.PP
+This manual page, and particularly this section, is too long.
