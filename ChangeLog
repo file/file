@@ -1,7 +1,11 @@
+2004-11-13 03:07  Christos Zoulas  <christos@zoulas.com>
+
+	* print the file name and line number in syntax errors.
+
 2004 10-12 10:50  Christos Zoulas  <christos@zoulas.com>
 
 	* Fix stack overwriting on 0 length strings: Tim Waugh
-	    <twaugh@redhat.com>
+	    <twaugh@redhat.com> Ned Ludd <solar@gentoo.org>
 
 2004-09-27 11:30  Christos Zoulas  <christos@zoulas.com>
 
