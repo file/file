@@ -42,7 +42,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.7 1987/09/23 21:14:28 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.8 1988/02/28 10:50:50 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -94,6 +94,7 @@ char *fn;
 #ifdef	S_IFLNK
 	case S_IFLNK:
 		ckfputs("symbolic link", stdout);
+		readsymbolic(fn);
 		return 1;
 #endif
 #ifdef	S_IFSOCK
@@ -117,3 +118,17 @@ char *fn;
 	return 0;
 }
 
+#ifdef S_IFLNK
+readsymbolic(fn)
+char *fn;
+{	char buf[BUFSIZ+4];
+	register int cc;
+
+	strcpy(buf, " to ");
+	cc = readlink(fn, &buf[4], BUFSIZ-1);
+	if (cc <= 0)
+		return;
+	buf[cc+4] = '\0';
+	ckfputs(buf, stdout);
+}
+#endif
