@@ -52,8 +52,12 @@ register char	*buf;
 		}
 	}
 
-	if (is_tar(buf)) {
+	switch (is_tar(buf)) {
+	case 1:
 		ckfputs("tar archive", stdout);
+		return 1;
+	case 2:
+		ckfputs("POSIX tar archive", stdout);
 		return 1;
 	}
 
