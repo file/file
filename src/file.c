@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.26 1993/02/19 14:22:45 ian Exp $";
+	"@(#)$Id: file.c,v 1.27 1993/09/16 20:45:46 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -234,7 +234,7 @@ int wid;
 	if (nbytes == 0) 
 		ckfputs("empty", stdout);
 	else {
-		buf[nbytes] = '\0';	/* null-terminate it */
+		buf[nbytes++] = '\0';	/* null-terminate it */
 		tryit(buf, nbytes);
 	}
 
