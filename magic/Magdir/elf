@@ -34,6 +34,7 @@
 >>18	leshort		7		Intel 80860,
 >>18	leshort		8		MIPS RS3000,
 >>18	leshort		9		Amdahl,
+>>18	leshort		0x9026		Alpha,
 >>20	lelong		0		invalid version
 >>20	lelong		1		version 1
 >>36	lelong		1		MathCoPro/FPU/MAU Required
@@ -55,7 +56,8 @@
 >>18	beshort		6		Intel 80486 - invalid byte order,
 >>18	beshort		7		Intel 80860,
 >>18	beshort		8		MIPS RS3000,
->>18	leshort		9		Amdahl,
+>>18	beshort		9		Amdahl,
+>>18	beshort		0x9026		Alpha,
 >>20	belong		0		invalid version
 >>20	belong		1		version 1
 >>36	belong		1		MathCoPro/FPU/MAU Required
