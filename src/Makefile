@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Ident: Makefile,v 1.20 91/01/23 13:33:18 ian Exp $
+# @(#)$Id: Makefile,v 1.25 1992/09/08 15:32:49 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -107,13 +107,15 @@ clean:
 
 dist:		dist.src dist.magic
 
-dist.src:	$(ALLSRC)
+dist.src:	$(ALLSRC) TARGETS
 #		Some versions of shar can't handle a single file from
 #		a subdirectory, so we manually insert mkdir as needed.
 #		The point is to exclude all the generable targets in tst.
 #		Put the extra "mkdir" AFTER the ": to unbundle..." line.
-		(echo mkdir tst   ; $(SHAR) $(ALLSRC)) > $@
+		(echo mkdir tst   ; $(SHAR) $(ALLSRC) TARGETS) > $@
 
+TARGETS:	$(ALLSRC)
+		ident $(ALLSRC) > TARGETS
 dist.magic:	Magdir
 #		As above, but to exclude Magdir/RCS from being shipped.
 		(echo mkdir Magdir; $(SHAR) $(ALLMAGIC)) >$@
