@@ -83,16 +83,17 @@
 # 
 # This will not identify ORCA/M source files, since those have
 # some sort of date code instead of the two zero bytes at 6 and 7
-
-4       belong&0xff00ffff       0x01000000      ORCA/EZ assembler source data
->5      byte                    x               \b, build number %d
+# XXX Conflicts with ELF
+#4       belong&0xff00ffff       0x01000000      ORCA/EZ assembler source data
+#>5      byte                    x               \b, build number %d
 
 # Broderbund Fantavision
 #
 # I don't know what these values really mean, but they seem to recur.
 # Will they cause too many conflicts?
 
-2	belong&0xFF00FF		0x040008	Fantavision movie data
+# Probably :-)
+#2	belong&0xFF00FF		0x040008	Fantavision movie data
 
 # Some attempts at images.
 #
