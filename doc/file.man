@@ -1,5 +1,5 @@
 .TH FILE 1 "Copyright but distributable"
-.\# $Id: file.man,v 1.19 1992/09/11 13:16:52 ian Exp $
+.\# $Id: file.man,v 1.20 1993/01/05 12:20:09 ian Exp $
 .SH NAME
 .I file
 \- determine file type
@@ -202,8 +202,7 @@ the first version.
 Geoff Collyer found several inadequacies
 and provided some magic file entries.
 The program has undergone continued evolution since.
-.SH NOTICE
-Copyright (c) Ian F. Darwin,  1986 and 1987.
+.SH AUTHOR
 Written by Ian F. Darwin, UUCP address {utzoo | ihnp4}!darwin!ian,
 Internet address ian@sq.com,
 postal address: P.O. Box 603, Station F, Toronto, Ontario, CANADA M4Y 2L8.
@@ -213,9 +212,18 @@ from simple `x&y != 0' to `x&y op z'.
 .PP
 Changes by Ian Darwin and various authors including
 Christos Zoulos (christos@ee.cornell.edu), 1990-1992.
+.SH LEGAL NOTICE
+Copyright (c) Ian F. Darwin, Toronto, Canada,
+1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993.
 .PP
-This software is not subject to any license of the American Telephone
-and Telegraph Company or of the Regents of the University of California.
+This software is not subject to and may not be made subject to any
+license of the American Telephone and Telegraph Company, Sun
+Microsystems Inc., Digital Equipment Inc., Lotus Development Inc., the
+Regents of the University of California, The X Consortium or MIT, or
+The Free Software Foundation.
+.PP
+This software is not subject to any export provision of the United States
+Department of Commerce, and may be exported to any country or planet.
 .PP
 Permission is granted to anyone to use this software for any purpose on
 any computer system, and to alter it and redistribute it freely, subject
@@ -308,3 +316,6 @@ an option (-a?).
 This program is slower than some vendors' file commands.
 .PP
 This manual page, and particularly this section, is too long.
+.SH AVAILABILITY
+You can obtain the original author's latest version by anonymous FTP
+on ftp.cs.toronto.edu in the directory /pub/darwin/file.
