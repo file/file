@@ -31,7 +31,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/apprentice.c,v 1.7 1987/09/16 14:43:52 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/apprentice.c,v 1.8 1987/11/06 21:14:34 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -53,32 +53,40 @@ int check;		/* non-zero: checking-only run. */
 {
 	FILE *f;
 	char line[MAXSTR+1];
+	int errs = 0;
 
 	f = fopen(fn, "r");
 	if (f==NULL) {
 		(void) fprintf(stderr, "%s: can't read magic file %s\n",
 		progname, fn);
-		exit(1);
+		if (check)
+			return -1;
+		else
+			exit(1);
 	}
 
 	/* parse it */
 	if (check)	/* print silly verbose header for USG compat. */
 		(void) printf("cont\toffset\ttype\topcode\tvalue\tdesc\n");
+
 	while (fgets(line, MAXSTR, f) != NULL) {
 		if (line[0]=='#')	/* comment, do not parse */
 			continue;
 		if (strlen(line) <= 1)	/* null line, garbage, etc */
 			continue;
 		line[strlen(line)-1] = '\0'; /* delete newline */
-		(void) parse(line, &nmagic, check);
+		if (parse(line, &nmagic, check) != 0)
+			++errs;
 	}
 
 	(void) fclose(f);
+	return errs ? -1 : 0;
 }
 
 /*
  * parse one line from magic file, put into magic[index++] if valid
  */
+int
 parse(l, ndx, check)
 char *l;
 int *ndx, check;
@@ -87,6 +95,7 @@ int *ndx, check;
 	int slen;
 	static int warned = 0;
 	struct magic *m;
+	extern int errno;
 
 	/*
 	 * TODO malloc the magic structures (linked list?) so this can't happen
@@ -96,7 +105,7 @@ int *ndx, check;
 			warning(
 "magic table overflow - increase MAXMAGIS beyond %d in file/apprentice.c\n",
 			MAXMAGIS);
-		return 0;
+		return -1;
 	}
 	m = &magic[*ndx];
 
@@ -130,8 +139,9 @@ int *ndx, check;
 		m->type = STRING;
 		l += NSTRING;
 	} else {
-		warning("type %s invalid\n", l);
-		return 0;
+		errno = 0;
+		warning("type %s invalid", l);
+		return -1;
 	}
 	EATAB;
 
@@ -167,6 +177,7 @@ int *ndx, check;
 		break;
 	default:
 		warning("can't happen: m->type=%d\n", m->type);
+		return -1;
 	}
 
 	/*
@@ -180,7 +191,7 @@ int *ndx, check;
 		mdump(m);
 	}
 	++(*ndx);		/* make room for next */
-	return 1;
+	return 0;
 }
 
 /*
