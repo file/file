@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.40 2004/07/24 19:23:22 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.41 2004/07/24 20:38:56 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -418,19 +418,36 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		 * otherwise 1>xx
 		 */
 		if (desc / 100000 < 5) {
-			if (file_printf(ms, " %d.%d", desc / 100000,
-			    desc / 10000 % 10) == -1)
-				return size;
-			if (desc / 1000 % 10 > 0)
-				if (file_printf(ms, ".%d", desc / 1000 % 10)
-				    == -1)
+			if (desc / 10000 % 10 == 9) {
+				if (file_printf(ms, " %d.%d", desc / 100000,
+				    9 + desc / 1000 % 10) == -1)
 					return size;
+			} else {
+				if (file_printf(ms, " %d.%d", desc / 100000,
+				    desc / 10000 % 10) == -1)
+					return size;
+				if (desc / 1000 % 10 > 0)
+					if (file_printf(ms, ".%d", desc / 1000 % 10)
+					    == -1)
+						return size;
+			}
+			if (desc / 10000 % 10 > 5) {
+				desc %= 1000;
+				if (desc >= 100) {
+					if (file_printf(ms, "-STABLE (rev %d)",
+				    	desc % 100) == -1)
+						return size;
+				} else if (desc != 0) {
+					if (file_printf(ms, ".%d", desc) == -1)
+						return size;
+				}
+			}
 		} else {
 			if (file_printf(ms, " %d.%d", desc / 100000,
 			    desc / 1000 % 100) == -1)
 				return size;
 			desc %= 1000;
-			if (desc > 100) {
+			if (desc >= 100) {
 				if (file_printf(ms, "-CURRENT (rev %d)",
 				    desc % 100) == -1)
 					return size;

@@ -1,3 +1,14 @@
+
+2004-07-24 16:33  Christos Zoulas  <christos@zoulas.com>
+
+	* magic.mime update Danny Milosavljevic <danny.milo@gmx.net> 
+
+	* FreeBSD version update Oliver Eikemeier <eikemeier@fillmore-labs.com>
+
+	* utime/utimes detection Ian Lance Taylor <ian@wasabisystems.com>
+
+  	* errors reading elf magic Jakub Bogusz <qboosh@pld-linux.org>
+
 2004-04-12 10:55  Christos Zoulas  <christos@zoulas.com>
 
 	* make sure that magic formats match magic types during compilation

@@ -28,3 +28,5 @@
 >8	string		TDDD		\b, TDDD 3-D rendering
 # other formats
 >8	string		FTXT		\b, FTXT formatted text
+>8	string		CTLG		\b, CTLG message catalog
+>8	string		PREF		\b, PREF preferences

@@ -53,6 +53,7 @@ Magdir/cisco \
 Magdir/citrus \
 Magdir/claris \
 Magdir/clipper \
+Magdir/spec \
 Magdir/commands \
 Magdir/communications \
 Magdir/compress \
@@ -111,6 +112,7 @@ Magdir/magic \
 Magdir/mail.news \
 Magdir/maple \
 Magdir/mathematica \
+Magdir/matroska \
 Magdir/mcrypt \
 Magdir/mime \
 Magdir/mips \

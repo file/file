@@ -514,3 +514,8 @@
 # From: Jason Bacon <bacon@smithers.neuro.mcw.edu>
 0	beshort	0x3020			character Computer Graphics Metafile
 
+
+
+# From: Tom Hilinski <tom.hilinski@comcast.net>
+# http://www.unidata.ucar.edu/packages/netcdf/
+0	string	CDF\001			netcdf file

@@ -164,9 +164,13 @@
 0	string	\333\245-\0\0\0			Microsoft Office Document
 #
 2080	string	Microsoft\ Excel\ 5.0\ Worksheet	%s
+2080	string	Foglio\ di\ lavoro\ Microsoft\ Exce	%s
 #
 # Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Excel)
 2114	string	Biff5		Microsoft Excel 5.0 Worksheet
+# Italian MS-Excel
+2121	string	Biff5		Microsoft Excel 5.0 Worksheet
+0	string	\x09\x04\x06\x00\x00\x00\x10\x00	Microsoft Excel Worksheet
 #
 0	belong	0x00001a00	Lotus 1-2-3
 >4	belong	0x00100400	wk3 document data
@@ -362,3 +366,11 @@
 # From: Dirk Jagdmann <doj@cubic.org>
 0	lelong	0x00035f3f	Windows 3.x help file
 
+# Christophe Monniez
+0	string	Client\ UrlCache\ MMF 	Microsoft Internet Explorer Cache File
+>20	string	>\0			Version %s
+0	string	\xCF\xAD\x12\xFE	Microsoft Outlook Express DBX File
+>4	byte	=0xC5			Message database
+>4	byte	=0xC6			Folder database
+>4	byte	=0xC7			Accounts informations
+>4	byte	=0x30			Offline database
