@@ -1,12 +1,18 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		15
+#define	patchlevel		16
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.15 1995/01/21 21:03:35 christos Exp $
+ * $Id: patchlevel.h,v 1.16 1995/03/25 22:06:45 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.15  1995/01/21 21:03:35  christos
+ * Revision 1.16  1995/03/25 22:06:45  christos
+ * - use strtoul() where it exists.
+ * - fix sign-extend bug
+ * - try to detect tar archives before nroff files, otherwise
+ *   tar files where the first file starts with a . will not work
+ *
+ * Revision 1.15  1995/01/21  21:03:35  christos
  * Added CSECTION for the file man page
  * Added version flag -v
  * Fixed bug with -f input flag (from iorio@violet.berkeley.edu)
