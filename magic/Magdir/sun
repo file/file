@@ -1,20 +1,29 @@
-# Values for Sun MC680x0 binaries
-0	short		2		mc68020
+# Values for big-endian Sun (MC680x0, SPARC) binaries
+1	byte		3		SPARC
+>0	byte		&0x80		dynamically linked
 >2	short		0407		executable
 >2	short		0410		pure executable
 >2	short		0413		demand paged executable
 >16	long		>0		not stripped
-0	short		1		mc68010
+1	byte		2		mc68020
+>0	byte		&0x80		dynamically linked
 >2	short		0407		executable
 >2	short		0410		pure executable
 >2	short		0413		demand paged executable
 >16	long		>0		not stripped
-0	long		0407		old sun-2 executable
-0	long		0410		old sun-2 pure executable
-0	long		0413		old sun-2 demand paged executable
+1	byte		1		mc68010
+>0	byte		&0x80		dynamically linked
+>2	short		0407		executable
+>2	short		0410		pure executable
+>2	short		0413		demand paged executable
 >16	long		>0		not stripped
-0	long		0x080456	core dump data
->128	string		>\0		from '%s'
+0	short		0		old sun-2
+>2	short		0407		executable
+>2	short		0410		pure executable
+>2	short		0413		demand paged executable
+>16	long		>0		not stripped
+0	long		0x080456	core file
+>128	string		>0		from '%s'
 #
 0	short		05401		byte-swapped demand paged executable
 0	short		010001		byte-swapped demand paged executable
