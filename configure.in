@@ -68,6 +68,7 @@ AC_CHECK_HEADERS(getopt.h)
 AC_CHECK_HEADERS(locale.h)
 AC_CHECK_HEADERS(utime.h)
 AC_CHECK_HEADERS(sys/utime.h)
+AC_CHECK_HEADERS(wchar.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
