@@ -73,8 +73,9 @@ offset into the file can usually be described in this way.
 The information in these files is read from the magic file
 .I /etc/magic .
 .PP
-If an argument appears to be 
-.SM ASCII ,
+If an argument appears to be an
+.SM ASCII 
+file,
 .I file
 attempts to guess its language.
 The language tests look for particular strings (cf \fInames.h\fP)
@@ -117,6 +118,7 @@ rather than (or in addition to) the argument list.
 .SH SEE ALSO
 .IR File (5)
 \- description of magic file format.
+.br
 .IR Strings (1), " od" (1)
 \- tools for examining non-textfiles.
 .SH STANDARDS CONFORMANCE
@@ -127,7 +129,9 @@ Its behaviour is mostly compatible with the System V program of the same name.
 This version knows more magic, however, so it will produce
 different (albeit more accurate) output in many cases. 
 .PP
-The one significant difference is that this version treats any white space
+The one significant difference 
+between this version and System V
+is that this version treats any white space
 as a delimiter, so that spaces in pattern strings must be escaped.
 For example,
 .br
@@ -136,6 +140,19 @@ For example,
 in an existing magic file would have to be changed to
 .br
 >10	string	language\e impress	(imPRESS data)
+.PP
+The SUN Microsystems implementation of System V compatibility
+includes a file(1) command that has some extentions.
+My version differs from SUN's only in minor ways.
+The significant one is the `&' operator, which SUN's program expects as,
+for example,
+.br
+>16	long&0x7fffffff	>0		not stripped
+.br
+would be entered in my version as
+>16	long	&0x7fffffff	not stripped
+which is a little less general (it simply tests (location 16)&0x7ffffff
+and returns its truth value as a C expression).
 .SH HISTORY
 There has been a 
 .I file
@@ -146,14 +163,13 @@ the external list of magic number types.
 This slowed the program down slightly but made it a lot more flexible.
 .PP
 This program, based on the System V version,
-was written by Ian Darwin without looking at anybody else's source code
-(I looked at one later, and was glad I hadn't!).
+was written by Ian Darwin without looking at anybody else's source code.
 .PP
 John Gilmore revised the code extensively, making it better than
 the first version.
 The program has undergone continued evolution since.
 .SH NOTICE
-Copyright (c) Ian F. Darwin,  1986 and 1987..
+Copyright (c) Ian F. Darwin,  1986 and 1987.
 Written by Ian F. Darwin, {utzoo|ihnp4}!darwin!ian.
 Postal: P.O. Box 603, Station F, Toronto, CANADA M4Y 2L8;
 .I Strtok.c
@@ -188,26 +204,28 @@ program, and is not covered by the above restrictions.
 The order of entries in the magic file is significant.
 Depending on what system you are using, the order that
 they are put together may be incorrect.
-Keep your old magic file around for comparison purposes
+If your old
+.I file
+command uses a magic file,
+keep the old magic file around for comparison purposes
 (rename it to /etc/magic.old).
 .PP
-The author of this progam will be glad to receive your additional
+The author of this progam will be glad to receive additional
 or corrected magic file entries.
-.PP
-There must be a way to automate the construction of the Magic
-file from all the glop in magdir. What is it?
 .PP
 A consolidation of magic file entries will be distributed periodically.
 .SH BUGS
+There must be a way to automate the construction of the Magic
+file from all the glop in magdir. What is it?
+.PP
 .I File
 uses several algorithms that favor speed over accuracy,
-thus it is often misled about the contents of ASCII files.
+thus it can be misled about the contents of ASCII files.
 .PP
 The support for ASCII files (primarily for programming languages)
 is simplistic, inefficient and requires recompilation to update.
 .PP
-Should there be an ``else'' clause to follow a series of
-continuation lines?
+Should there be an ``else'' clause to follow a series of continuation lines?
 .PP
 It might be worthwhile to implement recursive file inspection,
 so that compressed files, uuencoded, etc., can say ``compressed
@@ -228,13 +246,12 @@ Regular expression support would make this easy.
 The list of keywords in 
 .I ascmagic
 probably belongs in the Magic file.
-This could be done simply by using some keyword like `*'
-for the offset value.
+This could be done simply by using some keyword like `*' for the offset value.
 .PP
 The program should malloc the magic file structures,
 rather than using an array as at present.
 .PP
-The magic file should be compiled into a binary 
+The magic file should be compiled into binary 
 (or better yet, fixed-length ASCII strings 
 for use in heterogenous network environments)
 for faster startup.
