@@ -24,8 +24,8 @@
  *
  * 4. This notice may not be removed or altered.
  */
-#include "file.h"
 
+#include "file.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -61,7 +61,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.62 2002/05/16 18:45:56 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.63 2002/06/11 17:15:52 christos Exp $")
 #endif	/* lint */
 
 

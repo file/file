@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.39 2002/05/16 18:45:56 christos Exp $
+ * @(#)$Id: file.h,v 1.40 2002/06/11 17:15:52 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -28,6 +28,12 @@
 
 #ifndef __file_h__
 #define __file_h__
+
+#ifndef __linux__
+#define _LARGEFILE_SOURCE
+#define _LARGEFILE64_SOURCE 
+#define _FILE_OFFSET_BITS 64
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

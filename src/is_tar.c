@@ -5,23 +5,20 @@
  * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
  *
  * @(#)list.c 1.18 9/23/86 Public Domain - gnu
- * $Id: is_tar.c,v 1.14 2002/05/16 18:45:56 christos Exp $
+ * $Id: is_tar.c,v 1.15 2002/06/11 17:15:52 christos Exp $
  *
  * Comments changed and some code/comments reformatted
  * for file command by Ian Darwin.
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#include "file.h"
 #include <string.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include "tar.h"
-#include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.14 2002/05/16 18:45:56 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.15 2002/06/11 17:15:52 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
