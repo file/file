@@ -11,7 +11,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.27 2003/03/12 21:16:31 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.28 2003/03/18 19:20:24 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -221,9 +221,7 @@ dophn_core(int class, int swap, int fd, off_t off, int num, size_t size)
 		for (;;) {
 			if (offset >= bufsize)
 				break;
-			offset += donote(nbuf, offset, bufsize,
-			    class, swap, 4);
-
+			offset = donote(nbuf, offset, bufsize, class, swap, 4);
 		}
 	}
 }
@@ -287,6 +285,7 @@ donote(unsigned char *nbuf, size_t offset, size_t size, int class, int swap,
 		}
 		printf(" %d.%d.%d", getu32(swap, desc[1]),
 		    getu32(swap, desc[2]), getu32(swap, desc[3]));
+		return size;
 	}
 
 	if (nh_namesz == 7 && strcmp(&nbuf[noff], "NetBSD") == 0 &&
@@ -295,7 +294,7 @@ donote(unsigned char *nbuf, size_t offset, size_t size, int class, int swap,
 
 		printf(", for NetBSD");
 		/*
-		 * The version number used to be stuck as 199906, and was thus
+		 * The version number used to be stuck as 199905, and was thus
 		 * basically content-free.  Newer versions of NetBSD have fixed
 		 * this and now use the encoding of __NetBSD_Version__:
 		 *
@@ -323,6 +322,7 @@ donote(unsigned char *nbuf, size_t offset, size_t size, int class, int swap,
 				printf("<unknown>");
 			}
 		}
+		return size;
 	}
 
 	if (nh_namesz == 8 && strcmp(&nbuf[noff], "FreeBSD") == 0 &&
@@ -339,12 +339,14 @@ donote(unsigned char *nbuf, size_t offset, size_t size, int class, int swap,
 		printf(" %d.%d", desc / 100000, desc / 10000 % 10);
 		if (desc / 1000 % 10 > 0)
 			printf(".%d", desc / 1000 % 10);
+		return size;
 	}
 
 	if (nh_namesz == 8 && strcmp(&nbuf[noff], "OpenBSD") == 0 &&
 	    nh_type == NT_OPENBSD_VERSION && nh_descsz == 4) {
 		printf(", for OpenBSD");
 		/* Content of note is always 0 */
+		return size;
 	}
 
 	/*
@@ -543,7 +545,7 @@ dophn_exec(int class, int swap, int fd, off_t off, int num, size_t size)
 			for (;;) {
 				if (offset >= bufsize)
 					break;
-				offset += donote(nbuf, offset, bufsize,
+				offset = donote(nbuf, offset, bufsize,
 				    class, swap, ph_align);
 			}
 			if ((lseek(fd, savedoffset + offset, SEEK_SET)) == -1)
