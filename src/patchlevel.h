@@ -1,11 +1,21 @@
 #define	FILE_VERSION_MAJOR	4
-#define	patchlevel		0
+#define	patchlevel		01
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.44 2003/03/23 22:23:31 christos Exp $
+ * $Id: patchlevel.h,v 1.45 2003/03/26 15:37:25 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.45  2003/03/26 15:37:25  christos
+ * - Pass lint
+ * - make NULL in magic_file mean stdin
+ * - Fix "-" argument to file to pass NULL to magic_file
+ * - avoid pointer casts by using memcpy
+ * - rename magic_buf -> magic_buffer
+ * - keep only the first error
+ * - manual page: new sentence, new line
+ * - fix typo in api function (magic_buf -> magic_buffer)
+ *
  * Revision 1.44  2003/03/23 22:23:31  christos
  * finish librarification.
  *
