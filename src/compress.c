@@ -4,7 +4,7 @@
  *		   information if recognized
  *	uncompress(method, old, n, newch) - uncompress old into new, 
  *					    using method, return sizeof new
- * $Id: compress.c,v 1.7 1993/10/27 20:59:05 christos Exp $
+ * $Id: compress.c,v 1.8 1994/01/21 01:38:24 christos Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,10 +22,11 @@ static struct {
 } compr[] = {
     { "\037\235", 2, { "uncompress", "-c", NULL }, 0 },
     { "\037\213", 2, { "gzip", "-dq", NULL }, 1 },
-#if 0
-    /* XXX pcat does not work, cause I don't know how to make it read stdin */
-    { "\037\036", 2, { "pcat", NULL, NULL }, 0 },
-#endif
+    /* 
+     * XXX pcat does not work, cause I don't know how to make it read stdin,
+     * so we use gzip
+     */
+    { "\037\036", 2, { "gzip", "-dq", NULL }, 0 },
 };
 
 static int ncompr = sizeof(compr) / sizeof(compr[0]);
