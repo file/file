@@ -2,7 +2,6 @@
 #------------------------------------------------------------------------------
 # filesystems:  file(1) magic for different filesystems
 #
-0x438	leshort	0xEF53			Linux/i386 ext2 filesystem
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
 # Sun disk labels
 # From /usr/include/sun/dklabel.h:
@@ -76,3 +75,17 @@
 >8256	lelong		x		disk rotational speed %drps,
 >8320	lelong		0		TIME optimization
 >8320	lelong		1		SPACE optimization
+
+# ext2/ext3 filesystems - Andreas Dilger <adilger@turbolabs.com>
+0x438	leshort		0xEF53		Linux
+>0x44c	lelong		x		rev %d
+>0x43e	leshort		x		\b.%d
+>0x45c	lelong		^0x0000004	ext2 filesystem data
+>>0x43a	leshort		^0x0000001	(mounted or unclean)
+>0x45c	lelong		&0x0000004	ext3 filesystem data
+>>0x460	lelong		&0x0000004	(needs journal recovery)
+>0x43a	leshort		&0x0000002	(errors)
+>0x460	lelong		&0x0000001	(compressed)
+#>0x460	lelong		&0x0000002	(filetype)
+#>0x464	lelong		&0x0000001	(sparse_super)
+>0x464	lelong		&0x0000002	(large files)

@@ -105,6 +105,51 @@
 >16	lelong		x		\b, capture length %d)
 
 #
+# "libpcap"-with-Alexey-Kuznetsov's-patches capture files.
+# (We call them "tcpdump capture file(s)" for now, as "tcpdump" is
+# the main program that uses that format, but there are other programs
+# that use "libpcap", or that use the same capture file format.)
+#
+0	ubelong		0xa1b2cd34	extended tcpdump capture file (big-endian)
+>4	beshort		x		- version %d
+>6	beshort		x		\b.%d
+>20	belong		0		(No link-layer encapsulation
+>20	belong		1		(Ethernet
+>20	belong		2		(3Mb Ethernet
+>20	belong		3		(AX.25
+>20	belong		4		(ProNET
+>20	belong		5		(CHAOS
+>20	belong		6		(IEEE 802.x network
+>20	belong		7		(ARCNET
+>20	belong		8		(SLIP
+>20	belong		9		(PPP
+>20	belong		10		(FDDI
+>20	belong		11		(RFC 1483 ATM
+>20	belong		12		(raw IP
+>20	belong		13		(BSD/OS SLIP
+>20	belong		14		(BSD/OS PPP
+>16	belong		x		\b, capture length %d)
+0	ulelong		0xa1b2cd34	extended tcpdump capture file (little-endian)
+>4	leshort		x		- version %d
+>6	leshort		x		\b.%d
+>20	lelong		0		(No link-layer encapsulation
+>20	lelong		1		(Ethernet
+>20	lelong		2		(3Mb Ethernet
+>20	lelong		3		(AX.25
+>20	lelong		4		(ProNET
+>20	lelong		5		(CHAOS
+>20	lelong		6		(IEEE 802.x network
+>20	lelong		7		(ARCNET
+>20	lelong		8		(SLIP
+>20	lelong		9		(PPP
+>20	lelong		10		(FDDI
+>20	lelong		11		(RFC 1483 ATM
+>20	lelong		12		(raw IP
+>20	lelong		13		(BSD/OS SLIP
+>20	lelong		14		(BSD/OS PPP
+>16	lelong		x		\b, capture length %d)
+
+#
 # AIX "iptrace" capture files.
 #
 0	string		iptrace\ 2.0	"iptrace" capture file

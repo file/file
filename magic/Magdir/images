@@ -255,7 +255,10 @@
 0	beshort		0x1010		PEX Binary Archive
 
 # Visio drawings
-03000	string	Visio\ (TM)\ Drawing			%s
+03000	string	Visio\ (TM)\ Drawing	%s
 
 # Tgif files
 0	string	\%TGIF\ x 		Tgif file version %s
+
+# DICOM medical imaging data
+128	string	DICM			DICOM medical imaging data
