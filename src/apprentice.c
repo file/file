@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.70 2003/10/16 19:26:57 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.71 2003/11/20 00:25:39 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -614,7 +614,7 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 			eatsize(&l);
 		} else {
 			m->mask = 0L;
-			while (!isspace(*++l)) {
+			while (!isspace((unsigned char)*++l)) {
 				switch (*l) {
 				case CHAR_IGNORE_LOWERCASE:
 					m->mask |= STRING_IGNORE_LOWERCASE;
