@@ -14,15 +14,19 @@
 #define L_MACH	4		/* some kinda assembler */
 #define L_ENG	5		/* English */
 #define	L_PAS	6		/* Pascal */
+#define	L_MAIL	7		/* Electronic mail */
+#define	L_NEWS	8		/* Usenet Netnews */
 
 char *types[] = {
 	"c program text",
 	"fortran program text",
 	"makefile commands text" ,
-	"pl/1 (blech) program text",
-	"assembler (blech) program text",
+	"pl/1 program text",
+	"assembler program text",
 	"english text",
 	"pascal program text",
+	"mail text",
+	"news text",
 	"can't happen error on names.h/types",
 	0};
 
@@ -46,6 +50,10 @@ struct names {
 	{"LDFLAGS",	L_MAKE},
 	{"all:",	L_MAKE},
 	{".PRECIOUS",	L_MAKE},
+/* Too many files of text have these words in them.  Find another way
+ * to recognize Fortrash.
+ */
+#ifdef	NOTDEF
 	{"subroutine",	L_FORT},
 	{"function",	L_FORT},
 	{"block",	L_FORT},
@@ -53,6 +61,7 @@ struct names {
 	{"dimension",	L_FORT},
 	{"integer",	L_FORT},
 	{"data",	L_FORT},
+#endif	/*NOTDEF*/
 	{".ascii",	L_MACH},
 	{".asciiz",	L_MACH},
 	{".byte",	L_MACH},
@@ -61,5 +70,12 @@ struct names {
 	{"clr",		L_MACH},
 	{"(input,",	L_PAS},
 	{"dcl",		L_PLI},
+	{"Received:",	L_MAIL},
+	{">From",	L_MAIL},
+	{"Return-Path:",L_MAIL},
+	{"Cc:",		L_MAIL},
+	{"Newsgroups:",	L_NEWS},
+	{"Path:",	L_NEWS},
+	{"Organization:",L_NEWS},
 	0};
 #define NNAMES ((sizeof(names)/sizeof(struct names)) - 1)
