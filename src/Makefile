@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.33 1993/04/05 10:37:16 ian Exp $
+# @(#)$Id: Makefile,v 1.34 1993/04/05 10:39:30 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -127,9 +127,8 @@ dist.src:	$(ALLSRC) MANIFEST
 		(echo mkdir localinc localinc/sys localsrc tst; \
 			$(SHAR) $(ALLSRC) MANIFEST) > $@
 
-new:		$(ALLSRC)
-		echo $?
-		touch new
+rcsdiff:	$(ALLSRC)
+		rcsdiff -q RCS/*
 
 MANIFEST:	$(ALLSRC)
 		ident $(ALLSRC) > MANIFEST
