@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.56 2003/03/26 16:25:25 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.57 2003/03/28 21:02:03 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -142,6 +142,13 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 	struct mlist *ml;
 	int rv = -1;
 	int mapped;
+
+	if (sizeof(*magic) != FILE_MAGICSIZE) {
+		file_error(ms, "Magic element size %lu != %lu",
+		    (unsigned long)sizeof(*magic),
+		    (unsigned long)FILE_MAGICSIZE);
+		return -1;
+	}
 
 	if (action == FILE_COMPILE) {
 		rv = apprentice_file(ms, &magic, &nmagic, fn, action);

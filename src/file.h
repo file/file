@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.52 2003/03/27 18:34:21 christos Exp $
+ * @(#)$Id: file.h,v 1.53 2003/03/28 21:02:03 christos Exp $
  */
 
 #ifndef __file_h__
@@ -70,28 +70,25 @@
 # define HOWMANY 65536		/* how much of the file to look at */
 #endif
 #define MAXMAGIS 4096		/* max entries in /etc/magic */
-#define MAXDESC	50		/* max leng of text description */
+#define MAXDESC	64		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	1
+#define VERSIONNO	2
+#define FILE_MAGICSIZE	(32 * 4)
 
 #define FILE_CHECK	1
 #define FILE_COMPILE	2
 
-#ifndef __GNUC__
-#ifndef __attribute__
-#define __attribute__(a)
-#endif
-#endif
-
 struct magic {
+	/* Word 1 */
 	uint16_t cont_level;	/* level of ">" */
 	uint8_t nospflag;	/* supress space character */
 	uint8_t flag;
 #define INDIR	1		/* if '>(...)' appears,  */
 #define	UNSIGNED 2		/* comparison is unsigned */
 #define OFFADD	4		/* if '>&' appears,  */
+	/* Word 2 */
 	uint8_t reln;		/* relation (0=eq, '>'=gt, etc) */
 	uint8_t vallen;		/* length of string value, if any */
 	uint8_t type;		/* int, short, long or string. */
@@ -112,8 +109,11 @@ struct magic {
 #define				FILE_BELDATE	15
 #define				FILE_LELDATE	16
 #define				FILE_REGEX	17
+	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
 	uint8_t mask_op;	/* operator for mask */
+	uint8_t dummy1;	
+	uint8_t dummy2;	
 #define				FILE_OPS	"&|^+-*%/"
 #define				FILE_OPAND	0
 #define				FILE_OPOR	1
@@ -124,8 +124,17 @@ struct magic {
 #define				FILE_OPDIVIDE	6
 #define				FILE_OPMODULO	7
 #define				FILE_OPINVERSE	0x80
+	/* Word 4 */
 	int32_t offset;		/* offset to magic number */
+	/* Word 5 */
 	int32_t in_offset;	/* offset from indirection */
+	/* Word 6 */
+	uint32_t mask;	/* mask before comparison with value */
+	/* Word 7 */
+	uint32_t dummy3;
+	/* Word 8 */
+	uint32_t dummp4;
+	/* Words 9-16 */
 	union VALUETYPE {
 		uint8_t b;
 		uint16_t h;
@@ -135,9 +144,9 @@ struct magic {
 		uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
 		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
 	} value;		/* either number or string */
-	uint32_t mask;	/* mask before comparison with value */
+	/* Words 17..31 */
 	char desc[MAXDESC];	/* description */
-} __attribute__((__packed__));
+};
 
 #define BIT(A)   (1 << (A))
 #define STRING_IGNORE_LOWERCASE		BIT(0)
