@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.36 2003/11/18 19:42:33 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.37 2004/03/22 18:44:01 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -48,7 +48,7 @@ private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t);
 private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t);
 private int doshn(struct magic_set *, int, int, int, off_t, int, size_t);
 private size_t donote(struct magic_set *, unsigned char *, size_t, size_t, int,
-    int, int);
+    int, size_t);
 
 #define	ELF_ALIGN(a)	((((a) + align - 1) / align) * align)
 
@@ -142,7 +142,7 @@ getu64(int swap, uint64_t value)
 #define ph_offset	(class == ELFCLASS32		\
 			 ? getu32(swap, ph32.p_offset)	\
 			 : getu64(swap, ph64.p_offset))
-#define ph_align	(int)((class == ELFCLASS32	\
+#define ph_align	(size_t)((class == ELFCLASS32	\
 			 ? (off_t) (ph32.p_align ? 	\
 			    getu32(swap, ph32.p_align) : 4) \
 			 : (off_t) (ph64.p_align ?	\
@@ -222,7 +222,8 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	ssize_t bufsize;
 
 	if (size != ph_size) {
-		file_printf(ms, ", corrupted program header size");
+		if (file_printf(ms, ", corrupted program header size") == -1)
+			return -1;
 		return 0;
 	}
 	/*
@@ -269,7 +270,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 
 private size_t
 donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
-    int class, int swap, int align)
+    int class, int swap, size_t align)
 {
 	Elf32_Nhdr nh32;
 	Elf64_Nhdr nh64;
@@ -277,6 +278,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 #ifdef ELFCORE
 	int os_style = -1;
 #endif
+	uint32_t namesz, descsz;
 
 	if (class == ELFCLASS32)
 		memcpy(&nh32, &nbuf[offset], sizeof(nh32));
@@ -284,29 +286,45 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		memcpy(&nh64, &nbuf[offset], sizeof(nh64));
 	offset += nh_size;
 
-	if ((nh_namesz == 0) && (nh_descsz == 0)) {
+	namesz = nh_namesz;
+	descsz = nh_descsz;
+	if ((namesz == 0) && (descsz == 0)) {
 		/*
 		 * We're out of note headers.
 		 */
 		return offset;
 	}
 
-	noff = offset;
-	doff = ELF_ALIGN(offset + nh_namesz);
+	if (namesz & 0x80000000) {
+	    (void)file_printf(ms, ", bad note name size 0x%lx",
+		(unsigned long)namesz);
+	    return offset;
+	}
 
-	if (offset + nh_namesz >= size) {
+	if (descsz & 0x80000000) {
+	    (void)file_printf(ms, ", bad note description size 0x%lx",
+		(unsigned long)descsz);
+	    return offset;
+	}
+
+
+	noff = offset;
+	doff = ELF_ALIGN(offset + namesz);
+
+	if (offset + namesz >= size) {
 		/*
 		 * We're past the end of the buffer.
 		 */
 		return doff;
 	}
 
-	offset = ELF_ALIGN(doff + nh_descsz);
-	if (offset + nh_descsz >= size)
+	offset = ELF_ALIGN(doff + descsz);
+	if (offset + descsz >= size) {
 		return offset;
+	}
 
-	if (nh_namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
-	    nh_type == NT_GNU_VERSION && nh_descsz == 16) {
+	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
+	    nh_type == NT_GNU_VERSION && descsz == 16) {
 		uint32_t desc[4];
 		(void)memcpy(desc, &nbuf[doff], sizeof(desc));
 
@@ -335,8 +353,8 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		return size;
 	}
 
-	if (nh_namesz == 7 && strcmp((char *)&nbuf[noff], "NetBSD") == 0 &&
-	    nh_type == NT_NETBSD_VERSION && nh_descsz == 4) {
+	if (namesz == 7 && strcmp((char *)&nbuf[noff], "NetBSD") == 0 &&
+	    nh_type == NT_NETBSD_VERSION && descsz == 4) {
 		uint32_t desc;
 		(void)memcpy(&desc, &nbuf[doff], sizeof(desc));
 		desc = getu32(swap, desc);
@@ -377,8 +395,8 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		return size;
 	}
 
-	if (nh_namesz == 8 && strcmp((char *)&nbuf[noff], "FreeBSD") == 0 &&
-	    nh_type == NT_FREEBSD_VERSION && nh_descsz == 4) {
+	if (namesz == 8 && strcmp((char *)&nbuf[noff], "FreeBSD") == 0 &&
+	    nh_type == NT_FREEBSD_VERSION && descsz == 4) {
 		uint32_t desc;
 		(void)memcpy(&desc, &nbuf[doff], sizeof(desc));
 		desc = getu32(swap, desc);
@@ -399,8 +417,8 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		return size;
 	}
 
-	if (nh_namesz == 8 && strcmp((char *)&nbuf[noff], "OpenBSD") == 0 &&
-	    nh_type == NT_OPENBSD_VERSION && nh_descsz == 4) {
+	if (namesz == 8 && strcmp((char *)&nbuf[noff], "OpenBSD") == 0 &&
+	    nh_type == NT_OPENBSD_VERSION && descsz == 4) {
 		if (file_printf(ms, ", for OpenBSD") == -1)
 			return size;
 		/* Content of note is always 0 */
@@ -421,16 +439,16 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 	 * doesn't include the terminating null in the
 	 * name....
 	 */
-	if ((nh_namesz == 4 && strncmp((char *)&nbuf[noff], "CORE", 4) == 0) ||
-	    (nh_namesz == 5 && strcmp((char *)&nbuf[noff], "CORE") == 0)) {
+	if ((namesz == 4 && strncmp((char *)&nbuf[noff], "CORE", 4) == 0) ||
+	    (namesz == 5 && strcmp((char *)&nbuf[noff], "CORE") == 0)) {
 		os_style = OS_STYLE_SVR4;
 	} 
 
-	if ((nh_namesz == 8 && strcmp((char *)&nbuf[noff], "FreeBSD") == 0)) {
+	if ((namesz == 8 && strcmp((char *)&nbuf[noff], "FreeBSD") == 0)) {
 		os_style = OS_STYLE_FREEBSD;
 	}
 
-	if ((nh_namesz >= 11 && strncmp((char *)&nbuf[noff], "NetBSD-CORE", 11)
+	if ((namesz >= 11 && strncmp((char *)&nbuf[noff], "NetBSD-CORE", 11)
 	    == 0)) {
 		os_style = OS_STYLE_NETBSD;
 	}
@@ -490,7 +508,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 				 * if we are, this obviously
 				 * isn't the right offset.
 				 */
-				if (reloffset >= nh_descsz)
+				if (reloffset >= descsz)
 					goto tryanother;
 
 				c = nbuf[noffset];
@@ -543,7 +561,8 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
 	Elf64_Shdr sh64;
 
 	if (size != sh_size) {
-		file_printf(ms, ", corrupted section header size");
+		if (file_printf(ms, ", corrupted section header size") == -1)
+			return -1;
 		return 0;
 	}
 
@@ -583,11 +602,12 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	const char *shared_libraries = "";
 	unsigned char nbuf[BUFSIZ];
 	int bufsize;
-	size_t offset;
+	size_t offset, align;
 	off_t savedoffset;
 
 	if (size != ph_size) {
-		file_printf(ms, ", corrupted program header size");
+		if (file_printf(ms, ", corrupted program header size") == -1)
+		    return -1;
 		return 0;
 	}
 	if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
@@ -613,6 +633,13 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			shared_libraries = " (uses shared libs)";
 			break;
 		case PT_NOTE:
+			if ((align = ph_align) & 0x80000000) {
+				if (file_printf(ms, 
+				    ", invalid note alignment 0x%lx",
+				    (unsigned long)align) == -1)
+					return -1;
+				align = 4;
+			}
 			/*
 			 * This is a PT_NOTE section; loop through all the notes
 			 * in the section.
@@ -632,7 +659,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				if (offset >= (size_t)bufsize)
 					break;
 				offset = donote(ms, nbuf, offset,
-				    (size_t)bufsize, class, swap, ph_align);
+				    (size_t)bufsize, class, swap, align);
 			}
 			if (lseek(fd, savedoffset + offset, SEEK_SET)
 			    == (off_t)-1) {
