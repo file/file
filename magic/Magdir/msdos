@@ -279,7 +279,7 @@
 >14	lelong		&gt;0		- not stripped
 0	lelong		0x08086b70	TurboC BGI file
 0	lelong		0x08084b50	TurboC Font file
- 
+
 # WARNING: below line conflicts with Infocom game data Z-machine 3
 0	byte		0x03		DBase 3 data file
 >0x04	lelong		0		(no records)
