@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.9 1987/09/18 10:55:56 ian Exp $
+# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.10 1987/09/18 21:45:51 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -39,10 +39,10 @@ MAN4EXT	= 4
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
 # Delete some of LOCALSRCS and LOCALOBJS if they're in your C library.
-LOCALSRCS = strtol.c strtok.c
+LOCALSRCS = getopt.c strtol.c strtok.c
 SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c is_tar.c \
 	print.c $(LOCALSRCS)
-LOCALOBJS = strtol.o strtok.o
+LOCALOBJS = getopt.o strtol.o strtok.o
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o is_tar.o \
 	print.o $(LOCALOBJS)
 
