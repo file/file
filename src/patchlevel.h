@@ -1,11 +1,31 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		22
+#define	patchlevel		23
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.22 1997/01/15 17:23:24 christos Exp $
+ * $Id: patchlevel.h,v 1.23 1997/11/05 16:03:37 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.23  1997/11/05 16:03:37  christos
+ * - correct elf prps offset for SunOS-2.5.1 [guy@netapp.com]
+ * - handle 64 bit time_t's correctly [ewt@redhat.com]
+ * - new mime style magic [clarosse@netvista.net]
+ * - new TI calculator magic [rmcguire@freenet.columbus.oh.us]
+ * - new figlet fonts [obrien@freebsd.org]
+ * - new cisco magic, and elf fixes [jhawk@bbnplanet.com]
+ * - -b flag addition, and x86 filesystem magic [vax@linkhead.paranoia.com]
+ * - s/Mpeg/MPEG, header and elf typo fixes [guy@netapp.com]
+ * - Windows/NT registry files, audio code [guy@netapp.com]
+ * - libGrx graphics lib fonts [guy@netapp.com]
+ * - PNG fixes [guy@netapp.com]
+ * - more m$ document magic [guy@netapp.com]
+ * - PPD files [guy@netapp.com]
+ * - archive magic cleanup [guy@netapp.com]
+ * - linux kernel magic cleanup [guy@netapp.com]
+ * - lecter magic [guy@netapp.com]
+ * - vgetty magic [guy@netapp.com]
+ * - sniffer additions [guy@netapp.com]
+ *
  * Revision 1.22  1997/01/15 17:23:24  christos
  * - add support for elf core files: find the program name under SVR4 [Ken Pizzini]
  * - print strings only up to the first carriage return [various]
