@@ -1,12 +1,19 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		19
+#define	patchlevel		20
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.19 1995/10/27 23:14:46 christos Exp $
+ * $Id: patchlevel.h,v 1.20 1996/06/22 22:15:52 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.19  1995/10/27 23:14:46  christos
+ * Revision 1.20  1996/06/22 22:15:52  christos
+ * - support relative offsets of the form >&
+ * - fix bug with truncating magic strings that contain \n
+ * - file -f - did not read from stdin as documented
+ * - support elf file parsing using our own elf support.
+ * - as always magdir fixes and additions.
+ *
+ * Revision 1.19  1995/10/27  23:14:46  christos
  * Ability to parse colon separated list of magic files
  * New LEGAL.NOTICE
  * Various magic file changes
