@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.14 1993/02/19 14:22:44 ian Exp $
+ * @(#)$Id: file.h,v 1.15 1993/09/16 21:08:06 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -86,11 +86,11 @@ extern void  ckfputs		__P((const char *, FILE *));
 struct stat;
 extern int   fsmagic		__P((const char *, struct stat *));
 extern int   is_compress	__P((const unsigned char *, int *));
-extern int   is_tar		__P((unsigned char *));
+extern int   is_tar		__P((unsigned char *, int));
 extern void  magwarn		__P((const char *, ...));
 extern void  mdump		__P((struct magic *));
 extern void  process		__P((const char *, int));
-extern void  showstr		__P((const char *));
+extern void  showstr		__P((FILE *, const char *, int));
 extern int   softmagic		__P((unsigned char *, int));
 extern void  tryit		__P((unsigned char *, int));
 extern int   uncompress		__P((const unsigned char *, unsigned char **, int));
