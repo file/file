@@ -49,12 +49,36 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.20 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.21 2003/03/27 18:34:21 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
 
+private int is_tar(const unsigned char *, size_t);
 private int from_oct(int, const char *);	/* Decode octal number */
+
+protected int
+file_is_tar(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
+{
+	/*
+	 * Do the tar test first, because if the first file in the tar
+	 * archive starts with a dot, we can confuse it with an nroff file.
+	 */
+	switch (is_tar(buf, nbytes)) {
+	case 1:
+	        if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
+		    "application/x-tar" : "tar archive") == -1)
+			return -1;
+		return 1;
+	case 2:
+		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
+		    "application/x-tar, POSIX" : "POSIX tar archive") == -1)
+			return -1;
+		return 1;
+	default:
+		return 0;
+	}
+}
 
 /*
  * Return 
@@ -62,8 +86,8 @@ private int from_oct(int, const char *);	/* Decode octal number */
  *	1 for old UNIX tar file,
  *	2 for Unix Std (POSIX) tar file.
  */
-protected int
-file_is_tar(const unsigned char *buf, size_t nbytes)
+private int
+is_tar(const unsigned char *buf, size_t nbytes)
 {
 	const union record *header = (const union record *)(const void *)buf;
 	int	i;

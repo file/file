@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.51 2003/03/26 16:25:58 christos Exp $
+ * @(#)$Id: file.h,v 1.52 2003/03/27 18:34:21 christos Exp $
  */
 
 #ifndef __file_h__
@@ -184,7 +184,7 @@ protected int file_reset(struct magic_set *);
 protected int file_tryelf(struct magic_set *, int, const unsigned char *, size_t);
 protected int file_zmagic(struct magic_set *, const unsigned char *, size_t);
 protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
-protected int file_is_tar(const unsigned char *, size_t);
+protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t);
 protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
 protected uint32_t file_signextend(struct magic_set *, struct magic *, uint32_t);

@@ -54,7 +54,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.36 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.37 2003/03/27 18:34:21 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -97,23 +97,6 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 
 	int last_line_end = -1;
 	int has_long_lines = 0;
-
-	/*
-	 * Do the tar test first, because if the first file in the tar
-	 * archive starts with a dot, we can confuse it with an nroff file.
-	 */
-	switch (file_is_tar(buf, nbytes)) {
-	case 1:
-	        if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/x-tar" : "tar archive") == -1)
-			return -1;
-		return 1;
-	case 2:
-		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/x-tar, POSIX" : "POSIX tar archive") == -1)
-			return -1;
-		return 1;
-	}
 
 	/*
 	 * Undo the NUL-termination kindly provided by process()
