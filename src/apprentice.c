@@ -33,10 +33,11 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.13 1992/09/08 15:36:27 ian Exp $";
+	"@(#)$Id: apprentice.c,v 1.14 1992/09/11 17:43:08 ian Exp $";
 #endif	/* lint */
 
-#define	EATAB {while (isascii(*l) && isspace(*l))  ++l;}
+#define	EATAB {while (isascii((unsigned char) *l) && \
+		      isspace((unsigned char) *l))  ++l;}
 
 
 static int getvalue __P((struct magic *, char **));
