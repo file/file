@@ -27,7 +27,7 @@
 #
 0	leshort		0570		VAX COFF executable
 >12	lelong		>0		not stripped
-#>22	leshort		>0		- version %ld
+>22	leshort		>0		- version %ld
 0	leshort		0575		VAX COFF pure executable
 >12	lelong		>0		not stripped
-#>22	leshort		>0		- version %ld
+>22	leshort		>0		- version %ld

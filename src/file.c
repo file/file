@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.27 1993/09/16 20:45:46 christos Exp $";
+	"@(#)$Id: file.c,v 1.28 1993/09/23 21:47:01 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -201,7 +201,8 @@ int wid;
 	}
 
 	if (wid > 0)
-	     (void) printf("%s:%*s ", inname, wid - strlen(inname), "");
+	     (void) printf("%s:%*s ", inname, 
+			   (int) (wid - strlen(inname)), "");
 
 	if (inname != stdname) {
 	    /*

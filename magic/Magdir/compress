@@ -2,17 +2,10 @@
 # Formats for various forms of compressed data
 # Formats for "compress" proper have been moved into "compress.c",
 # because it tries to uncompress it to figure out what's inside.
+
+# According to gzip.h, this is the correct byte order for packed data.
 #
-# XXX - the two "packed data" versions are byte-swapped versions of
-# one another; is that because the 2-byte magic number is written
-# out in native byte order, with "unpack" figuring out the byte order
-# from the magic number (in which case both can be left as is, or
-# changed to specify a byte order *and* to indicate the byte order of
-# the packing machine), or because the old "file" didn't have any way of
-# having "magic"-file entries that specified a particular byte order?
-#
-0	short		017436		packed data
-0	short		017037		packed data
+0	string		\037\036	packed data
 
 #
 # This magic number is byte-order-independent.
@@ -32,9 +25,8 @@
 # handle these formats.  Note that I can only uncrunch, not crunch, and
 # I didn't have a crunched file handy, so the crunch number is untested.
 #				Keith Waclena <keith@cerberus.uchicago.edu>
-0	short		0x76FF		squeezed data (CP/M, DOS)
-0	short		0x76FE		crunched data (CP/M, DOS)
-#
+0	leshort		0x76FF		squeezed data (CP/M, DOS)
+0	leshort		0x76FE		crunched data (CP/M, DOS)
 # Freeze
-0	short		0x1f9f		Frozen file 2.1
-0	short		0x1f9e		Frozen file 1.0
+0	string		\037\237	Frozen file 2.1
+0	string		\037\236	Frozen file 1.0 (or gzip 0.5)

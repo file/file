@@ -32,3 +32,7 @@
 #>18	beshort		&00020000	- 32100 required
 #>18	beshort		&00040000	and mau hardware required
 #>22	beshort		>0		- version %ld
+#
+# core file for 3b2 
+0	string		\000\004\036\212\200	3b2 core file
+>364	string		>\0		of '%s'

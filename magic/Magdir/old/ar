@@ -62,5 +62,29 @@
 20	long		0xdca7c4fd	Rahul Dhesi's "zoo" archive
 # ZIP archiver
 0	string		PK		zip archive file 
->2	byte		>0		- version [%d
+>4	byte		x		- version
+>4	byte		10		1.0
+>4	byte		20		2.0
+
+2	string		-lh		LHarc archive data
+>6	byte		x		type %c
+>20	byte		x		- header level %d
+# ARJ archive data from jason@jarthur.Claremont.EDU
+0	leshort		0xea60		ARJ archive data
+>5	byte		x		- version %d,
+>8	byte		>0		flags:
+>>8	byte		&0x04		multi-volume,
+>>8	byte		&0x10		slash switched,
+>>8	byte		&0x20		backup,
+>34	string		x		original name: %s,
+>7	byte		0		os: MS/DOS
+>7	byte		1		os: PRIMOS
+>7	byte		2		os: UNIX
+>7	byte		3		os: Amiga
+>7	byte		4		os: Macintosh
+>7	byte		5		os: OS/2
+>7	byte		6		os: Apple ][ GS
+>7	byte		7		os: Atari ST
+>7	byte		8		os: NeXT
+>7	byte		9		os: VAX/VMS
 >3	byte		>0		%d]

@@ -30,3 +30,9 @@
 0	string		#!/bin/perl	perl commands text
 0	string		#!\ /bin/perl	perl commands text
 0	string		eval\ "exec\ /bin/perl	perl commands text
+0       string          #!/usr/bin/perl perl commands text
+0       string          #!\ /usr/bin/perl       perl commands text
+0       string          eval\ "exec\ /usr/bin/perl      perl commands text
+0       string          #!/usr/local/bin/perl   perl commands text
+0       string          #!\ /usr/local/bin/perl perl commands text
+0       string          eval\ "exec\ /usr/local/bin/perl        perl commands text

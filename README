@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.19 1993/04/05 10:18:56 ian Exp $
+@(#) $Id: README,v 1.20 1993/09/23 21:47:01 christos Exp $
 
 This is Release 3.x of Ian Darwin's (copyright but distributable)
 file(1) command.  Release 3.x is scheduled for inclusion in the
@@ -35,7 +35,7 @@ In addition, the /etc/magic file is built from a subdirectory
 for easier(?) maintenance.  I will act as a clearinghouse for
 magic numbers assigned to all sorts of data files that
 are in reasonable circulation. Send your magic numbers,
-in magic(4) format please, to the author, Ian Darwin.
+in magic(4) format please, to the maintainer, Christos Zoulas.
 
 LEGAL.NOTICE - read this first.
 README - read this second (you are currently reading this file).
@@ -67,17 +67,8 @@ strtok.c, getopt.c - in case you them (courtesy of Henry Spencer).
 strtol.c, strchr.c - in case you need them - public domain.
 tst - simple test suite, built from tst/Makefile
 
-Ian Darwin
-Darwin Open Systems
-R R 1
-Palgrave, Ontario L0N 1P0
-Canada
 
-E-mail: darwin@cs.toronto.edu
-	ian@sq.com
-	utzoo!ian
-	ian@darwin.uucp
-	uunet!sq!ian
+E-mail: christos@deshaw.com, moraes@deshaw.com
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
 

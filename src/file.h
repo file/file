@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.16 1993/09/23 20:26:25 christos Exp $
+ * @(#)$Id: file.h,v 1.17 1993/09/23 21:47:01 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -114,7 +114,7 @@ extern int lflag;		/* follow symbolic links?		*/
 extern int optind;		/* From getopt(3)			*/
 extern char *optarg;
 
-#if !defined(__STDC__) || defined(sun)
+#if !defined(__STDC__) || defined(sun) || defined(__sun__)
 extern int sys_nerr;
 extern char *sys_errlist[];
 #define strerror(e) \
