@@ -54,10 +54,10 @@
 # categories" and "left to right, top to bottom," respectively; the D and R
 # mean that the cursor should move either down or right when you press Return.
 
-30	string		\x01D	AppleWorks database data
-30	string		\x02D	AppleWorks database data
-30	string		\x01R	AppleWorks database data
-30	string		\x02R	AppleWorks database data
+#30	string		\x01D	AppleWorks database data
+#30	string		\x02D	AppleWorks database data
+#30	string		\x01R	AppleWorks database data
+#30	string		\x02R	AppleWorks database data
 
 # AppleWorks spreadsheet:
 #
@@ -65,10 +65,10 @@
 # row- or column-order recalculation; the A or M means automatic or manual
 # recalculation.
 
-131	string		RA	AppleWorks spreadsheet data
-131	string		RM	AppleWorks spreadsheet data
-131	string		CA	AppleWorks spreadsheet data
-131	string		CM	AppleWorks spreadsheet data
+#131	string		RA	AppleWorks spreadsheet data
+#131	string		RM	AppleWorks spreadsheet data
+#131	string		CA	AppleWorks spreadsheet data
+#131	string		CM	AppleWorks spreadsheet data
 
 # Applesoft BASIC:
 #
