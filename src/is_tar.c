@@ -50,7 +50,7 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.22 2003/03/27 19:09:45 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.23 2003/10/14 19:29:55 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
@@ -104,7 +104,7 @@ is_tar(const unsigned char *buf, size_t nbytes)
 	p = header->charptr;
 	for (i = sizeof(union record); --i >= 0;) {
 		/*
-		 * We can't use unsigned char here because of old compilers,
+		 * We cannot use unsigned char here because of old compilers,
 		 * e.g. V7.
 		 */
 		sum += 0xFF & *p++;

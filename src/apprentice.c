@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.68 2003/10/14 19:17:17 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.69 2003/10/14 19:29:55 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -138,7 +138,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 	int mapped;
 
 	if (magicsize != FILE_MAGICSIZE) {
-		file_error(ms, 0, "Magic element size %lu != %lu",
+		file_error(ms, 0, "magic element size %lu != %lu",
 		    (unsigned long)sizeof(*magic),
 		    (unsigned long)FILE_MAGICSIZE);
 		return -1;
@@ -155,7 +155,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 #ifndef COMPILE_ONLY
 	if ((rv = apprentice_map(ms, &magic, &nmagic, fn)) == -1) {
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn("Using regular magic file `%s'", fn);
+			file_magwarn("using regular magic file `%s'", fn);
 		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
 		if (rv != 0)
 			return -1;
@@ -266,7 +266,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		free(mfn);
 		free(mlist);
 		mlist = NULL;
-		file_error(ms, 0, "Couldn't find any magic files!");
+		file_error(ms, 0, "could not find any magic files!");
 		return NULL;
 	}
 	return mlist;
@@ -290,7 +290,8 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	f = fopen(fn, "r");
 	if (f == NULL) {
 		if (errno != ENOENT)
-			file_error(ms, errno, "Can't read magic file %s", fn);
+			file_error(ms, errno, "cannot read magic file `%s'",
+			    fn);
 		return -1;
 	}
 
@@ -365,7 +366,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint32_t v)
 			break;
 		default:
 			if (ms->flags & MAGIC_CHECK)
-			    file_magwarn("can't happen: m->type=%d\n",
+			    file_magwarn("cannot happen: m->type=%d\n",
 				    m->type);
 			return ~0U;
 		}
@@ -724,7 +725,7 @@ getvalue(struct magic_set *ms, struct magic *m, char **p)
 		*p = getstr(ms, *p, m->value.s, sizeof(m->value.s), &slen);
 		if (*p == NULL) {
 			if (ms->flags & MAGIC_CHECK)
-				file_magwarn("Cannot get string from `%s'",
+				file_magwarn("cannot get string from `%s'",
 				    m->value.s);
 			return -1;
 		}
@@ -758,7 +759,7 @@ getstr(struct magic_set *ms, char *s, char *p, int plen, int *slen)
 		if (isspace((unsigned char) c))
 			break;
 		if (p >= pmax) {
-			file_error(ms, 0, "String too long: `%s'", origs);
+			file_error(ms, 0, "string too long: `%s'", origs);
 			return NULL;
 		}
 		if(c == '\\') {
@@ -966,14 +967,14 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		return -1;
 
 	if (fstat(fd, &st) == -1) {
-		file_error(ms, errno, "Cannot stat `%s'", dbname);
+		file_error(ms, errno, "cannot stat `%s'", dbname);
 		goto error;
 	}
 
 #ifdef QUICK
 	if ((mm = mmap(0, (size_t)st.st_size, PROT_READ|PROT_WRITE,
 	    MAP_PRIVATE|MAP_FILE, fd, (off_t)0)) == MAP_FAILED) {
-		file_error(ms, errno, "Cannot map `%s'", dbname);
+		file_error(ms, errno, "cannot map `%s'", dbname);
 		goto error;
 	}
 #define RET	2
@@ -983,7 +984,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		goto error;
 	}
 	if (read(fd, mm, (size_t)st.st_size) != (size_t)st.st_size) {
-		file_error(ms, errno, "Read failed");
+		file_badread(ms);
 		goto error;
 	}
 #define RET	1
@@ -994,7 +995,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	ptr = (uint32_t *)(void *)*magicp;
 	if (*ptr != MAGICNO) {
 		if (swap4(*ptr) != MAGICNO) {
-			file_error(ms, 0, "Bad magic in `%s'");
+			file_error(ms, 0, "bad magic in `%s'");
 			goto error;
 		}
 		needsbyteswap = 1;
@@ -1049,24 +1050,24 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
 		return -1;
 
 	if ((fd = open(dbname, O_WRONLY|O_CREAT|O_TRUNC, 0644)) == -1) {
-		file_error(ms, errno, "Cannot open `%s'", dbname);
+		file_error(ms, errno, "cannot open `%s'", dbname);
 		return -1;
 	}
 
 	if (write(fd, ar, sizeof(ar)) != (ssize_t)sizeof(ar)) {
-		file_error(ms, errno, "Error writing `%s'", dbname);
+		file_error(ms, errno, "error writing `%s'", dbname);
 		return -1;
 	}
 
 	if (lseek(fd, (off_t)sizeof(struct magic), SEEK_SET)
 	    != sizeof(struct magic)) {
-		file_error(ms, errno, "Error seeking `%s'", dbname);
+		file_error(ms, errno, "error seeking `%s'", dbname);
 		return -1;
 	}
 
 	if (write(fd, *magicp, (sizeof(struct magic) * *nmagicp)) 
 	    != (ssize_t)(sizeof(struct magic) * *nmagicp)) {
-		file_error(ms, errno, "Error writing `%s'", dbname);
+		file_error(ms, errno, "error writing `%s'", dbname);
 		return -1;
 	}
 

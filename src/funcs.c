@@ -75,31 +75,36 @@ file_error(struct magic_set *ms, int error, const char *f, ...)
 	va_list va;
 	/* Only the first error is ok */
 	if (ms->haderr)
-	    return;
+		return;
 	va_start(va, f);
-	(void) vsnprintf(ms->o.buf, ms->o.size, f, va);
+	(void)vsnprintf(ms->o.buf, ms->o.size, f, va);
+	va_end(va);
+	if (error > 0) {
+		size_t len = strlen(ms->o.buf);
+		(void)snprintf(ms->o.buf + len, ms->o.size - len, " (%s)",
+		    strerror(error));
+	}
 	ms->haderr++;
 	ms->error = error;
-	va_end(va);
 }
 
 
 protected void
 file_oomem(struct magic_set *ms)
 {
-	file_error(ms, errno, "Cannot allocate memory");
+	file_error(ms, errno, "cannot allocate memory");
 }
 
 protected void
 file_badseek(struct magic_set *ms)
 {
-	file_error(ms, errno, "Error seeking");
+	file_error(ms, errno, "error seeking");
 }
 
 protected void
 file_badread(struct magic_set *ms)
 {
-	file_error(ms, errno, "Error reading");
+	file_error(ms, errno, "error reading");
 }
 
 protected int
@@ -130,7 +135,7 @@ protected int
 file_reset(struct magic_set *ms)
 {
 	if (ms->mlist == NULL) {
-		file_error(ms, 0, "No magic files loaded");
+		file_error(ms, 0, "no magic files loaded");
 		return -1;
 	}
 	ms->o.ptr = ms->o.buf;
