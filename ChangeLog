@@ -1,3 +1,9 @@
+2003-03-28 16:03  Christos Zoulas  <christos@zoulas.com>
+
+	* remove packed attribute from magic struct.
+	* make the magic struct properly aligned.
+	* bump version number of compiled files to 2.
+
 2003-03-27 13:10  Christos Zoulas  <christos@zoulas.com>
 
 	* separate tar detection and run it before softmagic.
