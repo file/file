@@ -27,13 +27,14 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "file.h"
 #include "names.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/ascmagic.c,v 1.7 1991/01/23 13:56:27 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/ascmagic.c,v 1.8 1992/05/22 17:48:38 ian Exp $";
 #endif	/* lint */
 
 char *ckfmsg = "write error on output";
@@ -41,13 +42,14 @@ char *ckfmsg = "write error on output";
 			/* an optimisation over plain strcmp() */
 #define	STREQ(a, b)	(*(a) == *(b) && strcmp((a), (b)) == 0)
 
+int
 ascmagic(buf, nbytes)
 unsigned char *buf;
 int nbytes;	/* size actually read */
 {
-	int i, isblock, is_tar(), is_compress(), has_escapes = 0;
+	int i, isblock, has_escapes = 0;
 	unsigned char *s;
-	char *strtok(), *token;
+	char *token;
 	register struct names *p;
 	extern int zflag;
 
@@ -77,7 +79,7 @@ int nbytes;	/* size actually read */
 
 	/* look for tokens from names.h - this is expensive! */
 	s = buf;
-	while ((token = strtok(s, " \t\n\r\f")) != NULL) {
+	while ((token = strtok((char*)s, " \t\n\r\f")) != NULL) {
 		s = NULL;	/* make strtok() keep on tokin' */
 		for (p = names; p < names + NNAMES; p++) {
 			if (STREQ(p->name, token)) {
@@ -101,8 +103,8 @@ int nbytes;	/* size actually read */
 			unsigned char *newbuf;
 			int newsize;
 
-			newsize = uncompress(buf, nbytes, &newbuf);
-			try(newbuf, newsize);
+			newsize = uncompress(buf, &newbuf, nbytes);
+			tryit(newbuf, newsize);
 			/* free(newbuf) */
 			printf(" (%scompressed data - %d bits)",
 				isblock ? "block " : "", i);
