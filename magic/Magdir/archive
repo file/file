@@ -214,3 +214,17 @@
 
 # Shell archives
 10	string		#\ This\ is\ a\ shell\ archive	shell archive text
+
+#
+# LBR. NB: May conflict with the questionable 
+#          "binary Computer Graphics Metafile" format.
+#
+0       string  \0\ \ \ \ \ \ \ \ \ \ \ \0\0    LBR archive data
+#
+# PMA (CP/M derivative of LHA)
+#
+2       string          -pm0-           PMarc archive data [pm0]
+2       string          -pm1-           PMarc archive data [pm1]
+2       string          -pm2-           PMarc archive data [pm2]
+2       string          -pms-           PMarc SFX archive (CP/M, DOS)
+5       string          -pc1-           PopCom compressed executable (CP/M)

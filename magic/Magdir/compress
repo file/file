@@ -61,11 +61,11 @@
 
 # squeeze and crunch
 # Michael Haardt <michael@cantor.informatik.rwth-aachen.de>
-0	leshort		0xFF76		squeezed data,
+0	beshort		0x76FF		squeezed data,
 >4	string		x		original name %s
-0	leshort		0xFE76		crunched data,
+0	beshort		0x76FE		crunched data,
 >2	string		x		original name %s
-0	leshort		0xFD76		LZH compressed data,
+0	beshort		0x76FD		LZH compressed data,
 >2	string		x		original name %s
 
 # Freeze
