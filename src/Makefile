@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.29 1992/09/09 16:32:59 ian Exp $
+# @(#)$Id: Makefile,v 1.30 1992/09/11 11:55:35 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -65,10 +65,13 @@ LOCALSRCS = # localsrc/getopt.c localsrc/strtol.c \
 #		localsrc/strtok.c localsrc/strchr.c
 LOCALOBJS = # localsrc/getopt.o localsrc/strtol.o \
 #		localsrc/strtok.o localsrc/strchr.o
+# These are not compiled in unless you use -Ilocalinc, but
+# are not commented out as "make dist" &c use them.
+LOCALINC = localinc/*.h localinc/sys/*.h
 
 SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 	compress.c is_tar.c \
-	print.c $(LOCALSRCS) localinc
+	print.c $(LOCALSRCS) $(LOCALINC)
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	compress.o is_tar.o \
 	print.o $(LOCALOBJS)
@@ -108,7 +111,7 @@ install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 clean:
 		rm -f *.o core file magic lint dist.* TARGETS lastnocore
 clobber:
-		(cd tst; make clean)
+		cd tst; make clean
 
 dist:		dist.src dist.magic
 
@@ -116,8 +119,8 @@ dist.src:	$(ALLSRC) TARGETS
 #		Some versions of shar can't handle a single file from
 #		a subdirectory, so we manually insert mkdir as needed.
 #		The point is to exclude all the generable targets in tst.
-#		Put the extra "mkdir" AFTER the ": to unbundle..." line.
-		(echo mkdir tst   ; $(SHAR) $(ALLSRC) TARGETS) > $@
+		(echo mkdir localinc localinc/sys localsrc tst; \
+			$(SHAR) $(ALLSRC) TARGETS) > $@
 
 TARGETS:	$(ALLSRC)
 		ident $(ALLSRC) > TARGETS
