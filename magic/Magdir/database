@@ -12,10 +12,12 @@
 0	lelong	0x13579ace	GNU dbm 1.x or ndbm database, little endian
 0	string	GDBM		GNU dbm 2.x database
 #
-0	belong	0x061561	Berkeley DB Hash file
+0	belong	0x061561	Berkeley DB
+>4	belong	>2		1.86
+>4	belong	<3		1.85
+>8	belong	4321		Hash/Big Endian
+>8	belong	1234		Hash/Little Endian
 >4	belong	>0		(Version %d,
->8	belong	1234		Little Endian,
->8	belong	4321		Big Endian,
 >12	belong	x		Bucket Size %d,
 >16	belong	x		Bucket Shift %d,
 >20	belong	x		Directory Size %d,
@@ -30,15 +32,26 @@
 >56	belong	x		Number of Keys %d)
 #
 #
-0	belong	0x053162	Berkeley DB Btree file/Big Endian
+0	belong	0x053162	Berkeley DB 1.85/1.86 Btree/Big Endian
 >4	belong	>0		(Version %d,
 >8	belong	x		Page Size %d,
 >12	belong	x		Free Page %d,
 >16	belong	x		Number of Records %d,
 >20	belong	x		Flags 0x%x)
-0	lelong	0x053162	Berkeley DB Btree file/Little Endian
+0	lelong	0x053162	Berkeley DB 1.85/1.86 Btree/Little Endian
 >4	lelong	>0		(Version %d,
 >8	lelong	x		Page Size %d,
 >12	lelong	x		Free Page %d,
 >16	lelong	x		Number of Records %d,
 >20	lelong	x		Flags 0x%x)
+#
+#
+12	belong	0x061561	Berkeley DB 2.X Hash/Big Endian
+>16	belong	>0		(Version %d)
+12	lelong	0x061561	Berkeley DB 2.X Hash/Little Endian
+>16	lelong	>0		(Version %d)
+
+12	belong	0x053162	Berkeley DB 2.X Btree/Big Endian
+>16	belong	>0		(Version %d)
+12	lelong	0x053162	Berkeley DB 2.X Btree/Little Endian
+>16	lelong	>0		(Version %d)

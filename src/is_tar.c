@@ -5,7 +5,7 @@
  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).
  *
  * @(#)list.c 1.18 9/23/86 Public Domain - gnu
- * $Id: is_tar.c,v 1.10 1998/06/27 13:23:39 christos Exp $
+ * $Id: is_tar.c,v 1.11 1999/01/13 15:44:07 christos Exp $
  *
  * Comments changed and some code/comments reformatted
  * for file command by Ian Darwin.
@@ -18,7 +18,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.10 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.11 1999/01/13 15:44:07 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
@@ -87,7 +87,7 @@ from_oct(digs, where)
 {
 	register int	value;
 
-	while (isspace(*where)) {		/* Skip spaces */
+	while (isspace((unsigned char)*where)) {		/* Skip spaces */
 		where++;
 		if (--digs <= 0)
 			return -1;		/* All blank field */
@@ -98,7 +98,7 @@ from_oct(digs, where)
 		--digs;
 	}
 
-	if (digs > 0 && *where && !isspace(*where))
+	if (digs > 0 && *where && !isspace((unsigned char)*where))
 		return -1;			/* Ended on non-space/nul */
 
 	return value;

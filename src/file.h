@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.27 1998/06/27 13:57:23 christos Exp $
+ * @(#)$Id: file.h,v 1.28 1999/01/13 15:44:05 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -46,12 +46,12 @@ struct magic {
 #define ADD	4		/* if '>&' appears,  */
 	short cont_level;	/* level of ">" */
 	struct {
-		char type;	/* byte short long */
+		unsigned char type;	/* byte short long */
 		int32 offset;	/* offset from indirection */
 	} in;
 	int32 offset;		/* offset to magic number */
 	unsigned char reln;	/* relation (0=eq, '>'=gt, etc) */
-	char type;		/* int, short, long or string. */
+	unsigned char type;	/* int, short, long or string. */
 	char vallen;		/* length of string value, if any */
 #define 			BYTE	1
 #define				SHORT	2

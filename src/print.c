@@ -39,7 +39,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.26 1998/06/27 13:57:23 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.27 1999/01/13 15:44:09 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -58,15 +58,14 @@ struct magic *m;
 
 	if (m->flag & INDIR)
 		(void) fprintf(stderr, "(%s,%d),",
-			       (m->in.type >= 0 && m->in.type < SZOF(typ)) ? 
-					typ[(unsigned char) m->in.type] :
-					"*bad*",
+			       /* Note: in.type is unsigned */
+			       (m->in.type < SZOF(typ)) ? 
+					typ[m->in.type] : "*bad*",
 			       m->in.offset);
 
 	(void) fprintf(stderr, " %s%s", (m->flag & UNSIGNED) ? "u" : "",
-		       (m->type >= 0 && m->type < SZOF(typ)) ? 
-				typ[(unsigned char) m->type] : 
-				"*bad*");
+		       /* Note: type is unsigned */
+		       (m->type < SZOF(typ)) ? typ[m->type] : "*bad*");
 	if (m->mask != ~((uint32)0))
 		(void) fprintf(stderr, " & %.8x", m->mask);
 

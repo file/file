@@ -53,7 +53,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: fsmagic.c,v 1.27 1998/06/27 13:23:39 christos Exp $")
+FILE_RCSID("@(#)$Id: fsmagic.c,v 1.28 1999/01/13 15:44:06 christos Exp $")
 #endif	/* lint */
 
 int
@@ -92,16 +92,30 @@ struct stat *sb;
 		return 1;
 	case S_IFCHR:
 #ifdef HAVE_ST_RDEV
+# ifdef dv_unit
+		(void) printf("character special (%d/%d/%d)",
+			major(sb->st_rdev),
+			dv_unit(sb->st_rdev),
+			dv_subunit(sb->st_rdev));
+# else
 		(void) printf("character special (%ld/%ld)",
 			(long) major(sb->st_rdev), (long) minor(sb->st_rdev));
+# endif
 #else
 		(void) printf("character special");
 #endif
 		return 1;
 	case S_IFBLK:
 #ifdef HAVE_ST_RDEV
+# ifdef dv_unit
+		(void) printf("block special (%d/%d/%d)",
+			major(sb->st_rdev),
+			dv_unit(sb->st_rdev),
+			dv_subunit(sb->st_rdev));
+# else
 		(void) printf("block special (%ld/%ld)",
 			(long) major(sb->st_rdev), (long) minor(sb->st_rdev));
+# endif
 #else
 		(void) printf("block special");
 #endif
