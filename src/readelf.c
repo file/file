@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.13 2000/07/28 23:03:08 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.14 2000/08/05 17:36:49 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -195,8 +195,10 @@ dophn_exec(class, swap, fd, off, num, size)
 
 #ifdef ELFCORE
 size_t	prpsoffsets32[] = {
+	8,		/* FreeBSD */
 	84,		/* SunOS 5.x */
-	32,		/* Linux */
+	32,		/* Linux (I forget which kernel version) */
+	28,		/* Linux 2.0.36 */
 };
 
 size_t	prpsoffsets64[] = {
@@ -210,14 +212,23 @@ size_t	prpsoffsets64[] = {
 
 /*
  * Look through the program headers of an executable image, searching
- * for a PT_NOTE section of type NT_PRPSINFO, with a name "CORE"; if one
- * is found, try looking in various places in its contents for a 16-character
- * string containing only printable characters - if found, that string
- * should be the name of the program that dropped core.
- * Note: right after that 16-character string is, at least in SunOS 5.x
- * (and possibly other SVR4-flavored systems) and Linux, a longer string
- * (80 characters, in 5.x, probably other SVR4-flavored systems, and Linux)
- * containing the start of the command line for that program.
+ * for a PT_NOTE section of type NT_PRPSINFO, with a name "CORE" or
+ * "FreeBSD"; if one is found, try looking in various places in its
+ * contents for a 16-character string containing only printable
+ * characters - if found, that string should be the name of the program
+ * that dropped core.  Note: right after that 16-character string is,
+ * at least in SunOS 5.x (and possibly other SVR4-flavored systems) and
+ * Linux, a longer string (80 characters, in 5.x, probably other
+ * SVR4-flavored systems, and Linux) containing the start of the
+ * command line for that program.
+ *
+ * The signal number probably appears in a section of type NT_PRSTATUS,
+ * but that's also rather OS-dependent, in ways that are harder to
+ * dissect with heuristics, so I'm not bothering with the signal number.
+ * (I suppose the signal number could be of interest in situations where
+ * you don't have the binary of the program that dropped core; if you
+ * *do* have that binary, the debugger will probably tell you what
+ * signal it was.)
  */
 static void
 dophn_core(class, swap, fd, off, num, size)
@@ -232,12 +243,16 @@ dophn_core(class, swap, fd, off, num, size)
 	Elf32_Nhdr *nh32;
 	Elf64_Phdr ph64;
 	Elf64_Nhdr *nh64;
-	size_t offset, noffset, reloffset;
+	size_t offset, nameoffset, noffset, reloffset;
 	unsigned char c;
 	int i, j;
 	char nbuf[BUFSIZ];
 	int bufsize;
+	int is_freebsd;
 
+	/*
+	 * Loop through all the program headers.
+	 */
 	for ( ; num; num--) {
 		if (lseek(fd, off, SEEK_SET) == -1)
 			error("lseek failed (%s).\n", strerror(errno));
@@ -246,6 +261,11 @@ dophn_core(class, swap, fd, off, num, size)
 		off += size;
 		if (ph_type != PT_NOTE)
 			continue;
+
+		/*
+		 * This is a PT_NOTE section; loop through all the notes
+		 * in the section.
+		 */
 		if (lseek(fd, (off_t) ph_offset, SEEK_SET) == -1)
 			error("lseek failed (%s).\n", strerror(errno));
 		bufsize = read(fd, nbuf, BUFSIZ);
@@ -262,19 +282,8 @@ dophn_core(class, swap, fd, off, num, size)
 			offset += nh_size;
 
 			/*
-			 * If this note isn't an NT_PRPSINFO note, it's
-			 * not what we're looking for.
-			 */
-			if (nh_type != NT_PRPSINFO) {
-				offset += nh_namesz;
-				offset = ((offset + 3)/4)*4;
-				offset += nh_descsz;
-				offset = ((offset + 3)/4)*4;
-				continue;
-			}
-
-			/*
-			 * Make sure this note has the name "CORE".
+			 * Check whether this note has the name "CORE" or
+			 * "FreeBSD".
 			 */
 			if (offset + nh_namesz >= bufsize) {
 				/*
@@ -282,62 +291,109 @@ dophn_core(class, swap, fd, off, num, size)
 				 */
 				break;
 			}
-			if (nh_namesz != 5
-			    || strcmp(&nbuf[offset], "CORE") != 0)
-				continue;
+
+			nameoffset = offset;
 			offset += nh_namesz;
 			offset = ((offset + 3)/4)*4;
 
 			/*
-			 * Extract the program name.  We assume it to be
-			 * 16 characters (that's what it is in SunOS 5.x
-			 * and Linux).
-			 *
-			 * Unfortunately, it's at a different offset in
-			 * SunOS 5.x and Linux, so try multiple offsets.
-			 * If the characters aren't all printable, reject
-			 * it.
+			 * Sigh.  The 2.0.36 kernel in Debian 2.1, at
+			 * least, doesn't correctly implement name
+			 * sections, in core dumps, as specified by
+			 * the "Program Linking" section of "UNIX(R) System
+			 * V Release 4 Programmer's Guide: ANSI C and
+			 * Programming Support Tools", because my copy
+			 * clearly says "The first 'namesz' bytes in 'name'
+			 * contain a *null-terminated* [emphasis mine]
+			 * character representation of the entry's owner
+			 * or originator", but the 2.0.36 kernel code
+			 * doesn't include the terminating null in the
+			 * name....
 			 */
-			for (i = 0; i < NOFFSETS; i++) {
-				reloffset = prpsoffsets(i);
-				noffset = offset + reloffset;
-				for (j = 0; j < 16;
-				    j++, noffset++, reloffset++) {
-					/*
-					 * Make sure we're not past the end
-					 * of the buffer; if we are, just
-					 * give up.
-					 */
-					if (noffset >= bufsize)
-						return;
-
-					/*
-					 * Make sure we're not past the
-					 * end of the contents; if we
-					 * are, this obviously isn't
-					 * the right offset.
-					 */
-					if (reloffset >= nh_descsz)
-						goto tryanother;
-
-					c = nbuf[noffset];
-					if (c != '\0' && !isprint(c))
-						goto tryanother;
-				}
-
+			if ((nh_namesz == 4 &&
+			      strncmp(&nbuf[nameoffset], "CORE", 4) == 0) ||
+			    (nh_namesz == 5 &&
+			      strcmp(&nbuf[nameoffset], "CORE") == 0))
+				is_freebsd = 0;
+			else if ((nh_namesz == 8 &&
+			      strcmp(&nbuf[nameoffset], "FreeBSD") == 0))
+				is_freebsd = 1;
+			else
+				continue;
+			if (nh_type == NT_PRPSINFO) {
 				/*
-				 * Well, that worked.
+				 * Extract the program name.  We assume
+				 * it to be 16 characters (that's what it
+				 * is in SunOS 5.x and Linux).
+				 *
+				 * Unfortunately, it's at a different offset
+				 * in varous OSes, so try multiple offsets.
+				 * If the characters aren't all printable,
+				 * reject it.
 				 */
-				printf(", from '%.16s'",
-				    &nbuf[offset + prpsoffsets(i)]);
-				return;
+				for (i = 0; i < NOFFSETS; i++) {
+					reloffset = prpsoffsets(i);
+					noffset = offset + reloffset;
+					for (j = 0; j < 16;
+					    j++, noffset++, reloffset++) {
+						/*
+						 * Make sure we're not past
+						 * the end of the buffer; if
+						 * we are, just give up.
+						 */
+						if (noffset >= bufsize)
+							goto tryanother;
 
-			tryanother:
-				;
+						/*
+						 * Make sure we're not past
+						 * the end of the contents;
+						 * if we are, this obviously
+						 * isn't the right offset.
+						 */
+						if (reloffset >= nh_descsz)
+							goto tryanother;
+
+						c = nbuf[noffset];
+						if (c == '\0') {
+							/*
+							 * A '\0' at the
+							 * beginning is
+							 * obviously wrong.
+							 * Any other '\0'
+							 * means we're done.
+							 */
+							if (j == 0)
+								goto tryanother;
+							else
+								break;
+						} else {
+							/*
+							 * A nonprintable
+							 * character is also
+							 * wrong.
+							 */
+							if (!isprint(c))
+								goto tryanother;
+						}
+					}
+
+					/*
+					 * Well, that worked.
+					 */
+					printf(", from '%.16s'",
+					    &nbuf[offset + prpsoffsets(i)]);
+					break;
+
+				tryanother:
+					;
+				}
+				break;
 			}
 			offset += nh_descsz;
 			offset = ((offset + 3)/4)*4;
 		}
+	out:
+		;
 	}
 }
 #endif

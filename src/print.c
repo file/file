@@ -41,14 +41,14 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.30 1999/11/28 20:02:29 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.31 2000/08/05 17:36:49 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
 
 void
 mdump(m)
-struct magic *m;
+	struct magic *m;
 {
 	static const char *typ[] = { "invalid", "byte", "short", "invalid",
 				     "long", "string", "date", "beshort",
@@ -86,37 +86,37 @@ struct magic *m;
 	(void) fprintf(stderr, ",%c", m->reln);
 
 	if (m->reln != 'x') {
-	    switch (m->type) {
-	    case BYTE:
-	    case SHORT:
-	    case LONG:
-	    case LESHORT:
-	    case LELONG:
-	    case BESHORT:
-	    case BELONG:
-		    (void) fprintf(stderr, "%d", m->value.l);
-		    break;
-	    case STRING:
-		    showstr(stderr, m->value.s, -1);
-		    break;
-	    case DATE:
-	    case LEDATE:
-	    case BEDATE:
-		    {
-			    time_t t = m->value.l;
-			    char *rt, *pp = ctime(&t);
+		switch (m->type) {
+		case BYTE:
+		case SHORT:
+		case LONG:
+		case LESHORT:
+		case LELONG:
+		case BESHORT:
+		case BELONG:
+			(void) fprintf(stderr, "%d", m->value.l);
+			break;
+		case STRING:
+			showstr(stderr, m->value.s, -1);
+			break;
+		case DATE:
+		case LEDATE:
+		case BEDATE:
+			{
+				time_t t = m->value.l;
+				char *rt, *pp = ctime(&t);
 
-			    if ((rt = strchr(pp, '\n')) != NULL)
-				    *rt = '\0';
-			    (void) fprintf(stderr, "%s,", pp);
-			    if (rt)
-				    *rt = '\n';
-		    }
-		    break;
-	    default:
-		    (void) fputs("*bad*", stderr);
-		    break;
-	    }
+				if ((rt = strchr(pp, '\n')) != NULL)
+					*rt = '\0';
+				(void) fprintf(stderr, "%s,", pp);
+				if (rt)
+					*rt = '\n';
+			}
+			break;
+		default:
+			(void) fputs("*bad*", stderr);
+			break;
+		}
 	}
 	(void) fprintf(stderr, ",\"%s\"]\n", m->desc);
 }
@@ -127,8 +127,8 @@ struct magic *m;
  */
 void
 ckfputs(str, fil) 	
-    const char *str;
-    FILE *fil;
+	const char *str;
+	FILE *fil;
 {
 	if (fputs(str,fil) == EOF)
 		error("write failed.\n");
