@@ -1,6 +1,11 @@
 #
 # magic.iris: Magic for mips from an iris4d
 #
+# Dunno what byte-order munging is needed; all of SGI's *current*
+# machines and OSes run in big-endian mode on the MIPS machines,
+# as far as I know, but they do have the MIPSEB and MIPSEL stuff
+# here....
+#
 0	short		0x0160		mipseb
 >20	short		0407		executable
 >20	short		0410		pure

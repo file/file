@@ -1,8 +1,30 @@
-# Formats for "compress" proper have been moved into "compress.c".
 #
-0	short		017037		packed data
-# CPL 	- added pack to /etc/magic
+# Formats for various forms of compressed data
+# Formats for "compress" proper have been moved into "compress.c",
+# because it tries to uncompress it to figure out what's inside.
+#
+# XXX - the two "packed data" versions are byte-swapped versions of
+# one another; is that because the 2-byte magic number is written
+# out in native byte order, with "unpack" figuring out the byte order
+# from the magic number (in which case both can be left as is, or
+# changed to specify a byte order *and* to indicate the byte order of
+# the packing machine), or because the old "file" didn't have any way of
+# having "magic"-file entries that specified a particular byte order?
+#
 0	short		017436		packed data
+0	short		017037		packed data
+
+#
+# This magic number is byte-order-independent.
+#
+0	short		017437		old packed data
+
+#
+# XXX - why *two* entries for "compacted data", one of which is
+# byte-order independent, and one of which is byte-order dependent?
+#
+0	short		0x1fff		compacted data
+0	string		\377\037	compacted data
 0	short		0145405		huf output
 #
 # Squeeze and Crunch...

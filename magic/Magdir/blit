@@ -1,5 +1,10 @@
 # 68K Blit stuff as seen from 680x0 machine
 # Note that this 0407 conflicts with several other a.out formats...
+#
+# XXX - should this be redone with "be" and "le", so that it works on
+# little-endian machines as well?  If so, what's the deal with
+# "VAX-order" and "VAX-order2"?
+#
 #0	long		0407		68K Blit (standalone) executable
 #0	short		0407		VAX-order2 68K Blit (standalone) executable
 0	short		03401		VAX-order 68K Blit (standalone) executable

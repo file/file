@@ -2,6 +2,8 @@
 # additions by janl@ifi.uio.no as well as others. Jan also suggested
 # merging several one- and two-line files into here.
 #
+# XXX - byte order for GIF and TIFF fields?
+#
 
 0	string		xbtoa			btoa'd file
 

@@ -1,6 +1,8 @@
 #
 # magic.tex: 
 #
+# XXX - needs byte-endian stuff (big-endian and little-endian DVI?)
+#
 0	short	0173402	DVI File
 >16	string	>\0	(%s)
 0	short	0173531	Packed TeX Font

@@ -1,6 +1,8 @@
 #
 # magic.ispell
 #
+# XXX - byte order?
+#
 0	short	0xffff9601	ispell hash file
 >2	short	0x00	- 8-bit, no capitalization, 26 flags
 >2	short	0x01	- 7-bit, no capitalization, 26 flags 

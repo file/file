@@ -2,6 +2,10 @@
 # Magic.shell: Shell Scripts
 # "Commands": stuff for various shells and interpreters.
 #
+# XXX - should "... script" have "text" appended to it?
+# Or is there no guarantee that the script in question is, in fact,
+# all text?
+#
 0	string		:\ shell archive or commands for antique kernel text
 0	string		#!/bin/sh		Bourne Shell script
 0	string		#!\ /bin/sh		Bourne Shell script
@@ -32,7 +36,12 @@
 0	string		#!\ /bin/perl	perl commands text
 0	string		eval\ "exec\ /bin/perl	perl commands text
 
+#
 #	An "antique" kernel is either unmodified early V7,
 #	without DMR's 1979 mod for #!, or any kernel
-#	derived from a pre-v7 kernel (i.e., System V)
+#	derived from a such a kernel (e.g., vanilla AT&T System V
+#	prior to SVR4)
+#
+#	XXX - why is this here *twice*?
+#
 0	string		:\ 		shell archive or commands for antique kernel text
