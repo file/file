@@ -359,3 +359,6 @@
 >>14	leshort		x      %hd dpi,
 >2	byte		0	uncompressed
 >2	byte		1	RLE compressed
+
+# Adobe Photoshop
+0	string		8BPS Adobe Photoshop Image

@@ -16,10 +16,10 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 	done >> $@
 
 magic.mgc: magic
-	$(top_builddir)/src/file -C -m magic
+	$(top_builddir)/src/file -C -m $(srcdir)/magic
 
 magic.mime.mgc: magic.mime
-	$(top_builddir)/src/file -C -m magic.mime
+	$(top_builddir)/src/file -C -m $(srcdir)/magic.mime
 
 magic_FRAGMENTS = \
 Magdir/acorn \

@@ -92,6 +92,8 @@
 >8	string		AVI		video/x-msvideo
 #
 0	belong		0x2e7261fd	application/x-realaudio
+>8 	string		CDRA		image/x-coreldraw
+
 
 # MPEG Layer 3 sound files
 0       beshort		&0xffe0		audio/mpeg
@@ -549,3 +551,6 @@
 # specifications at http://hdf.ncsa.uiuc.edu/
 0	belong		0x0e031301	Hierarchical Data Format (version 4) data
 0	string		\211HDF\r\n\032	Hierarchical Data Format (version 5) data
+
+# Adobe Photoshop
+0	string		8BPS			image/x-photoshop

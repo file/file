@@ -56,6 +56,8 @@
 >8      string          AVI\            \b, AVI
 # Animated Cursor format
 >8	string		ACON		\b, animated cursor
+# Corel Draw Picture
+>8 	string		CDRA		\b, Corel Draw Picture
 
 #
 # XXX - some of the below may only appear in little-endian form.
@@ -99,6 +101,8 @@
 >8	string		ACON		\b, animated cursor
 # Notation Interchange File Format (big-endian only)
 >8	string		NIFF		\b, Notation Interchange File Format
+# Corel Draw Picture
+>8 	string		CDRA		\b, Corel Draw Picture
 
 # SoundFont 2 <mpruett@sgi.com>
 >8	string		sfbk		SoundFont 2
