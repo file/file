@@ -108,6 +108,14 @@ char	*inname;
 	char	buf[HOWMANY];
 	struct utimbuf utbuf;
 
+	if (strcmp("-", inname) == 0) {
+		/* Standard input */
+		if (fstat(0, &statbuf)<0)
+			warning("cannot fstat; ");
+		fd = 0;
+		goto readit;
+	}
+		
 	(void) printf("%s:\t", inname);
 
 	/*
@@ -117,15 +125,19 @@ char	*inname;
 	if (fsmagic(inname) != 0) {
 		/*NULLBODY*/;
 	} else if ((fd = open(inname, 0)) < 0) {
-		warning("can't open for reading");
+		/* We can't open it, but we were able to stat it. */
+		if (statbuf.st_mode & 0002) ckfputs("writeable, ", stdout);
+		if (statbuf.st_mode & 0111) ckfputs("executable, ", stdout);
+		warning("can't read");
 	} else {
+readit:
 		/*
 		 * try looking at the first HOWMANY bytes
 		 */
 		if ((nbytes = read(fd, buf, HOWMANY)) == -1)
 			warning("read failed");
 		/*
-		 * try tests in /etc/magic (or surrogate magic file
+		 * try tests in /etc/magic (or surrogate magic file)
 		 */
 		if (softmagic(buf) == 1)
 			/*NULLBODY*/;
@@ -140,13 +152,16 @@ char	*inname;
 			 */
 			ckfputs("data", stdout);
 		}
-		/*
-		 * Restore access, modification times if we read the file.
-		 */
-		utbuf.actime = statbuf.st_atime;
-		utbuf.modtime = statbuf.st_mtime;
-		(void) utime(inname, &utbuf); /* don't care if we lack perms */
-		(void) close(fd);
+		if (strcmp("-", inname) != 0) {
+			/*
+			 * Restore access, modification times if we read it.
+			 */
+			utbuf.actime = statbuf.st_atime;
+			utbuf.modtime = statbuf.st_mtime;
+			(void) utime(inname, &utbuf);
+			/* we don't care if we lack perms */
+			(void) close(fd);
+		}
 	}
 
 	(void) putchar('\n');
