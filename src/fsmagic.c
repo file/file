@@ -46,7 +46,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: fsmagic.c,v 1.20 1992/09/11 12:52:46 ian Exp $";
+	"@(#)$Id: fsmagic.c,v 1.21 1992/11/09 11:53:31 ian Exp $";
 #endif	/* lint */
 
 int
@@ -105,9 +105,9 @@ struct stat *sb;
 			struct stat tstatbuf;
 
 			if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
-				error("readlink failed (%s).\n", 
+				ckfprintf(stdout, "unreadable symlink (%s).", 
 				      strerror(errno));
-				/*NOTREACHED*/
+				return 1;
 			}
 			buf[nch] = '\0';	/* readlink(2) forgets this */
 
