@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.53 1996/10/05 18:15:29 christos Exp $
+# @(#)$Id: Makefile,v 1.54 1996/12/16 03:33:34 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -70,10 +70,10 @@ LOCALOBJS = # localsrc/getopt.o localsrc/strtol.o \
 LOCALINC = # localinc/*.h localinc/sys/*.h
 
 SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
-	compress.c is_tar.c readelf.c \
+	compress.c is_tar.c readelf.c international.c \
 	print.c $(LOCALSRCS) $(LOCALINC)
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
-	compress.o is_tar.o readelf.o \
+	compress.o is_tar.o readelf.o international.o \
 	print.o $(LOCALOBJS)
 
 ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
