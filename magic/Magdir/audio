@@ -136,9 +136,6 @@
 # Audio Visual Research <mpruett@sgi.com>
 0	string		2BIT			Audio Visual Research file
 
-# From Felix von Leitner <leitner@fefe.de>
-0	string		OggS	Ogg-Vorbis compressed sound file
-
 # SGI SoundTrack <mpruett@sgi.com>
 0	string		_SGI_SoundTrack		SGI SoundTrack project file
 # ID3 version 2 tags <waschk@informatik.uni-rostock.de>

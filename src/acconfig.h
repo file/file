@@ -13,6 +13,12 @@
 /* Define if the `long long' type works.  */
 #undef HAVE_LONG_LONG
 
+/* Define if we have "tm_zone" in "struct tm".  */
+#undef HAVE_TM_ZONE
+
+/* Define if we have a global "char * []" "tzname" variable.  */
+#undef HAVE_TZNAME
+
 /* Define if we have "tm_isdst" in "struct tm".  */
 #undef HAVE_TM_ISDST
 

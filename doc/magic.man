@@ -7,7 +7,7 @@ This manual page documents the format of the magic file as
 used by the
 .BR file (__CSECTION__)
 command, version __VERSION__. The
-.B file
+.BR file
 command identifies the type of a file using,
 among other tests,
 a test for whether the file begins with a certain
@@ -130,7 +130,7 @@ then presumably print that string, by doing
 .IP message
 The message to be printed if the comparison succeeds.  If the string
 contains a
-.BR printf (3S)
+.BR printf (3)
 format specification, the value from the file (with any specified masking
 performed) is printed using the message as the format string.
 .PP
@@ -219,4 +219,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.17 2001/08/07 15:38:42 christos Exp $
+.\" @(#)$Id: magic.man,v 1.18 2002/05/16 18:45:56 christos Exp $

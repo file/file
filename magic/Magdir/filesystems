@@ -25,7 +25,12 @@
 >512    belong&077777777	0600407	\b, boot block present
 0x1FE	leshort	0xAA55			x86 boot sector
 >2	string	OSBS			\b, OS/BS MBR
+# J\xf6rg Jenderek <joerg@pcialias.localnet>
 >0x8C	string	Invalid\ partition\ table	\b, MS-DOS MBR
+>0x9D	string	Invalid\ partition\ table	\b, DR-DOS MBR, version 7.01 to 7.03
+>0x10F	string	Ung\201ltige\ Partitionstabelle	\b, MS-DOS MBR, german version 4.10.1998, 4.10.2222
+>0x8B	string	Ung\201ltige\ Partitionstabelle	\b, MS-DOS MBR, german version 5.00 to 4.00.950
+>0x145	string	Default:\ F			\b, FREE-DOS MBR
 >0	string	\0\0\0\0		\b, extended partition table
 >0	leshort 0x3CEB			\b, system
 >>3	string	>\0			%s
@@ -40,6 +45,12 @@
 >>>19	leshort		0		
 >>>>32	lelong		x		%d sectors
 >0x200	lelong	0x82564557		\b, BSD disklabel
+
+# Solaris 7 FAT12 floppies J\xf6rg Jenderek <joerg@pcialias.localnet>
+>0	leshort 0x7AEB			\b, system
+>>3	string	>\0			%s
+>>0x36	string	FAT			\b, %s
+>>>0x39	string	12			(%s bit)
 
 # Minix filesystems - Juan Cespedes <cespedes@debian.org>
 0x410	leshort		0x137f		Minix filesystem

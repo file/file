@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.34 2001/08/07 16:01:26 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.35 2002/05/16 18:45:56 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -54,7 +54,7 @@ mdump(m)
 				     "long", "string", "date", "beshort",
 				     "belong", "bedate", "leshort", "lelong",
 				     "ledate", "pstring", "ldate", "beldate",
-				     "leldate" };
+				     "leldate", "regex" };
 	static const char optyp[] = { '@', '&', '|', '^', '+', '-', 
 				      '*', '/', '%' };
 	(void) fputc('[', stderr);
@@ -110,6 +110,7 @@ mdump(m)
 			break;
 		case STRING:
 		case PSTRING:
+		case REGEX:
 			showstr(stderr, m->value.s, -1);
 			break;
 		case DATE:

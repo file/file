@@ -22,7 +22,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.21 2001/10/20 17:44:52 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.22 2002/05/16 18:45:56 christos Exp $")
 #endif
 
 
@@ -57,7 +57,8 @@ static int uncompressgzipped __P((const unsigned char *, unsigned char **,
 #endif
 
 int
-zmagic(buf, nbytes)
+zmagic(fname, buf, nbytes)
+	const char *fname;
 	unsigned char *buf;
 	int nbytes;
 {
@@ -70,10 +71,10 @@ zmagic(buf, nbytes)
 			continue;
 		if (memcmp(buf, compr[i].magic, compr[i].maglen) == 0 &&
 		    (newsize = uncompressbuf(i, buf, &newbuf, nbytes)) != 0) {
-			tryit(newbuf, newsize, 1);
+			tryit(fname, newbuf, newsize, 1);
 			free(newbuf);
 			printf(" (");
-			tryit(buf, nbytes, 0);
+			tryit(fname, buf, nbytes, 0);
 			printf(")");
 			return 1;
 		}

@@ -57,9 +57,11 @@ dnl Checks for headers
 AC_HEADER_STDC
 AC_HEADER_MAJOR
 AC_HEADER_SYS_WAIT
+AC_HEADER_STDINT
 AC_CHECK_HEADERS(fcntl.h locale.h)
 AC_CHECK_HEADERS(sys/mman.h sys/stat.h sys/types.h)
 AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADERS(getopt.h)
 AC_CHECK_HEADERS(locale.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -70,11 +72,9 @@ AC_STRUCT_ST_RDEV
 AC_STRUCT_TIMEZONE_DAYLIGHT
 AC_SYS_LARGEFILE
 
-dnl FIXME: only found in standard headers!
-AC_CHECK_TYPE(uint8_t, unsigned char)
-AC_CHECK_TYPE(uint16_t, unsigned short)
-AC_CHECK_TYPE(uint32_t, unsigned int)
-
+AC_CHECK_TYPE_STDC(uint8_t, unsigned char)
+AC_CHECK_TYPE_STDC(uint16_t, unsigned short)
+AC_CHECK_TYPE_STDC(uint32_t, unsigned int)
 AC_C_LONG_LONG
 if test $ac_cv_c_long_long = yes; then
   long64='unsigned long long';
@@ -82,7 +82,7 @@ else
   long64='unsigned long';
 fi
 dnl This needs a patch to autoconf 2.13 acgeneral.m4
-AC_CHECK_TYPE2(uint64_t, $long64)
+AC_CHECK_TYPE2_STDC(uint64_t, $long64)
 
 AC_CHECK_SIZEOF_STDC_HEADERS(uint8_t, 0)
 AC_CHECK_SIZEOF_STDC_HEADERS(uint16_t, 0)
