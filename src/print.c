@@ -31,7 +31,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.10 1987/11/12 13:00:24 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.11 1992/05/21 16:16:43 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -44,12 +44,16 @@ extern void showstr();
 mdump(m)
 struct magic *m;
 {
-	(void) printf("%d\t%d\t%d\t%c\t",
+	(void) printf("%d\t%d\t%d\t%s%c\t",
 		m->contflag,
 		m->offset,
 		m->type,
-		m->reln,
+		m->reln & MASK ? "&" : "",
+		m->reln & ~MASK,
 		0);
+	if (m->reln & MASK)
+		(void) printf("%d",m->mask);
+	(void) putchar('\t');
 	if (m->type == STRING)
 		showstr(m->value.s);
 	else
@@ -81,6 +85,10 @@ char *f, *a;
 	int myerrno;
 
 	myerrno = errno;
+
+	/* cuz we use stdout for most, stderr here */
+	(void) fflush(stdout); 
+
 	if (progname != NULL) {
 		(void) fputs(progname, stderr);
 		(void) putc(':', stderr);

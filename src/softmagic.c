@@ -30,7 +30,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/softmagic.c,v 1.9 1991/01/23 13:56:45 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/softmagic.c,v 1.10 1992/05/21 16:16:41 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -72,8 +72,12 @@ unsigned char	*s;
 			while (magic[magindex+1].contflag &&
 				magindex < nmagic) {
 				++magindex;
-				if (mcheck(s, &magic[magindex])){
-					(void) putchar(' ');
+				if (mcheck(s, &magic[magindex])) {
+					/* space if previous printed */
+					if (magic[magindex-1].desc[0]
+					   && (magic[magindex].nospflag == 0)
+					   )
+						(void) putchar(' ');
 					mprint(&magic[magindex],s);
 				}
 			}
@@ -96,28 +100,29 @@ struct magic *m;
 unsigned char *s;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
-	register long v;
 	char *pp, *strchr();
 
-	if (m->type == STRING) {
+  	switch (m->type) {
+  	case BYTE:
+ 		(void) printf(m->desc,
+ 			      (m->reln & MASK) ? p->b & m->mask : p->b);
+  		break;
+  	case SHORT:
+ 		(void) printf(m->desc,
+ 			      (m->reln & MASK) ? p->h & m->mask : p->h);
+  		break;
+  	case LONG:
+ 		(void) printf(m->desc,
+ 			      (m->reln & MASK) ? p->l & m->mask : p->l);
+  		break;
+  	case STRING:
 		if ((pp=strchr(p->s, '\n')) != NULL)
 			*pp = '\0';
 		(void) printf(m->desc, p->s);
-	} else {
-		switch (m->type) {
-		case BYTE:
-			v = p->b; break;
-		case SHORT:
-			v = p->h; break;
-		case LONG:
-			v = p->l; break;
-		default:
-			warning("invalid m->type (%d) in mprint()", m->type);
-			v = 0L;
-		}
-		if (m->mask != 0)
-			v &= m->mask;
-		(void) printf(m->desc, v);
+		break;
+	default:
+		warning("invalid m->type (%d) in mprint()", m->type);
+		break;
 	}
 }
 
@@ -128,12 +133,19 @@ struct magic *m;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
 	register long l = m->value.l;
+	register long mask = m->mask;
 	register long v;
 
 	if (debug) {
 		(void) printf("mcheck: %10.10s ", s);
 		mdump(m);
 	}
+
+	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
+		printf("BOINK");
+		return 1;
+	}
+
 	switch (m->type) {
 	case BYTE:
 		v = p->b; break;
@@ -167,6 +179,11 @@ struct magic *m;
 		v &= m->mask;
 
 	switch (m->reln) {
+	case 'x':
+		return 1;
+	case '!':
+	case '^':
+		return v != l;
 	case '=':
 		return v == l;
 	case '>':
@@ -175,10 +192,12 @@ struct magic *m;
 		return v < l;
 	case '&':
 		return (v & l) == l;
-	case '^':
-		return (v & l) != l;
-	case 'x':
-		return 1;
+	case MASK | '=':
+		return (v & mask) == l;
+	case MASK | '>':
+		return (v & mask) > l;
+	case MASK | '<':
+		return (v & mask) < l;
 	default:
 		warning("mcheck: can't happen: invalid relation %d", m->reln);
 		return 0;
