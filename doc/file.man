@@ -39,7 +39,7 @@ meaning anything else (data is usually `binary' or non-printable).
 Exceptions are well-known file formats (core files, tar archives)
 that are known to contain binary data.
 When modifying the file
-.I /etc/magic
+.I __MAGIC__
 or the program itself, 
 .B "preserve these keywords" .
 People depend on knowing that all the readable files in a directory
@@ -74,7 +74,7 @@ The concept of `magic number' has been applied by extension to data files.
 Any file with some invariant identifier at a small fixed
 offset into the file can usually be described in this way.
 The information in these files is read from the magic file
-.I /etc/magic .
+.I __MAGIC__.
 .PP
 If an argument appears to be an
 .SM ASCII 
@@ -125,10 +125,10 @@ The
 .B \-L
 option causes symlinks to be followed, as the like-named option in ls(1).
 .SH FILES
-.I /etc/magic
+.I __MAGIC__
 \- default list of magic numbers
 .SH SEE ALSO
-.IR Magic (FILES)
+.IR magic (__SECTION__)
 \- description of magic file format.
 .br
 .IR Strings (1), " od" (1)
@@ -176,7 +176,7 @@ If your old
 command uses a magic file,
 keep the old magic file around for comparison purposes
 (rename it to 
-.IR /etc/magic.orig ).
+.IR __MAGIC__.orig ).
 .SH HISTORY
 There has been a 
 .I file
@@ -203,10 +203,8 @@ postal address: P.O. Box 603, Station F, Toronto, Ontario, CANADA M4Y 2L8.
 Altered by Rob McMahon, cudcv@warwick.ac.uk, 1989, to extend the `&' operator
 from simple `x&y != 0' to `x&y op z'.
 .PP
-.I Strtok.c
-and
-.I getopt.c
-written by and copyright by Henry Spencer, utzoo!henry.
+Changes by Ian Darwin and various authors including
+Christos Zoulos (christos@ee.cornell.edu), 1990-1992.
 .PP
 This software is not subject to any license of the American Telephone
 and Telegraph Company or of the Regents of the University of California.
@@ -244,7 +242,7 @@ were written by John Gilmore from his public-domain
 .I tar
 program, and are not covered by the above restrictions.
 .SH BUGS
-There must be a way to automate the construction of the Magic
+There must be a better way to automate the construction of the Magic
 file from all the glop in magdir. What is it?
 .PP
 .I File
