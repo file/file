@@ -50,7 +50,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.39 2004/12/13 20:20:48 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.40 2004/12/20 19:48:59 christos Exp $")
 #endif
 
 
@@ -314,9 +314,6 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 	int fdin[2], fdout[2];
 	int r;
 
-	/* The buffer is NUL terminated, and we don't need that. */
-	n--;
-	 
 #ifdef HAVE_LIBZ
 	if (method == 2)
 		return uncompressgzipped(ms, old, newch, n);
