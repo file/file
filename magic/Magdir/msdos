@@ -225,6 +225,8 @@
 
 #ico files
 0	string	\102\101\050\000\000\000\056\000\000\000\000\000\000\000	Icon for ms-windows
+
+# Windows icons (Ian Springer <ips@fpk.hp.com>)
 0	string	\000\000\001\000	ms-windows icon resource
 >4	byte	1			- 1 icon
 >4	byte	>1			- %d icons
