@@ -114,7 +114,7 @@ DATA =  $(data_DATA)
 
 DIST_COMMON =  README ./stamp-h.in Makefile.am Makefile.in acconfig.h \
 acinclude.m4 aclocal.m4 config.h.in configure configure.in install-sh \
-missing mkinstalldirs
+mkinstalldirs
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -417,7 +417,7 @@ maintainer-clean-depend:
 #	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
 #	    >> .deps/$(*F).P; \
 #	rm .deps/$(*F).pp
-#
+
 #%.lo: %.c
 #	@echo '$(LTCOMPILE) -c $<'; \
 #	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
