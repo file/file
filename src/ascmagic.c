@@ -36,7 +36,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.10 1992/09/08 15:36:39 ian Exp $";
+	"@(#)$Id: ascmagic.c,v 1.11 1992/09/11 10:08:52 ian Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -49,6 +49,7 @@ int nbytes;	/* size actually read */
 {
 	int i, isblock, has_escapes = 0;
 	unsigned char *s;
+	char nbuf[HOWMANY];
 	char *token;
 	register struct names *p;
 
@@ -77,7 +78,8 @@ int nbytes;	/* size actually read */
 	}
 
 	/* look for tokens from names.h - this is expensive! */
-	s = buf;
+	/* make a copy of the buffer here because strtok() will destroy it */
+	s = (unsigned char*) memcpy(nbuf, buf, HOWMANY);
 	while ((token = strtok((char*)s, " \t\n\r\f")) != NULL) {
 		s = NULL;	/* make strtok() keep on tokin' */
 		for (p = names; p < names + NNAMES; p++) {
