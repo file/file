@@ -86,13 +86,14 @@ char *s;
 	}
 }
 
+int
 mcheck(s, m)
 char	*s;
 struct magic *m;
 {
-	register char reln = m->reln;
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
 	register long l = m->value.l;
+	register long v;
 
 	if (debug) {
 		(void) printf("mcheck: %10.10s ", s);
@@ -100,49 +101,42 @@ struct magic *m;
 	}
 	switch (m->type) {
 	case BYTE:
-		if (reln == '>')
-			return p->b > l;
-		if (reln == '&')
-			return l & p->b;
-		if (reln == '=')
-			return l == p->b;
-		warning("mcheck: can't happen: invalid BYTE reln %d", reln);
-		return 0;
+		v = p->b; break;
 	case SHORT:
-		if (reln == '=')
-			return l == p->h;
-		if (reln == '>')
-			return p->h > l;
-		if (reln == '&')
-			return l & p->h;
-		warning("mcheck: can't happen: invalid SHORT reln %d", reln);
-		return 0;
+		v = p->h; break;
 	case LONG:
-		if (reln == '=')
-			return l == p->l;
-		if (reln == '>')
-			return p->l > l;
-		if (reln == '&')
-			return l & p->l;
-		warning("mcheck: can't happen: invalid LONG reln %d", reln);
-		return 0;
+		v = p->l; break;
 	case STRING:
-		if (reln == '=')
-			return strncmp(m->value.s, p->s,
-				strlen(m->value.s)) == 0;
-		if (reln == '>')
-			if (strcmp(m->value.s, "0") == 0) /* special case! */
-				return *s > '\0';
-			else
-				return strncmp(m->value.s, p->s,
-					strlen(m->value.s)) > 0;
-		warning("mcheck: can't happen: invalid STRING reln %c(0%o)",
-			reln, reln);
-		return 0;
+		l = 0;
+		/* What we want here is:
+		 * v = strncmp(m->value.s, p->s, m->vallen);
+		 * but ignoring any nulls.  bcmp doesn't give -/+/0.
+		 */
+		{
+			register unsigned char *a = (unsigned char*)m->value.s;
+			register unsigned char *b = (unsigned char*)p->s;
+			register int len = m->vallen;
+
+			while (--len >= 0)
+				if (0 != (v = *b++ - *a++)) break;
+		}
+		break;
 	default:
 		warning("invalid type %d in mcheck()", m->type);
 		return 0;
 	}
+
+	switch (m->reln) {
+	case '=':
+		return v == l;
+	case '>':
+		return v > l;
+	case '<':
+		return v < l;
+	case '&':
+		return v & l;
+	default:
+		warning("mcheck: can't happen: invalid relation %d", m->reln);
+		return 0;
+	}
 }
-
-
