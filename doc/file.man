@@ -1,5 +1,5 @@
 .TH FILE 1 "Copyright but distributable"
-.\# $Id: file.man,v 1.18 1992/09/11 11:50:17 ian Exp $
+.\# $Id: file.man,v 1.19 1992/09/11 13:16:52 ian Exp $
 .SH NAME
 .I file
 \- determine file type
@@ -304,5 +304,7 @@ byte-swapping done, to avoid having to figure out the byte-swapped values
 when constructing the magic file.
 Of course this will run more slowly, so it should probably be
 an option (-a?).
+.PP
+This program is slower than some vendors' file commands.
 .PP
 This manual page, and particularly this section, is too long.
