@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.31 2003/03/24 15:01:39 christos Exp $
+@(#) $Id: README,v 1.32 2003/03/29 21:40:53 ian Exp $
 
 This is Release 4.x of Ian Darwin's (copyright but distributable)
 file(1) command. This version is the standard "file" command for Linux,
@@ -89,11 +89,10 @@ E-mail: christos@astron.com
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
 
-Parts of this software were developed at SoftQuad Inc., 56 Aberfoyle
-Cres, # 810, Toronto, Ontario CANADA M8X 2W4.  Phone: 416-239-4801 or
-800-387-2777. Email: mail@sq.com.  Call for information on SGML editing
-and browsing, Unix text processing, and customised products on Unix,
-DOS and Mac.
+Parts of this software were developed at SoftQuad Inc., developers
+of SGML/HTML/XML publishing software, in Toronto, Canada.
+SoftQuad was swallowed up by Corel in 2002
+and does not exist any longer.
 
 From: Kees Zeelenberg
 
