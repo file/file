@@ -1,12 +1,15 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		13
+#define	patchlevel		14
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.13 1994/01/21 01:27:01 christos Exp $
+ * $Id: patchlevel.h,v 1.14 1994/05/03 17:58:23 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.13  1994/01/21 01:27:01  christos
+ * Revision 1.14  1994/05/03 17:58:23  christos
+ * changes from mycroft@gnu.ai.mit.edu (Charles Hannum) for unsigned
+ *
+ * Revision 1.13  1994/01/21  01:27:01  christos
  * Fixed null termination bug from Don Seeley at BSDI in ascmagic.c
  *
  * Revision 1.12  1993/10/27  20:59:05  christos

@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.18 1993/10/27 20:59:05 christos Exp $
+ * @(#)$Id: file.h,v 1.19 1994/05/03 17:58:23 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -34,6 +34,7 @@
 struct magic {
 	short flag;		
 #define INDIR	1		/* if '>(...)' appears,  */
+#define	UNSIGNED 2		/* comparison is unsigned */
 	short cont_level;	/* level of ">" */
 	struct {
 		char type;	/* byte short long */
@@ -55,14 +56,14 @@ struct magic {
 #define				LELONG	11
 #define				LEDATE	12
 	union VALUETYPE {
-		char b;
-		short h;
-		long l;
+		unsigned char b;
+		unsigned short h;
+		unsigned long l;
 		char s[MAXstring];
 		unsigned char hs[2];	/* 2 bytes of a fixed-endian "short" */
 		unsigned char hl[4];	/* 2 bytes of a fixed-endian "long" */
 	} value;		/* either number or string */
-	long mask;		/* mask before comparison with value */
+	unsigned long mask;	/* mask before comparison with value */
 	char nospflag;		/* supress space character */
 	char desc[MAXDESC];	/* description */
 };
@@ -94,6 +95,7 @@ extern int   softmagic		__P((unsigned char *, int));
 extern void  tryit		__P((unsigned char *, int, int));
 extern int   zmagic		__P((unsigned char *, int));
 extern void  ckfprintf		__P((FILE *, const char *, ...));
+extern unsigned long signextend	__P((struct magic *, unsigned long));
 
 
 
