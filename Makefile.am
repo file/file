@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = foreign no-dependencies
 
 bin_PROGRAMS = file
 
-data_DATA = magic magic.mime magic.mgc
+data_DATA = magic magic.mime magic.mgc magic.mime.mgc
 
 MAGIC	 = @datadir@/magic
 CPPFLAGS = -DMAGIC='"$(MAGIC)"'
@@ -23,7 +23,7 @@ file_SOURCES = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 EXTRA_DIST = LEGAL.NOTICE MAINT PORTING Makefile.std magic2mime \
 	Localstuff Header $(magic_FRAGMENTS) file.man magic.man
 
-CLEANFILES = $(man_MANS) magic magic.mgc
+CLEANFILES = $(man_MANS) magic magic.mgc magic.mime.mgc
 
 magic: Header Localstuff $(magic_FRAGMENTS)
 	cat $(srcdir)/Header $(srcdir)/Localstuff > $@
@@ -38,6 +38,9 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 
 magic.mgc: magic file
 	./file -C -m magic
+
+magic.mime.mgc: magic.mime file
+	./file -C -m magic.mime
 
 file.1:	Makefile file.man
 	@rm -f $@
