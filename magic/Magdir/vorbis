@@ -17,11 +17,11 @@
 ##>4		byte		0		revision 0
 >4		byte		0
 ##>>14		lelong		x		(Serial %lX)
-# --- First vorbis packet - general header ---
->>28		string		\x01vorbis	\b, Vorbis audio,
 # non-Vorbis content: FLAC (Free Loss-lessy Audio Codec,
 # http://flac.sourceforge.net)
 >>28		string		fLaC		\b, FLAC audio
+# --- First vorbis packet - general header ---
+>>28		string		\x01vorbis	\b, Vorbis audio,
 >>>35		lelong		!0		UNKNOWN VERSION %lu,
 ##>>>35		lelong		0		version 0,
 >>>35		lelong		0

@@ -31,3 +31,6 @@
 >>30	string	       \026\105				   DGN File
 >4	string	       \030\000\000			   CIT File
 
+# AutoCad, from Nahuel Greco
+0	string AC1012	AutoCad (release 12)
+0	string AC1014	AutoCad (release 14)

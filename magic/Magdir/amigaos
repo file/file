@@ -33,9 +33,10 @@
 0	string		ARP.		The Holy Noise Module sound file
 0	string		BeEp\0		JamCracker Module sound file
 0	string		COSO\0		Hippel-COSO Module sound file
-26	string		V.3		Brian Postma's Soundmon Module sound file v3
-26	string		BPSM		Brian Postma's Soundmon Module sound file v3
-26	string		V.2		Brian Postma's Soundmon Module sound file v2
+# Too simple (short, pure ASCII, deep), MPi
+#26	string		V.3		Brian Postma's Soundmon Module sound file v3
+#26	string		BPSM		Brian Postma's Soundmon Module sound file v3
+#26	string		V.2		Brian Postma's Soundmon Module sound file v2
 
 # The following are from: "Stefan A. Haubenthal" <polluks@web.de>
 0	beshort		0x0f00		AmigaOS bitmap font

@@ -181,9 +181,6 @@
 # Help files
 0	string	?_\3\0		MS Windows Help Data
 
-# Microsoft CAB distribution format  Dale Worley <root@dworley.ny.mediaone.net>
-0	string		MSCF\000\000\000\000	Microsoft CAB file
-
 #  DeIsL1.isu what this is I don't know
 0	string	\161\250\000\000\001\002	DeIsL1.isu whatever that is
 
@@ -239,11 +236,6 @@
 >>8	byte	>0			\b, %d-colors
 
 
-# True Type fonts currently misidentified as raw G3 data
-
-0	string	\000\001\000\000\000 MS-Windows true type font .ttf
-
-
 # .chr files
 0	string	PK\010\010BGI	Borland font 
 >4	string	>\0	%s
@@ -279,7 +271,8 @@
 0	string		DCU1		Borland Delphi .DCU file
 0	string		!<spell>	MKS Spell hash list (old format)
 0	string		!<spell2>	MKS Spell hash list
-0	string		AH		Halo(TM) bitmapped font file
+# Too simple - MPi
+#0	string		AH		Halo(TM) bitmapped font file
 0	lelong		0x08086b70	TurboC BGI file
 0	lelong		0x08084b50	TurboC Font file
 
@@ -332,3 +325,36 @@
 >9	pstring		x		'%s'
 0	beshort		0xFB01		QDOS object
 >2	pstring		x		'%s'
+
+#------------------------------------------------------------------------------
+# From Stuart Caie <kyzer@4u.net> (developer of cabextract)
+# Microsoft Cabinet files
+0	string		MSCF\0\0\0\0	Microsoft Cabinet file
+>8	lelong		x		\b, %u bytes
+>28	leshort		1		\b, 1 file
+>28	leshort		>1		\b, %u files
+
+# InstallShield Cabinet files
+0	string		ISc(		InstallShield Cabinet file
+>5	byte&0xf0	=0x60 		version 6,
+>5	byte&0xf0	!0x60 		version 4/5,
+>(12.l+40)	lelong	x		%u files
+
+# Windows CE package files
+0	string		MSCE\0\0\0\0	Microsoft WinCE install header
+>20	lelong		0		\b, architecture-independent
+>20	lelong		103		\b, Hitachi SH3
+>20	lelong		104		\b, Hitachi SH4
+>20	lelong		0xA11		\b, StrongARM
+>20	lelong		4000		\b, MIPS R4000
+>20	lelong		10003		\b, Hitachi SH3
+>20	lelong		10004		\b, Hitachi SH3E
+>20	lelong		10005		\b, Hitachi SH4
+>20	lelong		70001		\b, ARM 7TDMI
+>52	leshort		1 		\b, 1 file
+>52	leshort		>1 		\b, %u files
+>56	leshort		1 		\b, 1 registry entry
+>56	leshort		>1 		\b, %u registry entries
+
+# Outlook Personal Folders
+0	lelong	0x4E444221	Microsoft Outlook binary email folder

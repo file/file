@@ -164,10 +164,11 @@
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
 >>28	leshort		x		%d
-0	string		IC		PC icon data
-0	string		PI		PC pointer image data
-0	string		CI		PC color icon data
-0	string		CP		PC color pointer image data
+# Too simple - MPi
+#0	string		IC		PC icon data
+#0	string		PI		PC pointer image data
+#0	string		CI		PC color icon data
+#0	string		CP		PC color pointer image data
 # Conflicts with other entries [BABYL]
 #0	string		BA		PC bitmap array data
 

@@ -65,7 +65,7 @@
 #   annotations.
 # For other versions, just outputs version.
 #
-0x3C		string		zTXT		A GutenPalm zTXT e-book
+60		string		zTXT		A GutenPalm zTXT e-book
 >0		string		>\0		"%s"
 >(0x4E.L)	byte		0
 >>(0x4E.L+1)	byte		x		(v0.%02d)
@@ -81,7 +81,11 @@
 >>(0x4E.L+1)	byte		x		%02d)
 
 # Palm OS .prc file types
-0x3C		string		libr		Palm OS dynamic library data
+60		string		libr		Palm OS dynamic library data
 >0		string		>\0		"%s"
-0x3C		string		ptch		Palm OS operating system patch data
+60		string		ptch		Palm OS operating system patch data
 >0		string		>\0		"%s"
+
+# Mobipocket (www.mobipocket.com), donated by Carl Witty
+60	string	                BOOKMOBI	Mobipocket E-book
+>0	string                  >\0             "%s"

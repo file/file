@@ -332,3 +332,6 @@
 >4	string  PPCBoot
 >>12	string  x		version %s
 
+# JFFS2 file system
+0       leshort         0x1984                  Linux old jffs2 filesystem data little endian
+0       lelong          0xe0011985              Linux jffs2 filesystem data little endian

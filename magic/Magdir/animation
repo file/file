@@ -121,7 +121,7 @@
 #From: Johan Gade <jgade@diku.dk>
 
 # MPEG-4 Advanced Audio Coding (AAC) file (perhaps also MPEG-2 ACC?)
-16	string		M4A		MPEG-4 Advanced Audio Coding file (ACC)
+16	string		M4A		MPEG-4 Advanced Audio Coding file (AAC)
 
 
 # FLI animation format
@@ -225,3 +225,16 @@
 # VRML (Virtual Reality Modelling Language)
 0       string/b        #VRML\ V1.0\ ascii	VRML 1 file
 0	string/b	#VRML\ V2.0\ utf8	ISO/IEC 14772 VRML 97 file
+
+#---------------------------------------------------------------------------
+# HVQM4: compressed movie format designed by Hudson for Nintendo GameCube
+# From Mark Sheppard <msheppard@climax.co.uk>, 2002-10-03
+#
+0	string		HVQM4		%s
+>6	string		>\0		v%s
+>0	byte		x		GameCube movie,
+>0x34	ubeshort	x		%d x
+>0x36	ubeshort	x		%d,
+>0x26	ubeshort	x		%dµs,
+>0x42	ubeshort	0		no audio
+>0x42	ubeshort	>0		%dHz audio
