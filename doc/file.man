@@ -120,7 +120,7 @@ to test the standard input, use ``-'' as a filename argument.
 .I /etc/magic
 \- default list of magic numbers
 .SH SEE ALSO
-.IR File (5)
+.IR Magic (FILES)
 \- description of magic file format.
 .br
 .IR Strings (1), " od" (1)
