@@ -785,3 +785,6 @@
 >>0xbc  string          DIVX            video/x-DivX
 >8      string          WAVE            audio/x-wav
 
+# From: stephane.loeuillet@tiscali.f
+# http://www.djvuzone.org/
+0	string		AT&TFORM	image/x.djvu

@@ -496,8 +496,21 @@
 # Bio-Rad .PIC is an image format used by microscope control systems
 # and related image processing software used by biologists.
 # From: Vebjorn Ljosa <vebjorn@ljosa.com>
-54		leshort 12345		Bio-Rad .PIC Image File
->0		leshort >0		%hd x
->2		leshort >0		%hd,
->4		leshort =1		1 image in file
->4		leshort >1		%hd images in file
+54	leshort 12345		Bio-Rad .PIC Image File
+>0	leshort >0		%hd x
+>2	leshort >0		%hd,
+>4	leshort =1		1 image in file
+>4	leshort >1		%hd images in file
+
+# From Jan "Yenya" Kasprzak <kas@fi.muni.cz>
+# The description of *.mrw format can be found at
+# http://www.dalibor.cz/minolta/raw_file_format.htm
+0	string	\000MRM			Minolta Dimage camera raw image data
+
+# From: stephane.loeuillet@tiscali.f
+# http://www.djvuzone.org/
+0	string	AT&TFORM		DjVu Image file
+
+# From: Jason Bacon <bacon@smithers.neuro.mcw.edu>
+0	beshort	0x3020			character Computer Graphics Metafile
+

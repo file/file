@@ -355,3 +355,6 @@
 >>>>0xa30	string		x		fourth type: %s,
 >>>>0xa10	string		x		name: %s,
 >>>>0xa54	belong		x		number of blocks: %d
+
+# From: Remi Mommsen <mommsen@slac.stanford.edu>
+0		string		BOMStore	Mac OS X bill of materials (BOM) fil
