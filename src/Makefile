@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.43 1994/05/03 17:57:59 christos Exp $
+# @(#)$Id: Makefile,v 1.44 1995/01/21 21:03:35 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -91,7 +91,7 @@ try:		all $(OFILE)
 		what ./file >lastnocore
 
 file:		$(OBJS)
-		$(CC) $(CFLAGS) $(OBJS) -o $@
+		$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@
 lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS) | tee $@
 magic:		Magdir
@@ -119,12 +119,14 @@ clobber:
 
 magic.${MANFEXT} :	Makefile magic.man
 		@rm -f $@
-		sed -e s@__SECTION__@${MANFEXT}@g \
+		sed -e s@__CSECTION__@${MANCEXT}@g \
+		    -e s@__FSECTION__@${MANFEXT}@g \
 		    -e s@__MAGIC__@${MAGIC}@g magic.man > $@
 
 file.${MANCEXT} :	Makefile file.man
 		@rm -f $@
-		sed -e s@__SECTION__@${MANCEXT}@g \
+		sed -e s@__CSECTION__@${MANCEXT}@g \
+		    -e s@__FSECTION__@${MANFEXT}@g \
 		    -e s@__MAGIC__@${MAGIC}@g file.man > $@
 
 send:		dist

@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.29 1993/10/27 20:59:05 christos Exp $";
+	"@(#)$Id: file.c,v 1.30 1995/01/21 21:03:35 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -36,15 +36,20 @@ static char *moduleid =
 #include <sys/param.h>	/* for MAXPATHLEN */
 #include <sys/stat.h>
 #include <fcntl.h>	/* for open() */
+#if (__COHERENT__ >= 0x420)
+#include <sys/utime.h>
+#else
 #include <utime.h>
+#endif
 #include <unistd.h>	/* for read() */
 
+#include "patchlevel.h"
 #include "file.h"
 
 #ifdef S_IFLNK
-# define USAGE  "Usage: %s [-czL] [-f namefile] [-m magicfile] file...\n"
+# define USAGE  "Usage: %s [-vczL] [-f namefile] [-m magicfile] file...\n"
 #else
-# define USAGE  "Usage: %s [-cz] [-f namefile] [-m magicfile] file...\n"
+# define USAGE  "Usage: %s [-vcz] [-f namefile] [-m magicfile] file...\n"
 #endif
 
 #ifndef MAGIC
@@ -78,15 +83,19 @@ int argc;
 char *argv[];
 {
 	int c;
-	int check = 0, didsomefiles = 0, errflg = 0, ret = 0;
+	int check = 0, didsomefiles = 0, errflg = 0, ret = 0, app = 0;
 
 	if ((progname = strrchr(argv[0], '/')) != NULL)
 		progname++;
 	else
 		progname = argv[0];
 
-	while ((c = getopt(argc, argv, "cdf:Lm:z")) != EOF)
+	while ((c = getopt(argc, argv, "vcdf:Lm:z")) != EOF)
 		switch (c) {
+		case 'v':
+			(void) fprintf(stdout, "%s-%d.%d\n", progname,
+				       FILE_VERSION_MAJOR, patchlevel);
+			return 1;
 		case 'c':
 			++check;
 			break;
@@ -94,6 +103,12 @@ char *argv[];
 			++debug;
 			break;
 		case 'f':
+			if (!app) {
+				ret = apprentice(magicfile, check);
+				if (check)
+					exit(ret);
+				app = 1;
+			}
 			unwrap(optarg);
 			++didsomefiles;
 			break;
@@ -113,14 +128,18 @@ char *argv[];
 			errflg++;
 			break;
 		}
+
 	if (errflg) {
 		(void) fprintf(stderr, USAGE, progname);
 		exit(2);
 	}
 
-	ret = apprentice(magicfile, check);
-	if (check)
-		exit(ret);
+	if (!app) {
+		ret = apprentice(magicfile, check);
+		if (check)
+			exit(ret);
+		app = 1;
+	}
 
 	if (optind == argc) {
 		if (!didsomefiles) {
