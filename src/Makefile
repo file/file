@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.19 1991/01/23 13:30:21 ian Exp $
+# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.20 1991/01/23 13:33:18 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -94,7 +94,7 @@ install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 		cp magic.4	$(MANFDIR)/magic.$(MANFEXT)
 
 clean:
-		rm -f *.o file magic lint.out
+		rm -f *.o core file magic lint
 		(cd tst; make clean)
 
 dist:		$(ALLSRC)
