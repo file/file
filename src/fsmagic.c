@@ -42,7 +42,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.6 1987/09/16 14:45:07 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.7 1987/09/23 21:14:28 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -69,8 +69,8 @@ char *fn;
 			return -1;
 		}
 
-	if (statbuf.st_mode & S_ISUID) ckfputs("suid ", stdout);
-	if (statbuf.st_mode & S_ISGID) ckfputs("sgid ", stdout);
+	if (statbuf.st_mode & S_ISUID) ckfputs("setuid ", stdout);
+	if (statbuf.st_mode & S_ISGID) ckfputs("setgid ", stdout);
 	if (statbuf.st_mode & S_ISVTX) ckfputs("sticky ", stdout);
 	
 	switch (statbuf.st_mode & S_IFMT) {
