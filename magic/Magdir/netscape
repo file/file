@@ -1,0 +1,11 @@
+
+#------------------------------------------------------------------------------
+# netscape:  file(1) magic for Netscape files
+# "H. Nanosecond" <aldomel@ix.netcom.com>
+#
+#This is files ending in .art, FIXME add more rules
+0       string          JG\004\016\0\0\0\0      ART
+# Netscape makes summaries of Mail and newsgroups files (DOS only I think)
+#FIXME, add more rules
+0       string          #\ Netscape\ folder\ cache	Netscape folder cache
+0       string		\000\036\204\220\000 Netscape folder cache
