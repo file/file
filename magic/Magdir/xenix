@@ -11,7 +11,9 @@
 # XXX - "x.out" collides with PDP-11 archives....
 #
 0	string		core		core file (Xenix)
-0	byte		0x80		8086 relocatable (Microsoft)
+# The following entry is really not specific enough and conflicts with
+# many others
+#0	byte		0x80		8086 relocatable (Microsoft)
 0	leshort		0xff65		x.out
 >2	string		__.SYMDEF	 randomized
 >0	byte		x		archive
