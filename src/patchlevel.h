@@ -3,17 +3,20 @@
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.10 1993/09/23 21:56:23 christos Exp $
+ * $Id: patchlevel.h,v 1.11 1993/09/24 18:49:06 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.10  1993/09/23 21:56:23  christos
+ * Revision 1.11  1993/09/24 18:49:06  christos
+ * Fixed small bug in softmagic.c introduced by
+ * copying the data to be examined out of the input
+ * buffer. Changed the Makefile to use sed to create
+ * the correct man pages.
+ *
+ * Revision 1.10  1993/09/23  21:56:23  christos
  * Passed purify. Fixed indirections. Fixed byte order printing.
  * Fixed segmentation faults caused by referencing past the end
  * of the magic buffer. Fixed bus errors caused by referencing
  * unaligned shorts or longs.
- *
- * Revision 1.9  1993/03/24  14:23:40  ian
- * Batch of minor changes from several contributors.
  *
  * Revision 1.9  1993/03/24  14:23:40  ian
  * Batch of minor changes from several contributors.
