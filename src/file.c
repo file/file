@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.74 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.75 2003/03/26 16:31:19 christos Exp $")
 #endif	/* lint */
 
 
@@ -364,12 +364,13 @@ private void
 process(const char *inname, int wid)
 {
 	const char *type;
+	int std_in = strcmp(inname, "-") == 0;
 
 	if (wid > 0 && !bflag)
-		(void) printf("%s%c%*s ", inname, separator,
-		    (int) (nopad ? 0 : (wid - strlen(inname))), "");
+		(void) printf("%s%c%*s ", std_in ? "/dev/stdin" : inname,
+		    separator, (int) (nopad ? 0 : (wid - strlen(inname))), "");
 
-	type = magic_file(magic, strcmp(inname, "-") == 0 ? NULL : inname);
+	type = magic_file(magic, std_in ? NULL : inname);
 	if (type == NULL)
 		printf("ERROR: %s\n", magic_error(magic));
 	else
