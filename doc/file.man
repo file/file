@@ -152,6 +152,14 @@ For example,
 in an existing magic file would have to be changed to
 .br
 >10	string	language\e impress	(imPRESS data)
+.PP
+The Sun Microsystems implementation of System V compatibility
+includes a file(1) command that has some extentions.
+My version differs from Sun's only in minor ways.
+It includes the extension of the `&' operator, used as,
+for example,
+.br
+>16	long&0x7fffffff	>0		not stripped
 .SH MAGIC DIRECTORY
 The magic file entries have been collected from various sources,
 mainly USENET, and contributed by various authors.
@@ -191,6 +199,9 @@ Copyright (c) Ian F. Darwin,  1986 and 1987.
 Written by Ian F. Darwin, UUCP address {utzoo | ihnp4}!darwin!ian,
 Internet address ian@sq.com,
 postal address: P.O. Box 603, Station F, Toronto, Ontario, CANADA M4Y 2L8.
+.PP
+Altered by Rob McMahon, cudcv@warwick.ac.uk, 1989, to extend the `&' operator
+from simple `x&y != 0' to `x&y op z'.
 .PP
 .I Strtok.c
 and
