@@ -1,3 +1,7 @@
+2003-08-10 10:25  Christos Zoulas  <christos@zoulas.com>
+
+	* fix unmapping'ing of mmaped files.
+
 2003-07-10 12:03  Christos Zoulas  <christos@zoulas.com>
 
 	* don't exit with -1 on error; always exit 1 (Marty Leisner)
