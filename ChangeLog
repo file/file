@@ -1,3 +1,8 @@
+2003-09-12 15:09  Christos Zoulas  <christos@zoulas.com>
+
+	* update magic files.
+	* remove largefile support from file.h; it breaks things on most OS's
+
 2003-08-10 10:25  Christos Zoulas  <christos@zoulas.com>
 
 	* fix unmapping'ing of mmaped files.
