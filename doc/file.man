@@ -98,12 +98,13 @@ Use
 .B -m
 .I file
 to specify an alternate file of magic numbers.
-The option
+.PP
+The
 .B -c
-causes a checking printout of the parsed form of the magic file.
+option causes a checking printout of the parsed form of the magic file.
 This is usually used in conjunction with 
 .B -m
-to debug a new magic file.
+to debug a new magic file before installing it.
 .PP
 The 
 .B -f
