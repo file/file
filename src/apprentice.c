@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.62 2003/09/12 19:08:48 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.63 2003/09/12 19:19:22 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -265,7 +265,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 
 	/* parse it */
 	if (action == FILE_CHECK)	/* print silly verbose header for USG compat. */
-		(void) printf("%s\n", hdr);
+		(void)fprintf(stderr, "%s\n", hdr);
 
 	for (lineno = 1; fgets(line, BUFSIZ, f) != NULL; lineno++) {
 		if (line[0]=='#')	/* comment, do not parse */
