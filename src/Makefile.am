@@ -1,4 +1,4 @@
-include "../Makefile.inc"
+MAGIC	 = $(pkgdatadir)/magic
 lib_LTLIBRARIES = libmagic.la
 include_HEADERS = magic.h
 
