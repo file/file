@@ -34,10 +34,11 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.15 1988/03/23 11:42:16 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.16 1990/10/03 17:49:09 ian Exp $";
 #endif	/* lint */
 extern char *ckfmsg;
 int 	debug = 0, 	/* huh? */
+	followLinks = 0, /* follow Symlinks (BSD only) */
 	nbytes = 0,	/* number of bytes read from a datafile */
 	nmagic = 0;	/* number of valid magic[]s */
 FILE *efopen();
@@ -67,7 +68,7 @@ char *argv[];
 
 	progname = argv[0];
 
-	while ((c = getopt(argc, argv, "cdf:m:")) != EOF)
+	while ((c = getopt(argc, argv, "cdf:Lm:")) != EOF)
 		switch (c) {
 		case 'c':
 			++check;
@@ -78,6 +79,9 @@ char *argv[];
 		case 'f':
 			unwrap(optarg);
 			++didsomefiles;
+			break;
+		case 'L':
+			++followLinks;
 			break;
 		case 'm':
 			magicfile = optarg;
@@ -104,7 +108,7 @@ char *argv[];
 	}
 	else
 		for (; optind < argc; optind++)
-			process(argv[optind]);
+			process(argv[optind], 1);
 
 	exit(0);
 }
@@ -125,7 +129,7 @@ char *fn;
 	else {
 		while (fgets(buf, FILENAMELEN, f) != NULL) {
 			buf[strlen(buf)-1] = '\0';
-			process(buf);
+			process(buf, 1);
 		}
 		(void) fclose(f);
 	}
@@ -134,8 +138,9 @@ char *fn;
 /*
  * process - process input file
  */
-process(inname)
+process(inname, top)
 char	*inname;
+int top;		/* true if called from top level */
 {
 	int	fd;
 	char	buf[HOWMANY];

@@ -42,7 +42,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.8 1988/02/28 10:50:50 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.9 1990/10/03 17:48:40 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -50,21 +50,26 @@ extern char *ckfmsg, *magicfile;
 extern int debug;
 extern FILE *efopen();
 
+
 fsmagic(fn)
 char *fn;
 {
 	extern struct stat statbuf;
+	extern followLinks;
+	int ret = 0;
 
 	/*
 	 * Fstat is cheaper but fails for files you don't have read perms on.
 	 * On 4.2BSD and similar systems, use lstat() so identify symlinks.
 	 */
 #ifdef	S_IFLNK
-	if (lstat(fn, &statbuf) <0)
-#else
-	if (stat(fn, &statbuf) <0)
+	if (!followLinks)
+		ret = lstat(fn, &statbuf);
+	else
 #endif
-		{
+	ret = stat(fn, &statbuf);
+
+	if (ret) {
 			warning("can't stat");
 			return -1;
 		}
@@ -93,8 +98,23 @@ char *fn;
 #endif
 #ifdef	S_IFLNK
 	case S_IFLNK:
-		ckfputs("symbolic link", stdout);
-		readsymbolic(fn);
+		{
+			char buf[BUFSIZ+4];
+			register int nch;
+
+			if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
+				error("readlink failed");
+				return 0;
+			}
+			buf[nch] = '\0';	/* readlink(2) forgets this */
+			if (followLinks) {
+				process(buf, 0);
+				return 1;
+			} else { /* just print what it points to */
+				ckfputs("symbolic link to", stdout);
+				ckfputs(buf, stdout);
+			}
+		}
 		return 1;
 #endif
 #ifdef	S_IFSOCK
@@ -118,17 +138,3 @@ char *fn;
 	return 0;
 }
 
-#ifdef S_IFLNK
-readsymbolic(fn)
-char *fn;
-{	char buf[BUFSIZ+4];
-	register int cc;
-
-	strcpy(buf, " to ");
-	cc = readlink(fn, &buf[4], BUFSIZ-1);
-	if (cc <= 0)
-		return;
-	buf[cc+4] = '\0';
-	ckfputs(buf, stdout);
-}
-#endif
