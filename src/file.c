@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.28 1993/09/23 21:47:01 christos Exp $";
+	"@(#)$Id: file.c,v 1.29 1993/10/27 20:59:05 christos Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -236,7 +236,7 @@ int wid;
 		ckfputs("empty", stdout);
 	else {
 		buf[nbytes++] = '\0';	/* null-terminate it */
-		tryit(buf, nbytes);
+		tryit(buf, nbytes, zflag);
 	}
 
 	if (inname != stdname) {
@@ -253,21 +253,24 @@ int wid;
 
 
 void
-tryit(buf, nb)
+tryit(buf, nb, zflag)
 unsigned char *buf;
-int nb;
+int nb, zflag;
 {
 	/*
-	 * try tests in /etc/magic (or surrogate magic file)
+	 * Try compression stuff
 	 */
-	if (softmagic(buf, nb) != 1)
-	    /*
-	     * try known keywords, check for ascii-ness too.
-	     */
-	    if (ascmagic(buf, nb) != 1)
+	if (!zflag || zmagic(buf, nb) != 1)
 		/*
-		 * abandon hope, all ye who remain here
+		 * try tests in /etc/magic (or surrogate magic file)
 		 */
-		ckfputs("data", stdout);
+		if (softmagic(buf, nb) != 1)
+			/*
+			 * try known keywords, check for ascii-ness too.
+			 */
+			if (ascmagic(buf, nb) != 1)
+			    /*
+			     * abandon hope, all ye who remain here
+			     */
+			    ckfputs("data", stdout);
 }
-

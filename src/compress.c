@@ -1,8 +1,10 @@
 /*
  * compress routines:
- *	is_compress() returns 0 if uncompressed, number of bits if compressed.
- *	uncompress(old, n, newch) - uncompress old into new, return sizeof new
- * $Id: compress.c,v 1.6 1992/09/08 15:32:17 ian Exp $
+ *	zmagic() - returns 0 if not recognized, uncompresses and prints
+ *		   information if recognized
+ *	uncompress(method, old, n, newch) - uncompress old into new, 
+ *					    using method, return sizeof new
+ * $Id: compress.c,v 1.7 1993/10/27 20:59:05 christos Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,26 +14,58 @@
 
 #include "file.h"
 
-/* Check for compression, return nbits. Algorithm, in magic(4) format:
- * 0       string          \037\235        compressed data
- * >2      byte&0x80       >0              block compressed
- * >2      byte&0x1f       x               %d bits
- */
+static struct {
+   char *magic;
+   int   maglen;
+   char *argv[3];
+   int	 silent;
+} compr[] = {
+    { "\037\235", 2, { "uncompress", "-c", NULL }, 0 },
+    { "\037\213", 2, { "gzip", "-dq", NULL }, 1 },
+#if 0
+    /* XXX pcat does not work, cause I don't know how to make it read stdin */
+    { "\037\036", 2, { "pcat", NULL, NULL }, 0 },
+#endif
+};
+
+static int ncompr = sizeof(compr) / sizeof(compr[0]);
+
+
+static int uncompress __P((int, const unsigned char *, unsigned char **, int));
+
 int
-is_compress(p, b)
-const unsigned char *p;
-int *b;
+zmagic(buf, nbytes)
+unsigned char *buf;
+int nbytes;
 {
+	unsigned char *newbuf;
+	int newsize;
+	int i;
 
-	if (*p != '\037' || *(/*signed*/ char*)(p+1) != '\235')
-		return 0;	/* not compress()ed */
+	for (i = 0; i < ncompr; i++) {
+		if (nbytes < compr[i].maglen)
+			continue;
+		if (memcmp(buf, compr[i].magic,  compr[i].maglen) == 0)
+			break;
+	}
 
-	*b = *(p+2) & 0x80;
-	return *(p+2) & 0x1f;
+	if (i == ncompr)
+		return 0;
+
+	if ((newsize = uncompress(i, buf, &newbuf, nbytes)) != 0) {
+		tryit(newbuf, newsize, 1);
+		free(newbuf);
+		printf(" (");
+		tryit(buf, nbytes, 0);
+		printf(")");
+	}
+	return 1;
 }
 
-int
-uncompress(old, newch, n)
+
+static int
+uncompress(method, old, newch, n)
+int method;
 const unsigned char *old;
 unsigned char **newch;
 int n;
@@ -53,10 +87,12 @@ int n;
 		(void) dup(fdout[1]);
 		(void) close(fdout[0]);
 		(void) close(fdout[1]);
+		if (compr[method].silent)
+		    (void) close(2);
 
-		execlp("uncompress", "uncompress", "-c", NULL);
-		error("could not execute `uncompress' (%s).\n", 
-		      strerror(errno));
+		execvp(compr[method].argv[0], compr[method].argv);
+		error("could not execute `%s' (%s).\n", 
+		      compr[method].argv[0], strerror(errno));
 		/*NOTREACHED*/
 	case -1:
 		error("could not fork (%s).\n", strerror(errno));
@@ -84,3 +120,5 @@ int n;
 		return n;
 	}
 }
+
+
