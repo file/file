@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.32 2003/05/23 21:31:59 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.33 2003/09/16 15:38:46 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -366,17 +366,12 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 			if (ver_rel == 0 && ver_patch != 0) {
 				if (file_printf(ms, ".%u", ver_patch) == -1)
 					return size;
-			} else if (ver_rel != 0 && ver_rel <= 26) {
-				if (file_printf(ms, "%c", 'A' + ver_rel - 1)
-				    == -1)
-					return size;
-			} else if (ver_rel != 0 && ver_rel <= 52) {
-				if (file_printf(ms, "Z%c", 'A' + ver_rel - 1)
-				    == -1)
-					return size;
 			} else if (ver_rel != 0) {
-				if (file_printf(ms, "<unknown>") == -1)
-					return size;
+				while (ver_rel > 26) {
+					file_printf(ms, "Z");
+					ver_rel -= 26;
+				}
+				file_printf(ms, "%c", 'A' + ver_rel - 1);
 			}
 		}
 		return size;
