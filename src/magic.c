@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.25 2005/01/07 19:17:27 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.26 2005/03/06 05:58:22 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -211,7 +211,12 @@ public const char *
 magic_file(struct magic_set *ms, const char *inname)
 {
 	int	fd = 0;
-	unsigned char buf[HOWMANY+1];	/* one extra for terminating '\0' */
+	/*
+	 * one extra for terminating '\0', and
+	 * some overlapping space for matches near EOF
+	 */
+#define SLOP (1 + sizeof(union VALUETYPE))
+	unsigned char buf[HOWMANY + SLOP];
 	struct stat	sb;
 	ssize_t nbytes = 0;	/* number of bytes read from a datafile */
 
@@ -251,6 +256,9 @@ magic_file(struct magic_set *ms, const char *inname)
 	/*
 	 * try looking at the first HOWMANY bytes
 	 */
+/*###259 [cc] error: `buf' undeclared (first use in this function)%%%*/
+/*###259 [cc] error: (Each undeclared identifier is reported only once%%%*/
+/*###259 [cc] error: for each function it appears in.)%%%*/
 	if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
 		file_error(ms, errno, "cannot read `%s'", inname);
 		goto done;
@@ -266,7 +274,8 @@ magic_file(struct magic_set *ms, const char *inname)
 			goto done;
 		goto gotit;
 	} else {
-		buf[nbytes] = '\0';	/* null-terminate it */
+/*###274 [cc] error: parse error before ';' token%%%*/
+		(void)memset(buf + nbytes, 0, SLOP); /* NUL terminate */
 #ifdef __EMX__
 		switch (file_os2_apptype(ms, inname, buf, nbytes)) {
 		case -1:

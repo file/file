@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.65 2005/01/07 19:17:26 christos Exp $
+ * @(#)$Id: file.h,v 1.66 2005/03/06 05:58:22 christos Exp $
  */
 
 #ifndef __file_h__
@@ -67,7 +67,7 @@
 #ifndef HOWMANY
 # define HOWMANY 65536		/* how much of the file to look at */
 #endif
-#define MAXMAGIS 4096		/* max entries in /etc/magic */
+#define MAXMAGIS 8192		/* max entries in /etc/magic */
 #define MAXDESC	64		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
 
@@ -87,6 +87,7 @@ struct magic {
 #define INDIR	1		/* if '>(...)' appears,  */
 #define	UNSIGNED 2		/* comparison is unsigned */
 #define OFFADD	4		/* if '>&' appears,  */
+#define INDIROFFADD	8	/* if '>&(' appears,  */
 	/* Word 2 */
 	uint8_t reln;		/* relation (0=eq, '>'=gt, etc) */
 	uint8_t vallen;		/* length of string value, if any */
@@ -110,6 +111,7 @@ struct magic {
 #define				FILE_REGEX	17
 #define				FILE_BESTRING16	18
 #define				FILE_LESTRING16	19
+#define				FILE_SEARCH	20
 
 #define				FILE_FORMAT_NAME	\
 /* 0 */ 			"invalid 0",		\
@@ -121,7 +123,7 @@ struct magic {
 /* 6 */ 			"date",			\
 /* 7 */ 			"beshort",		\
 /* 8 */ 			"belong",		\
-/* 9 */ 			"bedate"		\
+/* 9 */ 			"bedate",		\
 /* 10 */ 			"leshort",		\
 /* 11 */ 			"lelong",		\
 /* 12 */ 			"ledate",		\
@@ -131,7 +133,8 @@ struct magic {
 /* 16 */ 			"leldate",		\
 /* 17 */ 			"regex",		\
 /* 18 */			"bestring16",		\
-/* 19 */			"lestring16",
+/* 19 */			"lestring16",		\
+/* 20 */ 			"search",
 
 #define	FILE_FMT_NUM	"cduxXi"
 #define FILE_FMT_STR	"s"	
@@ -156,7 +159,8 @@ struct magic {
 /* 16 */ 			FILE_FMT_STR,		\
 /* 17 */ 			FILE_FMT_STR,		\
 /* 18 */			FILE_FMT_STR,		\
-/* 19 */			FILE_FMT_STR,
+/* 19 */			FILE_FMT_STR,		\
+/* 20 */			FILE_FMT_STR,
 
 	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
@@ -172,11 +176,12 @@ struct magic {
 #define				FILE_OPMULTIPLY	5
 #define				FILE_OPDIVIDE	6
 #define				FILE_OPMODULO	7
-#define				FILE_OPINVERSE	0x80
+#define				FILE_OPINVERSE	0x40
+#define				FILE_OPINDIRECT	0x80
 	/* Word 4 */
 	uint32_t offset;	/* offset to magic number */
 	/* Word 5 */
-	uint32_t in_offset;	/* offset from indirection */
+	int32_t in_offset;	/* offset from indirection */
 	/* Word 6 */
 	uint32_t mask;	/* mask before comparison with value */
 	/* Word 7 */

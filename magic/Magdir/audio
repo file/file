@@ -131,7 +131,7 @@
 0	string	Extended\ Module: Fasttracker II module sound data
 >17	string	>\0		Title: "%s"
 
-21	string/c	!SCREAM!	Screamtracker 2 module sound data
+21	string/c	=!SCREAM!	Screamtracker 2 module sound data
 21	string	BMOD2STM	Screamtracker 2 module sound data
 1080	string	M.K.		4-channel Protracker module sound data
 >0	string	>\0		Title: "%s"

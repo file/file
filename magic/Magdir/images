@@ -260,7 +260,7 @@
 
 # other images
 0	string	This\ is\ a\ BitMap\ file	Lisp Machine bit-array-file
-0	string		!!		Bennet Yee's "face" format
+0	string		=!!		Bennet Yee's "face" format
 
 # From SunOS 5.5.1 "/etc/magic" - appeared right before Sun raster image
 # stuff.
