@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.64 2003/09/12 19:39:44 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.65 2003/10/08 16:37:27 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -74,13 +74,6 @@ FILE_RCSID("@(#)$Id: apprentice.c,v 1.64 2003/09/12 19:39:44 christos Exp $")
 #ifndef MAP_FILE
 #define MAP_FILE 0
 #endif
-
-#ifdef __EMX__
-  char PATHSEP=';';
-#else
-  char PATHSEP=':';
-#endif
-
 
 private int getvalue(struct magic_set *ms, struct magic *, char **);
 private int hextoint(int);
@@ -172,12 +165,15 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 	mapped = rv;
 	     
 	if ((ml = malloc(sizeof(*ml))) == NULL) {
+		file_delmagic(magic, mapped, nmagic);
 		file_oomem(ms);
 		return -1;
 	}
 
-	if (magic == NULL || nmagic == 0)
+	if (magic == NULL || nmagic == 0) {
+		file_delmagic(magic, mapped, nmagic);
 		return -1;
+	}
 
 	ml->magic = magic;
 	ml->nmagic = nmagic;
@@ -192,19 +188,45 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 #endif /* COMPILE_ONLY */
 }
 
+protected void
+file_delmagic(struct magic *p, int type, size_t entries)
+{
+	if (p == NULL)
+		return;
+	switch (type) {
+	case 2:
+		p--;
+		(void)munmap(p, sizeof(*p) * (entries + 1));
+		break;
+	case 1:
+		p--;
+	case 0:
+		free(p);
+		break;
+	default:
+		abort();
+	}
+}
+
 
 /* const char *fn: list of magic files */
 protected struct mlist *
 file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
-	char *p, *mfn;
+	char *p, *mfn, *afn = NULL;
 	int file_err, errs = -1;
 	struct mlist *mlist;
+
+	if (fn == NULL)
+		fn = getenv("MAGIC");
+	if (fn == NULL)
+		fn = MAGIC;
 
 	if ((fn = mfn = strdup(fn)) == NULL) {
 		file_oomem(ms);
 		return NULL;
 	}
+
 	if ((mlist = malloc(sizeof(*mlist))) == NULL) {
 		free(mfn);
 		file_oomem(ms);
@@ -216,9 +238,26 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		p = strchr(fn, PATHSEP);
 		if (p)
 			*p++ = '\0';
+		if (*fn == '\0')
+			break;
+		if (ms->flags & MAGIC_MIME) {
+			if ((afn = malloc(strlen(fn) + 5 + 1)) == NULL) {
+				free(mfn);
+				free(mlist);
+				file_oomem(ms);
+				return NULL;
+			}
+			(void)strcpy(afn, fn);
+			(void)strcat(afn, ".mime");
+			fn = afn;
+		}
 		file_err = apprentice_1(ms, fn, action, mlist);
 		if (file_err > errs)
 			errs = file_err;
+		if (afn) {
+			free(afn);
+			afn = NULL;
+		}
 		fn = p;
 	}
 	if (errs == -1) {
@@ -228,7 +267,6 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		file_error(ms, "Couldn't find any magic files!");
 		return NULL;
 	}
-	free(mfn);
 	return mlist;
 }
 

@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.81 2003/09/12 19:39:44 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.82 2003/10/08 16:37:27 christos Exp $")
 #endif	/* lint */
 
 
@@ -84,10 +84,6 @@ FILE_RCSID("@(#)$Id: file.c,v 1.81 2003/09/12 19:39:44 christos Exp $")
 
 # define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNsvz] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 
-#ifndef MAGIC
-# define MAGIC "/etc/magic"
-#endif
-
 #ifndef MAXPATHLEN
 #define	MAXPATHLEN	512
 #endif
@@ -96,8 +92,7 @@ private int 		/* Global command-line options 		*/
 	bflag = 0,	/* brief output format	 		*/
 	nopad = 0,	/* Don't pad output			*/
 	nobuffer = 0,   /* Do not buffer stdout 		*/
-	kflag = 0,	/* Keep going after the first match	*/
-	rflag = 0;	/* Restore access times of files	*/
+	kflag = 0;	/* Keep going after the first match	*/
 
 private const char *magicfile = 0;	/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
@@ -229,11 +224,6 @@ main(int argc, char *argv[])
 			break;
 		case 'i':
 			flags |= MAGIC_MIME;
-			if ((mime = malloc(strlen(magicfile) + 6)) != NULL) {
-				(void)strcpy(mime, magicfile);
-				(void)strcat(mime, ".mime");
-				magicfile = mime;
-			}
 			break;
 		case 'k':
 			kflag = 1;

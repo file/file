@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.56 2003/09/12 19:07:25 christos Exp $
+ * @(#)$Id: file.h,v 1.57 2003/10/08 16:37:27 christos Exp $
  */
 
 #ifndef __file_h__
@@ -53,6 +53,15 @@
 /* Do this here and now, because struct stat gets re-defined on solaris */
 #include <sys/stat.h>
 
+#ifndef MAGIC
+#define MAGIC "/etc/magic"
+#endif
+
+#ifdef __EMX__
+#define PATHSEP	';'
+#else
+#define PATHSEP	':'
+#endif
 
 #define private static
 #ifndef protected
@@ -71,6 +80,7 @@
 #define VERSIONNO	2
 #define FILE_MAGICSIZE	(32 * 4)
 
+#define	FILE_LOAD	0
 #define FILE_CHECK	1
 #define FILE_COMPILE	2
 
@@ -191,6 +201,7 @@ protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t);
 protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
 protected uint32_t file_signextend(struct magic_set *, struct magic *, uint32_t);
+protected void file_delmagic(struct magic *, int type, size_t entries);
 protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);
 protected void file_oomem(struct magic_set *);
