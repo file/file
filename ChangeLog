@@ -1,3 +1,11 @@
+2004-12-07 14:15  Christos Zoulas  <christos@zoulas.com>
+
+	* bzip2 needs a lot of input buffer space on some files
+	  before it can begin uncompressing. This makes file -z
+	  fail on some bz2 files. Fix it by giving it a copy of
+	  the file descriptor to read as much as it wants if we
+	  have access to it. <christos@zoulas.com>
+
 2004-11-24 12:39  Christos Zoulas  <christos@zoulas.com>
 
 	* Stack smash fix, and ELF more conservative reading.

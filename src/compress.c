@@ -50,7 +50,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.40 2004/12/20 19:48:59 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.41 2005/01/07 19:17:26 christos Exp $")
 #endif
 
 
@@ -77,15 +77,16 @@ private int ncompr = sizeof(compr) / sizeof(compr[0]);
 
 private ssize_t swrite(int, const void *, size_t);
 private ssize_t sread(int, void *, size_t);
-private size_t uncompressbuf(struct magic_set *, size_t, const unsigned char *,
-    unsigned char **, size_t);
+private size_t uncompressbuf(struct magic_set *, int, size_t,
+    const unsigned char *, unsigned char **, size_t);
 #ifdef HAVE_LIBZ
 private size_t uncompressgzipped(struct magic_set *, const unsigned char *,
     unsigned char **, size_t);
 #endif
 
 protected int
-file_zmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
+file_zmagic(struct magic_set *ms, int fd, const unsigned char *buf,
+    size_t nbytes)
 {
 	unsigned char *newbuf = NULL;
 	size_t i, nsz;
@@ -98,14 +99,15 @@ file_zmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		if (nbytes < compr[i].maglen)
 			continue;
 		if (memcmp(buf, compr[i].magic, compr[i].maglen) == 0 &&
-		    (nsz = uncompressbuf(ms, i, buf, &newbuf, nbytes)) != 0) {
+		    (nsz = uncompressbuf(ms, fd, i, buf, &newbuf,
+		    nbytes)) != 0) {
 			ms->flags &= ~MAGIC_COMPRESS;
 			rv = -1;
-			if (file_buffer(ms, newbuf, nsz) == -1)
+			if (file_buffer(ms, -1, newbuf, nsz) == -1)
 				goto error;
 			if (file_printf(ms, " (") == -1)
 				goto error;
-			if (file_buffer(ms, buf, nbytes) == -1)
+			if (file_buffer(ms, -1, buf, nbytes) == -1)
 				goto error;
 			if (file_printf(ms, ")") == -1)
 				goto error;
@@ -308,8 +310,8 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 #endif
 
 private size_t
-uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
-    unsigned char **newch, size_t n)
+uncompressbuf(struct magic_set *ms, int fd, size_t method,
+    const unsigned char *old, unsigned char **newch, size_t n)
 {
 	int fdin[2], fdout[2];
 	int r;
@@ -321,26 +323,37 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 	(void)fflush(stdout);
 	(void)fflush(stderr);
 
-	if (pipe(fdin) == -1 || pipe(fdout) == -1) {
+	if ((fd != -1 && pipe(fdin) == -1) || pipe(fdout) == -1) {
 		file_error(ms, errno, "cannot create pipe");	
 		return 0;
 	}
 	switch (fork()) {
 	case 0:	/* child */
 		(void) close(0);
-		(void) dup(fdin[0]);
-		(void) close(fdin[0]);
-		(void) close(fdin[1]);
+		if (fd != -1) {
+		    (void) dup(fd);
+		    (void) lseek(0, (off_t)0, SEEK_SET);
+		} else {
+		    (void) dup(fdin[0]);
+		    (void) close(fdin[0]);
+		    (void) close(fdin[1]);
+		}
 
 		(void) close(1);
 		(void) dup(fdout[1]);
 		(void) close(fdout[0]);
 		(void) close(fdout[1]);
+#ifndef DEBUG
 		if (compr[method].silent)
-			(void) close(2);
+			(void)close(2);
+#endif
 
 		execvp(compr[method].argv[0],
 		       (char *const *)compr[method].argv);
+#ifdef DEBUG
+		(void)fprintf(stderr, "exec `%s' failed (%s)\n",
+		    compr[method].argv[0], strerror(errno));
+#endif
 		exit(1);
 		/*NOTREACHED*/
 	case -1:
@@ -348,31 +361,55 @@ uncompressbuf(struct magic_set *ms, size_t method, const unsigned char *old,
 		return 0;
 
 	default: /* parent */
-		(void) close(fdin[0]);
 		(void) close(fdout[1]);
-		/* fork again, to avoid blocking because both pipes filled */
-		switch (fork()) {
-		case 0: /* child */
-			(void)close(fdout[0]);
-			if (swrite(fdin[1], old, n) != n)
+		if (fd == -1) {
+			(void) close(fdin[0]);
+			/* 
+			 * fork again, to avoid blocking because both
+			 * pipes filled
+			 */
+			switch (fork()) {
+			case 0: /* child */
+				(void)close(fdout[0]);
+				if (swrite(fdin[1], old, n) != n) {
+#ifdef DEBUG
+					(void)fprintf(stderr,
+					    "Write failed (%s)\n",
+					    strerror(errno));
+#endif
+					exit(1);
+				}
+				exit(0);
+				/*NOTREACHED*/
+
+			case -1:
+#ifdef DEBUG
+				(void)fprintf(stderr, "Fork failed (%s)\n",
+				    strerror(errno));
+#endif
 				exit(1);
-			exit(0);
-			/*NOTREACHED*/
+				/*NOTREACHED*/
 
-		case -1:
-			exit(1);
-			/*NOTREACHED*/
-
-		default:  /* parent */
-			break;
+			default:  /* parent */
+				break;
+			}
+			(void) close(fdin[1]);
+			fdin[1] = -1;
 		}
-		(void) close(fdin[1]);
-		fdin[1] = -1;
+
 		if ((*newch = (unsigned char *) malloc(HOWMANY + 1)) == NULL) {
+#ifdef DEBUG
+			(void)fprintf(stderr, "Malloc failed (%s)\n",
+			    strerror(errno));
+#endif
 			n = 0;
 			goto err;
 		}
 		if ((r = sread(fdout[0], *newch, HOWMANY)) <= 0) {
+#ifdef DEBUG
+			(void)fprintf(stderr, "Read failed (%s)\n",
+			    strerror(errno));
+#endif
 			free(*newch);
 			n = 0;
 			newch[0] = '\0';
