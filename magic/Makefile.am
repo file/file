@@ -57,7 +57,6 @@ Magdir/compress \
 Magdir/console \
 Magdir/convex \
 Magdir/ctags \
-Magdir/cvs \
 Magdir/database \
 Magdir/diamond \
 Magdir/diff \
@@ -146,6 +145,7 @@ Magdir/psdbms \
 Magdir/pulsar \
 Magdir/pyramid \
 Magdir/python \
+Magdir/revision \
 Magdir/riff \
 Magdir/rpm \
 Magdir/rtf \
