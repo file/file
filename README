@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.14 1992/09/08 15:27:23 ian Exp $
+@(#) $Id: README,v 1.15 1992/09/08 22:32:22 ian Exp $
 
 This is Release 3.0 of Ian Darwin's (copyright but distributable)
 file(1) command.  Release 3.0 is scheduled for inclusion in the
@@ -9,7 +9,7 @@ not be used by commercial undertakings without permission in writing
 from USL. Just ask BSD Incorporated, a commercial venture not officially
 connected with the University of California at Berkeley).
 
-The prime contributor to Release 3.0 was Christos Zoulos, who put
+The prime contributor to Release 3.0 was Christos Zoulas, who put
 in hundreds of lines of source code changes, including his own
 ANSIfication of the code (I liked my own ANSIfication better, but
 his is the "Berkeley standard" way of doing it, and I wanted UCB
