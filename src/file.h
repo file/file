@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.37 2001/07/22 21:04:15 christos Exp $
+ * @(#)$Id: file.h,v 1.38 2001/10/20 17:44:53 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -151,6 +151,8 @@ extern int   zmagic		__P((unsigned char *, int));
 extern void  ckfprintf		__P((FILE *, const char *, ...));
 extern uint32 signextend	__P((struct magic *, unsigned int32));
 extern void tryelf		__P((int, unsigned char *, int));
+extern int pipe2file		__P((int, void *, size_t));
+
 
 extern char *progname;		/* the program name 			*/
 extern const char *magicfile;	/* name of the magic file		*/
@@ -164,8 +166,10 @@ extern int lflag;		/* follow symbolic links?		*/
 extern int sflag;		/* read/analyze block special files?	*/
 extern int iflag;		/* Output types as mime-types		*/
 
+#ifdef NEED_GETOPT
 extern int optind;		/* From getopt(3)			*/
 extern char *optarg;
+#endif
 
 #ifndef HAVE_STRERROR
 extern int sys_nerr;

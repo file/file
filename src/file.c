@@ -56,7 +56,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.59 2001/07/23 00:02:32 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.60 2001/10/20 17:44:53 christos Exp $")
 #endif	/* lint */
 
 
@@ -142,7 +142,7 @@ main(argc, argv)
 			}
 		}
 
-	while ((c = getopt(argc, argv, "bcdf:ikm:nsvzCL")) != EOF)
+	while ((c = getopt(argc, argv, "bcdf:ikm:nsvzCL")) != -1)
 		switch (c) {
 		case 'b':
 			++bflag;
