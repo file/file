@@ -46,7 +46,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.43 2003/03/26 15:35:30 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.44 2003/09/12 19:39:44 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -150,6 +150,7 @@ file_magwarn(const char *f, ...)
 	/* cuz we use stdout for most, stderr here */
 	(void) fflush(stdout); 
 
+	(void) fprintf(stderr, "WARNING: ");
 	(void) vfprintf(stderr, f, va);
 	va_end(va);
 	fputc('\n', stderr);
