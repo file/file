@@ -1,2 +1,7 @@
-# $Header: /p/file/cvsroot/file/magic/Magdir/sgml,v 1.1 1990/07/05 11:16:55 ian Exp $
-0	string		=<!DOCTYPE	SGML text
+# $Header: /p/file/cvsroot/file/magic/Magdir/sgml,v 1.2 1990/10/10 15:26:47 ian Exp $
+# these are (i think) true for any SGML file
+0	string		\<!SUBDOC	Exported SGML subdocument text
+0	string		\<!subdoc	Exported SGML subdocument text
+0	string		\<!DOCTYPE	Exported SGML document text
+0	string		\<!doctype	Exported SGML document text
+0	string		\<!		some kind of SGML text
