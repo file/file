@@ -42,6 +42,7 @@
  * for file command by Ian Darwin.
  */
 
+#include "magic.h"
 #include "file.h"
 #include <string.h>
 #include <ctype.h>
@@ -49,7 +50,7 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: is_tar.c,v 1.21 2003/03/27 18:34:21 christos Exp $")
+FILE_RCSID("@(#)$Id: is_tar.c,v 1.22 2003/03/27 19:09:45 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
