@@ -106,3 +106,13 @@
 #>0x460	lelong		&0x0000002	(filetype)
 #>0x464	lelong		&0x0000001	(sparse_super)
 >0x464	lelong		&0x0000002	(large files)
+
+# SGI disk labels - Nathan Scott <nathans@debian.org>
+0	belong		0x0BE5A941	SGI disk label (volume header)
+
+# SGI XFS filesystem - Nathan Scott <nathans@debian.org>
+0	belong		0x58465342	SGI XFS filesystem data
+>0x4	belong		x		(blksz=3D%d,
+>0x68	beshort		x		inosz=3D%d,
+>0x64	beshort		^0x2004		v1 dirs)
+>0x64	beshort		&0x2004		v2 dirs)
