@@ -34,7 +34,7 @@
 #include <ctype.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.11 2003/11/11 20:01:46 christos Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.12 2004/06/04 14:40:20 christos Exp $")
 #endif	/* lint */
 /*
  * Like printf, only we print to a buffer and advance it.
@@ -110,6 +110,7 @@ file_badread(struct magic_set *ms)
 	file_error(ms, errno, "error reading");
 }
 
+#ifndef COMPILE_ONLY
 protected int
 file_buffer(struct magic_set *ms, const void *buf, size_t nb)
 {
@@ -133,6 +134,7 @@ file_buffer(struct magic_set *ms, const void *buf, size_t nb)
     }
     return m;
 }
+#endif
 
 protected int
 file_reset(struct magic_set *ms)
