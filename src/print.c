@@ -26,12 +26,13 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.11 1992/05/21 16:16:43 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/print.c,v 1.12 1992/05/22 17:52:34 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -41,6 +42,7 @@ extern char *magicfile;
 extern int debug, nmagic;	/* number of valid magic[]s */
 extern void showstr();
 
+void
 mdump(m)
 struct magic *m;
 {
@@ -77,6 +79,7 @@ char *s1, *s2;
 
 /*ARGSUSED1*/
 /*VARARGS*/
+void
 warning(f, a)
 char *f, *a;
 {
