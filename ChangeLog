@@ -1,3 +1,12 @@
+
+2003-10-08 12:40  Christos Zoulas  <christos@zoulas.com>
+
+	* handle magic filename parsing sanely
+	* more magic fixes.
+	* fix a memory leak (Illes Marton) <illes.marton@balabit.hu>
+	* describe magic file handling
+	  (Bryan Henderson) <bryanh@giraffe-data.com>
+
 2003-09-12 15:09  Christos Zoulas  <christos@zoulas.com>
 
 	* update magic files.
