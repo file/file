@@ -34,12 +34,12 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.17 1993/02/19 14:22:48 ian Exp $";
+	"@(#)$Id: softmagic.c,v 1.18 1993/09/16 21:12:08 christos Exp $";
 #endif	/* lint */
 
-static int match	__P((unsigned char *));
-static int mcheck	__P((unsigned char	*, struct magic *));
-static void mprint	__P((struct magic *, unsigned char *));
+static int match	__P((unsigned char *, int));
+static int mcheck	__P((unsigned char *, struct magic *, int));
+static void mprint	__P((struct magic *, unsigned char *, int));
 
 /*
  * softmagic - lookup one file in database 
@@ -52,7 +52,7 @@ softmagic(buf, nbytes)
 unsigned char *buf;
 int nbytes;
 {
-	if (match(buf))
+	if (match(buf, nbytes))
 		return 1;
 
 	return 0;
@@ -86,8 +86,9 @@ int nbytes;
  *	so that higher-level continuations are processed.
  */
 static int
-match(s)
+match(s, nbytes)
 unsigned char	*s;
+int nbytes;
 {
 	int magindex = 0;
 	int cont_level = 0;
@@ -95,8 +96,8 @@ unsigned char	*s;
 
 	while (magindex < nmagic) {
 		/* if main entry matches, print it... */
-		if (mcheck(s, &magic[magindex])) {
-			mprint(&magic[magindex],s);
+		if (mcheck(s, &magic[magindex], nbytes)) {
+			mprint(&magic[magindex],s, nbytes);
 			/*
 			 * If we printed something, we'll need to print
 			 * a blank before we print something else.
@@ -120,7 +121,7 @@ unsigned char	*s;
 						cont_level = 
 						  magic[magindex].cont_level;
 					}
-					if (mcheck(s, &magic[magindex])) {
+					if (mcheck(s, &magic[magindex], nbytes)) {
 						/*
 						 * This continuation matched.
 						 * Print its message, with
@@ -136,7 +137,7 @@ unsigned char	*s;
 							(void) putchar(' ');
 							need_separator = 0;
 						}
-						mprint(&magic[magindex],s);
+						mprint(&magic[magindex],s,nbytes);
 						if (magic[magindex].desc[0])
 							need_separator = 1;
 
@@ -163,12 +164,17 @@ unsigned char	*s;
 }
 
 static void
-mprint(m, s)
+mprint(m, s, nbytes)
 struct magic *m;
 unsigned char *s;
+int nbytes;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
 	char *pp, *rt;
+
+	if (m->offset + sizeof(union VALUETYPE) > nbytes)
+	    return;
+	
 
   	switch (m->type) {
   	case BYTE:
@@ -211,22 +217,29 @@ unsigned char *s;
 }
 
 static int
-mcheck(s, m)
+mcheck(s, m, nbytes)
 unsigned char	*s;
 struct magic *m;
+int nbytes;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
 	register long l = m->value.l;
 	register long mask = m->mask;
 	register long v;
 
+	if (m->offset + sizeof(union VALUETYPE) > nbytes)
+	    return 0;
+
 	if (debug) {
-		(void) printf("mcheck: %10.10s ", s);
+		(void) fprintf(stderr, "mcheck @%d: ", m->offset);
+		showstr(stderr, (char *) p, 10);
+		(void) fputc('\n', stderr);
+		(void) fputc('\n', stderr);
 		mdump(m);
 	}
 
 	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
-		printf("BOINK");
+		fprintf(stderr, "BOINK");
 		return 1;
 	}
 
@@ -282,24 +295,49 @@ struct magic *m;
 
 	switch (m->reln) {
 	case 'x':
+		if (debug)
+			(void) fprintf(stderr, "*any* = 1\n");
 		return 1;
 	case '!':
+		if (debug)
+			(void) fprintf(stderr, "%d != %d = %d\n", v, l, v != l);
 		return v != l;
 	case '=':
+		if (debug)
+			(void) fprintf(stderr, "%d == %d = %d\n", v, l, v == l);
 		return v == l;
 	case '>':
+		if (debug)
+			(void) fprintf(stderr, "%d > %d = %d\n", v, l, v > l);
 		return v > l;
 	case '<':
+		if (debug)
+			(void) fprintf(stderr, "%d < %d = %d\n", v, l, v < l);
 		return v < l;
 	case '&':
+		if (debug)
+			(void) fprintf(stderr, "((%x & %x) == %x) = %d\n",
+				       v, l, l, (v & l) == l);
 		return (v & l) == l;
 	case '^':
+		if (debug)
+			(void) fprintf(stderr, "((%x & %x) != %x) = %d\n",
+				       v, l, l, (v & l) != l);
 		return (v & l) != l;
 	case MASK | '=':
+		if (debug)
+			(void) fprintf(stderr, "((%x & %x) == %x) = %d\n", 
+				       v, mask, l, (v & mask) == l);
 		return (v & mask) == l;
 	case MASK | '>':
+		if (debug)
+			(void) fprintf(stderr, "((%x & %x) > %x) = %d\n", 
+				       v, mask, l, (v & mask) > l);
 		return (v & mask) > l;
 	case MASK | '<':
+		if (debug)
+			(void) fprintf(stderr, "((%x & %x) < %x) = %d\n", 
+				       v, mask, l, (v & mask) < l);
 		return (v & mask) < l;
 	default:
 		error("mcheck: can't happen: invalid relation %d.\n", m->reln);
