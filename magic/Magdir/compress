@@ -1,0 +1,8 @@
+0	short		017037		packed data
+0	short		0145405		huf output
+0	short		0116437		compressed data
+>2	byte		140		(12 bits)
+>2	byte		141		(13 bits)
+>2	byte		142		(14 bits)
+>2	byte		143		(15 bits)
+>2	byte		144		(16 bits)

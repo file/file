@@ -1,0 +1,5 @@
+0	string		From 		mail text
+0	string		Relay-Version: 	news text
+0	string		#! rnews	batched news text
+0	string		N#! rnews	mailed, batched news text
+0	string		Article 	saved news text

@@ -1,0 +1,9 @@
+0	string		#! /bin/sh	commands text
+0	string		#!/bin/sh	commands text
+0	string		#! /bin/csh	C shell commands text
+0	string		#!/bin/csh	C shell commands text
+0	string		#! /bin/awk	awk commands text
+0	string		#!/bin/awk	awk commands text
+0	string		#! /		some kinda commands text
+0	string		#!/		some kinda commands text
+0	string		: 		commands for broken kernel text

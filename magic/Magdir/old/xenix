@@ -1,0 +1,4 @@
+# Xenix executable formats: derived empirically; treat as folklore until proven
+0	short	01006		Xenix (x.out?) executable
+>8	short	1		Middle model
+>16	short	>0		not stripped
