@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.53 2003/03/28 21:02:03 christos Exp $
+ * @(#)$Id: file.h,v 1.54 2003/04/04 21:59:27 christos Exp $
  */
 
 #ifndef __file_h__
@@ -114,7 +114,7 @@ struct magic {
 	uint8_t mask_op;	/* operator for mask */
 	uint8_t dummy1;	
 	uint8_t dummy2;	
-#define				FILE_OPS	"&|^+-*%/"
+#define				FILE_OPS	"&|^+-*/%"
 #define				FILE_OPAND	0
 #define				FILE_OPOR	1
 #define				FILE_OPXOR	2
