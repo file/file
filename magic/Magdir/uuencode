@@ -22,4 +22,9 @@
 # Greg Roelofs, newt@uchicago.edu
 0	string	Decode\ the\ following\ with\ bdeco	bencoded News text
 
+# BinHex is the Macintosh ASCII-encoded file format (see also "apple")
+# Daniel Quinlan, quinlan@yggdrasil.com
+11	string	must\ be\ converted\ with\ BinHex	BinHex binary text
+>41	string	x					\b, version %.3s
+
 # GRR:  is MIME BASE64 encoding handled somewhere?
