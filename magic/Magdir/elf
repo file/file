@@ -119,8 +119,8 @@
 >>16	beshort		2		executable,
 >>16	beshort		3		shared object,
 >>16	beshort		4		core file,
->>>(0x38+0xcc) string	>\0		of '%s'
->>>(0x38+0x10) belong	>0		(signal %d),
+#>>>(0x38+0xcc) string	>\0		of '%s'
+#>>>(0x38+0x10) belong	>0		(signal %d),
 >>16	beshort		&0xff00		processor-specific,
 >>18	beshort		0		no machine,
 >>18	beshort		1		AT&T WE32100,
