@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.28 1992/09/09 15:05:19 ian Exp $
+# @(#)$Id: Makefile,v 1.29 1992/09/09 16:32:59 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -60,10 +60,11 @@ MANCEXT	= 1
 MANFEXT	= 5
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
+# Uncomment any of these that is missing from your "standard" library.
 LOCALSRCS = # localsrc/getopt.c localsrc/strtol.c \
-		localsrc/strtok.c localsrc/strchr.c
+#		localsrc/strtok.c localsrc/strchr.c
 LOCALOBJS = # localsrc/getopt.o localsrc/strtol.o \
-		localsrc/strtok.o localsrc/strchr.o
+#		localsrc/strtok.o localsrc/strchr.o
 
 SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 	compress.c is_tar.c \
@@ -106,6 +107,7 @@ install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 
 clean:
 		rm -f *.o core file magic lint dist.* TARGETS lastnocore
+clobber:
 		(cd tst; make clean)
 
 dist:		dist.src dist.magic
