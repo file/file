@@ -42,15 +42,17 @@
 #
 # GRR 950115:  this is Thomas Boutell's Portable Bitmap Format proposal
 # (best; not yet implemented):
-0	string		PBF		PBF image (deflate compression)
+0	string		.PBF		PBF image (deflate compression)
 
 # GIF
 0	string		GIF		GIF image
->3	string		87a		- version %s
->3	string		89a		- version %s
+>3	string		87a		- version %s,
+>3	string		89a		- version %s,
 >6	leshort		>0		%hd x
 >8	leshort		>0		%hd,
->10	byte		&0x40		interlaced,
+#>10	byte		&0x80		color mapped,
+# GRR 950118:  the following is not accurate for xv-created GIFs:
+#>10	byte		&0x40		interlaced,
 >10	byte&0x07	=0x00		2 colors
 >10	byte&0x07	=0x01		4 colors
 >10	byte&0x07	=0x02		8 colors
@@ -73,6 +75,19 @@
 8	string		ILBM		IFF ILBM file
 0	string		ARF_BEGARF	PHIGS clear text archive
 
+# More miscellany from Daniel Quinlan (quinlan@yggdrasil.com)
+0	string	This\ is\ a\ BitMap\ file	Lisp Machine bit-array-file
+0	string		!!			Bennet Yee's "face" format
+0	string		@(#)SunPHIGS		SunPHIGS
+# version number follows, in the form m.n
+>40	string		SunBin			binary
+>32	string		archive			archive
+0	string		BEGMF		clear text Computer Graphics Metafile
+# these should be beshort, but not sure
+0	beshort&0xffe0	0x0020		binary Computer Graphics Metafile
+0	beshort		0x3020		character Computer Graphics Metafile
+
+
 # From: <u31b3hs@pool.informatik.rwth-aachen.de> (Michael Haardt)
 0	string          yz      MGR bitmap, modern format, 8 bit aligned
 0	string          zz      MGR bitmap, old format, 1 bit deep, 16 bit aligned
@@ -89,9 +104,9 @@
 
 # JPEG images
 0	beshort		0xffd8		JPEG image
->6	string		JFIF		(JFIF standard)
+>6	string		JFIF		- JFIF standard
 # from cameron@cs.unsw.oz.au (Cameron Simpson):
-0	string		hsi1		HSI1 image (wrapper for JPEG?)
+0	string		hsi1		JPEG image - HSI encoded (proprietary)
 
 # PC bitmaps (OS/2, Windoze BMP files)  (Greg Roelofs, newt@uchicago.edu)
 0	string		BM		bitmap
@@ -128,7 +143,7 @@
 # (for arbitary, prossibly different values of 42).
 # freely redistribuable under the GPL
 # [GRR:  which endianness?  big?]
-0	short		0xcc55		rle image data
+0	short		0xcc55		RLE image data
 >6	short		>0		%d x
 >8	short		>0		%d,
 >2	short		>0		x offset by %d,
@@ -145,3 +160,51 @@
 0	string		Imagefile\ version-	iff image data
 # this adds the whole header (inc. version number), informative but longish
 >10	string		>\0		%s
+
+# Sun rasterfiles, from Daniel Quinlan (quinlan@yggdrasil.com)
+#
+# XXX - Does the Sun 386i use the same byte order?
+#
+0	belong		0x59a66a95	Sun raster image
+>4	belong		>0		%d x
+>8	belong		>0		%d,
+>12	belong		>0		%d-bit,
+# this is almost the same as the file length (what about compressed?)
+#>16	belong		>0		%d bytes long,
+>20	belong		0		old format,
+# no need to complain if it is standard
+#>20	belong		1		standard,
+>20	belong		2		compressed,
+>20	belong		3		RGB,
+>20	belong		4		TIFF,
+>20	belong		5		IFF,
+>20	belong		0xffff		reserved for testing,
+>24	belong		0		no colormap
+>24	belong		1		RGB colormap
+>24	belong		2		raw colormap
+# this doesn't impart much useful information (or does it?)
+#>28	belong		>0		colormap is %d bytes long
+
+# Daniel Quinlan (quinlan@yggdrasil.com) -- from an SGI machine
+0	string	IT01			FIT image file
+>4	belong	x			(%d x
+>8	belong	x			%d x
+>12	belong	x			%d)
+#
+0	string	IT02			FIT image file
+>4	belong	x			(%d x
+>8	belong	x			%d x
+>12	belong	x			%d)
+#
+2048	string	PCD_IPI			Kodak Photo CD image pack file
+0	string	PCD_OPA			Kodak Photo CD overview pack file
+
+# Jeff Uphoff <juphoff@tarsier.cv.nrao.edu>
+# FITS is the Flexible Image Transport System, the de facto standard for
+# data and image transfer, storage, etc., for the astronomical community.
+# FITS format.
+0	string	SIMPLE\ \ =	FITS
+>107	string	-32		32 bits per pixel, IEEE big endian float
+>107	string	\ 32		32 bits per pixel, unsigned integer
+>108	string	16		16 bits per pixel, unsigned integer
+>109	string	8		8 bits per pixel, unsigned integer

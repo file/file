@@ -2,9 +2,10 @@
 #------------------------------------------------------------------------------
 # sgml:  file(1) magic for Standard(?) Generalized Mark-up Language
 #
-# $Id: sgml,v 1.4 1995/01/21 21:09:00 christos Exp $
+# $Id: sgml,v 1.5 1995/03/25 22:04:56 christos Exp $
 # SGML goop, mostly from rph@sq.
 0	string		\<!DOCTYPE	Exported SGML document
 0	string		\<!doctype	Exported SGML document
 0	string		\<!SUBDOC	Exported SGML subdocument
 0	string		\<!subdoc	Exported SGML subdocument
+0	string		\<!--		Exported SGML document

@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.26 1994/06/06 05:27:29 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.27 1995/03/25 22:08:07 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -179,18 +179,24 @@ struct magic *m;
   	switch (m->type) {
   	case BYTE:
 		v = p->b;
+		v = signextend(m, v) & m->mask;
+		(void) printf(m->desc, (unsigned char) v);
 		break;
 
   	case SHORT:
   	case BESHORT:
   	case LESHORT:
 		v = p->h;
+		v = signextend(m, v) & m->mask;
+		(void) printf(m->desc, (unsigned short) v);
 		break;
 
   	case LONG:
   	case BELONG:
   	case LELONG:
 		v = p->l;
+		v = signextend(m, v) & m->mask;
+		(void) printf(m->desc, (unsigned long) v);
   		break;
 
   	case STRING:
@@ -214,9 +220,6 @@ struct magic *m;
 		error("invalid m->type (%d) in mprint().\n", m->type);
 		/*NOTREACHED*/
 	}
-
-	v = signextend(m, v) & m->mask;
-	(void) printf(m->desc, (unsigned char) v);
 }
 
 /*

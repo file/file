@@ -1,0 +1,15 @@
+
+#------------------------------------------------------------------------------
+# database:  file(1) magic for various databases
+#
+# extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
+#
+0	long		0x053162	Berkeley db BTREE database
+>4	byte		1		(version 1)
+>4	byte		2		(version 2)
+>4	byte		3		(version 3)
+0	long		0x061561	Berkeley db HASH database
+>4	byte		1		(version 1)
+>4	byte		2		(version 2)
+>4	byte		3		(version 3)
+0	long		0x13579ace	GNU gdbm or ndbm database

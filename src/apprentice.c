@@ -33,7 +33,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.19 1994/05/03 17:58:23 christos Exp $";
+	"@(#)$Id: apprentice.c,v 1.20 1995/03/25 22:08:07 christos Exp $";
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -174,7 +174,7 @@ int *ndx, check;
 	}
 
 	/* get offset, then skip over it */
-	m->offset = (int) strtol(l,&t,0);
+	m->offset = (int) strtoul(l,&t,0);
         if (l == t)
 		magwarn("offset %s invalid", l);
         l = t;
@@ -205,7 +205,7 @@ int *ndx, check;
 		s = l;
 		if (*l == '+' || *l == '-') l++;
 		if (isdigit((unsigned char)*l)) {
-			m->in.offset = strtol(l, &t, 0);
+			m->in.offset = strtoul(l, &t, 0);
 			if (*s == '-') m->in.offset = - m->in.offset;
 		}
 		else
@@ -278,7 +278,7 @@ int *ndx, check;
 	/* New-style anding: "0 byte&0x80 =0x80 dynamically linked" */
 	if (*l == '&') {
 		++l;
-		m->mask = signextend(m, strtol(l, &l, 0));
+		m->mask = signextend(m, strtoul(l, &l, 0));
 	} else
 		m->mask = ~0L;
 	EATAB;
@@ -361,7 +361,7 @@ char **p;
 		m->vallen = slen;
 	} else
 		if (m->reln != 'x')
-			m->value.l = signextend(m, strtol(*p, p, 0));
+			m->value.l = signextend(m, strtoul(*p, p, 0));
 	return 0;
 }
 

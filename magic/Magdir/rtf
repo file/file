@@ -1,0 +1,13 @@
+
+#------------------------------------------------------------------------------
+# rtf:	file(1) magic for RTF (Rich text format)
+#
+# This information was gleaned from the version 1 documentation by
+# D.P.Simpson@dcs.warwick.ac.uk (Duncan P Simpson)
+#
+0	string		{\\rtf		Rich Text Format data (version
+>5	byte		x		%c,
+>6	string		\\mac		Apple Macintosh characters)
+>6	string		\\ansi		ANSI characters)
+>6	string		\\pc		IBM PC characters)
+>6	string		\\pca		IBM PS/2 characters)

@@ -1,10 +1,14 @@
 
 #------------------------------------------------------------------------------
-# archive:  file(1) magic for archive formats (see also "ms-dos" for self-
+# archive:  file(1) magic for archive formats (see also "dos" for self-
 #           extracting compressed archives)
 #
 # cpio, ar, arc, arj, hpack, lha/lharc, rar, squish, uc2, zip, zoo, etc.
-# "tar" archives are handled in the C code.
+# pre-POSIX "tar" archives are handled in the C code.
+
+# POSIX tar archives
+257	string		ustar\0		POSIX tar archive
+257	string		ustar\040\040\0	GNU tar archive
 
 # cpio archives
 #
@@ -28,6 +32,17 @@
 0	short		0177545		old PDP-11 archive
 0	long		0100554		apl workspace
 0	string		=<ar>		archive
+
+# MIPS archive (needs to go first)
+#
+0	string	!<arch>\n__________E	MIPS archive
+>20	string	U			with MIPS Ucode members
+>21	string	L			with MIPSEL members
+>21	string	B			with MIPSEB members
+>19	string	L			and an EL hash table
+>19	string	B			and an EB hash table
+>22	string	X			-- out of date
+
 0	string		!<arch>		archive
 >8	string		__.SYMDEF	random library
 0	string		-h-		Software Tools format archive text
@@ -64,7 +79,8 @@
 # thingies, to help you recognize VAX files on big-endian machines;
 # with "leshort", "lelong", and "string", that's no longer necessary....
 #
-# 0	long		0x3c61723e	VAX 5.0 archive
+0	belong		0x65ff0000	VAX 3.0 archive
+0	belong		0x3c61723e	VAX 5.0 archive
 #
 0	long		0x213c6172	archive file
 0	lelong		0177555		very old VAX archive
@@ -87,12 +103,18 @@
 #
 0	string		-h-		Software Tools format archive text
 
-# ARC archiver
-0	byte		26		ARC archive data
->1	byte		0		(empty)
->1	byte		1		(old format)
-# GRR:  this is my empirical entry:
-#0	string		\032\010	ARC archive data
+# ARC archiver (empirical entries), from Daniel Quinlan (quinlan@yggdrasil.com)
+#
+# Other entries seem likely, but single byte magic entries collide
+# with many things.  I think the real ARC magic is a single byte.
+#
+# the first entry covers about 84% of ARC files, the second 7%, the third 5%
+0	string		\032\010	ARC archive data
+0	string		\032\011	ARC archive data
+0	string		\032\002	ARC archive data
+# these seem to be rather uncommon, at less than 3% and 2%, respectively
+0	string		\032\003	ARC archive data
+0	string		\032\004	ARC archive data
 
 # Acorn archive formats (Disaster prone simpleton, m91dps@ecs.ox.ac.uk)
 # I can't create either SPARK or ArcFS archives so I have not tested this stuff
@@ -121,6 +143,15 @@
 >7	byte		8		os: NeXT
 >7	byte		9		os: VAX/VMS
 >3	byte		>0		%d]
+
+# HA archiver (Greg Roelofs, newt@uchicago.edu)
+0	string		HA		HA archive data,
+>2	leshort		x		%u files,
+>4	byte&0x0f	=0		first is type CPY
+>4	byte&0x0f	=1		first is type ASC
+>4	byte&0x0f	=2		first is type HSC
+>4	byte&0x0f	=0x0e		first is type DIR
+>4	byte&0x0f	=0x0f		first is type SPECIAL
 
 # HPACK archiver (Peter Gutmann, pgut1@cs.aukuni.ac.nz)
 0	string		HPAK		HPACK archive data
@@ -155,10 +186,9 @@
 
 # ZOO archiver (Greg Roelofs, newt@uchicago.edu)
 #0	string		ZOO 			Zoo archive data
-#20	belong		0xc4fddca7		Zoo archive data
-# [above are alternate identifiers]
-20	lelong		0xdca7c4fd		Zoo archive data
-# [don't know if all of these versions exist, or if some are missing...]
+# above is an alternate identifier
+20	string		\xdc\xa7\xc4\xfd	Zoo archive data
+# I don't know if all of these versions exist, or if some are missing...
 >4	string		1.00			(v%4s)
 >4	string		1.10			(v%4s)
 >4	string		1.20			(v%4s)
@@ -176,3 +206,15 @@
 >32	string		\002\000		(modify: v2.0+)
 >70	string		\001\000		(extract: v1.0+)
 >70	string		\002\001		(extract: v2.1+)
+
+# Shell archives
+10	string		#\ This\ is\ a\ shell\ archive	shell archive text
+>2	string		>\0				(%s)
+
+# JAM Archive volume format, by Dmitry.Kohmanyuk@UA.net
+0	string		\351,\001JAM\		JAM archive,
+>7	string		>\0			version %.4s
+>0x26	byte		=0x27			-
+>>0x2b	string          >\0			label %.11s,
+>>0x27	lelong		x			serial %08x,
+>>0x36	string		>\0			fstype %.8s
