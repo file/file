@@ -36,7 +36,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: ascmagic.c,v 1.15 1993/09/16 21:06:33 christos Exp $";
+	"@(#)$Id: ascmagic.c,v 1.16 1993/10/27 21:00:54 christos Exp $";
 #endif	/* lint */
 
 			/* an optimisation over plain strcmp() */
@@ -100,23 +100,6 @@ int nbytes;	/* size actually read */
 		return 1;
 	case 2:
 		ckfputs("POSIX tar archive", stdout);
-		return 1;
-	}
-
-	if ((i = is_compress(buf, &isblock)) != 0) {
-		if (zflag) {
-			unsigned char *newbuf;
-			int newsize;
-
-			if ((newsize = uncompress(buf, &newbuf, nbytes)) != 0) {
-			    tryit(newbuf, newsize);
-			    free(newbuf);
-			}
-			printf(" (%scompressed data - %d bits)",
-				isblock ? "block " : "", i);
-		}
-	 	else printf("%scompressed data - %d bits",
-			isblock ? "block " : "", i);
 		return 1;
 	}
 
