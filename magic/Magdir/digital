@@ -26,10 +26,10 @@
 #
 #
 # Some other interesting Digital formats,
-0	string	^\0377\0377\0177	ddis/ddif
-0	string	^\0377\0377\0174	ddis/dots archive
-0	string	^\0377\0377\0176	ddis/dtif table data
-0	string	^\033c\033		LN03 output
+0	string	\377\377\177		ddis/ddif
+0	string	\377\377\174		ddis/dots archive
+0	string	\377\377\176		ddis/dtif table data
+0	string	\033c\033		LN03 output
 0	long	04553207		X image
 #
 0	string	!<PDF>!\n		profiling data file
