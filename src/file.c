@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.79 2003/07/10 17:41:24 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.80 2003/07/10 21:10:16 christos Exp $")
 #endif	/* lint */
 
 
@@ -152,7 +152,7 @@ main(int argc, char *argv[])
 #endif
 		{"magic-file", 1, 0, 'm'},
 #if defined(HAVE_UTIME) || defined(HAVE_UTIMES)
-		{"preserve-dates", 0, 0, 'p'},
+		{"preserve-date", 0, 0, 'p'},
 #endif
 		{"uncompress", 0, 0, 'z'},
 		{"no-buffer", 0, 0, 'n'},
@@ -479,6 +479,7 @@ help(void)
 "  -L, --dereference          causes symlinks to be followed\n"
 "  -n, --no-buffer            do not buffer output\n"
 "  -N, --no-pad               do not pad output\n"
+"  -p, --preserve-date        preserve access times on files\n"
 "  -s, --special-files        treat special (block/char devices) files as\n"
 "                             ordinary ones\n"
 "      --help                 display this help and exit\n"
