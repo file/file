@@ -26,7 +26,7 @@
  */
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: file.c,v 1.24 1992/09/11 11:44:31 ian Exp $";
+	"@(#)$Id: file.c,v 1.25 1992/09/11 13:15:16 ian Exp $";
 #endif	/* lint */
 
 #include <stdio.h>
@@ -216,8 +216,9 @@ int wid;
 		    /* We can't open it, but we were able to stat it. */
 		    if (sb.st_mode & 0002) ckfputs("writeable, ", stdout);
 		    if (sb.st_mode & 0111) ckfputs("executable, ", stdout);
-		    error("can't read `%s' (%s).\n", inname, strerror(errno));
-		    /*NOTREACHED*/
+		    ckfprintf(stdout, "can't read `%s' (%s).\n",
+			inname, strerror(errno));
+		    return;
 	    }
 	}
 
