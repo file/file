@@ -33,13 +33,20 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.31 2000/04/11 02:06:57 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.32 2000/04/23 04:32:19 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
 		      isspace((unsigned char) *l))  ++l;}
 #define LOWCASE(l) (isupper((unsigned char) (l)) ? \
 			tolower((unsigned char) (l)) : (l))
+
+
+#ifdef __EMX__
+  char PATHSEP=';';
+#else
+  char PATHSEP=':';
+#endif
 
 
 static int getvalue	__P((struct magic *, char **));
@@ -73,7 +80,7 @@ int check;			/* non-zero? checking-only run. */
 	fn = strcpy(mfn, fn);
   
 	while (fn) {
-		p = strchr(fn, ':');
+		p = strchr(fn, PATHSEP);
 		if (p)
 			*p++ = '\0';
 		file_err = apprentice_1(fn, check);
