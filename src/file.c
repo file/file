@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.76 2003/03/27 22:33:18 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.77 2003/03/27 22:46:51 christos Exp $")
 #endif	/* lint */
 
 
@@ -82,8 +82,7 @@ FILE_RCSID("@(#)$Id: file.c,v 1.76 2003/03/27 22:33:18 christos Exp $")
 #define SYMLINKFLAG ""
 #endif
 
-# define USAGE  "Usage: %s [-bciknNsvz" SYMLINKFLAG "] [-f namefile] [-m magicfiles] [-F separator] file...\n"
-#endif
+# define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNsvz] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 
 #ifndef MAGIC
 # define MAGIC "/etc/magic"
@@ -441,8 +440,7 @@ byteconv2(int from, int same, int big_endian)
 private void
 usage(void)
 {
-	(void)fprintf(stderr, USAGE, progname);
-	(void)fprintf(stderr, "Usage: %s -C [-m magic]\n", progname);
+	(void)fprintf(stderr, USAGE, progname, progname);
 #ifdef HAVE_GETOPT_H
 	(void)fputs("Try `file --help' for more information.\n", stderr);
 #endif
