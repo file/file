@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.11 1992/09/08 22:33:06 ian Exp $
+ * @(#)$Id: file.h,v 1.12 1992/09/09 15:03:09 ian Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -107,8 +107,12 @@ extern int optind;		/* From getopt(3)			*/
 extern char *optarg;
 
 #if !defined(__STDC__) || defined(sun)
-extern int errno, sys_nerr;
+extern int sys_nerr;
 extern char *sys_errlist[];
 #define strerror(e) \
 	(((e) >= 0 && (e) < sys_nerr) ? sys_errlist[(e)] : "Unknown error")
+#endif
+
+#ifndef MAXPATHLEN
+#define	MAXPATHLEN	512
 #endif
