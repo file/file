@@ -119,6 +119,8 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+
+MAGIC = $(datadir)/magic
 @FSECT5_TRUE@man_MAGIC = magic.5
 @FSECT5_FALSE@man_MAGIC = magic.4
 man_MANS = file.1 $(man_MAGIC) libmagic.3

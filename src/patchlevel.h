@@ -1,19 +1,39 @@
-#define	FILE_VERSION_MAJOR	3
-#define	patchlevel		42
+#define	FILE_VERSION_MAJOR	4
+#define	patchlevel		0
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.43 2003/03/23 21:16:26 christos Exp $
+ * $Id: patchlevel.h,v 1.44 2003/03/23 22:23:31 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.44  2003/03/23 22:23:31  christos
+ * finish librarification.
+ *
  * Revision 1.43  2003/03/23 21:16:26  christos
  * update copyrights.
  *
  * Revision 1.42  2003/03/23 04:06:05  christos
- * reorg
+ * Library re-organization
  *
- * Revision 1.1.1.1  2003/02/07 18:50:31  mru
- * Initial librarification.
+ * Revision 1.41  2003/02/27 20:53:45  christos
+ * - fix memory allocation problem (Jeff Johnson)
+ * - fix stack overflow corruption (David Endler)
+ * - fixes from NetBSD source (Antti Kantee)
+ * - magic fixes
+ *
+ * Revision 1.40  2003/02/08 18:33:53  christos
+ * - detect inttypes.h too (Dave Love <d.love@dl.ac.uk>)
+ * - eliminate unsigned char warnings (Petter Reinholdtsen <pere@hungry.com>)
+ * - better elf PT_NOTE handling (Nalin Dahyabhai <nalin@redhat.com>)
+ * - add options to format the output differently
+ * - much more magic.
+ *
+ * Revision 1.39  2002/07/03 18:57:52  christos
+ * - ansify/c99ize
+ * - more magic
+ * - better COMPILE_ONLY support.
+ * - new magic files.
+ * - fix solaris compilation problems.
  *
  * Revision 1.38  2002/05/16 18:45:56  christos
  * - pt_note elf additions from NetBSD
@@ -233,4 +253,3 @@
  * Fix a tiny null-pointer bug in previous fix for tar archive + uncompress.
  * 
  */
-
