@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile.in,v 1.1 1998/02/15 22:46:34 christos Exp $
+# @(#)$Id: Makefile.in,v 1.2 1998/02/15 23:18:53 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -21,7 +21,7 @@
 #    ever read sources, credits must appear in the documentation.
 #
 # 4. This notice may not be removed or altered.
-VERSION	= 3.23
+VERSION	= 3.24
 SHELL	= /bin/sh
 #MAGIC	= /etc/magic
 prefix = @prefix@
@@ -80,9 +80,11 @@ SRCS = file.c apprentice.c fsmagic.c softmagic.c ascmagic.c \
 OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	compress.o is_tar.o readelf.o internat.o \
 	print.o $(LOCALOBJS)
+HDRS = file.h names.h patchlevel.h readelf.h tar.h
 
-ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
-	 Makefile file.man magic.man 
+AUTOSRC=configure configure.in install-sh config.h.in Makefile.in
+ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) $(HDRS) \
+	 Makefile.std file.man magic.man magic2mime $(AUTOSRC)
 ALLMAGIC =   Magdir/Makefile Magdir/Localstuff Magdir/Header Magdir/[a-z]*
 
 all:		file magic file.${MANCEXT} magic.${MANFEXT}
@@ -120,7 +122,8 @@ install.man: file.${MANCEXT} magic.${MANFEXT}
 
 clean:
 		rm -f *.o core file magic lint dist.* MANIFEST \
-		      magic.${MANFEXT} file.${MANCEXT}
+		      magic.${MANFEXT} file.${MANCEXT} \
+		      config.h config.status config.cache
 clobber:
 		cd tst; $(MAKE) clean
 
