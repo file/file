@@ -29,15 +29,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "file.h"
 #include "names.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/ascmagic.c,v 1.8 1992/05/22 17:48:38 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/ascmagic.c,v 1.9 1992/09/08 15:06:05 ian Exp $";
 #endif	/* lint */
-
-char *ckfmsg = "write error on output";
 
 			/* an optimisation over plain strcmp() */
 #define	STREQ(a, b)	(*(a) == *(b) && strcmp((a), (b)) == 0)
@@ -51,7 +51,6 @@ int nbytes;	/* size actually read */
 	unsigned char *s;
 	char *token;
 	register struct names *p;
-	extern int zflag;
 
 	/* these are easy, do them first */
 
@@ -103,9 +102,10 @@ int nbytes;	/* size actually read */
 			unsigned char *newbuf;
 			int newsize;
 
-			newsize = uncompress(buf, &newbuf, nbytes);
-			tryit(newbuf, newsize);
-			/* free(newbuf) */
+			if (newsize = uncompress(buf, &newbuf, nbytes)) {
+			    tryit(newbuf, newsize);
+			    free(newbuf);
+			}
 			printf(" (%scompressed data - %d bits)",
 				isblock ? "block " : "", i);
 		}
