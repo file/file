@@ -151,3 +151,7 @@
 0	string	5\x0aSlaughterhouse		 Quake I save: ddm5 Slaughterhouse
 0	string	5\x0aDOMINO			 Quake I save: ddm6 Domino
 0	string	5\x0aSANDRA'S_LADDER		 Quake I save: ddm7 Sandra's ladder
+
+
+0	string	MComprHD	MAME CHD compressed hard disk image,
+>12	belong	x		version %lu

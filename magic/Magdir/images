@@ -484,3 +484,20 @@
 # offsets for the respective PCX components.
 # From: Joerg Wunsch <joerg_wunsch@uriah.heep.sax.de>
 0	lelong	987654321	DCX multi-page PCX image data
+
+# Simon Walton <simonw@matteworld.com>
+# Kodak Cineon format for scanned negatives
+# http://www.kodak.com/US/en/motion/support/dlad/
+0	lelong  0xd75f2a80	Cineon image data
+>200	belong  >0		\b, %ld x
+>204	belong  >0		%ld
+
+
+# Bio-Rad .PIC is an image format used by microscope control systems
+# and related image processing software used by biologists.
+# From: Vebjorn Ljosa <vebjorn@ljosa.com>
+54		leshort 12345		Bio-Rad .PIC Image File
+>0		leshort >0		%hd x
+>2		leshort >0		%hd,
+>4		leshort =1		1 image in file
+>4		leshort >1		%hd images in file
