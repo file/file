@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.10 1992/09/08 14:58:34 ian Exp $
+ * @(#)$Id: file.h,v 1.11 1992/09/08 22:33:06 ian Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -30,10 +30,6 @@
 #define MAXMAGIS 1000		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
-#define ckfputs(str,fil) 	if (fputs(str,fil)==EOF)		\
-					error("write failed.\n");	\
-				else					\
-					str[0] = str[0]
 
 struct magic {
 	short flag;		
@@ -78,6 +74,7 @@ struct magic {
 extern int   apprentice		__P((char *, int));
 extern int   ascmagic		__P((unsigned char *, int));
 extern void  error		__P((const char *, ...));
+extern void  ckfputs		__P((const char *, FILE *));
 struct stat;
 extern int   fsmagic		__P((const char *, struct stat *));
 extern int   is_compress	__P((const unsigned char *, int *));
