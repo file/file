@@ -27,7 +27,7 @@
 #define	L_MAIL	7		/* Electronic mail */
 #define	L_NEWS	8		/* Usenet Netnews */
 
-char *types[] = {
+static char *types[] = {
 	"c program text",
 	"fortran program text",
 	"make commands text" ,
@@ -40,7 +40,7 @@ char *types[] = {
 	"can't happen error on names.h/types",
 	0};
 
-struct names {
+static struct names {
 	char *name;
 	short type;
 } names[] = {
