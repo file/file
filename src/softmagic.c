@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.68 2004/10/12 14:55:09 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.69 2004/11/13 08:11:12 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -427,8 +427,8 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			/* Null terminate and eat *trailing* return */
 			p->s[sizeof(p->s) - 1] = '\0';
 			len = strlen(p->s);
-			if (len && p->s[len - 1] == '\n')
-				p->s[len - 1] = '\0';
+			if (len-- && p->s[len] == '\n')
+				p->s[len] = '\0';
 			return 1;
 		}
 	case FILE_PSTRING:
@@ -441,8 +441,8 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 				*ptr1++ = *ptr2++;
 			*ptr1 = '\0';
 			len = strlen(p->s);
-			if (len && p->s[len - 1] == '\n')
-				p->s[len - 1] = '\0';
+			if (len-- && p->s[len] == '\n')
+				p->s[len] = '\0';
 			return 1;
 		}
 	case FILE_BESHORT:
