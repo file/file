@@ -1,4 +1,10 @@
-# SoftQuad troff magic numbers
+# SoftQuad Publishing Software magic numbers
+# $Header: /p/file/cvsroot/file/magic/Magdir/softquad,v 1.5 1990/10/10 15:28:16 ian Exp $
+# Author/Editor and RulesBuilder
+0	string		\<!SQ\ DTD>	Compiled SGML rules file
+>9	string		>\0		 Type %s
+0	string		\<!SQ\ A/E>	A/E SGML Document binary
+>9	string		>\0		 Type %s
 # Binary font/desc files...
 0	short		0125252		SoftQuad DESC or font file binary
 >2	short		>0		- version %d
