@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.12 2000/04/11 02:32:35 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.13 2000/07/28 23:03:08 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -377,7 +377,7 @@ tryelf(fd, buf, nbytes)
 
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
-		swap = (u.c[sizeof(long) - 1] + 1) != elfhdr.e_ident[5];
+		swap = (u.c[sizeof(int32) - 1] + 1) != elfhdr.e_ident[5];
 
 		if (getu16(swap, elfhdr.e_type) == ET_CORE) 
 #ifdef ELFCORE
@@ -414,7 +414,7 @@ tryelf(fd, buf, nbytes)
 
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
-		swap = (u.c[sizeof(long) - 1] + 1) != elfhdr.e_ident[5];
+		swap = (u.c[sizeof(int32) - 1] + 1) != elfhdr.e_ident[5];
 
 		if (getu16(swap, elfhdr.e_type) == ET_CORE) 
 #ifdef ELFCORE
