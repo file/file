@@ -57,17 +57,6 @@
 0	belong		0x4e54524b	MultiTrack sound data
 >4	belong		x		- version %ld
 
-# Microsoft WAVE format (*.wav)
-0	string		RIFF		Microsoft RIFF
->8	string		WAVE		\b, WAVE audio data
->>34	leshort		>0		\b, %d bit
->>22	leshort		=1		\b, mono
->>22	leshort		=2		\b, stereo
->>22	leshort		>2		\b, %d channels
->>24	lelong		>0		%d Hz
-# AVI == Audio Video Interleave
->8      string          AVI\            \b, AVI data
-
 # Extended MOD format (*.emd) (Greg Roelofs, newt@uchicago.edu); NOT TESTED
 # [based on posting 940824 by "Dirk/Elastik", husberg@lehtori.cc.tut.fi]
 0	string		EMOD		Extended MOD sound data,
