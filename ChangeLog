@@ -1,4 +1,10 @@
 
+2003-10-14 21:39  Christos Zoulas  <christos@zoulas.com>
+	* Python bindings (Brett Funderburg) <brettf@deepfile.com>
+	* Don't lookup past the end of the buffer
+	  (Chad Hanson) <chanson@tcs-sec.com>
+	* Add MAGIC_ERROR and api on magic_errno()
+
 2003-10-08 12:40  Christos Zoulas  <christos@zoulas.com>
 
 	* handle error conditions from compile as fatal
