@@ -1,0 +1,9 @@
+# 68K Blit stuff as seen from 680x0 machine
+# Note that this 0407 conflicts with several other a.out formats...
+0	long		0407		68K Blit (standalone) executable
+0	short		0407		VAX-order2 68K Blit (standalone) executable
+0	short		03401		VAX-order 68K Blit (standalone) executable
+0	long		0406		68k Blit mpx/mux executable
+0	short		0406		VAX-order2 68k Blit mpx/mux executable
+0	short		03001		VAX-order 68k Blit mpx/mux executable
+# Need values for WE32 DMD executables.
