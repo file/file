@@ -5,7 +5,7 @@
 # We have to check the byte order flag to see what byte order all the
 # other stuff in the header is in.
 #
-# MIPS R3000 may also be for MIPS RS2000.
+# MIPS R3000 may also be for MIPS R2000.
 # What're the correct byte orders for the nCUBE and the Fujitsu VPP500?
 #
 # updated by Daniel Quinlan (quinlan@yggdrasil.com)
@@ -20,8 +20,10 @@
 >>16	leshort		2		executable,
 >>16	leshort		3		shared object,
 # Core handling from Peter Tobias <tobias@server.et-inf.fho-emden.de>
++# corrections by Christian 'Dr. Disk' Hechelmann <drdisk@ds9.au.s.shuttle.de>
 >>16	leshort		4		core file
->>>400  lelong          >0              (signal %d),
+>>>(0x38+0xcc) string	>\0		of '%s'
+>>>(0x38+0x10) lelong	>0		(signal %d),
 >>16	leshort		&0xff00		processor-specific,
 >>18	leshort		0		no machine,
 >>18	leshort		1		AT&T WE32100 - invalid byte order,
@@ -44,13 +46,15 @@
 >>20	lelong		0		invalid version
 >>20	lelong		1		version 1
 >>36	lelong		1		MathCoPro/FPU/MAU Required
+>8	string		>\0		(%s)
 >5	byte		2		MSB
 >>16	beshort		0		no file type,
 >>16	beshort		1		relocatable,
 >>16	beshort		2		executable,
 >>16	beshort		3		shared object,
 >>16	beshort		4		core file,
->>>400	lelong		>0		(signal %d),
+>>>(0x38+0xcc) string	>\0		of '%s'
+>>>(0x38+0x10) belong	>0		(signal %d),
 >>16	beshort		&0xff00		processor-specific,
 >>18	beshort		0		no machine,
 >>18	beshort		1		AT&T WE32100,
@@ -68,7 +72,9 @@
 >>18	beshort		16		nCUBE,
 >>18	beshort		17		VPP500,
 >>18	beshort		18		SPARC32PLUS,
->>18	beshort		20		PowerPC,
+>>18	beshort		20		PowerPC or cisco 4500,
+>>18	beshort		21		cisco 7500,
+>>18	beshort		25		cisco 7200,
 >>18	beshort		0x9026		Alpha,
 >>20	belong		0		invalid version
 >>20	belong		1		version 1

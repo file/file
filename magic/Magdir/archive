@@ -27,6 +27,14 @@
 0	string		070701		ASCII cpio archive (SVR4 with no CRC)
 0	string		070702		ASCII cpio archive (SVR4 with CRC)
 
+# Debian package (needs to go before regular portable archives)
+#
+0	string		!<arch>\ndebian
+>8	string		debian-split	part of multipart Debian package
+>8	string		debian-binary	Debian binary package
+>68	string		>\n		(format %s)
+>136	ledate		x		created: %s
+
 # other archives
 0	long		0177555		very old archive
 0	short		0177555		very old PDP-11 archive
@@ -35,7 +43,7 @@
 0	long		0100554		apl workspace
 0	string		=<ar>		archive
 
-# MIPS archive (needs to go first)
+# MIPS archive (needs to go before regular portable archives)
 #
 0	string	!<arch>\n__________E	MIPS archive
 >20	string	U			with MIPS Ucode members
@@ -65,8 +73,6 @@
 #
 0	string		!<arch>		current ar archive
 >8	string		__.SYMDEF	random library
->8	string		debian-split	part of multipart Debian package
->8	string		debian-binary	Debian binary package
 >0	belong		=65538		- pre SR9.5
 >0	belong		=65539		- post SR9.5
 >0	beshort		2		- object archive

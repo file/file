@@ -37,7 +37,7 @@
 #
 # Debian Packages, from Peter Tobias <tobias@server.et-inf.fho-emden.de>
 0	string		0.9
->8	byte		0x0a		Debian Binary Package
+>8	byte		0x0a		old Debian Binary Package
 >>3	byte		>0		\b, created by dpkg 0.9%c
 >>4	byte		>0		pl%c
 # PSF fonts, from H. Peter Anvin <hpa@yggdrasil.com>
@@ -63,11 +63,31 @@
 >8	long		>0		not stripped
 >8	long		0		stripped
 >23	leshort		>0		- version %ld.
-# linux Kernel images version 1.3.80 - ?
-# from Axel Kohlmeyer <akohlmey@rincewind.chemie.uni-ulm.de>
-0       belong          0xb8c0078e      Linux/x86 kernel image,
->0x048c byte            0x31
->>0x048c string         x               version %s
->0x0493 byte            0x31
->>0x0493 string         x               version %s
 #
+# Linux kernel boot images, from Albert Cahalan <acahalan@cs.uml.edu>
+# and others such as Axel Kohlmeyer <akohlmey@rincewind.chemie.uni-ulm.de>
+# and Nicol=E1s Lichtmaier <nick@debian.org>
+# All known start with: b8 c0 07 8e d8 b8 00 90 8e c0 b9 00 01 29 f6 29
+514		string	HdrS		Linux kernel
+>518		leshort	>0
+>>529		byte	0		zImage data,
+>>529		byte	1		bzImage data,
+>0x048c		byte	0x31
+>>0x048c	string	x		version %s
+>0x0493		byte	0x31
+>>0x0493	string	x		version %s
+>0x048c		byte	0x32
+>>0x048c	string	x		version %s
+>0x0493		byte	0x32
+>>0x0493	string	x		version %s
+>0x04df		byte	0x32
+>>0x04df	string	x		version %s
+>0x04fb		byte	0x32
+>>0x04fb	string	x		version %s
+# This also matches new kernels, which were caught above by "HdrS".
+0		belong	0xb8c0078e	Linux kernel
+>0x1e3		string	Loading		version 1.3.79 or older
+>0x1e9		string	Loading		from prehistoric times
+20
+# LSM entries - Nicolas Lichtmaier <nick@feedback.com.ar>
+0	string	Begin3	Linux Software Map entry text

@@ -18,4 +18,4 @@
 0	string		BABYL		Emacs RMAIL text
 0	string		Received:	RFC 822 mail text
 0	string		MIME-Version:	MIME entity text
-0	string		Content-	MIME entity text
+#0	string		Content-	MIME entity text

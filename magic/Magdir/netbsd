@@ -160,7 +160,7 @@
 # NetBSD/alpha does not support (and has never supported) a.out objects,
 # so no rules are provided for them.  NetBSD/alpha ELF objects are 
 # dealt with in "elf".
-0	leshort		0x00070185		ECOFF NetBSD/alpha binary
+0	lelong		0x00070185		ECOFF NetBSD/alpha binary
 >10	leshort		0x0001			not stripped
 >10	leshort		0x0000			stripped
 0	belong&0377777777	043200507	NetBSD/alpha core
