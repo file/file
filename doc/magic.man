@@ -34,6 +34,8 @@ A two-byte value (on most systems).
 A four-byte value (on most systems).
 .IP string
 A string of bytes.
+.IP date
+A four-byte value interpreted as a unix date.
 .RE
 The numeric types may optionally be followed by
 .B &
@@ -147,4 +149,4 @@ at the beginning of the line.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.8 1992/06/30 13:25:59 ian Exp $
+.\" @(#)$Id: magic.man,v 1.9 1993/01/05 14:55:30 ian Exp $
