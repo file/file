@@ -39,7 +39,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.14 1992/09/08 15:36:44 ian Exp $";
+	"@(#)$Id: print.c,v 1.15 1992/09/11 11:44:51 ian Exp $";
 #endif  /* lint */
 
 void
@@ -69,6 +69,45 @@ struct magic *m;
 		(void) fprintf(stderr, "%d",m->value.l);
 	(void) fprintf(stderr, ",%s", m->desc);
 	(void) fputs("]\n", stderr);
+}
+
+/*
+ * ckfputs - futs, but with error checking
+ * ckfprintf - fprintf, but with error checking
+ */
+void
+ckfputs(str, fil) 	
+    const char *str;
+    FILE *fil;
+{
+	if (fputs(str,fil) == EOF)
+		error("write failed.\n");
+}
+
+/*VARARGS*/
+void
+#if __STDC__
+ckfprintf(const FILE *f, const char *fmt, ...)
+#else
+ckfprintf(va_alist)
+	va_dcl
+#endif
+{
+	va_list va;
+#if __STDC__
+	va_start(va, fmt);
+#else
+	const FILE *f;
+	const char *fmt;
+	va_start(va);
+	f = va_arg(va, const FILE *);
+	fmt = va_arg(va, const char *);
+#endif
+	(void) vfprintf(f, fmt, va);
+	if (ferror(f))
+		error("write failed.\n");
+	va_end(va);
+	exit(1);
 }
 
 /*
