@@ -7,7 +7,7 @@
 #ifndef	major			/* if `major' not defined in types.h, */
 #include <sys/sysmacros.h>	/* try this one. */
 #endif
-#ifndef	major
+#ifndef	major	/* still not defined? give up, manual intervention needed */
 		/* If cc tries to compile this, read and act on it. */
 		/* On most systems cpp will discard it automatically */
 		Congratulations, you have found a portability bug.
@@ -42,6 +42,13 @@ char *fn;
 			warning("can't stat");
 			return -1;
 		}
+
+#ifdef	PRINT_STAT_BITS
+	if (statbuf.st_mode & S_ISUID) ckfputs("suid ", stdout);
+	if (statbuf.st_mode & S_ISGID) ckfputs("sgid ", stdout);
+	if (statbuf.st_mode & S_ISVTX) ckfputs("sticky ", stdout);
+#endif	/* PRINT_STAT_BITS */
+	
 	switch (statbuf.st_mode & S_IFMT) {
 	case S_IFDIR:
 		ckfputs("directory", stdout);
