@@ -11,13 +11,18 @@
  * for file command by Ian Darwin.
  */
 
+#include <string.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include "tar.h"
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
 
-long from_oct();			/* Decode octal number */
+#if	defined(__STDC__) || defined(__cplusplus)
+static long from_oct(int, char*);	/* Decode octal number */
+#else
+static long from_oct();
+#endif
 
 /*
  * Return 
@@ -38,7 +43,7 @@ unsigned char *buf;
 
 	sum = 0;
 	p = header->charptr;
-	for (i = sizeof(*header); --i >= 0;) {
+	for (i = sizeof(union record); --i >= 0;) {
 		/*
 		 * We can't use unsigned char here because of old compilers,
 		 * e.g. V7.
@@ -66,7 +71,7 @@ unsigned char *buf;
  *
  * Result is -1 if the field is invalid (all blank, or nonoctal).
  */
-long
+static long
 from_oct(digs, where)
 	register int	digs;
 	register char	*where;
