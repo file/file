@@ -30,9 +30,15 @@
 >56	belong	x		Number of Keys %d)
 #
 #
-0	belong	0x053162	Berkeley DB Btree file
+0	belong	0x053162	Berkeley DB Btree file/Big Endian
 >4	belong	>0		(Version %d,
 >8	belong	x		Page Size %d,
 >12	belong	x		Free Page %d,
 >16	belong	x		Number of Records %d,
 >20	belong	x		Flags 0x%x)
+0	lelong	0x053162	Berkeley DB Btree file/Little Endian
+>4	lelong	>0		(Version %d,
+>8	lelong	x		Page Size %d,
+>12	lelong	x		Free Page %d,
+>16	lelong	x		Number of Records %d,
+>20	lelong	x		Flags 0x%x)
