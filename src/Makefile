@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.34 1993/04/05 10:39:30 ian Exp $
+# @(#)$Id: Makefile,v 1.35 1993/04/15 17:26:53 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -84,7 +84,7 @@ all:		file magic
 
 TESTFILES = * tst/*
 try:		all $(OFILE)
-		cd tst; make
+		cd tst; $(MAKE)
 		time $(OFILE) $(TESTFILES) >/tmp/t1 # can't use ./magic
 		time ./file -m ./magic $(TESTFILES) >/tmp/t2
 		-diff -b /tmp/t[12]
@@ -96,7 +96,7 @@ lint:		$(SRCS)
 		lint -ha $(DEFS) $(SRCS) | tee $@
 magic:		Magdir
 #		Magdir/Makefile's "install" mv's magic to here for testing.
-		cd Magdir; make install
+		cd Magdir; $(MAKE) install
 
 ascmagic.o:	names.h
 
@@ -111,7 +111,7 @@ install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 clean:
 		rm -f *.o core file magic lint dist.* MANIFEST lastnocore
 clobber:
-		cd tst; make clean
+		cd tst; $(MAKE) clean
 
 send:		dist
 		ftp ftp.cs
