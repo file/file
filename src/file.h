@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.12 1992/09/09 15:03:09 ian Exp $
+ * @(#)$Id: file.h,v 1.13 1992/09/11 17:41:54 ian Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -86,6 +86,7 @@ extern void  showstr		__P((const char *));
 extern int   softmagic		__P((unsigned char *, int));
 extern void  tryit		__P((unsigned char *, int));
 extern int   uncompress		__P((const unsigned char *, unsigned char **, int));
+extern void  ckfprintf		__P((FILE *, const char *, ...));
 
 
 
