@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.15 1992/09/08 22:32:22 ian Exp $
+@(#) $Id: README,v 1.16 1992/09/09 16:31:46 ian Exp $
 
 This is Release 3.0 of Ian Darwin's (copyright but distributable)
 file(1) command.  Release 3.0 is scheduled for inclusion in the
@@ -12,10 +12,23 @@ connected with the University of California at Berkeley).
 The prime contributor to Release 3.0 was Christos Zoulas, who put
 in hundreds of lines of source code changes, including his own
 ANSIfication of the code (I liked my own ANSIfication better, but
-his is the "Berkeley standard" way of doing it, and I wanted UCB
+his (__P()) is the "Berkeley standard" way of doing it, and I wanted UCB
 to include the code...), his HP-like "indirection" (a feature of
 the HP file command, I think), his mods that finally got the
 uncompress (-z) mode finished and working.
+
+This release has compiled in the following environments:
+
+SunOS sqarc 4.1.1 8 sun4
+	No problems.
+AIX sqibm 2 3 000XXXXXX100
+	Had weird "make" problems making "magic" file automatically; just
+	built it by hand. Your mileage may vary.
+A/UX sqmac 3.0a9 SVR22 mc68020
+	It works.
+sqzme sqzme 3.1.1 3 3B2
+	The 3B2 SVR3 needed a few tweaks as well as COPTS = -Ilocalinc
+	in order to compile.
 
 This fine freeware file(1) follows the USG (System V) model of the file
 command, rather than the Research (V7) version or the V7-derived 4.[23]
@@ -26,7 +39,7 @@ knows a little more magic (including tar archives) than System V; the
 System V /etc/magic format (with one exception; see the man page).
 
 In addition, the /etc/magic file is built from a subdirectory
-for easier maintenance.  I will act as a clearinghouse for
+for easier(?) maintenance.  I will act as a clearinghouse for
 magic numbers assigned to all sorts of data files that
 are in reasonable circulation. Send your magic numbers,
 in magic(4) format please, to the author, Ian Darwin.
@@ -74,3 +87,9 @@ E-mail: darwin@cs.toronto.edu
 	uunet!sq!ian
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
+
+Parts of this software were developed at SoftQuad Inc., 56 Aberfoyle
+Cres, # 810, Toronto, Ontario CANADA M8X 2W4.  Phone: 416-239-4801 or
+800-387-2777. Email: mail@sq.com.  Call for information on SGML editing
+and browsing, Unix text processing, and customised products on Unix,
+DOS and Mac.
