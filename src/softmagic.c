@@ -44,7 +44,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.63 2003/10/15 01:51:24 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.64 2003/12/31 18:36:22 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -133,7 +133,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			 * main entry didn't match,
 			 * flush its continuations
 			 */
-			while (magindex < nmagic &&
+			while (magindex < nmagic - 1 &&
 			       magic[magindex + 1].cont_level != 0)
 			       magindex++;
 			continue;
