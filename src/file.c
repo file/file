@@ -56,7 +56,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.60 2001/10/20 17:44:53 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.61 2001/12/18 20:56:38 christos Exp $")
 #endif	/* lint */
 
 
@@ -463,7 +463,7 @@ tryit(buf, nb, zflag)
 		return 'a';
 
 	/* abandon hope, all ye who remain here */
-	ckfputs("data", stdout);
+	ckfputs(iflag ? "application/octet-stream" : "data", stdout);
 		return '\0';
 }
 
