@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.14 1987/11/12 13:11:06 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.15 1988/03/23 11:42:16 ian Exp $";
 #endif	/* lint */
 extern char *ckfmsg;
 int 	debug = 0, 	/* huh? */
@@ -97,8 +97,10 @@ char *argv[];
 		exit(ret);
 
 	if (optind == argc) {
-		if (!didsomefiles)
+		if (!didsomefiles) {
 			(void)fprintf(stderr, USAGE, progname);
+			exit(2);
+		}
 	}
 	else
 		for (; optind < argc; optind++)
