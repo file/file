@@ -84,3 +84,5 @@
 # Now magic for IMAGEN font files...
 0	string		Rast		RST-format raster font data
 >45	string		>0		face %
+# From Jukka Ukkonen
+0	string		\033[K\002\0\0\017\033(a\001\0\001\033(g	Canon Bubble Jet BJC formatted data
