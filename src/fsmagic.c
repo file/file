@@ -46,7 +46,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: fsmagic.c,v 1.18 1992/09/11 12:07:27 ian Exp $";
+	"@(#)$Id: fsmagic.c,v 1.19 1992/09/11 12:37:43 ian Exp $";
 #endif	/* lint */
 
 int
@@ -65,11 +65,14 @@ struct stat *sb;
 		ret = lstat(fn, sb);
 	else
 #endif
-	ret = stat(fn, sb);
+	ret = stat(fn, sb);	/* don't merge into if; see "ret =" above */
 
 	if (ret) {
-		error("can't stat `%s' (%s).\n", fn, strerror(errno));
-		/*NOTREACHED*/
+		ckfprintf(stdout,
+			/* Yes, I do mean stdout. */
+			/* No \n, caller will provide. */
+			"can't stat `%s' (%s).", fn, strerror(errno));
+		return 1;
 	}
 
 	if (sb->st_mode & S_ISUID) ckfputs("setuid ", stdout);
