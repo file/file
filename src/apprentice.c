@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.27 1998/06/27 13:57:23 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.28 1998/09/12 13:17:52 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -228,16 +228,25 @@ int *ndx, check;
 		 */
 		if (*l == '.') {
 			l++;
-			switch (LOWCASE(*l)) {
+			switch (*l) {
 			case 'l':
-				m->in.type = LONG;
+				m->in.type = LELONG;
+				break;
+			case 'L':
+				m->in.type = BELONG;
 				break;
 			case 'h':
 			case 's':
-				m->in.type = SHORT;
+				m->in.type = LESHORT;
+				break;
+			case 'H':
+			case 'S':
+				m->in.type = BESHORT;
 				break;
 			case 'c':
 			case 'b':
+			case 'C':
+			case 'B':
 				m->in.type = BYTE;
 				break;
 			default:
