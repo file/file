@@ -33,7 +33,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/ascmagic.c,v 1.6 1991/01/23 13:22:06 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/ascmagic.c,v 1.7 1991/01/23 13:56:27 ian Exp $";
 #endif	/* lint */
 
 char *ckfmsg = "write error on output";
@@ -42,13 +42,13 @@ char *ckfmsg = "write error on output";
 #define	STREQ(a, b)	(*(a) == *(b) && strcmp((a), (b)) == 0)
 
 ascmagic(buf, nbytes)
-register char	*buf;
+unsigned char *buf;
 int nbytes;	/* size actually read */
 {
-	int i, isblock, is_tar(), is_compress();
-	char *s, *strtok(), *token;
+	int i, isblock, is_tar(), is_compress(), has_escapes = 0;
+	unsigned char *s;
+	char *strtok(), *token;
 	register struct names *p;
-	short has_escapes = 0;
 	extern int zflag;
 
 	/* these are easy, do them first */
@@ -59,12 +59,12 @@ int nbytes;	/* size actually read */
 	 * and other trash from real troff input.
 	 */
 	if (*buf == '.') {
-		char *p = buf + 1;
+		unsigned char *tp = buf + 1;
 
-		while (isascii(*p) && isspace(*p))
-			++p;	/* skip leading whitespace */
-		if ((isascii(*p) && (isalnum(*p) || *p=='\\') &&
-		    isascii(*(p+1)) && (isalnum(*(p+1)) || *p=='"'))) {
+		while (isascii(*tp) && isspace(*tp))
+			++tp;	/* skip leading whitespace */
+		if ((isascii(*tp) && (isalnum(*tp) || *tp=='\\') &&
+		    isascii(*(tp+1)) && (isalnum(*(tp+1)) || *tp=='"'))) {
 			ckfputs("troff or preprocessor input text", stdout);
 			return 1;
 		}
@@ -98,13 +98,13 @@ int nbytes;	/* size actually read */
 
 	if (i = is_compress(buf, &isblock)) {
 		if (zflag) {
-			char *newbuf;
+			unsigned char *newbuf;
 			int newsize;
 
 			newsize = uncompress(buf, nbytes, &newbuf);
 			try(newbuf, newsize);
 			/* free(newbuf) */
-			printf("(%scompressed data - %d bits)",
+			printf(" (%scompressed data - %d bits)",
 				isblock ? "block " : "", i);
 		}
 	 	else printf("%scompressed data - %d bits",

@@ -30,7 +30,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.8 1990/10/03 17:53:10 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/softmagic.c,v 1.9 1991/01/23 13:56:45 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -45,8 +45,10 @@ static int magindex;
  * (already read from /etc/magic by apprentice.c).
  * Passed the name and FILE * of one file to be typed.
  */
-softmagic(buf)
-char *buf;
+/*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
+softmagic(buf, nbytes)
+unsigned char *buf;
+int nbytes;
 {
 	magindex = 0;
 	if (match(buf))
@@ -60,7 +62,7 @@ char *buf;
  * Be sure to process every continuation of this match.
  */
 match(s)
-char	*s;
+unsigned char	*s;
 {
 	while (magindex < nmagic) {
 		/* if main entry matches, print it... */
@@ -91,7 +93,7 @@ char	*s;
 
 mprint(m,s)
 struct magic *m;
-char *s;
+unsigned char *s;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);
 	register long v;
@@ -121,7 +123,7 @@ char *s;
 
 int
 mcheck(s, m)
-char	*s;
+unsigned char	*s;
 struct magic *m;
 {
 	register union VALUETYPE *p = (union VALUETYPE *)(s+m->offset);

@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.17 1991/01/23 13:23:23 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/file.c,v 1.18 1991/01/23 13:56:37 ian Exp $";
 #endif	/* lint */
 
 extern char *ckfmsg;
@@ -123,7 +123,7 @@ char *argv[];
 		for (; optind < argc; optind++)
 			process(argv[optind], 1);
 
-	exit(0);
+	return 0;
 }
 
 /*
@@ -132,7 +132,7 @@ char *argv[];
 unwrap(fn)
 char *fn;
 {
-#define FILENAMELEN 128
+#define FILENAMELEN 1024
 	char buf[FILENAMELEN];
 	FILE *f;
 
@@ -151,12 +151,13 @@ char *fn;
 /*
  * process - process input file
  */
+/*ARGSUSED1*/		/* why is top no longer used? */
 process(inname, top)
 char	*inname;
 int top;		/* true if called from top level */
 {
 	int	fd;
-	char	buf[HOWMANY];
+	unsigned char	buf[HOWMANY];
 	struct utimbuf utbuf;
 
 	if (strcmp("-", inname) == 0) {
@@ -185,7 +186,7 @@ readit:
 		/*
 		 * try looking at the first HOWMANY bytes
 		 */
-		if ((nbytes = read(fd, buf, HOWMANY)) == -1)
+		if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1)
 			warning("read failed");
 		if (nbytes == 0) {
 			ckfputs("empty", stdout);
@@ -205,16 +206,16 @@ readit:
 	(void) putchar('\n');
 }
 
-try(buf, nbytes)
-char *buf;
-int nbytes;
+try(buf, nb)
+unsigned char *buf;
+int nb;
 {
 	/*
 	 * try tests in /etc/magic (or surrogate magic file)
 	 */
-	if (softmagic(buf, nbytes) == 1)
+	if (softmagic(buf, nb) == 1)
 		/*NULLBODY*/;
-	else if (ascmagic(buf, nbytes) == 1)
+	else if (ascmagic(buf, nb) == 1)
 		/*
 		 * try known keywords, check for ascii-ness too.
 		 */

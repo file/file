@@ -11,7 +11,7 @@
  */
 int
 is_compress(p, b)
-char *p;
+unsigned char *p;
 int *b;
 {
 
