@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Header: /p/file/cvsroot/file/src/Attic/Makefile,v 1.12 1987/11/06 11:34:45 ian Exp $
+# @(#)$Header: /p/file/cvsroot/file/src/Attic/Makefile,v 1.13 1987/11/06 21:26:21 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -74,7 +74,7 @@ test:		all $(OFILE)
 file:		$(OBJS)
 		cc $(CFLAGS) $(OBJS) -o $@
 lint:		$(SRCS)
-		lint -ha $(DEFS) $(SRCS)
+		lint -ha $(DEFS) $(SRCS) | tee $@
 magic:		magdir
 #		exclude RCS or SCCS dirs:
 		cat magdir/[a-z]* >$@
