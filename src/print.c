@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.46 2004/11/13 08:11:39 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.47 2005/03/14 16:56:25 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -152,7 +152,7 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 	fputc('\n', stderr);
 }
 
-protected char *
+protected const char *
 file_fmttime(uint32_t v, int local)
 {
 	char *pp, *rt;
@@ -171,6 +171,8 @@ file_fmttime(uint32_t v, int local)
 			struct tm *tm1;
 			(void)time(&now);
 			tm1 = localtime(&now);
+			if (tm1 == NULL)
+				return "*Invalid time*";
 			daylight = tm1->tm_isdst;
 		}
 #endif /* HAVE_TM_ISDST */
@@ -178,6 +180,8 @@ file_fmttime(uint32_t v, int local)
 		if (daylight)
 			t += 3600;
 		tm = gmtime(&t);
+		if (tm == NULL)
+			return "*Invalid time*";
 		pp = asctime(tm);
 	}
 

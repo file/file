@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.66 2005/03/06 05:58:22 christos Exp $
+ * @(#)$Id: file.h,v 1.67 2005/03/14 16:56:24 christos Exp $
  */
 
 #ifndef __file_h__
@@ -245,7 +245,7 @@ struct magic_set {
 };
 
 struct stat;
-protected char *file_fmttime(uint32_t, int);
+protected const char *file_fmttime(uint32_t, int);
 protected int file_buffer(struct magic_set *, int, const void *, size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
