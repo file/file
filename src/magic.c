@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.26 2005/03/06 05:58:22 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.27 2005/03/09 19:00:17 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -256,9 +256,6 @@ magic_file(struct magic_set *ms, const char *inname)
 	/*
 	 * try looking at the first HOWMANY bytes
 	 */
-/*###259 [cc] error: `buf' undeclared (first use in this function)%%%*/
-/*###259 [cc] error: (Each undeclared identifier is reported only once%%%*/
-/*###259 [cc] error: for each function it appears in.)%%%*/
 	if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
 		file_error(ms, errno, "cannot read `%s'", inname);
 		goto done;
@@ -274,7 +271,6 @@ magic_file(struct magic_set *ms, const char *inname)
 			goto done;
 		goto gotit;
 	} else {
-/*###274 [cc] error: parse error before ';' token%%%*/
 		(void)memset(buf + nbytes, 0, SLOP); /* NUL terminate */
 #ifdef __EMX__
 		switch (file_os2_apptype(ms, inname, buf, nbytes)) {
