@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/param.h>	/* for MAXPATHLEN */
+#include <sys/stat.h>
 #include <fcntl.h>	/* for open() */
 #ifdef RESTORE_TIME
 # if (__COHERENT__ >= 0x420)
@@ -58,7 +59,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.64 2002/06/11 17:31:46 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.65 2002/07/03 18:26:37 christos Exp $")
 #endif	/* lint */
 
 
@@ -103,25 +104,23 @@ char *progname;		/* used throughout 			*/
 int lineno;		/* line number in the magic file	*/
 
 
-static void	unwrap		__P((char *fn));
-static void	usage		__P((void));
+static void	unwrap(char *fn);
+static void	usage(void);
 #ifdef HAVE_GETOPT_H
-static void	help		__P((void));
+static void	help(void);
 #endif
 #if 0
-static int	byteconv4	__P((int, int, int));
-static short	byteconv2	__P((int, int, int));
+static int	byteconv4(int, int, int);
+static short	byteconv2(int, int, int);
 #endif
 
-int main __P((int, char *[]));
+int main(int, char *[]);
 
 /*
  * main - parse arguments and handle options
  */
 int
-main(argc, argv)
-	int argc;
-	char *argv[];
+main(int argc, char **argv)
 {
 	int c;
 	int action = 0, didsomefiles = 0, errflg = 0, ret = 0, app = 0;
@@ -291,8 +290,7 @@ main(argc, argv)
  * unwrap -- read a file of filenames, do each one.
  */
 static void
-unwrap(fn)
-	char *fn;
+unwrap(char *fn)
 {
 	char buf[MAXPATHLEN];
 	FILE *f;
@@ -336,10 +334,7 @@ unwrap(fn)
  *	big_endian	whether we are a big endian host
  */
 static int
-byteconv4(from, same, big_endian)
-	int from;
-	int same;
-	int big_endian;
+byteconv4(int from, int same, int big_endian)
 {
 	if (same)
 		return from;
@@ -366,10 +361,7 @@ byteconv4(from, same, big_endian)
  * Same as byteconv4, but for shorts
  */
 static short
-byteconv2(from, same, big_endian)
-	int from;
-	int same;
-	int big_endian;
+byteconv2(int from, int same, int big_endian)
 {
 	if (same)
 		return from;
@@ -394,9 +386,7 @@ byteconv2(from, same, big_endian)
  * process - process input file
  */
 void
-process(inname, wid)
-	const char	*inname;
-	int wid;
+process(const char *inname, int wid)
 {
 	int	fd = 0;
 	static  const char stdname[] = "standard input";
@@ -496,10 +486,7 @@ process(inname, wid)
 
 
 int
-tryit(fn, buf, nb, zfl)
-	const char *fn;		/* file name*/
-	unsigned char *buf;	/* buffer */
-	int nb, zfl;
+tryit(const char *fn, unsigned char *buf, int nb, int zfl)
 {
 
 	/*
@@ -533,7 +520,7 @@ tryit(fn, buf, nb, zfl)
 }
 
 static void
-usage()
+usage(void)
 {
 	(void)fprintf(stderr, USAGE, progname);
 	(void)fprintf(stderr, "Usage: %s -C [-m magic]\n", progname);
@@ -545,28 +532,28 @@ usage()
 
 #ifdef HAVE_GETOPT_H
 static void
-help()
+help(void)
 {
 	puts(
-"Usage: file [OPTION]... [FILE]...
-Determine file type of FILEs.
-
-  -m, --magic-file LIST      use LIST as a colon-separated list of magic
-                               number files
-  -z, --uncompress           try to look inside compressed files
-  -b, --brief                do not prepend filenames to output lines
-  -c, --checking-printout    print the parsed form of the magic file, use in
-                               conjunction with -m to debug a new magic file
-                               before installing it
-  -f, --files-from FILE      read the filenames to be examined from FILE
-  -i, --mime                 output mime type strings
-  -k, --keep-going           don't stop at the first match
-  -L, --dereference          causes symlinks to be followed
-  -n, --no-buffer            do not buffer output
-  -s, --special-files        treat special (block/char devices) files as
-                             ordinary ones
-      --help                 display this help and exit
-      --version              output version information and exit"
+"Usage: file [OPTION]... [FILE]...\n"
+"Determine file type of FILEs.\n"
+"\n"
+"  -m, --magic-file LIST      use LIST as a colon-separated list of magic\n"
+"                               number files\n"
+"  -z, --uncompress           try to look inside compressed files\n"
+"  -b, --brief                do not prepend filenames to output lines\n"
+"  -c, --checking-printout    print the parsed form of the magic file, use in\n"
+"                               conjunction with -m to debug a new magic file\n"
+"                               before installing it\n"
+"  -f, --files-from FILE      read the filenames to be examined from FILE\n"
+"  -i, --mime                 output mime type strings\n"
+"  -k, --keep-going           don't stop at the first match\n"
+"  -L, --dereference          causes symlinks to be followed\n"
+"  -n, --no-buffer            do not buffer output\n"
+"  -s, --special-files        treat special (block/char devices) files as\n"
+"                             ordinary ones\n"
+"      --help                 display this help and exit\n"
+"      --version              output version information and exit\n"
 );
 	exit(0);
 }
