@@ -27,8 +27,14 @@ COPTS	= -O # -g
 CFLAGS	= $(COPTS) $(DEFS)
 SHAR	= bundle
 OFILE	= /usr/bin/file.orig	# old or distributed version, for comparison
-BINDIR	= /usr/local		# where new binary lives
-MANDIR	= /usr/man/local	# for our man pages
+# Where new binary lives; typically /usr/local (BSD), /usr/lbin (USG).
+BINDIR	= /usr/local
+# For installing our man pages; typically MANDIR is /usr/man/man1 (BSD)
+# or /usr/man/local (USG). MAN?EXT is [15] on BSD, l for BSD if
+# installing in /usr/man/manl (for local), [14] on USG.
+MANDIR	= /usr/man/local
+MAN1EXT	= 1
+MAN4EXT	= 4
 
 # There are no system-dependant configuration options (except maybe CFLAGS).
 # Delete some of LOCALSRCS and LOCALOBJS if they're in your C library.
@@ -49,7 +55,7 @@ test:		all
 		time $(OFILE) -m ./magic * tst/* >/tmp/t1
 		time ./file -m ./magic * tst/* >/tmp/t2
 		-diff -b /tmp/t[12]
-		what ./file >lastnocore
+		ident ./file >lastnocore
 
 file:		$(OBJS)
 		cc $(CFLAGS) $(OBJS) -o $@
@@ -66,8 +72,8 @@ apprentice.o ascmagic.o file.o fsmagic.o print.o softmagic.o: file.h
 install:	all
 		cp file $(BINDIR)/file
 		cp magic $(MAGIC)
-		cp file.1 $(MANDIR)/man1
-		cp magic.4 $(MANDIR)/man4 # maybe 5 on some systems.
+		cp file.1 $(MANDIR)/$(MAN1EXT)
+		cp magic.4 $(MANDIR)/$(MAN4EXT)
 
 clean:
 		rm -f *.o file magic lint.out
