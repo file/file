@@ -201,7 +201,8 @@
 # Up to now only 0, 1 and 2 are defined; I've seen a file with 0x83, it seemed
 # like proper ELF, but extracting the string had bad results.
 >4      byte            <0x80
->8	string		>\0		(%s)
+>>8	string		>\0		(%s)
+>8	string		\0
 >>7	byte		0		(SYSV)
 >>7	byte		1		(HP-UX)
 >>7	byte		2		(NetBSD)
