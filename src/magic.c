@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.19 2004/03/22 20:37:13 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.20 2004/03/23 15:33:43 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -234,13 +234,13 @@ magic_file(struct magic_set *ms, const char *inname)
 		fd = STDIN_FILENO;
 	else if ((fd = open(inname, O_RDONLY)) < 0) {
 		/* We cannot open it, but we were able to stat it. */
-		if (sb.st_mode & 0002)
+		if (sb.st_mode & 0222)
 			if (file_printf(ms, "writable, ") == -1)
 				return NULL;
 		if (sb.st_mode & 0111)
 			if (file_printf(ms, "executable, ") == -1)
 				return NULL;
-		if (sb.st_mode & 0100000)
+		if (S_ISREG(sb.st_mode))
 			if (file_printf(ms, "regular file, ") == -1)
 				return NULL;
 		if (file_printf(ms, "no read permission") == -1)
