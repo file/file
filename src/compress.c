@@ -16,7 +16,7 @@
 #include <sys/wait.h>
 #endif
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.18 2001/03/17 20:03:26 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.19 2001/03/20 04:22:02 christos Exp $")
 #endif
 
 
@@ -26,11 +26,10 @@ static struct {
 	const char *const argv[3];
 	int	 silent;
 } compr[] = {
-#if 0
-	/* We don't use uncompress anymore because it gets stuck */
-	{ "\037\235", 2, { "uncompress", "-c", NULL }, 1 },	/* compressed */
-#endif
 	{ "\037\235", 2, { "gzip", "-cdq", NULL }, 1 },		/* compressed */
+	/* Uncompress can get stuck; so use gzip first if we have it
+	 * Idea from Damien Clark, thanks! */
+	{ "\037\235", 2, { "uncompress", "-c", NULL }, 1 },	/* compressed */
 	{ "\037\213", 2, { "gzip", "-cdq", NULL }, 1 },		/* gzipped */
 	{ "\037\236", 2, { "gzip", "-cdq", NULL }, 1 },		/* frozen */
 	{ "\037\240", 2, { "gzip", "-cdq", NULL }, 1 },		/* SCO LZH */
