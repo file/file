@@ -62,7 +62,7 @@
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
-#ifdef HAVE_WCHAR_T
+#ifdef HAVE_WCHAR_H
 #include <wchar.h>
 #endif
 
@@ -77,7 +77,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.91 2004/03/22 19:12:15 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.92 2004/03/22 21:34:39 christos Exp $")
 #endif	/* lint */
 
 
