@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.28 1995/04/28 17:29:13 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.29 1995/04/28 19:13:08 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -287,7 +287,7 @@ struct magic *m;
 int nbytes;
 {
 	long offset = m->offset;
-	long diff = (offset + sizeof(union VALUETYPE)) - nbytes;
+	long diff = nbytes - (offset + sizeof(union VALUETYPE));
 	if (diff >= 0)
 		memcpy(p, s + offset, sizeof(union VALUETYPE));
 	else {
