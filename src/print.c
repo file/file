@@ -39,7 +39,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.16 1992/09/11 12:37:28 ian Exp $";
+	"@(#)$Id: print.c,v 1.17 1992/09/11 17:42:09 ian Exp $";
 #endif  /* lint */
 
 void
@@ -87,7 +87,7 @@ ckfputs(str, fil)
 /*VARARGS*/
 void
 #if __STDC__
-ckfprintf(const FILE *f, const char *fmt, ...)
+ckfprintf(FILE *f, const char *fmt, ...)
 #else
 ckfprintf(va_alist)
 	va_dcl
@@ -97,10 +97,10 @@ ckfprintf(va_alist)
 #if __STDC__
 	va_start(va, fmt);
 #else
-	const FILE *f;
+	FILE *f;
 	const char *fmt;
 	va_start(va);
-	f = va_arg(va, const FILE *);
+	f = va_arg(va, FILE *);
 	fmt = va_arg(va, const char *);
 #endif
 	(void) vfprintf(f, fmt, va);
