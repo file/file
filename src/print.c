@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.45 2004/09/11 19:15:57 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.46 2004/11/13 08:11:39 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -137,7 +137,7 @@ file_mdump(struct magic *m)
 
 /*VARARGS*/
 protected void
-file_magwarn(const char *f, ...)
+file_magwarn(struct magic_set *ms, const char *f, ...)
 {
 	va_list va;
 	va_start(va, f);
@@ -145,7 +145,8 @@ file_magwarn(const char *f, ...)
 	/* cuz we use stdout for most, stderr here */
 	(void) fflush(stdout); 
 
-	(void) fprintf(stderr, "WARNING: ");
+	(void) fprintf(stderr, "%s, %lu: Warning ", ms->file,
+	    (unsigned long)ms->line);
 	(void) vfprintf(stderr, f, va);
 	va_end(va);
 	fputc('\n', stderr);
