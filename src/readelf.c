@@ -14,7 +14,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.19 2002/05/16 15:01:41 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.20 2002/05/16 18:57:11 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -170,9 +170,9 @@ dophn_exec(class, swap, fd, off, num, size)
 	size_t size;
 {
 	Elf32_Phdr ph32;
-	Elf32_Nhdr *nh32;
+	Elf32_Nhdr *nh32 = NULL;
 	Elf64_Phdr ph64;
-	Elf64_Nhdr *nh64;
+	Elf64_Nhdr *nh64 = NULL;
 	char *linking_style = "statically";
 	char *shared_libraries = "";
 	char nbuf[BUFSIZ];
@@ -362,9 +362,9 @@ dophn_core(class, swap, fd, off, num, size)
 	size_t size;
 {
 	Elf32_Phdr ph32;
-	Elf32_Nhdr *nh32;
+	Elf32_Nhdr *nh32 = NULL;
 	Elf64_Phdr ph64;
-	Elf64_Nhdr *nh64;
+	Elf64_Nhdr *nh64 = NULL;
 	size_t offset, nameoffset, noffset, reloffset;
 	unsigned char c;
 	int i, j;
