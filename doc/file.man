@@ -1,5 +1,5 @@
 .TH FILE 1 "Copyright but distributable"
-.\# $Id: file.man,v 1.16 1992/09/08 15:32:50 ian Exp $
+.\# $Id: file.man,v 1.17 1992/09/08 16:15:57 ian Exp $
 .SH NAME
 .I file
 \- determine file type
@@ -251,7 +251,7 @@ were written by John Gilmore from his public-domain
 program, and are not covered by the above restrictions.
 .SH BUGS
 There must be a better way to automate the construction of the Magic
-file from all the glop in magdir. What is it?
+file from all the glop in Magdir. What is it?
 .PP
 .I File
 uses several algorithms that favor speed over accuracy,
@@ -262,12 +262,9 @@ is simplistic, inefficient and requires recompilation to update.
 .PP
 Should there be an ``else'' clause to follow a series of continuation lines?
 .PP
-Is it worthwhile to implement recursive file inspection,
-so that compressed files, uuencoded, etc., can say ``compressed
-ascii text'' or ``compressed executable'' or ``compressed tar archive"
-or whatever? 
-.PP
 The magic file and keywords should have regular expression support.
+Their use of ASCII TAB as a field delimiter is ugly and makes
+it hard to edit the files, but is entrenched.
 .PP
 It might be advisable to allow upper-case letters in keywords
 for e.g., troff commands vs man page macros.
@@ -282,9 +279,6 @@ The list of keywords in
 .I ascmagic
 probably belongs in the Magic file.
 This could be done by using some keyword like `*' for the offset value.
-.PP
-The program should malloc the magic file structures,
-rather than using a fixed-size array as at present.
 .PP
 The magic file should be compiled into binary 
 (or better yet, fixed-length ASCII strings 
