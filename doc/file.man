@@ -1,12 +1,12 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.29 1997/04/13 18:29:54 christos Exp $
+.\" $Id: file.man,v 1.30 1997/11/05 16:03:18 christos Exp $
 .SH NAME
 file
 \- determine file type
 .SH SYNOPSIS
 .B file
 [
-.B \-vczL
+.B \-vbczL
 ]
 [
 .B \-f
@@ -115,6 +115,9 @@ This can be a single file, or a colon-separated list of files.
 .B \-z
 Try to look inside compressed files.
 .TP 8
+.B \-b
+Do not prepend filenames to output lines (brief mode).
+.TP 8
 .B \-c
 Cause a checking printout of the parsed form of the magic file.
 This is usually used in conjunction with 
@@ -146,7 +149,7 @@ can be used to set the default magic number files.
 .BR magic (__FSECTION__)
 \- description of magic file format.
 .br
-.BR strings (1), " od" (1)
+.BR strings (1), " od" (1), " hexdump(1)"
 \- tools for examining non-textfiles.
 .SH STANDARDS CONFORMANCE
 This program is believed to exceed the System V Interface Definition
@@ -248,7 +251,7 @@ the process running
 .RE
 .PP
 Changes by Ian Darwin and various authors including
-Christos Zoulas (christos@deshaw.com), 1990-1997.
+Christos Zoulas (christos@astron.com), 1990-1997.
 .SH LEGAL NOTICE
 Copyright (c) Ian F. Darwin, Toronto, Canada,
 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993.
@@ -360,6 +363,6 @@ This manual page, and particularly this section, is too long.
 .SH AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
-.B ftp.deshaw.com
+.B ftp.astron.com
 in the directory
 .I /pub/file/file-X.YY.tar.gz

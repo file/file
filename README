@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.21 1997/01/15 17:23:24 christos Exp $
+@(#) $Id: README,v 1.22 1997/11/05 16:03:18 christos Exp $
 
 This is Release 3.x of Ian Darwin's (copyright but distributable)
 file(1) command. This version is the standard "file" command for Linux,
@@ -80,7 +80,7 @@ file, apply this patch [which is going to be in the next version of gzip]:
       }
       bytes_in += (ulg)insize;
 
-E-mail: christos@deshaw.com, moraes@deshaw.com
+E-mail: christos@astron.com, moraes@deshaw.com
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
 
