@@ -32,7 +32,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.50 2003/03/26 16:25:25 christos Exp $
+ * @(#)$Id: file.h,v 1.51 2003/03/26 16:25:58 christos Exp $
  */
 
 #ifndef __file_h__
@@ -80,7 +80,7 @@
 #define FILE_COMPILE	2
 
 #ifndef __GNUC__
-#ifndef __lint__
+#ifndef __attribute__
 #define __attribute__(a)
 #endif
 #endif
