@@ -1,0 +1,7 @@
+#
+# magic.basic
+#
+0	short		0x142		basic-16 executable
+>12	long		>0		not stripped
+0	short		0x143		basic-16 executable (TV)
+>12	long		>0		not stripped
