@@ -1,12 +1,20 @@
 #define	FILE_VERSION_MAJOR	3
-#define	patchlevel		10
+#define	patchlevel		12
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.11 1993/09/24 18:49:06 christos Exp $
+ * $Id: patchlevel.h,v 1.12 1993/10/27 20:59:05 christos Exp $
  *
  * $Log: patchlevel.h,v $
- * Revision 1.11  1993/09/24 18:49:06  christos
+ * Revision 1.12  1993/10/27 20:59:05  christos
+ * Changed -z flag to understand gzip format too.
+ * Moved builtin compression detection to a table, and move
+ * the compress magic entry out of the source.
+ * Made printing of numbers unsigned, and added the mask to it.
+ * Changed the buffer size to 8k, because gzip will refuse to
+ * unzip just a few bytes.
+ *
+ * Revision 1.11  1993/09/24  18:49:06  christos
  * Fixed small bug in softmagic.c introduced by
  * copying the data to be examined out of the input
  * buffer. Changed the Makefile to use sed to create

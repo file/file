@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.17 1993/09/23 21:47:01 christos Exp $
+ * @(#)$Id: file.h,v 1.18 1993/10/27 20:59:05 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -26,7 +26,7 @@
  * 4. This notice may not be removed or altered.
  */
 
-#define HOWMANY	1024		/* how much of the file to look at */
+#define HOWMANY	8192		/* how much of the file to look at */
 #define MAXMAGIS 1000		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
@@ -91,8 +91,8 @@ extern void  mdump		__P((struct magic *));
 extern void  process		__P((const char *, int));
 extern void  showstr		__P((FILE *, const char *, int));
 extern int   softmagic		__P((unsigned char *, int));
-extern void  tryit		__P((unsigned char *, int));
-extern int   uncompress		__P((const unsigned char *, unsigned char **, int));
+extern void  tryit		__P((unsigned char *, int, int));
+extern int   zmagic		__P((unsigned char *, int));
 extern void  ckfprintf		__P((FILE *, const char *, ...));
 
 
@@ -114,7 +114,7 @@ extern int lflag;		/* follow symbolic links?		*/
 extern int optind;		/* From getopt(3)			*/
 extern char *optarg;
 
-#if !defined(__STDC__) || defined(sun) || defined(__sun__)
+#if !defined(__STDC__) || defined(sun) || defined(__sun__) || defined(__convex__)
 extern int sys_nerr;
 extern char *sys_errlist[];
 #define strerror(e) \
