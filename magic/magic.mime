@@ -145,6 +145,8 @@
 
 #
 # zsh/ash/ae/nawk/gawk magic from cameron@cs.unsw.oz.au (Cameron Simpson)
+0       string          #!/bin/zsh	        application/x-shellscript
+0       string          #!/usr/bin/zsh	        application/x-shellscript
 0       string          #!/usr/local/bin/zsh    application/x-shellscript
 0       string          #!\ /usr/local/bin/zsh  application/x-shellscript
 0       string          #!/usr/local/bin/ash    application/x-shellscript
