@@ -19,7 +19,7 @@ magic.mgc: magic
 	$(top_builddir)/src/file -C -m magic
 
 magic.mime.mgc: magic.mime
-	$(top_builddir)/src/file -C -m magic.mime
+	$(top_builddir)/src/file -C -m $(srcdir)/magic.mime
 
 magic_FRAGMENTS = \
 Magdir/acorn \
