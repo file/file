@@ -149,6 +149,10 @@
 0	belong	0xdeadad40	IRIX 64-bit core dump
 >4	belong	1		of
 >16	string	>\0		'%s'
+# N32bit core file
+0       belong	0xbabec0bb	IRIX N32 core dump
+>4      belong	1               of
+>16     string	>\0             '%s'
 # New style crash dump file
 0	string	\x43\x72\x73\x68\x44\x75\x6d\x70	IRIX vmcore dump of
 >36	string	>\0					'%s'
@@ -156,7 +160,7 @@
 0	string	SGIAUDIT	SGI Audit file
 >8	byte	x		- version %d
 >9	byte	x		.%ld
-# Are these three SGI-based file types or general ones?
+#
 0	string	WNGZWZSC	Wingz compiled script
 0	string	WNGZWZSS	Wingz spreadsheet
 0	string	WNGZWZHP	Wingz help file
