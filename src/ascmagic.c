@@ -33,35 +33,41 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/ascmagic.c,v 1.5 1987/09/16 14:44:45 ian Exp $";
+	"@(#)$Header: /home/glen/git/file/cvs/file/src/ascmagic.c,v 1.6 1991/01/23 13:22:06 ian Exp $";
 #endif	/* lint */
 
-char ckfmsg[] = "write error on output";
+char *ckfmsg = "write error on output";
 
 			/* an optimisation over plain strcmp() */
 #define	STREQ(a, b)	(*(a) == *(b) && strcmp((a), (b)) == 0)
 
-ascmagic(buf)
+ascmagic(buf, nbytes)
 register char	*buf;
+int nbytes;	/* size actually read */
 {
-	register int i;
-	char	*s, *strtok(), *token;
+	int i, isblock, is_tar(), is_compress();
+	char *s, *strtok(), *token;
 	register struct names *p;
-	extern int nbytes;
 	short has_escapes = 0;
+	extern int zflag;
 
 	/* these are easy, do them first */
 
 	/*
-	 * for troff, look for . + letter + letter;
+	 * for troff, look for . + letter + letter or .\";
 	 * this must be done to disambiguate tar archives' ./file
 	 * and other trash from real troff input.
 	 */
-	if (*buf == '.' && 
-		isascii(*(buf+1)) && isalnum(*(buf+1)) &&
-		isascii(*(buf+2)) && isalnum(*(buf+2))){
-		ckfputs("troff or preprocessor input text", stdout);
-		return 1;
+	if (*buf == '.') {
+		char *p = buf + 1;
+
+		while (isascii(*p) && isspace(*p))
+			++p;	/* skip leading whitespace */
+		if ((isascii(*p) && (isalnum(*p) || *p=='\\') &&
+		    isascii(*(p+1)) && (isalnum(*(p+1)) || *p=='"'))) {
+			ckfputs("troff or preprocessor input text", stdout);
+			return 1;
+		}
 	}
 	if ((*buf == 'c' || *buf == 'C') && 
 	    isascii(*(buf + 1)) && isspace(*(buf + 1))) {
@@ -87,6 +93,22 @@ register char	*buf;
 		return 1;
 	case 2:
 		ckfputs("POSIX tar archive", stdout);
+		return 1;
+	}
+
+	if (i = is_compress(buf, &isblock)) {
+		if (zflag) {
+			char *newbuf;
+			int newsize;
+
+			newsize = uncompress(buf, nbytes, &newbuf);
+			try(newbuf, newsize);
+			/* free(newbuf) */
+			printf("(%scompressed data - %d bits)",
+				isblock ? "block " : "", i);
+		}
+	 	else printf("%scompressed data - %d bits",
+			isblock ? "block " : "", i);
 		return 1;
 	}
 
