@@ -1,4 +1,9 @@
-2004-09-27 11:30  christos Zoulas  <christos@zoulas.com>
+2004 10-12 10:50  Christos Zoulas  <christos@zoulas.com>
+
+	* Fix stack overwriting on 0 length strings: Tim Waugh
+	    <twaugh@redhat.com>
+
+2004-09-27 11:30  Christos Zoulas  <christos@zoulas.com>
 
 	* Remove 3rd and 4th copyright clause; approved by Ian Darwin.
 
