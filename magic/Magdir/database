@@ -192,4 +192,12 @@
 2	string		ICE		ICE authority data
 
 # X11 Xauthority file (Wolfram Kleff)
+10	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
+11	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
+12	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
+13	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
 14	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
+15	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
+16	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
+17	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data
+18	string		MIT-MAGIC-COOKIE-1	X11 Xauthority data

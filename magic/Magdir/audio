@@ -337,3 +337,6 @@
 0	string		A#S#C#S#S#L#V#3	    Synthesizer Generator or Kimwitu data
 # Kimwitu++ uses a slightly different magic
 0	string		A#S#C#S#S#L#HUB	    Kimwitu++ data
+
+# From "Simon Hosie
+0       string  TFMX-SONG       TFMX module sound data

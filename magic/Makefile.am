@@ -59,6 +59,7 @@ Magdir/compress \
 Magdir/console \
 Magdir/convex \
 Magdir/ctags \
+Magdir/dact \
 Magdir/database \
 Magdir/diamond \
 Magdir/diff \
@@ -78,6 +79,7 @@ Magdir/frame \
 Magdir/freebsd \
 Magdir/fsav \
 Magdir/games \
+Magdir/geos \
 Magdir/gcc \
 Magdir/gimp \
 Magdir/gnu \

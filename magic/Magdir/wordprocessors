@@ -102,3 +102,9 @@
 >8	long	18219264	WordPerfect graphic image (1.0)
 >8	long	18219520	WordPerfect graphic image (2.0)
 #end of WordPerfect type files Version 1.6 - PLEASE DO NOT REMOVE THIS LINE
+
+# Hangul (Korean) Word Processor File
+0	string	HWP\ Document\ File	Hangul (Korean) Word Processor File
+
+# CosmicBook, from Benoît Rouits
+0       string  CSBK    Ted Neslson's CosmicBook hypertext file

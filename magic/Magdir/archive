@@ -35,7 +35,7 @@
 >68	string		>\0		(format %s)
 >81	string		bz2		\b, uses bzip2 compression
 >84	string		gz		\b, uses gzip compression
->136	ledate		x		created: %s
+#>136	ledate		x		created: %s
 
 # other archives
 0	long		0177555		very old archive
@@ -241,9 +241,11 @@
 
 # Microsoft cabinets 
 # by David Necas (Yeti) <yeti@physics.muni.cz>
-0	string	MSCF\0\0\0\0	Microsoft cabinet file data,
->25	byte	x		v%d
->24	byte	x		\b.%d
+#0	string	MSCF\0\0\0\0	Microsoft cabinet file data,
+#>25	byte	x		v%d
+#>24	byte	x		\b.%d
+# MPi: All CABs have version 1.3, so this is pointless.
+# Better magic in debian-additions.
 
 # GTKtalog catalogs 
 # by David Necas (Yeti) <yeti@physics.muni.cz>
