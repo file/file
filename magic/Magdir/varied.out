@@ -23,4 +23,8 @@
 0	short		0561		WE32000 executable (TV)
 >12	long		>0		not stripped
 0	short		0610		Perkin-Elmer executable
-
+#
+# Motorola/UniSoft Application Binary Interface (ABI)
+0	short	0554	68K BCS executable
+# Motorola/88Open ABI
+0	short	0555	88K BCS executable
