@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.22 1993/09/23 21:47:01 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.23 1993/09/24 18:47:48 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -275,10 +275,10 @@ int nbytes;
 	    return 0;
 
 
-	memcpy(p, s + offset, sizeof(p));
+	memcpy(p, s + offset, sizeof(union VALUETYPE));
 
 	if (debug) {
-		mdebug(offset, (char *) p, sizeof(p));
+		mdebug(offset, (char *) p, sizeof(union VALUETYPE));
 		mdump(m);
 	}
 
@@ -302,10 +302,10 @@ int nbytes;
 		if (offset + sizeof(union VALUETYPE) > nbytes)
 			return 0;
 
-		memcpy(p, s + offset, sizeof(p));
+		memcpy(p, s + offset, sizeof(union VALUETYPE));
 
 		if (debug) {
-			mdebug(offset, (char *) p, sizeof(p));
+			mdebug(offset, (char *) p, sizeof(union VALUETYPE));
 			mdump(m);
 		}
 
