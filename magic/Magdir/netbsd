@@ -4,21 +4,6 @@
 #
 # All new-style magic numbers are in network byte order.
 #
-0	lelong			000000413	386BSD demand paged executable
->16	lelong			>0		not stripped
-0	lelong			000000314	BSDI demand paged executable
->16	lelong			>0		not stripped
->32	byte			0x6a		(uses shared libs)
-
-0	lelong&077777777	041400314	FreeBSD/i386 demand paged
->3	byte			&0x80
->>20	lelong			<4096		shared library
->>20	lelong			=4096		dynamically linked executable
->>20	lelong			>4096		dynamically linked executable
->3	byte			^0x80		executable
->16	lelong			>0		not stripped
-0	string			\0\0\0\0\0\0\300\357\020\0	FreeBSD core
->1075	string			>\0				from '%s'
 
 0	lelong			000000407	NetBSD little-endian object file
 >16	lelong			>0		not stripped
