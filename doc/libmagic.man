@@ -43,7 +43,7 @@
 .Sh LIBRARY
 .Lb libmagic
 .Sh SYNOPSIS
-.Fd #include \*[Lt]magic.h\*[Gt]
+.In magic.h
 .Ft magic_t
 .Fn magic_open "int flags"
 .Ft void
