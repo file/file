@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.72 2003/12/23 17:33:38 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.73 2004/03/07 16:16:14 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -969,6 +969,10 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 
 	if (fstat(fd, &st) == -1) {
 		file_error(ms, errno, "cannot stat `%s'", dbname);
+		goto error;
+	}
+	if (st.st_size < 16) {
+		file_error(ms, 0, "file `%s' is too small", dbname);
 		goto error;
 	}
 
