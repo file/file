@@ -110,7 +110,8 @@ struct magic *m;
 		l = 0;
 		/* What we want here is:
 		 * v = strncmp(m->value.s, p->s, m->vallen);
-		 * but ignoring any nulls.  bcmp doesn't give -/+/0.
+		 * but ignoring any nulls.  bcmp doesn't give -/+/0
+		 * and isn't universally available anyway.
 		 */
 		{
 			register unsigned char *a = (unsigned char*)m->value.s;
@@ -118,7 +119,8 @@ struct magic *m;
 			register int len = m->vallen;
 
 			while (--len >= 0)
-				if (0 != (v = *b++ - *a++)) break;
+				if ((v = *b++ - *a++) != 0)
+					break;
 		}
 		break;
 	default:

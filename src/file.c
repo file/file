@@ -153,7 +153,7 @@ readit:
 			 */
 			ckfputs("data", stdout);
 		}
-		if (0 != strcmp("-", inname)) {
+		if (strcmp("-", inname) != 0) {
 			/*
 			 * Restore access, modification times if we read it.
 			 */
