@@ -1,5 +1,5 @@
 .TH FILE 1 "Copyright but distributable"
-.\# $Id: file.man,v 1.22 1993/04/05 10:38:26 ian Exp $
+.\# $Id: file.man,v 1.23 1993/09/24 18:50:48 christos Exp $
 .SH NAME
 .I file
 \- determine file type
@@ -184,7 +184,7 @@ for example,
 .SH MAGIC DIRECTORY
 The magic file entries have been collected from various sources,
 mainly USENET, and contributed by various authors.
-Ian Darwin (address below) will collect additional
+Christos Zoulas (address below) will collect additional
 or corrected magic file entries.
 A consolidation of magic file entries 
 will be distributed periodically.
@@ -346,6 +346,6 @@ This manual page, and particularly this section, is too long.
 .SH AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
-.B ftp.cs.toronto.edu
+.B tesla.ee.cornell.edu
 in the directory
-.BR /pub/darwin/file .
+.BR /pub/file-X.YY.tar.gz
