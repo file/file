@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.83 2005/03/06 05:58:22 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.84 2005/03/25 18:03:18 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1242,7 +1242,7 @@ bs1(struct magic *m)
 	m->cont_level = swap2(m->cont_level);
 	m->offset = swap4((uint32_t)m->offset);
 	m->in_offset = swap4((uint32_t)m->in_offset);
-	if (IS_STRING(m->type))
+	if (!IS_STRING(m->type))
 		m->value.l = swap4(m->value.l);
 	m->mask = swap4(m->mask);
 }
