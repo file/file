@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.35 2001/03/11 20:29:16 christos Exp $
+ * @(#)$Id: file.h,v 1.36 2001/04/27 23:59:52 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -160,6 +160,10 @@ extern char *sys_errlist[];
 
 #ifndef HAVE_STRTOUL
 #define strtoul(a, b, c)	strtol(a, b, c)
+#endif
+
+#if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)
+#define QUICK
 #endif
 
 #ifdef __STDC__
