@@ -1,7 +1,7 @@
 #  Digital UNIX - Info
 #
-0	string	^!<arch>\n________64E	Alpha archive
->22	string	^X			-- out of date
+0	string	^!<arch>\n_______64E	Alpha archive
+>22	string	X			-- out of date
 #
 # Alpha COFF Based Executables
 # The stripped stuff really needs to be an 8 byte (64 bit) compare,
