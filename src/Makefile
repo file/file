@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.31 1993/02/19 14:11:26 ian Exp $
+# @(#)$Id: Makefile,v 1.32 1993/04/05 10:27:30 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -109,7 +109,7 @@ install:	file magic file.1 magic.4 $(BINDIR) $(MANCDIR) $(MANCDIR)
 		cp magic.4	$(MANFDIR)/magic.$(MANFEXT)
 
 clean:
-		rm -f *.o core file magic lint dist.* TARGETS lastnocore
+		rm -f *.o core file magic lint dist.* MANIFEST lastnocore
 clobber:
 		cd tst; make clean
 
@@ -120,19 +120,22 @@ dist:		dist.src dist.magic
 		@echo Now check this patchlevel!
 		ident patchlevel.h
 
-dist.src:	$(ALLSRC) TARGETS
+dist.src:	$(ALLSRC) MANIFEST
 #		Some versions of shar can't handle a single file from
 #		a subdirectory, so we manually insert mkdir as needed.
 #		The point is to exclude all the generable targets in tst.
 		(echo mkdir localinc localinc/sys localsrc tst; \
-			$(SHAR) $(ALLSRC) TARGETS) > $@
+			$(SHAR) $(ALLSRC) MANIFEST) > $@
 
 new:		$(ALLSRC)
 		echo $?
 		touch new
 
-TARGETS:	$(ALLSRC)
-		ident $(ALLSRC) > TARGETS
+MANIFEST:	$(ALLSRC)
+		ident $(ALLSRC) > MANIFEST
 dist.magic:	Magdir
 #		As above, but to exclude Magdir/RCS from being shipped.
 		(echo mkdir Magdir; $(SHAR) $(ALLMAGIC)) >$@
+
+tar:		$(ALLSRC) $(ALLMAGIC)
+		tar cvf /dev/rfd0a $(ALLSRC) $(ALLMAGIC)
