@@ -38,7 +38,7 @@ typedef ULONG   APPTYPE;
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apptype.c,v 1.1 2003/03/24 01:34:21 christos Exp $")
+FILE_RCSID("@(#)$Id: apptype.c,v 1.2 2003/03/24 14:53:31 christos Exp $")
 #endif /* lint */
 
 protected int
@@ -48,7 +48,6 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const void *buf,
 	APPTYPE         rc, type;
 	char            path[_MAX_PATH], drive[_MAX_DRIVE], dir[_MAX_DIR], fname[_MAX_FNAME],
 	                ext[_MAX_EXT];
-#endif
 	char           *filename;
 	FILE           *fp;
 
