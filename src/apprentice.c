@@ -31,7 +31,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.9 1990/10/03 17:52:59 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.10 1992/05/21 16:15:12 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -67,7 +67,7 @@ int check;		/* non-zero: checking-only run. */
 
 	/* parse it */
 	if (check)	/* print silly verbose header for USG compat. */
-		(void) printf("cont\toffset\ttype\topcode\tvalue\tdesc\n");
+		(void) printf("cont\toffset\ttype\topcode\tmask\tvalue\tdesc\n");
 
 	while (fgets(line, MAXSTR, f) != NULL) {
 		if (line[0]=='#')	/* comment, do not parse */
@@ -92,7 +92,6 @@ char *l;
 int *ndx, check;
 {
 	int i = 0, nd = *ndx;
-	int slen;
 	static int warned = 0;
 	struct magic *m;
 	extern int errno;
@@ -116,9 +115,13 @@ int *ndx, check;
 		m->contflag = 0;
 
 	/* get offset, then skip over it */
+#ifdef OldWay
 	m->offset = atoi(l);
 	while (isascii(*l) && isdigit(*l))
 		++l;
+#else
+	m->offset = (int) strtol(l,&l,0);
+#endif
 	EATAB;
 
 #define NBYTE 4
@@ -149,21 +152,97 @@ int *ndx, check;
 	} else
 		m->mask = 0L;
 	EATAB;
+  
+	switch (*l) {
+	case '>':
+	case '<':
+	case '&':
+	case '=':
+  		m->reln = *l;
+  		++l;
+		break;
+	case '!':
+	case '^':
+		if (m->type != STRING) {
+			m->reln = *l;
+			++l;
+			break;
+		}
+		/* FALL THROUGH */
+	default:
+		if (*l == 'x' && isascii(l[1]) && isspace(l[1])) {
+			m->reln = *l;
+			++l;
+			goto GetDesc;	/* Bill The Cat */
+		}
+  		m->reln = '=';
+		break;
+	}
+  	EATAB;
+  
+	if (getvalue(m, &l))
+		return -1;
+	/*
+	 * TODO finish this macro and start using it!
+	 * #define offsetcheck {if (offset > HOWMANY-1) 
+	 *	warning("offset too big"); }
+	 */
 
-	if (*l == '>' || *l == '<' || *l == '='
-	    || (m->type != STRING && (*l == '&' || *l == '^' || *l == 'x'))) {
-		m->reln = *l;
-		++l;
-	} else
-		m->reln = '=';
+	/* 
+	 * if the relation was ``&'',
+	 * change it to a MASK op relation.
+	 */
 	EATAB;
+	if (m->reln == '&') {
+		if (*l == '>' || *l == '<' || *l == '=') {
+			m->reln = *l | MASK;
+			++l;
+		} else
+			m->reln = '=' | MASK;
+		m->mask = m->value.l;
+		EATAB;
+		if (getvalue(m, &l))
+			return -1;
+	}
 
-/*
- * TODO finish this macro and start using it!
- * #define offsetcheck {if (offset > HOWMANY-1) warning("offset too big"); }
+	/*
+	 * now get last part - the description
+	 */
+GetDesc:
+	EATAB;
+	if (l[0] == '\b') {
+		++l;
+		m->nospflag = 1;
+	} else if ((l[0] == '\\') && (l[1] == 'b')) {
+		++l;
+		++l;
+		m->nospflag = 1;
+	} else
+		m->nospflag = 0;
+	while ((m->desc[i++] = *l++) != '\0' && i<MAXDESC)
+		/* NULLBODY */;
+
+	if (check) {
+		mdump(m);
+	}
+	++(*ndx);		/* make room for next */
+	return 0;
+}
+
+/* 
+ * Read a numeric value from a pointer, into the value union of a magic 
+ * pointer, according to the magic type.  Update the string pointer to point 
+ * just after the number read.  Return 0 for success, non-zero for failure.
  */
+int
+getvalue(m, p)
+	struct magic *m;
+	char **p;
+{
+	int slen;
+
 	if (m->type == STRING) {
-		l = getstr(l, m->value.s, sizeof(m->value.s), &slen);
+		*p = getstr(*p, m->value.s, sizeof(m->value.s), &slen);
 		m->vallen = slen;
 	} else {
 		if (m->reln != 'x') {
@@ -174,13 +253,13 @@ int *ndx, check;
 			 * extension must have happened.
 			 */
 			case BYTE:
-				m->value.l = (char) strtol(l,&l,0);
+				m->value.l = (char) strtol(*p,p,0);
 				break;
 			case SHORT:
-				m->value.l = (short) strtol(l,&l,0);
+				m->value.l = (short) strtol(*p,p,0);
 				break;
 			case LONG:
-				m->value.l = (long) strtol(l,&l,0);
+				m->value.l = (long) strtol(*p,p,0);
 				break;
 			default:
 				warning("can't happen: m->type=%d\n", m->type);
@@ -188,18 +267,6 @@ int *ndx, check;
 			}
 		}
 	}
-
-	/*
-	 * now get last part - the description
-	 */
-	EATAB;
-	while ((m->desc[i++] = *l++) != '\0' && i<MAXDESC)
-		/* NULLBODY */;
-
-	if (check) {
-		mdump(m);
-	}
-	++(*ndx);		/* make room for next */
 	return 0;
 }
 
@@ -220,7 +287,7 @@ int	plen, *slen;
 	register int	c;
 	register int	val;
 
-	while((c = *s++) != '\0') {
+	while ((c = *s++) != '\0') {
 		if (isspace(c))
 			break;
 		if (p >= pmax) {
