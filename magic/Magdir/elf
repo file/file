@@ -91,7 +91,7 @@
 >>20	lelong		1		version 1
 >>36	lelong		1		MathCoPro/FPU/MAU Required
 >8	string		>\0		(%s)
->8	string		\0		(%s)
+>8	string		\0
 >>7	byte		0		(SYSV)
 >>7	byte		1		(HP-UX)
 >>7	byte		2		(NetBSD)
