@@ -1,10 +1,25 @@
 ** README for file(1) Command **
-@(#) $Id: README,v 1.13 1992/06/30 13:23:16 ian Exp $
+@(#) $Id: README,v 1.14 1992/09/08 15:27:23 ian Exp $
 
-This is Release 1.5 of Ian Darwin's (copyright but distributable)
-file(1) command. It follows the USG (Sys V) model of the file command,
-rather than the Research (V7) version or the V7-derived 4.[23] Berkeley
-one. That is, the file /etc/magic contains much of the ritual
+This is Release 3.0 of Ian Darwin's (copyright but distributable)
+file(1) command.  Release 3.0 is scheduled for inclusion in the
+4.4 BSD (Berkeley Software Distribution) of UNIX- and UNIX-like
+software (UNIX is a trademark of UNIX System Laboratories and may
+not be used by commercial undertakings without permission in writing
+from USL. Just ask BSD Incorporated, a commercial venture not officially
+connected with the University of California at Berkeley).
+
+The prime contributor to Release 3.0 was Christos Zoulos, who put
+in hundreds of lines of source code changes, including his own
+ANSIfication of the code (I liked my own ANSIfication better, but
+his is the "Berkeley standard" way of doing it, and I wanted UCB
+to include the code...), his HP-like "indirection" (a feature of
+the HP file command, I think), his mods that finally got the
+uncompress (-z) mode finished and working.
+
+This fine freeware file(1) follows the USG (System V) model of the file
+command, rather than the Research (V7) version or the V7-derived 4.[23]
+Berkeley one. That is, the file /etc/magic contains much of the ritual
 information that is the source of this program's power. My version
 knows a little more magic (including tar archives) than System V; the
 /etc/magic parsing seems to be compatible with the (poorly documented)
@@ -58,4 +73,4 @@ E-mail: darwin@cs.toronto.edu
 	ian@darwin.uucp
 	uunet!sq!ian
 
-Phone: Do not even think of telephoning me about this program.
+Phone: Do not even think of telephoning me about this program. Send cash first!
