@@ -40,7 +40,7 @@
 
 #ifndef lint
 static char *moduleid =
-	"@(#)$Id: print.c,v 1.20 1993/09/23 20:26:25 christos Exp $";
+	"@(#)$Id: print.c,v 1.21 1994/05/03 17:58:23 christos Exp $";
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -49,33 +49,29 @@ void
 mdump(m)
 struct magic *m;
 {
-	static char *offs[] = {  "absolute", "offset", 
-				 "indirect", "indirect-offset" };
 	static char *typ[] = {   "invalid", "byte", "short", "invalid",
 				 "long", "string", "date", "beshort",
 				 "belong", "bedate", "leshort", "lelong",
 				 "ledate" };
-	(void) fprintf(stderr, "[%s,%d,",
-		(m->flag >= 0 && m->flag < SZOF(offs) ? offs[m->flag]: "*bad*"),
-		m->offset);
-
+	(void) fputc('[', stderr);
+	(void) fprintf(stderr, ">>>>>>>> %d" + 8 - (m->cont_level & 7),
+		       m->offset);
 
 	if (m->flag & INDIR)
-	    (void) fprintf(stderr, "(%s,%d),",
-		(m->in.type >= 0 && 
-		 m->in.type < SZOF(typ) ? 
-		    typ[(unsigned char) m->in.type] : "*bad*"),
-		m->in.offset);
+		(void) fprintf(stderr, "(%s,%d),",
+			       (m->in.type >= 0 && m->in.type < SZOF(typ)) ? 
+					typ[(unsigned char) m->in.type] :
+					"*bad*",
+			       m->in.offset);
 
-	(void) fputs((m->type >= 0 && m->type < SZOF(typ)) ? 
-			typ[(unsigned char) m->type] : 
-			"*bad*", 
-		     stderr);
+	(void) fprintf(stderr, " %s%s", (m->flag & UNSIGNED) ? "u" : "",
+		       (m->type >= 0 && m->type < SZOF(typ)) ? 
+				typ[(unsigned char) m->type] : 
+				"*bad*");
+	if (m->mask != ~0L)
+		(void) fprintf(stderr, " & %.8x", m->mask);
 
-	if (m->reln == 'x')
-	    (void) fputs(",*any*", stderr);
-	else
-	    (void) fprintf(stderr, ",%c", m->reln);
+	(void) fprintf(stderr, ",%c", m->reln);
 
 	if (m->reln != 'x') {
 	    switch (m->type) {

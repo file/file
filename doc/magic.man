@@ -51,11 +51,14 @@ A four-byte value (on most systems) in little-endian byte order.
 A four-byte value (on most systems) in little-endian byte order,
 interpreted as a unix date.
 .RE
+.PP
 The numeric types may optionally be followed by
 .B &
 and a numeric value,
 to specify that the value is to be AND'ed with the
-numeric value before any comparisons are done.
+numeric value before any comparisons are done.  Prepending a
+.B u
+to the type indicates that ordered comparisons should be unsigned.
 .IP test
 The value to be compared with the value from the file.  If the type is
 numeric, this value
@@ -188,4 +191,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.10 1993/02/19 14:22:46 ian Exp $
+.\" @(#)$Id: magic.man,v 1.11 1994/05/03 17:58:23 christos Exp $

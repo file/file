@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.24 1993/10/27 20:59:05 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.25 1994/05/03 17:58:23 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -173,22 +173,26 @@ union VALUETYPE *p;
 struct magic *m;
 {
 	char *pp, *rt;
-	unsigned long mask = m->mask ? m->mask : ~0;
+	unsigned long v;
+
 
   	switch (m->type) {
   	case BYTE:
- 		(void) printf(m->desc, (unsigned char) p->b & mask);
-  		break;
+		v = p->b;
+		break;
+
   	case SHORT:
   	case BESHORT:
   	case LESHORT:
- 		(void) printf(m->desc, (unsigned short) p->h & mask);
-  		break;
+		v = p->h;
+		break;
+
   	case LONG:
   	case BELONG:
   	case LELONG:
- 		(void) printf(m->desc, (unsigned long) p->l & mask);
+		v = p->l;
   		break;
+
   	case STRING:
 		if (m->reln == '=') {
 			(void) printf(m->desc, m->value.s);
@@ -198,7 +202,8 @@ struct magic *m;
 				*rt = '\0';
 			(void) printf(m->desc, p->s);
 		}
-		break;
+		return;
+
 	case DATE:
 	case BEDATE:
 	case LEDATE:
@@ -206,11 +211,14 @@ struct magic *m;
 		if ((rt = strchr(pp, '\n')) != NULL)
 			*rt = '\0';
 		(void) printf(m->desc, pp);
-		break;
+		return;
 	default:
 		error("invalid m->type (%d) in mprint().\n", m->type);
 		/*NOTREACHED*/
 	}
+
+	v = signextend(m, v) & m->mask;
+	(void) printf(m->desc, (unsigned char) v);
 }
 
 /*
@@ -321,8 +329,9 @@ mcheck(p, m)
 union VALUETYPE* p;
 struct magic *m;
 {
-	register long l = m->value.l;
-	register long v;
+	register unsigned long l = m->value.l;
+	register unsigned long v;
+	int matched;
 
 	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
 		fprintf(stderr, "BOINK");
@@ -373,42 +382,58 @@ struct magic *m;
 		return 0;/*NOTREACHED*/
 	}
 
-	if (m->mask != 0L)
-		v &= m->mask;
+	v = signextend(m, v) & m->mask;
 
 	switch (m->reln) {
 	case 'x':
 		if (debug)
 			(void) fprintf(stderr, "%d == *any* = 1\n", v);
-		return 1;
+		matched = 1;
+		break;
+
 	case '!':
 		if (debug)
 			(void) fprintf(stderr, "%d != %d = %d\n", v, l, v != l);
-		return v != l;
+		matched = v != l;
+		break;
+
 	case '=':
 		if (debug)
 			(void) fprintf(stderr, "%d == %d = %d\n", v, l, v == l);
-		return v == l;
+		matched = v == l;
+		break;
+
 	case '>':
 		if (debug)
 			(void) fprintf(stderr, "%d > %d = %d\n", v, l, v > l);
-		return v > l;
+		matched = v > l;
+		break;
+
 	case '<':
 		if (debug)
 			(void) fprintf(stderr, "%d < %d = %d\n", v, l, v < l);
-		return v < l;
+		matched = v < l;
+		break;
+
 	case '&':
 		if (debug)
 			(void) fprintf(stderr, "((%x & %x) == %x) = %d\n",
 				       v, l, l, (v & l) == l);
-		return (v & l) == l;
+		matched = (v & l) == l;
+		break;
+
 	case '^':
 		if (debug)
 			(void) fprintf(stderr, "((%x & %x) != %x) = %d\n",
 				       v, l, l, (v & l) != l);
-		return (v & l) != l;
+		matched = (v & l) != l;
+		break;
+
 	default:
+		matched = 0;
 		error("mcheck: can't happen: invalid relation %d.\n", m->reln);
-		return 0;/*NOTREACHED*/
+		break;/*NOTREACHED*/
 	}
+
+	return matched;
 }
