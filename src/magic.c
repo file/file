@@ -41,20 +41,21 @@
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
-#ifdef RESTORE_TIME
-# if (__COHERENT__ >= 0x420)
+
+#if defined(HAVE_UTIME)
+# if defined(HAVE_SYS_UTIME_H)
 #  include <sys/utime.h>
-# else
-#  ifdef USE_UTIMES
-#   include <sys/time.h>
-#  else
-#   include <utime.h>
-#  endif
+# elif defined(HAVE_UTIME_H)
+#  include <utime.h>
 # endif
+#elif defined(HAVE_UTIMES)
+# include <sys/time.h>
 #endif
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>	/* for read() */
 #endif
+
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
@@ -64,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.8 2003/06/10 18:28:37 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.9 2003/07/10 17:41:24 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -78,11 +79,18 @@ protected int file_os2_apptype(struct magic_set *ms, const char *fn,
 #endif
 
 private void free_mlist(struct mlist *);
+private void close_and_restore(const struct magic_set *, const char *, int,
+    const struct stat *);
 
 public struct magic_set *
 magic_open(int flags)
 {
 	struct magic_set *ms;
+
+	if (magic_setflags(ms, flags) == -1) {
+		errno = EINVAL;
+		return NULL;
+	}
 
 	if ((ms = malloc(sizeof(struct magic_set))) == NULL)
 		return NULL;
@@ -98,7 +106,6 @@ magic_open(int flags)
 		free(ms);
 		return NULL;
 	}
-	ms->flags = flags;
 	ms->haderr = 0;
 	ms->mlist = NULL;
 	return ms;
@@ -183,6 +190,34 @@ magic_check(struct magic_set *ms, const char *magicfile)
 	return ml ? 0 : -1;
 }
 
+private void
+close_and_restore(const struct magic_set *ms, const char *name, int fd,
+    const struct stat *sb)
+{
+	(void) close(fd);
+	if (fd != STDIN_FILENO && (ms->flags & MAGIC_PRESERVE_ATIME) != 0) {
+		/*
+		 * Try to restore access, modification times if read it.
+		 * This is really *bad* because it will modify the status
+		 * time of the file... And of course this will affect
+		 * backup programs
+		 */
+#ifdef HAVE_UTIMES
+		struct timeval  utsbuf[2];
+		utsbuf[0].tv_sec = sb->st_atime;
+		utsbuf[1].tv_sec = sb->st_mtime;
+
+		(void) utimes(name, utsbuf); /* don't care if loses */
+#elif defined(HAVE_UTIME_H) || defined(HAVE_SYS_UTIME_H)
+		struct utimbuf  utbuf;
+
+		utbuf.actime = sb->st_atime;
+		utbuf.modtime = sb->st_mtime;
+		(void) utime(name, &utbuf); /* don't care if loses */
+#endif
+	}
+}
+
 /*
  * find type of named file
  */
@@ -227,33 +262,29 @@ magic_file(struct magic_set *ms, const char *inname)
 	 */
 	if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
 		file_error(ms, "Cannot read `%s' %s", inname, strerror(errno));
-		(void)close(fd);
-		return NULL;
+		goto done;
 	}
 
 	if (nbytes == 0) {
 		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
 		    "application/x-empty" : "empty") == -1) {
 			(void)close(fd);
-			return NULL;
+		    goto done;
 		}
 	} else {
 		buf[nbytes++] = '\0';	/* null-terminate it */
 #ifdef __EMX__
 		switch (file_os2_apptype(ms, inname, buf, nbytes)) {
 		case -1:
-			(void)close(fd);
-			return NULL;
+			goto done;
 		case 0:
 			break;
 		default:
 			return ms->o.buf;
 		}
 #endif
-		if (file_buffer(ms, buf, (size_t)nbytes) == -1) {
-			(void)close(fd);
-			return NULL;
-		}
+		if (file_buffer(ms, buf, (size_t)nbytes) == -1)
+			goto done;
 #ifdef BUILTIN_ELF
 		if (nbytes > 5) {
 			/*
@@ -269,8 +300,11 @@ magic_file(struct magic_set *ms, const char *inname)
 #endif
 	}
 
-	close(fd);
+	close_and_restore(ms, inname, fd, &sb);
 	return ms->haderr ? NULL : ms->o.buf;
+done:
+	close_and_restore(ms, inname, fd, &sb);
+	return NULL;
 }
 
 
@@ -295,8 +329,13 @@ magic_error(struct magic_set *ms)
 	return ms->haderr ? ms->o.buf : NULL;
 }
 
-public void
+public int
 magic_setflags(struct magic_set *ms, int flags)
 {
+#if !defined(HAVE_UTIME) && !defined(HAVE_UTIMES)
+	if (flags & MAGIC_PRESERVE_ATIME)
+		return -1;
+#endif
 	ms->flags = flags;
+	return 0;
 }

@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.78 2003/07/10 17:01:38 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.79 2003/07/10 17:41:24 christos Exp $")
 #endif	/* lint */
 
 
@@ -96,7 +96,8 @@ private int 		/* Global command-line options 		*/
 	bflag = 0,	/* brief output format	 		*/
 	nopad = 0,	/* Don't pad output			*/
 	nobuffer = 0,   /* Do not buffer stdout 		*/
-	kflag = 0;	/* Keep going after the first match	*/
+	kflag = 0,	/* Keep going after the first match	*/
+	rflag = 0;	/* Restore access times of files	*/
 
 private const char *magicfile = 0;	/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
@@ -132,7 +133,7 @@ main(int argc, char *argv[])
 	int flags = 0;
 	char *mime, *home, *usermagic;
 	struct stat sb;
-#define OPTSTRING	"bcdf:F:ikm:nNsvzCL"
+#define OPTSTRING	"bcCdf:F:ikLm:nNpsvz"
 #ifdef HAVE_GETOPT_LONG
 	int longindex;
 	private struct option long_options[] =
@@ -150,6 +151,9 @@ main(int argc, char *argv[])
 		{"dereference", 0, 0, 'L'},
 #endif
 		{"magic-file", 1, 0, 'm'},
+#if defined(HAVE_UTIME) || defined(HAVE_UTIMES)
+		{"preserve-dates", 0, 0, 'p'},
+#endif
 		{"uncompress", 0, 0, 'z'},
 		{"no-buffer", 0, 0, 'n'},
 		{"no-pad", 0, 0, 'N'},
@@ -243,6 +247,11 @@ main(int argc, char *argv[])
 		case 'N':
 			++nopad;
 			break;
+#if defined(HAVE_UTIME) || defined(HAVE_UTIMES)
+		case 'p':
+			flags |= MAGIC_PRESERVE_ATIME;
+			break;
+#endif
 		case 's':
 			flags |= MAGIC_DEVICES;
 			break;
