@@ -1,4 +1,4 @@
-.TH MAGIC FILES "Public Domain"
+.TH MAGIC __SECTION__ "Public Domain"
 .\" install as magic.4 on USG, magic.5 on V7 or Berkeley systems.
 .SH NAME
 magic \- file command's magic number file
@@ -10,7 +10,7 @@ among other tests,
 a test for whether the file begins with a certain
 .IR "magic number" .
 The file
-.B /etc/magic
+.B __MAGIC__
 specifies what magic numbers are to be tested for,
 what message to print if a particular magic number is found,
 and additional information to extract from the file.
@@ -54,11 +54,14 @@ to specify that the value from the file must equal the specified value,
 .BR < ,
 to specify that the value from the file must be less than the specified
 value,
-or
 .BR > ,
 to specify that the value from the file must be greater than the specified
-value.
+value,
 or
+.BR ^ ,
+to specify that the value from the file must have clear any of the bits 
+that are set in the specified value.
+.IP
 Numeric values are specified in C form; e.g.
 .B 13
 is decimal,
@@ -94,6 +97,25 @@ are performed, and the messages printed if the tests succeed.  The next
 line which does not begin with a
 .B >
 terminates this.
+If the first character following the
+.B >
+is a
+.B (
+then the string after the parenthesis is interpreted as an indirect offset.
+That means that the number after the parenthesis is used as a offset in
+the file. The value at that offset is read, and is used again as an offset
+in the file. Indirect offsets are of the form:
+.B ((x[.[bsl]][+-][y]).
+The value of 
+.B x
+is used as an offset in the file. A byte, short or long is read at that offset
+depending on the 
+.B [bsl] 
+type specifier. To that number the value of
+.B y
+is added and the result is used as an offset in the file. The default type
+if one is not specified is long.
+
 .SH BUGS
 The formats 
 .I long
@@ -125,4 +147,4 @@ at the beginning of the line.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Ident $
+.\" @(#)$Id: magic.man,v 1.8 1992/06/30 13:25:59 ian Exp $
