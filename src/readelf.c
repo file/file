@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.44 2004/11/21 05:20:31 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.45 2004/11/24 17:38:24 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -254,7 +254,8 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			file_badseek(ms);
 			return -1;
 		}
-		bufsize = read(fd, nbuf, sizeof(nbuf));
+		bufsize = read(fd, nbuf,
+		    ((ph_filesz < sizeof(nbuf)) ? ph_filesz : sizeof(nbuf)));
 		if (bufsize == -1) {
 			file_badread(ms);
 			return -1;
@@ -325,7 +326,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 	}
 
 	offset = ELF_ALIGN(doff + descsz);
-	if (offset + descsz > size) {
+	if (doff + descsz > size) {
 		return offset;
 	}
 
@@ -710,7 +711,8 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				file_badseek(ms);
 				return -1;
 			}
-			bufsize = read(fd, nbuf, sizeof(nbuf));
+			bufsize = read(fd, nbuf, ((ph_filesz < sizeof(nbuf)) ?
+			    ph_filesz : sizeof(nbuf)));
 			if (bufsize == -1) {
 				file_badread(ms);
 				return -1;
