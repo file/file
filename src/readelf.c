@@ -11,7 +11,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.25 2003/02/25 15:27:39 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.26 2003/02/25 15:30:00 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -142,7 +142,7 @@ doshn(int class, int swap, int fd, off_t off, int num, size_t size)
 		error("lseek failed (%s).\n", strerror(errno));
 
 	for ( ; num; num--) {
-		if (read(fd, sh_addr, sh_size)) == -1)
+		if (read(fd, sh_addr, sh_size) == -1)
 			error("read failed (%s).\n", strerror(errno));
 		if (shs_type == SHT_SYMTAB /* || shs_type == SHT_DYNSYM */) {
 			(void) printf (", not stripped");
