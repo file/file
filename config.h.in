@@ -60,6 +60,9 @@
 /* The number of bytes in a uint64_t.  */
 #define SIZEOF_UINT64_T 0
 
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
