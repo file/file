@@ -170,6 +170,15 @@
 0	belong&0377777777	043000507	NetBSD/vax core
 >12	string			>\0		from '%s'
 
+# NetBSD/alpha does not support (and has never supported) a.out objects,
+# so no rules are provided for them.  NetBSD/alpha ELF objects are 
+# dealt with in "elf".
+0	leshort		0x00070185		ECOFF NetBSD/alpha binary
+>10	leshort		0x0001			not stripped
+>10	leshort		0x0000			stripped
+0	belong&0377777777	043200507	NetBSD/alpha core
+>12	string			>\0		from '%s'
+
 0	belong&0377777777	043400413	NetBSD/mips demand paged
 >0	byte			&0x80		
 >>20	belong			<8192		shared library
