@@ -1,3 +1,7 @@
+2003-04-04 16:59  Christos Zoulas  <christos@zoulas.com>
+
+	* fix operand sort order in string.
+
 2003-04-02 17:30  Christos Zoulas  <christos@zoulas.com>
 
 	* cleanup namespace in magic.h
