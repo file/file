@@ -34,7 +34,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: softmagic.c,v 1.18 1993/09/16 21:12:08 christos Exp $";
+	"@(#)$Id: softmagic.c,v 1.19 1993/09/23 18:24:45 christos Exp $";
 #endif	/* lint */
 
 static int match	__P((unsigned char *, int));
@@ -247,10 +247,12 @@ int nbytes;
 	case BYTE:
 		v = p->b; break;
 	case SHORT:
-		v = p->h; break;
+		memcpy(&v, &p->h, sizeof(short));
+		break;
 	case LONG:
 	case DATE:
-		v = p->l; break;
+		memcpy(&v, &p->l, sizeof(long));
+		break;
 	case STRING:
 		l = 0;
 		/* What we want here is:
