@@ -42,7 +42,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.9 1990/10/03 17:48:40 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/fsmagic.c,v 1.10 1990/10/03 17:51:19 ian Exp $";
 #endif	/* lint */
 
 extern char *progname;
@@ -111,7 +111,7 @@ char *fn;
 				process(buf, 0);
 				return 1;
 			} else { /* just print what it points to */
-				ckfputs("symbolic link to", stdout);
+				ckfputs("symbolic link to ", stdout);
 				ckfputs(buf, stdout);
 			}
 		}
