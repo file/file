@@ -25,6 +25,7 @@
 # 0	beshort		300		hp300 (68020+68881) BSD binary
 # 0	beshort		0x20c		hp200/300 HP-UX binary
 # 0	beshort		0x20b		hp800 HP-UX binary
+
 #
 # The "misc" stuff needs a byte order; the archives look suspiciously
 # like the old 177545 archives (0xff65 = 0177545).
@@ -198,3 +199,14 @@
 >10	string		A(G)		A(G)
 >14	string		F(.)		F(.);
 >14	string		F(,)		F(,);
+
+# hpBSD magic numbers
+0	beshort		200		hp200 (68010) BSD
+>2	beshort		0407		impure binary
+>2	beshort		0410		read-only binary
+>2	beshort		0413		demand paged binary
+0	beshort		300		hp300 (68020+68881) BSD
+>2	beshort		0407		impure binary
+>2	beshort		0410		read-only binary
+>2	beshort		0413		demand paged binary
+
