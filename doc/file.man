@@ -1,12 +1,12 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.46 2003/03/26 15:34:50 christos Exp $
+.\" $Id: file.man,v 1.47 2003/03/27 22:42:47 christos Exp $
 .SH NAME
 file
 \- determine file type
 .SH SYNOPSIS
 .B file
 [
-.B \-bciknsvzL
+.B \-bcikLnNsvz
 ]
 [
 .B \-f
@@ -15,6 +15,10 @@ file
 [
 .B \-m 
 .I magicfiles
+]
+[
+.B \-F
+.I separator
 ]
 .I file
 \&...
@@ -172,6 +176,10 @@ Either
 or at least one filename argument must be present;
 to test the standard input, use ``\-'' as a filename argument.
 .TP 8
+.BI \-F " separator"
+Use the specified string as the separator between the filename and the
+file result returned. Defaults to ``:''.
+.TP 8
 .B \-i
 Causes the file command to output mime type strings rather than the more
 traditional human readable ones. Thus it may say
@@ -187,6 +195,11 @@ text file types, directories etc), and makes use of an alternative
 .B \-k
 Don't stop at the first match, keep going.
 .TP 8
+.B \-L
+option causes symlinks to be followed, as the like-named option in
+.BR ls (1).
+(on systems that support symbolic links).
+.TP 8
 .BI \-m " list"
 Specify an alternate list of files containing magic numbers.
 This can be a single file, or a colon-separated list of files.
@@ -196,16 +209,8 @@ Force stdout to be flushed after checking each file.
 This is only useful if checking a list of files.
 It is intended to be used by programs that want filetype output from a pipe.
 .TP 8
-.B \-v
-Print the version of the program and exit.
-.TP 8
-.B \-z
-Try to look inside compressed files.
-.TP 8
-.B \-L
-option causes symlinks to be followed, as the like-named option in
-.BR ls (1).
-(on systems that support symbolic links).
+.B \-N
+Don't pad filenames so that they align in the output.
 .TP 8
 .B \-s
 Normally,
@@ -227,12 +232,22 @@ This option also causes
 to disregard the file size as reported by
 .BR stat (2)
 since on some systems it reports a zero size for raw disk partitions.
+.TP 8
+.B \-v
+Print the version of the program and exit.
+.TP 8
+.B \-z
+Try to look inside compressed files.
 .SH FILES
 .I __MAGIC__.mgc
-\- defaults compiled list of magic numbers
+\- default compiled list of magic numbers
 .PP
 .I __MAGIC__
 \- default list of magic numbers
+.PP
+.I __MAGIC__.mime.mgc
+\- default compiled list of magic numbers, used to output mime types when
+the -i option is specified.
 .PP
 .I __MAGIC__.mime
 \- default list of magic numbers, used to output mime types when the -i option
