@@ -1,5 +1,6 @@
 /*
  * file.h - definitions for file(1) program
+ # @(#)$Header: /home/glen/git/file/cvs/file/src/file.h,v 1.4 1987/09/18 10:56:09 ian Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.

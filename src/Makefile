@@ -1,5 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
+# @(#)$Header: /home/glen/git/file/cvs/file/src/Attic/Makefile,v 1.9 1987/09/18 10:55:56 ian Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
