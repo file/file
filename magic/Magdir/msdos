@@ -143,6 +143,8 @@
 #
 0	belong	0x31be0000	Microsoft Word Document
 #
+0       string  PO^Q`           Microsoft Word 6.0 Document
+#
 2080	string	Microsoft\ Excel\ 5.0\ Worksheet	%s
 #
 # Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Excel)

@@ -16,3 +16,6 @@
 # Ultrix 4.3
 596	string		\130\337\377\377	Ultrix core file
 >600	string		>\0	'%s'
+# BeOS and MAcOS PEF executables
+# From: hplus@zilker.net (Jon Watte)
+0	string		Joy!peffpwpc	header for PowerPC PEF executable

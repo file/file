@@ -237,3 +237,6 @@
 # stuff.
 #
 0	beshort		0x1010		PEX Binary Archive
+
+# Visio drawings
+03000	string	Visio\ (TM)\ Drawing			%s

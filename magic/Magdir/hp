@@ -48,7 +48,7 @@
 0       long            01702407010     TML 1032 byte-order format
 0       long            01003405017     TML 2301 byte-order format
 0       long            01602007412     TML 3210 byte-order format
-#### PA-RISC
+#### PA-RISC 1.1
 0	belong 		0x02100106	PA-RISC1.1 relocatable object
 0	belong 		0x02100107	PA-RISC1.1 executable
 >168	belong		&=0x00000004	dynamically linked
@@ -69,6 +69,30 @@
 >96	belong		>0		- not stripped
 
 0	belong 		0x0210010d	PA-RISC1.1 dynamic load library
+>96	belong		>0		- not stripped
+
+#### PA-RISC 2.0
+0	belong		0x02140106	PA-RISC2.0 relocatable object
+
+0       belong		0x02140107	PA-RISC2.0 executable
+>168	belong		&=0x00000004	dynamically linked
+>(144)	belong		0x054ef630	dynamically linked
+>96	belong		>0		- not stripped
+
+0       belong		0x02140108	PA-RISC2.0 shared executable
+>168	belong		&=0x00000004	dynamically linked
+>(144)	belong		0x054ef630	dynamically linked
+>96	belong		>0		- not stripped
+
+0       belong		0x0214010b	PA-RISC2.0 demand-load executable
+>168	belong		&=0x00000004	dynamically linked
+>(144)	belong		0x054ef630	dynamically linked
+>96	belong		>0		- not stripped
+
+0       belong		0x0214010e	PA-RISC2.0 shared library
+>96	belong		>0		- not stripped
+
+0       belong		0x0214010d	PA-RISC2.0 dynamic load library
 >96	belong		>0		- not stripped
 
 #### 800
