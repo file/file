@@ -231,6 +231,10 @@
 >12	belong		x		%d
 #
 2048	string		PCD_IPI		Kodak Photo CD image pack file
+>0xe02	byte&0x03	0x00		, landscape mode
+>0xe02	byte&0x03	0x01		, portrait mode
+>0xe02	byte&0x03	0x02		, landscape mode
+>0xe02	byte&0x03	0x03		, portrait mode
 0	string		PCD_OPA		Kodak Photo CD overview pack file
 
 # FITS format.  Jeff Uphoff <juphoff@tarsier.cv.nrao.edu>
@@ -319,3 +323,13 @@
 #>12	beshort	2		CCIR601
 #>12	beshort	3		RP175
 #>12	beshort	4		YUV
+
+#------------------------------------------------------------------------------
+#
+# Marco Schmidt (marcoschmidt@users.sourceforge.net) -- an image  file format
+# for the EPOC operating system, which is used with PDAs like those from Psion
+#
+# see http://huizen.dds.nl/~frodol/psiconv/html/Index.html for a description
+# of various EPOC file formats
+
+0	string \x37\x00\x00\x10\x42\x00\x00\x10\x00\x00\x00\x00\x39\x64\x39\x47 EPOC MBM image file
