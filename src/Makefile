@@ -65,7 +65,7 @@ OBJS = file.o apprentice.o fsmagic.o softmagic.o ascmagic.o \
 	compress.o is_tar.o \
 	print.o $(LOCALOBJS)
 
-ALLSRC = LEGAL.NOTICE README PORTING $(SRCS) *.h \
+ALLSRC = LEGAL.NOTICE README MAINT PORTING $(SRCS) *.h \
 	Makefile file.1 magic.4 tst/Makefile
 ALLMAGIC =   Magdir/Makefile Magdir/[a-z]* NEWMAGIC
 
