@@ -59,10 +59,11 @@ struct names {
 } names[] = {
 	/* These must be sorted by eye for optimal hit rate */
 	/* Add to this list only after substantial meditation */
-	{"/*",		L_C},
+	{"/*",		L_C},	/* must preced "The", "the", etc. */
 	{"#include",	L_C},
 	{"char",	L_C},
 	{"The",		L_ENG},
+	{"the",		L_ENG},
 	{"double",	L_C},
 	{"extern",	L_C},
 	{"float",	L_C},
