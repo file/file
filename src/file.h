@@ -11,8 +11,9 @@
 struct magic {
 	short contflag;		/* 1 if '>0' appears */
 	long offset;		/* offset to magic number */
-	char reln;		/* relation (0=.eq, '>'=gt, etc) */
-	short type;		/* int, short, long or string. */
+	char reln;		/* relation (0=eq, '>'=gt, etc) */
+	char type;		/* int, short, long or string. */
+	char vallen;		/* length of string value, if any */
 #define 			BYTE	1
 #define				SHORT	2
 #define				LONG	4
