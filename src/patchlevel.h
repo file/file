@@ -1,11 +1,14 @@
 #define	FILE_VERSION_MAJOR	4
-#define	patchlevel		2
+#define	patchlevel		3
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.46 2003/04/02 18:57:43 christos Exp $
+ * $Id: patchlevel.h,v 1.47 2003/05/23 21:38:21 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.47  2003/05/23 21:38:21  christos
+ * welcome to 4.03
+ *
  * Revision 1.46  2003/04/02 18:57:43  christos
  * prepare for 4.02
  *
