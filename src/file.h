@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.42 2002/07/03 18:26:37 christos Exp $
+ * @(#)$Id: file.h,v 1.43 2002/07/03 18:57:52 christos Exp $
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -44,9 +44,11 @@
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
+/* Do this here and now, because struct stat gets re-defined on solaris */
+#include <sys/stat.h>
 
 #ifndef HOWMANY
-# define HOWMANY 16384		/* how much of the file to look at */
+# define HOWMANY 65536		/* how much of the file to look at */
 #endif
 #define MAXMAGIS 4096		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */

@@ -77,6 +77,7 @@ Magdir/blender \
 Magdir/blit \
 Magdir/bsdi \
 Magdir/c-lang \
+Magdir/cddb \
 Magdir/chi \
 Magdir/cisco \
 Magdir/citrus \
@@ -115,6 +116,7 @@ Magdir/ibm370 \
 Magdir/ibm6000 \
 Magdir/iff \
 Magdir/images \
+Magdir/impulse \
 Magdir/intel \
 Magdir/interleaf \
 Magdir/island \
