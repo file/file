@@ -15,7 +15,11 @@ int check = 0,		/* check format of magic file */
 	nbytes = 0,	/* number of bytes read from a datafile */
 	nmagic = 0;	/* number of valid magic[]s */
 FILE *efopen();
+#ifdef MAGIC
+char *magicfile = MAGIC;	/* where magic be found */
+#else
 char *magicfile = "/etc/magic";	/* where magic be found */
+#endif
 char *progname;
 struct stat statbuf;
 struct utimbuf {	/* for utime(2), belongs in a .h file */
