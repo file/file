@@ -51,17 +51,17 @@ Magdir/bsdi Magdir/c-lang Magdir/chi Magdir/cisco Magdir/clipper \
 Magdir/commands Magdir/compress Magdir/convex Magdir/database \
 Magdir/diamond Magdir/diff Magdir/digital Magdir/dump Magdir/elf \
 Magdir/encore Magdir/filesystems Magdir/flash Magdir/fonts Magdir/frame \
-Magdir/freebsd Magdir/gimp Magdir/gnu Magdir/hp Magdir/ibm370 \
+Magdir/freebsd Magdir/gimp Magdir/gnu Magdir/grace Magdir/hp Magdir/ibm370 \
 Magdir/ibm6000 Magdir/iff Magdir/images Magdir/intel Magdir/interleaf \
-Magdir/island Magdir/ispell Magdir/java Magdir/karma Magdir/lecter \
+Magdir/island Magdir/ispell Magdir/java Magdir/jpeg Magdir/karma Magdir/lecter \
 Magdir/lex Magdir/lif Magdir/linux Magdir/lisp Magdir/mach Magdir/macintosh \
-Magdir/magic Magdir/mail.news Magdir/mime Magdir/mirage Magdir/mkid \
+Magdir/magic Magdir/mail.news Magdir/mcrypt Magdir/mime Magdir/mirage Magdir/mkid \
 Magdir/mmdf Magdir/modem Magdir/motorola Magdir/msdos Magdir/ncr \
 Magdir/netbsd Magdir/news Magdir/octave Magdir/olf Magdir/os2 Magdir/os9 \
-Magdir/osf1 Magdir/pbm Magdir/pdf Magdir/pdp Magdir/pgp Magdir/pkgadd \
+Magdir/osf1 Magdir/palm Magdir/pbm Magdir/pdf Magdir/pdp Magdir/pgp Magdir/pkgadd \
 Magdir/plus5 Magdir/printer Magdir/psdbms Magdir/pyramid Magdir/riff \
 Magdir/rpm Magdir/rtf Magdir/sc Magdir/sccs Magdir/sendmail Magdir/sequent \
-Magdir/sgi Magdir/sgml Magdir/sniffer Magdir/softquad Magdir/sun \
+Magdir/sgi Magdir/sgml Magdir/sniffer Magdir/softquad Magdir/spectrum Magdir/sun \
 Magdir/teapot Magdir/terminfo Magdir/tex Magdir/ti-8x Magdir/timezone \
 Magdir/troff Magdir/typeset Magdir/unknown Magdir/uuencode \
 Magdir/varied.out Magdir/vax Magdir/vicar Magdir/visx Magdir/vms \
