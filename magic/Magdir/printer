@@ -17,6 +17,8 @@
 >>>16	string		EPS		- type %s
 >>>16	string		Query		- type %s
 >>>16	string		ExitServer	- type %s
+0	string		\033%-12345X%!PS	PostScript document
+
 
 # DOS EPS Binary File Header
 # From: Ed Sznyter <ews@Black.Market.NET>
