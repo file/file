@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.87 2003/11/11 20:01:45 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.88 2003/12/23 17:32:41 christos Exp $")
 #endif	/* lint */
 
 
@@ -91,8 +91,7 @@ FILE_RCSID("@(#)$Id: file.c,v 1.87 2003/11/11 20:01:45 christos Exp $")
 private int 		/* Global command-line options 		*/
 	bflag = 0,	/* brief output format	 		*/
 	nopad = 0,	/* Don't pad output			*/
-	nobuffer = 0,   /* Do not buffer stdout 		*/
-	kflag = 0;	/* Keep going after the first match	*/
+	nobuffer = 0;   /* Do not buffer stdout 		*/
 
 private const char *magicfile = 0;	/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
@@ -227,7 +226,7 @@ main(int argc, char *argv[])
 			flags |= MAGIC_MIME;
 			break;
 		case 'k':
-			kflag = 1;
+			flags |= MAGIC_CONTINUE;
 			break;
 		case 'm':
 			magicfile = optarg;
