@@ -39,7 +39,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.42 2001/07/22 21:04:15 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.43 2001/07/23 00:02:32 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -330,7 +330,7 @@ parse(magicp, nmagicp, l, action)
 {
 	int i = 0;
 	struct magic *m;
-	char *t, *s;
+	char *t;
 
 #define ALLOC_INCR	200
 	if (*nmagicp + 1 >= maxmagic){
