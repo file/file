@@ -188,6 +188,11 @@
 #
 >8 	string		CDRA		image/x-coreldraw
 
+# AAC (aka MPEG-2 NBC)
+0       beshort&FFF6    0xFFF0          audio/X-HX-AAC-ADTS
+0       string          ADIF            audio/X-HX-AAC-ADIF
+0       beshort&0xFFE0  0x56E0          audio/MP4A-LATM
+0       beshort         0x4DE1          audio/MP4A-LATM
 
 # MPEG Layer 3 sound files
 0       beshort		&0xffe0		audio/mpeg
@@ -588,19 +593,23 @@
 # animation formats, originally from vax@ccwf.cc.utexas.edu (VaX#n8)
 #						MPEG file
 # MPEG sequences
-0	belong		   0x000001BA	  video/mpeg
-0	belong		   0x000001BB	  video/mpeg
-0	belong		   0x000001B0	  video/mp4v-es
-0	belong		   0x000001B5	  video/mp4v-es
-0	belong		   0x000001B3	  video/mpv
-0	belong&0xFF5FFF1F  0x47400010	  video/mp2t
+0       belong             0x000001BA
+>4      byte               &0x40          video/mp2p
+>4      byte               ^0x40          video/mpeg
+0       belong             0x000001BB     video/mpeg
+0       belong             0x000001B0     video/mp4v-es
+0       belong             0x000001B5     video/mp4v-es
+0       belong             0x000001B3     video/mpv
+0       belong&0xFF5FFF1F  0x47400010     video/mp2t
+0       belong             0x00000001
+>4      byte&1F            0x07           video/h264
+
 # FLI animation format
 0	leshort		0xAF11				video/fli
 # FLC animation format
 0	leshort		0xAF12				video/flc
 #
 # SGI and Apple formats
-# Added ISO mimes
 # Added ISO mimes
 0	string		MOVI	      video/sgi
 4	string		moov	      video/quicktime
@@ -612,12 +621,13 @@
 4	string		idat	      image/x-quicktime
 4	string		pckg	      application/x-quicktime
 4	string/B	jP	      image/jp2
-4	string		ftyp	      application/octet-stream
+4	string		ftyp
 >8	string		isom	      video/mp4
 >8	string		mp41	      video/mp4
 >8	string		mp42	      video/mp4
 >8	string/B	jp2	      image/jp2
 >8	string		3gp	      video/3gpp
+>8      string          avc1          video/3gpp
 >8	string		mmp4	      video/mp4
 >8	string/B	M4A	      audio/mp4
 >8	string/B	qt	      video/quicktime

@@ -334,12 +334,6 @@
 >>>&1	string		>\0		%.4s]
 >>0x1c	string		pmodedj		stubbed with %s
 
-# QDOS
-4	belong		0x4AFB		QDOS executable
->9	pstring		x		'%s'
-0	beshort		0xFB01		QDOS object
->2	pstring		x		'%s'
-
 #------------------------------------------------------------------------------
 # From Stuart Caie <kyzer@4u.net> (developer of cabextract)
 # Microsoft Cabinet files

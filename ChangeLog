@@ -1,3 +1,15 @@
+2005-01-12 00:00  Stepan Kasal  <kasal@ucw.cz>
+
+        * src/ascmagic.c (file_ascmagic): Fix three bugs about text files:
+          If a CRLF text file happens to have CR at offset HOWMANY - 1
+          (currently 0xffff), it should not be counted as CR line
+          terminator.
+          If a line has length exactly MAXLINELEN, it should not yet be
+          treated as a ``very long line'', as MAXLINELEN is ``longest sane
+          line length''.
+          With CRLF, the line length was not computed correctly, and even
+          lines of length MAXLINELEN - 1 were treated as ``very long''.
+
 2004-12-07 14:15  Christos Zoulas  <christos@zoulas.com>
 
 	* bzip2 needs a lot of input buffer space on some files

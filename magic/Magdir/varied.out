@@ -30,6 +30,3 @@
 # Harbour <URL:http://www.harbour-project.org/> HRB files.
 0	string		\xc0HRB		Harbour HRB file
 >4	short		x		version %d
-
-# From: "Stefan A. Haubenthal" <polluks@web.de>
-0	belong		0x000001EB	Plan 9 executable
