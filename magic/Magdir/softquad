@@ -5,3 +5,6 @@
 >2	string		impr		- for IMAGEN printer
 >2	string		ps		- for PostScript output
 >2	string		hp		- for Hewlett-Packard LaserJet family
+>2	string		495		- for AT&T 495 laser printer
+0	string		SQ\ BITMAP1	SoftQuad Raster Format text
+0	string		SQ\ BITMAP2	SoftQuad Raster Format data
