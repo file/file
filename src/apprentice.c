@@ -33,7 +33,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.14 1992/09/11 17:43:08 ian Exp $";
+	"@(#)$Id: apprentice.c,v 1.15 1993/02/19 14:10:50 ian Exp $";
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -83,7 +83,7 @@ int check;			/* non-zero? checking-only run. */
 	for (lineno = 1;fgets(line, BUFSIZ, f) != NULL; lineno++) {
 		if (line[0]=='#')	/* comment, do not parse */
 			continue;
-		if (strlen(line) <= 1)	/* null line, garbage, etc */
+		if (strlen(line) <= (unsigned)1) /* null line, garbage, etc */
 			continue;
 		line[strlen(line)-1] = '\0'; /* delete newline */
 		if (parse(line, &nmagic, check) != 0)
@@ -202,6 +202,7 @@ int *ndx, check;
 		magwarn("type %s invalid", l);
 		return -1;
 	}
+	/* New-style anding: "0 byte&0x80 =0x80 dynamically linked" */
 	if (*l == '&') {
 		++l;
 		m->mask = strtol(l, &l, 0);
@@ -212,6 +213,7 @@ int *ndx, check;
 	switch (*l) {
 	case '>':
 	case '<':
+	/* Old-style anding: "0 byte &0x80 dynamically linked" - not working */
 	case '&':
 	case '=':
   		m->reln = *l;
