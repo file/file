@@ -1,7 +1,11 @@
 Portability of the new file(1) command.
-@(#) $Id: PORTING,v 1.7 1992/06/30 13:22:30 ian Exp $
+@(#) $Id: PORTING,v 1.8 1992/09/08 15:28:03 ian Exp $
 
 Read this file only if the program doesn't compile on your system.
+
+This version, reluctanly, includes <stdlib.h>, which won't exist
+on older systems or those that aren't even close to the ANSI C
+standard. You could try creating a null "stdlib.h", I suppose.
 
 I have tried to make a program that doesn't need any command-line
 defines (-D) to specify what version of UNIX is in use,
@@ -12,7 +16,7 @@ of UNIX. If it's done right (ie., using the same definitions),
 my program will compile and work correctly. Look at the #ifdefs
 to see how it's done. 
 
-I've also tried to include all the non-portable library routines
+I've also tried to include source for all the non-portable library routines
 I used (getopt, str*).   Non-portable here means `not in every
 reasonably standard UNIX out there: V7, System V, 4BSD'.
 
@@ -26,21 +30,20 @@ have a system in which  neither types.h nor sysmacros.h defines
 systems, you will get a compilation error in trying to compile
 a warning message. Please do the following: 
 
-	1) change the appropriate (2nd) #include at the start of 
-		fsmagic.c
+	1) change the appropriate #include at the start of fsmagic.c
 and	2) let me know the name of the system, the release number,
 	   and the name of the header file that *does* include
 	   this "standard" definition.
 
 If you are running the old Ritchie PDP-11 C compiler or
 some other compiler that doesn't know about `void', you will have
-to un-comment-out the definition of `void=int' in the Makefile.
+to include `-Dvoid=int' in the Makefile.
 
 Other than this, there should be no portability problems,
 but one never knows these days. Please let me know of any
 other problems you find porting to a UNIX system. I don't much
-care for non-UNIX systems but will collect widely-used magic 
+care about non-UNIX systems but will collect widely-used magic 
 numbers for them as well as for UNIX systems.
 
 Ian Darwin
-Toronto, Canada
+(address in README)
