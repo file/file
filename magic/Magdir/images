@@ -45,6 +45,17 @@
 >4	long		1	rectangular 24-bit image
 >4	long		2	rectangular 8-bit image with colormap
 >4      long            3	rectangular 32-bit image (24-bit with matte)
+0	string		\361\0\100\273	CMU window manager bitmap
+0	string		#FIG		FIG graphics savefile text
+>6      string          2.1            	Version 2.1
+>6      string          2.0            	Version 2.0
+0	string		GKSM		GKS Metafile
+8	string		ILBM		IFF ILBM file
+6	string		JFIF		JPEG picture
+0       string          ARF_BEGARF     	PHIGS clear text archive
+
+# From: <u31b3hs@pool.informatik.rwth-aachen.de> (Michael Haardt)
+0	string          yz      MGR bitmap, modern format, 8 bit aligned
 0	string          zz      MGR bitmap, old format, 1 bit deep, 16 bit aligned
 0	string          xz      MGR bitmap, old format, 1 bit deep, 32 bit aligned
 0	string          yx      MGR bitmap, modern format, squeezed

@@ -69,6 +69,20 @@
 2	string		-lh		LHarc archive data
 >6	byte		x		type %c
 >20	byte		x		- header level %d
+
+# From: <u31b3hs@pool.informatik.rwth-aachen.de> (Michael Haardt)
+2	string		-lh0-		Lharc 1.x archive
+2	string		-lh1-		Lharc 1.x archive
+2	string		-lz4-		Lharc 1.x archive
+2	string		-lz5-		Lharc 1.x archive
+2	string		-lzs-		LHa 2.x? archive [lzs]
+2	string		-lh -		LHa 2.x? archive [lh ]
+2	string		-lhd-		LHa 2.x? archive [lhd]
+2	string		-lh2-		LHa 2.x? archive [lh2]
+2	string		-lh3-		LHa 2.x? archive [lh3]
+2	string		-lh4-		LHa 2.x? archive [lh4]
+2	string		-lh5-		LHa (2.x) archive
+
 # ARJ archive data from jason@jarthur.Claremont.EDU
 0	leshort		0xea60		ARJ archive data
 >5	byte		x		- version %d,

@@ -36,3 +36,5 @@
 0       string          #!/usr/local/bin/perl   perl commands text
 0       string          #!\ /usr/local/bin/perl perl commands text
 0       string          eval\ "exec\ /usr/local/bin/perl        perl commands text
+0	string		#!/bin/rc	Plan 9 rc Shell script text
+0	string		#!\ /bin/rc	Plan 9 rc Shell script text
