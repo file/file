@@ -12,9 +12,15 @@
 
 # magic for Newton PDA package formats
 # from Ruda Moura <ruda@helllabs.org>
-0	string	package		Newton package,
->7	byte	48		NOS 1.x,
->7	byte	49		NOS 2.x,
+0	string	package0	Newton package, NOS 1.x,
+>12	belong	&0x80000000	AutoRemove,
+>12	belong	&0x40000000	CopyProtect,
+>12	belong	&0x10000000	NoCompression,
+>12	belong	&0x04000000	Relocation,
+>12	belong	&0x02000000	UseFasterCompression,
+>16	belong	x		version %d
+
+0	string	package1	Newton package, NOS 2.x,
 >12	belong	&0x80000000	AutoRemove,
 >12	belong	&0x40000000	CopyProtect,
 >12	belong	&0x10000000	NoCompression,
