@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.73 2004/03/07 16:16:14 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.74 2004/03/09 18:52:08 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -166,14 +166,14 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 		return rv;
 	mapped = rv;
 	     
-	if ((ml = malloc(sizeof(*ml))) == NULL) {
+	if (magic == NULL || nmagic == 0) {
 		file_delmagic(magic, mapped, nmagic);
-		file_oomem(ms);
 		return -1;
 	}
 
-	if (magic == NULL || nmagic == 0) {
+	if ((ml = malloc(sizeof(*ml))) == NULL) {
 		file_delmagic(magic, mapped, nmagic);
+		file_oomem(ms);
 		return -1;
 	}
 
