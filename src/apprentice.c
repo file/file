@@ -33,7 +33,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Id: apprentice.c,v 1.16 1993/02/19 14:22:42 ian Exp $";
+	"@(#)$Id: apprentice.c,v 1.17 1993/09/16 20:49:29 christos Exp $";
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -67,7 +67,7 @@ int check;			/* non-zero? checking-only run. */
 	}
 
         maxmagic = MAXMAGIS;
-	if ((magic = (struct magic *) malloc(sizeof(struct magic) * maxmagic))
+	if ((magic = (struct magic *) calloc(sizeof(struct magic), maxmagic))
 	    == NULL) {
 		(void) fprintf(stderr, "%s: Out of memory.\n", progname);
 		if (check)
@@ -474,47 +474,57 @@ int c;
  * Print a string containing C character escapes.
  */
 void
-showstr(s)
+showstr(fp, s, len)
+FILE *fp;
 const char *s;
+int len;
 {
 	register char	c;
 
-	while((c = *s++) != '\0') {
+	for (;;) {
+		c = *s++;
+		if (len == -1) {
+			if (c == '\0')
+				break;
+		}
+		else  {
+			if (len-- == 0)
+				break;
+		}
 		if(c >= 040 && c <= 0176)	/* TODO isprint && !iscntrl */
-			putchar(c);
+			(void) fputc(c, fp);
 		else {
-			putchar('\\');
+			(void) fputc('\\', fp);
 			switch (c) {
 			
 			case '\n':
-				putchar('n');
+				(void) fputc('n', fp);
 				break;
 
 			case '\r':
-				putchar('r');
+				(void) fputc('r', fp);
 				break;
 
 			case '\b':
-				putchar('b');
+				(void) fputc('b', fp);
 				break;
 
 			case '\t':
-				putchar('t');
+				(void) fputc('t', fp);
 				break;
 
 			case '\f':
-				putchar('f');
+				(void) fputc('f', fp);
 				break;
 
 			case '\v':
-				putchar('v');
+				(void) fputc('v', fp);
 				break;
 
 			default:
-				printf("%.3o", c & 0377);
+				(void) fprintf(fp, "%.3o", c & 0377);
 				break;
 			}
 		}
 	}
-	putchar('\t');
 }
