@@ -1,6 +1,6 @@
 /*
  * file.h - definitions for file(1) program
- # @(#)$Header: /p/file/cvsroot/file/src/file.h,v 1.5 1990/10/03 17:53:29 ian Exp $
+ # @(#)$Ident$
  *
  * Copyright (c) Ian F. Darwin, 1987.
  * Written by Ian F. Darwin.
@@ -27,7 +27,7 @@
  */
 
 #define HOWMANY	1024		/* how much of the file to look at */
-#define MAXMAGIS 300		/* max entries in /etc/magic */
+#define MAXMAGIS 600		/* max entries in /etc/magic */
 #define MAXDESC	50		/* max leng of text description */
 #define MAXstring 32		/* max leng of "string" types */
 #define ckfputs(str,fil) {if (fputs(str,fil)==EOF) error(ckfmsg,"");}
@@ -35,9 +35,9 @@
 struct magic {
 	short contflag;		/* 1 if '>0' appears */
 	long offset;		/* offset to magic number */
-	char reln;		/* relation (0=eq, '>'=gt, etc) */
+#define	MASK	0200		/* this is a masked op, like & v1 = v2 */
+	unsigned char reln;	/* relation (0=eq, '>'=gt, etc) */
 	char type;		/* int, short, long or string. */
-	long mask;		/* mask for bitfields */
 	char vallen;		/* length of string value, if any */
 #define 			BYTE	1
 #define				SHORT	2
@@ -49,6 +49,8 @@ struct magic {
 		long l;
 		char s[MAXstring];
 	} value;		/* either number or string */
+	long mask;		/* mask before comparison with value */
+	char nospflag;		/* supress space character */
 	char desc[MAXDESC];	/* description */
 };
 
