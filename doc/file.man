@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.53 2003/10/16 13:02:56 christos Exp $
+.\" $Id: file.man,v 1.54 2003/10/27 18:09:08 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -218,7 +218,7 @@ Don't pad filenames so that they align in the output.
 On systems that support
 .BR utime (2)
 or
-.BR utimes(2) ,
+.BR utimes(2),
 attempt to preserve the access time of files analyzed, to pretend that
 .BR file (2)
 never read them.
