@@ -184,3 +184,7 @@ The compiled magic database.
 .Sh SEE ALSO
 .Xr file __CSECTION__ ,
 .Xr magic __FSECTION__ 
+.Sh AUTHORS
+Måns Rullgård Initial libmagic implementation,
+and configuration.
+Christos Zoulas API cleanup, error code and allocation handling.
