@@ -1,11 +1,11 @@
 Portability of the new file(1) command.
-@(#) $Header: /home/glen/git/file/cvs/file/src/Attic/PORTING,v 1.5 1987/11/08 23:03:41 ian Exp $
+@(#) $Header: /home/glen/git/file/cvs/file/src/Attic/PORTING,v 1.6 1990/10/03 17:57:04 ian Exp $
 
 Read this file only if the program doesn't compile on your system.
 
-I have tried to make a file command that doesn't need any command-line
-defines (-D) to specify what version of UNIX is in use. I do
-this by using the definitions available in the system #include
+I have tried to make a program that doesn't need any command-line
+defines (-D) to specify what version of UNIX is in use,
+by using the definitions available in the system #include
 files. For example, the lstat(2) call is normally found in
 4BSD systems, but might be grafted into some other variant
 of UNIX. If it's done right (ie., using the same definitions),
