@@ -72,7 +72,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.95 2004/09/27 15:28:37 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.96 2005/03/06 05:58:22 christos Exp $")
 #endif	/* lint */
 
 
@@ -95,7 +95,7 @@ private int 		/* Global command-line options 		*/
 
 private const char *magicfile = 0;	/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
-private char *separator = ":";	/* Default field separator	*/
+private const char *separator = ":";	/* Default field separator	*/
 
 private char *progname;		/* used throughout 		*/
 

@@ -1,3 +1,8 @@
+
+2005-03-06 00:00  Joerg Walter <jwalt@mail.garni.ch>
+	
+	* Add indirect magic offset support, and search mode.
+
 2005-01-12 00:00  Stepan Kasal  <kasal@ucw.cz>
 
         * src/ascmagic.c (file_ascmagic): Fix three bugs about text files:

@@ -50,7 +50,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.41 2005/01/07 19:17:26 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.42 2005/03/06 05:58:22 christos Exp $")
 #endif
 
 
@@ -69,6 +69,8 @@ private struct {
 	{ "\037\240", 2, { "gzip", "-cdq", NULL }, 1 },		/* SCO LZH */
 	/* the standard pack utilities do not accept standard input */
 	{ "\037\036", 2, { "gzip", "-cdq", NULL }, 0 },		/* packed */
+	{ "PK\3\4",   4, { "gzip", "-cdq", NULL }, 1 },		/* pkzipped, */
+					    /* ...only first file examined */
 	{ "BZh",      3, { "bzip2", "-cd", NULL }, 1 },		/* bzip2-ed */
 };
 
@@ -349,7 +351,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 #endif
 
 		execvp(compr[method].argv[0],
-		       (char *const *)compr[method].argv);
+		       (char *const *)(intptr_t)compr[method].argv);
 #ifdef DEBUG
 		(void)fprintf(stderr, "exec `%s' failed (%s)\n",
 		    compr[method].argv[0], strerror(errno));
