@@ -39,11 +39,12 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.37 2002/07/03 18:26:38 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.38 2002/07/03 18:37:44 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
 
+#ifndef COMPILE_ONLY
 void
 mdump(struct magic *m)
 {
@@ -127,6 +128,7 @@ mdump(struct magic *m)
 	}
 	(void) fprintf(stderr, ",\"%s\"]\n", m->desc);
 }
+#endif
 
 /*
  * ckfputs - fputs, but with error checking
@@ -191,6 +193,7 @@ magwarn(const char *f, ...)
 }
 
 
+#ifndef COMPILE_ONLY
 char *
 fmttime(long v, int local)
 {
@@ -224,3 +227,4 @@ fmttime(long v, int local)
 		*rt = '\0';
 	return pp;
 }
+#endif
