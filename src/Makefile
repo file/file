@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile,v 1.50 1996/06/22 22:04:22 christos Exp $
+# @(#)$Id: Makefile,v 1.51 1996/06/22 22:05:07 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -121,12 +121,14 @@ magic.${MANFEXT} :	Makefile magic.man
 		@rm -f $@
 		sed -e s@__CSECTION__@${MANCEXT}@g \
 		    -e s@__FSECTION__@${MANFEXT}@g \
+		    -e s@__VERSION__@${VERSION}@g \
 		    -e s@__MAGIC__@${MAGIC}@g magic.man > $@
 
 file.${MANCEXT} :	Makefile file.man
 		@rm -f $@
 		sed -e s@__CSECTION__@${MANCEXT}@g \
 		    -e s@__FSECTION__@${MANFEXT}@g \
+		    -e s@__VERSION__@${VERSION}@g \
 		    -e s@__MAGIC__@${MAGIC}@g file.man > $@
 
 send:		dist
