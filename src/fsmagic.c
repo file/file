@@ -46,7 +46,7 @@
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /home/glen/git/file/cvs/file/src/fsmagic.c,v 1.15 1992/09/08 15:04:34 ian Exp $";
+	"@(#)$Id: fsmagic.c,v 1.16 1992/09/08 15:36:42 ian Exp $";
 #endif	/* lint */
 
 int
