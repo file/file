@@ -162,19 +162,6 @@
 # Conflicts with other entries [BABYL]
 #0	string		BA		PC bitmap array data
 
-# JPEG images
-# SunOS 5.5.1 had
-#
-#	0	string		\377\330\377\340	JPEG file
-#	0	string		\377\330\377\356	JPG file
-#
-# both of which turn into "JPEG image data" here.
-#
-0	beshort		0xffd8		JPEG image data
->6	string		JFIF		\b, JFIF standard
-# HSI is Handmade Software's proprietary JPEG encoding scheme
-0	string		hsi1		JPEG image data, HSI proprietary
-
 # XPM icons (Greg Roelofs, newt@uchicago.edu)
 # note possible collision with C/REXX entry in c-lang; currently commented out
 0	string		/*\ XPM\ */	X pixmap image text
