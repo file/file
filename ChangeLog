@@ -1,3 +1,7 @@
+2004-11-24 12:39  Christos Zoulas  <christos@zoulas.com>
+
+	* Stack smash fix, and ELF more conservative reading.
+	  Jakub Bogusz <qboosh@pld-linux.org>
 
 2004-11-20 18:50  Christos Zoulas  <christos@zoulas.com>
 
