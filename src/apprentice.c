@@ -50,7 +50,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.69 2003/10/14 19:29:55 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.70 2003/10/16 19:26:57 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -269,6 +269,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		file_error(ms, 0, "could not find any magic files!");
 		return NULL;
 	}
+	free(mfn);
 	return mlist;
 }
 
