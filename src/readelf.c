@@ -39,7 +39,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.38 2004/03/22 19:08:53 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.39 2004/03/22 20:28:40 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -404,18 +404,37 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		desc = getu32(swap, desc);
 		if (file_printf(ms, ", for FreeBSD") == -1)
 			return size;
+
 		/*
-		 * Contents is __FreeBSD_version, whose relation to OS versions
-		 * is defined by a huge table in the Porters' Handbook. Happily,
-		 * the first three digits are the version number, at least in
-		 * versions of FreeBSD that use this note.
+		 * Contents is __FreeBSD_version, whose relation to OS
+		 * versions is defined by a huge table in the Porters'
+		 * Handbook. For up to 5.x, the first three digits are
+		 * the version number.  For 5.x and higher, the scheme
+		 * is: <major><two digit minor> <0 if release branch,
+		 * otherwise 1>xx
 		 */
-		if (file_printf(ms, " %d.%d", desc / 100000, desc / 10000 % 10)
-		    == -1)
-			return size;
-		if (desc / 1000 % 10 > 0)
-			if (file_printf(ms, ".%d", desc / 1000 % 10) == -1)
+		if (desc / 100000 < 5) {
+			if (file_printf(ms, " %d.%d", desc / 100000,
+			    desc / 10000 % 10) == -1)
 				return size;
+			if (desc / 1000 % 10 > 0)
+				if (file_printf(ms, ".%d", desc / 1000 % 10)
+				    == -1)
+					return size;
+		} else {
+			if (file_printf(ms, " %d.%d", desc / 100000,
+			    desc / 1000 % 100) == -1)
+				return size;
+			desc %= 1000;
+			if (desc > 100) {
+				if (file_printf(ms, "-CURRENT (rev %d)",
+				    desc % 100) == -1)
+					return size;
+			} else if (desc != 0) {
+				if (file_printf(ms, ".%d", desc / 10) == -1)
+					return size;
+			}
+		}
 		return size;
 	}
 
