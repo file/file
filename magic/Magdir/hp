@@ -16,27 +16,25 @@
 # UNIX environment atop the "SUN kernel"; dunno whether it was
 # big-endian or little-endian.
 #
-# I'm guessing that the 200 series was 68K-based; the 300 and 400 series
-# are.
+# Daniel Quinlan (quinlan@yggdrasil.com): hp200 machines are 68010 based;
+# hp300 are 68020+68881 based; hp400 are also 68k.  The following basic
+# HP magic is useful for reference, but using "long" magic is a better
+# practice in order to avoid collisions.
 #
-# Daniel Quinlan (quinlan@yggdrasil.com): hp200 machines are 68010
-# based; hp300 are 68020+68881 based.  I think the following "basic"
-# magic should probably be integrated and the various flavors of
-# binaries be implemented with ">2" in case some flavors have been missed.
-# 0	beshort		200	hp200 (68010) BSD binary
-# 0	beshort		300	hp300 (68020+68881) BSD binary
-# 0	beshort		0x20c	hp200/300 HP-UX binary
-# 0	beshort		0x20b	hp800 HP-UX binary
+# 0	beshort		200		hp200 (68010) BSD binary
+# 0	beshort		300		hp300 (68020+68881) BSD binary
+# 0	beshort		0x20c		hp200/300 HP-UX binary
+# 0	beshort		0x20b		hp800 HP-UX binary
 #
 # The "misc" stuff needs a byte order; the archives look suspiciously
 # like the old 177545 archives (0xff65 = 0177545).
 #
 #### Old Apollo stuff
 0	beshort		0627		Apollo m68k COFF executable
->18	beshort		^040000		not stripped 
+>18	beshort		^040000		not stripped
 >22	beshort		>0		- version %ld
 0	beshort		0624		apollo a88k COFF executable
->18	beshort		^040000		not stripped 
+>18	beshort		^040000		not stripped
 >22	beshort		>0		- version %ld
 0       long            01203604016     TML 0123 byte-order format
 0       long            01702407010     TML 1032 byte-order format

@@ -2,7 +2,8 @@
 #------------------------------------------------------------------------------
 # audio:  file(1) magic for sound formats
 #
-# from Jan Nicolai Langfeldt <janl@ifi.uio.no>,
+# Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
+# and others
 #
 
 # Sun/NeXT audio data
@@ -60,9 +61,18 @@
 # Microsoft WAVE format (*.wav)
 # [GRR 950115:  probably all of the shorts and longs should be leshort/lelong]
 0	string		RIFF		Microsoft RIFF
->8	string		WAVE		- WAVE format
->34	short		>0		%d bit
->22	short		=1		Mono
->22	short		=2		Stereo
->22	short		>2		%d Channels
+>8	string		WAVE		\b, WAVE audio data
+>34	short		>0		\b, %d bit
+>22	short		=1		\b, mono
+>22	short		=2		\b, stereo
+>22	short		>2		\b, %d channels
 >24	long		>0		%d Hz
+
+# Extended MOD format (*.emd) (Greg Roelofs, newt@uchicago.edu); NOT TESTED
+# [based on posting 940824 by "Dirk/Elastik", husberg@lehtori.cc.tut.fi]
+0	string		EMOD		Extended MOD sound data,
+>4	byte&0xf0	x		version %d
+>4	byte&0x0f	x		\b.%d,
+>45	byte		x		%d instruments
+>83	byte		0		(module)
+>83	byte		1		(song)

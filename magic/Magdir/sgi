@@ -152,13 +152,6 @@
 0	string	SGIAUDIT	SGI Audit file
 >8	byte	x		- version %d
 >9	byte	x		.%ld
-#
-0	beshort	000732		SGI imagelib image
->6	beshort	x		(%d x
->8	beshort	x		%d)
-0	beshort	0155001		SGI imagelib image byte-swapped
-0	beshort	017436		packed data
-0	beshort	017037		packed data (byte swapped)
 # Are these three SGI-based file types or general ones?
 0	string	WNGZWZSC	Wingz compiled script
 0	string	WNGZWZSS	Wingz spreadsheet

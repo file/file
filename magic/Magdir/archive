@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# archive:  file(1) magic for archive formats (see also "dos" for self-
+# archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
 # cpio, ar, arc, arj, hpack, lha/lharc, rar, squish, uc2, zip, zoo, etc.
@@ -26,6 +26,8 @@
 0	string		070707		ASCII cpio archive (pre-SVR4 or odc)
 0	string		070701		ASCII cpio archive (SVR4 with no CRC)
 0	string		070702		ASCII cpio archive (SVR4 with CRC)
+
+# other archives
 0	long		0177555		very old archive
 0	short		0177555		very old PDP-11 archive
 0	long		0177545		old archive
@@ -103,18 +105,19 @@
 #
 0	string		-h-		Software Tools format archive text
 
-# ARC archiver (empirical entries), from Daniel Quinlan (quinlan@yggdrasil.com)
+# ARC archiver, from Daniel Quinlan (quinlan@yggdrasil.com)
 #
-# Other entries seem likely, but single byte magic entries collide
-# with many things.  I think the real ARC magic is a single byte.
-#
-# the first entry covers about 84% of ARC files, the second 7%, the third 5%
-0	string		\032\010	ARC archive data
-0	string		\032\011	ARC archive data
-0	string		\032\002	ARC archive data
-# these seem to be rather uncommon, at less than 3% and 2%, respectively
-0	string		\032\003	ARC archive data
-0	string		\032\004	ARC archive data
+# The first byte is the magic (0x1a), byte 2 is the compression type for
+# the first file (0x01 through 0x09), and bytes 3 to 15 are the MS-DOS
+# filename of the first file (null terminated).  Since some types collide
+# we only test some types on basis of frequency: 0x08 (83%), 0x09 (5%),
+# 0x02 (5%), 0x03 (3%), 0x04 (2%), 0x06 (2%).  0x01 collides with terminfo.
+0	lelong&0x8080ffff	0x0000081a	ARC archive data, dynamic LZW
+0	lelong&0x8080ffff	0x0000091a	ARC archive data, squashed
+0	lelong&0x8080ffff	0x0000021a	ARC archive data, uncompressed
+0	lelong&0x8080ffff	0x0000031a	ARC archive data, packed
+0	lelong&0x8080ffff	0x0000041a	ARC archive data, squeezed
+0	lelong&0x8080ffff	0x0000061a	ARC archive data, crunched
 
 # Acorn archive formats (Disaster prone simpleton, m91dps@ecs.ox.ac.uk)
 # I can't create either SPARK or ArcFS archives so I have not tested this stuff
@@ -126,15 +129,14 @@
 
 # ARJ archiver (jason@jarthur.Claremont.EDU)
 0	leshort		0xea60		ARJ archive data
->5	byte		x		- version %d,
->8	byte		>0		flags:
->>8	byte		&0x04		multi-volume,
->>8	byte		&0x10		slash switched,
->>8	byte		&0x20		backup,
+>5	byte		x		\b, v%d,
+>8	byte		&0x04		multi-volume,
+>8	byte		&0x10		slash-switched,
+>8	byte		&0x20		backup,
 >34	string		x		original name: %s,
->7	byte		0		os: MS/DOS
+>7	byte		0		os: MS-DOS
 >7	byte		1		os: PRIMOS
->7	byte		2		os: UNIX
+>7	byte		2		os: Unix
 >7	byte		3		os: Amiga
 >7	byte		4		os: Macintosh
 >7	byte		5		os: OS/2
@@ -145,22 +147,32 @@
 >3	byte		>0		%d]
 
 # HA archiver (Greg Roelofs, newt@uchicago.edu)
-0	string		HA		HA archive data,
->2	leshort		x		%u files,
->4	byte&0x0f	=0		first is type CPY
->4	byte&0x0f	=1		first is type ASC
->4	byte&0x0f	=2		first is type HSC
->4	byte&0x0f	=0x0e		first is type DIR
->4	byte&0x0f	=0x0f		first is type SPECIAL
+# This is a really bad format. A file containing HAWAII will match this...
+#0	string		HA		HA archive data,
+#>2	leshort		=1		1 file,
+#>2	leshort		>1		%u files,
+#>4	byte&0x0f	=0		first is type CPY
+#>4	byte&0x0f	=1		first is type ASC
+#>4	byte&0x0f	=2		first is type HSC
+#>4	byte&0x0f	=0x0e		first is type DIR
+#>4	byte&0x0f	=0x0f		first is type SPECIAL
 
 # HPACK archiver (Peter Gutmann, pgut1@cs.aukuni.ac.nz)
 0	string		HPAK		HPACK archive data
 
+# JAM Archive volume format, by Dmitry.Kohmanyuk@UA.net
+0	string		\351,\001JAM\		JAM archive,
+>7	string		>\0			version %.4s
+>0x26	byte		=0x27			-
+>>0x2b	string          >\0			label %.11s,
+>>0x27	lelong		x			serial %08x,
+>>0x36	string		>\0			fstype %.8s
+
 # LHARC/LHA archiver (Greg Roelofs, newt@uchicago.edu)
-2	string		-lh0-		Lharc 1.x archive data [lh0]
-2	string		-lh1-		Lharc 1.x archive data [lh1]
-2	string		-lz4-		Lharc 1.x archive data [lz4]
-2	string		-lz5-		Lharc 1.x archive data [lz5]
+2	string		-lh0-		LHarc 1.x archive data [lh0]
+2	string		-lh1-		LHarc 1.x archive data [lh1]
+2	string		-lz4-		LHarc 1.x archive data [lz4]
+2	string		-lz5-		LHarc 1.x archive data [lz5]
 #	[never seen any but the last; -lh4- reported in comp.compression:]
 2	string		-lzs-		LHa 2.x? archive data [lzs]
 2	string		-lh -		LHa 2.x? archive data [lh ]
@@ -177,44 +189,27 @@
 # SQUISH archiver (Greg Roelofs, newt@uchicago.edu)
 0	string		SQSH		squished archive data (Acorn RISCOS)
 
-# ZIP archiver (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
-0	string		PK\003\004	Zip archive data
->4	byte		0x09		(at least v0.9 to extract)
->4	byte		0x0a		(at least v1.0 to extract)
->4	byte		0x0b		(at least v1.1 to extract)
->4	byte		0x14		(at least v2.0 to extract)
+# UC2 archiver (Greg Roelofs, newt@uchicago.edu)
+# I can't figure out the self-extracting form of these buggers...
+0	string		UC2\x1a		UC2 archive data
 
-# ZOO archiver (Greg Roelofs, newt@uchicago.edu)
-#0	string		ZOO 			Zoo archive data
-# above is an alternate identifier
-20	string		\xdc\xa7\xc4\xfd	Zoo archive data
-# I don't know if all of these versions exist, or if some are missing...
->4	string		1.00			(v%4s)
->4	string		1.10			(v%4s)
->4	string		1.20			(v%4s)
->4	string		1.30			(v%4s)
->4	string		1.40			(v%4s)
->4	string		1.50			(v%4s)
->4	string		1.60			(v%4s)
->4	string		1.70			(v%4s)
->4	string		1.71			(v%4s)
->4	string		2.00			(v%4s)
->4	string		2.01			(v%4s)
->4	string		2.10			(v%4s)
->32	string		\001\000		(modify: v1.0+)
->32	string		\001\004		(modify: v1.4+)
->32	string		\002\000		(modify: v2.0+)
->70	string		\001\000		(extract: v1.0+)
->70	string		\002\001		(extract: v2.1+)
+# ZIP archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
+0	string		PK\003\004	Zip archive data
+>4	byte		0x09		\b, at least v0.9 to extract
+>4	byte		0x0a		\b, at least v1.0 to extract
+>4	byte		0x0b		\b, at least v1.1 to extract
+>4	byte		0x14		\b, at least v2.0 to extract
+
+# Zoo archiver
+20	lelong		0xfdc4a7dc	Zoo archive data
+>4	byte		>48		\b, v%c.
+>>6	byte		>47		\b%c
+>>>7	byte		>47		\b%c
+>32	byte		>0		\b, modify: v%d
+>>33	byte		x		\b.%d+
+>42	lelong		0xfdc4a7dc	\b,
+>>70	byte		>0		extract: v%d
+>>>71	byte		x		\b.%d+
 
 # Shell archives
 10	string		#\ This\ is\ a\ shell\ archive	shell archive text
->2	string		>\0				(%s)
-
-# JAM Archive volume format, by Dmitry.Kohmanyuk@UA.net
-0	string		\351,\001JAM\		JAM archive,
->7	string		>\0			version %.4s
->0x26	byte		=0x27			-
->>0x2b	string          >\0			label %.11s,
->>0x27	lelong		x			serial %08x,
->>0x36	string		>\0			fstype %.8s
