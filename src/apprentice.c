@@ -26,12 +26,14 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "file.h"
 
 #ifndef	lint
 static char *moduleid = 
-	"@(#)$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.10 1992/05/21 16:15:12 ian Exp $";
+	"@(#)$Header: /p/file/cvsroot/file/src/apprentice.c,v 1.11 1992/05/22 17:49:23 ian Exp $";
 #endif	/* lint */
 
 #define MAXSTR		500
@@ -45,11 +47,20 @@ extern long strtol();
 
 struct magic magic[MAXMAGIS];
 
-char *getstr();
+#if	defined(__STDC__) || defined(__cplusplus)
+static int getvalue(struct magic *m, char **p);
+static int hextoint(int c);
+static char *getstr(char *s, char *p, int plen, int *slen);
+#else
+static int getvalue();
+static int hextoint();
+static char *getstr();
+#endif
 
+int
 apprentice(fn, check)
 char *fn;			/* name of magic file */
-int check;		/* non-zero: checking-only run. */
+int check;			/* non-zero? checking-only run. */
 {
 	FILE *f;
 	char line[MAXSTR+1];
@@ -234,10 +245,10 @@ GetDesc:
  * pointer, according to the magic type.  Update the string pointer to point 
  * just after the number read.  Return 0 for success, non-zero for failure.
  */
-int
+static int
 getvalue(m, p)
-	struct magic *m;
-	char **p;
+struct magic *m;
+char **p;
 {
 	int slen;
 
@@ -276,7 +287,7 @@ getvalue(m, p)
  * Copy the converted version to "p", returning its length in *slen.
  * Return updated scan pointer as function result.
  */
-char *
+static char *
 getstr(s, p, plen, slen)
 register char	*s;
 register char	*p;
@@ -379,19 +390,19 @@ int	plen, *slen;
 out:
 	*p = '\0';
 	*slen = p - origp;
-	return(s);
+	return s;
 }
 
 
 /* Single hex char to int; -1 if not a hex char. */
-int
+static int
 hextoint(c)
-	char c;
+int c;
 {
 	if (!isascii(c))	return -1;
 	if (isdigit(c))		return c - '0';
-	if ((c>='a')&(c<='f'))	return c + 10 - 'a';
-	if ((c>='A')&(c<='F'))	return c + 10 - 'A';
+	if ((c>='a')&&(c<='f'))	return c + 10 - 'a';
+	if ((c>='A')&&(c<='F'))	return c + 10 - 'A';
 				return -1;
 }
 
@@ -406,7 +417,7 @@ register char	*s;
 	register char	c;
 
 	while((c = *s++) != '\0') {
-		if(c >= 040 && c <= 0176)
+		if(c >= 040 && c <= 0176)	/* TODO isprint && !iscntrl */
 			putchar(c);
 		else {
 			putchar('\\');
