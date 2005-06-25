@@ -630,3 +630,7 @@
 # DR-DOS 7.03 Packed File *.??_
 0	string	Packed\ File\  Personal		NetWare Packed File
 >12	string	x    				\b, was "%.12s"
+
+# EET archive
+# From: Tilman Sauerbeck <tilman@code-monkey.de>
+0	belong	0x1ee7ff00	EET archive

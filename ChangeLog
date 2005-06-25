@@ -1,4 +1,13 @@
 
+2005-06-25 11:48 Christos Zoulas <christos@zoulas.com>
+
+	* Dynamically allocate the string buffers and make the
+	  default read size 256K.
+
+2005-06-01 00:00 Joerg Sonnenberger <joerg@britannica.bec.de>
+
+	* Dragonfly ELF note support
+
 2005-03-14 00:00 Giuliano Bertoletti <gb@symbolic.it>
 
 	* Avoid NULL pointer dereference in time conversion.

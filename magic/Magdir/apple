@@ -148,3 +148,6 @@
 # information seems to be more useful.
 #0	long	0x45520200
 #>0x410	string	disk\ image	UDIF read/write image (UDRW)
+
+# From: Toby Peterson <toby@apple.com>
+0	string	bplist00	Apple binary property list

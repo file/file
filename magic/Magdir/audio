@@ -409,3 +409,19 @@
 >12	lelong	>0	samplerate %d,
 >24	lelong	>0	frames %d
 
+# adlib sound files
+# From Gürkan Sengün <gurkan@linuks.mine.nu>, http://www.linuks.mine.nu
+0    	string		RAWADATA	RdosPlay RAW
+
+1068	string		RoR		AMUSIC Adlib Tracker
+
+0	string		JCH		EdLib
+
+0	string		mpu401tr	MPU-401 Trakker
+
+0	string		SAdT		Surprise! Adlib Tracker
+>4	byte		x		Version %d
+
+0	string		XAD!		eXotic ADlib
+
+0	string		ofTAZ!		eXtra Simple Music

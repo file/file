@@ -223,6 +223,7 @@ typedef struct {
 #define NT_NETBSD_EMULATION	2
 #define NT_FREEBSD_VERSION	1
 #define NT_OPENBSD_VERSION	1
+#define NT_DRAGONFLY_VERSION	1
 /* GNU executables (name = "GNU") */
 #define NT_GNU_VERSION		1
 
