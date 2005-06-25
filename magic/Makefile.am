@@ -125,6 +125,7 @@ Magdir/modem \
 Magdir/motorola \
 Magdir/msdos \
 Magdir/msvc \
+Magdir/mup \
 Magdir/natinst \
 Magdir/ncr \
 Magdir/netbsd \
