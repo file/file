@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.42 2005/02/09 19:25:13 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.43 2005/06/25 15:52:14 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -71,10 +71,11 @@ protected int
 file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 {
 	size_t i;
-	unsigned char nbuf[HOWMANY+1];	/* one extra for terminating '\0' */
-	unichar ubuf[HOWMANY+1];	/* one extra for terminating '\0' */
+	unsigned char *nbuf = NULL;
+	unichar *ubuf = NULL;	
 	size_t ulen;
 	struct names *p;
+	int rv = -1;
 
 	const char *code = NULL;
 	const char *code_mime = NULL;
@@ -98,13 +99,13 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	 * Undo the NUL-termination kindly provided by process()
 	 * but leave at least one byte to look at
 	 */
-
 	while (nbytes > 1 && buf[nbytes - 1] == '\0')
 		nbytes--;
 
-	/* nbuf and ubuf relies on this */
-	if (nbytes > HOWMANY)
-		nbytes = HOWMANY;
+	if ((nbuf = malloc((nbytes + 1) * sizeof(nbuf[0]))) == NULL)
+		goto done;
+	if ((ubuf = malloc((nbytes + 1) * sizeof(ubuf[0]))) == NULL)
+		goto done;
 
 	/*
 	 * Then try to determine whether it's any character code we can
@@ -148,7 +149,8 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 			type = "character data";
 			code_mime = "ebcdic";
 		} else {
-			return 0;  /* doesn't look like text at all */
+			rv = 0;
+			goto done;  /* doesn't look like text at all */
 		}
 	}
 
@@ -263,37 +265,37 @@ subtype_identified:
 	if ((ms->flags & MAGIC_MIME)) {
 		if (subtype_mime) {
 			if (file_printf(ms, subtype_mime) == -1)
-				return -1;
+				goto done;
 		} else {
 			if (file_printf(ms, "text/plain") == -1)
-				return -1;
+				goto done;
 		}
 
 		if (code_mime) {
 			if (file_printf(ms, "; charset=") == -1)
-				return -1;
+				goto done;
 			if (file_printf(ms, code_mime) == -1)
-				return -1;
+				goto done;
 		}
 	} else {
 		if (file_printf(ms, code) == -1)
-			return -1;
+			goto done;
 
 		if (subtype) {
 			if (file_printf(ms, " ") == -1)
-				return -1;
+				goto done;
 			if (file_printf(ms, subtype) == -1)
-				return -1;
+				goto done;
 		}
 
 		if (file_printf(ms, " ") == -1)
-			return -1;
+			goto done;
 		if (file_printf(ms, type) == -1)
-			return -1;
+			goto done;
 
 		if (has_long_lines)
 			if (file_printf(ms, ", with very long lines") == -1)
-				return -1;
+				goto done;
 
 		/*
 		 * Only report line terminators if we find one other than LF,
@@ -302,51 +304,57 @@ subtype_identified:
 		if ((n_crlf == 0 && n_cr == 0 && n_nel == 0 && n_lf == 0) ||
 		    (n_crlf != 0 || n_cr != 0 || n_nel != 0)) {
 			if (file_printf(ms, ", with") == -1)
-				return -1;
+				goto done;
 
 			if (n_crlf == 0 && n_cr == 0 && n_nel == 0 && n_lf == 0)			{
 				if (file_printf(ms, " no") == -1)
-					return -1;
+					goto done;
 			} else {
 				if (n_crlf) {
 					if (file_printf(ms, " CRLF") == -1)
-						return -1;
+						goto done;
 					if (n_cr || n_lf || n_nel)
 						if (file_printf(ms, ",") == -1)
-							return -1;
+							goto done;
 				}
 				if (n_cr) {
 					if (file_printf(ms, " CR") == -1)
-						return -1;
+						goto done;
 					if (n_lf || n_nel)
 						if (file_printf(ms, ",") == -1)
-							return -1;
+							goto done;
 				}
 				if (n_lf) {
 					if (file_printf(ms, " LF") == -1)
-						return -1;
+						goto done;
 					if (n_nel)
 						if (file_printf(ms, ",") == -1)
-							return -1;
+							goto done;
 				}
 				if (n_nel)
 					if (file_printf(ms, " NEL") == -1)
-						return -1;
+						goto done;
 			}
 
 			if (file_printf(ms, " line terminators") == -1)
-				return -1;
+				goto done;
 		}
 
 		if (has_escapes)
 			if (file_printf(ms, ", with escape sequences") == -1)
-				return -1;
+				goto done;
 		if (has_backspace)
 			if (file_printf(ms, ", with overstriking") == -1)
-				return -1;
+				goto done;
 	}
+	rv = 1;
+done:
+	if (nbuf)
+		free(nbuf);
+	if (ubuf)
+		free(ubuf);
 
-	return 1;
+	return rv;
 }
 
 private int

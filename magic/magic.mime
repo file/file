@@ -916,3 +916,6 @@
 # (made the mimetype up) 
 0	string	\0\0MMXPR3\0	application/x-quark-xpress-3
 
+# EET archive
+# From: Tilman Sauerbeck <tilman@code-monkey.de>
+0	belong	0x1ee7ff00	application/x-eet

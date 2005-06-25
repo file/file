@@ -30,3 +30,13 @@
 >8	string		FTXT		\b, FTXT formatted text
 >8	string		CTLG		\b, CTLG message catalog
 >8	string		PREF		\b, PREF preferences
+
+# These go at the end of the iff rules
+#
+# I don't see why these might collide with anything else.
+#
+# Interactive Fiction related formats
+#
+>8	string		IFRS		\b, Blorb Interactive Fiction
+>>24	string		Exec		with executable chunk
+>8	string          IFZS		\b, Z-machine or Glulx saved game file (Quetzal)
