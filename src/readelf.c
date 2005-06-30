@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.47 2005/06/25 15:52:14 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.48 2005/06/30 16:33:47 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -490,9 +490,9 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 
 	if (namesz == 10 && strcmp((char *)&nbuf[noff], "DragonFly") == 0 &&
 	    nh_type == NT_DRAGONFLY_VERSION && descsz == 4) {
+		uint32_t desc;
 		if (file_printf(ms, ", for DragonFly") == -1)
 			return size;
-		uint32_t desc;
 		(void)memcpy(&desc, &nbuf[doff], sizeof(desc));
 		desc = getu32(swap, desc);
 		if (file_printf(ms, " %d.%d.%d", desc / 100000,
