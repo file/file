@@ -44,7 +44,7 @@
 #audio/x-tracker-module
 ##>17	string	>\0		Title: "%s"
 
-21	string/c	!SCREAM!	audio/x-mod
+21	string/c	\!SCREAM!	audio/x-mod
 #audio/x-screamtracker-module
 21	string	BMOD2STM	audio/x-mod
 #audio/x-screamtracker-module
@@ -342,7 +342,7 @@
 0	short		0143561		application/x-cpio	swapped
 
 0	string		=<ar>		application/x-archive
-0	string		!<arch>		application/x-archive
+0	string		\!<arch>	application/x-archive
 >8	string		debian		application/x-debian-package
 
 #------------------------------------------------------------------------------

@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.68 2005/06/25 15:52:14 christos Exp $
+ * @(#)$Id: file.h,v 1.69 2005/07/12 20:05:38 christos Exp $
  */
 
 #ifndef __file_h__
@@ -278,6 +278,10 @@ extern char *sys_errlist[];
 
 #ifndef HAVE_STRTOUL
 #define strtoul(a, b, c)	strtol(a, b, c)
+#endif
+
+#ifndef HAVE_SNPRINTF
+int snprintf(char *, size_t, const char *, ...);
 #endif
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)

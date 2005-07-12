@@ -1,4 +1,11 @@
 
+2005-07-12 11:48 Christos Zoulas <christos@zoulas.com>
+
+	* Provide stub implementations for {v,}nsprintf() for older
+	  OS's that don't have them.
+	* Change mbstate_t autoconf detection macro from AC_MBSTATE_T
+	  to AC_TYPE_MBSTATE_T.
+
 2005-06-25 11:48 Christos Zoulas <christos@zoulas.com>
 
 	* Dynamically allocate the string buffers and make the
