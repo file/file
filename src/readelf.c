@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.48 2005/06/30 16:33:47 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.49 2005/07/14 02:22:25 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -176,6 +176,7 @@ size_t	prpsoffsets32[] = {
 };
 
 size_t	prpsoffsets64[] = {
+	16,		/* FreeBSD, 64-bit */
 	40,             /* Linux (tested on core from 2.4.x) */
        120,		/* SunOS 5.x, 64-bit */
 };
