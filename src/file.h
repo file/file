@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.69 2005/07/12 20:05:38 christos Exp $
+ * @(#)$Id: file.h,v 1.70 2005/07/29 17:57:20 christos Exp $
  */
 
 #ifndef __file_h__
@@ -194,7 +194,10 @@ struct magic {
 		uint16_t h;
 		uint32_t l;
 		char s[MAXstring];
-		char *buf;
+		struct {
+			char *buf;
+			size_t buflen;
+		} search;
 		uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
 		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
 	} value;		/* either number or string */
