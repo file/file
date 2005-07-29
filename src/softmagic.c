@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.73 2005/03/06 05:58:22 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.74 2005/07/29 17:57:20 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -626,11 +626,11 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		 * (starting at 1), not as bytes-from start-of-file
 		 */
 		char *b, *c, *last = NULL;
-		if ((p->buf = strdup((const char *)s)) == NULL) {
+		if ((p->search.buf = strdup((const char *)s)) == NULL) {
 			file_oomem(ms);
 			return -1;
 		}
-		for (b = p->buf; offset && 
+		for (b = p->search.buf; offset && 
 		    ((b = strchr(c = b, '\n')) || (b = strchr(c, '\r')));
 		    offset--, b++) {
 			last = b;
@@ -638,6 +638,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		}
 		if (last != NULL)
 			*last = '\0';
+		p->search.buflen = last - p->search.buf;
 		return 0;
 	}
 
@@ -1135,12 +1136,18 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 	}
 
 	if (m->type == FILE_SEARCH) {
-		p->buf = malloc(m->mask + m->vallen);
-		if (p->buf == NULL) {
+		size_t mlen = m->mask + m->vallen;
+		size_t flen = nbytes - offset;
+		if (flen < mlen)
+			mlen = flen;
+		p->search.buflen = mlen;
+		p->search.buf = malloc(mlen + 1);
+		if (p->search.buf == NULL) {
 			file_error(ms, errno, "Cannot allocate search buffer");
 			return 0;
 		}
-		(void)memcpy(p->buf, s + offset, m->mask + m->vallen);
+		(void)memcpy(p->search.buf, s + offset, mlen);
+		p->search.buf[mlen] = '\0';
 	}
 	if (!mconvert(ms, p, m))
 		return 0;
@@ -1237,18 +1244,23 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		regex_t rx;
 		char errmsg[512];
 
+		if (p->search.buf == NULL)
+			return 0;
+
 		rc = regcomp(&rx, m->value.s,
 		    REG_EXTENDED|REG_NOSUB|REG_NEWLINE|
 		    ((m->mask & STRING_IGNORE_LOWERCASE) ? REG_ICASE : 0));
 		if (rc) {
-			free(p->buf);
+			free(p->search.buf);
+			p->search.buf = NULL;
 			regerror(rc, &rx, errmsg, sizeof(errmsg));
 			file_error(ms, 0, "regex error %d, (%s)", rc, errmsg);
 			return -1;
 		} else {
-			rc = regexec(&rx, p->buf, 0, 0, 0);
+			rc = regexec(&rx, p->search.buf, 0, 0, 0);
 			regfree(&rx);
-			free(p->buf);
+			free(p->search.buf);
+			p->search.buf = NULL;
 			return !rc;
 		}
 	}
@@ -1258,23 +1270,31 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		 * search for a string in a certain range
 		 */
 		unsigned char *a = (unsigned char*)m->value.s;
-		unsigned char *b = (unsigned char*)p->buf;
-		int len = m->vallen;
-		int range = 0;
+		unsigned char *b = (unsigned char*)p->search.buf;
+		size_t len, slen = m->vallen;
+		size_t range = 0;
+		if (slen > sizeof(m->value.s))
+			slen = sizeof(m->value.s);
 		l = 0;
 		v = 0;
+		if (b == NULL)
+			return 0;
+		len = slen;
 		while (++range <= m->mask) {
 			while (len-- > 0 && (v = *b++ - *a++) == 0)
 				continue;
 			if (!v) {
-				m->offset += range-1;
+				m->offset += range - 1;
 				break;
 			}
-			len = m->vallen;
+			if (range + slen >= p->search.buflen)
+				break;
+			len = slen;
 			a = (unsigned char*)m->value.s;
-			b = (unsigned char*)p->buf + range;
+			b = (unsigned char*)p->search.buf + range;
 		}
-		free(p->buf);
+		free(p->search.buf);
+		p->search.buf = NULL;
 		break;
 	}
 	default:
