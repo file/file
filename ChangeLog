@@ -1,4 +1,8 @@
 
+2005-07-29 13:57 Christos Zoulas <christos@zoulas.com>
+
+	* Avoid search and regex buffer overflows (Kelledin)
+
 2005-07-12 11:48 Christos Zoulas <christos@zoulas.com>
 
 	* Provide stub implementations for {v,}nsprintf() for older
