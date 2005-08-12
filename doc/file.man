@@ -1,12 +1,12 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.55 2005/02/09 19:07:30 christos Exp $
+.\" $Id: file.man,v 1.56 2005/08/12 14:19:33 christos Exp $
 .SH NAME
 file
 \- determine file type
 .SH SYNOPSIS
 .B file
 [
-.B \-bcikLnNprsvz
+.B \-bchikLnNprsvz
 ]
 [
 .B \-f
@@ -186,6 +186,13 @@ to test the standard input, use ``\-'' as a filename argument.
 Use the specified string as the separator between the filename and the
 file result returned. Defaults to ``:''.
 .TP 8
+.B "\-h, \-\-no-dereference"
+option causes symlinks not to be followed
+(on systems that support symbolic links). This is the default if the
+environment variable
+.I POSIXLY_CORRECT
+is not defined.
+.TP 8
 .B "\-i, \-\-mime"
 Causes the file command to output mime type strings rather than the more
 traditional human readable ones. Thus it may say
@@ -203,8 +210,11 @@ Don't stop at the first match, keep going.
 .TP 8
 .B "\-L, \-\-dereference"
 option causes symlinks to be followed, as the like-named option in
-.BR ls (1).
+.BR ls (1)
 (on systems that support symbolic links).
+This is the default if the environment variable
+.I POSIXLY_CORRECT
+is defined.
 .TP 8
 .BI "\-m, \-\-magic\-file" " list"
 Specify an alternate list of files containing magic numbers.
@@ -293,6 +303,18 @@ will not attempt to open
 .B $HOME/.magic .
 .B file
 adds ".mime" and/or ".mgc" to the value of this variable as appropriate.
+The environment variable
+.B POSIXLY_CORRECT
+controls (on systems that support symbolic links), if
+.B file
+will attempt to follow symlinks or not. If set, then
+.B file
+follows symlink, otherwise it does not. This is also controlled
+by the
+.B L
+and
+.B h
+options.
 .SH SEE ALSO
 .BR magic (__FSECTION__)
 \- description of magic file format.

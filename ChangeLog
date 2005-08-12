@@ -1,4 +1,9 @@
 
+2005-08-12 10:17 Christos Zoulas <christos@zoulas.com>
+
+	* Add -h flag and dereference symlinks if POSIXLY_CORRECT
+	  is set.
+
 2005-07-29 13:57 Christos Zoulas <christos@zoulas.com>
 
 	* Avoid search and regex buffer overflows (Kelledin)
