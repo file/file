@@ -432,7 +432,7 @@
 
 # From: Alex Beregszaszi <alex@fsn.hu>
 0	string		MP+		Musepack
->3s	byte&0x0f	x		SV%d
+>3	byte&0x0f	x		SV%d
 
 0	string		\0BONK		BONK,
 #>5	byte		x		version %d

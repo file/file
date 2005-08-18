@@ -52,8 +52,7 @@
 >>772	belong	>0		\b%d
 
 
-1028	string	MMX\000\000\000\000\000\000\000\000\000\000\000\000\000	MAR Area
-Detector Image,
+1028	string	MMX\000\000\000\000\000\000\000\000\000\000\000\000\000	MAR Area Detector Image,
 >1072	ulong	>1		Compressed(%d),
 >1100	ulong	>1		%d headers,
 >1104	ulong	>0		%d x
