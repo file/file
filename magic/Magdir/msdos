@@ -521,3 +521,22 @@
 # of characters instead of all the "description length"
 # number of characters -- indicated by the ulelong at offset 60.
 >>(64.l)  lestring16 >0 Description: %15.15s
+
+# From: Alex Beregszaszi <alex@fsn.hu>
+0	string	COWD		VMWare3 disk image
+>12	belong	x		%d bytes
+
+0	string	VMDK		 VMware4 disk image
+
+0	belong	0x514649fb	QEMU Copy-On-Write disk image
+>4	belong	x		version %d,
+>24	belong	x		size %d +
+>28	belong	x		%d
+
+0	string	QEVM		QEMU's suspend to disk image
+
+0	string	Bochs\ Virtual\ HD\ Image	Bochs disk image,
+>32	string	x				type %s,
+>48	string	x				subtype %s
+
+0	lelong	0x02468ace			Bochs Sparse disk image

@@ -425,3 +425,20 @@
 0	string		XAD!		eXotic ADlib
 
 0	string		ofTAZ!		eXtra Simple Music
+
+# Spectrum 128 tunes (.ay files).
+# From: Emanuel Haupt <ehaupt@critical.ch>
+0	string		ZXAYEMUL	Spectrum 128 tune
+
+# From: Alex Beregszaszi <alex@fsn.hu>
+0	string		MP+		Musepack
+>3s	byte&0x0f	x		SV%d
+
+0	string		\0BONK		BONK,
+#>5	byte		x		version %d
+>14	byte		x		%d channel(s),
+>15	byte		=1		lossless,
+>15	byte		=0		lossy,
+>16	byte		x		mid-side
+
+384	string		LockStream	LockStream Embedded file (mostly MP3 on old Nokia phones)

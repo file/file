@@ -181,3 +181,7 @@
 0	lelong	=0x1413f33d		SYSLINUX' LSS16 image data
 >4	leshort	x			\b, width %d
 >6	leshort	x			\b, height %d
+
+0	string	OOOM			User-Mode-Linux's Copy-On-Write disk image
+>4	belong	x			version %d
+

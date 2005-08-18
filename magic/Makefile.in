@@ -93,6 +93,8 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+IS_CROSS_COMPILE_FALSE = @IS_CROSS_COMPILE_FALSE@
+IS_CROSS_COMPILE_TRUE = @IS_CROSS_COMPILE_TRUE@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
@@ -163,6 +165,8 @@ target_alias = @target_alias@
 pkgdata_DATA = magic magic.mime magic.mgc magic.mime.mgc
 EXTRA_DIST = magic2mime Localstuff Header magic.mime $(magic_FRAGMENTS)
 CLEANFILES = magic magic.mgc magic.mime.mgc
+@IS_CROSS_COMPILE_FALSE@FILE_COMPILE = $(top_builddir)/src/file
+@IS_CROSS_COMPILE_TRUE@FILE_COMPILE = file
 magic_FRAGMENTS = \
 Magdir/acorn \
 Magdir/adi \
@@ -195,6 +199,7 @@ Magdir/cisco \
 Magdir/citrus \
 Magdir/claris \
 Magdir/clipper \
+Magdir/cracklib \
 Magdir/spec \
 Magdir/commands \
 Magdir/communications \
@@ -313,6 +318,7 @@ Magdir/sketch \
 Magdir/smalltalk \
 Magdir/sniffer \
 Magdir/dyadic \
+Magdir/scientific \
 Magdir/softquad \
 Magdir/spectrum \
 Magdir/sql \
@@ -542,10 +548,10 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 	done >> $@
 
 magic.mgc: magic
-	$(top_builddir)/src/file -C -m magic
+	$(FILE_COMPILE) -C -m magic
 
 magic.mime.mgc: magic.mime
-	$(top_builddir)/src/file -C -m $(srcdir)/magic.mime
+	$(FILE_COMPILE) -C -m $(srcdir)/magic.mime
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

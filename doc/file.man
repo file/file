@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.56 2005/08/12 14:19:33 christos Exp $
+.\" $Id: file.man,v 1.57 2005/08/18 15:18:22 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -289,9 +289,6 @@ the -i option is specified.
 .I __MAGIC__.mime
 Default list of magic numbers, used to output mime types when the -i option
 is specified.
-.TP
-.I /etc/magic
-Local additions to magic wisdom.
 
 .SH ENVIRONMENT
 The environment variable
@@ -442,7 +439,7 @@ to identify character codes and attempt to identify the languages
 of non-ASCII files.
 .PP
 The list of contributors to the "Magdir" directory (source for the
-/etc/magic
+.I __MAGIC__
 file) is too long to include here.
 You know who you are; thank you.
 .SH LEGAL NOTICE

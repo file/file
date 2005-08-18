@@ -30,3 +30,7 @@
 # Harbour <URL:http://www.harbour-project.org/> HRB files.
 0	string		\xc0HRB		Harbour HRB file
 >4	short		x		version %d
+
+# From: Alex Beregszaszi <alex@fsn.hu>
+# 0	string		exec 		BugOS executable
+# 0	string		pack		BugOS archive
