@@ -15,11 +15,17 @@ magic: Header Localstuff $(magic_FRAGMENTS)
           cat $$f; \
 	done >> $@
 
+if IS_CROSS_COMPILE
+FILE_COMPILE = file
+else
+FILE_COMPILE = $(top_builddir)/src/file
+endif
+
 magic.mgc: magic
-	$(top_builddir)/src/file -C -m magic
+	$(FILE_COMPILE) -C -m magic
 
 magic.mime.mgc: magic.mime
-	$(top_builddir)/src/file -C -m $(srcdir)/magic.mime
+	$(FILE_COMPILE) -C -m $(srcdir)/magic.mime
 
 magic_FRAGMENTS = \
 Magdir/acorn \
@@ -53,6 +59,7 @@ Magdir/cisco \
 Magdir/citrus \
 Magdir/claris \
 Magdir/clipper \
+Magdir/cracklib \
 Magdir/spec \
 Magdir/commands \
 Magdir/communications \
@@ -171,6 +178,7 @@ Magdir/sketch \
 Magdir/smalltalk \
 Magdir/sniffer \
 Magdir/dyadic \
+Magdir/scientific \
 Magdir/softquad \
 Magdir/spectrum \
 Magdir/sql \

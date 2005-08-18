@@ -1,3 +1,9 @@
+2005-08-18 09:53 Christos Zoulas <christos@zoulas.com>
+
+	* Remove erroreous mention of /etc/magic in the file man page
+	  This is gentoo bug 101639. (Mike Frysinger) 
+
+	* Cross-compile support and detection (Mike Frysinger) 
 
 2005-08-12 10:17 Christos Zoulas <christos@zoulas.com>
 

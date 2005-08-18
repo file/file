@@ -189,10 +189,10 @@
 >8 	string		CDRA		image/x-coreldraw
 
 # AAC (aka MPEG-2 NBC)
-0       beshort&FFF6    0xFFF0          audio/X-HX-AAC-ADTS
+0       beshort&0xfff6    0xfff0          audio/X-HX-AAC-ADTS
 0       string          ADIF            audio/X-HX-AAC-ADIF
-0       beshort&0xFFE0  0x56E0          audio/MP4A-LATM
-0       beshort         0x4DE1          audio/MP4A-LATM
+0       beshort&0xffe0  0x56e0          audio/MP4A-LATM
+0       beshort         0x4De1          audio/MP4A-LATM
 
 # MPEG Layer 3 sound files
 0       beshort		&0xffe0		audio/mpeg

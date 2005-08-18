@@ -587,3 +587,17 @@
 >28	leshort >1
 >>51	lelong	x	blocksize: %d bytes,
 >39	ledate	x	created: %s
+
+# AFS Dump Magic
+# From: Ty Sarna <tsarna@sarna.org> 
+0       string                  \x01\xb3\xa1\x13\x22    AFS Dump
+>&0     belong                  x                       (v%d)
+>>&0    byte                    0x76
+>>>&0   belong                  x                       Vol %d,
+>>>>&0  byte                    0x6e
+>>>>>&0 string                  x                       %s
+>>>>>>&1        byte            0x74
+>>>>>>>&0       beshort         2
+>>>>>>>>&4      bedate          x                       on: %s
+>>>>>>>>&0      bedate          =0                      full dump
+>>>>>>>>&0      bedate          !0                      incremental since: %s

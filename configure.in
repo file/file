@@ -130,5 +130,8 @@ AC_CHECK_FUNCS(mmap strerror strtoul mbrtowc mkstemp getopt_long utimes utime wc
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)
 
+dnl See if we are cross-compiling
+AM_CONDITIONAL(IS_CROSS_COMPILE, test "$cross_compiling" = yes)
+
 AC_CONFIG_FILES([Makefile src/Makefile magic/Makefile doc/Makefile python/Makefile])
 AC_OUTPUT

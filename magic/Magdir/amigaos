@@ -54,3 +54,7 @@
 0	string		DOS\4		Amiga Fastdir DOS disk
 0	string		DOS\5		Amiga Fastdir FFS disk
 0	string		KICK		Kickstart disk
+
+# From: Alex Beregszaszi <alex@fsn.hu>
+0	string		LZX		LZX compressed archive (Amiga)
+

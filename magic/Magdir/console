@@ -161,6 +161,7 @@
 >2	beshort		x		RAM start $%04x
 >6	string		BS93
 
-
-
+# Opera file system that is used on the 3DO console
+# From: Serge van den Boom <svdb@stack.nl>
+0	string		\x01ZZZZZ\x01	3DO "Opera" file system
 
