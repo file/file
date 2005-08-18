@@ -93,7 +93,6 @@ Magdir/gimp \
 Magdir/gnu \
 Magdir/grace \
 Magdir/gringotts \
-Magdir/hdf \
 Magdir/hitachi-sh \
 Magdir/hp \
 Magdir/human68k \
