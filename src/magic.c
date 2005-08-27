@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.28 2005/06/25 15:52:14 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.29 2005/08/27 08:12:19 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -243,6 +243,11 @@ magic_file(struct magic_set *ms, const char *inname)
 	if (inname == NULL)
 		fd = STDIN_FILENO;
 	else if ((fd = open(inname, O_RDONLY)) < 0) {
+#ifdef __CYGWIN__
+	    char *tmp = alloca(strlen(inname) + 5);
+	    (void)strcat(strcpy(tmp, inname), ".exe");
+	    if ((fd = open(tmp, O_RDONLY)) < 0) {
+#endif
 		/* We cannot open it, but we were able to stat it. */
 		if (sb.st_mode & 0222)
 			if (file_printf(ms, "writable, ") == -1)
@@ -257,6 +262,9 @@ magic_file(struct magic_set *ms, const char *inname)
 			goto done;
 		rv = 0;
 		goto done;
+#ifdef __CYGWIN__
+	    }
+#endif
 	}
 
 	/*
