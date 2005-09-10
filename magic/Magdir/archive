@@ -130,10 +130,8 @@
 # I can't create either SPARK or ArcFS archives so I have not tested this stuff
 # [GRR:  the original entries collide with ARC, above; replaced with combined
 #  version (not tested)]
-#0	byte		0x1a		RISC OS archive
-#>1	string		archive		(ArcFS format)
-#0	string		\032archive	RISC OS archive (ArcFS format)
-0       string          \032            RISC OS archive (spark format)
+#0	byte		0x1a		RISC OS archive (spark format)
+0	string		\032archive	RISC OS archive (ArcFS format)
 0       string          Archive\000     RISC OS archive (ArcFS format)
 
 # All these were taken from idarc, many could not be verified. Unfortunately,
