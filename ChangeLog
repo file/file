@@ -1,4 +1,9 @@
 
+2005-09-20 13:33 Christos Zoulas <christos@zoulas.com>
+	
+	* Don't print SVR4 Style in core files multiple times
+	    (Radek Vokál)
+
 2005-08-27 04:09 Christos Zoulas <christos@zoulas.com>
 
 	* Cygwin changes Corinna Vinschen
