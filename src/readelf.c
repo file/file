@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.49 2005/07/14 02:22:25 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.50 2005/09/20 17:34:30 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -46,9 +46,11 @@ private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t);
 private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t);
 private int doshn(struct magic_set *, int, int, int, off_t, int, size_t);
 private size_t donote(struct magic_set *, unsigned char *, size_t, size_t, int,
-    int, size_t);
+    int, size_t, int *);
 
 #define	ELF_ALIGN(a)	((((a) + align - 1) / align) * align)
+
+#define isquote(c) (strchr("'\"`", (c)) != NULL)
 
 private uint16_t getu16(int, uint16_t);
 private uint32_t getu32(int, uint32_t);
@@ -217,6 +219,8 @@ private const char *os_style_names[] = {
 	"NetBSD",
 };
 
+#define FLAGS_DID_CORE		1
+
 private int
 dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
     int num, size_t size)
@@ -226,12 +230,14 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	size_t offset;
 	unsigned char nbuf[BUFSIZ];
 	ssize_t bufsize;
+	int flags = 0;
 
 	if (size != ph_size) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
 			return -1;
 		return 0;
 	}
+
 	/*
 	 * Loop through all the program headers.
 	 */
@@ -267,7 +273,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			if (offset >= (size_t)bufsize)
 				break;
 			offset = donote(ms, nbuf, offset, (size_t)bufsize,
-			    class, swap, 4);
+			    class, swap, 4, &flags);
 			if (offset == 0)
 				break;
 
@@ -279,7 +285,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 
 private size_t
 donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
-    int class, int swap, size_t align)
+    int class, int swap, size_t align, int *flags)
 {
 	Elf32_Nhdr nh32;
 	Elf64_Nhdr nh64;
@@ -531,100 +537,114 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 	}
 
 #ifdef ELFCORE
-	if (os_style != -1)
-		if (file_printf(ms, ", %s-style", os_style_names[os_style]) == -1)
+	if (os_style != -1) {
+		if ((*flags & FLAGS_DID_CORE) == 0) {
+			if (file_printf(ms, ", %s-style",
+			    os_style_names[os_style]) == -1)
+				return size;
+			*flags |= FLAGS_DID_CORE;
+		} else
 			return size;
+	}
 
-	if (os_style == OS_STYLE_NETBSD && nh_type == NT_NETBSD_CORE_PROCINFO) {
-		uint32_t signo;
-		/*
-		 * Extract the program name.  It is at
-		 * offset 0x7c, and is up to 32-bytes,
-		 * including the terminating NUL.
-		 */
-		if (file_printf(ms, ", from '%.31s'", &nbuf[doff + 0x7c]) == -1)
-			return size;
-		
-		/*
-		 * Extract the signal number.  It is at
-		 * offset 0x08.
-		 */
-		memcpy(&signo, &nbuf[doff + 0x08],
-		    sizeof(signo));
-		if (file_printf(ms, " (signal %u)", getu32(swap, signo)) == -1)
-			return size;
-		return size;
-	} else if (os_style != OS_STYLE_NETBSD && nh_type == NT_PRPSINFO) {
-		size_t i, j;
-		unsigned char c;
-		/*
-		 * Extract the program name.  We assume
-		 * it to be 16 characters (that's what it
-		 * is in SunOS 5.x and Linux).
-		 *
-		 * Unfortunately, it's at a different offset
-		 * in varous OSes, so try multiple offsets.
-		 * If the characters aren't all printable,
-		 * reject it.
-		 */
-		for (i = 0; i < NOFFSETS; i++) {
-			size_t reloffset = prpsoffsets(i);
-			size_t noffset = doff + reloffset;
-			for (j = 0; j < 16; j++, noffset++, reloffset++) {
-				/*
-				 * Make sure we're not past
-				 * the end of the buffer; if
-				 * we are, just give up.
-				 */
-				if (noffset >= size)
-					goto tryanother;
-
-				/*
-				 * Make sure we're not past
-				 * the end of the contents;
-				 * if we are, this obviously
-				 * isn't the right offset.
-				 */
-				if (reloffset >= descsz)
-					goto tryanother;
-
-				c = nbuf[noffset];
-				if (c == '\0') {
-					/*
-					 * A '\0' at the
-					 * beginning is
-					 * obviously wrong.
-					 * Any other '\0'
-					 * means we're done.
-					 */
-					if (j == 0)
-						goto tryanother;
-					else
-						break;
-				} else {
-					/*
-					 * A nonprintable
-					 * character is also
-					 * wrong.
-					 */
-#define isquote(c) (strchr("'\"`", (c)) != NULL)
-					if (!isprint(c) || isquote(c))
-						goto tryanother;
-				}
-			}
-
+	switch (os_style) {
+	case OS_STYLE_NETBSD:
+		if (nh_type == NT_NETBSD_CORE_PROCINFO) {
+			uint32_t signo;
 			/*
-			 * Well, that worked.
+			 * Extract the program name.  It is at
+			 * offset 0x7c, and is up to 32-bytes,
+			 * including the terminating NUL.
 			 */
-			if (file_printf(ms, ", from '%.16s'",
-			    &nbuf[doff + prpsoffsets(i)]) == -1)
+			if (file_printf(ms, ", from '%.31s'",
+			    &nbuf[doff + 0x7c]) == -1)
+				return size;
+			
+			/*
+			 * Extract the signal number.  It is at
+			 * offset 0x08.
+			 */
+			(void)memcpy(&signo, &nbuf[doff + 0x08],
+			    sizeof(signo));
+			if (file_printf(ms, " (signal %u)",
+			    getu32(swap, signo)) == -1)
 				return size;
 			return size;
-
-		tryanother:
-			;
 		}
-		return offset;
+		break;
+
+	default:
+		if (nh_type == NT_PRPSINFO) {
+			size_t i, j;
+			unsigned char c;
+			/*
+			 * Extract the program name.  We assume
+			 * it to be 16 characters (that's what it
+			 * is in SunOS 5.x and Linux).
+			 *
+			 * Unfortunately, it's at a different offset
+			 * in varous OSes, so try multiple offsets.
+			 * If the characters aren't all printable,
+			 * reject it.
+			 */
+			for (i = 0; i < NOFFSETS; i++) {
+				size_t reloffset = prpsoffsets(i);
+				size_t noffset = doff + reloffset;
+				for (j = 0; j < 16; j++, noffset++,
+				    reloffset++) {
+					/*
+					 * Make sure we're not past
+					 * the end of the buffer; if
+					 * we are, just give up.
+					 */
+					if (noffset >= size)
+						goto tryanother;
+
+					/*
+					 * Make sure we're not past
+					 * the end of the contents;
+					 * if we are, this obviously
+					 * isn't the right offset.
+					 */
+					if (reloffset >= descsz)
+						goto tryanother;
+
+					c = nbuf[noffset];
+					if (c == '\0') {
+						/*
+						 * A '\0' at the
+						 * beginning is
+						 * obviously wrong.
+						 * Any other '\0'
+						 * means we're done.
+						 */
+						if (j == 0)
+							goto tryanother;
+						else
+							break;
+					} else {
+						/*
+						 * A nonprintable
+						 * character is also
+						 * wrong.
+						 */
+						if (!isprint(c) || isquote(c))
+							goto tryanother;
+					}
+				}
+				/*
+				 * Well, that worked.
+				 */
+				if (file_printf(ms, ", from '%.16s'",
+				    &nbuf[doff + prpsoffsets(i)]) == -1)
+					return size;
+				return size;
+
+			tryanother:
+				;
+			}
+		}
+		break;
 	}
 #endif
 	return offset;
@@ -681,6 +701,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	int bufsize;
 	size_t offset, align;
 	off_t savedoffset;
+	int flags = 0;
 
 	if (size != ph_size) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
@@ -737,7 +758,8 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				if (offset >= (size_t)bufsize)
 					break;
 				offset = donote(ms, nbuf, offset,
-				    (size_t)bufsize, class, swap, align);
+				    (size_t)bufsize, class, swap, align,
+				    &flags);
 				if (offset == 0)
 					break;
 			}
