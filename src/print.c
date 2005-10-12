@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.47 2005/03/14 16:56:25 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.48 2005/10/12 19:29:42 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -50,13 +50,9 @@ FILE_RCSID("@(#)$Id: print.c,v 1.47 2005/03/14 16:56:25 christos Exp $")
 protected void
 file_mdump(struct magic *m)
 {
-	private const char *typ[] = { "invalid", "byte", "short", "invalid",
-				     "long", "string", "date", "beshort",
-				     "belong", "bedate", "leshort", "lelong",
-				     "ledate", "pstring", "ldate", "beldate",
-				     "leldate", "regex" };
-	private const char optyp[] = { '@', '&', '|', '^', '+', '-', 
-				      '*', '/', '%' };
+	private const char *typ[] = { FILE_FORMAT_NAME };
+	private const char optyp[] = { FILE_OPS };
+
 	(void) fputc('[', stderr);
 	(void) fprintf(stderr, ">>>>>>>> %d" + 8 - (m->cont_level & 7),
 		       m->offset);
