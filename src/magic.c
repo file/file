@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.30 2005/10/17 15:13:31 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.31 2005/10/17 15:14:44 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -75,6 +75,10 @@ protected int file_os2_apptype(struct magic_set *ms, const char *fn,
 private void free_mlist(struct mlist *);
 private void close_and_restore(const struct magic_set *, const char *, int,
     const struct stat *);
+
+#ifndef	STDIN_FILENO
+#define	STDIN_FILENO	0
+#endif
 
 public struct magic_set *
 magic_open(int flags)
@@ -240,9 +244,6 @@ magic_file(struct magic_set *ms, const char *inname)
 		goto done;
 	}
 
-#ifndef	STDIN_FILENO
-#define	STDIN_FILENO	0
-#endif
 	if (inname == NULL)
 		fd = STDIN_FILENO;
 	else if ((fd = open(inname, O_RDONLY)) < 0) {
