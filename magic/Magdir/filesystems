@@ -23,12 +23,22 @@
 >0770	long		x		%ld blocks
 # Is there a boot block written 1 sector in?
 >512    belong&077777777	0600407	\b, boot block present
+# Smart Boot Manager backup file is 41 byte header + first sectors of disc
+# (http://btmgr.sourceforge.net/docs/user-guide-3.html)
+0		string	SBMBAKUP_	Smart Boot Manager backup file
+>9		string	x		\b, version %-5.5s
+>>14		string	=_		
+>>>15		string	x		%-.1s
+>>>>16		string	=_		\b.
+>>>>>17		string	x		\b%-.1s
+>>>>>>18	string	=_		\b.
+>>>>>>>19	string	x		\b%-.1s
 # DOS Emulator image is 128 byte header + harddisc image
 0	string	DOSEMU\0			
 >0x27E	leshort	0xAA55			DOS Emulator image
 0x1FE	leshort	0xAA55			x86 boot sector
 >2	string	OSBS			\b, OS/BS MBR
-# J\xf6rg Jenderek <joerg.jenderek@gmx.net>
+# J\xf6rg Jenderek <joerg dot jenderek at web dot de>
 >0x8C	string	Invalid\ partition\ table	\b, MS-DOS MBR
 # dr-dos with some upper-, lowercase variants
 >0x9D	string	Invalid\ partition\ table$	
@@ -49,36 +59,55 @@
 >>>>>>>387	string	Copyright\ (c)\ 1984,1998	
 >>>>>>>>411	string	Caldera\ Inc.\0		\b, DR-DOS MBR (IBMBIO.LDR)
 >0x10F	string	Ung\201ltige\ Partitionstabelle	\b, MS-DOS MBR, german version 4.10.1998, 4.10.2222
+>>0x1B8	ubelong	>0				\b, Serial 0x%-.4x
 >0x8B	string	Ung\201ltige\ Partitionstabelle	\b, MS-DOS MBR, german version 5.00 to 4.00.950
+>271	string	Invalid\ partition\ table\0		
+>>295	string	Error\ loading\ operating\ system\0	
+>>>326	string	Missing\ operating\ system\0		\b, mbr
+#
+>139	string	Invalid\ partition\ table\0		
+>>163	string	Error\ loading\ operating\ system\0	
+>>>194	string	Missing\ operating\ system\0		\b, Microsoft Windows XP mbr
+# http://www.heise.de/ct/05/09/006/ page 184
+#HKEY_LOCAL_MACHINE\SYSTEM\MountedDevices\DosDevices\?:=Serial4Bytes+8Bytes
+>>>>0x1B8	ulelong	>0				\b,Serial 0x%-.4x
 >300	string	Invalid\ partition\ table\0	
 >>324	string	Error\ loading\ operating\ system\0
 >>>355	string	Missing\ operating\ system\0		\b, Microsoft Windows XP MBR
 #??>>>389	string	Invalid\ system\ disk		
+>>>>0x1B8	ulelong	>0				\b, Serial 0x%-.4x
 >300	string	Ung\201ltige\ Partitionstabelle
 #split string to avoid error: String too long
 >>328	string	Fehler\ beim\ Laden\ 	
 >>>346	string	des\ Betriebssystems	
 >>>>366	string	Betriebssystem\ nicht\ vorhanden	\b, Microsoft Windows XP MBR (german)
+>>>>>0x1B8	ulelong	>0				\b, Serial 0x%-.4x
 >0x145	string	Default:\ F				\b, FREE-DOS MBR
 >64	string	no\ active\ partition\ found	
->>96	string	read\ error\ while\ reading\ drive	\b, FREE-DOS Beta9 MBR
+>>96	string	read\ error\ while\ reading\ drive	\b, FREE-DOS Beta 0.9 MBR
+>271	string	Operating\ system\ loading 		
+>>296	string	error\r					\b, SYSLINUX MBR (2.10)
 # bootloader, bootmanager
 >43	string	SMART\ BTMGRFAT12\ \ \ 		
 >>430	string	SBMK\ Bad!\r			
 >>>3	string	SBM				\b, Smart Boot Manager
 >>>>6	string	>\0                             \b, version %s
->382	string	XOSLLOADXCF			\b, EXtended Operating System Loader
+>382	string	XOSLLOADXCF			\b, eXtended Operating System Loader
 >6	string	LILO				\b, LInux i386 boot LOader
 >>120	string	LILO				\b, version 22.3.4 SuSe
 >>172	string	LILO				\b, version 22.5.8 Debian
 >402	string	Geom\0Hard\ Disk\0Read\0\ Error\0
 >>394	string	stage1				\b, GRand Unified Bootloader (0.5.95)
+>343	string	Geom\0Read\0\ Error\0		
+>>321	string	Loading\ stage1.5		\b, Grand Unified Bootloader
 >380	string	Geom\0Hard\ Disk\0Read\0\ Error\0
 >>374	string	GRUB\ \0			\b, GRand Unified Bootloader
 >382	string	Geom\0Hard\ Disk\0Read\0\ Error\0
 >>376	string	GRUB\ \0			\b, GRand Unified Bootloader (0.93)
 >383	string	Geom\0Hard\ Disk\0Read\0\ Error\0
 >>377	string	GRUB\ \0			\b, GRand Unified Bootloader (0.94)
+>385	string	Geom\0Hard\ Disk\0Read\0\ Error\0
+>>379	string	GRUB\ \0			\b, GRand Unified Bootloader (0.95)
 >480	string	Boot\ failed\r			
 >>495	string	LDLINUX\ SYS			\b, SYSLINUX bootloader (2.06)
 >395	string	chksum\0\ ERROR!\0		\b, Gujin bootloader
@@ -108,69 +137,111 @@
 >>>>>>>>>(1.b+11)	ubyte	0xb			
 >>>>>>>>>>(1.b+12)	ubyte	0x56			
 >>>>>>>>>>(1.b+13)	ubyte	0xb4			\b, mkdosfs boot message display
+#
+>66	string	Solaris\ Boot\ Sector    		
+>>99	string	Incomplete\ MDBoot\ load.		
+>>>89	string	Version 				\b, Sun Solaris Bootloader
+>>>>97	byte	x					version %c
+#
+>408	string	OS/2\ !!\ SYS01475\r\0			
+>>429	string	OS/2\ !!\ SYS02025\r\0			
+>>>450	string	OS/2\ !!\ SYS02027\r\0			
+>>>469	string	OS2BOOT\ \ \ \ 				\b, IBM OS/2 Warp bootloader
+#
+>409	string	OS/2\ !!\ SYS01475\r\0			
+>>430	string	OS/2\ !!\ SYS02025\r\0			
+>>>451	string	OS/2\ !!\ SYS02027\r\0			
+>>>470	string	OS2BOOT\ \ \ \ 				\b, IBM OS/2 Warp Bootloader
+>112		string	This\ disk\ is\ not\ bootable\r			
+>>142		string	If\ you\ wish\ to\ make\ it\ bootable		
+>>>176		string	run\ the\ DOS\ program\ SYS\  			
+>>>200		string	after\ the\r					
+>>>>216		string	system\ has\ been\ loaded\r\n			
+>>>>>242	string	Please\ insert\ a\ DOS\ diskette\ 		
+>>>>>271	string	into\r\n\ the\ drive\ and\ 			
+>>>>>>292	string	strike\ any\ key...\0		\b, IBM OS/2 Warp message display
 # XP
 >430	string	NTLDR\ is\ missing\xFF\r\n		
 >>449	string	Disk\ error\xFF\r\n			
 >>>462	string	Press\ any\ key\ to\ restart\r		\b, Microsoft Windows XP Bootloader
 # DOS names like NTLDR,CMLDR,$LDR$ are 8 right space padded bytes+3 bytes
->>>>417		ubyte		<0x7E 			
->>>>>417	string		>\ 			%-.5s
->>>>>>422	ubyte		<0x7E 			
->>>>>>>422	string		>\ 			\b%-.3s
+>>>>417		ubyte&0xDF	>0			
+>>>>>417	string		x			%-.5s
+>>>>>>422	ubyte&0xDF	>0			
+>>>>>>>422	string		x 			\b%-.3s
+>>>>>425	ubyte&0xDF	>0			
 >>>>>>425	string		>\ 			\b.%-.3s
 #
->>>>368		ubyte		<0x7E 			
->>>>>368	string		>\ 			%-.5s
->>>>>>373	ubyte		<0x7E			
->>>>>>>373	string		>\ 			\b%-.3s
->>>>>>376	string		>\ 			\b.%-.3s
+>>>>371		ubyte		>0x20			
+>>>>>368	ubyte&0xDF	>0			
+>>>>>>368	string		x 			%-.5s
+>>>>>>>373	ubyte&0xDF	>0			
+>>>>>>>>373	string		x 			\b%-.3s
+>>>>>>376	ubyte&0xDF	>0			
+>>>>>>>376	string		x 			\b.%-.3s
 #
 >430	string	NTLDR\ nicht\ gefunden\xFF\r\n		
 >>453	string	Datentr\204gerfehler\xFF\r\n		
 >>>473	string	Neustart\ mit\ beliebiger\ Taste\r	\b, Microsoft Windows XP Bootloader (german)
->>>>417		ubyte		<0x7E 			
->>>>>417	string		>\ 			%-.5s
->>>>>>422	ubyte		<0x7E 			
->>>>>>>422	string		>\ 			\b%-.3s
+>>>>417		ubyte&0xDF	>0			
+>>>>>417	string		x			%-.5s
+>>>>>>422	ubyte&0xDF	>0			
+>>>>>>>422	string		x 			\b%-.3s
+>>>>>425	ubyte&0xDF	>0			
 >>>>>>425	string		>\ 			\b.%-.3s
 #
->>>>368		ubyte		<0x7E 			
->>>>>368	string		>\ 			%-.5s
->>>>>>373	ubyte		<0x7E 			
->>>>>>>373	string		>\ 			\b%-.3s
->>>>>>376	string		>\ 			\b.%-.3s
+>>>>368		ubyte&0xDF	>0			
+>>>>>368	string		x 			%-.5s
+>>>>>>373	ubyte&0xDF	>0			
+>>>>>>>373	string		x 			\b%-.3s
+>>>>>376	ubyte&0xDF	>0			
+>>>>>>376	string		x 			\b.%-.3s
 #
 >430	string	NTLDR\ fehlt\xFF\r\n			
 >>444	string	Datentr\204gerfehler\xFF\r\n		
 >>>464	string	Neustart\ mit\ beliebiger\ Taste\r	\b, Microsoft Windows XP Bootloader (2.german)
->>>>417		ubyte		<0x7E 			
->>>>>417	string		>\ 			%-.5s
->>>>>>422	ubyte		<0x7E 			
->>>>>>>422	string		>\ 			\b%-.3s
+>>>>417		ubyte&0xDF	>0			
+>>>>>417	string		x			%-.5s
+>>>>>>422	ubyte&0xDF	>0			
+>>>>>>>422	string		x 			\b%-.3s
+>>>>>425	ubyte&0xDF	>0			
 >>>>>>425	string		>\ 			\b.%-.3s
+# variant
+>>>>371		ubyte		>0x20			
+>>>>>368	ubyte&0xDF	>0			
+>>>>>>368	string		x 			%-.5s
+>>>>>>>373	ubyte&0xDF	>0			
+>>>>>>>>373	string		x 			\b%-.3s
+>>>>>>376	ubyte&0xDF	>0			
+>>>>>>>376	string		x 			\b.%-.3s
 #
 >430	string	NTLDR\ fehlt\xFF\r\n			
 >>444	string	Medienfehler\xFF\r\n			
 >>>459	string	Neustart:\ Taste\ dr\201cken\r		\b, Microsoft Windows XP Bootloader (3.german)
->>>>368		ubyte		<0x7E 			
->>>>>368	string		>\ 			%-.5s
->>>>>>373	ubyte		<0x7E			
->>>>>>>373	string		>\ 			\b%-.3s
->>>>>>376	string		>\ 			\b.%-.3s
->>>>417		ubyte		<0x7E 			
->>>>>417	string		>\ 			%-.5s
->>>>>>422	ubyte		<0x7E 			
->>>>>>>422	string		>\ 			\b%-.3s
+>>>>371		ubyte		>0x20			
+>>>>>368	ubyte&0xDF	>0			
+>>>>>>368	string		x 			%-.5s
+>>>>>>>373	ubyte&0xDF	>0			
+>>>>>>>>373	string		x 			\b%-.3s
+>>>>>>376	ubyte&0xDF	>0			
+>>>>>>>376	string		x 			\b.%-.3s
+# variant
+>>>>417		ubyte&0xDF	>0			
+>>>>>417	string		x			%-.5s
+>>>>>>422	ubyte&0xDF	>0			
+>>>>>>>422	string		x 			\b%-.3s
+>>>>>425	ubyte&0xDF	>0			
 >>>>>>425	string		>\ 			\b.%-.3s
 #
 >430	string	Datentr\204ger\ entfernen\xFF\r\n	
 >>454	string	Medienfehler\xFF\r\n			
 >>>469	string	Neustart:\ Taste\ dr\201cken\r		\b, Microsoft Windows XP Bootloader (4.german)
->>>>368		ubyte		<0x7E 			
->>>>>368	string		>\ 			%-.5s
->>>>>>373	ubyte		<0x7E			
->>>>>>>373	string		>\ 			\b%-.3s
->>>>>>376	string		>\ 			\b.%-.3s
+>>>>368		ubyte&0xDF	>0			
+>>>>>368	string		x 			%-.5s
+>>>>>>373	ubyte&0xDF	>0			
+>>>>>>>373	string		x 			\b%-.3s
+>>>>>376	ubyte&0xDF	>0			
+>>>>>>376	string		x 			\b.%-.3s
 #>3	string	NTFS\ \ \ \ 				
 >389	string	Fehler\ beim\ Lesen\ 
 >>407	string	des\ Datentr\204gers
@@ -185,12 +256,27 @@
 >>>>>429 string	Insert\ a\ system\ diskette\ 	
 >>>>>>454 string and\ restart\r\nthe\ system.\r		\b, Microsoft Windows XP Bootloader NTFS
 # DOS loader variants different languages,offsets
->472	string	IO\ \ \ \ \ \ SYSMSDOS\ \ \ SYS		
->>497	string	WINBOOT\ SYS				
+>472	ubyte&0xDF	>0
 >>389	string	Invalid\ system\ disk\xFF\r\n		
 >>>411	string	Disk\ I/O\ error			
 >>>>428	string	Replace\ the\ disk,\ and\ 		
 >>>>>455 string	press\ any\ key				\b, Microsoft Windows 98 Bootloader
+#IO.SYS
+>>>>>>472	ubyte&0xDF	>0			
+>>>>>>>472	string		x 			\b %-.2s
+>>>>>>>>474	ubyte&0xDF	>0			
+>>>>>>>>>474	string		x 			\b%-.5s
+>>>>>>>>>>479	ubyte&0xDF	>0			
+>>>>>>>>>>>479 string		x 			\b%-.1s
+>>>>>>>480	ubyte&0xDF	>0			
+>>>>>>>>480	string		x 			\b.%-.3s
+#MSDOS.SYS
+>>>>>>>483	ubyte&0xDF	>0			\b+
+>>>>>>>>483	string		x 			\b%-.5s
+>>>>>>>>>488	ubyte&0xDF	>0			
+>>>>>>>>>>488	string		x 			\b%-.3s
+>>>>>>>>491	ubyte&0xDF	>0			
+>>>>>>>>>491	string		x 			\b.%-.3s
 #
 >>390	string	Invalid\ system\ disk\xFF\r\n		
 >>>412	string	Disk\ I/O\ error\xFF\r\n		
@@ -200,30 +286,121 @@
 >>>410	string	E/A-Fehler\ \ \ \ \xFF\r\n		
 >>>>427	string	Datentraeger\ wechseln\ und\ 		
 >>>>>453 string	Taste\ druecken\r			\b, Microsoft Windows 95/98/ME Bootloader (german)
+#WINBOOT.SYS only not spaces (0xDF)
+>>>>>>497	ubyte&0xDF	>0			
+>>>>>>>497	string		x 			%-.5s
+>>>>>>>>502	ubyte&0xDF	>0			
+>>>>>>>>>502	string		x 			\b%-.1s
+>>>>>>>>>>503	ubyte&0xDF	>0			
+>>>>>>>>>>>503	string		x 			\b%-.1s
+>>>>>>>>>>>>504	ubyte&0xDF	>0			
+>>>>>>>>>>>>>504 string		x 			\b%-.1s
+>>>>>>505	ubyte&0xDF	>0			
+>>>>>>>505	string		x 			\b.%-.3s
+#IO.SYS
+>>>>>>472	ubyte&0xDF	>0			or
+>>>>>>>472	string		x 			\b %-.2s
+>>>>>>>>474	ubyte&0xDF	>0			
+>>>>>>>>>474	string		x 			\b%-.5s
+>>>>>>>>>>479	ubyte&0xDF	>0			
+>>>>>>>>>>>479 string		x 			\b%-.1s
+>>>>>>>480	ubyte&0xDF	>0			
+>>>>>>>>480	string		x 			\b.%-.3s
+#MSDOS.SYS
+>>>>>>>483	ubyte&0xDF	>0			\b+
+>>>>>>>>483	string		x 			\b%-.5s
+>>>>>>>>>488	ubyte&0xDF	>0			
+>>>>>>>>>>488	string		x 			\b%-.3s
+>>>>>>>>491	ubyte&0xDF	>0			
+>>>>>>>>>491	string		x 			\b.%-.3s
 #
 >>390	string	Ungueltiges\ System\ \xFF\r\n		
 >>>412	string	E/A-Fehler\ \ \ \ \xFF\r\n		
 >>>>429	string	Datentraeger\ wechseln\ und\ 		
 >>>>>455 string	Taste\ druecken\r			\b, Microsoft Windows 95/98/ME Bootloader (German)
+#WINBOOT.SYS only not spaces (0xDF)
+>>>>>>497	ubyte&0xDF	>0			
+>>>>>>>497	string		x 			%-.7s
+>>>>>>>>504	ubyte&0xDF	>0			
+>>>>>>>>>504	string		x 			\b%-.1s
+>>>>>>505	ubyte&0xDF	>0			
+>>>>>>>505	string		x 			\b.%-.3s
+#IO.SYS
+>>>>>>472	ubyte&0xDF	>0			or
+>>>>>>>472	string		x 			\b %-.2s
+>>>>>>>>474	ubyte&0xDF	>0			
+>>>>>>>>>474	string		x 			\b%-.6s
+>>>>>>>480	ubyte&0xDF	>0			
+>>>>>>>>480	string		x 			\b.%-.3s
+#MSDOS.SYS
+>>>>>>>483	ubyte&0xDF	>0			\b+
+>>>>>>>>483	string		x 			\b%-.5s
+>>>>>>>>>488	ubyte&0xDF	>0			
+>>>>>>>>>>488	string		x 			\b%-.3s
+>>>>>>>>491	ubyte&0xDF	>0			
+>>>>>>>>>491	string		x 			\b.%-.3s
 #
 >>389	string	Ungueltiges\ System\ \xFF\r\n		
 >>>411	string	E/A-Fehler\ \ \ \ \xFF\r\n		
 >>>>428	string	Datentraeger\ wechseln\ und\ 		
 >>>>>454 string	Taste\ druecken\r			\b, Microsoft Windows 95/98/ME Bootloader (GERMAN)
->479	string	IO\ \ \ \ \ \ SYSMSDOS\ \ \ SYS		
+# DOS names like IO.SYS,WINBOOT.SYS,MSDOS.SYS,WINBOOT.INI are 8 right space padded bytes+3 bytes
+>>>>>>472	string		x 			%-.2s
+>>>>>>>474	ubyte&0xDF	>0			
+>>>>>>>>474	string		x 			\b%-.5s
+>>>>>>>>479	ubyte&0xDF	>0			
+>>>>>>>>>479	string		x 			\b%-.1s
+>>>>>>480	ubyte&0xDF	>0			
+>>>>>>>480	string		x 			\b.%-.3s
+>>>>>>483	ubyte&0xDF	>0			\b+
+>>>>>>>483	string		x 			\b%-.5s
+>>>>>>>488	ubyte&0xDF	>0			
+>>>>>>>>488	string		x 			\b%-.2s
+>>>>>>>>490	ubyte&0xDF	>0			
+>>>>>>>>>490	string		x 			\b%-.1s
+>>>>>>>491	ubyte&0xDF	>0			
+>>>>>>>>491	string		x 			\b.%-.3s
+>479	ubyte&0xDF	>0
 >>416	string	Kein\ System\ oder\ 			
 >>>433	string	Laufwerksfehler				
 >>>>450	string	Wechseln\ und\ Taste\ dr\201cken	\b, Microsoft DOS Bootloader (german)
->486	string	IO\ \ \ \ \ \ SYSMSDOS\ \ \ SYS		
+#IO.SYS
+>>>>>479	string		x 			\b %-.2s
+>>>>>>481	ubyte&0xDF	>0			
+>>>>>>>481	string		x 			\b%-.6s
+>>>>>487	ubyte&0xDF	>0			
+>>>>>>487	string		x 			\b.%-.3s
+#MSDOS.SYS
+>>>>>>490	ubyte&0xDF	>0			\b+
+>>>>>>>490	string		x 			\b%-.5s
+>>>>>>>>495	ubyte&0xDF	>0			
+>>>>>>>>>495	string		x 			\b%-.3s
+>>>>>>>498	ubyte&0xDF	>0			
+>>>>>>>>498	string		x 			\b.%-.3s
+#
+>486	ubyte&0xDF	>0
 >>416	string	Non-System\ disk\ or\ 			
 >>>435	string	disk\ error\r				
 >>>>447	string	Replace\ and\ press\ any\ key\ 		
 >>>>>473 string	when\ ready\r				\b, Microsoft DOS Bootloader
->480	string	IO\ \ \ \ \ \ SYSMSDOS\ \ \ SYS		
+>480	ubyte&0xDF	>0			
 >>393	string	Non-System\ disk\ or\ 			
 >>>412	string	disk\ error\r				
 >>>>424	string	Replace\ and\ press\ any\ key\ 		
 >>>>>450 string	when\ ready\r				\b, Microsoft DOS bootloader
+#IO.SYS
+>>>>>480	string		x 			\b %-.2s
+>>>>>>482	ubyte&0xDF	>0			
+>>>>>>>48	string		x 			\b%-.6s
+>>>>>488	ubyte&0xDF	>0			
+>>>>>>488	string		x 			\b.%-.3s
+#MSDOS.SYS
+>>>>>>491	ubyte&0xDF	>0			\b+
+>>>>>>>491	string		x 			\b%-.5s
+>>>>>>>>496	ubyte&0xDF	>0			
+>>>>>>>>>496	string		x 			\b%-.3s
+>>>>>>>499	ubyte&0xDF	>0			
+>>>>>>>>499	string		x 			\b.%-.3s
 #>43	string	\224R-LOADER\ \ SYS			=label					
 >54	string	SYS
 >>324	string	VASKK
@@ -239,24 +416,56 @@
 >499	string	KERNEL\ \ SYS				
 >>305	string	BOOT\ err!\0				\b, Free-DOS Bootloader
 >449	string	KERNEL\ \ SYS				
->>319	string	BOOT\ error!				\b, FREE-DOS 5.0 Bootloader
+>>319	string	BOOT\ error!				\b, FREE-DOS 0.5 Bootloader
+>125	string	Loading\ FreeDOS...\r			
+>>311	string	BOOT\ error!\r				\b, FREE-DOS bootloader
+>>>441		ubyte&0xDF	>0			
+>>>>441		string		x 			\b %-.6s
+>>>>>447	ubyte&0xDF	>0			
+>>>>>>447	string		x 			\b%-.1s
+>>>>>>>448	ubyte&0xDF	>0			
+>>>>>>>>448	string		x 			\b%-.1s
+>>>>449		ubyte&0xDF	>0			
+>>>>>449	string		x 			\b.%-.3s
 >124	string	FreeDOS\0				
->>331	string	\ err\0					\b, FREE-DOS BETa 9 Bootloader
+>>331	string	\ err\0					\b, FREE-DOS BETa 0.9 Bootloader
 # DOS names like KERNEL.SYS,KERNEL16.SYS,KERNEL32.SYS,METAKERN.SYS are 8 right space padded bytes+3 bytes
->>>497		string		>\ 			%-.6s
->>>>503		string		>\ 			\b%-.1s
->>>>504		string		>\ 			\b%-.1s
->>>505		string		>\ 			\b.%-.3s
->>333	string	\ err\0					\b, FREE-DOS BEta 9 Bootloader
->>>497		string		>\ 			%-.6s
->>>>503		string		>\ 			\b%-.1s
->>>>504		string		>\ 			\b%-.1s
->>>505		string		>\ 			\b.%-.3s
->>334	string	\ err\0					\b, FREE-DOS Beta 9 Bootloader
->>>497		string		>\ 			%-.6s
->>>>503		string		>\ 			\b%-.1s
->>>>504		string		>\ 			\b%-.1s
->>>505		string		>\ 			\b.%-.3s
+>>>497		ubyte&0xDF	>0			
+>>>>497		string		x 			\b %-.6s
+>>>>>503	ubyte&0xDF	>0			
+>>>>>>503	string		x 			\b%-.1s
+>>>>>>>504	ubyte&0xDF	>0			
+>>>>>>>>504	string		x 			\b%-.1s
+>>>>505		ubyte&0xDF	>0			
+>>>>>505	string		x 			\b.%-.3s
+>>333	string	\ err\0					\b, FREE-DOS BEta 0.9 Bootloader
+>>>497		ubyte&0xDF	>0			
+>>>>497		string		x 			\b %-.6s
+>>>>>503	ubyte&0xDF	>0			
+>>>>>>503	string		x 			\b%-.1s
+>>>>>>>504	ubyte&0xDF	>0			
+>>>>>>>>504	string		x 			\b%-.1s
+>>>>505		ubyte&0xDF	>0			
+>>>>>505	string		x 			\b.%-.3s
+>>334	string	\ err\0					\b, FREE-DOS Beta 0.9 Bootloader
+>>>497		ubyte&0xDF	>0			
+>>>>497		string		x 			\b %-.6s
+>>>>>503	ubyte&0xDF	>0			
+>>>>>>503	string		x 			\b%-.1s
+>>>>>>>504	ubyte&0xDF	>0			
+>>>>>>>>504	string		x 			\b%-.1s
+>>>>505		ubyte&0xDF	>0			
+>>>>>505	string		x 			\b.%-.3s
+>336	string	Error!\ 				
+>>343	string	Hit\ a\ key\ to\ reboot.		\b, FREE-DOS Beta 0.9sr1 Bootloader
+>>>497		ubyte&0xDF	>0			
+>>>>497		string		x 			\b %-.6s
+>>>>>503	ubyte&0xDF	>0			
+>>>>>>503	string		x 			\b%-.1s
+>>>>>>>504	ubyte&0xDF	>0			
+>>>>>>>>504	string		x 			\b%-.1s
+>>>>505		ubyte&0xDF	>0			
+>>>>>505	string		x 			\b.%-.3s
 # loader end
 >0	string	\0\0\0\0		\b, extended partition table
 # JuMP short     bootcodeoffset NOP assembler instructions will usually be EB xx 90
@@ -316,7 +525,7 @@
 >>>>>>>43	string		<NO\ NAME	\b, label: "%11.11s"
 >>>>>>>43	string		>NO\ NAME	\b, label: "%11.11s"
 >>>>>>>43	string		=NO\ NAME	\b, unlabeled
->>>>>>54	string		FAT1		\b, FAT
+>>>>>>54	string		FAT		\b, FAT
 >>>>>>>54	string		FAT12		\b (12 bit)
 >>>>>>>54	string		FAT16		\b (16 bit)
 # FAT32 specific
