@@ -1,3 +1,10 @@
+2005-10-17 11:15 Christos Zoulas <christos@zoulas.com>
+
+	* Open with O_BINARY for CYGWIN (Corinna Vinschen)
+
+	* Don't close stdin (Arkadiusz Miskiewicz)
+
+	* Look for note sections in non executables.
 
 2005-09-20 13:33 Christos Zoulas <christos@zoulas.com>
 	
