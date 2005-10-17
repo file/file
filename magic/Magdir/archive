@@ -33,8 +33,13 @@
 >8	string		debian-split	part of multipart Debian package
 >8	string		debian-binary	Debian binary package
 >68	string		>\0		(format %s)
->81	string		bz2		\b, uses bzip2 compression
->84	string		gz		\b, uses gzip compression
+# These next two lines do not work, because a bzip2 Debian archive
+# still uses gzip for the control.tar (first in the archive).  Only
+# data.tar varies, and the location of its filename varies too.
+# file/libmagic does not current have support for ascii-string based
+# (offsets) as of 2005-09-15.
+#>81	string		bz2		\b, uses bzip2 compression
+#>84	string		gz		\b, uses gzip compression
 #>136	ledate		x		created: %s
 
 # other archives
@@ -626,8 +631,8 @@
 >>0x2A	string	>\0		: %s
 
 # DR-DOS 7.03 Packed File *.??_
-0	string	Packed\ File\  Personal		NetWare Packed File
->12	string	x    				\b, was "%.12s"
+0	string	Packed\ File\ 	Personal NetWare Packed File
+>12	string	x    		\b, was "%.12s"
 
 # EET archive
 # From: Tilman Sauerbeck <tilman@code-monkey.de>
