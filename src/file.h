@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.71 2005/10/17 15:31:10 christos Exp $
+ * @(#)$Id: file.h,v 1.72 2005/10/17 15:36:22 christos Exp $
  */
 
 #ifndef __file_h__
@@ -39,7 +39,7 @@
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 #include <errno.h>
-#include <fcntl.h>	/* For open and flags
+#include <fcntl.h>	/* For open and flags */
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
