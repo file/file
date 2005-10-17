@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.75 2005/10/17 18:41:44 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.76 2005/10/17 19:04:36 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -644,8 +644,8 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 
 	if (indir == 0 && (type == FILE_BESTRING16 || type == FILE_LESTRING16))
 	{
-		const char *src = s + offset;
-		const char *esrc = s + nbytes;
+		const unsigned char *src = s + offset;
+		const unsigned char *esrc = s + nbytes;
 		char *dst = p->s, *edst = &p->s[sizeof(p->s) - 1];
 
 		if (type == FILE_BESTRING16)
