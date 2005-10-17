@@ -278,28 +278,10 @@
 
 #
 # Windows Registry files.
-# WINDIR/system32/config/
+#
 0	string		regf		Windows NT registry file
-# WINDIR/{USER.DAT,SYSTEM.DAT}
 0	string		CREG		Windows 95 registry file
-# WINDIR/REG.DAT
-0	string		SHCC3		Windows 3.x registry file
-0	string		REGEDIT		
->7	string		\r\n		Windows 3.x registry text
->7	string		4		
->>8	string		\n		
->>>9	byte		x		Windows 95/98/ME registry text
->>8	string		\r\n		
->>>9	byte		x		Windows 95/98/ME registry text
-#utf-16	Windows Registry Editor Version 5.00
-#not	MPEG ADTS, layer I, v1, 160 kBits, 48 kHz, Stereo
-0	ubyte		0xff				
->1	ubyte		0xfe				
->>2		string	W\0i\0n\0d\0o\0w\0s\0\ \0	
->>>18		string	R\0e\0g\0i\0s\0t\0r\0y\0\ \0	
->>>>36		string	E\0d\0i\0t\0o\0r\0\ \0		
->>>>>50		string	V\0e\0r\0s\0i\0o\0n\0\ \0 	Windows XP registry text
->>>>>>66	string	5\0.\0\x30\0\x30\0\r\0		\b, version 5.00
+
 
 # AAF files:
 # <stuartc@rd.bbc.co.uk> Stuart Cunningham
