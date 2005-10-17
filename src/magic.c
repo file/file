@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.29 2005/08/27 08:12:19 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.30 2005/10/17 15:13:31 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -179,8 +179,11 @@ private void
 close_and_restore(const struct magic_set *ms, const char *name, int fd,
     const struct stat *sb)
 {
+	if (fd == STDIN_FILENO)
+		return;
 	(void) close(fd);
-	if (fd != STDIN_FILENO && (ms->flags & MAGIC_PRESERVE_ATIME) != 0) {
+
+	if ((ms->flags & MAGIC_PRESERVE_ATIME) != 0) {
 		/*
 		 * Try to restore access, modification times if read it.
 		 * This is really *bad* because it will modify the status
