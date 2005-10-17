@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.98 2005/10/17 15:31:10 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.99 2005/10/17 17:39:39 christos Exp $")
 #endif	/* lint */
 
 
@@ -347,6 +347,7 @@ unwrap(char *fn)
 	char buf[MAXPATHLEN];
 	FILE *f;
 	int wid = 0, cwid;
+	size_t len;
 
 	if (strcmp("-", fn) == 0) {
 		f = stdin;
@@ -359,7 +360,10 @@ unwrap(char *fn)
 		}
 
 		while (fgets(buf, MAXPATHLEN, f) != NULL) {
-			cwid = file_mbswidth(buf) - 1;
+			len = strlen(buf);
+			if (len > 0 && buf[len - 1] == '\n')
+				buf[len - 1] = '\0';
+			cwid = file_mbswidth(buf);
 			if (cwid > wid)
 				wid = cwid;
 		}
@@ -368,7 +372,9 @@ unwrap(char *fn)
 	}
 
 	while (fgets(buf, MAXPATHLEN, f) != NULL) {
-		buf[file_mbswidth(buf)-1] = '\0';
+		len = strlen(buf);
+		if (len > 0 && buf[len - 1] == '\n')
+			buf[len - 1] = '\0';
 		process(buf, wid);
 		if(nobuffer)
 			(void) fflush(stdout);
