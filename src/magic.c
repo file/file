@@ -35,7 +35,6 @@
 #include <sys/types.h>
 #include <sys/param.h>	/* for MAXPATHLEN */
 #include <sys/stat.h>
-#include <fcntl.h>	/* for open() */
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
@@ -63,7 +62,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.31 2005/10/17 15:14:44 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.32 2005/10/17 15:31:10 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -246,11 +245,11 @@ magic_file(struct magic_set *ms, const char *inname)
 
 	if (inname == NULL)
 		fd = STDIN_FILENO;
-	else if ((fd = open(inname, O_RDONLY)) < 0) {
+	else if ((fd = open(inname, O_RDONLY|O_BINARY)) < 0) {
 #ifdef __CYGWIN__
 	    char *tmp = alloca(strlen(inname) + 5);
 	    (void)strcat(strcpy(tmp, inname), ".exe");
-	    if ((fd = open(tmp, O_RDONLY)) < 0) {
+	    if ((fd = open(tmp, O_RDONLY|O_BINARY)) < 0) {
 #endif
 		/* We cannot open it, but we were able to stat it. */
 		if (sb.st_mode & 0222)
