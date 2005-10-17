@@ -32,7 +32,7 @@
 #include <ctype.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.15 2005/07/12 20:05:38 christos Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.16 2005/10/17 18:41:44 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -179,9 +179,9 @@ file_getbuffer(struct magic_set *ms)
 			*np++ = *op;	
 		} else {
 			*np++ = '\\';
-			*np++ = ((*op >> 6) & 3) + '0';
-			*np++ = ((*op >> 3) & 7) + '0';
-			*np++ = ((*op >> 0) & 7) + '0';
+			*np++ = (((uint32_t)*op >> 6) & 3) + '0';
+			*np++ = (((uint32_t)*op >> 3) & 7) + '0';
+			*np++ = (((uint32_t)*op >> 0) & 7) + '0';
 		}
 	}
 	*np = '\0';

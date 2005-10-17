@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.51 2005/10/16 07:37:13 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.52 2005/10/17 18:41:44 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -129,10 +129,10 @@ getu64(int swap, uint64_t value)
 			 : sizeof sh64)
 #define xsh_size	(class == ELFCLASS32		\
 			 ? getu32(swap, sh32.sh_size)	\
-			 : getu32(swap, sh64.sh_size))
+			 : getu64(swap, sh64.sh_size))
 #define xsh_offset	(class == ELFCLASS32		\
 			 ? getu32(swap, sh32.sh_offset)	\
-			 : getu32(swap, sh64.sh_offset))
+			 : getu64(swap, sh64.sh_offset))
 #define xsh_type	(class == ELFCLASS32		\
 			 ? getu32(swap, sh32.sh_type)	\
 			 : getu32(swap, sh64.sh_type))
@@ -696,18 +696,19 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
 				file_badread(ms);
 				return -1;
 			}
-			if ((nbuf = malloc(xsh_size)) == NULL) {
+			if ((nbuf = malloc((size_t)xsh_size)) == NULL) {
 				file_error(ms, errno, "Cannot allocate memory"
 				    " for note");
 				return -1;
 			}
-			if ((noff = lseek(fd, xsh_offset, SEEK_SET)) ==
+			if ((noff = lseek(fd, (off_t)xsh_offset, SEEK_SET)) ==
 			    (off_t)-1) {
 				file_badread(ms);
 				free(nbuf);
 				return -1;
 			}
-			if (read(fd, nbuf, xsh_size) != xsh_size) {
+			if (read(fd, nbuf, (size_t)xsh_size) !=
+			    (ssize_t)xsh_size) {
 				free(nbuf);
 				file_badread(ms);
 				return -1;
@@ -715,9 +716,9 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
 
 			noff = 0;
 			for (;;) {
-				if (noff >= xsh_size)
+				if (noff >= (size_t)xsh_size)
 					break;
-				noff = donote(ms, nbuf, noff,
+				noff = donote(ms, nbuf, (size_t)noff,
 				    (size_t)xsh_size, class, swap, 4,
 				    &flags);
 				if (noff == 0)

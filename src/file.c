@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.99 2005/10/17 17:39:39 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.100 2005/10/17 18:41:44 christos Exp $")
 #endif	/* lint */
 
 
@@ -159,7 +159,8 @@ main(int argc, char *argv[])
 #endif
 
 #ifdef LC_CTYPE
-	setlocale(LC_CTYPE, ""); /* makes islower etc work for other langs */
+	/* makes islower etc work for other langs */
+	(void)setlocale(LC_CTYPE, "");
 #endif
 
 #ifdef __EMX__
@@ -252,9 +253,9 @@ main(int argc, char *argv[])
 			flags |= MAGIC_DEVICES;
 			break;
 		case 'v':
-			(void) fprintf(stdout, "%s-%d.%.2d\n", progname,
+			(void)fprintf(stdout, "%s-%d.%.2d\n", progname,
 				       FILE_VERSION_MAJOR, patchlevel);
-			(void) fprintf(stdout, "magic file from %s\n",
+			(void)fprintf(stdout, "magic file from %s\n",
 				       magicfile);
 			return 1;
 		case 'z':
@@ -322,6 +323,7 @@ main(int argc, char *argv[])
 
 
 private void
+/*ARGSUSED*/
 load(const char *m, int flags)
 {
 	if (magic)
@@ -377,10 +379,10 @@ unwrap(char *fn)
 			buf[len - 1] = '\0';
 		process(buf, wid);
 		if(nobuffer)
-			(void) fflush(stdout);
+			(void)fflush(stdout);
 	}
 
-	(void) fclose(f);
+	(void)fclose(f);
 }
 
 private void
@@ -390,14 +392,14 @@ process(const char *inname, int wid)
 	int std_in = strcmp(inname, "-") == 0;
 
 	if (wid > 0 && !bflag)
-		(void) printf("%s%s%*s ", std_in ? "/dev/stdin" : inname,
+		(void)printf("%s%s%*s ", std_in ? "/dev/stdin" : inname,
 		    separator, (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
 
 	type = magic_file(magic, std_in ? NULL : inname);
 	if (type == NULL)
-		printf("ERROR: %s\n", magic_error(magic));
+		(void)printf("ERROR: %s\n", magic_error(magic));
 	else
-		printf("%s\n", type);
+		(void)printf("%s\n", type);
 }
 
 
@@ -506,7 +508,7 @@ usage(void)
 private void
 help(void)
 {
-	puts(
+	(void)puts(
 "Usage: file [OPTION]... [FILE]...\n"
 "Determine file type of FILEs.\n"
 "\n"

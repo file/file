@@ -39,13 +39,13 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.74 2005/07/29 17:57:20 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.75 2005/10/17 18:41:44 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
     const unsigned char *, size_t);
 private int mget(struct magic_set *, union VALUETYPE *, const unsigned char *,
-    struct magic *, size_t, int);
+    struct magic *, size_t, unsigned int);
 private int mcheck(struct magic_set *, union VALUETYPE *, struct magic *);
 private int32_t mprint(struct magic_set *, union VALUETYPE *, struct magic *);
 private void mdebug(uint32_t, const char *, size_t);
@@ -679,13 +679,14 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 	 * might even cause problems
 	 */
 	if (nbytes < sizeof(*p))
-		(void)memset(((char *)p) + nbytes, '\0', sizeof(*p) - nbytes);
+		(void)memset(((char *)(void *)p) + nbytes, '\0',
+		    sizeof(*p) - nbytes);
 	return 0;
 }
 
 private int
 mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
-    struct magic *m, size_t nbytes, int cont_level)
+    struct magic *m, size_t nbytes, unsigned int cont_level)
 {
 	uint32_t offset = m->offset;
 
@@ -701,7 +702,7 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		int off = m->in_offset;
 		if (m->in_op & FILE_OPINDIRECT) {
 			const union VALUETYPE *q =
-			    ((const union VALUETYPE *)(s + offset + off));
+			    ((const void *)(s + offset + off));
 			switch (m->in_type) {
 			case FILE_BYTE:
 				off = q->b;
