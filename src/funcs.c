@@ -32,7 +32,7 @@
 #include <ctype.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.16 2005/10/17 18:41:44 christos Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.17 2005/10/17 19:03:34 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -196,7 +196,7 @@ file_getbuffer(struct magic_set *ms)
 int
 vsnprintf(char *buf, size_t len, const char *fmt, va_list ap)
 {
-	vsprintf(buf, fmt, ap);
+	return vsprintf(buf, fmt, ap);
 }
 #endif
 
@@ -205,9 +205,11 @@ vsnprintf(char *buf, size_t len, const char *fmt, va_list ap)
 int
 snprintf(char *buf, size_t len, const char *fmt, ...)
 {
+	int rv;
 	va_list ap;
 	va_start(ap, fmt);
-	vsprintf(buf, fmt, ap);
+	rv = vsprintf(buf, fmt, ap);
 	va_end(ap);
+	return rv;
 }
 #endif
