@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.84 2005/03/25 18:03:18 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.85 2005/10/17 15:31:10 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1059,7 +1059,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	if (dbname == NULL)
 		return -1;
 
-	if ((fd = open(dbname, O_RDONLY)) == -1)
+	if ((fd = open(dbname, O_RDONLY|O_BINARY)) == -1)
 		return -1;
 
 	if (fstat(fd, &st) == -1) {
@@ -1149,7 +1149,7 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
 	if (dbname == NULL) 
 		return -1;
 
-	if ((fd = open(dbname, O_WRONLY|O_CREAT|O_TRUNC, 0644)) == -1) {
+	if ((fd = open(dbname, O_WRONLY|O_CREAT|O_TRUNC|O_BINARY, 0644)) == -1) {
 		file_error(ms, errno, "cannot open `%s'", dbname);
 		return -1;
 	}

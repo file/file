@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.70 2005/07/29 17:57:20 christos Exp $
+ * @(#)$Id: file.h,v 1.71 2005/10/17 15:31:10 christos Exp $
  */
 
 #ifndef __file_h__
@@ -39,6 +39,7 @@
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 #include <errno.h>
+#include <fcntl.h>	/* For open and flags
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -289,6 +290,10 @@ int snprintf(char *, size_t, const char *, ...);
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)
 #define QUICK
+#endif
+
+#ifndef O_BINARY
+#define O_BINARY	0
 #endif
 
 #define FILE_RCSID(id) \
