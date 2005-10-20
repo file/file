@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.48 2005/10/12 19:29:42 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.49 2005/10/20 14:59:01 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -101,6 +101,7 @@ file_mdump(struct magic *m)
 		case FILE_LONG:
 		case FILE_LESHORT:
 		case FILE_LELONG:
+		case FILE_MELONG:
 		case FILE_BESHORT:
 		case FILE_BELONG:
 			(void) fprintf(stderr, "%d", m->value.l);
@@ -113,12 +114,14 @@ file_mdump(struct magic *m)
 		case FILE_DATE:
 		case FILE_LEDATE:
 		case FILE_BEDATE:
+		case FILE_MEDATE:
 			(void)fprintf(stderr, "%s,",
 			    file_fmttime(m->value.l, 1));
 			break;
 		case FILE_LDATE:
 		case FILE_LELDATE:
 		case FILE_BELDATE:
+		case FILE_MELDATE:
 			(void)fprintf(stderr, "%s,",
 			    file_fmttime(m->value.l, 0));
 			break;

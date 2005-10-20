@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.85 2005/10/17 15:31:10 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.86 2005/10/20 14:59:01 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -366,12 +366,15 @@ file_signextend(struct magic_set *ms, struct magic *m, uint32_t v)
 		case FILE_DATE:
 		case FILE_BEDATE:
 		case FILE_LEDATE:
+		case FILE_MEDATE:
 		case FILE_LDATE:
 		case FILE_BELDATE:
 		case FILE_LELDATE:
+		case FILE_MELDATE:
 		case FILE_LONG:
 		case FILE_BELONG:
 		case FILE_LELONG:
+		case FILE_MELONG:
 			v = (int32_t) v;
 			break;
 		case FILE_STRING:
@@ -462,6 +465,9 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 				break;
 			case 'L':
 				m->in_type = FILE_BELONG;
+				break;
+			case 'm':
+				m->in_type = FILE_MELONG;
 				break;
 			case 'h':
 			case 's':
@@ -555,11 +561,14 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 #define NBEDATE		6
 #define NLESHORT	7
 #define NLELONG		6
+#define NMELONG		6
 #define NLEDATE		6
+#define NMEDATE		6
 #define NPSTRING	7
 #define NLDATE		5
 #define NBELDATE	7
 #define NLELDATE	7
+#define NMELDATE	7
 #define NREGEX		5
 #define NBESTRING16	10
 #define NLESTRING16	10
@@ -604,9 +613,15 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 	} else if (strncmp(l, "lelong", NLELONG)==0) {
 		m->type = FILE_LELONG;
 		l += NLELONG;
+	} else if (strncmp(l, "melong", NMELONG)==0) {
+		m->type = FILE_MELONG;
+		l += NMELONG;
 	} else if (strncmp(l, "ledate", NLEDATE)==0) {
 		m->type = FILE_LEDATE;
 		l += NLEDATE;
+	} else if (strncmp(l, "medate", NMEDATE)==0) {
+		m->type = FILE_MEDATE;
+		l += NMEDATE;
 	} else if (strncmp(l, "pstring", NPSTRING)==0) {
 		m->type = FILE_PSTRING;
 		l += NPSTRING;
@@ -619,6 +634,9 @@ parse(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp, char *l,
 	} else if (strncmp(l, "leldate", NLELDATE)==0) {
 		m->type = FILE_LELDATE;
 		l += NLELDATE;
+	} else if (strncmp(l, "meldate", NMELDATE)==0) {
+		m->type = FILE_MELDATE;
+		l += NMELDATE;
 	} else if (strncmp(l, "regex", NREGEX)==0) {
 		m->type = FILE_REGEX;
 		l += NREGEX;
