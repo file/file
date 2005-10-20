@@ -77,6 +77,15 @@ interpreted as a UNIX date.
 A four-byte value (on most systems) in little-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
+.IP melong
+A four-byte value (on most systems) in middle-endian (PDP-11) byte order.
+.IP medate
+A four-byte value (on most systems) in middle-endian (PDP-11) byte order,
+interpreted as a UNIX date.
+.IP meldate
+A four-byte value (on most systems) in middle-endian (PDP-11) byte order,
+interpreted as a UNIX-style date, but interpreted as local time rather
+than UTC.
 .IP regex
 A regular expression match in extended POSIX regular expression syntax
 (much like egrep).
@@ -228,11 +237,14 @@ The value of
 .I x
 is used as an offset in the file. A byte, short or long is read at that offset
 depending on the
-.B [bslBSL]
+.B [bslBSLm]
 type specifier.
 The capitalized types interpret the number as a big endian
 value, whereas the small letter versions interpret the number as a little
-endian value.
+endian value;
+the
+.B m
+type interprets the number as a middle endian (PDP-11) value.
 To that number the value of
 .I y
 is added and the result is used as an offset in the file.
@@ -340,13 +352,18 @@ The formats
 .IR long ,
 .IR belong ,
 .IR lelong ,
+.IR melong ,
 .IR short ,
 .IR beshort ,
 .IR leshort ,
 .IR date ,
 .IR bedate ,
+.IR medate ,
+.IR ledate ,
+.IR beldate ,
+.IR leldate ,
 and
-.I ledate
+.I meldate
 are system-dependent; perhaps they should be specified as a number
 of bytes (2B, 4B, etc),
 since the files being recognized typically come from
@@ -370,4 +387,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.28 2005/03/17 17:34:15 christos Exp $
+.\" @(#)$Id: magic.man,v 1.29 2005/10/20 14:59:01 christos Exp $

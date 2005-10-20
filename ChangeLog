@@ -1,3 +1,8 @@
+
+2005-10-20 11:15 Christos Zoulas <christos@zoulas.com>
+
+	* Middle Endian magic (Diomidis Spinellis)
+
 2005-10-17 11:15 Christos Zoulas <christos@zoulas.com>
 
 	* Open with O_BINARY for CYGWIN (Corinna Vinschen)

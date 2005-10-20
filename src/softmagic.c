@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.76 2005/10/17 19:04:36 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.77 2005/10/20 14:59:01 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -272,6 +272,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
   	case FILE_LONG:
   	case FILE_BELONG:
   	case FILE_LELONG:
+  	case FILE_MELONG:
 		v = file_signextend(ms, m, p->l);
 		if (file_printf(ms, m->desc, (uint32_t) v) == -1)
 			return -1;
@@ -302,6 +303,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_DATE:
 	case FILE_BEDATE:
 	case FILE_LEDATE:
+	case FILE_MEDATE:
 		if (file_printf(ms, m->desc, file_fmttime(p->l, 1)) == -1)
 			return -1;
 		t = m->offset + sizeof(time_t);
@@ -310,6 +312,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_LDATE:
 	case FILE_BELDATE:
 	case FILE_LELDATE:
+	case FILE_MELDATE:
 		if (file_printf(ms, m->desc, file_fmttime(p->l, 0)) == -1)
 			return -1;
 		t = m->offset + sizeof(time_t);
@@ -597,6 +600,41 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (m->mask_op & FILE_OPINVERSE)
 			p->l = ~p->l;
 		return 1;
+	case FILE_MELONG:
+	case FILE_MEDATE:
+	case FILE_MELDATE:
+		p->l = (int32_t)
+		    ((p->hl[1]<<24)|(p->hl[0]<<16)|(p->hl[3]<<8)|(p->hl[2]));
+		if (m->mask)
+			switch (m->mask_op&0x7F) {
+			case FILE_OPAND:
+				p->l &= m->mask;
+				break;
+			case FILE_OPOR:
+				p->l |= m->mask;
+				break;
+			case FILE_OPXOR:
+				p->l ^= m->mask;
+				break;
+			case FILE_OPADD:
+				p->l += m->mask;
+				break;
+			case FILE_OPMINUS:
+				p->l -= m->mask;
+				break;
+			case FILE_OPMULTIPLY:
+				p->l *= m->mask;
+				break;
+			case FILE_OPDIVIDE:
+				p->l /= m->mask;
+				break;
+			case FILE_OPMODULO:
+				p->l %= m->mask;
+				break;
+			}
+		if (m->mask_op & FILE_OPINVERSE)
+			p->l = ~p->l;
+		return 1;
 	case FILE_REGEX:
 	case FILE_SEARCH:
 		return 1;
@@ -726,6 +764,10 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 			case FILE_LELONG:
 				off = (int32_t)((q->hl[3]<<24)|(q->hl[2]<<16)|
 						 (q->hl[1]<<8)|(q->hl[0]));
+				break;
+			case FILE_MELONG:
+				off = (int32_t)((q->hl[1]<<24)|(q->hl[0]<<16)|
+						 (q->hl[3]<<8)|(q->hl[2]));
 				break;
 			}
 		}
@@ -1044,6 +1086,76 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 			if (m->in_op & FILE_OPINVERSE)
 				offset = ~offset;
 			break;
+		case FILE_MELONG:
+			if (nbytes < (offset + 4))
+				return 0;
+			if (off) {
+				switch (m->in_op & 0x7F) {
+				case FILE_OPAND:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) &
+						 off;
+					break;
+				case FILE_OPOR:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) |
+						 off;
+					break;
+				case FILE_OPXOR:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) ^
+						 off;
+					break;
+				case FILE_OPADD:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) +
+						 off;
+					break;
+				case FILE_OPMINUS:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) -
+						 off;
+					break;
+				case FILE_OPMULTIPLY:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) *
+						 off;
+					break;
+				case FILE_OPDIVIDE:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) /
+						 off;
+					break;
+				case FILE_OPMODULO:
+					offset = (int32_t)((p->hl[1]<<24)|
+							 (p->hl[0]<<16)|
+							 (p->hl[3]<<8)|
+							 (p->hl[2])) %
+						 off;
+					break;
+				}
+			} else
+				offset = (int32_t)((p->hl[1]<<24)|
+						 (p->hl[0]<<16)|
+						 (p->hl[3]<<8)|
+						 (p->hl[2]));
+			if (m->in_op & FILE_OPINVERSE)
+				offset = ~offset;
+			break;
 		case FILE_LONG:
 			if (nbytes < (offset + 4))
 				return 0;
@@ -1117,12 +1229,15 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		case FILE_LONG:
 		case FILE_BELONG:
 		case FILE_LELONG:
+		case FILE_MELONG:
 		case FILE_DATE:
 		case FILE_BEDATE:
 		case FILE_LEDATE:
+		case FILE_MEDATE:
 		case FILE_LDATE:
 		case FILE_BELDATE:
 		case FILE_LELDATE:
+		case FILE_MELDATE:
 			if (nbytes < (offset + 4))
 				return 0;
 			break;
@@ -1181,12 +1296,15 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_LONG:
 	case FILE_BELONG:
 	case FILE_LELONG:
+	case FILE_MELONG:
 	case FILE_DATE:
 	case FILE_BEDATE:
 	case FILE_LEDATE:
+	case FILE_MEDATE:
 	case FILE_LDATE:
 	case FILE_BELDATE:
 	case FILE_LELDATE:
+	case FILE_MELDATE:
 		v = p->l;
 		break;
 
