@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.52 2005/10/17 18:41:44 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.53 2005/10/31 13:53:40 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -549,8 +549,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 			    os_style_names[os_style]) == -1)
 				return size;
 			*flags |= FLAGS_DID_CORE;
-		} else
-			return size;
+		}
 	}
 
 	switch (os_style) {
