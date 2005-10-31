@@ -1,4 +1,9 @@
 
+2005-10-31 8:54 Christos Zoulas <christos@zoulas.com>
+
+	* Fix regression where the core info was not completely processed
+	    (Radek Vokál)
+
 2005-10-20 11:15 Christos Zoulas <christos@zoulas.com>
 
 	* Middle Endian magic (Diomidis Spinellis)
