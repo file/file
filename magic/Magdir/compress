@@ -43,7 +43,7 @@
 >9	byte		=0x0D		\b, from Acorn RISCOS
 >3	byte		&0x10		\b, comment
 >3	byte		&0x20		\b, encrypted
->4	ledate		>0		last modified: %s,
+>4	ledate		>0		\b, last modified: %s
 >8	byte		2		\b, max compression
 >8	byte		4		\b, max speed
 
