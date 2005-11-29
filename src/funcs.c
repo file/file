@@ -30,9 +30,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#if defined(HAVE_WCHAR_H)
+#include <wchar.h>
+#endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.17 2005/10/17 19:03:34 christos Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.18 2005/11/29 18:25:53 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -152,6 +155,13 @@ file_reset(struct magic_set *ms)
 	return 0;
 }
 
+#define OCTALIFY(n, o)	\
+	*(n)++ = '\\', \
+	*(n)++ = (((uint32_t)*(o) >> 6) & 3) + '0', \
+	*(n)++ = (((uint32_t)*(o) >> 3) & 7) + '0', \
+	*(n)++ = (((uint32_t)*(o) >> 0) & 7) + '0', \
+	(o)++
+
 protected const char *
 file_getbuffer(struct magic_set *ms)
 {
@@ -174,14 +184,50 @@ file_getbuffer(struct magic_set *ms)
 		ms->o.pbuf = nbuf;
 	}
 
+#if defined(HAVE_WCHAR_H) && defined(HAVE_MBRTOWC) && defined(HAVE_WCWIDTH)
+	{
+		mbstate_t state;
+		wchar_t nextchar;
+		int mb_conv = 1;
+		size_t bytesconsumed;
+		char *eop;
+		(void)memset(&state, 0, sizeof(mbstate_t));
+
+		np = ms->o.pbuf;
+		op = ms->o.buf;
+		eop = op + strlen(ms->o.buf);
+
+		while (op < eop) {
+			bytesconsumed = mbrtowc(&nextchar, op, eop - op,
+			    &state);
+			if (bytesconsumed == (size_t)(-1) ||
+			    bytesconsumed == (size_t)(-2)) {
+				mb_conv = 0;
+				break;
+			}
+
+			if (iswprint(nextchar) ) {
+				(void)memcpy(np, op, bytesconsumed);
+				op += bytesconsumed;
+				np += bytesconsumed;
+			} else {
+				while (bytesconsumed-- > 0)
+					OCTALIFY(np, op);
+			}
+		}
+		*np = '\0';
+
+		/* Parsing succeeded as a multi-byte sequence */
+		if (mb_conv != 0)
+			return ms->o.pbuf;
+	}
+#endif
+
 	for (np = ms->o.pbuf, op = ms->o.buf; *op; op++) {
 		if (isprint((unsigned char)*op)) {
 			*np++ = *op;	
 		} else {
-			*np++ = '\\';
-			*np++ = (((uint32_t)*op >> 6) & 3) + '0';
-			*np++ = (((uint32_t)*op >> 3) & 7) + '0';
-			*np++ = (((uint32_t)*op >> 0) & 7) + '0';
+			OCTALIFY(np, op);
 		}
 	}
 	*np = '\0';
