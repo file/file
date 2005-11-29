@@ -1,4 +1,9 @@
 
+2005-11-29 13:26 Christos Zoulas <christos@zoulas.com>
+
+	* Use iswprint() to convert the output string.
+	    (Radek Vokál)
+
 2005-10-31 8:54 Christos Zoulas <christos@zoulas.com>
 
 	* Fix regression where the core info was not completely processed
