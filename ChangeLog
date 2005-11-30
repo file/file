@@ -2,7 +2,7 @@
 2005-11-29 13:26 Christos Zoulas <christos@zoulas.com>
 
 	* Use iswprint() to convert the output string.
-	    (Radek Vokál)
+	    (Bastien Nocera)
 
 2005-10-31 8:54 Christos Zoulas <christos@zoulas.com>
 
