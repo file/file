@@ -919,3 +919,7 @@
 # EET archive
 # From: Tilman Sauerbeck <tilman@code-monkey.de>
 0	belong	0x1ee7ff00	application/x-eet
+
+# From: Denis Knauf, via gentoo.
+0	string	fLaC		audio/x-flac
+0	string	CWS		application/x-shockwave-flash
