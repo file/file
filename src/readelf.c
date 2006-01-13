@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.53 2005/10/31 13:53:40 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.54 2006/01/13 00:45:21 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -120,6 +120,14 @@ getu64(int swap, uint64_t value)
 	} else
 		return value;
 }
+
+#ifdef USE_ARRAY_FOR_64BIT_TYPES
+# define elf_getu64(swap, array) \
+	((swap ? ((uint64_t)getu32(swap, array[0])) << 32 : getu32(swap, array[0])) + \
+	 (swap ? getu32(swap, array[1]) : ((uint64_t)getu32(swap, array[1]) << 32)))
+#else
+# define elf_getu64(swap, value) getu64(swap, value)
+#endif
 
 #define xsh_addr	(class == ELFCLASS32		\
 			 ? (void *) &sh32		\
@@ -912,11 +920,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 		if (getu16(swap, elfhdr.e_type) == ET_CORE) {
 #ifdef ELFCORE
 			if (dophn_core(ms, class, swap, fd,
-#ifdef USE_ARRAY_FOR_64BIT_TYPES
-			    (off_t)getu32(swap, elfhdr.e_phoff[1]),
-#else
-			    (off_t)getu64(swap, elfhdr.e_phoff),
-#endif
+			    (off_t)elf_getu64(swap, elfhdr.e_phoff),
 			    getu16(swap, elfhdr.e_phnum), 
 			    (size_t)getu16(swap, elfhdr.e_phentsize)) == -1)
 				return -1;
@@ -926,22 +930,14 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 		} else {
 			if (getu16(swap, elfhdr.e_type) == ET_EXEC) {
 				if (dophn_exec(ms, class, swap, fd,
-#ifdef USE_ARRAY_FOR_64BIT_TYPES
-				    (off_t)getu32(swap, elfhdr.e_phoff[1]),
-#else
-				    (off_t)getu64(swap, elfhdr.e_phoff),
-#endif
+				    (off_t)elf_getu64(swap, elfhdr.e_phoff),
 				    getu16(swap, elfhdr.e_phnum), 
 				    (size_t)getu16(swap, elfhdr.e_phentsize))
 				    == -1)
 					return -1;
 			}
 			if (doshn(ms, class, swap, fd,
-#ifdef USE_ARRAY_FOR_64BIT_TYPES
-			    (off_t)getu32(swap, elfhdr.e_shoff[1]),
-#else
-			    (off_t)getu64(swap, elfhdr.e_shoff),
-#endif
+			    (off_t)elf_getu64(swap, elfhdr.e_shoff),
 			    getu16(swap, elfhdr.e_shnum),
 			    (size_t)getu16(swap, elfhdr.e_shentsize)) == -1)
 				return -1;
