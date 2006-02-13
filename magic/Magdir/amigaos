@@ -42,6 +42,8 @@
 0	beshort		0x0f03		AmigaOS outline font
 0	belong		0x80001001	AmigaOS outline tag
 0	string		##\ version	catalog translation
+0	string		EMOD\0		Amiga E module
+8	string		ECXM\0		ECX module
 
 # Amiga disk types
 # 

@@ -3,6 +3,7 @@
 #
 0	string	%%!!			X-Post-It-Note text
 0	string	BEGIN:VCALENDAR		vCalendar calendar file
+0	string	BEGIN:VCARD		vCard visiting card
 
 # From: Alex Beregszaszi <alex@fsn.hu>
 4	string	gtktalog		GNOME Catalogue (gtktalog)
