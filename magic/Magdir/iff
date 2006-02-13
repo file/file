@@ -26,6 +26,7 @@
 >8	string		RGB8		\b, RGB8 24-bit RGB image
 >8	string		DR2D		\b, DR2D 2-D object
 >8	string		TDDD		\b, TDDD 3-D rendering
+>8	string		LWOB		\b, LWOB 3-D object
 # other formats
 >8	string		FTXT		\b, FTXT formatted text
 >8	string		CTLG		\b, CTLG message catalog
