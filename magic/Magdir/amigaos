@@ -44,6 +44,7 @@
 0	string		##\ version	catalog translation
 0	string		EMOD\0		Amiga E module
 8	string		ECXM\0		ECX module
+0	string/c	@database	AmigaGuide file
 
 # Amiga disk types
 # 

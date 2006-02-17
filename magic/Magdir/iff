@@ -15,9 +15,9 @@
 >8	string		AIFF		\b, AIFF audio
 >8	string		AIFC		\b, AIFF-C compressed audio
 >8	string		8SVX		\b, 8SVX 8-bit sampled sound voice
+>8	string		16SV		\b, 16SV 16-bit sampled sound voice
 >8	string		SAMP		\b, SAMP sampled audio
->8	string		DTYP		\b, DTYP datatype description
->8	string		PTCH		\b, PTCH binary patch
+>8	string		MAUD		\b, MAUD MacroSystem audio
 # image formats
 >8	string		ILBMBMHD	\b, ILBM interleaved image
 >>20	beshort		x		\b, %d x
@@ -27,10 +27,14 @@
 >8	string		DR2D		\b, DR2D 2-D object
 >8	string		TDDD		\b, TDDD 3-D rendering
 >8	string		LWOB		\b, LWOB 3-D object
+>8	string		ANIM		\b, ANIM animation
 # other formats
 >8	string		FTXT		\b, FTXT formatted text
 >8	string		CTLG		\b, CTLG message catalog
 >8	string		PREF		\b, PREF preferences
+>8	string		DTYP		\b, DTYP datatype description
+>8	string		PTCH		\b, PTCH binary patch
+>8	string		AMFF		\b, AMFF AmigaMetaFile format
 
 # These go at the end of the iff rules
 #
