@@ -616,7 +616,7 @@
 >5	leshort	&0x0400		\b, small dictionary
 >5	leshort	&0x0800		\b, multi-volume
 >5	leshort	&0x1000		\b, contains AV-String
->>30	string\x16*UNREGISTERED\x20VERSION*	(unregistered)
+>>30	string	\x16*UNREGISTERED\x20VERSION*	(unregistered)
 >5	leshort &0x2000		\b, with recovery record
 >5	leshort &0x4000		\b, locked
 >5	leshort &0x8000		\b, solid
