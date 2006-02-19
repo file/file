@@ -54,6 +54,9 @@ Finally the ``c'' flag, specifies case insensitive matching: lowercase
 characters in the magic match both lower and upper case characters in the
 targer, whereas upper case characters in the magic, only much uppercase
 characters in the target.
+.IP pstring
+A pascal style string where the first byte is interpreted as the an
+unsigned length. The string is not NUL terminated.
 .IP date
 A four-byte value interpreted as a UNIX date.
 .IP ldate
@@ -66,6 +69,12 @@ A four-byte value (on most systems) in big-endian byte order.
 .IP bedate
 A four-byte value (on most systems) in big-endian byte order,
 interpreted as a Unix date.
+.IP beldate
+A four-byte value (on most systems) in big-endian byte order,
+interpreted as a UNIX-style date, but interpreted as local time rather
+than UTC.
+.IP bestring16
+A two-byte unicode (UCS16) string in big-endian byte order.
 .IP leshort
 A two-byte value (on most systems) in little-endian byte order.
 .IP lelong
@@ -77,6 +86,8 @@ interpreted as a UNIX date.
 A four-byte value (on most systems) in little-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
+.IP lestring16
+A two-byte unicode (UCS16) string in little-endian byte order.
 .IP melong
 A four-byte value (on most systems) in middle-endian (PDP-11) byte order.
 .IP medate
@@ -146,6 +157,8 @@ that are set in the specified value,
 .BR ^ ,
 to specify that the value from the file must have clear any of the bits
 that are set in the specified value, or
+.BR ~ ,
+the value specified after is negated before tested.
 .BR x ,
 to specify that any value will match.
 If the character is omitted, it is assumed to be
@@ -368,9 +381,6 @@ are system-dependent; perhaps they should be specified as a number
 of bytes (2B, 4B, etc),
 since the files being recognized typically come from
 a system on which the lengths are invariant.
-.PP
-There is (currently) no support for specified-endian data to be used in
-indirect offsets.
 .SH SEE ALSO
 .BR file (__CSECTION__)
 \- the command that reads this file.
@@ -387,4 +397,4 @@ indirect offsets.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.29 2005/10/20 14:59:01 christos Exp $
+.\" @(#)$Id: magic.man,v 1.30 2006/02/19 18:16:03 christos Exp $
