@@ -18,6 +18,8 @@
 >8	string		16SV		\b, 16SV 16-bit sampled sound voice
 >8	string		SAMP		\b, SAMP sampled audio
 >8	string		MAUD		\b, MAUD MacroSystem audio
+>8	string		SMUS		\b, SMUS simple music
+>8	string		CMUS		\b, CMUS complex music
 # image formats
 >8	string		ILBMBMHD	\b, ILBM interleaved image
 >>20	beshort		x		\b, %d x
@@ -28,6 +30,8 @@
 >8	string		TDDD		\b, TDDD 3-D rendering
 >8	string		LWOB		\b, LWOB 3-D object
 >8	string		ANIM		\b, ANIM animation
+>8	string		ACBM		\b, ACBM continuous image
+>8	string		FAXX		\b, FAXX fax image
 # other formats
 >8	string		FTXT		\b, FTXT formatted text
 >8	string		CTLG		\b, CTLG message catalog
@@ -35,6 +39,7 @@
 >8	string		DTYP		\b, DTYP datatype description
 >8	string		PTCH		\b, PTCH binary patch
 >8	string		AMFF		\b, AMFF AmigaMetaFile format
+>8	string		WZRD		\b, WZRD StormWIZARD resource
 
 # These go at the end of the iff rules
 #

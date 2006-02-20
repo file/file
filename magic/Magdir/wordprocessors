@@ -106,6 +106,7 @@
 # Hangul (Korean) Word Processor File
 0	string	HWP\ Document\ File	Hangul (Korean) Word Processor File
 
-# CosmicBook, from BenoÃ®t Rouits
+# CosmicBook, from Benoît Rouits
 0       string  CSBK    Ted Neslson's CosmicBook hypertext file
 
+2       string  EYWR    AmigaWriter file
