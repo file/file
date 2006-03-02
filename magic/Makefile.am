@@ -44,11 +44,13 @@ Magdir/archive \
 Magdir/asterix \
 Magdir/att3b \
 Magdir/audio \
-Magdir/bFLT \
+Magdir/basis \
+Magdir/bflt \
 Magdir/blender \
 Magdir/blit \
 Magdir/bout \
 Magdir/bsdi \
+Magdir/btsnoop \
 Magdir/cad \
 Magdir/c-lang \
 Magdir/c64 \

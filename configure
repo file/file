@@ -1808,7 +1808,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=file
- VERSION=4.16
+ VERSION=4.17
 
 
 cat >>confdefs.h <<_ACEOF
@@ -9287,7 +9287,7 @@ echo "${ECHO_T}$lt_cv_dlopen_self_static" >&6
 fi
 
 
-# Report which library types will actually be built
+# Report which librarie types wil actually be built
 echo "$as_me:$LINENO: checking if libtool supports shared libraries" >&5
 echo $ECHO_N "checking if libtool supports shared libraries... $ECHO_C" >&6
 echo "$as_me:$LINENO: result: $can_build_shared" >&5

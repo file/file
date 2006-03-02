@@ -176,3 +176,14 @@
 
 # AFX compressed files (Wolfram Kleff)
 2	string		-afx-		AFX compressed file data
+
+# Supplementary magic data for the file(1) command to support
+# rzip(1).  The format is described in magic(5).
+#
+# Copyright (C) 2003 by Andrew Tridgell.  You may do whatever you want with
+# this file.
+#
+0	string		RZIP		rzip compressed data
+>4	byte		x		- version %d
+>5	byte		x		\b.%d
+>6	belong		x		(%d bytes)

@@ -37,3 +37,24 @@
 #>>>>>>11	ubyte	x		size 0x%02x
 #>>>>>>12	ubyte	x		\b%02x
 #>>>>>>13	ubyte	x		\b%02x bytes
+
+# Joerg Jenderek: joerg dot jenderek at web dot de
+# http://www.clamav.net/doc/latest/html/node45.html
+# .cvd files start with a 512 bytes colon separated header
+# ClamAV-VDB:buildDate:version:signaturesNumbers:functionalityLevelRequired:MD5:Signature:builder:buildTime
+# + gzipped tarball files
+0	string		ClamAV-VDB:	
+>11	string		>\0		Clam AntiVirus database %-.23s
+>>34	string		:		
+>>>35	regex		[^:]+		\b, version 
+>>>>35		string		x 	\b%-.1s
+>>>>>36		string 		!:	
+>>>>>>36	string		x 	\b%-.1s
+>>>>>>>37	string		!:	
+>>>>>>>>37	string		x 	\b%-.1s
+>>>>>>>>>38	string		!:	
+>>>>>>>>>>38	string		x 	\b%-.1s
+>>>>512	string		\037\213	\b, gzipped
+>>>>769	string		ustar\0		\b, tared
+>512	string		\037\213	\b, gzipped
+>769	string		ustar\0		\b, tared
