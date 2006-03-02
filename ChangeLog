@@ -1,3 +1,10 @@
+2006-03-02 16:06 Christos Zoulas <christos@zoulas.com>
+
+	* Print empty if the file is (Mike Frysinger)
+
+	* Don't try to read past the end of the buffer (Mike Frysinger)
+
+	* Sort magic entries by strength [experimental]
 
 2005-11-29 13:26 Christos Zoulas <christos@zoulas.com>
 

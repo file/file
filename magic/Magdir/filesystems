@@ -23,7 +23,7 @@
 >0770	long		x		%ld blocks
 # Is there a boot block written 1 sector in?
 >512    belong&077777777	0600407	\b, boot block present
-# Smart Boot Manager backup file is 41 byte header + first sectors of disc
+# Joerg Jenderek: Smart Boot Manager backup file is 41 byte header + first sectors of disc
 # (http://btmgr.sourceforge.net/docs/user-guide-3.html)
 0		string	SBMBAKUP_	Smart Boot Manager backup file
 >9		string	x		\b, version %-5.5s
@@ -33,8 +33,22 @@
 >>>>>17		string	x		\b%-.1s
 >>>>>>18	string	=_		\b.
 >>>>>>>19	string	x		\b%-.1s
-# DOS Emulator image is 128 byte header + harddisc image
+>>>22		ubyte	0		
+>>>>21		ubyte	x		\b, from drive 0x%x
+>>>22		ubyte	>0		
+>>>>21		string	x		\b, from drive %s
+
+# Joerg Jenderek
+# DOS Emulator image is 128 byte, null right padded header + harddisc image
 0	string	DOSEMU\0			
+>0x27E	leshort	0xAA55			
+#offset is 128
+>>19	ubyte	128			
+>>>(19.b-1)	ubyte	0x0		DOS Emulator image
+>>>>7	ulong		>0		\b, %u heads
+>>>>11	ulong		>0		\b, %d sectors/track
+>>>>15	ulong		>0		\b, %d cylinders
+ 
 >0x27E	leshort	0xAA55			DOS Emulator image
 0x1FE	leshort	0xAA55			x86 boot sector
 >2	string	OSBS			\b, OS/BS MBR
@@ -111,6 +125,51 @@
 >480	string	Boot\ failed\r			
 >>495	string	LDLINUX\ SYS			\b, SYSLINUX bootloader (2.06)
 >395	string	chksum\0\ ERROR!\0		\b, Gujin bootloader
+# mbr partion table entries, if not fat boot secor, activ flag 0 or 0x80 and type > 0
+>3			string		!MS	
+>>3			string		!SYSLINUX
+>>>82			string		!FAT32	
+>>>>446			ubyte		<0x81	
+>>>>>446		ubyte&0x7F	0	
+>>>>>>450		ubyte		>0	\b; partition 1: ID=0x%x
+>>>>>>>446		ubyte		0x80	\b, active
+>>>>>>>447		ubyte		x	\b, starthead %u
+#>>>>>>>448		ubyte		x	\b, start C_S: 0x%x
+#>>>>>>448		ubeshort&1023	x	\b, startcylinder? %d
+>>>>>>>454		ulelong		x	\b, startsector %u
+>>>>>>>458		ulelong		x	\b, %u sectors
+#
+>>>>462			ubyte		<0x81	
+>>>>>462		ubyte&0x7F	0		
+>>>>>>466		ubyte		>0	\b; partition 2: ID=0x%x
+>>>>>>>462		ubyte		0x80	\b, active
+>>>>>>>463		ubyte		x	\b, starthead %u
+#>>>>>>>464		ubyte		x	\b, start C_S: 0x%x
+#>>>>>>>464		ubeshort&1023	x	\b, startcylinder? %d
+>>>>>>>470		ulelong		x	\b, startsector %u
+>>>>>>>474		ulelong		x	\b, %u sectors
+#
+>>>>478			ubyte		<0x81		
+>>>>>478		ubyte&0x7F	0		
+>>>>>>482		ubyte		>0	\b; partition 3: ID=0x%x
+>>>>>>>478		ubyte		0x80	\b, active
+>>>>>>>479		ubyte		x	\b, starthead %u
+#>>>>>>>480		ubyte		x	\b, start C_S: 0x%x
+#>>>>>>>481		ubyte		x	\b, start C2S: 0x%x
+#>>>>>>>480		ubeshort&1023	x	\b, startcylinder? %d
+>>>>>>>486		ulelong		x	\b, startsector %u
+>>>>>>>490		ulelong		x	\b, %u sectors
+#
+>>>>494			ubyte		<0x81	
+>>>>>494		ubyte&0x7F	0		
+>>>>>>498		ubyte		>0	\b; partition 4: ID=0x%x
+>>>>>>>494		ubyte		0x80	\b, active
+>>>>>>>495		ubyte		x	\b, starthead %u
+#>>>>>>>496		ubyte		x	\b, start C_S: 0x%x
+#>>>>>>>496		ubeshort&1023	x	\b, startcylinder? %d
+>>>>>>>502		ulelong		x	\b, startsector %u
+>>>>>>>506		ulelong		x	\b, %u sectors
+# mbr partion table entries end
 >185	string	FDBOOT\ Version\ 			
 >>204	string	\rNo\ Systemdisk.\ 			
 >>>220	string	Booting\ from\ harddisk.\n\r		
@@ -137,6 +196,10 @@
 >>>>>>>>>(1.b+11)	ubyte	0xb			
 >>>>>>>>>>(1.b+12)	ubyte	0x56			
 >>>>>>>>>>(1.b+13)	ubyte	0xb4			\b, mkdosfs boot message display
+>103	string	This\ is\ not\ a\ bootable\ disk.\ 	
+>>132	string	Please\ insert\ a\ bootable\ 		
+>>>157	string	floppy\ and\r\n				
+>>>>169	string	press\ any\ key\ to\ try\ again...\r	\b, FREE-DOS message display
 #
 >66	string	Solaris\ Boot\ Sector    		
 >>99	string	Incomplete\ MDBoot\ load.		
@@ -467,7 +530,14 @@
 >>>>505		ubyte&0xDF	>0			
 >>>>>505	string		x 			\b.%-.3s
 # loader end
->0	string	\0\0\0\0		\b, extended partition table
+# Joerg Jenderek
+>446	ubyte	0			
+>>450	ubyte	>0			
+>>>482	ubyte	0			
+>>>>498	ubyte	0			
+>>>>466	ubyte	0x05			\b, extended partition table
+>>>>466	ubyte	0x0F			\b, extended partition table (LBA)
+>>>>466	ubyte	0x0			\b, extended partition table (last)	
 # JuMP short     bootcodeoffset NOP assembler instructions will usually be EB xx 90
 # older drives may use E9 xx xx
 >0		lelong&0x009000EB	0x009000EB 

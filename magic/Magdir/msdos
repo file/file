@@ -4,7 +4,13 @@
 #
 
 # .BAT files (Daniel Quinlan, quinlan@yggdrasil.com)
-0	string/c	@echo\ off	MS-DOS batch file text
+# updated by Joerg Jenderek
+0	string	@			
+>1	string/cB	\ echo\ off	MS-DOS batch file text
+>1	string/cB	echo\ off	MS-DOS batch file text
+>1	string/cB	rem\ 		MS-DOS batch file text
+>1	string/cB	set\ 		MS-DOS batch file text
+
 
 # OS/2 batch files are REXX. the second regex is a bit generic, oh well
 # the matched commands seem to be common in REXX and uncommon elsewhere
@@ -39,8 +45,8 @@
 #
 # many of the compressed formats were extraced from IDARC 1.23 source code
 #
-0	string	MZ
->0 string MZ\0\0\0\0\0\0\0\0\0\0PE\0\0 PE executable for MS Windows
+0	string	MZ		MS-DOS executable
+>0 string MZ\0\0\0\0\0\0\0\0\0\0PE\0\0 \b, PE for MS Windows
 >>&18	leshort&0x2000	>0	(DLL)
 >>&88	leshort		0	(unknown subsystem)
 >>&88	leshort		1	(native)
@@ -60,7 +66,7 @@
 >>>(&0.l+(4)) string MSCF \b, WinHKI CAB self-extracting archive
 
 >0x18  leshort >0x3f
->>(0x3c.l) string PE\0\0 PE executable
+>>(0x3c.l) string PE\0\0 PE 
 # hooray, there's a DOS extender using the PE format, with a valid PE
 # executable inside (which just prints a message and exits if run in win)
 >>>(8.s*16) string 32STUB for MS-DOS, 32rtm DOS extender
@@ -108,7 +114,7 @@
 >>>>&(0x3c.l+0xf8)	search/0x100	SharedD \b, Microsoft Installer self-extracting archive
 >>>>0x30		string		Inno \b, InnoSetup self-extracting archive
 
->>(0x3c.l)		string		NE NE executable
+>>(0x3c.l)		string		NE \b, NE
 >>>(0x3c.l+0x36)	byte		0 (unknown OS)
 >>>(0x3c.l+0x36)	byte		1 for OS/2 1.x
 >>>(0x3c.l+0x36)	byte		2 for MS Windows 3.x
@@ -120,7 +126,7 @@
 >>>&(&0x24.s-1)		string		ARJSFX \b, ARJ self-extracting archive
 >>>(0x3c.l+0x70)	search/0x80	WinZip(R)\ Self-Extractor \b, ZIP self-extracting archive (WinZip)
 
->>(0x3c.l)		string		LX\0\0 LX executable
+>>(0x3c.l)		string		LX\0\0 \b, LX
 >>>(0x3c.l+0x0a)	leshort		<1 (unknown OS)
 >>>(0x3c.l+0x0a)	leshort		1 for OS/2
 >>>(0x3c.l+0x0a)	leshort		2 for MS Windows
@@ -138,9 +144,9 @@
 >>>&(&0x54.l-3)		string		arjsfx \b, ARJ self-extracting archive
 
 # MS Windows system file, supposedly a collection of LE executables
->>(0x3c.l)		string		W3 W3 executable for MS Windows
+>>(0x3c.l)		string		W3 \b, W3 for MS Windows
 
->>(0x3c.l)		string		LE\0\0 LE executable
+>>(0x3c.l)		string		LE\0\0 \b, LE executable
 >>>(0x3c.l+0x0a)	leshort		1
 # some DOS extenders use LE files with OS/2 header
 >>>>0x240		search/0x100	DOS/4G for MS-DOS, DOS4GW DOS extender
@@ -158,7 +164,7 @@
 #>>>>(0x3c.l+0x1c)	lelong		>0x10000 for OS/2
 # fails with DOS-Extenders.
 >>>(0x3c.l+0x0a)	leshort		2 for MS Windows
->>>(0x3c.l+0x0a)	leshort		3 for MS-DOS
+>>>(0x3c.l+0x0a)	leshort		3 for DOS
 >>>(0x3c.l+0x0a)	leshort		4 for MS Windows (VxD)
 >>>(&0x7c.l+0x26)	string		UPX \b, UPX compressed
 >>>&(&0x54.l-3)		string		UNACE \b, ACE self-extracting archive
@@ -166,25 +172,25 @@
 # looks like ASCII, probably some embedded copyright message.
 # and definitely not NE/LE/LX/PE
 >>0x3c		lelong	>0x20000000
->>>(4.s*512)	leshort !0x014c MZ executable for MS-DOS
+>>>(4.s*512)	leshort !0x014c \b, MZ for MS-DOS
 # header data too small for extended executable
 >2		long	!0
 >>0x18		leshort	<0x40
 >>>(4.s*512)	leshort !0x014c
 
 >>>>&(2.s-514)	string	!LE
->>>>>&-2	string	!BW MZ executable for MS-DOS
->>>>&(2.s-514)	string	LE LE executable
+>>>>>&-2	string	!BW \b, MZ for MS-DOS
+>>>>&(2.s-514)	string	LE \b, LE
 >>>>>0x240	search/0x100	DOS/4G for MS-DOS, DOS4GW DOS extender
 # educated guess since indirection is still not capable enough for complex offset
 # calculations (next embedded executable would be at &(&2*512+&0-2)
 # I suspect there are only LE executables in these multi-exe files
 >>>>&(2.s-514)	string	BW
->>>>>0x240	search/0x100	DOS/4G LE executable for MS-DOS, DOS4GW DOS extender (embedded)
->>>>>0x240	search/0x100	!DOS/4G BW executable collection for MS-DOS
+>>>>>0x240	search/0x100	DOS/4G ,\b LE for MS-DOS, DOS4GW DOS extender (embedded)
+>>>>>0x240	search/0x100	!DOS/4G ,\b BW collection for MS-DOS
 
 # This sequence skips to the first COFF segment, usually .text
->(4.s*512)	leshort		0x014c COFF executable
+>(4.s*512)	leshort		0x014c \b, COFF
 >>(8.s*16)	string		go32stub for MS-DOS, DJGPP go32 DOS extender
 >>(8.s*16)	string		emx
 >>>&1		string		x for DOS, Win or OS/2, emx %s
@@ -255,18 +261,76 @@
 # Uncommenting only the first two lines will cover about 2/3 of COM files,
 # but it isn't feasible to match all COM files since there must be at least
 # two dozen different one-byte "magics".
-0	byte		0xe9		MS-DOS executable (COM)
+0	byte		0xe9		DOS executable (COM)
+>0x1FE	leshort		0xAA55		\b, boot code
 >6	string		SFX\ of\ LHarc	(%s)
-0	byte		0x8c		MS-DOS executable (COM)
+0	belong	0xffffffff		DOS executable (device driver)
+#CMD640X2.SYS
+>10	string	>\x23			
+>>10	string	!\x2e			
+>>>17	string	<\x5B			
+>>>>10	string	x			\b, name: %.8s
+#UDMA.SYS KEYB.SYS CMD640X2.SYS
+>10	string	<\x41			
+>>12	string	>\x40			
+>>>10	string	!$			
+>>>>12	string	x			\b, name: %.8s
+#BTCDROM.SYS ASPICD.SYS
+>22	string	>\x40			
+>>22	string	<\x5B			
+>>>23	string	<\x5B			
+>>>>22	string	x			\b, name: %.8s
+#ATAPICD.SYS
+>76	string	\0			
+>>77	string	>\x40			
+>>>77	string	<\x5B			
+>>>>77	string	x			\b, name: %.8s
+0	byte		0x8c		DOS executable (COM)
 # 0xeb conflicts with "sequent" magic
-0	byte		0xeb		MS-DOS executable (COM)
+0	byte		0xeb		DOS executable (COM)
+>0x1FE	leshort		0xAA55		\b, boot code
+>85	string		UPX		\b, UPX compressed
 >4	string		\ $ARX		\b, ARX self-extracting archive
 >4	string		\ $LHarc	\b, LHarc self-extracting archive
 >0x20e	string		SFX\ by\ LARC	\b, LARC self-extracting archive
-0	byte		0xb8		COM executable for MS-DOS
+0	byte		0xb8		COM executable
+# modified by Joerg Jenderek
+>1	lelong          !0x21cd4cff	for DOS
+# http://syslinux.zytor.com/comboot.php
+# (32-bit COMBOOT) programs *.C32 contain 32-bit code and run in flat-memory 32-bit protected mode
+# start with assembler instructions mov eax,21cd4cffh
+>1	lelong          0x21cd4cff	(32-bit COMBOOT)
+0	string	\x81\xfc		
+>4	string	\x77\x02\xcd\x20\xb9	
+>>36	string	UPX! 			FREE-DOS executable (COM), UPX compressed
+252	string Must\ have\ DOS\ version	DR-DOS executable (COM)
+# GRR search is not working
+#2	search/28	\xcd\x21	COM executable for MS-DOS
+#WHICHFAT.cOM
+2	string	\xcd\x21		COM executable for DOS
+#DELTREE.cOM DELTREE2.cOM
+4	string	\xcd\x21		COM executable for DOS
+#IFMEMDSK.cOM ASSIGN.cOM COMP.cOM
+5	string	\xcd\x21		COM executable for DOS
+#DELTMP.COm HASFAT32.cOM
+7	string	\xcd\x21		
+>0	byte	!0xb8			COM executable for DOS
+#COMP.cOM MORE.COm
+10	string	\xcd\x21		
+>5	string	!\xcd\x21		COM executable for DOS
+#comecho.com
+13	string	\xcd\x21		COM executable for DOS
+#HELP.COm EDIT.coM
+18	string	\xcd\x21		COM executable for MS-DOS
+#NWRPLTRM.COm
+23	string	\xcd\x21		COM executable for MS-DOS
+#LOADFIX.cOm LOADFIX.cOm
+30	string	\xcd\x21		COM executable for MS-DOS
+#syslinux.com 3.11
+70	string	\xcd\x21		COM executable for DOS
 # many compressed/converted COMs start with a copy loop instead of a jump
 0x6	search/0xa	\xfc\x57\xf3\xa5\xc3	COM executable for MS-DOS
-0x6	search/0xa	\xfc\x57\xf3\xa4\xc3	COM executable for MS-DOS
+0x6	search/0xa	\xfc\x57\xf3\xa4\xc3	COM executable for DOS
 >0x18	search/0x10	\x50\xa4\xff\xd5\x73	\b, aPack compressed
 0x3c	string		W\ Collis\0\0		COM executable for MS-DOS, Compack compressed
 # FIXME: missing diet .com compression
@@ -278,9 +342,10 @@
 
 #
 # Windows Registry files.
-#
-0	string		regf		Windows NT registry file
-0	string		CREG		Windows 95 registry file
+# updated by Joerg Jenderek
+0	string		regf		Windows NT/XP registry file
+0	string		CREG		Windows 95/98/ME registry file
+0	string		SHCC3		Windows 3.1 registry file
 
 
 # AAF files:
@@ -340,7 +405,9 @@
 >15	string	1.0\ --\ HyperTerminal\ data\ file	MS-windows Hyperterminal
 
 # Windows Metafont .WMF
-0	string	\327\315\306\232\000\000\000\000\000\000	ms-windows metafont .wmf
+0       string  \327\315\306\232        ms-windows metafont .wmf
+0       string  \002\000\011\000        ms-windows metafont .wmf
+0       string  \001\000\011\000        ms-windows metafont .wmf
 
 #tz3 files whatever that is (MS Works files)
 0	string	\003\001\001\004\070\001\000\000	tz3 ms-works file
