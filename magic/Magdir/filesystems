@@ -44,12 +44,11 @@
 >0x27E	leshort	0xAA55			
 #offset is 128
 >>19	ubyte	128			
->>>(19.b-1)	ubyte	0x0		DOS Emulator image
->>>>7	ulong		>0		\b, %u heads
->>>>11	ulong		>0		\b, %d sectors/track
->>>>15	ulong		>0		\b, %d cylinders
- 
->0x27E	leshort	0xAA55			DOS Emulator image
+>>>(19.b-1)	ubyte	0x0	DOS Emulator image
+>>>>7	ulelong	>0		\b, %u heads
+>>>>11	ulelong	>0		\b, %d sectors/track
+>>>>15	ulelong	>0		\b, %d cylinders
+
 0x1FE	leshort	0xAA55			x86 boot sector
 >2	string	OSBS			\b, OS/BS MBR
 # J\xf6rg Jenderek <joerg dot jenderek at web dot de>
