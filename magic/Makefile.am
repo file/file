@@ -55,7 +55,6 @@ Magdir/cad \
 Magdir/c-lang \
 Magdir/c64 \
 Magdir/cddb \
-Magdir/chi \
 Magdir/chord \
 Magdir/cisco \
 Magdir/citrus \

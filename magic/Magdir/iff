@@ -26,10 +26,17 @@
 >>22	beshort		x		%d
 >8	string		RGBN		\b, RGBN 12-bit RGB image
 >8	string		RGB8		\b, RGB8 24-bit RGB image
+>8	string		DEEP		\b, DEEP TVPaint/XiPaint image
 >8	string		DR2D		\b, DR2D 2-D object
 >8	string		TDDD		\b, TDDD 3-D rendering
 >8	string		LWOB		\b, LWOB 3-D object
+>8	string		LWO2		\b, LWO2 3-D object, v2
+>8	string		LWLO		\b, LWLO 3-D layered object
+>8	string		REAL		\b, REAL Real3D rendering
+>8	string		MC4D		\b, MC4D MaxonCinema4D rendering
 >8	string		ANIM		\b, ANIM animation
+>8	string		YAFA		\b, YAFA animation
+>8	string		SSA\ 		\b, SSA super smooth animation
 >8	string		ACBM		\b, ACBM continuous image
 >8	string		FAXX		\b, FAXX fax image
 # other formats
@@ -40,6 +47,7 @@
 >8	string		PTCH		\b, PTCH binary patch
 >8	string		AMFF		\b, AMFF AmigaMetaFile format
 >8	string		WZRD		\b, WZRD StormWIZARD resource
+>8	string		DOC\ 		\b, DOC desktop publishing document
 
 # These go at the end of the iff rules
 #
