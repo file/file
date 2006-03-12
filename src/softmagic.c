@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.77 2005/10/20 14:59:01 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.78 2006/03/12 22:09:33 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -664,6 +664,11 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		 * (starting at 1), not as bytes-from start-of-file
 		 */
 		char *b, *c, *last = NULL;
+		if (s == NULL) {
+			p->search.buflen = 0;
+			p->search.buf = NULL;
+			return 0;
+		}
 		if ((p->search.buf = strdup((const char *)s)) == NULL) {
 			file_oomem(ms);
 			return -1;
