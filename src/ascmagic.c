@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.44 2006/03/02 22:08:22 christos Exp $")
+FILE_RCSID("@(#)$Id: ascmagic.c,v 1.45 2006/03/12 22:09:33 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -154,8 +154,10 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		}
 	}
 
-	if (nbytes <= 1)
+	if (nbytes <= 1) {
+		rv = 0;
 		goto done;
+	}
 
 	/*
 	 * for troff, look for . + letter + letter or .\";
