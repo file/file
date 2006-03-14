@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.87 2006/03/02 22:08:57 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.88 2006/03/14 01:04:31 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -381,7 +381,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	}
 
         maxmagic = MAXMAGIS;
-	if ((marray = malloc(maxmagic * sizeof(*marray))) == NULL) {
+	if ((marray = calloc(maxmagic, sizeof(*marray))) == NULL) {
 		(void)fclose(f);
 		file_oomem(ms);
 		return -1;
@@ -509,7 +509,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 	char *t;
 	private const char *fops = FILE_OPS;
 	uint32_t val;
-	uint32_t cont_level, cont_count;
+	uint32_t cont_level;
 
 	cont_level = 0;
 
