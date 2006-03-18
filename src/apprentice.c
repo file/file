@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.88 2006/03/14 01:04:31 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.89 2006/03/18 04:44:58 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -186,8 +186,6 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 		mapped = 0;
 	}
 
-	if (rv == -1)
-		return rv;
 	mapped = rv;
 	     
 	if (magic == NULL || nmagic == 0) {
