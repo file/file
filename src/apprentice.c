@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.89 2006/03/18 04:44:58 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.90 2006/04/09 16:41:39 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -299,40 +299,46 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 private size_t
 apprentice_magic_strength(const struct magic *m)
 {
+#define MULT 10
+
 	switch (m->type) {
 	case FILE_BYTE:
-		return 1;
+		return 1 * MULT;
 
 	case FILE_SHORT:
 	case FILE_LESHORT:
 	case FILE_BESHORT:
-		return 2;
+		return 2 * MULT;
 
 	case FILE_LONG:
 	case FILE_LELONG:
 	case FILE_BELONG:
 	case FILE_MELONG:
-		return 4;
+		return 4 * MULT;
 
 	case FILE_PSTRING:
 	case FILE_STRING:
-	case FILE_REGEX:
+		return m->vallen * MULT;
+
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
+		return m->vallen * MULT / 2;
+
 	case FILE_SEARCH:
+	case FILE_REGEX:
 		return m->vallen;
 
 	case FILE_DATE:
 	case FILE_LEDATE:
 	case FILE_BEDATE:
 	case FILE_MEDATE:
-		return 4;
+		return 4 * MULT;
 
 	case FILE_LDATE:
 	case FILE_LELDATE:
 	case FILE_BELDATE:
 	case FILE_MELDATE:
-		return 8;
+		return 8 * MULT;
 
 	default:
 		return 0;
