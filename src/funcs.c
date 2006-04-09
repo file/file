@@ -33,9 +33,12 @@
 #if defined(HAVE_WCHAR_H)
 #include <wchar.h>
 #endif
+#if defined(HAVE_WCTYPE_H)
+#include <wctype.h>
+#endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.19 2006/03/02 22:10:26 christos Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.20 2006/04/09 16:41:03 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
