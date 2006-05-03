@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.100 2005/10/17 18:41:44 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.101 2006/05/03 15:50:23 christos Exp $")
 #endif	/* lint */
 
 
@@ -126,10 +126,11 @@ main(int argc, char *argv[])
 	int flags = 0;
 	char *home, *usermagic;
 	struct stat sb;
+	static const char hmagic[] = "/.magic";
 #define OPTSTRING	"bcCdf:F:hikLm:nNprsvz"
 #ifdef HAVE_GETOPT_LONG
 	int longindex;
-	private struct option long_options[] =
+	static const struct option long_options[] =
 	{
 		{"version", 0, 0, 'v'},
 		{"help", 0, 0, 0},
@@ -178,9 +179,10 @@ main(int argc, char *argv[])
 		magicfile = usermagic;
 	else
 		if ((home = getenv("HOME")) != NULL) {
-			if ((usermagic = malloc(strlen(home) + 8)) != NULL) {
+			if ((usermagic = malloc(strlen(home)
+			    + sizeof(hmagic))) != NULL) {
 				(void)strcpy(usermagic, home);
-				(void)strcat(usermagic, "/.magic");
+				(void)strcat(usermagic, hmagic);
 				if (stat(usermagic, &sb)<0) 
 					free(usermagic);
 				else
