@@ -1,4 +1,4 @@
-$Id: MAINT,v 1.5 2003/03/23 04:36:37 christos Exp $
+$Id: MAINT,v 1.6 2006/05/03 18:48:33 christos Exp $
 
 Maintenance notes:
 
@@ -18,13 +18,15 @@ short.
 - Do not distribute changed versions.
 
 People trying to be helpful occasionally put up their hacked versions
-of the file command for FTP, then the "archie" server finds and publishes
-the hacked version, and people all over the world get copies of it.
-Within a day or two I am getting email from around the world
-asking me why "my" file command won't compile!!! Needless to say this
-detracts from the limited time I have available to work on the actual
-software.  Therefore I ask you again to please NOT distribute
-your changed version.
+of the file command for anonymous FTP, and people all over the
+world get copies of the hacked versions.  Within a day or two I am
+getting email from around the world asking me why "my" file command
+won't compile!!! Needless to say this detracts from the limited
+time I have available to work on the actual software. Therefore I
+ask you again to please NOT distribute your changed version. If
+you need to make changes, please add a patch file next to the
+distribution tar, and a README file that clearly explains what you
+are trying to fix.
 
 
 Thank you for your assistance and cooperation.
