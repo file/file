@@ -1,3 +1,16 @@
+
+2006-05-03 11:11 Christos Zoulas <christos@zoulas.com>
+
+	* Identify gnu tar vs. posix tar
+
+	* When keep going, don't print spurious newlines (Radek Vokál)
+
+2006-04-01 12:02 Christos Zoulas <christos@zoulas.com>
+
+	* Use calloc instead of malloc (Mike Frysinger)
+
+	* Fix configure script to detect wctypes.h (Mike Frysinger)
+
 2006-03-02 16:06 Christos Zoulas <christos@zoulas.com>
 
 	* Print empty if the file is (Mike Frysinger)
