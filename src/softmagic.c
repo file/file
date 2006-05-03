@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.78 2006/03/12 22:09:33 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.79 2006/05/03 15:18:30 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -53,6 +53,7 @@ private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, size_t, size_t);
 private int mconvert(struct magic_set *, union VALUETYPE *, struct magic *);
 private int check_mem(struct magic_set *, unsigned int);
+private int print_sep(struct magic_set *, int);
 
 /*
  * softmagic - lookup one file in database 
@@ -141,21 +142,20 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			continue;
 		}
 
-		if (!firstline) { /* we found another match */
-			/* put a newline and '-' to do some simple formatting*/
-			if (file_printf(ms, "\n- ") == -1)
+		/*
+		 * If we are going to print something, we'll need to print
+		 * a blank before we print something else.
+		 */
+		if (magic[magindex].desc[0]) {
+			need_separator = 1;
+			if (print_sep(ms, firstline) == -1)
 				return -1;
 		}
 
 		if ((ms->c.off[cont_level] = mprint(ms, &p, &magic[magindex]))
 		    == -1)
 			return -1;
-		/*
-		 * If we printed something, we'll need to print
-		 * a blank before we print something else.
-		 */
-		if (magic[magindex].desc[0])
-			need_separator = 1;
+
 		/* and any continuations that match */
 		if (check_mem(ms, ++cont_level) == -1)
 			return -1;
@@ -188,6 +188,14 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			case 0:
 				break;
 			default:
+				/*
+				 * If we are going to print something,
+				 * make sure that we have a separator first.
+				 */
+				if (magic[magindex].desc[0]) {
+					if (print_sep(ms, firstline) == -1)
+						return -1;
+				}
 				/*
 				 * This continuation matched.
 				 * Print its message, with
@@ -249,7 +257,7 @@ private int32_t
 mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 {
 	uint32_t v;
-	int32_t t=0 ;
+	int32_t t = 0;
 
 
   	switch (m->type) {
@@ -1502,4 +1510,16 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	}
 
 	return matched;
+}
+
+private int
+print_sep(struct magic_set *ms, int firstline)
+{
+	if (firstline)
+		return 0;
+	/*
+	 * we found another match 
+	 * put a newline and '-' to do some simple formatting
+	 */
+	return file_printf(ms, "\n- ");
 }
