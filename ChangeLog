@@ -1,6 +1,8 @@
 
 2006-05-03 11:11 Christos Zoulas <christos@zoulas.com>
 
+	* Pick up some elf changes and some constant fixes from SUSE
+
 	* Identify gnu tar vs. posix tar
 
 	* When keep going, don't print spurious newlines (Radek Vokál)
