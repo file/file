@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.57 2005/08/18 15:18:22 christos Exp $
+.\" $Id: file.man,v 1.58 2006/05/03 19:20:25 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -200,7 +200,7 @@ traditional human readable ones. Thus it may say
 rather
 than ``ASCII text''.
 In order for this option to work, file changes the way
-it handles files recognised by the command itself (such as many of the
+it handles files recognized by the command itself (such as many of the
 text file types, directories etc), and makes use of an alternative
 ``magic'' file.
 (See ``FILES'' section, below).
@@ -322,9 +322,10 @@ options.
 This program is believed to exceed the System V Interface Definition
 of FILE(CMD), as near as one can determine from the vague language
 contained therein. 
-Its behaviour is mostly compatible with the System V program of the same name.
+Its behavior is mostly compatible with the System V program of the same name.
 This version knows more magic, however, so it will produce
 different (albeit more accurate) output in many cases. 
+.\" URL: http://www.opengroup.org/onlinepubs/009695399/utilities/file.html
 .PP
 The one significant difference 
 between this version and System V
@@ -456,7 +457,7 @@ were written by John Gilmore from his public-domain
 program, and are not covered by the above license.
 .SH BUGS
 There must be a better way to automate the construction of the Magic
-file from all the glop in magdir.
+file from all the glop in Magdir.
 What is it?
 Better yet, the magic file should be compiled into binary (say,
 .BR ndbm (3)
@@ -501,7 +502,7 @@ The list of keywords in
 probably belongs in the Magic file.
 This could be done by using some keyword like `*' for the offset value.
 .PP
-Another optimisation would be to sort
+Another optimization would be to sort
 the magic file so that we can just run down all the
 tests for the first byte, first word, first long, etc, once we
 have fetched it.

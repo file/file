@@ -297,7 +297,7 @@ the value read from the file before it is used as an offset:
 .PP
 Sometimes you do not know the exact offset as this depends on the length or
 position (when indirection was used before) of preceding fields. You can
-specify an offset relative to the end of the last uplevel field using
+specify an offset relative to the end of the last up-level field using
 .BI &
 as a prefix to the offset:
 .sp
@@ -329,7 +329,7 @@ Or the other way around:
     >0x18             leshort >0x3f
     >>(0x3c.l)        string  LE\e0\e0  LE executable (MS-Windows)
     # at offset 0x80 (-4, since relative offsets start at the end
-    # of the uplevel match) inside the LE header, we find the absolute
+    # of the up-level match) inside the LE header, we find the absolute
     # offset to the code area, where we look for a specific signature
     >>>(&0x7c.l+0x26) string  UPX     \eb, UPX compressed
 .fi
@@ -346,7 +346,7 @@ Or even both!
 .fi
 .PP
 Finally, if you have to deal with offset/length pairs in your file, even the
-second value in a parenthesed expression can be taken from the file itself,
+second value in a parenthesized expression can be taken from the file itself,
 using another set of parentheses. Note that this additional indirect offset
 is always relative to the start of the main indirect offset.
 .sp
@@ -397,4 +397,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.30 2006/02/19 18:16:03 christos Exp $
+.\" @(#)$Id: magic.man,v 1.31 2006/05/03 19:20:25 christos Exp $
