@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.90 2006/04/09 16:41:39 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.91 2006/05/03 15:50:23 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -241,6 +241,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	char *p, *mfn, *afn = NULL;
 	int file_err, errs = -1;
 	struct mlist *mlist;
+	static const char mime[] = ".mime";
 
 	if (fn == NULL)
 		fn = getenv("MAGIC");
@@ -266,14 +267,14 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		if (*fn == '\0')
 			break;
 		if (ms->flags & MAGIC_MIME) {
-			if ((afn = malloc(strlen(fn) + 5 + 1)) == NULL) {
+			if ((afn = malloc(strlen(fn) + sizeof(mime))) == NULL) {
 				free(mfn);
 				free(mlist);
 				file_oomem(ms);
 				return NULL;
 			}
 			(void)strcpy(afn, fn);
-			(void)strcat(afn, ".mime");
+			(void)strcat(afn, mime);
 			fn = afn;
 		}
 		file_err = apprentice_1(ms, fn, action, mlist);

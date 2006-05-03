@@ -37,13 +37,15 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.54 2006/01/13 00:45:21 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.55 2006/05/03 15:50:24 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
-private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t);
+private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t,
+    off_t);
 #endif
-private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t);
+private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t,
+    off_t);
 private int doshn(struct magic_set *, int, int, int, off_t, int, size_t);
 private size_t donote(struct magic_set *, unsigned char *, size_t, size_t, int,
     int, size_t, int *);
@@ -240,7 +242,7 @@ private const char *os_style_names[] = {
 
 private int
 dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
-    int num, size_t size)
+    int num, size_t size, off_t fsize)
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
@@ -248,6 +250,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	unsigned char nbuf[BUFSIZ];
 	ssize_t bufsize;
 	int flags = 0;
+	off_t savedoffset;
 
 	if (size != xph_sizeof) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
@@ -259,7 +262,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	 * Loop through all the program headers.
 	 */
 	for ( ; num; num--) {
-		if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
+		if ((savedoffset = lseek(fd, off, SEEK_SET)) == (off_t)-1) {
 			file_badseek(ms);
 			return -1;
 		}
@@ -267,6 +270,14 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			file_badread(ms);
 			return -1;
 		}
+		if (xph_offset > fsize) {
+			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
+				file_badseek(ms);
+				return -1;
+			}
+			continue;
+		}
+
 		off += size;
 		if (xph_type != PT_NOTE)
 			continue;
@@ -321,7 +332,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		/*
 		 * We're out of note headers.
 		 */
-		return offset;
+		return (offset >= size) ? offset : size;
 	}
 
 	if (namesz & 0x80000000) {
@@ -349,7 +360,10 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 
 	offset = ELF_ALIGN(doff + descsz);
 	if (doff + descsz > size) {
-		return offset;
+		/*
+		 * We're past the end of the buffer.
+		 */
+		return (offset >= size) ? offset : size;
 	}
 
 	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
@@ -752,7 +766,7 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
  */
 private int
 dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
-    int num, size_t size)
+    int num, size_t size, off_t fsize)
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
@@ -779,9 +793,18 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
   			file_badread(ms);
 			return -1;
 		}
+
 		if ((savedoffset = lseek(fd, (off_t)0, SEEK_CUR)) == (off_t)-1) {
   			file_badseek(ms);
 			return -1;
+		}
+
+		if (xph_offset > fsize) {
+			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
+				file_badseek(ms);
+				return -1;
+			}
+			continue;
 		}
 
 		switch (xph_type) {
@@ -848,12 +871,20 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	} u;
 	int class;
 	int swap;
+	struct stat st;
+	off_t fsize;
 
 	/*
 	 * If we cannot seek, it must be a pipe, socket or fifo.
 	 */
 	if((lseek(fd, (off_t)0, SEEK_SET) == (off_t)-1) && (errno == ESPIPE))
 		fd = file_pipe2file(ms, fd, buf, nbytes);
+
+	if (fstat(fd, &st) == -1) {
+  		file_badread(ms);
+		return -1;
+	}
+	fsize = st.st_size;
 
 	/*
 	 * ELF executables have multiple section headers in arbitrary
@@ -867,7 +898,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	    return 0;
 
 
-	class = buf[4];
+	class = buf[EI_CLASS];
 
 	if (class == ELFCLASS32) {
 		Elf32_Ehdr elfhdr;
@@ -877,14 +908,15 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
-		swap = (u.c[sizeof(int32_t) - 1] + 1) != elfhdr.e_ident[5];
+		swap = (u.c[sizeof(int32_t) - 1] + 1) != elfhdr.e_ident[EI_DATA];
 
 		if (getu16(swap, elfhdr.e_type) == ET_CORE) {
 #ifdef ELFCORE
 			if (dophn_core(ms, class, swap, fd,
 			    (off_t)getu32(swap, elfhdr.e_phoff),
 			    getu16(swap, elfhdr.e_phnum), 
-			    (size_t)getu16(swap, elfhdr.e_phentsize)) == -1)
+			    (size_t)getu16(swap, elfhdr.e_phentsize),
+			    fsize) == -1)
 				return -1;
 #else
 			;
@@ -894,7 +926,8 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 				if (dophn_exec(ms, class, swap,
 				    fd, (off_t)getu32(swap, elfhdr.e_phoff),
 				    getu16(swap, elfhdr.e_phnum), 
-				    (size_t)getu16(swap, elfhdr.e_phentsize))
+				    (size_t)getu16(swap, elfhdr.e_phentsize),
+				    fsize)
 				    == -1)
 					return -1;
 			}
@@ -915,14 +948,15 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 
 		u.l = 1;
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
-		swap = (u.c[sizeof(int32_t) - 1] + 1) != elfhdr.e_ident[5];
+		swap = (u.c[sizeof(int32_t) - 1] + 1) != elfhdr.e_ident[EI_DATA];
 
 		if (getu16(swap, elfhdr.e_type) == ET_CORE) {
 #ifdef ELFCORE
 			if (dophn_core(ms, class, swap, fd,
 			    (off_t)elf_getu64(swap, elfhdr.e_phoff),
 			    getu16(swap, elfhdr.e_phnum), 
-			    (size_t)getu16(swap, elfhdr.e_phentsize)) == -1)
+			    (size_t)getu16(swap, elfhdr.e_phentsize),
+			    fsize) == -1)
 				return -1;
 #else
 			;
@@ -932,8 +966,8 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 				if (dophn_exec(ms, class, swap, fd,
 				    (off_t)elf_getu64(swap, elfhdr.e_phoff),
 				    getu16(swap, elfhdr.e_phnum), 
-				    (size_t)getu16(swap, elfhdr.e_phentsize))
-				    == -1)
+				    (size_t)getu16(swap, elfhdr.e_phentsize),
+				    fsize) == -1)
 					return -1;
 			}
 			if (doshn(ms, class, swap, fd,
