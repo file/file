@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.91 2006/05/03 15:50:23 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.92 2006/06/01 21:37:07 ian Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -297,6 +297,9 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	return mlist;
 }
 
+/*
+ * Get weight of this magic entry, for sorting purposes.
+ */
 private size_t
 apprentice_magic_strength(const struct magic *m)
 {
@@ -346,6 +349,9 @@ apprentice_magic_strength(const struct magic *m)
 	}
 }
 
+/*  
+ * Sort callback for sorting entries by "strength" (basically length)
+ */
 private int
 apprentice_sort(const void *a, const void *b)
 {
@@ -397,7 +403,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	if (action == FILE_CHECK)
 		(void)fprintf(stderr, "%s\n", hdr);
 
-	/* parse it */
+	/* read and parse this file */
 	for (ms->line = 1; fgets(line, BUFSIZ, f) != NULL; ms->line++) {
 		size_t len;
 		if (line[0] == '#')	/* comment, do not parse */
