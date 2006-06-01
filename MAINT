@@ -1,4 +1,4 @@
-$Id: MAINT,v 1.6 2006/05/03 18:48:33 christos Exp $
+$Id: MAINT,v 1.7 2006/06/01 18:19:41 ian Exp $
 
 Maintenance notes:
 
@@ -28,8 +28,28 @@ you need to make changes, please add a patch file next to the
 distribution tar, and a README file that clearly explains what you
 are trying to fix.
 
-
 Thank you for your assistance and cooperation.
+
+Code Overview
+
+This is a rough idea of the control flow from the main program:
+
+file.c	main()
+file.c	process (called for each file)
+		printf file name
+magic.c		magic_file()
+fsmagic.c		file_fsmagic()
+				(handles statbuf modes for DEV)
+			(handles statbuf modes for executable &c.
+			reads data from file.
+funcs.c:		file_buffer()
+compress.c			file_zmagic()
+is_tar.c			file_is_tar()
+softmagic.c			file_softmagic()
+						match() - looks for match against main magic database
+ascmagic.c			file_ascmagic()
+readelf.c		file_tryelf()
+				"unknown"
 
 Christos Zoulas
 christos@astron.com
