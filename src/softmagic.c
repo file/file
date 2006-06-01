@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.79 2006/05/03 15:18:30 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.80 2006/06/01 18:51:08 ian Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -56,8 +56,7 @@ private int check_mem(struct magic_set *, unsigned int);
 private int print_sep(struct magic_set *, int);
 
 /*
- * softmagic - lookup one file in database 
- * (already read from MAGIC by apprentice.c).
+ * softmagic - lookup one file in parsed, in-memory copy of database
  * Passed the name and FILE * of one file to be typed.
  */
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
