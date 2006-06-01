@@ -62,7 +62,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.32 2005/10/17 15:31:10 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.33 2006/06/01 18:52:18 ian Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -234,11 +234,11 @@ magic_file(struct magic_set *ms, const char *inname)
 		goto done;
 
 	switch (file_fsmagic(ms, inname, &sb)) {
-	case -1:
+	case -1:		/* error */
 		goto done;
-	case 0:
+	case 0:			/* nothing found */
 		break;
-	default:
+	default:		/* matched it and printed type */
 		rv = 0;
 		goto done;
 	}
