@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.20 2006/04/09 16:41:03 christos Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.21 2006/06/02 17:51:43 ian Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -241,8 +241,8 @@ file_getbuffer(struct magic_set *ms)
 }
 
 /*
- * Yes these suffer from buffer overflows, but if your OS does not have
- * these functions, then maybe you should consider replacing your OS?
+ * Yes these wrappers suffer from buffer overflows, but if your OS does not have
+ * the real functions, maybe you should consider replacing your OS?
  */
 #ifndef HAVE_VSNPRINTF
 int
