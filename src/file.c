@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.101 2006/05/03 15:50:23 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.102 2006/06/02 00:07:58 ian Exp $")
 #endif	/* lint */
 
 
@@ -81,7 +81,7 @@ FILE_RCSID("@(#)$Id: file.c,v 1.101 2006/05/03 15:50:23 christos Exp $")
 #define SYMLINKFLAG ""
 #endif
 
-# define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNsvz] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
+# define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNrsvz] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 
 #ifndef MAXPATHLEN
 #define	MAXPATHLEN	512
@@ -387,6 +387,9 @@ unwrap(char *fn)
 	(void)fclose(f);
 }
 
+/*
+ * Called for each input file on the command line (or in a list of files)
+ */
 private void
 process(const char *inname, int wid)
 {
