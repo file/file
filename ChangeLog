@@ -1,4 +1,18 @@
 
+2006-06-08 11:11 Christos Zoulas <christos@zoulas.com>
+
+	* QNX fixes (Mike Gorchak)
+
+	* Add quad support.
+
+	* FIFO checks (Dr. Werner Fink)
+
+	* Linux ELF fixes (Dr. Werner Fink)
+
+	* Magic format checks (Dr. Werner Fink)
+
+	* Magic format function improvent (Karl Chen)
+
 2006-05-03 11:11 Christos Zoulas <christos@zoulas.com>
 
 	* Pick up some elf changes and some constant fixes from SUSE
