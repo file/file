@@ -511,3 +511,41 @@
 0	string	\[playlist\]	PLS playlist
 # licq.conf
 1	string	\[licq\]	LICQ configuration file
+
+# Atari ST audio files by Dirk Jagdmann <doj@cubic.org>
+0	string		ICE!		SNDH Atari ST music
+0	string		SC68\ Music-file\ /\ (c)\ (BeN)jami	sc68 Atari ST music
+
+# musepak support From: "Jiri Pejchal" <jiri.pejchal@gmail.com>
+0       string          MP+     Musepack audio
+>3      byte            255     \b, SV pre8
+>3      byte&0xF        0x6     \b, SV 6
+>3      byte&0xF        0x8     \b, SV 8
+>3      byte&0xF        0x7     \b, SV 7
+>>3     byte&0xF0       0x0     \b.0
+>>3     byte&0xF0       0x10    \b.1
+>>3     byte&0xF0       240     \b.15
+>>10    byte&0xF0       0x0     \b, no profile
+>>10    byte&0xF0       0x10    \b, profile 'Unstable/Experimental'
+>>10    byte&0xF0       0x50    \b, quality 0
+>>10    byte&0xF0       0x60    \b, quality 1
+>>10    byte&0xF0       0x70    \b, quality 2 (Telephone)
+>>10    byte&0xF0       0x80    \b, quality 3 (Thumb)
+>>10    byte&0xF0       0x90    \b, quality 4 (Radio)
+>>10    byte&0xF0       0xA0    \b, quality 5 (Standard)
+>>10    byte&0xF0       0xB0    \b, quality 6 (Xtreme)
+>>10    byte&0xF0       0xC0    \b, quality 7 (Insane)
+>>10    byte&0xF0       0xD0    \b, quality 8 (BrainDead)
+>>10    byte&0xF0       0xE0    \b, quality 9
+>>10    byte&0xF0       0xF0    \b, quality 10
+>>27    byte            0x0     \b, Buschmann 1.7.0-9, Klemm 0.90-1.05
+>>27    byte            102     \b, Beta 1.02
+>>27    byte            104     \b, Beta 1.04
+>>27    byte            105     \b, Alpha 1.05
+>>27    byte            106     \b, Beta 1.06
+>>27    byte            110     \b, Release 1.1
+>>27    byte            111     \b, Alpha 1.11
+>>27    byte            112     \b, Beta 1.12
+>>27    byte            113     \b, Alpha 1.13
+>>27    byte            114     \b, Beta 1.14
+>>27    byte            115     \b, Alpha 1.15
