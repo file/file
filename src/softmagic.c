@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.80 2006/06/01 18:51:08 ian Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.81 2006/06/08 20:52:50 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -252,18 +252,54 @@ check_mem(struct magic_set *ms, unsigned int level)
 	return -1;
 }
 
+private int
+check_fmt(struct magic_set *ms, struct magic *m)
+{
+	regex_t rx;
+	int rc;
+
+	if (strchr(m->desc, '%') == NULL)
+		return 0;
+
+	rc = regcomp(&rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
+	if (rc) {
+		char errmsg[512];
+		regerror(rc, &rx, errmsg, sizeof(errmsg));
+		file_error(ms, 0, "regex error %d, (%s)", rc, errmsg);
+		return -1;
+	} else {
+		rc = regexec(&rx, m->desc, 0, 0, 0);
+		regfree(&rx);
+		return !rc;
+	}
+}
+
 private int32_t
 mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 {
-	uint32_t v;
+	uint64_t v;
 	int32_t t = 0;
+ 	char buf[512];
 
 
   	switch (m->type) {
   	case FILE_BYTE:
 		v = file_signextend(ms, m, (size_t)p->b);
-		if (file_printf(ms, m->desc, (unsigned char) v) == -1)
+		switch (check_fmt(ms, m)) {
+		case -1:
 			return -1;
+		case 1:
+			if (snprintf(buf, sizeof(buf), "%c",
+			    (unsigned char)v) < 0)
+				return -1;
+			if (file_printf(ms, m->desc, buf) == -1)
+				return -1;
+			break;
+		default:
+			if (file_printf(ms, m->desc, (unsigned char) v) == -1)
+				return -1;
+			break;
+		}
 		t = m->offset + sizeof(char);
 		break;
 
@@ -271,8 +307,20 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
   	case FILE_BESHORT:
   	case FILE_LESHORT:
 		v = file_signextend(ms, m, (size_t)p->h);
-		if (file_printf(ms, m->desc, (unsigned short) v) == -1)
+		switch (check_fmt(ms, m)) {
+		case -1:
 			return -1;
+		case 1:
+			if (snprintf(buf, sizeof(buf), "%hu", (unsigned short)v) < 0)
+				return -1;
+			if (file_printf(ms, m->desc, buf) == -1)
+				return -1;
+			break;
+		default:
+			if (file_printf(ms, m->desc, (unsigned short) v) == -1)
+				return -1;
+			break;
+		}
 		t = m->offset + sizeof(short);
 		break;
 
@@ -281,11 +329,31 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
   	case FILE_LELONG:
   	case FILE_MELONG:
 		v = file_signextend(ms, m, p->l);
-		if (file_printf(ms, m->desc, (uint32_t) v) == -1)
+		switch (check_fmt(ms, m)) {
+		case -1:
 			return -1;
+		case 1:
+			if (snprintf(buf, sizeof(buf), "%u", (uint32_t)v) < 0)
+				return -1;
+			if (file_printf(ms, m->desc, buf) == -1)
+				return -1;
+			break;
+		default:
+			if (file_printf(ms, m->desc, (uint32_t) v) == -1)
+				return -1;
+			break;
+		}
 		t = m->offset + sizeof(int32_t);
   		break;
 
+  	case FILE_QUAD:
+  	case FILE_BEQUAD:
+  	case FILE_LEQUAD:
+		v = file_signextend(ms, m, p->q);
+		if (file_printf(ms, m->desc, (uint64_t) v) == -1)
+			return -1;
+		t = m->offset + sizeof(int64_t);
+  		break;
   	case FILE_STRING:
   	case FILE_PSTRING:
   	case FILE_BESTRING16:
@@ -446,6 +514,37 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (m->mask_op & FILE_OPINVERSE)
 			p->l = ~p->l;
 		return 1;
+	case FILE_QUAD:
+		if (m->mask)
+			switch (m->mask_op & 0x7F) {
+			case FILE_OPAND:
+				p->q &= m->mask;
+				break;
+			case FILE_OPOR:
+				p->q |= m->mask;
+				break;
+			case FILE_OPXOR:
+				p->q ^= m->mask;
+				break;
+			case FILE_OPADD:
+				p->q += m->mask;
+				break;
+			case FILE_OPMINUS:
+				p->q -= m->mask;
+				break;
+			case FILE_OPMULTIPLY:
+				p->q *= m->mask;
+				break;
+			case FILE_OPDIVIDE:
+				p->q /= m->mask;
+				break;
+			case FILE_OPMODULO:
+				p->q %= m->mask;
+				break;
+			}
+		if (m->mask_op & FILE_OPINVERSE)
+			p->q = ~p->q;
+		return 1;
 	case FILE_STRING:
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
@@ -540,6 +639,41 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (m->mask_op & FILE_OPINVERSE)
 			p->l = ~p->l;
 		return 1;
+	case FILE_BEQUAD:
+		p->q = (int64_t)
+		    (((int64_t)p->hq[0]<<56)|((int64_t)p->hq[1]<<48)|
+		     ((int64_t)p->hq[2]<<40)|((int64_t)p->hq[3]<<32)|
+		     (p->hq[4]<<24)|(p->hq[5]<<16)|(p->hq[6]<<8)|(p->hq[7]));
+		if (m->mask)
+			switch (m->mask_op&0x7F) {
+			case FILE_OPAND:
+				p->q &= m->mask;
+				break;
+			case FILE_OPOR:
+				p->q |= m->mask;
+				break;
+			case FILE_OPXOR:
+				p->q ^= m->mask;
+				break;
+			case FILE_OPADD:
+				p->q += m->mask;
+				break;
+			case FILE_OPMINUS:
+				p->q -= m->mask;
+				break;
+			case FILE_OPMULTIPLY:
+				p->q *= m->mask;
+				break;
+			case FILE_OPDIVIDE:
+				p->q /= m->mask;
+				break;
+			case FILE_OPMODULO:
+				p->q %= m->mask;
+				break;
+			}
+		if (m->mask_op & FILE_OPINVERSE)
+			p->l = ~p->l;
+		return 1;
 	case FILE_LESHORT:
 		p->h = (short)((p->hs[1]<<8)|(p->hs[0]));
 		if (m->mask)
@@ -606,6 +740,41 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			}
 		if (m->mask_op & FILE_OPINVERSE)
 			p->l = ~p->l;
+		return 1;
+	case FILE_LEQUAD:
+		p->q = (int64_t)
+		    (((int64_t)p->hq[7]<<56)|((int64_t)p->hq[6]<<48)|
+		     ((int64_t)p->hq[5]<<40)|((int64_t)p->hq[4]<<32)|
+		     (p->hq[3]<<24)|(p->hq[2]<<16)|(p->hq[1]<<8)|(p->hq[0]));
+		if (m->mask)
+			switch (m->mask_op&0x7F) {
+			case FILE_OPAND:
+				p->q &= m->mask;
+				break;
+			case FILE_OPOR:
+				p->q |= m->mask;
+				break;
+			case FILE_OPXOR:
+				p->q ^= m->mask;
+				break;
+			case FILE_OPADD:
+				p->q += m->mask;
+				break;
+			case FILE_OPMINUS:
+				p->q -= m->mask;
+				break;
+			case FILE_OPMULTIPLY:
+				p->q *= m->mask;
+				break;
+			case FILE_OPDIVIDE:
+				p->q /= m->mask;
+				break;
+			case FILE_OPMODULO:
+				p->q %= m->mask;
+				break;
+			}
+		if (m->mask_op & FILE_OPINVERSE)
+			p->q = ~p->q;
 		return 1;
 	case FILE_MELONG:
 	case FILE_MEDATE:
@@ -1285,8 +1454,8 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 private int
 mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 {
-	uint32_t l = m->value.l;
-	uint32_t v;
+	uint64_t l = m->value.q;
+	uint64_t v;
 	int matched;
 
 	if ( (m->value.s[0] == 'x') && (m->value.s[1] == '\0') ) {
@@ -1318,6 +1487,12 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_LELDATE:
 	case FILE_MELDATE:
 		v = p->l;
+		break;
+
+	case FILE_QUAD:
+	case FILE_LEQUAD:
+	case FILE_BEQUAD:
+		v = p->q;
 		break;
 
 	case FILE_STRING:
