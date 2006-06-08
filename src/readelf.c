@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.56 2006/06/08 20:53:31 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.57 2006/06/08 21:51:12 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -424,10 +424,10 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		 * p = patchlevel
 		 */
 		if (desc > 100000000U) {
-			u_int ver_patch = (desc / 100) % 100;
-			u_int ver_rel = (desc / 10000) % 100;
-			u_int ver_min = (desc / 1000000) % 100;
-			u_int ver_maj = desc / 100000000;
+			uint32_t ver_patch = (desc / 100) % 100;
+			uint32_t ver_rel = (desc / 10000) % 100;
+			uint32_t ver_min = (desc / 1000000) % 100;
+			uint32_t ver_maj = desc / 100000000;
 
 			if (file_printf(ms, " %u.%u", ver_maj, ver_min) == -1)
 				return size;
