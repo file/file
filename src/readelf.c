@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.55 2006/05/03 15:50:24 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.56 2006/06/08 20:53:31 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -191,15 +191,16 @@ getu64(int swap, uint64_t value)
 #ifdef ELFCORE
 size_t	prpsoffsets32[] = {
 	8,		/* FreeBSD */
-	28,		/* Linux 2.0.36 */
-	32,		/* Linux (I forget which kernel version) */
+	28,		/* Linux 2.0.36 (short name) */
+	44,		/* Linux (path name) */
 	84,		/* SunOS 5.x */
 };
 
 size_t	prpsoffsets64[] = {
 	16,		/* FreeBSD, 64-bit */
-	40,             /* Linux (tested on core from 2.4.x) */
-       120,		/* SunOS 5.x, 64-bit */
+	40,             /* Linux (tested on core from 2.4.x, short name) */
+	56,		/* Linux (path name) */
+	120,		/* SunOS 5.x, 64-bit */
 };
 
 #define	NOFFSETS32	(sizeof prpsoffsets32 / sizeof prpsoffsets32[0])
@@ -251,6 +252,12 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	ssize_t bufsize;
 	int flags = 0;
 	off_t savedoffset;
+ 	struct stat st;
+
+	if (fstat(fd, &st) < 0) {
+		file_badread(ms);
+		return -1;
+	}
 
 	if (size != xph_sizeof) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
@@ -776,13 +783,20 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	int bufsize;
 	size_t offset, align;
 	off_t savedoffset;
+	struct stat st;
 	int flags = 0;
 
+	if (fstat(fd, &st) < 0) {
+		file_badread(ms);
+		return -1;
+	}
+	
 	if (size != xph_sizeof) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
 		    return -1;
 		return 0;
 	}
+
 	if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
 		file_badseek(ms);
 		return -1;
@@ -792,6 +806,13 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
   		if (read(fd, xph_addr, xph_sizeof) == -1) {
   			file_badread(ms);
 			return -1;
+		}
+		if (xph_offset > st.st_size) {
+			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
+				file_badseek(ms);
+				return -1;
+			}
+			continue;
 		}
 
 		if ((savedoffset = lseek(fd, (off_t)0, SEEK_CUR)) == (off_t)-1) {
@@ -866,8 +887,13 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
     size_t nbytes)
 {
 	union {
+#if defined(__s390x__) || defined(__powerpc64__)
 		int32_t l;
 		char c[sizeof (int32_t)];
+#else
+		long l;
+		char c[sizeof (long)];
+#endif
 	} u;
 	int class;
 	int swap;
