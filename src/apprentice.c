@@ -45,7 +45,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.92 2006/06/01 21:37:07 ian Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.93 2006/06/08 20:53:51 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -102,6 +102,7 @@ private void byteswap(struct magic *, uint32_t);
 private void bs1(struct magic *);
 private uint16_t swap2(uint16_t);
 private uint32_t swap4(uint32_t);
+private uint64_t swap8(uint64_t);
 private char *mkdbname(const char *, char *, size_t, int);
 private int apprentice_map(struct magic_set *, struct magic **, uint32_t *,
     const char *);
@@ -458,8 +459,8 @@ out:
 /*
  * extend the sign bit if the comparison is to be signed
  */
-protected uint32_t
-file_signextend(struct magic_set *ms, struct magic *m, uint32_t v)
+protected uint64_t
+file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 {
 	if (!(m->flag & UNSIGNED))
 		switch(m->type) {
@@ -490,6 +491,11 @@ file_signextend(struct magic_set *ms, struct magic *m, uint32_t v)
 		case FILE_MELONG:
 			v = (int32_t) v;
 			break;
+		case FILE_QUAD:
+		case FILE_BEQUAD:
+		case FILE_LEQUAD:
+			v = (int64_t) v;
+			break;
 		case FILE_STRING:
 		case FILE_PSTRING:
 		case FILE_BESTRING16:
@@ -519,7 +525,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 	const char *l = line;
 	char *t;
 	private const char *fops = FILE_OPS;
-	uint32_t val;
+	uint64_t val;
 	uint32_t cont_level;
 
 	cont_level = 0;
@@ -816,7 +822,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		if (op != FILE_OPDIVIDE || !IS_PLAINSTRING(m->type)) {
 			++l;
 			m->mask_op |= op;
-			val = (uint32_t)strtoul(l, &t, 0);
+			val = (uint64_t)strtoull(l, &t, 0);
 			l = t;
 			m->mask = file_signextend(ms, m, val);
 			eatsize(&l);
@@ -1000,8 +1006,8 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p)
 	default:
 		if (m->reln != 'x') {
 			char *ep;
-			m->value.l = file_signextend(ms, m,
-			    (uint32_t)strtoul(*p, &ep, 0));
+			m->value.q = file_signextend(ms, m,
+			    (uint64_t)strtoull(*p, &ep, 0));
 			*p = ep;
 			eatsize(p);
 		}
@@ -1407,6 +1413,26 @@ swap4(uint32_t sv)
 }
 
 /*
+ * swap a quad
+ */
+private uint64_t
+swap8(uint64_t sv)
+{
+	uint32_t rv;
+	uint8_t *s = (uint8_t *)(void *)&sv; 
+	uint8_t *d = (uint8_t *)(void *)&rv; 
+	d[0] = s[7];
+	d[1] = s[6];
+	d[2] = s[5];
+	d[3] = s[4];
+	d[4] = s[3];
+	d[5] = s[2];
+	d[6] = s[1];
+	d[7] = s[0];
+	return rv;
+}
+
+/*
  * byteswap a single magic entry
  */
 private void
@@ -1416,6 +1442,6 @@ bs1(struct magic *m)
 	m->offset = swap4((uint32_t)m->offset);
 	m->in_offset = swap4((uint32_t)m->in_offset);
 	if (!IS_STRING(m->type))
-		m->value.l = swap4(m->value.l);
-	m->mask = swap4(m->mask);
+		m->value.q = swap8(m->value.q);
+	m->mask = swap8(m->mask);
 }
