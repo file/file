@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.94 2006/06/08 22:10:28 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.95 2006/06/08 22:48:51 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -86,6 +86,11 @@ struct magic_entry {
 	uint32_t cont_count;
 	uint32_t max_count;
 };
+
+const int file_formats[] = { FILE_FORMAT_STRING };
+const int file_nformats = sizeof(file_formats) / sizeof(file_formats[0]);
+const char *file_names[] = { FILE_FORMAT_NAME };
+const int file_nnames = sizeof(file_names) / sizeof(file_names[0]);
 
 private int getvalue(struct magic_set *ms, struct magic *, const char **);
 private int hextoint(int);
@@ -523,7 +528,7 @@ private int
 parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp, 
     const char *line, int action)
 {
-	int i = 0;
+	int i;
 	struct magic_entry *me;
 	struct magic *m;
 	const char *l = line;
@@ -531,6 +536,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 	private const char *fops = FILE_OPS;
 	uint64_t val;
 	uint32_t cont_level;
+	uint32_t len;
 
 	cont_level = 0;
 
@@ -711,105 +717,21 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		++l;
 	EATAB;
 
-#define NBYTE		4
-#define NSHORT		5
-#define NLONG		4
-#define NSTRING 	6
-#define NDATE		4
-#define NBESHORT	7
-#define NBELONG		6
-#define NBEDATE		6
-#define NLESHORT	7
-#define NLELONG		6
-#define NMELONG		6
-#define NLEDATE		6
-#define NMEDATE		6
-#define NPSTRING	7
-#define NLDATE		5
-#define NBELDATE	7
-#define NLELDATE	7
-#define NMELDATE	7
-#define NREGEX		5
-#define NBESTRING16	10
-#define NLESTRING16	10
-#define NSEARCH		6
-
 	if (*l == 'u') {
 		++l;
 		m->flag |= UNSIGNED;
 	}
 
 	/* get type, skip it */
-	if (strncmp(l, "char", NBYTE)==0) {	/* HP/UX compat */
-		m->type = FILE_BYTE;
-		l += NBYTE;
-	} else if (strncmp(l, "byte", NBYTE)==0) {
-		m->type = FILE_BYTE;
-		l += NBYTE;
-	} else if (strncmp(l, "short", NSHORT)==0) {
-		m->type = FILE_SHORT;
-		l += NSHORT;
-	} else if (strncmp(l, "long", NLONG)==0) {
-		m->type = FILE_LONG;
-		l += NLONG;
-	} else if (strncmp(l, "string", NSTRING)==0) {
-		m->type = FILE_STRING;
-		l += NSTRING;
-	} else if (strncmp(l, "date", NDATE)==0) {
-		m->type = FILE_DATE;
-		l += NDATE;
-	} else if (strncmp(l, "beshort", NBESHORT)==0) {
-		m->type = FILE_BESHORT;
-		l += NBESHORT;
-	} else if (strncmp(l, "belong", NBELONG)==0) {
-		m->type = FILE_BELONG;
-		l += NBELONG;
-	} else if (strncmp(l, "bedate", NBEDATE)==0) {
-		m->type = FILE_BEDATE;
-		l += NBEDATE;
-	} else if (strncmp(l, "leshort", NLESHORT)==0) {
-		m->type = FILE_LESHORT;
-		l += NLESHORT;
-	} else if (strncmp(l, "lelong", NLELONG)==0) {
-		m->type = FILE_LELONG;
-		l += NLELONG;
-	} else if (strncmp(l, "melong", NMELONG)==0) {
-		m->type = FILE_MELONG;
-		l += NMELONG;
-	} else if (strncmp(l, "ledate", NLEDATE)==0) {
-		m->type = FILE_LEDATE;
-		l += NLEDATE;
-	} else if (strncmp(l, "medate", NMEDATE)==0) {
-		m->type = FILE_MEDATE;
-		l += NMEDATE;
-	} else if (strncmp(l, "pstring", NPSTRING)==0) {
-		m->type = FILE_PSTRING;
-		l += NPSTRING;
-	} else if (strncmp(l, "ldate", NLDATE)==0) {
-		m->type = FILE_LDATE;
-		l += NLDATE;
-	} else if (strncmp(l, "beldate", NBELDATE)==0) {
-		m->type = FILE_BELDATE;
-		l += NBELDATE;
-	} else if (strncmp(l, "leldate", NLELDATE)==0) {
-		m->type = FILE_LELDATE;
-		l += NLELDATE;
-	} else if (strncmp(l, "meldate", NMELDATE)==0) {
-		m->type = FILE_MELDATE;
-		l += NMELDATE;
-	} else if (strncmp(l, "regex", NREGEX)==0) {
-		m->type = FILE_REGEX;
-		l += NREGEX;
-	} else if (strncmp(l, "bestring16", NBESTRING16)==0) {
-		m->type = FILE_BESTRING16;
-		l += NBESTRING16;
-	} else if (strncmp(l, "lestring16", NLESTRING16)==0) {
-		m->type = FILE_LESTRING16;
-		l += NLESTRING16;
-	} else if (strncmp(l, "search", NSEARCH)==0) {
-		m->type = FILE_SEARCH;
-		l += NSEARCH;
-	} else {
+	for (i = 0; i < file_nnames; i++) {
+		size_t len = strlen(file_names[i]);
+		if (strncmp(l, file_names[i], len) == 0) {
+			m->type = i;
+			l+= len;
+			break;
+		}
+	}
+	if (i == file_nnames) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "type `%s' invalid", l);
 		return -1;
@@ -913,8 +835,8 @@ GetDesc:
 		m->nospflag = 1;
 	} else
 		m->nospflag = 0;
-	while ((m->desc[i++] = *l++) != '\0' && i < MAXDESC)
-		/* NULLBODY */;
+	for (i = 0; (m->desc[i++] = *l++) != '\0' && i < MAXDESC; )
+		continue;
 
         /*
 	 * We only do this check while compiling, or if any of the magic
@@ -937,18 +859,36 @@ GetDesc:
 private int
 check_format_type(const char *ptr, int type)
 {
+	int quad = 0;
 	if (*ptr == '\0') {
 		/* Missing format string; bad */
 		return -1;
 	}
 
 	switch (type) {
+	case FILE_FMT_QUAD:
+		quad = 1;
+		/*FALLTHROUGH*/
 	case FILE_FMT_NUM:
+		if (*ptr == '-')
+			ptr++;
+		if (*ptr == '.')
+			ptr++;
 		while (isdigit (*ptr)) ptr++;
+		if (*ptr == '.')
+			ptr++;
+		while (isdigit (*ptr)) ptr++;
+		if (quad) {
+			if (*ptr++ != 'l')
+				return -1;
+			if (*ptr++ != 'l')
+				return -1;
+		}
 	
 		switch (*ptr++) {
 		case 'l':
 			switch (*ptr++) {
+			case 'i':
 			case 'd':
 			case 'u':
 			case 'x':
@@ -962,7 +902,11 @@ check_format_type(const char *ptr, int type)
 			switch (*ptr++) {
 			case 'h':
 				switch (*ptr++) {
+				case 'i':
 				case 'd':
+				case 'u':
+				case 'x':
+				case 'X':
 					return 0;
 				default:
 					return -1;
@@ -973,6 +917,7 @@ check_format_type(const char *ptr, int type)
 				return -1;
 			}
 
+		case 'i':
 		case 'c':
 		case 'd':
 		case 'u':
@@ -1017,8 +962,6 @@ check_format_type(const char *ptr, int type)
 private int
 check_format(struct magic_set *ms, struct magic *m)
 {
-	static const int formats[] = { FILE_FORMAT_STRING };
-	static const char *names[] = { FILE_FORMAT_NAME };
 	char *ptr;
 
 	for (ptr = m->desc; *ptr; ptr++)
@@ -1029,29 +972,28 @@ check_format(struct magic_set *ms, struct magic *m)
 		return 1;
 	}
 
-#define ARR_SIZE(a)	(sizeof(a) / sizeof(a[0]))
+	assert(file_nformats == file_nnames);
 
-	assert(ARR_SIZE(formats) == ARR_SIZE(names));
-
-	if (m->type >= ARR_SIZE(formats)) {
+	if (m->type >= file_nformats) {
 		file_error(ms, 0, "Internal error inconsistency between "
 		    "m->type and format strings");		
 		return -1;
 	}
-	if (formats[m->type] == FILE_FMT_NONE) {
+	if (file_formats[m->type] == FILE_FMT_NONE) {
 		file_error(ms, 0, "No format string for `%s' with description "
-		    "`%s'", m->desc, names[m->type]);
+		    "`%s'", m->desc, file_names[m->type]);
 		return -1;
 	}
 
 	ptr++;
-	if (check_format_type(ptr, formats[m->type]) == -1) {
+	if (check_format_type(ptr, file_formats[m->type]) == -1) {
 		/*
 		 * TODO: this error message is unhelpful if the format
 		 * string is not one character long
 		 */
 		file_error(ms, 0, "Printf format `%c' is not valid for type "
-		    " `%s' in description `%s'", *ptr, names[m->type], m->desc);
+		    " `%s' in description `%s'", *ptr,
+		    file_names[m->type], m->desc);
 		return -1;
 	}
 	
@@ -1059,8 +1001,8 @@ check_format(struct magic_set *ms, struct magic *m)
 		if (*ptr == '%') {
 			file_error(ms, 0,
 			    "Too many format strings (should have at most one) "
-			    "for `%s' with description `%s'", names[m->type],
-			    m->desc);
+			    "for `%s' with description `%s'",
+			    file_names[m->type], m->desc);
 			return -1;
 		}
 	}

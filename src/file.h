@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.75 2006/06/08 22:10:28 christos Exp $
+ * @(#)$Id: file.h,v 1.76 2006/06/08 22:48:51 christos Exp $
  */
 
 #ifndef __file_h__
@@ -153,6 +153,7 @@ struct magic {
 #define FILE_FMT_NONE 0
 #define FILE_FMT_NUM  1 /* "cduxXi" */
 #define FILE_FMT_STR  2 /* "s" */
+#define FILE_FMT_QUAD 3 /* "ll" */
 
 #define				FILE_FORMAT_STRING	\
 /* 0 */ 			FILE_FMT_NONE,		\
@@ -179,9 +180,9 @@ struct magic {
 /* 21 */			FILE_FMT_STR,		\
 /* 22 */			FILE_FMT_STR,		\
 /* 23 */			FILE_FMT_NUM,		\
-/* 24 */			FILE_FMT_NUM,		\
-/* 25 */			FILE_FMT_NUM,		\
-/* 26 */			FILE_FMT_NUM,
+/* 24 */			FILE_FMT_QUAD,		\
+/* 25 */			FILE_FMT_QUAD,		\
+/* 26 */			FILE_FMT_QUAD,
 
 	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
