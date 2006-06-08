@@ -39,14 +39,14 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.81 2006/06/08 20:52:50 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.82 2006/06/08 21:50:04 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
     const unsigned char *, size_t);
 private int mget(struct magic_set *, union VALUETYPE *, const unsigned char *,
     struct magic *, size_t, unsigned int);
-private int mcheck(struct magic_set *, union VALUETYPE *, struct magic *);
+private int magiccheck(struct magic_set *, union VALUETYPE *, struct magic *);
 private int32_t mprint(struct magic_set *, union VALUETYPE *, struct magic *);
 private void mdebug(uint32_t, const char *, size_t);
 private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
@@ -120,7 +120,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		if (flush) {
 			if (magic[magindex].reln == '!') flush = 0;
 		} else {	
-			switch (mcheck(ms, &p, &magic[magindex])) {
+			switch (magiccheck(ms, &p, &magic[magindex])) {
 			case -1:
 				return -1;
 			case 0:
@@ -181,7 +181,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			if (flush && magic[magindex].reln != '!')
 				goto done;
 				
-			switch (flush ? 1 : mcheck(ms, &p, &magic[magindex])) {
+			switch (flush ? 1 : magiccheck(ms, &p, &magic[magindex])) {
 			case -1:
 				return -1;
 			case 0:
@@ -1452,7 +1452,7 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 }
 
 private int
-mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
+magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 {
 	uint64_t l = m->value.q;
 	uint64_t v;
@@ -1604,7 +1604,7 @@ mcheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		break;
 	}
 	default:
-		file_error(ms, 0, "invalid type %d in mcheck()", m->type);
+		file_error(ms, 0, "invalid type %d in magiccheck()", m->type);
 		return -1;
 	}
 
