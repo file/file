@@ -860,7 +860,7 @@
 >28	beshort <3
 >>8	belong	x	%d bytes,
 >28	beshort >2
->>63	bequad x	%d bytes,
+>>63	bequad x	%lld bytes,
 #>>67	belong	x	%d bytes,
 >4	belong	x	%d inodes,
 >28	beshort <2
@@ -874,7 +874,7 @@
 >28	leshort <3
 >>8	lelong	x	%d bytes,
 >28	leshort >2
->>63	lequad x	%d bytes,
+>>63	lequad x	%lld bytes,
 #>>63	lelong	x	%d bytes,
 >4	lelong	x	%d inodes,
 >28	leshort <2
