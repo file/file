@@ -36,6 +36,7 @@
 #include <unistd.h>
 #endif
 #include <string.h>
+#include <assert.h>
 #include <ctype.h>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -45,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.93 2006/06/08 20:53:51 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.94 2006/06/08 22:10:28 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -108,6 +109,7 @@ private int apprentice_map(struct magic_set *, struct magic **, uint32_t *,
     const char *);
 private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
     const char *);
+private int check_format_type(const char *, int);
 private int check_format(struct magic_set *, struct magic *);
 
 private size_t maxmagic = 0;
@@ -383,6 +385,8 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	int errs = 0;
 	struct magic_entry *marray;
 	uint32_t marraycount, i, mentrycount;
+
+	ms->flags |= MAGIC_CHECK;	/* Enable checks for parsed files */
 
 	f = fopen(ms->file = fn, "r");
 	if (f == NULL) {
@@ -912,8 +916,12 @@ GetDesc:
 	while ((m->desc[i++] = *l++) != '\0' && i < MAXDESC)
 		/* NULLBODY */;
 
-	if (ms->flags & MAGIC_CHECK) {
-		if (!check_format(ms, m))
+        /*
+	 * We only do this check while compiling, or if any of the magic
+	 * files were not compiled.
+         */
+        if (ms->flags & MAGIC_CHECK) {
+		if (check_format(ms, m) == -1)
 			return -1;
 	}
 #ifndef COMPILE_ONLY
@@ -926,6 +934,82 @@ GetDesc:
 	return 0;
 }
 
+private int
+check_format_type(const char *ptr, int type)
+{
+	if (*ptr == '\0') {
+		/* Missing format string; bad */
+		return -1;
+	}
+
+	switch (type) {
+	case FILE_FMT_NUM:
+		while (isdigit (*ptr)) ptr++;
+	
+		switch (*ptr++) {
+		case 'l':
+			switch (*ptr++) {
+			case 'd':
+			case 'u':
+			case 'x':
+			case 'X':
+				return 0;
+			default:
+				return -1;
+			}
+		
+		case 'h':
+			switch (*ptr++) {
+			case 'h':
+				switch (*ptr++) {
+				case 'd':
+					return 0;
+				default:
+					return -1;
+				}
+			case 'd':
+				return 0;
+			default:
+				return -1;
+			}
+
+		case 'c':
+		case 'd':
+		case 'u':
+		case 'x':
+		case 'X':
+			return 0;
+			
+		default:
+			return -1;
+		}
+		
+	case FILE_FMT_STR:
+		if (*ptr == '-')
+			ptr++;
+		while (isdigit((unsigned char )*ptr))
+			ptr++;
+		if (*ptr == '.') {
+			ptr++;
+			while (isdigit((unsigned char )*ptr))
+				ptr++;
+		}
+		
+		switch (*ptr++) {
+		case 's':
+			return 0;
+		default:
+			return -1;
+		}
+		
+	default:
+		/* internal error */
+		abort();
+	}
+	/*NOTREACHED*/
+	return -1;
+}
+	
 /*
  * Check that the optional printf format in description matches
  * the type of the magic.
@@ -933,7 +1017,7 @@ GetDesc:
 private int
 check_format(struct magic_set *ms, struct magic *m)
 {
-	static const char *formats[] = { FILE_FORMAT_STRING };
+	static const int formats[] = { FILE_FORMAT_STRING };
 	static const char *names[] = { FILE_FORMAT_NAME };
 	char *ptr;
 
@@ -944,37 +1028,43 @@ check_format(struct magic_set *ms, struct magic *m)
 		/* No format string; ok */
 		return 1;
 	}
-	if (m->type >= sizeof(formats)/sizeof(formats[0])) {
-		file_magwarn(ms, "Internal error inconsistency between m->type"
-		    " and format strings");
-		return 0;
+
+#define ARR_SIZE(a)	(sizeof(a) / sizeof(a[0]))
+
+	assert(ARR_SIZE(formats) == ARR_SIZE(names));
+
+	if (m->type >= ARR_SIZE(formats)) {
+		file_error(ms, 0, "Internal error inconsistency between "
+		    "m->type and format strings");		
+		return -1;
 	}
-	if (formats[m->type] == NULL) {
-		file_magwarn(ms, "No format string for `%s' with description "
+	if (formats[m->type] == FILE_FMT_NONE) {
+		file_error(ms, 0, "No format string for `%s' with description "
 		    "`%s'", m->desc, names[m->type]);
-		return 0;
+		return -1;
 	}
+
+	ptr++;
+	if (check_format_type(ptr, formats[m->type]) == -1) {
+		/*
+		 * TODO: this error message is unhelpful if the format
+		 * string is not one character long
+		 */
+		file_error(ms, 0, "Printf format `%c' is not valid for type "
+		    " `%s' in description `%s'", *ptr, names[m->type], m->desc);
+		return -1;
+	}
+	
 	for (; *ptr; ptr++) {
-		if (*ptr == 'l' || *ptr == 'h') {
-			/* XXX: we should really fix this one day */
-			continue;
+		if (*ptr == '%') {
+			file_error(ms, 0,
+			    "Too many format strings (should have at most one) "
+			    "for `%s' with description `%s'", names[m->type],
+			    m->desc);
+			return -1;
 		}
-		if (islower((unsigned char)*ptr) || *ptr == 'X')
-			break;
 	}
-	if (*ptr == '\0') {
-		/* Missing format string; bad */
-		file_magwarn(ms, "Invalid format `%s' for type `%s'",
-			m->desc, names[m->type]);
-		return 0;
-	}
-	if (strchr(formats[m->type], *ptr) == NULL) {
-		file_magwarn(ms, "Printf format `%c' is not valid for type `%s'"
-		    " in description `%s'",
-			*ptr, names[m->type], m->desc);
-		return 0;
-	}
-	return 1;
+	return 0;
 }
 
 /* 

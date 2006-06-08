@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.74 2006/06/08 20:53:51 christos Exp $
+ * @(#)$Id: file.h,v 1.75 2006/06/08 22:10:28 christos Exp $
  */
 
 #ifndef __file_h__
@@ -150,14 +150,15 @@ struct magic {
 /* 25 */ 			"lequad",		\
 /* 26 */ 			"bequad",
 
-#define	FILE_FMT_NUM	"cduxXi"
-#define FILE_FMT_STR	"s"	
+#define FILE_FMT_NONE 0
+#define FILE_FMT_NUM  1 /* "cduxXi" */
+#define FILE_FMT_STR  2 /* "s" */
 
 #define				FILE_FORMAT_STRING	\
-/* 0 */ 			NULL,			\
+/* 0 */ 			FILE_FMT_NONE,		\
 /* 1 */				FILE_FMT_NUM,		\
 /* 2 */ 			FILE_FMT_NUM,		\
-/* 3 */ 			NULL,			\
+/* 3 */ 			FILE_FMT_NONE,		\
 /* 4 */ 			FILE_FMT_NUM,		\
 /* 5 */ 			FILE_FMT_STR,		\
 /* 6 */ 			FILE_FMT_STR,		\
