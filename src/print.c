@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.51 2006/06/08 20:53:51 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.52 2006/06/08 22:48:51 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -50,8 +50,9 @@ FILE_RCSID("@(#)$Id: print.c,v 1.51 2006/06/08 20:53:51 christos Exp $")
 protected void
 file_mdump(struct magic *m)
 {
-	private const char *typ[] = { FILE_FORMAT_NAME };
 	private const char optyp[] = { FILE_OPS };
+	extern const char *file_names[];
+	extern const int file_nnames;
 
 	(void) fputc('[', stderr);
 	(void) fprintf(stderr, ">>>>>>>> %d" + 8 - (m->cont_level & 7),
@@ -60,8 +61,8 @@ file_mdump(struct magic *m)
 	if (m->flag & INDIR) {
 		(void) fprintf(stderr, "(%s,",
 			       /* Note: type is unsigned */
-			       (m->in_type < SZOF(typ)) ? 
-					typ[m->in_type] : "*bad*");
+			       (m->in_type < file_nnames) ? 
+					file_names[m->in_type] : "*bad*");
 		if (m->in_op & FILE_OPINVERSE)
 			(void) fputc('~', stderr);
 		(void) fprintf(stderr, "%c%d),",
@@ -71,7 +72,7 @@ file_mdump(struct magic *m)
 	}
 	(void) fprintf(stderr, " %s%s", (m->flag & UNSIGNED) ? "u" : "",
 		       /* Note: type is unsigned */
-		       (m->type < SZOF(typ)) ? typ[m->type] : "*bad*");
+		       (m->type < file_nnames) ? file_names[m->type] : "*bad*");
 	if (m->mask_op & FILE_OPINVERSE)
 		(void) fputc('~', stderr);
 	if (m->mask) {
