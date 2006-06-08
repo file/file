@@ -38,6 +38,8 @@ A one-byte value.
 A two-byte value (on most systems) in this machine's native byte order.
 .IP long
 A four-byte value (on most systems) in this machine's native byte order.
+.IP quad
+An eight-byte value (on most systems) in this machine's native byte order.
 .IP string
 A string of bytes.
 The string type specification can be optionally followed
@@ -66,6 +68,8 @@ local time rather than UTC.
 A two-byte value (on most systems) in big-endian byte order.
 .IP belong
 A four-byte value (on most systems) in big-endian byte order.
+.IP bequad
+An eight-byte value (on most systems) in big-endian byte order.
 .IP bedate
 A four-byte value (on most systems) in big-endian byte order,
 interpreted as a Unix date.
@@ -79,6 +83,8 @@ A two-byte unicode (UCS16) string in big-endian byte order.
 A two-byte value (on most systems) in little-endian byte order.
 .IP lelong
 A four-byte value (on most systems) in little-endian byte order.
+.IP lequad
+An eight-byte value (on most systems) in little-endian byte order.
 .IP ledate
 A four-byte value (on most systems) in little-endian byte order,
 interpreted as a UNIX date.
@@ -397,4 +403,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.31 2006/05/03 19:20:25 christos Exp $
+.\" @(#)$Id: magic.man,v 1.32 2006/06/08 22:24:44 christos Exp $
