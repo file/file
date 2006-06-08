@@ -86,6 +86,7 @@
 >>>>(0x3c.l+4)	leshort		0x290	PA-RISC
 >>>>(0x3c.l+22)	leshort&0x0100	>0	32-bit
 >>>>(0x3c.l+22)	leshort&0x1000	>0	system file
+>>>>(0x3c.l+232)	lelong	>0	Mono/.Net assembly
 
 >>>>(0x3c.l+0xf8)	string		UPX0 \b, UPX compressed
 >>>>(0x3c.l+0xf8)	search/0x140	PEC2 \b, PECompact2 compressed
@@ -358,6 +359,7 @@
 >30	byte	12		(4kB sectors)
 
 # Popular applications
+0       string \xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3E\x00\x03\x00\xFE\xFF Microsoft Installer
 2080	string	Microsoft\ Word\ 6.0\ Document	%s
 2080	string	Documento\ Microsoft\ Word\ 6 Spanish Microsoft Word 6 document data
 # Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Word)

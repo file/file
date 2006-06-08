@@ -700,3 +700,12 @@
 # EET archive
 # From: Tilman Sauerbeck <tilman@code-monkey.de>
 0	belong	0x1ee7ff00	EET archive
+
+# From: "Robert Dale" <robdale@gmail.com>
+0	belong	123		dar archive,
+>4	belong	x		label "%.8x
+>>8	belong	x		%.8x
+>>>12	beshort	x		%.4x"
+>14	byte	0x54		end slice
+>14	beshort	0x4e4e		multi-part
+>14	beshort	0x4e53		multi-part, with -S
