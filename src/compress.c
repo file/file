@@ -42,6 +42,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <sys/ioctl.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
@@ -50,7 +51,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.42 2005/03/06 05:58:22 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.43 2006/06/08 20:52:08 christos Exp $")
 #endif
 
 
@@ -78,7 +79,6 @@ private int ncompr = sizeof(compr) / sizeof(compr[0]);
 
 
 private ssize_t swrite(int, const void *, size_t);
-private ssize_t sread(int, void *, size_t);
 private size_t uncompressbuf(struct magic_set *, int, size_t,
     const unsigned char *, unsigned char **, size_t);
 #ifdef HAVE_LIBZ
@@ -152,14 +152,53 @@ swrite(int fd, const void *buf, size_t n)
 /*
  * `safe' read for sockets and pipes.
  */
-private ssize_t
+protected ssize_t
 sread(int fd, void *buf, size_t n)
 {
 	int rv;
+#ifdef FIONREAD
+	int t;
+#endif
 	size_t rn = n;
 
+	if (fd == STDIN_FILENO)
+		goto nocheck;
+
+#ifdef FIONREAD
+	if ((ioctl(fd, FIONREAD, &t) < 0) || (t == 0)) {
+#ifdef FD_ZERO
+		for (;;) {
+			fd_set check;
+			struct timeval tout = {0, 100 * 1000};
+
+			FD_ZERO(&check);
+			FD_SET(fd, &check);
+
+			/*
+			 * Avoid soft deadlock: do not read if there
+			 * is nothing to read from sockets and pipes.
+			 */
+			if (select(fd + 1, &check, NULL, NULL, &tout) <= 0) {
+				if (errno == EINTR || errno == EAGAIN)
+					continue;
+				return 0;
+			}
+		}
+
+#endif
+
+		(void)ioctl(fd, FIONREAD, &t);
+	}
+
+	if (t > 0 && (size_t)t < n) {
+		n = t;
+		rn = n;
+	}
+#endif
+
+nocheck:
 	do
-		switch (rv = read(fd, buf, n)) {
+		switch ((rv = read(fd, buf, n))) {
 		case -1:
 			if (errno == EINTR)
 				continue;
