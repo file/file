@@ -115,3 +115,9 @@
 0       string          \\1cw\          ChiWriter file
 >5      string          >\0             version %s
 0       string          \\1cw           ChiWriter file
+
+# Quark Express from http://www.garykessler.net/library/file_sigs.html
+2	string	IIXPR3			Intel Quark Express Document (English)
+2	string	IIXPRa			Intel Quark Express Document (Korean)
+2	string	MMXPR3			Motorola Quark Express Document (English)
+2	string	MMXPRa			Motorola Quark Express Document (Korean)
