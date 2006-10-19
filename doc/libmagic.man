@@ -119,8 +119,8 @@ no error.
 .Pp
 The
 .Fn magic_errno
-function returns the last operating system error number (
-.Xr errno 3 )
+function returns the last operating system error number
+.Pq .Xr errno 3
 that was encountered by a system call.
 .Pp
 The
