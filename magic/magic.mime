@@ -209,8 +209,8 @@
 # ideally should go into "images", but entries below would tag XPM as C source
 0	string		/*\ XPM		image/x-xpmi 7bit
 
-# 3DS (3d Studio files)
-16	beshort		0x3d3d		image/x-3ds
+# 3DS (3d Studio files) Conflicts with diff output 0x3d '='
+#16	beshort		0x3d3d		image/x-3ds
 
 # this first will upset you if you're a PL/1 shop... (are there any left?)
 # in which case rm it; ascmagic will catch real C programs
