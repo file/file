@@ -37,16 +37,16 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.57 2006/06/08 21:51:12 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.58 2006/10/22 22:54:09 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
 private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t,
-    off_t);
+    off_t, int *);
 #endif
 private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t,
-    off_t);
-private int doshn(struct magic_set *, int, int, int, off_t, int, size_t);
+    off_t, int *);
+private int doshn(struct magic_set *, int, int, int, off_t, int, size_t, int *);
 private size_t donote(struct magic_set *, unsigned char *, size_t, size_t, int,
     int, size_t, int *);
 
@@ -240,17 +240,17 @@ private const char *os_style_names[] = {
 };
 
 #define FLAGS_DID_CORE		1
+#define FLAGS_DID_NOTE		2
 
 private int
 dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
-    int num, size_t size, off_t fsize)
+    int num, size_t size, off_t fsize, int *flags)
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
 	size_t offset;
 	unsigned char nbuf[BUFSIZ];
 	ssize_t bufsize;
-	int flags = 0;
 	off_t savedoffset;
  	struct stat st;
 
@@ -308,7 +308,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			if (offset >= (size_t)bufsize)
 				break;
 			offset = donote(ms, nbuf, offset, (size_t)bufsize,
-			    class, swap, 4, &flags);
+			    class, swap, 4, flags);
 			if (offset == 0)
 				break;
 
@@ -373,6 +373,9 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		return (offset >= size) ? offset : size;
 	}
 
+	if (*flags & FLAGS_DID_NOTE)
+		goto core;
+
 	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
 	    xnh_type == NT_GNU_VERSION && descsz == 16) {
 		uint32_t desc[4];
@@ -400,6 +403,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		if (file_printf(ms, " %d.%d.%d", getu32(swap, desc[1]),
 		    getu32(swap, desc[2]), getu32(swap, desc[3])) == -1)
 			return size;
+		*flags |= FLAGS_DID_NOTE;
 		return size;
 	}
 
@@ -436,12 +440,16 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 					return size;
 			} else if (ver_rel != 0) {
 				while (ver_rel > 26) {
-					file_printf(ms, "Z");
+					if (file_printf(ms, "Z") == -1)
+						return size;
 					ver_rel -= 26;
 				}
-				file_printf(ms, "%c", 'A' + ver_rel - 1);
+				if (file_printf(ms, "%c", 'A' + ver_rel - 1)
+				    == -1)
+					return size;
 			}
 		}
+		*flags |= FLAGS_DID_NOTE;
 		return size;
 	}
 
@@ -519,6 +527,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 					return size;
 			}
 		}
+		*flags |= FLAGS_DID_NOTE;
 		return size;
 	}
 
@@ -527,6 +536,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		if (file_printf(ms, ", for OpenBSD") == -1)
 			return size;
 		/* Content of note is always 0 */
+		*flags |= FLAGS_DID_NOTE;
 		return size;
 	}
 
@@ -540,9 +550,11 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		if (file_printf(ms, " %d.%d.%d", desc / 100000,
 		    desc / 10000 % 10, desc % 10000) == -1)
 			return size;
+		*flags |= FLAGS_DID_NOTE;
 		return size;
 	}
 
+core:
 	/*
 	 * Sigh.  The 2.0.36 kernel in Debian 2.1, at
 	 * least, doesn't correctly implement name
@@ -572,13 +584,13 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 	}
 
 #ifdef ELFCORE
+	if ((*flags & FLAGS_DID_CORE) != 0)
+		return size;
+
 	if (os_style != -1) {
-		if ((*flags & FLAGS_DID_CORE) == 0) {
-			if (file_printf(ms, ", %s-style",
-			    os_style_names[os_style]) == -1)
-				return size;
-			*flags |= FLAGS_DID_CORE;
-		}
+		if (file_printf(ms, ", %s-style", os_style_names[os_style])
+		    == -1)
+			return size;
 	}
 
 	switch (os_style) {
@@ -681,17 +693,17 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 		break;
 	}
 #endif
+	*flags |= FLAGS_DID_CORE;
 	return offset;
 }
 
 private int
 doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
-    size_t size)
+    size_t size, int *flags)
 {
 	Elf32_Shdr sh32;
 	Elf64_Shdr sh64;
 	int stripped = 1;
-	int flags = 0;
 	void *nbuf;
 	off_t noff;
 
@@ -748,7 +760,7 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
 					break;
 				noff = donote(ms, nbuf, (size_t)noff,
 				    (size_t)xsh_size, class, swap, 4,
-				    &flags);
+				    flags);
 				if (noff == 0)
 					break;
 			}
@@ -773,7 +785,7 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
  */
 private int
 dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
-    int num, size_t size, off_t fsize)
+    int num, size_t size, off_t fsize, int *flags)
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
@@ -784,7 +796,6 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	size_t offset, align;
 	off_t savedoffset;
 	struct stat st;
-	int flags = 0;
 
 	if (fstat(fd, &st) < 0) {
 		file_badread(ms);
@@ -864,7 +875,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 					break;
 				offset = donote(ms, nbuf, offset,
 				    (size_t)bufsize, class, swap, align,
-				    &flags);
+				    flags);
 				if (offset == 0)
 					break;
 			}
@@ -899,6 +910,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	int swap;
 	struct stat st;
 	off_t fsize;
+	int flags = 0;
 
 	/*
 	 * If we cannot seek, it must be a pipe, socket or fifo.
@@ -942,7 +954,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 			    (off_t)getu32(swap, elfhdr.e_phoff),
 			    getu16(swap, elfhdr.e_phnum), 
 			    (size_t)getu16(swap, elfhdr.e_phentsize),
-			    fsize) == -1)
+			    fsize, &flags) == -1)
 				return -1;
 #else
 			;
@@ -953,14 +965,15 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 				    fd, (off_t)getu32(swap, elfhdr.e_phoff),
 				    getu16(swap, elfhdr.e_phnum), 
 				    (size_t)getu16(swap, elfhdr.e_phentsize),
-				    fsize)
+				    fsize, &flags)
 				    == -1)
 					return -1;
 			}
 			if (doshn(ms, class, swap, fd,
 			    (off_t)getu32(swap, elfhdr.e_shoff),
 			    getu16(swap, elfhdr.e_shnum),
-			    (size_t)getu16(swap, elfhdr.e_shentsize)) == -1)
+			    (size_t)getu16(swap, elfhdr.e_shentsize),
+			    &flags) == -1)
 				return -1;
 		}
 		return 1;
@@ -982,7 +995,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 			    (off_t)elf_getu64(swap, elfhdr.e_phoff),
 			    getu16(swap, elfhdr.e_phnum), 
 			    (size_t)getu16(swap, elfhdr.e_phentsize),
-			    fsize) == -1)
+			    fsize, &flags) == -1)
 				return -1;
 #else
 			;
@@ -993,13 +1006,14 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 				    (off_t)elf_getu64(swap, elfhdr.e_phoff),
 				    getu16(swap, elfhdr.e_phnum), 
 				    (size_t)getu16(swap, elfhdr.e_phentsize),
-				    fsize) == -1)
+				    fsize, &flags) == -1)
 					return -1;
 			}
 			if (doshn(ms, class, swap, fd,
 			    (off_t)elf_getu64(swap, elfhdr.e_shoff),
 			    getu16(swap, elfhdr.e_shnum),
-			    (size_t)getu16(swap, elfhdr.e_shentsize)) == -1)
+			    (size_t)getu16(swap, elfhdr.e_shentsize), &flags)
+			    == -1)
 				return -1;
 		}
 		return 1;
