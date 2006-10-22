@@ -1,3 +1,8 @@
+	* don't process elf notes multiple times
+
+	* allow -z to report empty compressed files
+
+	* use calloc to initialize the ascii buffers (Jos van den Oever)
 
 2006-06-08 11:11 Christos Zoulas <christos@zoulas.com>
 
