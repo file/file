@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.76 2006/06/08 22:48:51 christos Exp $
+ * @(#)$Id: file.h,v 1.77 2006/10/27 14:57:32 christos Exp $
  */
 
 #ifndef __file_h__
@@ -295,6 +295,11 @@ protected size_t file_mbswidth(const char *);
 protected const char *file_getbuffer(struct magic_set *);
 protected ssize_t sread(int, void *, size_t);
 
+#ifndef COMPILE_ONLY
+extern const char *file_names[];
+extern const size_t file_nnames;
+#endif
+
 #ifndef HAVE_STRERROR
 extern int sys_nerr;
 extern char *sys_errlist[];
@@ -322,6 +327,5 @@ int snprintf(char *, size_t, const char *, ...);
 static const char *rcsid(const char *p) { \
 	return rcsid(p = id); \
 }
-#else
 
 #endif /* __file_h__ */
