@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.95 2006/06/08 22:48:51 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.96 2006/10/27 14:51:28 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -835,8 +835,9 @@ GetDesc:
 		m->nospflag = 1;
 	} else
 		m->nospflag = 0;
-	for (i = 0; (m->desc[i++] = *l++) != '\0' && i < MAXDESC; )
+	for (i = 0; (m->desc[i++] = *l++) != '\0' && i < sizeof(m->desc); )
 		continue;
+	m->desc[sizeof(m->desc) - 1] = '\0';
 
         /*
 	 * We only do this check while compiling, or if any of the magic
