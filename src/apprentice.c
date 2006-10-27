@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.96 2006/10/27 14:51:28 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.97 2006/10/27 14:57:32 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -88,9 +88,9 @@ struct magic_entry {
 };
 
 const int file_formats[] = { FILE_FORMAT_STRING };
-const int file_nformats = sizeof(file_formats) / sizeof(file_formats[0]);
+const size_t file_nformats = sizeof(file_formats) / sizeof(file_formats[0]);
 const char *file_names[] = { FILE_FORMAT_NAME };
-const int file_nnames = sizeof(file_names) / sizeof(file_names[0]);
+const size_t file_nnames = sizeof(file_names) / sizeof(file_names[0]);
 
 private int getvalue(struct magic_set *ms, struct magic *, const char **);
 private int hextoint(int);
@@ -528,7 +528,7 @@ private int
 parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp, 
     const char *line, int action)
 {
-	int i;
+	size_t i;
 	struct magic_entry *me;
 	struct magic *m;
 	const char *l = line;
@@ -837,7 +837,11 @@ GetDesc:
 		m->nospflag = 0;
 	for (i = 0; (m->desc[i++] = *l++) != '\0' && i < sizeof(m->desc); )
 		continue;
-	m->desc[sizeof(m->desc) - 1] = '\0';
+	if (i == sizeof(m->desc)) {
+		m->desc[sizeof(m->desc) - 1] = '\0';
+		if (ms->flags & MAGIC_CHECK)
+			file_magwarn(ms, "description `%s' truncated", m->desc);
+	}
 
         /*
 	 * We only do this check while compiling, or if any of the magic
