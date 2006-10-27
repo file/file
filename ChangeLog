@@ -1,3 +1,5 @@
+	* make sure that we nul terminate desc (Ryoji Kanai)
+
 	* don't process elf notes multiple times
 
 	* allow -z to report empty compressed files
