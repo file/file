@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.79 2006/10/31 20:46:23 christos Exp $
+ * @(#)$Id: file.h,v 1.80 2006/10/31 20:57:45 christos Exp $
  */
 
 #ifndef __file_h__
@@ -224,9 +224,11 @@ struct magic {
 	uint32_t offset;	/* offset to magic number */
 	/* Word 5 */
 	int32_t in_offset;	/* offset from indirection */
-	/* Word 6,7 */
+	/* Word 6 */
+	uint32_t dummy4;
+	/* Word 7,8 */
 	uint64_t mask;	/* mask before comparison with value */
-	/* Words 8-15 */
+	/* Words 9-16 */
 	union VALUETYPE {
 		uint8_t b;
 		uint16_t h;
@@ -241,8 +243,6 @@ struct magic {
 		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
 		uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
 	} value;		/* either number or string */
-	/* Word 16 */
-	uint32_t dummp4;
 	/* Words 17..31 */
 	char desc[MAXDESC];	/* description */
 };
