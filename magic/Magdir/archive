@@ -530,6 +530,8 @@
 >4	byte		0x0b		Zip archive data, at least v1.1 to extract
 >4	byte		0x14
 >>30	ubelong		!0x6d696d65	Zip archive data, at least v2.0 to extract
+>0x161	string		WINZIP          Zip archive data, WinZIP self-extracting
+
 
 # OpenOffice.org / KOffice / StarOffice documents
 # From: Abel Cheung <abel@oaka.org>
