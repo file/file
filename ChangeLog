@@ -1,3 +1,11 @@
+2006-10-31 15:14 Christos Zoulas <christos@zoulas.com>
+
+	* Check offset before copying (Mike Frysinger)
+
+	* merge duplicated code
+
+	* add quad date support
+
 	* make sure that we nul terminate desc (Ryoji Kanai)
 
 	* don't process elf notes multiple times
