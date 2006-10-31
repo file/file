@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.34 2006/06/08 20:52:08 christos Exp $")
+FILE_RCSID("@(#)$Id: magic.c,v 1.35 2006/10/31 19:37:17 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -305,7 +305,7 @@ magic_file(struct magic_set *ms, const char *inname)
 		ssize_t r = 0;
 
 		while ((r = sread(fd, (void *)&buf[nbytes],
-		    HOWMANY - nbytes)) > 0) {
+		    (size_t)(HOWMANY - nbytes))) > 0) {
 			nbytes += r;
 			if (r < PIPE_BUF) break;
 		}

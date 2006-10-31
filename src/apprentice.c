@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.97 2006/10/27 14:57:32 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.98 2006/10/31 19:37:17 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -344,12 +344,18 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_LEDATE:
 	case FILE_BEDATE:
 	case FILE_MEDATE:
-		return 4 * MULT;
-
 	case FILE_LDATE:
 	case FILE_LELDATE:
 	case FILE_BELDATE:
 	case FILE_MELDATE:
+		return 4 * MULT;
+
+	case FILE_QDATE:
+	case FILE_LEQDATE:
+	case FILE_BEQDATE:
+	case FILE_QLDATE:
+	case FILE_LEQLDATE:
+	case FILE_BEQLDATE:
 		return 8 * MULT;
 
 	default:
@@ -389,7 +395,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	char line[BUFSIZ+1];
 	int errs = 0;
 	struct magic_entry *marray;
-	uint32_t marraycount, i, mentrycount;
+	uint32_t marraycount, i, mentrycount = 0;
 
 	ms->flags |= MAGIC_CHECK;	/* Enable checks for parsed files */
 
@@ -435,7 +441,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	qsort(marray, marraycount, sizeof(*marray), apprentice_sort);
 #endif
 
-	for (i = 0, mentrycount = 0; i < marraycount; i++)
+	for (i = 0; i < marraycount; i++)
 		mentrycount += marray[i].cont_count;
 
 	if ((*magicp = malloc(sizeof(**magicp) * mentrycount)) == NULL) {
@@ -503,6 +509,12 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_QUAD:
 		case FILE_BEQUAD:
 		case FILE_LEQUAD:
+		case FILE_QDATE:
+		case FILE_QLDATE:
+		case FILE_BEQDATE:
+		case FILE_BEQLDATE:
+		case FILE_LEQDATE:
+		case FILE_LEQLDATE:
 			v = (int64_t) v;
 			break;
 		case FILE_STRING:
@@ -536,7 +548,6 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 	private const char *fops = FILE_OPS;
 	uint64_t val;
 	uint32_t cont_level;
-	uint32_t len;
 
 	cont_level = 0;
 
@@ -879,10 +890,10 @@ check_format_type(const char *ptr, int type)
 			ptr++;
 		if (*ptr == '.')
 			ptr++;
-		while (isdigit (*ptr)) ptr++;
+		while (isdigit((unsigned char)*ptr)) ptr++;
 		if (*ptr == '.')
 			ptr++;
-		while (isdigit (*ptr)) ptr++;
+		while (isdigit((unsigned char)*ptr)) ptr++;
 		if (quad) {
 			if (*ptr++ != 'l')
 				return -1;

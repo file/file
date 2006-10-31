@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.21 2006/06/02 17:51:43 ian Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.22 2006/10/31 19:37:17 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -162,11 +162,12 @@ file_reset(struct magic_set *ms)
 }
 
 #define OCTALIFY(n, o)	\
-	*(n)++ = '\\', \
+	/*LINTED*/ \
+	(void)(*(n)++ = '\\', \
 	*(n)++ = (((uint32_t)*(o) >> 6) & 3) + '0', \
 	*(n)++ = (((uint32_t)*(o) >> 3) & 7) + '0', \
 	*(n)++ = (((uint32_t)*(o) >> 0) & 7) + '0', \
-	(o)++
+	(o)++)
 
 protected const char *
 file_getbuffer(struct magic_set *ms)
@@ -204,15 +205,15 @@ file_getbuffer(struct magic_set *ms)
 		eop = op + strlen(ms->o.buf);
 
 		while (op < eop) {
-			bytesconsumed = mbrtowc(&nextchar, op, eop - op,
-			    &state);
+			bytesconsumed = mbrtowc(&nextchar, op,
+			    (size_t)(eop - op), &state);
 			if (bytesconsumed == (size_t)(-1) ||
 			    bytesconsumed == (size_t)(-2)) {
 				mb_conv = 0;
 				break;
 			}
 
-			if (iswprint(nextchar) ) {
+			if (iswprint(nextchar)) {
 				(void)memcpy(np, op, bytesconsumed);
 				op += bytesconsumed;
 				np += bytesconsumed;

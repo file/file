@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.58 2006/10/22 22:54:09 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.59 2006/10/31 19:37:17 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -794,7 +794,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 	unsigned char nbuf[BUFSIZ];
 	int bufsize;
 	size_t offset, align;
-	off_t savedoffset;
+	off_t savedoffset = (off_t)-1;
 	struct stat st;
 
 	if (fstat(fd, &st) < 0) {
@@ -818,7 +818,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
   			file_badread(ms);
 			return -1;
 		}
-		if (xph_offset > st.st_size) {
+		if (xph_offset > st.st_size && savedoffset != (off_t)-1) {
 			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
 				file_badseek(ms);
 				return -1;

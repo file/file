@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.82 2006/06/08 21:50:04 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.83 2006/10/31 19:37:17 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -54,6 +54,10 @@ private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
 private int mconvert(struct magic_set *, union VALUETYPE *, struct magic *);
 private int check_mem(struct magic_set *, unsigned int);
 private int print_sep(struct magic_set *, int);
+private void cvt_8(union VALUETYPE *, const struct magic *);
+private void cvt_16(union VALUETYPE *, const struct magic *);
+private void cvt_32(union VALUETYPE *, const struct magic *);
+private void cvt_64(union VALUETYPE *, const struct magic *);
 
 /*
  * softmagic - lookup one file in parsed, in-memory copy of database
@@ -284,7 +288,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 
   	switch (m->type) {
   	case FILE_BYTE:
-		v = file_signextend(ms, m, (size_t)p->b);
+		v = file_signextend(ms, m, (uint64_t)p->b);
 		switch (check_fmt(ms, m)) {
 		case -1:
 			return -1;
@@ -306,7 +310,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
   	case FILE_SHORT:
   	case FILE_BESHORT:
   	case FILE_LESHORT:
-		v = file_signextend(ms, m, (size_t)p->h);
+		v = file_signextend(ms, m, (uint64_t)p->h);
 		switch (check_fmt(ms, m)) {
 		case -1:
 			return -1;
@@ -328,7 +332,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
   	case FILE_BELONG:
   	case FILE_LELONG:
   	case FILE_MELONG:
-		v = file_signextend(ms, m, p->l);
+		v = file_signextend(ms, m, (uint64_t)p->l);
 		switch (check_fmt(ms, m)) {
 		case -1:
 			return -1;
@@ -392,11 +396,31 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			return -1;
 		t = m->offset + sizeof(time_t);
 		break;
+
+	case FILE_QDATE:
+	case FILE_BEQDATE:
+	case FILE_LEQDATE:
+		if (file_printf(ms, m->desc, file_fmttime((uint32_t)p->q, 1))
+		    == -1)
+			return -1;
+		t = m->offset + sizeof(uint64_t);
+		break;
+
+	case FILE_QLDATE:
+	case FILE_BEQLDATE:
+	case FILE_LEQLDATE:
+		if (file_printf(ms, m->desc, file_fmttime((uint32_t)p->q, 0))
+		    == -1)
+			return -1;
+		t = m->offset + sizeof(uint64_t);
+		break;
+
 	case FILE_REGEX:
 	  	if (file_printf(ms, m->desc, p->s) == -1)
 			return -1;
 		t = m->offset + strlen(p->s);
 		break;
+
 	case FILE_SEARCH:
 	  	if (file_printf(ms, m->desc, m->value.s) == -1)
 			return -1;
@@ -410,6 +434,62 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	return(t);
 }
 
+
+#define DO_CVT(fld, cast) \
+	if (m->mask) \
+		switch (m->mask_op & 0x7F) { \
+		case FILE_OPAND: \
+			p->fld &= cast m->mask; \
+			break; \
+		case FILE_OPOR: \
+			p->fld |= cast m->mask; \
+			break; \
+		case FILE_OPXOR: \
+			p->fld ^= cast m->mask; \
+			break; \
+		case FILE_OPADD: \
+			p->fld += cast m->mask; \
+			break; \
+		case FILE_OPMINUS: \
+			p->fld -= cast m->mask; \
+			break; \
+		case FILE_OPMULTIPLY: \
+			p->fld *= cast m->mask; \
+			break; \
+		case FILE_OPDIVIDE: \
+			p->fld /= cast m->mask; \
+			break; \
+		case FILE_OPMODULO: \
+			p->fld %= cast m->mask; \
+			break; \
+		} \
+	if (m->mask_op & FILE_OPINVERSE) \
+		p->fld = ~p->fld \
+
+private void
+cvt_8(union VALUETYPE *p, const struct magic *m)
+{
+	DO_CVT(b, (uint8_t));
+}
+
+private void
+cvt_16(union VALUETYPE *p, const struct magic *m)
+{
+	DO_CVT(h, (uint16_t));
+}
+
+private void
+cvt_32(union VALUETYPE *p, const struct magic *m)
+{
+	DO_CVT(l, (uint32_t));
+}
+
+private void
+cvt_64(union VALUETYPE *p, const struct magic *m)
+{
+	DO_CVT(q, (uint64_t));
+}
+
 /*
  * Convert the byte order of the data we are looking at
  * While we're here, let's apply the mask operation
@@ -420,130 +500,20 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 {
 	switch (m->type) {
 	case FILE_BYTE:
-		if (m->mask)
-			switch (m->mask_op & 0x7F) {
-			case FILE_OPAND:
-				p->b &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->b |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->b ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->b += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->b -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->b *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->b /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->b %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->b = ~p->b;
+		cvt_8(p, m);
 		return 1;
 	case FILE_SHORT:
-		if (m->mask)
-			switch (m->mask_op & 0x7F) {
-			case FILE_OPAND:
-				p->h &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->h |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->h ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->h += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->h -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->h *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->h /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->h %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->h = ~p->h;
+		cvt_16(p, m);
 		return 1;
 	case FILE_LONG:
 	case FILE_DATE:
 	case FILE_LDATE:
-		if (m->mask)
-			switch (m->mask_op & 0x7F) {
-			case FILE_OPAND:
-				p->l &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->l |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->l ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->l += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->l -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->l *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->l /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->l %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->l = ~p->l;
+		cvt_32(p, m);
 		return 1;
 	case FILE_QUAD:
-		if (m->mask)
-			switch (m->mask_op & 0x7F) {
-			case FILE_OPAND:
-				p->q &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->q |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->q ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->q += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->q -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->q *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->q /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->q %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->q = ~p->q;
+	case FILE_QDATE:
+	case FILE_QLDATE:
+		cvt_64(p, m);
 		return 1;
 	case FILE_STRING:
 	case FILE_BESTRING16:
@@ -574,242 +544,50 @@ mconvert(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		}
 	case FILE_BESHORT:
 		p->h = (short)((p->hs[0]<<8)|(p->hs[1]));
-		if (m->mask)
-			switch (m->mask_op&0x7F) {
-			case FILE_OPAND:
-				p->h &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->h |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->h ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->h += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->h -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->h *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->h /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->h %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->h = ~p->h;
+		cvt_16(p, m);
 		return 1;
 	case FILE_BELONG:
 	case FILE_BEDATE:
 	case FILE_BELDATE:
 		p->l = (int32_t)
 		    ((p->hl[0]<<24)|(p->hl[1]<<16)|(p->hl[2]<<8)|(p->hl[3]));
-		if (m->mask)
-			switch (m->mask_op&0x7F) {
-			case FILE_OPAND:
-				p->l &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->l |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->l ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->l += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->l -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->l *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->l /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->l %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->l = ~p->l;
+		cvt_32(p, m);
 		return 1;
 	case FILE_BEQUAD:
+	case FILE_BEQDATE:
+	case FILE_BEQLDATE:
 		p->q = (int64_t)
 		    (((int64_t)p->hq[0]<<56)|((int64_t)p->hq[1]<<48)|
 		     ((int64_t)p->hq[2]<<40)|((int64_t)p->hq[3]<<32)|
 		     (p->hq[4]<<24)|(p->hq[5]<<16)|(p->hq[6]<<8)|(p->hq[7]));
-		if (m->mask)
-			switch (m->mask_op&0x7F) {
-			case FILE_OPAND:
-				p->q &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->q |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->q ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->q += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->q -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->q *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->q /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->q %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->l = ~p->l;
+		cvt_64(p, m);
 		return 1;
 	case FILE_LESHORT:
 		p->h = (short)((p->hs[1]<<8)|(p->hs[0]));
-		if (m->mask)
-			switch (m->mask_op&0x7F) {
-			case FILE_OPAND:
-				p->h &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->h |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->h ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->h += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->h -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->h *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->h /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->h %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->h = ~p->h;
+		cvt_16(p, m);
 		return 1;
 	case FILE_LELONG:
 	case FILE_LEDATE:
 	case FILE_LELDATE:
 		p->l = (int32_t)
 		    ((p->hl[3]<<24)|(p->hl[2]<<16)|(p->hl[1]<<8)|(p->hl[0]));
-		if (m->mask)
-			switch (m->mask_op&0x7F) {
-			case FILE_OPAND:
-				p->l &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->l |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->l ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->l += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->l -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->l *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->l /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->l %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->l = ~p->l;
+		cvt_32(p, m);
 		return 1;
 	case FILE_LEQUAD:
+	case FILE_LEQDATE:
+	case FILE_LEQLDATE:
 		p->q = (int64_t)
 		    (((int64_t)p->hq[7]<<56)|((int64_t)p->hq[6]<<48)|
 		     ((int64_t)p->hq[5]<<40)|((int64_t)p->hq[4]<<32)|
 		     (p->hq[3]<<24)|(p->hq[2]<<16)|(p->hq[1]<<8)|(p->hq[0]));
-		if (m->mask)
-			switch (m->mask_op&0x7F) {
-			case FILE_OPAND:
-				p->q &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->q |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->q ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->q += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->q -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->q *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->q /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->q %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->q = ~p->q;
+		cvt_64(p, m);
 		return 1;
 	case FILE_MELONG:
 	case FILE_MEDATE:
 	case FILE_MELDATE:
 		p->l = (int32_t)
 		    ((p->hl[1]<<24)|(p->hl[0]<<16)|(p->hl[3]<<8)|(p->hl[2]));
-		if (m->mask)
-			switch (m->mask_op&0x7F) {
-			case FILE_OPAND:
-				p->l &= m->mask;
-				break;
-			case FILE_OPOR:
-				p->l |= m->mask;
-				break;
-			case FILE_OPXOR:
-				p->l ^= m->mask;
-				break;
-			case FILE_OPADD:
-				p->l += m->mask;
-				break;
-			case FILE_OPMINUS:
-				p->l -= m->mask;
-				break;
-			case FILE_OPMULTIPLY:
-				p->l *= m->mask;
-				break;
-			case FILE_OPDIVIDE:
-				p->l /= m->mask;
-				break;
-			case FILE_OPMODULO:
-				p->l %= m->mask;
-				break;
-			}
-		if (m->mask_op & FILE_OPINVERSE)
-			p->l = ~p->l;
+		cvt_32(p, m);
 		return 1;
 	case FILE_REGEX:
 	case FILE_SEARCH:
@@ -869,6 +647,13 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 
 		if (type == FILE_BESTRING16)
 			src++;
+
+		/* check for pointer overflow */
+		if (src < s) {
+			file_error(ms, 0, "invalid offset %zu in mcopy()",
+			    offset);
+			return -1;
+		}
 
 		for (;src < esrc; src++, dst++) {
 			if (dst < edst)
@@ -1433,7 +1218,7 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 	}
 
 	if (m->type == FILE_SEARCH) {
-		size_t mlen = m->mask + m->vallen;
+		size_t mlen = (size_t)(m->mask + m->vallen);
 		size_t flen = nbytes - offset;
 		if (flen < mlen)
 			mlen = flen;
@@ -1492,6 +1277,12 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_QUAD:
 	case FILE_LEQUAD:
 	case FILE_BEQUAD:
+	case FILE_QDATE:
+	case FILE_BEQDATE:
+	case FILE_LEQDATE:
+	case FILE_QLDATE:
+	case FILE_BEQLDATE:
+	case FILE_LEQLDATE:
 		v = p->q;
 		break;
 
@@ -1614,21 +1405,21 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	switch (m->reln) {
 	case 'x':
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "%u == *any* = 1\n", v);
+			(void) fprintf(stderr, "%llu == *any* = 1\n", v);
 		matched = 1;
 		break;
 
 	case '!':
 		matched = v != l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "%u != %u = %d\n",
+			(void) fprintf(stderr, "%llu != %llu = %d\n",
 				       v, l, matched);
 		break;
 
 	case '=':
 		matched = v == l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "%u == %u = %d\n",
+			(void) fprintf(stderr, "%llu == %llu = %d\n",
 				       v, l, matched);
 		break;
 
@@ -1636,13 +1427,13 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (m->flag & UNSIGNED) {
 			matched = v > l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%u > %u = %d\n",
+				(void) fprintf(stderr, "%llu > %llu = %d\n",
 					       v, l, matched);
 		}
 		else {
 			matched = (int32_t) v > (int32_t) l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%d > %d = %d\n",
+				(void) fprintf(stderr, "%lld > %lld = %d\n",
 					       v, l, matched);
 		}
 		break;
@@ -1651,13 +1442,13 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (m->flag & UNSIGNED) {
 			matched = v < l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%u < %u = %d\n",
+				(void) fprintf(stderr, "%llu < %llu = %d\n",
 					       v, l, matched);
 		}
 		else {
 			matched = (int32_t) v < (int32_t) l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%d < %d = %d\n",
+				(void) fprintf(stderr, "%lld < %lld = %d\n",
 					       v, l, matched);
 		}
 		break;
@@ -1665,14 +1456,14 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case '&':
 		matched = (v & l) == l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "((%x & %x) == %x) = %d\n",
+			(void) fprintf(stderr, "((%llx & %llx) == %llx) = %d\n",
 				       v, l, l, matched);
 		break;
 
 	case '^':
 		matched = (v & l) != l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "((%x & %x) != %x) = %d\n",
+			(void) fprintf(stderr, "((%llx & %llx) != %llx) = %d\n",
 				       v, l, l, matched);
 		break;
 
