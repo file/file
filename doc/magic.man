@@ -61,8 +61,13 @@ A pascal style string where the first byte is interpreted as the an
 unsigned length. The string is not NUL terminated.
 .IP date
 A four-byte value interpreted as a UNIX date.
+.IP qdate
+A eight-byte value interpreted as a UNIX date.
 .IP ldate
 A four-byte value interpreted as a UNIX-style date, but interpreted as
+local time rather than UTC.
+.IP qldate
+An eight-byte value interpreted as a UNIX-style date, but interpreted as
 local time rather than UTC.
 .IP beshort
 A two-byte value (on most systems) in big-endian byte order.
@@ -73,8 +78,15 @@ An eight-byte value (on most systems) in big-endian byte order.
 .IP bedate
 A four-byte value (on most systems) in big-endian byte order,
 interpreted as a Unix date.
+.IP beqdate
+An eight-byte value (on most systems) in big-endian byte order,
+interpreted as a Unix date.
 .IP beldate
 A four-byte value (on most systems) in big-endian byte order,
+interpreted as a UNIX-style date, but interpreted as local time rather
+than UTC.
+.IP beqldate
+An eight-byte value (on most systems) in big-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .IP bestring16
@@ -88,8 +100,15 @@ An eight-byte value (on most systems) in little-endian byte order.
 .IP ledate
 A four-byte value (on most systems) in little-endian byte order,
 interpreted as a UNIX date.
+.IP leqdate
+An eight-byte value (on most systems) in little-endian byte order,
+interpreted as a UNIX date.
 .IP leldate
 A four-byte value (on most systems) in little-endian byte order,
+interpreted as a UNIX-style date, but interpreted as local time rather
+than UTC.
+.IP leqldate
+An eight-byte value (on most systems) in little-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .IP lestring16
@@ -403,4 +422,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.32 2006/06/08 22:24:44 christos Exp $
+.\" @(#)$Id: magic.man,v 1.33 2006/10/31 19:37:16 christos Exp $

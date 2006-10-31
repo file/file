@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.53 2006/10/27 14:57:32 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.54 2006/10/31 19:37:17 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -79,7 +79,7 @@ file_mdump(struct magic *m)
 		else
 			fputc('?', stderr);
 		if (FILE_STRING != m->type || FILE_PSTRING != m->type)
-			(void) fprintf(stderr, "%.8x", m->mask);
+			(void) fprintf(stderr, "%.8llx", m->mask);
 		else {
 			if (m->mask & STRING_IGNORE_LOWERCASE) 
 				(void) fputc(CHAR_IGNORE_LOWERCASE, stderr);
@@ -116,7 +116,7 @@ file_mdump(struct magic *m)
 		case FILE_BESTRING16:
 		case FILE_LESTRING16:
 		case FILE_SEARCH:
-			file_showstr(stderr, m->value.s, m->vallen);
+			file_showstr(stderr, m->value.s, (size_t)m->vallen);
 			break;
 		case FILE_DATE:
 		case FILE_LEDATE:
@@ -131,6 +131,18 @@ file_mdump(struct magic *m)
 		case FILE_MELDATE:
 			(void)fprintf(stderr, "%s,",
 			    file_fmttime(m->value.l, 0));
+			break;
+		case FILE_QDATE:
+		case FILE_LEQDATE:
+		case FILE_BEQDATE:
+			(void)fprintf(stderr, "%s,",
+			    file_fmttime((uint32_t)m->value.q, 1));
+			break;
+		case FILE_QLDATE:
+		case FILE_LEQLDATE:
+		case FILE_BEQLDATE:
+			(void)fprintf(stderr, "%s,",
+			    file_fmttime((uint32_t)m->value.q, 0));
 			break;
 		default:
 			(void) fputs("*bad*", stderr);

@@ -25,7 +25,7 @@
 >12	belong		19		16-bit linear compressed,
 >12	belong		20		16-bit linear with emphasis and compression,
 >12	belong		21		Music kit DSP commands,
->12	belong		23		8-bit ISDN mu-law compressed (CCITT G.721 ADPCM voice data encoding),
+>12	belong		23		8-bit ISDN mu-law compressed (CCITT G.721 ADPCM voice enc.),
 >12	belong		24		compressed (8-bit CCITT G.722 ADPCM)
 >12	belong		25		compressed (3-bit CCITT G.723.3 ADPCM),
 >12	belong		26		compressed (5-bit CCITT G.723.5 ADPCM),
@@ -55,7 +55,7 @@
 >12	belong		19		16-bit linear compressed,
 >12	belong		20		16-bit linear with emphasis and compression,
 >12	belong		21		Music kit DSP commands,
->12	lelong		23		8-bit ISDN mu-law compressed (CCITT G.721 ADPCM voice data encoding),
+>12	lelong		23		8-bit ISDN mu-law compressed (CCITT G.721 ADPCM voice enc.),
 >12	belong		24		compressed (8-bit CCITT G.722 ADPCM)
 >12	belong		25		compressed (3-bit CCITT G.723.3 ADPCM),
 >12	belong		26		compressed (5-bit CCITT G.723.5 ADPCM),

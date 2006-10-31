@@ -51,7 +51,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.44 2006/10/20 21:03:40 christos Exp $")
+FILE_RCSID("@(#)$Id: compress.c,v 1.45 2006/10/31 19:37:17 christos Exp $")
 #endif
 
 private struct {
@@ -158,7 +158,7 @@ sread(int fd, void *buf, size_t n)
 {
 	int rv;
 #ifdef FIONREAD
-	int t;
+	int t = 0;
 #endif
 	size_t rn = n;
 
@@ -184,10 +184,9 @@ sread(int fd, void *buf, size_t n)
 					continue;
 				return 0;
 			}
+			break;
 		}
-
 #endif
-
 		(void)ioctl(fd, FIONREAD, &t);
 	}
 

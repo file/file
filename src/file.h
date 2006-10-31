@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.77 2006/10/27 14:57:32 christos Exp $
+ * @(#)$Id: file.h,v 1.78 2006/10/31 19:37:17 christos Exp $
  */
 
 #ifndef __file_h__
@@ -120,6 +120,12 @@ struct magic {
 #define				FILE_QUAD	24
 #define				FILE_LEQUAD	25
 #define				FILE_BEQUAD	26
+#define				FILE_QDATE	27
+#define				FILE_LEQDATE	28
+#define				FILE_BEQDATE	29
+#define				FILE_QLDATE	30
+#define				FILE_LEQLDATE	31
+#define				FILE_BEQLDATE	32
 
 #define				FILE_FORMAT_NAME	\
 /* 0 */ 			"invalid 0",		\
@@ -148,7 +154,14 @@ struct magic {
 /* 23 */ 			"melong",		\
 /* 24 */ 			"quad",			\
 /* 25 */ 			"lequad",		\
-/* 26 */ 			"bequad",
+/* 26 */ 			"bequad",		\
+/* 27 */ 			"qdate",		\
+/* 28 */ 			"leqdate",		\
+/* 29 */ 			"beqdate",		\
+/* 30 */ 			"qldate",		\
+/* 31 */ 			"leqldate",		\
+/* 32 */ 			"beqldate",
+
 
 #define FILE_FMT_NONE 0
 #define FILE_FMT_NUM  1 /* "cduxXi" */
@@ -182,7 +195,14 @@ struct magic {
 /* 23 */			FILE_FMT_NUM,		\
 /* 24 */			FILE_FMT_QUAD,		\
 /* 25 */			FILE_FMT_QUAD,		\
-/* 26 */			FILE_FMT_QUAD,
+/* 26 */			FILE_FMT_QUAD,		\
+/* 27 */			FILE_FMT_STR,		\
+/* 28 */			FILE_FMT_STR,		\
+/* 29 */			FILE_FMT_STR,		\
+/* 30 */			FILE_FMT_STR,		\
+/* 31 */			FILE_FMT_STR,		\
+/* 32 */			FILE_FMT_STR,
+
 
 	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
