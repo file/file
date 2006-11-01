@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: print.c,v 1.54 2006/10/31 19:37:17 christos Exp $")
+FILE_RCSID("@(#)$Id: print.c,v 1.55 2006/11/01 20:16:43 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -79,7 +79,8 @@ file_mdump(struct magic *m)
 		else
 			fputc('?', stderr);
 		if (FILE_STRING != m->type || FILE_PSTRING != m->type)
-			(void) fprintf(stderr, "%.8llx", m->mask);
+			(void) fprintf(stderr, "%.8llx",
+			    (unsigned long long)m->mask);
 		else {
 			if (m->mask & STRING_IGNORE_LOWERCASE) 
 				(void) fputc(CHAR_IGNORE_LOWERCASE, stderr);
@@ -108,7 +109,8 @@ file_mdump(struct magic *m)
 		case FILE_BEQUAD:
 		case FILE_LEQUAD:
 		case FILE_QUAD:
-			(void) fprintf(stderr, "%lld", m->value.q);
+			(void) fprintf(stderr, "%lld",
+			    (unsigned long long)m->value.q);
 			break;
 		case FILE_PSTRING:
 		case FILE_STRING:
