@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.83 2006/10/31 19:37:17 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.84 2006/11/01 20:16:43 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -1405,7 +1405,8 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	switch (m->reln) {
 	case 'x':
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "%llu == *any* = 1\n", v);
+			(void) fprintf(stderr, "%llu == *any* = 1\n",
+			    (unsigned long long)v);
 		matched = 1;
 		break;
 
@@ -1413,14 +1414,16 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		matched = v != l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "%llu != %llu = %d\n",
-				       v, l, matched);
+			    (unsigned long long)v, (unsigned long long)l,
+			    matched);
 		break;
 
 	case '=':
 		matched = v == l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "%llu == %llu = %d\n",
-				       v, l, matched);
+			    (unsigned long long)v, (unsigned long long)l,
+			    matched);
 		break;
 
 	case '>':
@@ -1428,13 +1431,14 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			matched = v > l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%llu > %llu = %d\n",
-					       v, l, matched);
+				    (unsigned long long)v,
+				    (unsigned long long)l, matched);
 		}
 		else {
 			matched = (int32_t) v > (int32_t) l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%lld > %lld = %d\n",
-					       v, l, matched);
+				    (long long)v, (long long)l, matched);
 		}
 		break;
 
@@ -1443,13 +1447,14 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			matched = v < l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%llu < %llu = %d\n",
-					       v, l, matched);
+				    (unsigned long long)v,
+				    (unsigned long long)l, matched);
 		}
 		else {
 			matched = (int32_t) v < (int32_t) l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%lld < %lld = %d\n",
-					       v, l, matched);
+				       (long long)v, (long long)l, matched);
 		}
 		break;
 
@@ -1457,14 +1462,16 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		matched = (v & l) == l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "((%llx & %llx) == %llx) = %d\n",
-				       v, l, l, matched);
+			    (unsigned long long)v, (unsigned long long)l,
+			    (unsigned long long)l, matched);
 		break;
 
 	case '^':
 		matched = (v & l) != l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "((%llx & %llx) != %llx) = %d\n",
-				       v, l, l, matched);
+			    (unsigned long long)v, (unsigned long long)l,
+			    (unsigned long long)l, matched);
 		break;
 
 	default:
