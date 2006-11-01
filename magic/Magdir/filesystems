@@ -963,6 +963,8 @@
 >>51	lelong	x	blocksize: %d bytes,
 >39	ledate	x	created: %s
 
+0	string		td\000		floppy image data (TeleDisk)
+
 # AFS Dump Magic
 # From: Ty Sarna <tsarna@sarna.org> 
 0       string                  \x01\xb3\xa1\x13\x22    AFS Dump
