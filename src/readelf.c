@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.60 2006/11/07 19:47:22 christos Exp $")
+FILE_RCSID("@(#)$Id: readelf.c,v 1.61 2006/11/15 15:53:23 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -898,13 +898,8 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
     size_t nbytes)
 {
 	union {
-#if defined(__s390x__) || defined(__powerpc64__) || defined(__sparcv9)
 		int32_t l;
 		char c[sizeof (int32_t)];
-#else
-		long l;
-		char c[sizeof (long)];
-#endif
 	} u;
 	int class;
 	int swap;
