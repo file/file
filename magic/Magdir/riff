@@ -122,6 +122,7 @@
 >>>>>>>(104.l+132)      string/c        iv50    Indeo 5.0
 >>>>>>>(104.l+132)      string/c        mp42    Microsoft MPEG-4 v2
 >>>>>>>(104.l+132)      string/c        mp43    Microsoft MPEG-4 v3
+>>>>>>>(104.l+132)      string/c        fmp4    FFMpeg MPEG-4
 >>>>>>>(104.l+132)      string/c        mjpg    Motion JPEG
 >>>>>>>(104.l+132)      string/c        div3    DivX 3
 >>>>>>>>112             string/c        div3    Low-Motion
