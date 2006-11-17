@@ -1,3 +1,8 @@
+2006-11-17 10:51 Christos Zoulas <christos@zoulas.com>
+
+	* Added a -0 option to print a '\0' separator
+	  Etienne Buira <etienne.buira@free.fr>
+
 2006-10-31 15:14 Christos Zoulas <christos@zoulas.com>
 
 	* Check offset before copying (Mike Frysinger)

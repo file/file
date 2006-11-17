@@ -1,5 +1,5 @@
 .TH FILE __CSECTION__ "Copyright but distributable"
-.\" $Id: file.man,v 1.58 2006/05/03 19:20:25 christos Exp $
+.\" $Id: file.man,v 1.59 2006/11/17 16:11:10 christos Exp $
 .SH NAME
 file
 \- determine file type
@@ -271,6 +271,10 @@ Print the version of the program and exit.
 .TP 8
 .B "\-z, \-\-uncompress"
 Try to look inside compressed files.
+.B "\-0, \-\-print0"
+Output a null character ('\0') after the end of the filename. Nice to
+.BR cut (1)
+the output. This does not affect the separator which is still printed.
 .TP 8
 .B "\-\-help"
 Print a help message and exit.
