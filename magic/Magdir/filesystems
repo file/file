@@ -923,15 +923,15 @@
 0	string	VoIP\ Startup\ and	Aculab VoIP firmware
 >35	string	x	format %s
 
-# PPCBoot image file
+# u-boot/PPCBoot image file
 # From: Mark Brown <broonie@sirena.org.uk>
-0	belong	0x27051956	PPCBoot image
+0	belong	0x27051956	u-boot/PPCBoot image
 >4	string  PPCBoot
 >>12	string  x		version %s
 
 # JFFS2 file system
-0       leshort         0x1984                  Linux old jffs2 filesystem data little endian
-0       lelong          0xe0011985              Linux jffs2 filesystem data little endian
+0	leshort	0x1984		Linux old jffs2 filesystem data little endian
+0	leshort	0x1985		Linux jffs2 filesystem data little endian
 
 # Squashfs
 0	string	sqsh	Squashfs filesystem, big endian,
