@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.102 2006/06/02 00:07:58 ian Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.103 2006/11/17 16:11:10 christos Exp $")
 #endif	/* lint */
 
 
@@ -81,7 +81,7 @@ FILE_RCSID("@(#)$Id: file.c,v 1.102 2006/06/02 00:07:58 ian Exp $")
 #define SYMLINKFLAG ""
 #endif
 
-# define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNrsvz] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
+# define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNrsvz0] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 
 #ifndef MAXPATHLEN
 #define	MAXPATHLEN	512
@@ -90,7 +90,8 @@ FILE_RCSID("@(#)$Id: file.c,v 1.102 2006/06/02 00:07:58 ian Exp $")
 private int 		/* Global command-line options 		*/
 	bflag = 0,	/* brief output format	 		*/
 	nopad = 0,	/* Don't pad output			*/
-	nobuffer = 0;   /* Do not buffer stdout 		*/
+	nobuffer = 0,   /* Do not buffer stdout 		*/
+	nullsep = 0;	/* Append '\0' to the separator		*/
 
 private const char *magicfile = 0;	/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
@@ -127,7 +128,7 @@ main(int argc, char *argv[])
 	char *home, *usermagic;
 	struct stat sb;
 	static const char hmagic[] = "/.magic";
-#define OPTSTRING	"bcCdf:F:hikLm:nNprsvz"
+#define OPTSTRING	"bcCdf:F:hikLm:nNprsvz0"
 #ifdef HAVE_GETOPT_LONG
 	int longindex;
 	static const struct option long_options[] =
@@ -155,6 +156,7 @@ main(int argc, char *argv[])
 		{"no-pad", 0, 0, 'N'},
 		{"special-files", 0, 0, 's'},
 		{"compile", 0, 0, 'C'},
+		{"print0", 0, 0, '0'},
 		{0, 0, 0, 0},
 	};
 #endif
@@ -206,6 +208,9 @@ main(int argc, char *argv[])
 				help();
 			break;
 #endif
+		case '0':
+			nullsep = 1;
+			break;
 		case 'b':
 			++bflag;
 			break;
@@ -397,8 +402,9 @@ process(const char *inname, int wid)
 	int std_in = strcmp(inname, "-") == 0;
 
 	if (wid > 0 && !bflag)
-		(void)printf("%s%s%*s ", std_in ? "/dev/stdin" : inname,
-		    separator, (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
+		(void)printf("%s%*c%s%*s ", std_in ? "/dev/stdin" : inname,
+		    nullsep ? 1 : 0, '\0', separator,
+		    (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
 
 	type = magic_file(magic, std_in ? NULL : inname);
 	if (type == NULL)
