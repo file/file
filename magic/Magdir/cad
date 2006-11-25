@@ -56,8 +56,7 @@
 
 # CAD: file(1) magic for computer aided design files
 # Phillip Griffith <phillip dot griffith at gmail dot com>
-# AutoCAD magic taken from the Open Design Alliance's OpenDWG 
-specifications.
+# AutoCAD magic taken from the Open Design Alliance's OpenDWG specifications.
 #
 0	belong	0x08051700	Bentley/Intergraph MicroStation DGN cell library
 0	belong	0x0809fe02	Bentley/Intergraph MicroStation DGN vector CAD

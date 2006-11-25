@@ -131,6 +131,6 @@
 # From: Michael Piefel <piefel@debian.org>
 # sqtroff intermediate language (replacement for ditroff int. lang.)
 0	string		X\ 495		SoftQuad troff Context intermediate for AT&T 495 laser printer
-0	string		X\ hp		SoftQuad troff Context intermediate for Hewlett-Packard LaserJet
+0	string		X\ hp		SoftQuad troff Context intermediate for HP LaserJet
 0	string		X\ impr		SoftQuad troff Context intermediate for IMAGEN imPRESS
 0	string		X\ ps		SoftQuad troff Context intermediate for PostScript
