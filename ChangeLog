@@ -1,3 +1,14 @@
+2006-11-25 13:35 Christos Zoulas <christos@zoulas.com>
+	
+	* Don't store the current offset in the magic
+	  struct, because it needs to be restored and
+	  it was not done properly all the time. Bug
+	  found by: Arkadiusz Miskiewicz
+
+	* Fix problem in the '\0' separator; and don't
+	  print it as an additional separator; print
+	  it as the only separator.
+
 2006-11-17 10:51 Christos Zoulas <christos@zoulas.com>
 
 	* Added a -0 option to print a '\0' separator

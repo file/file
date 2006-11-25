@@ -933,3 +933,6 @@
 0	string		WordPro\0	application/vnd.lotus-wordpro
 0	string		WordPro\r\373	application/vnd.lotus-wordpro
 0	string		CPC\262		image/cpi
+
+# 
+128	string		DICM		application/dicom

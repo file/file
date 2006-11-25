@@ -196,6 +196,7 @@ Magdir/troff \
 Magdir/tuxedo \
 Magdir/typeset \
 Magdir/unknown \
+Magdir/unicode \
 Magdir/uuencode \
 Magdir/varied.out \
 Magdir/varied.script \
