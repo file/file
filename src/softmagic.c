@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.84 2006/11/01 20:16:43 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.85 2006/11/25 17:28:54 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -50,7 +50,7 @@ private int magiccheck(struct magic_set *, union VALUETYPE *, struct magic *);
 private int32_t mprint(struct magic_set *, union VALUETYPE *, struct magic *);
 private void mdebug(uint32_t, const char *, size_t);
 private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
-    const unsigned char *, size_t, size_t);
+    const unsigned char *, uint32_t, size_t);
 private int mconvert(struct magic_set *, union VALUETYPE *, struct magic *);
 private int check_mem(struct magic_set *, unsigned int);
 private int print_sep(struct magic_set *, int);
@@ -119,6 +119,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 
 	for (magindex = 0; magindex < nmagic; magindex++) {
 		/* if main entry matches, print it... */
+		ms->offset = magic[magindex].offset;
 		int flush = !mget(ms, &p, s, &magic[magindex], nbytes,
 		    cont_level);
 		if (flush) {
@@ -174,16 +175,16 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				 */
 				cont_level = magic[magindex].cont_level;
 			}
-			oldoff = magic[magindex].offset;
+			ms->offset = magic[magindex].offset;
 			if (magic[magindex].flag & OFFADD) {
-				magic[magindex].offset +=
+				ms->offset +=
 				    ms->c.off[cont_level - 1];
 			}
 
 			flush = !mget(ms, &p, s, &magic[magindex], nbytes,
 			    cont_level);
 			if (flush && magic[magindex].reln != '!')
-				goto done;
+				continue;
 				
 			switch (flush ? 1 : magiccheck(ms, &p, &magic[magindex])) {
 			case -1:
@@ -228,8 +229,6 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				if (check_mem(ms, ++cont_level) == -1)
 					return -1;
 			}
-done:
-			magic[magindex].offset = oldoff;
 		}
 		firstline = 0;
 		returnval = 1;
@@ -304,7 +303,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 				return -1;
 			break;
 		}
-		t = m->offset + sizeof(char);
+		t = ms->offset + sizeof(char);
 		break;
 
   	case FILE_SHORT:
@@ -325,7 +324,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 				return -1;
 			break;
 		}
-		t = m->offset + sizeof(short);
+		t = ms->offset + sizeof(short);
 		break;
 
   	case FILE_LONG:
@@ -347,7 +346,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 				return -1;
 			break;
 		}
-		t = m->offset + sizeof(int32_t);
+		t = ms->offset + sizeof(int32_t);
   		break;
 
   	case FILE_QUAD:
@@ -356,7 +355,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		v = file_signextend(ms, m, p->q);
 		if (file_printf(ms, m->desc, (uint64_t) v) == -1)
 			return -1;
-		t = m->offset + sizeof(int64_t);
+		t = ms->offset + sizeof(int64_t);
   		break;
   	case FILE_STRING:
   	case FILE_PSTRING:
@@ -365,7 +364,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (m->reln == '=' || m->reln == '!') {
 			if (file_printf(ms, m->desc, m->value.s) == -1)
 				return -1;
-			t = m->offset + m->vallen;
+			t = ms->offset + m->vallen;
 		}
 		else {
 			if (*m->value.s == '\0') {
@@ -375,7 +374,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			}
 			if (file_printf(ms, m->desc, p->s) == -1)
 				return -1;
-			t = m->offset + strlen(p->s);
+			t = ms->offset + strlen(p->s);
 		}
 		break;
 
@@ -385,7 +384,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_MEDATE:
 		if (file_printf(ms, m->desc, file_fmttime(p->l, 1)) == -1)
 			return -1;
-		t = m->offset + sizeof(time_t);
+		t = ms->offset + sizeof(time_t);
 		break;
 
 	case FILE_LDATE:
@@ -394,7 +393,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 	case FILE_MELDATE:
 		if (file_printf(ms, m->desc, file_fmttime(p->l, 0)) == -1)
 			return -1;
-		t = m->offset + sizeof(time_t);
+		t = ms->offset + sizeof(time_t);
 		break;
 
 	case FILE_QDATE:
@@ -403,7 +402,7 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (file_printf(ms, m->desc, file_fmttime((uint32_t)p->q, 1))
 		    == -1)
 			return -1;
-		t = m->offset + sizeof(uint64_t);
+		t = ms->offset + sizeof(uint64_t);
 		break;
 
 	case FILE_QLDATE:
@@ -412,19 +411,19 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		if (file_printf(ms, m->desc, file_fmttime((uint32_t)p->q, 0))
 		    == -1)
 			return -1;
-		t = m->offset + sizeof(uint64_t);
+		t = ms->offset + sizeof(uint64_t);
 		break;
 
 	case FILE_REGEX:
 	  	if (file_printf(ms, m->desc, p->s) == -1)
 			return -1;
-		t = m->offset + strlen(p->s);
+		t = ms->offset + strlen(p->s);
 		break;
 
 	case FILE_SEARCH:
 	  	if (file_printf(ms, m->desc, m->value.s) == -1)
 			return -1;
-		t = m->offset + m->vallen;
+		t = ms->offset + m->vallen;
 		break;
 
 	default:
@@ -610,7 +609,7 @@ mdebug(uint32_t offset, const char *str, size_t len)
 
 private int
 mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
-    const unsigned char *s, size_t offset, size_t nbytes)
+    const unsigned char *s, uint32_t offset, size_t nbytes)
 {
 	if (type == FILE_REGEX && indir == 0) {
 		/*
@@ -692,7 +691,7 @@ private int
 mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
     struct magic *m, size_t nbytes, unsigned int cont_level)
 {
-	uint32_t offset = m->offset;
+	uint32_t offset = ms->offset;
 
 	if (mcopy(ms, p, m->type, m->flag & INDIR, s, offset, nbytes) == -1)
 		return -1;
@@ -1169,7 +1168,7 @@ mget(struct magic_set *ms, union VALUETYPE *p, const unsigned char *s,
 		if (m->flag & INDIROFFADD) offset += ms->c.off[cont_level-1];
 		if (mcopy(ms, p, m->type, 0, s, offset, nbytes) == -1)
 			return -1;
-		m->offset = offset;
+		ms->offset = offset;
 
 		if ((ms->flags & MAGIC_DEBUG) != 0) {
 			mdebug(offset, (char *)(void *)p,
@@ -1381,7 +1380,7 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 			while (len-- > 0 && (v = *b++ - *a++) == 0)
 				continue;
 			if (!v) {
-				m->offset += range - 1;
+				ms->offset += range - 1;
 				break;
 			}
 			if (range + slen >= p->search.buflen)
