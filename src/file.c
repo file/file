@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.103 2006/11/17 16:11:10 christos Exp $")
+FILE_RCSID("@(#)$Id: file.c,v 1.104 2006/11/25 17:28:54 christos Exp $")
 #endif	/* lint */
 
 
@@ -91,7 +91,7 @@ private int 		/* Global command-line options 		*/
 	bflag = 0,	/* brief output format	 		*/
 	nopad = 0,	/* Don't pad output			*/
 	nobuffer = 0,   /* Do not buffer stdout 		*/
-	nullsep = 0;	/* Append '\0' to the separator		*/
+	nulsep = 0;	/* Append '\0' to the separator		*/
 
 private const char *magicfile = 0;	/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
@@ -209,7 +209,7 @@ main(int argc, char *argv[])
 			break;
 #endif
 		case '0':
-			nullsep = 1;
+			nulsep = 1;
 			break;
 		case 'b':
 			++bflag;
@@ -401,10 +401,15 @@ process(const char *inname, int wid)
 	const char *type;
 	int std_in = strcmp(inname, "-") == 0;
 
-	if (wid > 0 && !bflag)
-		(void)printf("%s%*c%s%*s ", std_in ? "/dev/stdin" : inname,
-		    nullsep ? 1 : 0, '\0', separator,
+	if (wid > 0 && !bflag) {
+		(void)printf("%s", std_in ? "/dev/stdin" : inname);
+		if (nulsep)
+			(void)puts('\0');
+		else
+			(void)printf("%s", separator);
+		(void)printf("%*s ",
 		    (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
+	}
 
 	type = magic_file(magic, std_in ? NULL : inname);
 	if (type == NULL)

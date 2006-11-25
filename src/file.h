@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.80 2006/10/31 20:57:45 christos Exp $
+ * @(#)$Id: file.h,v 1.81 2006/11/25 17:28:54 christos Exp $
  */
 
 #ifndef __file_h__
@@ -282,6 +282,7 @@ struct magic_set {
 	char *pbuf;
 	size_t psize;
     } o;
+    uint32_t offset;
     int error;
     int flags;
     int haderr;
