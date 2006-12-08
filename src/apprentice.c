@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.98 2006/10/31 19:37:17 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.99 2006/12/08 20:31:07 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -97,7 +97,7 @@ private int hextoint(int);
 private const char *getstr(struct magic_set *, const char *, char *, int,
     int *);
 private int parse(struct magic_set *, struct magic_entry **, uint32_t *,
-    const char *, int);
+    const char *, size_t, int);
 private void eatsize(const char **);
 private int apprentice_1(struct magic_set *, const char *, int, struct mlist *);
 private size_t apprentice_magic_strength(const struct magic *);
@@ -312,33 +312,40 @@ private size_t
 apprentice_magic_strength(const struct magic *m)
 {
 #define MULT 10
+	size_t val = 2 * MULT;	/* baseline strength */
 
 	switch (m->type) {
 	case FILE_BYTE:
-		return 1 * MULT;
+		val += 1 * MULT;
+		break;
 
 	case FILE_SHORT:
 	case FILE_LESHORT:
 	case FILE_BESHORT:
-		return 2 * MULT;
+		val += 2 * MULT;
+		break;
 
 	case FILE_LONG:
 	case FILE_LELONG:
 	case FILE_BELONG:
 	case FILE_MELONG:
-		return 4 * MULT;
+		val += 4 * MULT;
+		break;
 
 	case FILE_PSTRING:
 	case FILE_STRING:
-		return m->vallen * MULT;
+		val += m->vallen * MULT;
+		break;
 
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
-		return m->vallen * MULT / 2;
+		val += m->vallen * MULT / 2;
+		break;
 
 	case FILE_SEARCH:
 	case FILE_REGEX:
-		return m->vallen;
+		val += m->vallen;
+		break;
 
 	case FILE_DATE:
 	case FILE_LEDATE:
@@ -348,7 +355,8 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_LELDATE:
 	case FILE_BELDATE:
 	case FILE_MELDATE:
-		return 4 * MULT;
+		val += 4 * MULT;
+		break;
 
 	case FILE_QDATE:
 	case FILE_LEQDATE:
@@ -356,11 +364,40 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_QLDATE:
 	case FILE_LEQLDATE:
 	case FILE_BEQLDATE:
-		return 8 * MULT;
+		val += 8 * MULT;
+		break;
 
 	default:
-		return 0;
+		val = 0;
+		(void)fprintf(stderr, "Bad type %d\n", m->type);
+		abort();
 	}
+
+	switch (m->reln) {
+	case 'x':	/* matches anything penalize */
+		val = 0;
+		break;
+
+	case '!':
+	case '=':	/* Exact match, prefer */
+		val += MULT;
+		break;
+
+	case '>':
+	case '<':	/* comparison match reduce strength */
+		val -= 2 * MULT;
+		break;
+
+	case '^':
+	case '&':	/* masking bits, we could count them too */
+		val -= MULT;
+		break;
+
+	default:
+		(void)fprintf(stderr, "Bad relation %c\n", m->reln);
+		abort();
+	}
+	return val;
 }
 
 /*  
@@ -396,6 +433,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	int errs = 0;
 	struct magic_entry *marray;
 	uint32_t marraycount, i, mentrycount = 0;
+	size_t lineno = 0;
 
 	ms->flags |= MAGIC_CHECK;	/* Enable checks for parsed files */
 
@@ -422,14 +460,18 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	/* read and parse this file */
 	for (ms->line = 1; fgets(line, BUFSIZ, f) != NULL; ms->line++) {
 		size_t len;
+		len = strlen(line);
+		if (len == 0) /* null line, garbage, etc */
+			continue;
+		if (line[len - 1] == '\n') {
+			lineno++;
+			line[len - 1] = '\0'; /* delete newline */
+		}
+		if (line[0] == '\0')	/* empty, do not parse */
+			continue;
 		if (line[0] == '#')	/* comment, do not parse */
 			continue;
-		len = strlen(line);
-		if (len < 2) /* null line, garbage, etc */
-			continue;
-		if (line[len - 1] == '\n')
-			line[len - 1] = '\0'; /* delete newline */
-		if (parse(ms, &marray, &marraycount, line, action) != 0)
+		if (parse(ms, &marray, &marraycount, line, lineno, action) != 0)
 			errs++;
 	}
 
@@ -538,7 +580,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
  */
 private int
 parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp, 
-    const char *line, int action)
+    const char *line, size_t lineno, int action)
 {
 	size_t i;
 	struct magic_entry *me;
@@ -606,6 +648,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		m->cont_level = 0;
 		me->cont_count = 1;
 	}
+	m->lineno = lineno;
 
 	if (m->cont_level != 0 && *l == '&') {
                 ++l;            /* step over */

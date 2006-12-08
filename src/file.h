@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.81 2006/11/25 17:28:54 christos Exp $
+ * @(#)$Id: file.h,v 1.82 2006/12/08 20:31:07 christos Exp $
  */
 
 #ifndef __file_h__
@@ -225,7 +225,7 @@ struct magic {
 	/* Word 5 */
 	int32_t in_offset;	/* offset from indirection */
 	/* Word 6 */
-	uint32_t dummy4;
+	uint32_t lineno;	/* line number in magic file */
 	/* Word 7,8 */
 	uint64_t mask;	/* mask before comparison with value */
 	/* Words 9-16 */

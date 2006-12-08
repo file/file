@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.85 2006/11/25 17:28:54 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.86 2006/12/08 20:31:07 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -68,9 +68,10 @@ protected int
 file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 {
 	struct mlist *ml;
+	int rv;
 	for (ml = ms->mlist->next; ml != ms->mlist; ml = ml->next)
-		if (match(ms, ml->magic, ml->nmagic, buf, nbytes))
-			return 1;
+		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes)) != 0)
+			return rv;
 
 	return 0;
 }
@@ -113,6 +114,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	int32_t oldoff = 0;
 	int returnval = 0; /* if a match is found it is set to 1*/
 	int firstline = 1; /* a flag to print X\n  X\n- X */
+	int printed_something = 0;
 
 	if (check_mem(ms, cont_level) == -1)
 		return -1;
@@ -123,7 +125,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		int flush = !mget(ms, &p, s, &magic[magindex], nbytes,
 		    cont_level);
 		if (flush) {
-			if (magic[magindex].reln == '!') flush = 0;
+			if (magic[magindex].reln == '!')
+				flush = 0;
 		} else {	
 			switch (magiccheck(ms, &p, &magic[magindex])) {
 			case -1:
@@ -152,6 +155,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		 */
 		if (magic[magindex].desc[0]) {
 			need_separator = 1;
+			printed_something = 1;
 			if (print_sep(ms, firstline) == -1)
 				return -1;
 		}
@@ -197,6 +201,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				 * make sure that we have a separator first.
 				 */
 				if (magic[magindex].desc[0]) {
+					printed_something = 1;
 					if (print_sep(ms, firstline) == -1)
 						return -1;
 				}
@@ -231,8 +236,9 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			}
 		}
 		firstline = 0;
-		returnval = 1;
-		if ((ms->flags & MAGIC_CONTINUE) == 0) {
+		if (printed_something)
+			returnval = 1;
+		if ((ms->flags & MAGIC_CONTINUE) == 0 && printed_something) {
 			return 1; /* don't keep searching */
 		}			
 	}
@@ -314,7 +320,8 @@ mprint(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			if (snprintf(buf, sizeof(buf), "%hu", (unsigned short)v) < 0)
+			if (snprintf(buf, sizeof(buf), "%hu",
+			    (unsigned short)v) < 0)
 				return -1;
 			if (file_printf(ms, m->desc, buf) == -1)
 				return -1;
@@ -1383,14 +1390,18 @@ magiccheck(struct magic_set *ms, union VALUETYPE *p, struct magic *m)
 				ms->offset += range - 1;
 				break;
 			}
-			if (range + slen >= p->search.buflen)
+			if (range + slen >= p->search.buflen) {
+				v = 1;
 				break;
+			}
 			len = slen;
 			a = (unsigned char*)m->value.s;
 			b = (unsigned char*)p->search.buf + range;
 		}
 		free(p->search.buf);
 		p->search.buf = NULL;
+		if (v)
+			return 0;
 		break;
 	}
 	default:
