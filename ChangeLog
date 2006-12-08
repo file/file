@@ -1,3 +1,20 @@
+2006-12-08 16:32 Christos Zoulas <christos@zoulas.com>
+
+	* store and print the line number of the magic
+	  entry for debugging.         
+
+	* if the magic entry did not print anything,
+	  don't treat it as a match
+
+	* change the magic strength algorithm to take
+	  into account the relationship op.
+
+	* fix a bug in search where we could accidentally
+	  return a match.
+
+	* propagate the error return from match to
+	  file_softmagic.
+
 2006-11-25 13:35 Christos Zoulas <christos@zoulas.com>
 	
 	* Don't store the current offset in the magic
