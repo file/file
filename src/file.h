@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.82 2006/12/08 20:31:07 christos Exp $
+ * @(#)$Id: file.h,v 1.83 2006/12/11 21:48:49 christos Exp $
  */
 
 #ifndef __file_h__
@@ -307,7 +307,7 @@ protected uint64_t file_signextend(struct magic_set *, struct magic *, uint64_t)
 protected void file_delmagic(struct magic *, int type, size_t entries);
 protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);
-protected void file_oomem(struct magic_set *);
+protected void file_oomem(struct magic_set *, size_t);
 protected void file_error(struct magic_set *, int, const char *, ...);
 protected void file_magwarn(struct magic_set *, const char *, ...);
 protected void file_mdump(struct magic *);

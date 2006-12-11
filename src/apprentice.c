@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: apprentice.c,v 1.99 2006/12/08 20:31:07 christos Exp $")
+FILE_RCSID("@(#)$Id: apprentice.c,v 1.100 2006/12/11 21:48:49 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -203,7 +203,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 
 	if ((ml = malloc(sizeof(*ml))) == NULL) {
 		file_delmagic(magic, mapped, nmagic);
-		file_oomem(ms);
+		file_oomem(ms, sizeof(*ml));
 		return -1;
 	}
 
@@ -257,13 +257,13 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		fn = MAGIC;
 
 	if ((fn = mfn = strdup(fn)) == NULL) {
-		file_oomem(ms);
+		file_oomem(ms, strlen(fn));
 		return NULL;
 	}
 
 	if ((mlist = malloc(sizeof(*mlist))) == NULL) {
 		free(mfn);
-		file_oomem(ms);
+		file_oomem(ms, sizeof(*mlist));
 		return NULL;
 	}
 	mlist->next = mlist->prev = mlist;
@@ -275,10 +275,11 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		if (*fn == '\0')
 			break;
 		if (ms->flags & MAGIC_MIME) {
-			if ((afn = malloc(strlen(fn) + sizeof(mime))) == NULL) {
+			size_t len = strlen(fn) + sizeof(mime);
+			if ((afn = malloc(len)) == NULL) {
 				free(mfn);
 				free(mlist);
-				file_oomem(ms);
+				file_oomem(ms, len);
 				return NULL;
 			}
 			(void)strcpy(afn, fn);
@@ -358,6 +359,9 @@ apprentice_magic_strength(const struct magic *m)
 		val += 4 * MULT;
 		break;
 
+	case FILE_QUAD:
+	case FILE_BEQUAD:
+	case FILE_LEQUAD:
 	case FILE_QDATE:
 	case FILE_LEQDATE:
 	case FILE_BEQDATE:
@@ -448,7 +452,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
         maxmagic = MAXMAGIS;
 	if ((marray = calloc(maxmagic, sizeof(*marray))) == NULL) {
 		(void)fclose(f);
-		file_oomem(ms);
+		file_oomem(ms, maxmagic * sizeof(*marray));
 		return -1;
 	}
 	marraycount = 0;
@@ -487,7 +491,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		mentrycount += marray[i].cont_count;
 
 	if ((*magicp = malloc(sizeof(**magicp) * mentrycount)) == NULL) {
-		file_oomem(ms);
+		file_oomem(ms, sizeof(**magicp) * mentrycount);
 		errs++;
 		goto out;
 	}
@@ -611,7 +615,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 			struct magic *nm;
 			size_t cnt = me->max_count + ALLOC_CHUNK;
 			if ((nm = realloc(me->mp, sizeof(*nm) * cnt)) == NULL) {
-				file_oomem(ms);
+				file_oomem(ms, sizeof(*nm) * cnt);
 				return -1;
 			}
 			me->mp = m = nm;
@@ -627,7 +631,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 			maxmagic += ALLOC_INCR;
 			if ((mp = realloc(*mentryp, sizeof(*mp) * maxmagic)) ==
 			    NULL) {
-				file_oomem(ms);
+				file_oomem(ms, sizeof(*mp) * maxmagic);
 				return -1;
 			}
 			(void)memset(&mp[*nmentryp], 0, sizeof(*mp) *
@@ -637,7 +641,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		me = &(*mentryp)[*nmentryp];
 		if (me->mp == NULL) {
 			if ((m = malloc(sizeof(*m) * ALLOC_CHUNK)) == NULL) {
-				file_oomem(ms);
+				file_oomem(ms, sizeof(*m) * ALLOC_CHUNK);
 				return -1;
 			}
 			me->mp = m;
@@ -1350,7 +1354,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 #define RET	2
 #else
 	if ((mm = malloc((size_t)st.st_size)) == NULL) {
-		file_oomem(ms);
+		file_oomem(ms, (size_t)st.st_size);
 		goto error;
 	}
 	if (read(fd, mm, (size_t)st.st_size) != (size_t)st.st_size) {
@@ -1512,14 +1516,14 @@ swap8(uint64_t sv)
 	uint32_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv; 
 	uint8_t *d = (uint8_t *)(void *)&rv; 
-	d[0] = s[7];
-	d[1] = s[6];
-	d[2] = s[5];
-	d[3] = s[4];
-	d[4] = s[3];
-	d[5] = s[2];
-	d[6] = s[1];
-	d[7] = s[0];
+	d[0] = s[3];
+	d[1] = s[2];
+	d[2] = s[1];
+	d[3] = s[0];
+	d[4] = s[7];
+	d[5] = s[6];
+	d[6] = s[5];
+	d[7] = s[4];
 	return rv;
 }
 
