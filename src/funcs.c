@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.22 2006/10/31 19:37:17 christos Exp $")
+FILE_RCSID("@(#)$Id: funcs.c,v 1.23 2006/12/11 21:48:49 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -60,7 +60,7 @@ file_printf(struct magic_set *ms, const char *fmt, ...)
 	if ((len = vsnprintf(ms->o.ptr, ms->o.len, fmt, ap)) >= ms->o.len) {
 		va_end(ap);
 		if ((buf = realloc(ms->o.buf, len + 1024)) == NULL) {
-			file_oomem(ms);
+			file_oomem(ms, len + 1024);
 			return -1;
 		}
 		ms->o.ptr = buf + (ms->o.ptr - ms->o.buf);
@@ -102,9 +102,9 @@ file_error(struct magic_set *ms, int error, const char *f, ...)
 
 
 protected void
-file_oomem(struct magic_set *ms)
+file_oomem(struct magic_set *ms, size_t len)
 {
-	file_error(ms, errno, "cannot allocate memory");
+	file_error(ms, errno, "cannot allocate %zu bytes", len);
 }
 
 protected void
@@ -184,7 +184,7 @@ file_getbuffer(struct magic_set *ms)
 	nsize = ms->o.len * 4 + 1;
 	if (ms->o.psize < nsize) {
 		if ((nbuf = realloc(ms->o.pbuf, nsize)) == NULL) {
-			file_oomem(ms);
+			file_oomem(ms, nsize);
 			return NULL;
 		}
 		ms->o.psize = nsize;

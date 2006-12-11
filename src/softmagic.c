@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.86 2006/12/08 20:31:07 christos Exp $")
+FILE_RCSID("@(#)$Id: softmagic.c,v 1.87 2006/12/11 21:48:49 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -257,7 +257,7 @@ check_mem(struct magic_set *ms, unsigned int level)
 	ms->c.off = (ms->c.off == NULL) ? malloc(len) : realloc(ms->c.off, len);
 	if (ms->c.off != NULL)
 		return 0;
-	file_oomem(ms);
+	file_oomem(ms, len);
 	return -1;
 }
 
@@ -630,7 +630,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 			return 0;
 		}
 		if ((p->search.buf = strdup((const char *)s)) == NULL) {
-			file_oomem(ms);
+			file_oomem(ms, strlen((const char *)s));
 			return -1;
 		}
 		for (b = p->search.buf; offset && 
