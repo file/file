@@ -1,4 +1,4 @@
-.\" $Id: file.man,v 1.62 2007/01/10 22:54:21 christos Exp $
+.\" $Id: file.man,v 1.63 2007/01/10 23:00:16 christos Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -164,18 +164,18 @@ Any file that cannot be identified as having been written
 in any of the character sets listed above is simply said to be ``data''.
 .Sh OPTIONS
 .Bl -tag -width indent
-.It Fl b Fl \-brief
+.It Fl b , -brief
 Do not prepend filenames to output lines (brief mode).
-.It Fl c Fl \-checking\-printout
+.It Fl c , -checking-printout
 Cause a checking printout of the parsed form of the magic file.
 This is usually used in conjunction with the
 .Fl m
 flag to debug a new magic file before installing it.
-.It Fl C Fl \-compile
+.It Fl C , -compile
 Write a
 .Pa magic.mgc
 output file that contains a pre-parsed version of the magic file.
-.It Fl f Fl \-files\-from Ar namefile
+.It Fl f , -files-from Ar namefile
 Read the names of the files to be examined from 
 .Ar namefile
 (one per line) 
@@ -184,19 +184,19 @@ Either
 .Ar namefile
 or at least one filename argument must be present;
 to test the standard input, use 
-.Sq \-
+.Sq -
 as a filename argument.
-.It Fl F Fl \-separator Ar separator
+.It Fl F , -separator Ar separator
 Use the specified string as the separator between the filename and the
 file result returned. Defaults to 
 .Sq \&: .
-.It Fl h Fl \-no\-dereference
+.It Fl h , -no-dereference
 option causes symlinks not to be followed
 (on systems that support symbolic links). This is the default if the
 environment variable
 .Dv POSIXLY_CORRECT
 is not defined.
-.It Fl i Fl \-mime
+.It Fl i , -mime
 Causes the file command to output mime type strings rather than the more
 traditional human readable ones. Thus it may say
 .Dq text/plain; charset=us-ascii
@@ -211,16 +211,16 @@ file.
 (See
 .Dq FILES
 section, below).
-.It Fl k Fl \-keep\-going
+.It Fl k , -keep-going
 Don't stop at the first match, keep going.
-.It Fl L Fl \-dereference
+.It Fl L , -dereference
 option causes symlinks to be followed, as the like-named option in
 .Xr ls 1
 (on systems that support symbolic links).
 This is the default if the environment variable
 .Dv POSIXLY_CORRECT
 is defined.
-.It Fl m Fl \-magic\-file Ar list
+.It Fl m , -magic-file Ar list
 Specify an alternate list of files containing magic numbers.
 This can be a single file, or a colon-separated list of files.
 If a compiled magic file is found alongside, it will be used instead.
@@ -230,13 +230,13 @@ With the
 option, the program adds
 .Dq .mime
 to each file name.
-.It Fl n Fl \-no\-buffer
+.It Fl n , -no-buffer
 Force stdout to be flushed after checking each file.
 This is only useful if checking a list of files.
 It is intended to be used by programs that want filetype output from a pipe.
-.It Fl N Fl \-no\-pad
+.It Fl N , -no-pad
 Don't pad filenames so that they align in the output.
-.It Fl p Fl \-preserve\-date
+.It Fl p , -preserve-date
 On systems that support
 .Xr utime 2
 or
@@ -244,12 +244,12 @@ or
 attempt to preserve the access time of files analyzed, to pretend that
 .Nm
 never read them.
-.It Fl r Fl \-raw
+.It Fl r , -raw
 Don't translate unprintable characters to \eooo.
 Normally
 .Nm
 translates unprintable characters to their octal representation.
-.It Fl s Fl \-special\-files
+.It Fl s , -special-files
 Normally,
 .Nm
 only attempts to read and determine the type of argument files which
@@ -269,17 +269,17 @@ This option also causes
 to disregard the file size as reported by
 .Xr stat 2
 since on some systems it reports a zero size for raw disk partitions.
-.It Fl v Fl \-version
+.It Fl v , -version
 Print the version of the program and exit.
-.It Fl z Fl \-uncompress
+.It Fl z , -uncompress
 Try to look inside compressed files.
-.It Fl 0 Fl \-print0
+.It Fl 0 , -print0
 Output a null character
 .Sq \e0
 after the end of the filename. Nice to
 .Xr cut 1
 the output. This does not affect the separator which is still printed.
-.It Fl \-help
+.It Fl -help
 Print a help message and exit.
 .El
 .Sh FILES
