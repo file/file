@@ -1,4 +1,4 @@
-.\" $Id: file.man,v 1.60 2007/01/08 17:08:48 christos Exp $
+.\" $Id: file.man,v 1.61 2007/01/10 18:59:03 christos Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -35,13 +35,13 @@ printing characters and a few common control
 characters and is probably safe to read on an
 .Dv ASCII
 terminal),
-.Dv executable
+.Em executable
 (the file contains the result of compiling a program
 in a form understandable to some 
 .Dv UNIX
 kernel or another),
 or
-.Dv data
+.Em data
 meaning anything else (data is usually 
 .Sq binary
 or non-printable).
@@ -49,7 +49,7 @@ Exceptions are well-known file formats (core files, tar archives)
 that are known to contain binary data.
 When modifying the file
 .Pa __MAGIC__
-or the program itself, 
+or the program itself, make sure to
 .Em "preserve these keywords" .
 People depend on knowing that all the readable files in a directory
 have the word 
@@ -83,14 +83,20 @@ particular fixed formats.
 The canonical example of this is a binary executable (compiled program)
 .Dv a.out
 file, whose format is defined in 
+.In elf.h ,
 .In a.out.h
 and possibly
 .In exec.h
 in the standard include directory.
-These files have a `magic number' stored in a particular place
-near the beginning of the file that tells the \s-1UNIX\s0 operating system
+These files have a 
+.Sq "magic number"
+stored in a particular place
+near the beginning of the file that tells the 
+.Dv UNIX operating system
 that the file is a binary executable, and which of several types thereof.
-The concept of `magic number' has been applied by extension to data files.
+The concept of a
+.Sq "magic number"
+has been applied by extension to data files.
 Any file with some invariant identifier at a small fixed
 offset into the file can usually be described in this way.
 The information identifying these files is read from the compiled
@@ -141,11 +147,11 @@ The language tests look for particular strings (cf
 .In names.h
 that can appear anywhere in the first few blocks of a file.
 For example, the keyword
-.Dv .br
+.Em .br
 indicates that the file is most likely a
 .Xr troff 1
 input file, just as the keyword 
-.Dv struct
+.Em struct
 indicates a C program.
 These tests are less reliable than the previous
 two groups, so they are performed last.
@@ -162,12 +168,13 @@ in any of the character sets listed above is simply said to be ``data''.
 Do not prepend filenames to output lines (brief mode).
 .It Fl c Fl \-checking\-printout
 Cause a checking printout of the parsed form of the magic file.
-This is usually used in conjunction with 
-.It Fl m
-to debug a new magic file before installing it.
+This is usually used in conjunction with the
+.Fl m
+flag to debug a new magic file before installing it.
 .It Fl C Fl \-compile
-Write a magic.mgc output file that contains a pre-parsed version of
-file.
+Write a
+.Pa magic.mgc
+output file that contains a pre-parsed version of the magic file.
 .It Fl f Fl \-files\-from Ar namefile
 Read the names of the files to be examined from 
 .Ar namefile
@@ -177,12 +184,12 @@ Either
 .Ar namefile
 or at least one filename argument must be present;
 to test the standard input, use 
-.Dq \-
+.Sq \-
 as a filename argument.
 .It Fl F Fl \-separator Ar separator
 Use the specified string as the separator between the filename and the
 file result returned. Defaults to 
-.Dq \: .
+.Sq \&: .
 .It Fl h Fl \-no\-dereference
 option causes symlinks not to be followed
 (on systems that support symbolic links). This is the default if the
@@ -267,14 +274,14 @@ Print the version of the program and exit.
 .It Fl z Fl \-uncompress
 Try to look inside compressed files.
 .It Fl 0 Fl \-print0
-Output a null character (
-.Sq \0 )
+Output a null character
+.Sq \e0
 after the end of the filename. Nice to
 .Xr cut 1
 the output. This does not affect the separator which is still printed.
 .It Fl \-help
-.El
 Print a help message and exit.
+.El
 .Sh FILES
 .Bl -tag -width __MAGIC__.mime.mgc -compact
 .It Pa __MAGIC__.mgc
@@ -319,7 +326,7 @@ and
 options.
 .Sh SEE ALSO
 .Xr magic __FSECTION__ ,
-.Xr strings 1u ,
+.Xr strings 1 ,
 .Xr od 1 ,
 .Xr hexdump 1
 .Sh STANDARDS CONFORMANCE
@@ -336,23 +343,26 @@ between this version and System V
 is that this version treats any white space
 as a delimiter, so that spaces in pattern strings must be escaped.
 For example,
-.br
+.Bd -literal -offset indent 
 >10	string	language impress\ 	(imPRESS data)
-.br
+.Ed
+.Pp
 in an existing magic file would have to be changed to
-.br
+.Bd -literal -offset indent 
 >10	string	language\e impress	(imPRESS data)
-.br
+.Ed
+.Pp
 In addition, in this version, if a pattern string contains a backslash,
 it must be escaped.
 For example
-.br
+.Bd -literal -offset indent 
 0	string		\ebegindata	Andrew Toolkit document
-.br
+.Ed
+.Pp
 in an existing magic file would have to be changed to
-.br
+.Bd -literal -offset indent 
 0	string		\e\ebegindata	Andrew Toolkit document
-.br
+.Ed
 .Pp
 SunOS releases 3.2 and later from Sun Microsystems include a
 .Nm 
@@ -362,8 +372,9 @@ It includes the extension of the
 .Sq &
 operator, used as,
 for example,
-.br
+.Bd -literal -offset indent 
 >16	long&0x7fffffff	>0		not stripped
+.Ed
 .Sh MAGIC DIRECTORY
 The magic file entries have been collected from various sources,
 mainly USENET, and contributed by various authors.
@@ -382,16 +393,18 @@ keep the old magic file around for comparison purposes
 (rename it to 
 .Pa __MAGIC__.orig ).
 .Sh EXAMPLES
-.nf
+.Bd -literal -offset indent 
 $ file file.c file /dev/{wd0a,hda}
 file.c:   C program text
 file:     ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
           dynamically linked (uses shared libs), stripped
 /dev/wd0a: block special (0/0)
 /dev/hda: block special (3/0)
+
 $ file -s /dev/wd0{b,d}
 /dev/wd0b: data
 /dev/wd0d: x86 boot sector
+
 $ file -s /dev/hda{,1,2,3,4,5,6,7,8,9,10}
 /dev/hda:   x86 boot sector
 /dev/hda1:  Linux/i386 ext2 filesystem
@@ -408,11 +421,11 @@ $ file -s /dev/hda{,1,2,3,4,5,6,7,8,9,10}
 $ file -i file.c file /dev/{wd0a,hda}
 file.c:      text/x-c
 file:        application/x-executable, dynamically linked (uses shared libs),
-not stripped
+	     not stripped
 /dev/hda:    application/x-not-regular-file
 /dev/wd0a:   application/x-not-regular-file
 
-.fi
+.Ed
 .Sh HISTORY
 There has been a 
 .Nm 
@@ -466,13 +479,14 @@ program, and are not covered by the above license.
 There must be a better way to automate the construction of the Magic
 file from all the glop in Magdir.
 What is it?
-Better yet, the magic file should be compiled into binary (say,
-.Xr ndbm 3
-or, better yet, fixed-length
-.Dv ASCII
-strings for use in heterogenous network environments) for faster startup.
-Then the program would run as fast as the Version 7 program of the same name,
-with the flexibility of the System V version.
+.\" Compilation support has been done
+.\" Better yet, the magic file should be compiled into binary (say,
+.\" .Xr ndbm 3
+.\" or, better yet, fixed-length
+.\" .Dv ASCII
+.\" strings for use in heterogenous network environments) for faster startup.
+.\" Then the program would run as fast as the Version 7 program of the same
+.\" name, with the flexibility of the System V version.
 .Pp
 .Nm
 uses several algorithms that favor speed over accuracy,
@@ -482,12 +496,13 @@ files.
 .Pp
 The support for text files (primarily for programming languages)
 is simplistic, inefficient and requires recompilation to update.
-.Pp
-There should be an
-.Dv else
-clause to follow a series of continuation lines.
-.Pp
-The magic file and keywords should have regular expression support.
+.\" Else support has been done
+.\" There should be an
+.\" .Dv else
+.\" clause to follow a series of continuation lines.
+.\" .Pp
+.\" Regular expression support has been done
+.\" The magic file and keywords should have regular expression support.
 Their use of
 .Dv ASCII TAB
 as a field delimiter is ugly and makes
@@ -514,10 +529,11 @@ This could be done by using some keyword like
 .Sq *
 for the offset value.
 .Pp
-Another optimization would be to sort
-the magic file so that we can just run down all the
-tests for the first byte, first word, first long, etc, once we
-have fetched it.
+.\" Sorting has been done.
+.\" Another optimization would be to sort
+.\" the magic file so that we can just run down all the
+.\" tests for the first byte, first word, first long, etc, once we
+.\" have fetched it.
 Complain about conflicts in the magic file entries.
 Make a rule that the magic entries sort based on file offset rather
 than position within the magic file?
