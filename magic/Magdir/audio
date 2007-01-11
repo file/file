@@ -545,3 +545,10 @@
 >>27    byte            113     \b, Alpha 1.13
 >>27    byte            114     \b, Beta 1.14
 >>27    byte            115     \b, Alpha 1.15
+
+# IMY
+# from http://filext.com/detaillist.php?extdetail=IMY
+# http://cellphones.about.com/od/cellularfaqs/f/rf_imelody.htm
+# http://download.ncl.ie/doc/api/ie/ncl/media/music/IMelody.html
+# http://www.wx800.com/msg/download/irda/iMelody.pdf
+0	string	BEGIN:IMELODY	iMelody Ringtone Format
