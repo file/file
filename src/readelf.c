@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: readelf.c,v 1.61 2006/11/15 15:53:23 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.62 2007/01/12 17:38:28 christos Exp $")
 #endif
 
 #ifdef	ELFCORE

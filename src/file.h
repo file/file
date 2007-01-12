@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$Id: file.h,v 1.83 2006/12/11 21:48:49 christos Exp $
+ * @(#)$File: file.h,v 1.84 2007/01/12 17:38:28 christos Exp $
  */
 
 #ifndef __file_h__

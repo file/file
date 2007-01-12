@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: funcs.c,v 1.23 2006/12/11 21:48:49 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.24 2007/01/12 17:38:28 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF

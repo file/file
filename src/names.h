@@ -32,7 +32,7 @@
  * appear at fixed offsets into the file. Don't make HOWMANY
  * too high unless you have a very fast CPU.
  *
- * $Id: names.h,v 1.25 2004/09/11 19:15:57 christos Exp $
+ * $File: names.h,v 1.26 2007/01/12 17:38:28 christos Exp $
  */
 
 /*

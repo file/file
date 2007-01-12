@@ -51,7 +51,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$Id: compress.c,v 1.45 2006/10/31 19:37:17 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.46 2007/01/12 17:38:27 christos Exp $")
 #endif
 
 private struct {

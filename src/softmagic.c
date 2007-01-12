@@ -39,7 +39,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: softmagic.c,v 1.87 2006/12/11 21:48:49 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.88 2007/01/12 17:38:28 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
