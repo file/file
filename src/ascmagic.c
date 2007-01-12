@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: ascmagic.c,v 1.46 2006/10/20 21:04:15 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.46 2006/10/20 21:04:15 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;

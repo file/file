@@ -3,9 +3,12 @@
 
 /*
  * Patchlevel file for Ian Darwin's MAGIC command.
- * $Id: patchlevel.h,v 1.62 2006/12/11 21:49:58 christos Exp $
+ * $File: patchlevel.h,v 1.62 2006/12/11 21:49:58 christos Exp $
  *
  * $Log: patchlevel.h,v $
+ * Revision 1.63  2007/01/12 17:38:28  christos
+ * Use File id.
+ *
  * Revision 1.62  2006/12/11 21:49:58  christos
  * time for 4.19
  *

@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: magic.c,v 1.35 2006/10/31 19:37:17 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.35 2006/10/31 19:37:17 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__

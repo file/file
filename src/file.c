@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$Id: file.c,v 1.104 2006/11/25 17:28:54 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.104 2006/11/25 17:28:54 christos Exp $")
 #endif	/* lint */
 
 

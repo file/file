@@ -1,4 +1,4 @@
-.\" $Id: magic.man,v 1.36 2007/01/10 22:56:49 christos Exp $
+.\" $File: magic.man,v 1.36 2007/01/10 22:56:49 christos Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -446,4 +446,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.36 2007/01/10 22:56:49 christos Exp $
+.\" @(#)$Id: magic.man,v 1.37 2007/01/12 17:38:27 christos Exp $
