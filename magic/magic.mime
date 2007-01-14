@@ -193,7 +193,12 @@
 0       beshort         0x4De1          audio/MP4A-LATM
 
 # MPEG Layer 3 sound files
-0       beshort		&0xffe0		audio/mpeg
+# modified by Joerg Jenderek
+# GRR the original test are too common for many DOS files
+# so test 1 <= kbits nibble <= E
+0       beshort		&0xffe0		
+>2	ubyte&0xF0	>0x0F		
+>>2	ubyte&0xF0	<0xE1		audio/mpeg
 #MP3 with ID3 tag
 0	string		ID3		audio/mpeg
 # Ogg/Vorbis
@@ -861,6 +866,8 @@
 # miscellaneous formats
 0		string	LZ		application/octet-stream
 
+# DOS device drivers by Joerg Jenderek
+0	belong		0xffffffff	application/octet-stream
 
 # .EXE formats (Greg Roelofs, newt@uchicago.edu)
 #
