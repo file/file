@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.84 2007/01/12 17:38:28 christos Exp $
+ * @(#)$File: file.h,v 1.85 2007/01/16 14:58:48 ljt Exp $
  */
 
 #ifndef __file_h__
@@ -46,6 +46,7 @@
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
+#include <regex.h>
 #include <sys/types.h>
 /* Do this here and now, because struct stat gets re-defined on solaris */
 #include <sys/stat.h>
@@ -66,6 +67,28 @@
 #endif
 #define public
 
+#ifndef __GNUC_PREREQ__
+#ifdef __GNUC__
+#define	__GNUC_PREREQ__(x, y)						\
+	((__GNUC__ == (x) && __GNUC_MINOR__ >= (y)) ||			\
+	 (__GNUC__ > (x)))
+#else
+#define	__GNUC_PREREQ__(x, y)	0
+#endif
+#endif
+
+#ifndef __unused
+#if __GNUC_PREREQ__(2, 7)
+#define	__unused	__attribute__((__unused__))
+#else
+#define	__unused	/* delete */
+#endif
+#endif
+
+#ifndef MIN
+#define	MIN(a,b)	(((a) < (b)) ? (a) : (b))
+#endif
+
 #ifndef HOWMANY
 # define HOWMANY (256 * 1024)	/* how much of the file to look at */
 #endif
@@ -74,7 +97,7 @@
 #define MAXstring 32		/* max leng of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	3
+#define VERSIONNO	4
 #define FILE_MAGICSIZE	(32 * 4)
 
 #define	FILE_LOAD	0
@@ -86,10 +109,10 @@ struct magic {
 	uint16_t cont_level;	/* level of ">" */
 	uint8_t nospflag;	/* supress space character */
 	uint8_t flag;
-#define INDIR	1		/* if '>(...)' appears,  */
-#define	UNSIGNED 2		/* comparison is unsigned */
-#define OFFADD	4		/* if '>&' appears,  */
-#define INDIROFFADD	8	/* if '>&(' appears,  */
+#define INDIR		1	/* if '(...)' appears */
+#define OFFADD		2	/* if '>&' or '>...(&' appears */
+#define INDIROFFADD	4	/* if '>&(' appears */
+#define	UNSIGNED	8	/* comparison is unsigned */
 	/* Word 2 */
 	uint8_t reln;		/* relation (0=eq, '>'=gt, etc) */
 	uint8_t vallen;		/* length of string value, if any */
@@ -97,6 +120,7 @@ struct magic {
 	uint8_t in_type;	/* type of indirrection */
 #define 			FILE_BYTE	1
 #define				FILE_SHORT	2
+#define				FILE_DEFAULT	3
 #define				FILE_LONG	4
 #define				FILE_STRING	5
 #define				FILE_DATE	6
@@ -127,11 +151,23 @@ struct magic {
 #define				FILE_LEQLDATE	31
 #define				FILE_BEQLDATE	32
 
+#define IS_PLAINSTRING(t) \
+	((t) == FILE_STRING || \
+	 (t) == FILE_PSTRING || \
+	 (t) == FILE_BESTRING16 || \
+	 (t) == FILE_LESTRING16)
+
+#define IS_STRING(t) \
+	(IS_PLAINSTRING(t) || \
+	(t) == FILE_REGEX || \
+	(t) == FILE_SEARCH || \
+	(t) == FILE_DEFAULT)
+
 #define				FILE_FORMAT_NAME	\
 /* 0 */ 			"invalid 0",		\
 /* 1 */				"byte",			\
 /* 2 */ 			"short",		\
-/* 3 */ 			"invalid 3",		\
+/* 3 */ 			"default",		\
 /* 4 */ 			"long",			\
 /* 5 */ 			"string",		\
 /* 6 */ 			"date",			\
@@ -162,7 +198,6 @@ struct magic {
 /* 31 */ 			"leqldate",		\
 /* 32 */ 			"beqldate",
 
-
 #define FILE_FMT_NONE 0
 #define FILE_FMT_NUM  1 /* "cduxXi" */
 #define FILE_FMT_STR  2 /* "s" */
@@ -172,7 +207,7 @@ struct magic {
 /* 0 */ 			FILE_FMT_NONE,		\
 /* 1 */				FILE_FMT_NUM,		\
 /* 2 */ 			FILE_FMT_NUM,		\
-/* 3 */ 			FILE_FMT_NONE,		\
+/* 3 */ 			FILE_FMT_STR,		\
 /* 4 */ 			FILE_FMT_NUM,		\
 /* 5 */ 			FILE_FMT_STR,		\
 /* 6 */ 			FILE_FMT_STR,		\
@@ -203,12 +238,12 @@ struct magic {
 /* 31 */			FILE_FMT_STR,		\
 /* 32 */			FILE_FMT_STR,
 
-
 	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
 	uint8_t mask_op;	/* operator for mask */
 	uint8_t dummy1;	
 	uint8_t dummy2;	
+
 #define				FILE_OPS	"&|^+-*/%"
 #define				FILE_OPAND	0
 #define				FILE_OPOR	1
@@ -218,8 +253,13 @@ struct magic {
 #define				FILE_OPMULTIPLY	5
 #define				FILE_OPDIVIDE	6
 #define				FILE_OPMODULO	7
+#define				FILE_OPS_MASK	0x07 /* mask for above ops */
+#define				FILE_UNUSED_1	0x08
+#define				FILE_UNUSED_2	0x10
+#define				FILE_UNUSED_3	0x20
 #define				FILE_OPINVERSE	0x40
 #define				FILE_OPINDIRECT	0x80
+
 	/* Word 4 */
 	uint32_t offset;	/* offset to magic number */
 	/* Word 5 */
@@ -227,33 +267,46 @@ struct magic {
 	/* Word 6 */
 	uint32_t lineno;	/* line number in magic file */
 	/* Word 7,8 */
-	uint64_t mask;	/* mask before comparison with value */
+	union {
+		uint64_t _mask;	/* for use with numeric and date types */
+		struct {
+			uint32_t _count;	/* repeat/line count */
+			uint32_t _flags;	/* modifier flags */
+		} _s;		/* for use with string types */
+	} _u;
+#define num_mask _u._mask
+#define str_count _u._s._count
+#define str_flags _u._s._flags
+
 	/* Words 9-16 */
 	union VALUETYPE {
-		uint8_t b;
-		uint16_t h;
-		uint32_t l;
-		uint64_t q;
-		char s[MAXstring];
-		struct {
-			char *buf;
-			size_t buflen;
-		} search;
-		uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
-		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
-		uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
+//		union NUMTYPE {
+			uint8_t b;
+			uint16_t h;
+			uint32_t l;
+			uint64_t q;
+			uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
+			uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
+			uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
+//		} n;
+		char s[MAXstring];	/* the search string or regex pattern */
 	} value;		/* either number or string */
 	/* Words 17..31 */
 	char desc[MAXDESC];	/* description */
 };
 
 #define BIT(A)   (1 << (A))
-#define STRING_IGNORE_LOWERCASE		BIT(0)
-#define STRING_COMPACT_BLANK		BIT(1)
-#define STRING_COMPACT_OPTIONAL_BLANK	BIT(2)
-#define CHAR_IGNORE_LOWERCASE		'c'
+#define STRING_COMPACT_BLANK		BIT(0)
+#define STRING_COMPACT_OPTIONAL_BLANK	BIT(1)
+#define STRING_IGNORE_LOWERCASE		BIT(2)
+#define STRING_IGNORE_UPPERCASE		BIT(3)
+#define REGEX_OFFSET_START		BIT(4)
 #define CHAR_COMPACT_BLANK		'B'
 #define CHAR_COMPACT_OPTIONAL_BLANK	'b'
+#define CHAR_IGNORE_LOWERCASE		'c'
+#define CHAR_IGNORE_UPPERCASE		'C'
+#define CHAR_REGEX_OFFSET_START		's'
+#define STRING_IGNORE_CASE		(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 
 
 /* list of magic entries */
@@ -267,27 +320,40 @@ struct mlist {
 };
 
 struct magic_set {
-    struct mlist *mlist;
-    struct cont {
-	size_t len;
-	int32_t *off;
-    } c;
-    struct out {
-	/* Accumulation buffer */
-	char *buf;
-	char *ptr;
-	size_t len;
-	size_t size;
-	/* Printable buffer */
-	char *pbuf;
-	size_t psize;
-    } o;
-    uint32_t offset;
-    int error;
-    int flags;
-    int haderr;
-    const char *file;
-    size_t line;
+	struct mlist *mlist;
+	struct cont {
+		size_t len;
+		struct level_info {
+			int32_t off;
+			int got_match;
+		} *li;
+	} c;
+	struct out {
+		/* Accumulation buffer */
+		char *buf;
+		char *ptr;
+		size_t len;
+		size_t size;
+		/* Printable buffer */
+		char *pbuf;
+		size_t psize;
+	} o;
+	uint32_t offset;
+	int error;
+	int flags;
+	int haderr;
+	const char *file;
+	size_t line;			/* current magic line number */
+
+	/* data for searches */
+	struct {
+		const char *s;		/* start of search in original source */
+		size_t s_len;		/* length of search region */
+		size_t offset;		/* starting offset in source: XXX - should this be off_t? */
+		size_t rm_len;		/* match length */
+	} search;
+
+	union VALUETYPE ms_value;	/* either number or string */
 };
 
 struct stat;
@@ -309,6 +375,7 @@ protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);
 protected void file_oomem(struct magic_set *, size_t);
 protected void file_error(struct magic_set *, int, const char *, ...);
+protected void file_magerror(struct magic_set *, const char *, ...);
 protected void file_magwarn(struct magic_set *, const char *, ...);
 protected void file_mdump(struct magic *);
 protected void file_showstr(FILE *, const char *, size_t);

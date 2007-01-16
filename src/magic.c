@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.36 2007/01/12 17:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.37 2007/01/16 14:58:48 ljt Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -102,8 +102,8 @@ magic_open(int flags)
 	if (ms->o.pbuf == NULL)
 		goto free2;
 
-	ms->c.off = malloc((ms->c.len = 10) * sizeof(*ms->c.off));
-	if (ms->c.off == NULL)
+	ms->c.li = malloc((ms->c.len = 10) * sizeof(*ms->c.li));
+	if (ms->c.li == NULL)
 		goto free3;
 	
 	ms->o.len = 0;
@@ -162,7 +162,7 @@ magic_close(struct magic_set *ms)
 	free_mlist(ms->mlist);
 	free(ms->o.pbuf);
 	free(ms->o.buf);
-	free(ms->c.off);
+	free(ms->c.li);
 	free(ms);
 }
 
@@ -357,7 +357,7 @@ magic_file(struct magic_set *ms, const char *inname)
 			 * information from the ELF headers that cannot easily
 			 * be extracted with rules in the magic file.
 			 */
-			file_tryelf(ms, fd, buf, (size_t)nbytes);
+			(void) file_tryelf(ms, fd, buf, (size_t)nbytes);
 		}
 #endif
 	}

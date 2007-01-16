@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.24 2007/01/12 17:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.25 2007/01/16 14:58:48 ljt Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -81,18 +81,22 @@ file_printf(struct magic_set *ms, const char *fmt, ...)
  * error - print best error message possible
  */
 /*VARARGS*/
-protected void
-file_error(struct magic_set *ms, int error, const char *f, ...)
+private void
+file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
+    uint32_t lineno)
 {
-	va_list va;
+	size_t len;
 	/* Only the first error is ok */
 	if (ms->haderr)
 		return;
-	va_start(va, f);
-	(void)vsnprintf(ms->o.buf, ms->o.size, f, va);
-	va_end(va);
+	len = 0;
+	if (lineno != 0) {
+		(void)snprintf(ms->o.buf, ms->o.size, "line %u: ", lineno);
+		len = strlen(ms->o.buf);
+	}
+	(void)vsnprintf(ms->o.buf + len, ms->o.size - len, f, va);
 	if (error > 0) {
-		size_t len = strlen(ms->o.buf);
+		len = strlen(ms->o.buf);
 		(void)snprintf(ms->o.buf + len, ms->o.size - len, " (%s)",
 		    strerror(error));
 	}
@@ -100,6 +104,28 @@ file_error(struct magic_set *ms, int error, const char *f, ...)
 	ms->error = error;
 }
 
+/*VARARGS*/
+protected void
+file_error(struct magic_set *ms, int error, const char *f, ...)
+{
+	va_list va;
+	va_start(va, f);
+	file_error_core(ms, error, f, va, 0);
+	va_end(va);
+}
+
+/*
+ * Print an error with magic line number.
+ */
+/*VARARGS*/
+protected void
+file_magerror(struct magic_set *ms, const char *f, ...)
+{
+	va_list va;
+	va_start(va, f);
+	file_error_core(ms, 0, f, va, ms->line);
+	va_end(va);
+}
 
 protected void
 file_oomem(struct magic_set *ms, size_t len)
