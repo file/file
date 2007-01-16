@@ -51,7 +51,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.45 2006/10/31 19:37:17 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.46 2007/01/12 17:38:27 christos Exp $")
 #endif
 
 private struct {
@@ -74,7 +74,7 @@ private struct {
 	{ "BZh",      3, { "bzip2", "-cd", NULL }, 1 },		/* bzip2-ed */
 };
 
-private int ncompr = sizeof(compr) / sizeof(compr[0]);
+private size_t ncompr = sizeof(compr) / sizeof(compr[0]);
 
 #define NODATA ((size_t)~0)
 
@@ -341,7 +341,7 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 	}
 
 	n = (size_t)z.total_out;
-	inflateEnd(&z);
+	(void)inflateEnd(&z);
 	
 	/* let's keep the nul-terminate tradition */
 	(*newch)[n] = '\0';
@@ -389,8 +389,8 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 			(void)close(2);
 #endif
 
-		execvp(compr[method].argv[0],
-		       (char *const *)(intptr_t)compr[method].argv);
+		(void)execvp(compr[method].argv[0],
+		    (char *const *)(intptr_t)compr[method].argv);
 #ifdef DEBUG
 		(void)fprintf(stderr, "exec `%s' failed (%s)\n",
 		    compr[method].argv[0], strerror(errno));
@@ -412,7 +412,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 			switch (fork()) {
 			case 0: /* child */
 				(void)close(fdout[0]);
-				if (swrite(fdin[1], old, n) != n) {
+				if (swrite(fdin[1], old, n) != (ssize_t)n) {
 #ifdef DEBUG
 					(void)fprintf(stderr,
 					    "Write failed (%s)\n",
