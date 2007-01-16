@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.47 2007/01/12 17:38:27 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.48 2007/01/16 14:56:45 ljt Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -92,7 +92,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	int n_cr = 0;
 	int n_nel = 0;
 
-	int last_line_end = -1;
+	size_t last_line_end = (size_t)-1;
 	int has_long_lines = 0;
 
 	/*
@@ -461,7 +461,7 @@ private int
 looks_ascii(const unsigned char *buf, size_t nbytes, unichar *ubuf,
     size_t *ulen)
 {
-	int i;
+	size_t i;
 
 	*ulen = 0;
 
@@ -480,7 +480,7 @@ looks_ascii(const unsigned char *buf, size_t nbytes, unichar *ubuf,
 private int
 looks_latin1(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 {
-	int i;
+	size_t i;
 
 	*ulen = 0;
 
@@ -500,7 +500,7 @@ private int
 looks_extended(const unsigned char *buf, size_t nbytes, unichar *ubuf,
     size_t *ulen)
 {
-	int i;
+	size_t i;
 
 	*ulen = 0;
 
@@ -519,7 +519,8 @@ looks_extended(const unsigned char *buf, size_t nbytes, unichar *ubuf,
 private int
 looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 {
-	int i, n;
+	size_t i;
+	int n;
 	unichar c;
 	int gotone = 0;
 
@@ -583,7 +584,7 @@ looks_unicode(const unsigned char *buf, size_t nbytes, unichar *ubuf,
     size_t *ulen)
 {
 	int bigend;
-	int i;
+	size_t i;
 
 	if (nbytes < 2)
 		return 0;
@@ -702,7 +703,7 @@ private unsigned char ebcdic_1047_to_8859[] = {
 private void
 from_ebcdic(const unsigned char *buf, size_t nbytes, unsigned char *out)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < nbytes; i++) {
 		out[i] = ebcdic_to_ascii[buf[i]];
