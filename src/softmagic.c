@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.89 2007/01/16 14:58:48 ljt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.90 2007/01/16 23:24:31 ljt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -258,17 +258,17 @@ check_mem(struct magic_set *ms, unsigned int level)
 {
 	size_t len;
 
-	if (level < ms->c.len)
-		return 0;
-
-	len = (ms->c.len += 20) * sizeof(*ms->c.li);
-	ms->c.li = (ms->c.li == NULL) ? malloc(len) : realloc(ms->c.li, len);
-	if (ms->c.li != NULL) {
-		ms->c.li[level].got_match = 0;
-		return 0;
+	if (level >= ms->c.len) {
+		len = (ms->c.len += 20) * sizeof(*ms->c.li);
+		ms->c.li = (ms->c.li == NULL) ? malloc(len) :
+		    realloc(ms->c.li, len);
+		if (ms->c.li == NULL) {
+			file_oomem(ms, len);
+			return -1;
+		}
 	}
-	file_oomem(ms, len);
-	return -1;
+	ms->c.li[level].got_match = 0;
+	return 0;
 }
 
 private int
