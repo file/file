@@ -1,3 +1,8 @@
+2007-01-16 14:56 Anon Ymous <do@not.spam.me>
+
+	* make several more files compile with gcc warnings
+	  on and also make them pass lint.
+
 2007-01-16 14:54 Anon Ymous <do@not.spam.me>
 
 	* fix a puts()/putc() usage goof in file.c
