@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.84 2007/01/12 17:38:28 christos Exp $
+ * @(#)$File: file.h,v 1.85 2007/01/16 14:58:48 ljt Exp $
  */
 
 #ifndef __file_h__
@@ -50,6 +50,8 @@
 #include <sys/types.h>
 /* Do this here and now, because struct stat gets re-defined on solaris */
 #include <sys/stat.h>
+
+#define ENABLE_CONDITIONALS
 
 #ifndef MAGIC
 #define MAGIC "/etc/magic"
@@ -113,11 +115,13 @@ struct magic {
 #define OFFADD		2	/* if '>&' or '>...(&' appears */
 #define INDIROFFADD	4	/* if '>&(' appears */
 #define	UNSIGNED	8	/* comparison is unsigned */
+
 	/* Word 2 */
 	uint8_t reln;		/* relation (0=eq, '>'=gt, etc) */
 	uint8_t vallen;		/* length of string value, if any */
 	uint8_t type;		/* int, short, long or string. */
 	uint8_t in_type;	/* type of indirrection */
+#define 			FILE_INVALID	0
 #define 			FILE_BYTE	1
 #define				FILE_SHORT	2
 #define				FILE_DEFAULT	3
@@ -150,99 +154,32 @@ struct magic {
 #define				FILE_QLDATE	30
 #define				FILE_LEQLDATE	31
 #define				FILE_BEQLDATE	32
+#define				FILE_NAMES_SIZE	33/* size of array to contain all names */
 
-#define IS_PLAINSTRING(t) \
+#define IS_STRING(t) \
 	((t) == FILE_STRING || \
 	 (t) == FILE_PSTRING || \
 	 (t) == FILE_BESTRING16 || \
-	 (t) == FILE_LESTRING16)
-
-#define IS_STRING(t) \
-	(IS_PLAINSTRING(t) || \
-	(t) == FILE_REGEX || \
-	(t) == FILE_SEARCH || \
-	(t) == FILE_DEFAULT)
-
-#define				FILE_FORMAT_NAME	\
-/* 0 */ 			"invalid 0",		\
-/* 1 */				"byte",			\
-/* 2 */ 			"short",		\
-/* 3 */ 			"default",		\
-/* 4 */ 			"long",			\
-/* 5 */ 			"string",		\
-/* 6 */ 			"date",			\
-/* 7 */ 			"beshort",		\
-/* 8 */ 			"belong",		\
-/* 9 */ 			"bedate",		\
-/* 10 */ 			"leshort",		\
-/* 11 */ 			"lelong",		\
-/* 12 */ 			"ledate",		\
-/* 13 */ 			"pstring",		\
-/* 14 */ 			"ldate",		\
-/* 15 */ 			"beldate",		\
-/* 16 */ 			"leldate",		\
-/* 17 */ 			"regex",		\
-/* 18 */			"bestring16",		\
-/* 19 */			"lestring16",		\
-/* 20 */ 			"search",		\
-/* 21 */ 			"medate",		\
-/* 22 */ 			"meldate",		\
-/* 23 */ 			"melong",		\
-/* 24 */ 			"quad",			\
-/* 25 */ 			"lequad",		\
-/* 26 */ 			"bequad",		\
-/* 27 */ 			"qdate",		\
-/* 28 */ 			"leqdate",		\
-/* 29 */ 			"beqdate",		\
-/* 30 */ 			"qldate",		\
-/* 31 */ 			"leqldate",		\
-/* 32 */ 			"beqldate",
+	 (t) == FILE_LESTRING16 || \
+	 (t) == FILE_REGEX || \
+	 (t) == FILE_SEARCH || \
+	 (t) == FILE_DEFAULT)
 
 #define FILE_FMT_NONE 0
 #define FILE_FMT_NUM  1 /* "cduxXi" */
 #define FILE_FMT_STR  2 /* "s" */
 #define FILE_FMT_QUAD 3 /* "ll" */
 
-#define				FILE_FORMAT_STRING	\
-/* 0 */ 			FILE_FMT_NONE,		\
-/* 1 */				FILE_FMT_NUM,		\
-/* 2 */ 			FILE_FMT_NUM,		\
-/* 3 */ 			FILE_FMT_STR,		\
-/* 4 */ 			FILE_FMT_NUM,		\
-/* 5 */ 			FILE_FMT_STR,		\
-/* 6 */ 			FILE_FMT_STR,		\
-/* 7 */ 			FILE_FMT_NUM,		\
-/* 8 */ 			FILE_FMT_NUM,		\
-/* 9 */ 			FILE_FMT_STR,		\
-/* 10 */ 			FILE_FMT_NUM,		\
-/* 11 */ 			FILE_FMT_NUM,		\
-/* 12 */ 			FILE_FMT_STR,		\
-/* 13 */ 			FILE_FMT_STR,		\
-/* 14 */ 			FILE_FMT_STR,		\
-/* 15 */ 			FILE_FMT_STR,		\
-/* 16 */ 			FILE_FMT_STR,		\
-/* 17 */ 			FILE_FMT_STR,		\
-/* 18 */			FILE_FMT_STR,		\
-/* 19 */			FILE_FMT_STR,		\
-/* 20 */			FILE_FMT_STR,		\
-/* 21 */			FILE_FMT_STR,		\
-/* 22 */			FILE_FMT_STR,		\
-/* 23 */			FILE_FMT_NUM,		\
-/* 24 */			FILE_FMT_QUAD,		\
-/* 25 */			FILE_FMT_QUAD,		\
-/* 26 */			FILE_FMT_QUAD,		\
-/* 27 */			FILE_FMT_STR,		\
-/* 28 */			FILE_FMT_STR,		\
-/* 29 */			FILE_FMT_STR,		\
-/* 30 */			FILE_FMT_STR,		\
-/* 31 */			FILE_FMT_STR,		\
-/* 32 */			FILE_FMT_STR,
-
 	/* Word 3 */
 	uint8_t in_op;		/* operator for indirection */
 	uint8_t mask_op;	/* operator for mask */
+#ifdef ENABLE_CONDITIONALS
+	uint8_t cond;		/* conditional type */
+	uint8_t dummy1;	
+#else
 	uint8_t dummy1;	
 	uint8_t dummy2;	
+#endif
 
 #define				FILE_OPS	"&|^+-*/%"
 #define				FILE_OPAND	0
@@ -259,6 +196,13 @@ struct magic {
 #define				FILE_UNUSED_3	0x20
 #define				FILE_OPINVERSE	0x40
 #define				FILE_OPINDIRECT	0x80
+
+#ifdef ENABLE_CONDITIONALS
+#define				COND_NONE	0
+#define				COND_IF		1
+#define				COND_ELIF	2
+#define				COND_ELSE	3
+#endif /* ENABLE_CONDITIONALS */
 
 	/* Word 4 */
 	uint32_t offset;	/* offset to magic number */
@@ -280,15 +224,13 @@ struct magic {
 
 	/* Words 9-16 */
 	union VALUETYPE {
-//		union NUMTYPE {
-			uint8_t b;
-			uint16_t h;
-			uint32_t l;
-			uint64_t q;
-			uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
-			uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
-			uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
-//		} n;
+		uint8_t b;
+		uint16_t h;
+		uint32_t l;
+		uint64_t q;
+		uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
+		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
+		uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
 		char s[MAXstring];	/* the search string or regex pattern */
 	} value;		/* either number or string */
 	/* Words 17..31 */
@@ -326,6 +268,10 @@ struct magic_set {
 		struct level_info {
 			int32_t off;
 			int got_match;
+#ifdef ENABLE_CONDITIONALS
+			int last_match;
+			int last_cond;	/* used for error checking by parse() */
+#endif
 		} *li;
 	} c;
 	struct out {
@@ -382,6 +328,9 @@ protected void file_showstr(FILE *, const char *, size_t);
 protected size_t file_mbswidth(const char *);
 protected const char *file_getbuffer(struct magic_set *);
 protected ssize_t sread(int, void *, size_t);
+#ifdef ENABLE_CONDITIONALS
+protected int file_check_mem(struct magic_set *, unsigned int);
+#endif
 
 #ifndef COMPILE_ONLY
 extern const char *file_names[];

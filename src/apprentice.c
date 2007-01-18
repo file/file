@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.101 2007/01/12 17:38:27 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.102 2007/01/16 14:58:48 ljt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -81,10 +81,10 @@ struct magic_entry {
 	uint32_t max_count;
 };
 
-const int file_formats[] = { FILE_FORMAT_STRING };
-const size_t file_nformats = sizeof(file_formats) / sizeof(file_formats[0]);
-const char *file_names[] = { FILE_FORMAT_NAME };
-const size_t file_nnames = sizeof(file_names) / sizeof(file_names[0]);
+int file_formats[FILE_NAMES_SIZE];
+const size_t file_nformats = FILE_NAMES_SIZE;
+const char *file_names[FILE_NAMES_SIZE];
+const size_t file_nnames = FILE_NAMES_SIZE;
 
 private int getvalue(struct magic_set *ms, struct magic *, const char **, int);
 private int hextoint(int);
@@ -148,6 +148,82 @@ main(int argc, char *argv[])
 }
 #endif /* COMPILE_ONLY */
 
+static const struct type_tbl_s {
+	const char *name;
+	const size_t len;
+	const int type;
+	const int format;
+} type_tbl[] = {
+# define XX(s)		s, (sizeof(s) - 1)
+# define XX_NULL	NULL, 0
+	{ XX("byte"),		FILE_BYTE,		FILE_FMT_NUM },
+	{ XX("short"),		FILE_SHORT,		FILE_FMT_NUM },
+	{ XX("default"),	FILE_DEFAULT,		FILE_FMT_STR },
+	{ XX("long"),		FILE_LONG,		FILE_FMT_NUM },
+	{ XX("string"),		FILE_STRING,		FILE_FMT_STR },
+	{ XX("date"),		FILE_DATE,		FILE_FMT_STR },
+	{ XX("beshort"),	FILE_BESHORT,		FILE_FMT_NUM },
+	{ XX("belong"),		FILE_BELONG,		FILE_FMT_NUM },
+	{ XX("bedate"),		FILE_BEDATE,		FILE_FMT_STR },
+	{ XX("leshort"),	FILE_LESHORT,		FILE_FMT_NUM },
+	{ XX("lelong"),		FILE_LELONG,		FILE_FMT_NUM },
+	{ XX("ledate"),		FILE_LEDATE,		FILE_FMT_STR },
+	{ XX("pstring"),	FILE_PSTRING,		FILE_FMT_STR },
+	{ XX("ldate"),		FILE_LDATE,		FILE_FMT_STR },
+	{ XX("beldate"),	FILE_BELDATE,		FILE_FMT_STR },
+	{ XX("leldate"),	FILE_LELDATE,		FILE_FMT_STR },
+	{ XX("regex"),		FILE_REGEX,		FILE_FMT_STR },
+	{ XX("bestring16"),	FILE_BESTRING16,	FILE_FMT_STR },
+	{ XX("lestring16"),	FILE_LESTRING16,	FILE_FMT_STR },
+	{ XX("search"),		FILE_SEARCH,		FILE_FMT_STR },
+	{ XX("medate"),		FILE_MEDATE,		FILE_FMT_STR },
+	{ XX("meldate"),	FILE_MELDATE,		FILE_FMT_STR },
+	{ XX("melong"),		FILE_MELONG,		FILE_FMT_NUM },
+	{ XX("quad"),		FILE_QUAD,		FILE_FMT_QUAD },
+	{ XX("lequad"),		FILE_LEQUAD,		FILE_FMT_QUAD },
+	{ XX("bequad"),		FILE_BEQUAD,		FILE_FMT_QUAD },
+	{ XX("qdate"),		FILE_QDATE,		FILE_FMT_STR },
+	{ XX("leqdate"),	FILE_LEQDATE,		FILE_FMT_STR },
+	{ XX("beqdate"),	FILE_BEQDATE,		FILE_FMT_STR },
+	{ XX("qldate"),		FILE_QLDATE,		FILE_FMT_STR },
+	{ XX("leqldate"),	FILE_LEQLDATE,		FILE_FMT_STR },
+	{ XX("beqldate"),	FILE_BEQLDATE,		FILE_FMT_STR },
+	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
+# undef XX
+# undef XX_NULL
+};
+
+private int
+get_type(const char *l, const char **t)
+{
+	const struct type_tbl_s *p;
+
+	for (p = type_tbl; p->name; p++) {
+		if (strncmp(l, p->name, p->len) == 0) {
+			if (t)
+				*t = l + p->len;
+			break;
+		}
+	}
+	return p->type;
+}
+
+private void
+init_file_tables(void)
+{
+	static int done = 0;
+	const struct type_tbl_s *p;
+
+	if (done)
+		return;
+	done++;
+
+	for (p = type_tbl; p->name; p++) {
+		assert(p->type < FILE_NAMES_SIZE);
+		file_names[p->type] = p->name;
+		file_formats[p->type] = p->format;
+	}
+}
 
 /*
  * Handle one file.
@@ -235,7 +311,6 @@ file_delmagic(struct magic *p, int type, size_t entries)
 	}
 }
 
-
 /* const char *fn: list of magic files */
 protected struct mlist *
 file_apprentice(struct magic_set *ms, const char *fn, int action)
@@ -244,6 +319,8 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	int file_err, errs = -1;
 	struct mlist *mlist;
 	static const char mime[] = ".mime";
+
+	init_file_tables();
 
 	if (fn == NULL)
 		fn = getenv("MAGIC");
@@ -668,6 +745,77 @@ get_op(char c)
 	}
 }
 
+#ifdef ENABLE_CONDITIONALS
+private int
+get_cond(const char *l, const char **t)
+{
+	static struct cond_tbl_s {
+		const char *name;
+		const size_t len;
+		const int cond;
+	} cond_tbl[] = {
+		{ "if",		2,	COND_IF },
+		{ "elif",	4,	COND_ELIF },
+		{ "else",	4,	COND_ELSE },
+		{ NULL, 	0,	COND_NONE },
+	};
+	struct cond_tbl_s *p;
+
+	for (p = cond_tbl; p->name; p++) {
+		if (strncmp(l, p->name, p->len) == 0 &&
+		    isspace((unsigned char)l[p->len])) {
+			if (t)
+				*t = l + p->len;
+			break;
+		}
+	}
+	return p->cond;
+}
+
+private int
+check_cond(struct magic_set *ms, int cond, uint32_t cont_level)
+{
+	int last_cond;
+	last_cond = ms->c.li[cont_level].last_cond;
+
+	switch (cond) {
+	case COND_IF:
+		if (last_cond != COND_NONE && last_cond != COND_ELIF) {
+			if (ms->flags & MAGIC_CHECK)
+				file_magwarn(ms, "syntax error: `if'");
+			return -1;
+		}
+		last_cond = COND_IF;
+		break;
+
+	case COND_ELIF:
+		if (last_cond != COND_IF && last_cond != COND_ELIF) {
+			if (ms->flags & MAGIC_CHECK)
+				file_magwarn(ms, "syntax error: `elif'");
+			return -1;
+		}
+		last_cond = COND_ELIF;
+		break;
+
+	case COND_ELSE:
+		if (last_cond != COND_IF && last_cond != COND_ELIF) {
+			if (ms->flags & MAGIC_CHECK)
+				file_magwarn(ms, "syntax error: `else'");
+			return -1;
+		}
+		last_cond = COND_NONE;
+		break;
+
+	case COND_NONE:
+		last_cond = COND_NONE;
+		break;
+	}
+
+	ms->c.li[cont_level].last_cond = last_cond;
+	return 0;
+}
+#endif /* ENABLE_CONDITIONALS */
+
 /*
  * parse one line from magic file, put into magic[index++] if valid
  */
@@ -675,6 +823,9 @@ private int
 parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp, 
     const char *line, size_t lineno, int action)
 {
+#ifdef ENABLE_CONDITIONALS
+	static uint32_t last_cont_level = 0;
+#endif
 	size_t i;
 	struct magic_entry *me;
 	struct magic *m;
@@ -689,6 +840,12 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		++l;		/* step over */
 		cont_level++; 
 	}
+#ifdef ENABLE_CONDITIONALS
+	if (cont_level == 0 || cont_level > last_cont_level)
+		if (file_check_mem(ms, cont_level) == -1)
+			return -1;
+	last_cont_level = cont_level;
+#endif
 
 #define ALLOC_CHUNK	(size_t)10
 #define ALLOC_INCR	(size_t)200
@@ -840,21 +997,21 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 	}
 	EATAB;
 
+#ifdef ENABLE_CONDITIONALS
+	m->cond = get_cond(l, &l);
+	if (check_cond(ms, m->cond, cont_level) == -1)
+		return -1;
+
+	EATAB;
+#endif
+
 	if (*l == 'u') {
 		++l;
 		m->flag |= UNSIGNED;
 	}
 
-	/* get type, skip it */
-	for (i = 0; i < file_nnames; i++) {
-		size_t len = strlen(file_names[i]);
-		if (strncmp(l, file_names[i], len) == 0) {
-			m->type = i;
-			l+= len;
-			break;
-		}
-	}
-	if (i == file_nnames) {
+	m->type = get_type(l, &l);
+	if (m->type == FILE_INVALID) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "type `%s' invalid", l);
 		return -1;
