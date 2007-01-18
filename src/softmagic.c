@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.90 2007/01/16 23:24:31 ljt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.91 2007/01/18 05:29:33 ljt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -51,7 +51,6 @@ private void mdebug(uint32_t, const char *, size_t);
 private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, size_t);
 private int mconvert(struct magic_set *, struct magic *);
-private int check_mem(struct magic_set *, unsigned int);
 private int print_sep(struct magic_set *, int);
 private void cvt_8(union VALUETYPE *, const struct magic *);
 private void cvt_16(union VALUETYPE *, const struct magic *);
@@ -72,6 +71,32 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes)) != 0)
 			return rv;
 
+	return 0;
+}
+
+#ifdef ENABLE_CONDITIONALS
+protected int
+#else
+private int
+#endif
+file_check_mem(struct magic_set *ms, unsigned int level)
+{
+	size_t len;
+
+	if (level >= ms->c.len) {
+		len = (ms->c.len += 20) * sizeof(*ms->c.li);
+		ms->c.li = (ms->c.li == NULL) ? malloc(len) :
+		    realloc(ms->c.li, len);
+		if (ms->c.li == NULL) {
+			file_oomem(ms, len);
+			return -1;
+		}
+	}
+	ms->c.li[level].got_match = 0;
+#ifdef ENABLE_CONDITIONALS
+	ms->c.li[level].last_match = 0;
+	ms->c.li[level].last_cond = COND_NONE;
+#endif /* ENABLE_CONDITIONALS */
 	return 0;
 }
 
@@ -113,7 +138,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	int firstline = 1; /* a flag to print X\n  X\n- X */
 	int printed_something = 0;
 
-	if (check_mem(ms, cont_level) == -1)
+	if (file_check_mem(ms, cont_level) == -1)
 		return -1;
 
 	for (magindex = 0; magindex < nmagic; magindex++) {
@@ -165,7 +190,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			return -1;
 
 		/* and any continuations that match */
-		if (check_mem(ms, ++cont_level) == -1)
+		if (file_check_mem(ms, ++cont_level) == -1)
 			return -1;
 
 		while (magic[magindex+1].cont_level != 0 &&
@@ -187,6 +212,13 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				    ms->c.li[cont_level - 1].off;
 			}
 
+#ifdef ENABLE_CONDITIONALS
+			if (magic[magindex].cond == COND_ELSE ||
+			    magic[magindex].cond == COND_ELIF) {
+				if (ms->c.li[cont_level].last_match == 1)
+					continue;
+			}
+#endif
 			flush = !mget(ms, s, &magic[magindex], nbytes,
 			    cont_level);
 			if (flush && magic[magindex].reln != '!')
@@ -196,8 +228,14 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			case -1:
 				return -1;
 			case 0:
+#ifdef ENABLE_CONDITIONALS
+				ms->c.li[cont_level].last_match = 0;
+#endif
 				break;
 			default:
+#ifdef ENABLE_CONDITIONALS
+				ms->c.li[cont_level].last_match = 1;
+#endif
 				if (magic[magindex].type != FILE_DEFAULT)
 					ms->c.li[cont_level].got_match = 1;
 				else if (ms->c.li[cont_level].got_match) {
@@ -214,16 +252,15 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 						return -1;
 				}
 				/*
-				 * This continuation matched.
-				 * Print its message, with
-				 * a blank before it if
-				 * the previous item printed
-				 * and this item isn't empty.
+				 * This continuation matched.  Print
+				 * its message, with a blank before it
+				 * if the previous item printed and
+				 * this item isn't empty.
 				 */
 				/* space if previous printed */
 				if (need_separator
 				    && (magic[magindex].nospflag == 0)
-				   && (magic[magindex].desc[0] != '\0')) {
+				    && (magic[magindex].desc[0] != '\0')) {
 					if (file_printf(ms, " ") == -1)
 						return -1;
 					need_separator = 0;
@@ -238,7 +275,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				 * at a higher level,
 				 * process them.
 				 */
-				if (check_mem(ms, ++cont_level) == -1)
+				if (file_check_mem(ms, ++cont_level) == -1)
 					return -1;
 				break;
 			}
@@ -251,24 +288,6 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		}			
 	}
 	return returnval;  /* This is hit if -k is set or there is no match */
-}
-
-private int
-check_mem(struct magic_set *ms, unsigned int level)
-{
-	size_t len;
-
-	if (level >= ms->c.len) {
-		len = (ms->c.len += 20) * sizeof(*ms->c.li);
-		ms->c.li = (ms->c.li == NULL) ? malloc(len) :
-		    realloc(ms->c.li, len);
-		if (ms->c.li == NULL) {
-			file_oomem(ms, len);
-			return -1;
-		}
-	}
-	ms->c.li[level].got_match = 0;
-	return 0;
 }
 
 private int
