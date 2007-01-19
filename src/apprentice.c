@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.102 2007/01/16 14:58:48 ljt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.103 2007/01/18 05:29:33 ljt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1399,14 +1399,42 @@ getstr(struct magic_set *ms, const char *s, char *p, int plen, int *slen, int ac
 					file_magwarn(ms, "incomplete escape");
 				goto out;
 
-			default:
-				if (action == FILE_COMPILE)
+			case '\t':
+				if (action == FILE_COMPILE) {
 					file_magwarn(ms,
-					    "unknown escape sequence: \\%03o", c);
+					    "escaped tab found, use \\t instead");
+					action++;
+				}
 				/*FALLTHROUGH*/
+			default:
+				if (action == FILE_COMPILE) {
+					if (isprint((unsigned char)c))
+					    file_magwarn(ms,
+						"no need to escape `%c'", c);
+					else
+					    file_magwarn(ms,
+						"unknown escape sequence: \\%03o", c);
+				}
+				/*FALLTHROUGH*/
+			/* space, perhaps force people to use \040? */
+			case ' ':
+#if 0
+			/*
+			 * Other things people escape, but shouldn't need to,
+			 * so we disallow them
+			 */
 			case '\'':
 			case '"':
 			case '?':
+#endif
+			/* Relations */
+			case '>':
+			case '<':
+			case '&':
+			case '^':
+			case '=':
+			case '!':
+			/* and baskslash itself */
 			case '\\':
 				*p++ = (char) c;
 				break;
