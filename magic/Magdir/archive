@@ -478,7 +478,7 @@
 0	string		HPAK		HPACK archive data
 
 # JAM Archive volume format, by Dmitry.Kohmanyuk@UA.net
-0	string		\351,\001JAM\		JAM archive,
+0	string		\351,\001JAM\ 		JAM archive,
 >7	string		>\0			version %.4s
 >0x26	byte		=0x27			-
 >>0x2b	string          >\0			label %.11s,

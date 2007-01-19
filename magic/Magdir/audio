@@ -500,13 +500,13 @@
 # Since I saw only eqf files with version v1.1 I think that it's OK
 >23	string	x	\b%.4s
 # .preset
-0	string	\[Equalizer\ preset\]	XMMS equalizer preset
+0	string	[Equalizer\ preset]	XMMS equalizer preset
 # .m3u
-0	string	\#EXTM3U	M3U playlist
+0	string	#EXTM3U			M3U playlist
 # .pls
-0	string	\[playlist\]	PLS playlist
+0	string	[playlist]		PLS playlist
 # licq.conf
-1	string	\[licq\]	LICQ configuration file
+1	string	[licq]			LICQ configuration file
 
 # Atari ST audio files by Dirk Jagdmann <doj@cubic.org>
 0	string		ICE!		SNDH Atari ST music

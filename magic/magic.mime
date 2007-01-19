@@ -679,9 +679,9 @@
 #
 # KDE
 0		string	[KDE\ Desktop\ Entry]	application/x-kdelnk
-0		string	\#\ KDE\ Config\ File	application/x-kdelnk
+0		string	#\ KDE\ Config\ File	application/x-kdelnk
 # xmcd database file for kscd
-0		string	\#\ xmcd                text/xmcd
+0		string	#\ xmcd                text/xmcd
 
 #------------------------------------------------------------------------------
 # pkgadd:  file(1) magic for SysV R4 PKG Datastreams
