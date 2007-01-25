@@ -36,7 +36,7 @@
 0	string		\\chapter	LaTeX document text
 0	string		\\documentclass	LaTeX 2e document text
 0	string		\\relax		LaTeX auxiliary file
-0	string		\\contentsline	LaTeX  table of contents
+0	string		\\contentsline	LaTeX table of contents
 0	string		%\ -*-latex-*-	LaTeX document text
 
 # Tex document, from Hendrik Scholz <hendrik@scholz.net>
