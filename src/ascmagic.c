@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.47 2007/01/12 17:38:27 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.48 2007/01/16 14:56:45 ljt Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -167,7 +167,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	 * I believe Plan 9 troff allows non-ASCII characters in the names
 	 * of macros, so this test might possibly fail on such a file.
 	 */
-	if (*ubuf == '.') {
+	if ((ms->flags & MAGIC_NO_CHECK_TROFF) != 0 && *ubuf == '.') {
 		unichar *tp = ubuf + 1;
 
 		while (ISSPC(*tp))
@@ -184,13 +184,17 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		}
 	}
 
-	if ((*buf == 'c' || *buf == 'C') && ISSPC(buf[1])) {
+	if ((ms->flags & MAGIC_NO_CHECK_FORTRAN) &&
+	    (*buf == 'c' || *buf == 'C') && ISSPC(buf[1])) {
 		subtype_mime = "text/fortran";
 		subtype = "fortran program";
 		goto subtype_identified;
 	}
 
 	/* look for tokens from names.h - this is expensive! */
+
+	if ((ms->flags & MAGIC_NO_CHECK_TOKENS) != 0)
+		goto subtype_identified;
 
 	i = 0;
 	while (i < ulen) {

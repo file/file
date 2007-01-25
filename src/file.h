@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.85 2007/01/16 14:58:48 ljt Exp $
+ * @(#)$File: file.h,v 1.86 2007/01/18 05:29:33 ljt Exp $
  */
 
 #ifndef __file_h__
@@ -304,18 +304,22 @@ struct magic_set {
 
 struct stat;
 protected const char *file_fmttime(uint32_t, int);
-protected int file_buffer(struct magic_set *, int, const void *, size_t);
+protected int file_buffer(struct magic_set *, int, const char *, const void *,
+    size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_printf(struct magic_set *, const char *, ...);
 protected int file_reset(struct magic_set *);
-protected int file_tryelf(struct magic_set *, int, const unsigned char *, size_t);
-protected int file_zmagic(struct magic_set *, int, const unsigned char *, size_t);
+protected int file_tryelf(struct magic_set *, int, const unsigned char *,
+    size_t);
+protected int file_zmagic(struct magic_set *, int, const char *,
+    const unsigned char *, size_t);
 protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t);
 protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
-protected uint64_t file_signextend(struct magic_set *, struct magic *, uint64_t);
+protected uint64_t file_signextend(struct magic_set *, struct magic *,
+    uint64_t);
 protected void file_delmagic(struct magic *, int type, size_t entries);
 protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);

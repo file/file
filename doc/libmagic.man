@@ -104,6 +104,26 @@ Don't translate unprintable characters to a \eooo octal representation.
 .It Dv MAGIC_ERROR
 Treat operating system errors while trying to open files and follow symlinks
 as real errors, instead of printing them in the magic buffer.
+.It Dv MAGIC_NO_CHECK_APPTYPE
+Check for
+.Dv EMX
+application type (only on EMX).
+.It Dv MAGIC_NO_CHECK_ASCII
+Check for various types of ascii files.
+.It Dv MAGIC_NO_CHECK_COMPRESS
+Don't look for, or inside compressed files.
+.It Dv MAGIC_NO_CHECK_ELF
+Don't print elf details.
+.It Dv MAGIC_NO_CHECK_FORTRAN
+Don't look for fortran sequences inside ascii files.
+.It Dv MAGIC_NO_CHECK_SOFT
+Don't consult magic files.
+.It Dv MAGIC_NO_CHECK_TAR
+Don't examine tar files.
+.It Dv MAGIC_NO_CHECK_TOKENS
+Don't look for known tokens inside ascii files.
+.It Dv MAGIC_NO_CHECK_TROFF
+Don't look for troff sequences inside ascii files.
 .El
 .Pp
 The

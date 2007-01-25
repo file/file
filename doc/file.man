@@ -175,6 +175,33 @@ flag to debug a new magic file before installing it.
 Write a
 .Pa magic.mgc
 output file that contains a pre-parsed version of the magic file.
+.It Fl e , -exclude Ar testname
+Exclude the test named in
+.Ar testname
+from the list of tests made to determine the file type. Valid test names
+are:
+.Bl -tag -width
+.It apptype
+Check for
+.Dv EMX
+application type (only on EMX).
+.It ascii
+Check for various types of ascii files.
+.It compress
+Don't look for, or inside compressed files.
+.It elf
+Don't print elf details.
+.It fortran
+Don't look for fortran sequences inside ascii files.
+.It soft
+Don't consult magic files.
+.It tar
+Don't examine tar files.
+.It token
+Don't look for known tokens inside ascii files.
+.It troff
+Don't look for troff sequences inside ascii files.
+.El
 .It Fl f , -files-from Ar namefile
 Read the names of the files to be examined from 
 .Ar namefile

@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.36 2007/01/12 17:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.37 2007/01/16 14:58:48 ljt Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -334,32 +334,8 @@ magic_file(struct magic_set *ms, const char *inname)
 			goto done;
 	} else {
 		(void)memset(buf + nbytes, 0, SLOP); /* NUL terminate */
-#ifdef __EMX__
-		switch (file_os2_apptype(ms, inname, buf, nbytes)) {
-		case -1:
+		if (file_buffer(ms, fd, inname, buf, (size_t)nbytes) == -1)
 			goto done;
-		case 0:
-			break;
-		default:
-			rv = 0;
-			goto done;
-		}
-#endif
-		if (file_buffer(ms, fd, buf, (size_t)nbytes) == -1)
-			goto done;
-#ifdef BUILTIN_ELF
-		if (nbytes > 5) {
-			/*
-			 * We matched something in the file, so this *might*
-			 * be an ELF file, and the file is at least 5 bytes
-			 * long, so if it's an ELF file it has at least one
-			 * byte past the ELF magic number - try extracting
-			 * information from the ELF headers that cannot easily
-			 * be extracted with rules in the magic file.
-			 */
-			(void) file_tryelf(ms, fd, buf, (size_t)nbytes);
-		}
-#endif
 	}
 	rv = 0;
 done:
@@ -378,7 +354,7 @@ magic_buffer(struct magic_set *ms, const void *buf, size_t nb)
 	 * The main work is done here!
 	 * We have the file name and/or the data buffer to be identified. 
 	 */
-	if (file_buffer(ms, -1, buf, nb) == -1) {
+	if (file_buffer(ms, -1, NULL, buf, nb) == -1) {
 		return NULL;
 	}
 	return file_getbuffer(ms);

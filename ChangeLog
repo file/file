@@ -1,3 +1,10 @@
+
+2007-01-25 16:01 Christos Zoulas <christos@zoulas.com>
+
+	* Centralize all the tests in file_buffer.
+
+	* Add exclude flag.
+
 2007-01-18 05:29 Anon Ymous <do@not.spam.me>
 	
 	* Move the "type" detection code from parse() into its own table

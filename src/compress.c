@@ -51,7 +51,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.46 2007/01/12 17:38:27 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.47 2007/01/16 14:56:45 ljt Exp $")
 #endif
 
 private struct {
@@ -88,8 +88,8 @@ private size_t uncompressgzipped(struct magic_set *, const unsigned char *,
 #endif
 
 protected int
-file_zmagic(struct magic_set *ms, int fd, const unsigned char *buf,
-    size_t nbytes)
+file_zmagic(struct magic_set *ms, int fd, const char *name,
+    const unsigned char *buf, size_t nbytes)
 {
 	unsigned char *newbuf = NULL;
 	size_t i, nsz;
@@ -106,11 +106,11 @@ file_zmagic(struct magic_set *ms, int fd, const unsigned char *buf,
 		    nbytes)) != NODATA) {
 			ms->flags &= ~MAGIC_COMPRESS;
 			rv = -1;
-			if (file_buffer(ms, -1, newbuf, nsz) == -1)
+			if (file_buffer(ms, -1, name, newbuf, nsz) == -1)
 				goto error;
 			if (file_printf(ms, " (") == -1)
 				goto error;
-			if (file_buffer(ms, -1, buf, nbytes) == -1)
+			if (file_buffer(ms, -1, NULL, buf, nbytes) == -1)
 				goto error;
 			if (file_printf(ms, ")") == -1)
 				goto error;
