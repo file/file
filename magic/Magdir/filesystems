@@ -1192,3 +1192,8 @@
 #>>&(&0.b+8)  byte    0x42       OpenVMS backup saveset data
 #>>>40        lelong  x          (block size %d
 #>>>49        string  >\0        original name '%s')
+
+# Compaq/HP RILOE floppy image
+# From: Dirk Jagdmann <doj@cubic.org>
+0	string	CPQRFBLO	Compaq/HP RILOE floppy image
+
