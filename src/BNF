@@ -120,11 +120,14 @@ default = "default"	;; This is intended to be used with the
 
 ------------------------------------------------------------------------
 test = numtest | strtest | truetest
-				;; test to preform on <type> read from file.
+				;; Test to preform on <type> read from file.
 
-numtest = [ compare ] NUMBER	;; if compare is missing, "=" is assumed.
+numtest = [ compare ] NUMBER	;; If compare is missing, "=" is assumed.
 
-strtest = [ compare ] STRING	;; if compare is missing, "=" is assumed.
+strtest = [ compare ] STRING	;; If compare is missing, "=" is assumed.
+				;; Note: If the STRING begins with a <compare>
+				;; character, the <compare> field cannot be
+				;; omitted.
 
 compare = "=" | "!" | "<" | ">" | "&" | "^"
 
@@ -133,7 +136,7 @@ truetest = "x"		;; This always returns true.
 
 ------------------------------------------------------------------------
 message = [ nospflag ] ( STRING | FMT_STRING )
-			;; message to print if test result is true.
+			;; Message to print if test result is true.
 
 nospflag = %x08 | "\\b"	;; Do not insert a space before the message.
 			;; By default, messages are separated by a " ".
