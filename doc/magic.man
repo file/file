@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.36 2007/01/10 22:56:49 christos Exp $
+.\" $File: magic.man,v 1.37 2007/01/12 17:38:27 christos Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -49,7 +49,7 @@ An eight-byte value (on most systems) in this machine's native byte order.
 A string of bytes.
 The string type specification can be optionally followed
 by /[Bbc]*.
-The 
+The
 .Dq B
 flag compacts whitespace in the target, which must
 contain at least one whitespace character.
@@ -58,7 +58,7 @@ If the magic has
 consecutive blanks, the target needs at least
 .Dv n
 consecutive blanks to match.
-The 
+The
 .Dq b
 flag treats every blank in the target as an optional blank.
 Finally the
@@ -69,7 +69,8 @@ targer, whereas upper case characters in the magic, only much uppercase
 characters in the target.
 .It Dv pstring
 A pascal style string where the first byte is interpreted as the an
-unsigned length. The string is not NUL terminated.
+unsigned length.
+The string is not NUL terminated.
 .It Dv date
 A four-byte value interpreted as a UNIX date.
 .It Dv qdate
@@ -137,7 +138,7 @@ than UTC.
 A regular expression match in extended POSIX regular expression syntax
 (much like egrep).
 The type specification can be optionally followed by /[cse]*.
-The 
+The
 .Dq c
 flag makes the match case insensitive, while the
 .Dq s
@@ -158,14 +159,15 @@ and
 will match the beginning and end of individual lines, respectively,
 not beginning and end of file.
 .It Dv search
-A literal string search starting at the given offset. It must be followed by
-.Dv /<number>
+A literal string search starting at the given offset.
+It must be followed by
+.Dv \*[Lt]number\*[Gt]
 which specifies how many matches shall be attempted (the range).
 This is suitable for searching larger binary expressions with variable
 offsets, using
 .Dv \e
 escapes for special characters.
-.It Dv default 
+.It Dv default
 This is intended to be used with the text
 .Dv x
 (which is always true) and a message that is to be used if there are
@@ -174,7 +176,7 @@ no other matches.
 .El
 .Pp
 The numeric types may optionally be followed by
-.Dv &
+.Dv \*[Am]
 and a numeric value,
 to specify that the value is to be AND'ed with the
 numeric value before any comparisons are done.
@@ -194,13 +196,13 @@ may be preceded by a character indicating the operation to be performed.
 It may be
 .Dv = ,
 to specify that the value from the file must equal the specified value,
-.Dv < ,
+.Dv \*[Lt] ,
 to specify that the value from the file must be less than the specified
 value,
-.Dv > ,
+.Dv \*[Gt] ,
 to specify that the value from the file must be greater than the specified
 value,
-.Dv & ,
+.Dv \*[Am] ,
 to specify that the value from the file must have set all of the bits
 that are set in the specified value,
 .Dv ^ ,
@@ -215,7 +217,7 @@ If the character is omitted, it is assumed to be
 For all tests except
 .Em string
 and
-.Em regex,
+.Em regex ,
 operation
 .Dv !
 specifies that the line matches if the test does
@@ -234,25 +236,25 @@ For string values, the byte string from the
 file must match the specified byte string.
 The operators
 .Dv = ,
-.Dv <
+.Dv \*[Lt]
 and
-.Dv >
+.Dv \*[Gt]
 (but not
-.Dv & )
+.Dv \*[Am] )
 can be applied to strings.
 The length used for matching is that of the string argument
 in the magic file.
 This means that a line can match any string, and
 then presumably print that string, by doing
-.Em >\e0
+.Em \*[Gt]\e0
 (because all strings are greater than the null string).
 .Pp
 The special test
 .Em x
 always evaluates to true.
 .Dv message
-The message to be printed if the comparison succeeds.  If the string
-contains a
+The message to be printed if the comparison succeeds.
+If the string contains a
 .Xr printf 3
 format specification, the value from the file (with any specified masking
 performed) is printed using the message as the format string.
@@ -265,12 +267,12 @@ Some file formats contain additional information which is to be printed
 along with the file type or need additional tests to determine the true
 file type.
 These additional tests are introduced by one or more
-.Em >
+.Em \*[Gt]
 characters preceding the offset.
 The number of
-.Em >
+.Em \*[Gt]
 on the line indicates the level of the test; a line with no
-.Em >
+.Em \*[Gt]
 at the beginning is considered to be at level 0.
 Tests are arranged in a tree-like hierarchy:
 If a the test on a line at level
@@ -283,16 +285,16 @@ with level
 (or less) appears.
 For more complex files, one can use empty messages to get just the
 "if/then" effect, in the following way:
-.Bd -literal -offset indent 
+.Bd -literal -offset indent
 0      string   MZ
->0x18  leshort  <0x40   MS-DOS executable
->0x18  leshort  >0x3f   extended PC executable (e.g., MS Windows)
+\*[Gt]0x18  leshort  \*[Lt]0x40   MS-DOS executable
+\*[Gt]0x18  leshort  \*[Gt]0x3f   extended PC executable (e.g., MS Windows)
 .Ed
 .Pp
 Offsets do not need to be constant, but can also be read from the file
 being examined.
 If the first character following the last
-.Em >
+.Em \*[Gt]
 is a
 .Em (
 then the string after the parenthesis is interpreted as an indirect offset.
@@ -301,11 +303,11 @@ the file.
 The value at that offset is read, and is used again as an offset
 in the file.
 Indirect offsets are of the form:
-.Em (( x [.[bslBSL]][+\-][ y ]).
+.Em (( x [.[bslBSL]][+\-][ y ]) .
 The value of
 .Em x
-is used as an offset in the file. A byte, short or long is read at that offset
-depending on the
+is used as an offset in the file.
+A byte, short or long is read at that offset depending on the
 .Em [bslBSLm]
 type specifier.
 The capitalized types interpret the number as a big endian
@@ -320,14 +322,14 @@ is added and the result is used as an offset in the file.
 The default type if one is not specified is long.
 .Pp
 That way variable length structures can be examined:
-.Bd -literal -offset indent 
+.Bd -literal -offset indent
 # MS Windows executables are also valid MS-DOS executables
 0           string  MZ
->0x18       leshort <0x40   MZ executable (MS-DOS)
+\*[Gt]0x18       leshort \*[Lt]0x40   MZ executable (MS-DOS)
 # skip the whole block below if it is not an extended executable
->0x18       leshort >0x3f
->>(0x3c.l)  string  PE\e0\e0  PE executable (MS-Windows)
->>(0x3c.l)  string  LX\e0\e0  LX executable (OS/2)
+\*[Gt]0x18       leshort \*[Gt]0x3f
+\*[Gt]\*[Gt](0x3c.l)  string  PE\e0\e0  PE executable (MS-Windows)
+\*[Gt]\*[Gt](0x3c.l)  string  LX\e0\e0  LX executable (OS/2)
 .Ed
 .Pp
 This strategy of examining has one drawback: You must make sure that
@@ -336,79 +338,84 @@ there is neither PE\e0\e0 nor LE\e0\e0 in the above example)
 .Pp
 If this indirect offset cannot be used as-is, there are simple calculations
 possible: appending
-.Em [+-*/%&|^]<number>
+.Em [+-*/%\*[Am]|^]\*[Lt]number\*[Gt]
 inside parentheses allows one to modify
 the value read from the file before it is used as an offset:
-.Bd -literal -offset indent 
+.Bd -literal -offset indent
 # MS Windows executables are also valid MS-DOS executables
 0           string  MZ
 # sometimes, the value at 0x18 is less that 0x40 but there's still an
 # extended executable, simply appended to the file
->0x18       leshort <0x40
->>(4.s*512) leshort 0x014c  COFF executable (MS-DOS, DJGPP)
->>(4.s*512) leshort !0x014c MZ executable (MS-DOS)
+\*[Gt]0x18       leshort \*[Lt]0x40
+\*[Gt]\*[Gt](4.s*512) leshort 0x014c  COFF executable (MS-DOS, DJGPP)
+\*[Gt]\*[Gt](4.s*512) leshort !0x014c MZ executable (MS-DOS)
 .Ed
 .Pp
 Sometimes you do not know the exact offset as this depends on the length or
-position (when indirection was used before) of preceding fields. You can
-specify an offset relative to the end of the last up-level field using
-.Sq &
+position (when indirection was used before) of preceding fields.
+You can specify an offset relative to the end of the last up-level
+field using
+.Sq \*[Am]
 as a prefix to the offset:
-.Bd -literal -offset indent 
+.Bd -literal -offset indent
 0           string  MZ
->0x18       leshort >0x3f
->>(0x3c.l)  string  PE\e0\e0    PE executable (MS-Windows)
+\*[Gt]0x18       leshort \*[Gt]0x3f
+\*[Gt]\*[Gt](0x3c.l)  string  PE\e0\e0    PE executable (MS-Windows)
 # immediately following the PE signature is the CPU type
->>>&0       leshort 0x14c     for Intel 80386
->>>&0       leshort 0x184     for DEC Alpha
+\*[Gt]\*[Gt]\*[Gt]\*[Am]0       leshort 0x14c     for Intel 80386
+\*[Gt]\*[Gt]\*[Gt]\*[Am]0       leshort 0x184     for DEC Alpha
 .Ed
 .Pp
 Indirect and relative offsets can be combined:
-.Bd -literal -offset indent 
+.Bd -literal -offset indent
 0             string  MZ
->0x18         leshort <0x40
->>(4.s*512)   leshort !0x014c MZ executable (MS-DOS)
+\*[Gt]0x18         leshort \*[Lt]0x40
+\*[Gt]\*[Gt](4.s*512)   leshort !0x014c MZ executable (MS-DOS)
 # if it's not COFF, go back 512 bytes and add the offset taken
 # from byte 2/3, which is yet another way of finding the start
 # of the extended executable
->>>&(2.s-514) string  LE      LE executable (MS Windows VxD driver)
+\*[Gt]\*[Gt]\*[Gt]\*[Am](2.s-514) string  LE      LE executable (MS Windows VxD driver)
 .Ed
 .Pp
 Or the other way around:
-.Bd -literal -offset indent 
+.Bd -literal -offset indent
 0                 string  MZ
->0x18             leshort >0x3f
->>(0x3c.l)        string  LE\e0\e0  LE executable (MS-Windows)
+\*[Gt]0x18             leshort \*[Gt]0x3f
+\*[Gt]\*[Gt](0x3c.l)        string  LE\e0\e0  LE executable (MS-Windows)
 # at offset 0x80 (-4, since relative offsets start at the end
 # of the up-level match) inside the LE header, we find the absolute
 # offset to the code area, where we look for a specific signature
->>>(&0x7c.l+0x26) string  UPX     \eb, UPX compressed
+\*[Gt]\*[Gt]\*[Gt](\*[Am]0x7c.l+0x26) string  UPX     \eb, UPX compressed
 .Ed
 .Pp
 Or even both!
-.Bd -literal -offset indent 
+.Bd -literal -offset indent
 0                string  MZ
->0x18            leshort >0x3f
->>(0x3c.l)       string  LE\e0\e0 LE executable (MS-Windows)
+\*[Gt]0x18            leshort \*[Gt]0x3f
+\*[Gt]\*[Gt](0x3c.l)       string  LE\e0\e0 LE executable (MS-Windows)
 # at offset 0x58 inside the LE header, we find the relative offset
 # to a data area where we look for a specific signature
->>>&(&0x54.l-3)  string  UNACE  \eb, ACE self-extracting archive
+\*[Gt]\*[Gt]\*[Gt]\*[Am](\*[Am]0x54.l-3)  string  UNACE  \eb, ACE self-extracting archive
 .Ed
 .Pp
 Finally, if you have to deal with offset/length pairs in your file, even the
 second value in a parenthesized expression can be taken from the file itself,
-using another set of parentheses. Note that this additional indirect offset
-is always relative to the start of the main indirect offset.
-.Bd -literal -offset indent 
+using another set of parentheses.
+Note that this additional indirect offset is always relative to the
+start of the main indirect offset.
+.Bd -literal -offset indent
 0                 string       MZ
->0x18             leshort      >0x3f
->>(0x3c.l)        string       PE\e0\e0 PE executable (MS-Windows)
+\*[Gt]0x18             leshort      \*[Gt]0x3f
+\*[Gt]\*[Gt](0x3c.l)        string       PE\e0\e0 PE executable (MS-Windows)
 # search for the PE section called ".idata"...
->>>&0xf4          search/0x140 .idata
+\*[Gt]\*[Gt]\*[Gt]\*[Am]0xf4          search/0x140 .idata
 # ...and go to the end of it, calculated from start+length;
 # these are located 14 and 10 bytes after the section name
->>>>(&0xe.l+(-4)) string       PK\e3\e4 \eb, ZIP self-extracting archive
+\*[Gt]\*[Gt]\*[Gt]\*[Gt](\*[Am]0xe.l+(-4)) string       PK\e3\e4 \eb, ZIP self-extracting archive
 .Ed
+.Sh SEE ALSO
+.Xr file __CSECTION__
+\- the command that reads this file.
 .Sh BUGS
 The formats
 .Dv long ,
@@ -430,9 +437,6 @@ are system-dependent; perhaps they should be specified as a number
 of bytes (2B, 4B, etc),
 since the files being recognized typically come from
 a system on which the lengths are invariant.
-.Sh SEE ALSO
-.Xr file __CSECTION__
-\- the command that reads this file.
 .\"
 .\" From: guy@sun.uucp (Guy Harris)
 .\" Newsgroups: net.bugs.usg
@@ -446,4 +450,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.37 2007/01/12 17:38:27 christos Exp $
+.\" @(#)$Id: magic.man,v 1.38 2007/01/27 00:52:08 ljt Exp $
