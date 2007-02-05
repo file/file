@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.26 2007/01/25 21:05:47 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.27 2007/02/05 16:46:40 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -166,16 +166,16 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 #endif
 
     /* try compression stuff */
-    if ((ms->flags & MAGIC_NO_CHECK_COMPRESS) == 0 ||
+    if ((ms->flags & MAGIC_NO_CHECK_COMPRESS) != 0 ||
         (m = file_zmagic(ms, fd, inname, buf, nb)) == 0) {
 	/* Check if we have a tar file */
-	if ((ms->flags & MAGIC_NO_CHECK_TAR) == 0 ||
+	if ((ms->flags & MAGIC_NO_CHECK_TAR) != 0 ||
 	    (m = file_is_tar(ms, buf, nb)) == 0) {
 	    /* try tests in /etc/magic (or surrogate magic file) */
-	    if ((ms->flags & MAGIC_NO_CHECK_SOFT) == 0 ||
+	    if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
 		(m = file_softmagic(ms, buf, nb)) == 0) {
 		/* try known keywords, check whether it is ASCII */
-		if ((ms->flags & MAGIC_NO_CHECK_ASCII) == 0 ||
+		if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
 		    (m = file_ascmagic(ms, buf, nb)) == 0) {
 		    /* abandon hope, all ye who remain here */
 		    if (file_printf(ms, ms->flags & MAGIC_MIME ?
