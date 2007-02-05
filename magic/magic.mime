@@ -592,6 +592,14 @@
 # RTF - Rich Text Format
 0	string		{\\rtf		text/rtf
 
+# TeX documents, from Daniel Quinlan (quinlan@yggdrasil.com)
+0	search/400	\\input		text/x-tex
+0	search/400	\\section	text/x-tex
+0	search/400	\\setlength	text/x-tex
+0	search/400	\\documentstyle	text/x-tex
+0	search/400	\\chapter	text/x-tex
+0	search/400	\\documentclass	text/x-tex
+
 #------------------------------------------------------------------------------
 # animation:  file(1) magic for animation/movie formats
 #

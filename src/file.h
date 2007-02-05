@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.86 2007/01/18 05:29:33 ljt Exp $
+ * @(#)$File: file.h,v 1.87 2007/01/25 21:05:47 christos Exp $
  */
 
 #ifndef __file_h__
@@ -331,7 +331,7 @@ protected void file_mdump(struct magic *);
 protected void file_showstr(FILE *, const char *, size_t);
 protected size_t file_mbswidth(const char *);
 protected const char *file_getbuffer(struct magic_set *);
-protected ssize_t sread(int, void *, size_t);
+protected ssize_t sread(int, void *, size_t, int);
 #ifdef ENABLE_CONDITIONALS
 protected int file_check_mem(struct magic_set *, unsigned int);
 #endif

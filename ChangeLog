@@ -1,4 +1,8 @@
 
+2007-02-05 11:35 Christos Zoulas <christos@zoulas.com>
+
+	* make socket/pipe reading more robust
+
 2007-01-25 16:01 Christos Zoulas <christos@zoulas.com>
 
 	* Centralize all the tests in file_buffer.

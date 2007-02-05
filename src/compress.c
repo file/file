@@ -51,7 +51,7 @@
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.47 2007/01/16 14:56:45 ljt Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.48 2007/01/25 21:05:46 christos Exp $")
 #endif
 
 private struct {
@@ -154,9 +154,9 @@ swrite(int fd, const void *buf, size_t n)
  * `safe' read for sockets and pipes.
  */
 protected ssize_t
-sread(int fd, void *buf, size_t n)
+sread(int fd, void *buf, size_t n, int canbepipe)
 {
-	int rv;
+	int rv, cnt;
 #ifdef FIONREAD
 	int t = 0;
 #endif
@@ -166,11 +166,12 @@ sread(int fd, void *buf, size_t n)
 		goto nocheck;
 
 #ifdef FIONREAD
-	if ((ioctl(fd, FIONREAD, &t) < 0) || (t == 0)) {
+	if (canbepipe && (ioctl(fd, FIONREAD, &t) == -1) || (t == 0)) {
 #ifdef FD_ZERO
-		for (;;) {
+		for (cnt = 0;; cnt++) {
 			fd_set check;
 			struct timeval tout = {0, 100 * 1000};
+			int rv;
 
 			FD_ZERO(&check);
 			FD_SET(fd, &check);
@@ -179,12 +180,14 @@ sread(int fd, void *buf, size_t n)
 			 * Avoid soft deadlock: do not read if there
 			 * is nothing to read from sockets and pipes.
 			 */
-			if (select(fd + 1, &check, NULL, NULL, &tout) <= 0) {
+			rv = select(fd + 1, &check, NULL, NULL, &tout);
+			if (rv == -1) {
 				if (errno == EINTR || errno == EAGAIN)
 					continue;
+			} else if (rv == 0 && cnt >= 5) {
 				return 0;
-			}
-			break;
+			} else
+				break;
 		}
 #endif
 		(void)ioctl(fd, FIONREAD, &t);
@@ -245,7 +248,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 	if (swrite(tfd, startbuf, nbytes) != (ssize_t)nbytes)
 		r = 1;
 	else {
-		while ((r = sread(fd, buf, sizeof(buf))) > 0)
+		while ((r = sread(fd, buf, sizeof(buf), 1)) > 0)
 			if (swrite(tfd, buf, (size_t)r) != r)
 				break;
 	}
@@ -446,7 +449,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 			n = 0;
 			goto err;
 		}
-		if ((r = sread(fdout[0], *newch, HOWMANY)) <= 0) {
+		if ((r = sread(fdout[0], *newch, HOWMANY, 0)) <= 0) {
 #ifdef DEBUG
 			(void)fprintf(stderr, "Read failed (%s)\n",
 			    strerror(errno));
