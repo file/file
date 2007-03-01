@@ -165,3 +165,6 @@
 # From: Serge van den Boom <svdb@stack.nl>
 0	string		\x01ZZZZZ\x01	3DO "Opera" file system
 
+# From Gürkan Sengün <gurkan@linuks.mine.nu>, www.linuks.mine.nu
+0	string		GBS		Nintendo Gameboy Music/Audio Data
+
