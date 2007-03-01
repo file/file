@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.87 2007/01/25 21:05:47 christos Exp $
+ * @(#)$File: file.h,v 1.88 2007/02/05 16:46:40 christos Exp $
  */
 
 #ifndef __file_h__
@@ -278,7 +278,7 @@ struct magic_set {
 		/* Accumulation buffer */
 		char *buf;
 		char *ptr;
-		size_t len;
+		size_t left;
 		size_t size;
 		/* Printable buffer */
 		char *pbuf;

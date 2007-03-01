@@ -46,12 +46,16 @@
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
+#if defined(HAVE_SYS_TIME_H)
+#include <sys/time.h>
+#endif
 #ifdef HAVE_LIBZ
 #include <zlib.h>
 #endif
 
+
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.48 2007/01/25 21:05:46 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.49 2007/02/05 16:46:40 christos Exp $")
 #endif
 
 private struct {
