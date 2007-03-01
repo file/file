@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.39 2007/02/05 16:46:40 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.40 2007/03/01 22:14:55 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -94,7 +94,7 @@ magic_open(int flags)
 		goto free1;
 	}
 
-	ms->o.ptr = ms->o.buf = malloc(ms->o.size = 1024);
+	ms->o.ptr = ms->o.buf = malloc(ms->o.left = ms->o.size = 1024);
 	if (ms->o.buf == NULL)
 		goto free1;
 
@@ -106,7 +106,6 @@ magic_open(int flags)
 	if (ms->c.li == NULL)
 		goto free3;
 	
-	ms->o.len = 0;
 	ms->haderr = 0;
 	ms->error = -1;
 	ms->mlist = NULL;
