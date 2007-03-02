@@ -101,6 +101,7 @@
 >>18	leshort		88		Renesas M32R,
 >>18	leshort		94		Tensilica Xtensa,
 >>18	leshort		97		NatSemi 32k,
+>>18	leshort		106		Analog Devices Blackfin,
 >>18	leshort		0x9026		Alpha (unofficial),
 >>20	lelong		0		invalid version
 >>20	lelong		1		version 1
