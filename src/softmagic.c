@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.91 2007/01/18 05:29:33 ljt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.92 2007/03/02 17:50:06 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -1523,10 +1523,19 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		}
 		else {
 			regmatch_t pmatch[1];
+#ifndef REG_STARTEND
+#define	REG_STARTEND	0
+			char c = ms->search.s[ms->search.s_len - 1];
+			ms->search.s[ms->search.s_len - 1] = '\0';
+#else
 			pmatch[0].rm_so = 0;
 			pmatch[0].rm_eo = ms->search.s_len;
+#endif
 			rc = regexec(&rx, (const char *)ms->search.s,
 			    1, pmatch, REG_STARTEND);
+#if REG_STARTEND == 0
+			ms->search.s[ms->search.s_len - 1] = c;
+#endif
 			switch (rc) {
 			case 0:
 				ms->search.s += (int)pmatch[0].rm_so;
