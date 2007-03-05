@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.58 2007/01/16 14:58:48 ljt Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.59 2007/03/05 02:41:29 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -52,8 +52,8 @@ file_mdump(struct magic *m)
 {
 	private const char optyp[] = { FILE_OPS };
 
-	(void) fprintf(stderr, "[%zu", m->lineno);
-	(void) fprintf(stderr, ">>>>>>>> %d" + 8 - (m->cont_level & 7),
+	(void) fprintf(stderr, "[%u", m->lineno);
+	(void) fprintf(stderr, ">>>>>>>> %u" + 8 - (m->cont_level & 7),
 		       m->offset);
 
 	if (m->flag & INDIR) {
@@ -63,7 +63,7 @@ file_mdump(struct magic *m)
 					file_names[m->in_type] : "*bad*");
 		if (m->in_op & FILE_OPINVERSE)
 			(void) fputc('~', stderr);
-		(void) fprintf(stderr, "%c%d),",
+		(void) fprintf(stderr, "%c%u),",
 			       ((m->in_op & FILE_OPS_MASK) < SZOF(optyp)) ? 
 					optyp[m->in_op & FILE_OPS_MASK] : '?',
 				m->in_offset);

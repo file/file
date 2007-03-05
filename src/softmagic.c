@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.95 2007/03/03 19:09:25 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.96 2007/03/05 02:41:29 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -336,7 +336,7 @@ private int32_t
 mprint(struct magic_set *ms, struct magic *m)
 {
 	uint64_t v;
-	int32_t t = 0;
+	int64_t t = 0;
  	char buf[512];
 	union VALUETYPE *p = &ms->ms_value;
 
