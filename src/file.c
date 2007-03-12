@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.106 2007/01/16 14:54:57 ljt Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.107 2007/01/25 21:05:46 christos Exp $")
 #endif	/* lint */
 
 
@@ -358,9 +358,9 @@ main(int argc, char *argv[])
 
 private void
 /*ARGSUSED*/
-load(const char *m __unused, int flags)
+load(const char *m, int flags)
 {
-	if (magic)
+	if (magic || m == NULL)
 		return;
 	magic = magic_open(flags);
 	if (magic == NULL) {
