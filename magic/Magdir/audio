@@ -552,3 +552,7 @@
 # http://download.ncl.ie/doc/api/ie/ncl/media/music/IMelody.html
 # http://www.wx800.com/msg/download/irda/iMelody.pdf
 0	string	BEGIN:IMELODY	iMelody Ringtone Format
+
+# From: Matthew Flaschen <matthew.flaschen@gatech.edu>
+0	string	#EXTM3U 	M3U playlist text
+
