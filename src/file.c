@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.108 2007/03/12 15:43:21 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.109 2007/03/15 14:50:34 christos Exp $")
 #endif	/* lint */
 
 
@@ -128,7 +128,7 @@ main(int argc, char *argv[])
 	char *home, *usermagic;
 	struct stat sb;
 	static const char hmagic[] = "/.magic";
-#define OPTSTRING	"bcCdf:F:hikLm:nNprsvz0"
+#define OPTSTRING	"bcCde:f:F:hikLm:nNprsvz0"
 #ifdef HAVE_GETOPT_LONG
 	int longindex;
 	static const struct option long_options[] =
@@ -138,7 +138,7 @@ main(int argc, char *argv[])
 		{"brief", 0, 0, 'b'},
 		{"checking-printout", 0, 0, 'c'},
 		{"debug", 0, 0, 'd'},
-		{"exclude", 0, 0, 'e' },
+		{"exclude", 1, 0, 'e' },
 		{"files-from", 1, 0, 'f'},
 		{"separator", 1, 0, 'F'},
 		{"mime", 0, 0, 'i'},
