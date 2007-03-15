@@ -1,4 +1,10 @@
 
+2007-03-15 10:51 Christos Zoulas <christos@zoulas.com>
+
+	* fix fortran and nroff reversed tests (Dmitry V. Levin)
+	
+	* fix exclude option (Dmitry V. Levin)
+
 2007-02-08 17:30 Christos Zoulas <christos@zoulas.com>
 
 	* fix integer underflow in file_printf which can lead to
