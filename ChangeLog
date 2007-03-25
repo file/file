@@ -1,4 +1,11 @@
 
+2007-03-25 17:44 Christos Zoulas <christos@zoulas.com>
+
+	* reset left bytes in the buffer (Dmitry V. Levin)
+
+	* compilation failed with COMPILE_ONLY and ENABLE_CONDITIONALS
+	  (Peter Avalos)
+
 2007-03-15 10:51 Christos Zoulas <christos@zoulas.com>
 
 	* fix fortran and nroff reversed tests (Dmitry V. Levin)
