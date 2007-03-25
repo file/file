@@ -39,7 +39,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.29 2007/03/25 03:13:47 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.30 2007/03/25 21:46:52 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -219,6 +219,7 @@ file_reset(struct magic_set *ms)
 		return -1;
 	}
 	ms->o.ptr = ms->o.buf;
+	ms->o.left = ms->o.size;
 	ms->haderr = 0;
 	ms->error = -1;
 	return 0;
