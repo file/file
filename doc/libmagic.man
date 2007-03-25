@@ -140,7 +140,7 @@ no error.
 The
 .Fn magic_errno
 function returns the last operating system error number
-.Pq .Xr errno 2
+.Pq Xr errno 2
 that was encountered by a system call.
 .Pp
 The
