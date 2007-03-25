@@ -39,7 +39,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.27 2007/02/05 16:46:40 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.28 2007/03/01 22:14:54 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -307,6 +307,27 @@ file_getbuffer(struct magic_set *ms)
 	return ms->o.pbuf;
 }
 
+protected int
+file_check_mem(struct magic_set *ms, unsigned int level)
+{
+	size_t len;
+
+	if (level >= ms->c.len) {
+		len = (ms->c.len += 20) * sizeof(*ms->c.li);
+		ms->c.li = (ms->c.li == NULL) ? malloc(len) :
+		    realloc(ms->c.li, len);
+		if (ms->c.li == NULL) {
+			file_oomem(ms, len);
+			return -1;
+		}
+	}
+	ms->c.li[level].got_match = 0;
+#ifdef ENABLE_CONDITIONALS
+	ms->c.li[level].last_match = 0;
+	ms->c.li[level].last_cond = COND_NONE;
+#endif /* ENABLE_CONDITIONALS */
+	return 0;
+}
 /*
  * Yes these wrappers suffer from buffer overflows, but if your OS does not
  * have the real functions, maybe you should consider replacing your OS?
