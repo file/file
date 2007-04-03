@@ -951,3 +951,7 @@
 
 # 
 128	string		DICM		application/dicom
+
+# Symbian installation files
+8	lelong	0x10000419	application/vnd.symbian.install
+0	lelong	0x10201A7A	x-epoc/x-sisx-app
