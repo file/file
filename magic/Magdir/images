@@ -307,6 +307,10 @@
 >5	byte	0x00		(white background)
 >5	byte	0xFF		(black background)
 
+# Gürkan Sengün <gurkan@linuks.mine.nu>, www.linuks.mine.nu
+# http://www.atarimax.com/jindroush.atari.org/afmtatr.html
+0	leshort	0x0296		Atari ATR image
+
 # XXX:
 # This is bad magic 0x5249 == 'RI' conflicts with RIFF and other
 # magic.
