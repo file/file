@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.109 2007/03/15 14:50:34 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.110 2007/05/08 14:41:44 christos Exp $")
 #endif	/* lint */
 
 
@@ -128,7 +128,7 @@ main(int argc, char *argv[])
 	char *home, *usermagic;
 	struct stat sb;
 	static const char hmagic[] = "/.magic";
-#define OPTSTRING	"bcCde:f:F:hikLm:nNprsvz0"
+#define OPTSTRING	"bcCde:f:F:hikLm:nNprstvz0"
 #ifdef HAVE_GETOPT_LONG
 	int longindex;
 	static const struct option long_options[] =
@@ -158,6 +158,7 @@ main(int argc, char *argv[])
 		{"special-files", 0, 0, 's'},
 		{"compile", 0, 0, 'C'},
 		{"print0", 0, 0, '0'},
+		{"timing", 0, 0, 't'},
 		{0, 0, 0, 0},
 	};
 #endif
@@ -285,6 +286,9 @@ main(int argc, char *argv[])
 			break;
 		case 's':
 			flags |= MAGIC_DEVICES;
+			break;
+		case 't':
+			flags |= MAGIC_TIMING;
 			break;
 		case 'v':
 			(void)fprintf(stdout, "%s-%d.%.2d\n", progname,
@@ -576,8 +580,11 @@ help(void)
 "  -r, --raw                  don't translate unprintable chars to \\ooo\n"
 "  -s, --special-files        treat special (block/char devices) files as\n"
 "                             ordinary ones\n"
+"  -t, --timing		      print debug timing info\n"
 "      --help                 display this help and exit\n"
 "      --version              output version information and exit\n"
+"or\n"
+"  -C, --compile              compile file specified by -m\n"
 );
 	exit(0);
 }
