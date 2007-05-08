@@ -40,7 +40,6 @@
 #define	MAGIC_PRESERVE_ATIME	0x000080 /* Restore access time on exit */
 #define	MAGIC_RAW		0x000100 /* Don't translate unprintable chars */
 #define	MAGIC_ERROR		0x000200 /* Handle ENOENT etc as real errors */
-#define MAGIC_TIMING		0x000400 /* Print timing info for each entry */
 #define MAGIC_NO_CHECK_COMPRESS	0x001000 /* Don't check for compressed files */
 #define MAGIC_NO_CHECK_TAR	0x002000 /* Don't check for tar files */
 #define MAGIC_NO_CHECK_SOFT	0x004000 /* Don't check magic entries */

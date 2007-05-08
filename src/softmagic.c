@@ -111,27 +111,13 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	int returnval = 0; /* if a match is found it is set to 1*/
 	int firstline = 1; /* a flag to print X\n  X\n- X */
 	int printed_something = 0;
-	struct timeval starttv, curtv;
 
 	if (file_check_mem(ms, cont_level) == -1)
 		return -1;
 
-	starttv.tv_sec = 0;
 	for (magindex = 0; magindex < nmagic; magindex++) {
 		int flush;
 
-		if (ms->flags & MAGIC_TIMING) {
-			(void)gettimeofday(&curtv, NULL);
-			if (starttv.tv_sec == 0)
-				starttv = curtv;
-			else {
-				struct timeval diff;
-				timersub(&curtv, &starttv, &diff);
-				starttv = curtv;
-				(void)fprintf(stderr, "Took %ld.%ld\n",
-				    (long)diff.tv_sec, (long)diff.tv_usec);
-			}
-		}
 		ms->offset = magic[magindex].offset;
 		ms->line = magic[magindex].lineno;
 
@@ -1511,7 +1497,6 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		}
 		else {
 			regmatch_t pmatch[1];
-#undef REG_STARTEND
 #ifndef REG_STARTEND
 #define	REG_STARTEND	0
 			size_t l = ms->search.s_len - 1;
