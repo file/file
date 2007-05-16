@@ -1185,15 +1185,28 @@
 >>>>>>>>&0      bedate          =0                      full dump
 >>>>>>>>&0      bedate          !0                      incremental since: %s
 
+#----------------------------------------------------------
 # VMS backup savesets - gerardo.cacciari@gmail.com
-# had to comment out GEM Image and G3 raw data  entries due to conflict
-#0            byte    x
-#>(0.s+16)    string  \x01\x01
-#>>&(&0.b+8)  byte    0x42       OpenVMS backup saveset data
-#>>>40        lelong  x          (block size %d
-#>>>49        string  >\0        original name '%s')
+#
+4            string  \x01\x00\x01\x00\x01\x00
+>(0.s+16)    string  \x01\x01
+>>&(&0.b+8)  byte    0x42       OpenVMS backup saveset data
+>>>40        lelong  x          (block size %d,
+>>>49        string  >\0        original name '%s',
+>>>2         short   1024       VAX generated)
+>>>2         short   2048       AXP generated)
+>>>2         short   4096       I64 generated)
 
 # Compaq/HP RILOE floppy image
 # From: Dirk Jagdmann <doj@cubic.org>
 0	string	CPQRFBLO	Compaq/HP RILOE floppy image
 
+#------------------------------------------------------------------------------
+# Files-11 On-Disk Structure (OpenVMS file system) - gerardo.cacciari@gmail.com
+# These bits come from LBN 1 (home block) of ODS-2 and ODS-5 volumes, which is
+# mapped to VBN 2 of [000000]INDEXF.SYS;1
+#
+1008    string          DECFILE11B      Files-11 On-Disk Structure
+>525    byte            x               Level %d
+>525    byte            x               (ODS-%d OpenVMS file system),
+>984    string          x               volume label is '%-12.12s'
