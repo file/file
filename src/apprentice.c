@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.104 2007/01/19 19:54:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.105 2007/05/16 20:51:40 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -327,10 +327,11 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	if (fn == NULL)
 		fn = MAGIC;
 
-	if ((fn = mfn = strdup(fn)) == NULL) {
+	if ((mfn = strdup(fn)) == NULL) {
 		file_oomem(ms, strlen(fn));
 		return NULL;
 	}
+	fn = mfn;
 
 	if ((mlist = malloc(sizeof(*mlist))) == NULL) {
 		free(mfn);
