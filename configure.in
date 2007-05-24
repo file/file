@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT
 AC_CONFIG_SRCDIR([src/file.c])
-AM_INIT_AUTOMAKE(file, 4.20)
+AM_INIT_AUTOMAKE(file, 4.21)
 AM_CONFIG_HEADER([config.h])
 AM_MAINTAINER_MODE
 
@@ -80,7 +80,7 @@ AC_HEADER_MAJOR
 AC_HEADER_SYS_WAIT
 AC_HEADER_STDINT
 AC_CHECK_HEADERS(fcntl.h locale.h stdint.h inttypes.h unistd.h getopt.h)
-AC_CHECK_HEADERS(utime.h wchar.h wctype.h)
+AC_CHECK_HEADERS(utime.h wchar.h wctype.h limits.h)
 AC_CHECK_HEADERS(sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.

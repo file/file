@@ -1808,7 +1808,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=file
- VERSION=4.20
+ VERSION=4.21
 
 
 cat >>confdefs.h <<_ACEOF
@@ -20670,7 +20670,8 @@ done
 
 
 
-for ac_header in utime.h wchar.h wctype.h
+
+for ac_header in utime.h wchar.h wctype.h limits.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if eval "test \"\${$as_ac_Header+set}\" = set"; then
