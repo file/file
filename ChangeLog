@@ -1,3 +1,6 @@
+2007-05-24 10:00 Christos Zoulas <christos@zoulas.com>
+
+	* Fix another integer overflow (Colin Percival)
 
 2007-03-26 13:58 Christos Zoulas <christos@zoulas.com>
 
