@@ -26,7 +26,6 @@
  */
 #include "file.h"
 #include "magic.h"
-#include <assert.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.30 2007/03/25 21:46:52 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.31 2007/05/24 12:29:54 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -247,8 +246,11 @@ file_getbuffer(struct magic_set *ms)
 
 	len = ms->o.size - ms->o.left;
 	/* * 4 is for octal representation, + 1 is for NUL */
+	if (len > (SIZE_T_MAX - 1) / 4) {
+		file_oomem(ms);
+		return NULL;
+	}
 	psize = len * 4 + 1;
-	assert(psize > len);
 	if (ms->o.psize < psize) {
 		if ((pbuf = realloc(ms->o.pbuf, psize)) == NULL) {
 			file_oomem(ms, psize);
