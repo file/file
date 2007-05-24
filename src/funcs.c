@@ -36,9 +36,19 @@
 #if defined(HAVE_WCTYPE_H)
 #include <wctype.h>
 #endif
+#if defined(HAVE_LIMITS_H)
+#include <limits.h>
+#endif
+#ifndef SIZE_T_MAX
+#ifdef __LP64__
+#define SIZE_T_MAX (size_t)0xfffffffffffffffffU
+#else
+#define SIZE_T_MAX (size_t)0xffffffffU
+#endif
+#endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.30 2007/03/25 21:46:52 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.31 2007/05/24 12:29:54 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -247,7 +257,7 @@ file_getbuffer(struct magic_set *ms)
 	len = ms->o.size - ms->o.left;
 	/* * 4 is for octal representation, + 1 is for NUL */
 	if (len > (SIZE_T_MAX - 1) / 4) {
-		file_oomem(ms);
+		file_oomem(ms, len);
 		return NULL;
 	}
 	psize = len * 4 + 1;
