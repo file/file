@@ -196,6 +196,7 @@
 >>18	beshort		88		Renesas M32R,
 >>18	beshort		94		Tensilica Xtensa,
 >>18	beshort		97		NatSemi 32k,
+>>18	beshort		0x18ad		AVR32 (unofficial),
 >>18	beshort		0x9026		Alpha (unofficial),
 >>18	beshort		0xa390		IBM S/390 (obsolete),
 >>20	belong		0		invalid version
