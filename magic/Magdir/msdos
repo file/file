@@ -363,8 +363,6 @@
 >30	byte	12		(4kB sectors)
 
 # Popular applications
-# False positive with PPT
-#0       string \xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3E\x00\x03\x00\xFE\xFF Microsoft Installer
 2080	string	Microsoft\ Word\ 6.0\ Document	%s
 2080	string	Documento\ Microsoft\ Word\ 6 Spanish Microsoft Word 6 document data
 # Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Word)
@@ -624,5 +622,6 @@
 0	lelong	0x02468ace			Bochs Sparse disk image
 
 # from http://filext.com by Derek M Jones <derek@knosof.co.uk>
-0	string	\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3E\x00\x03\x00\xFE\xFF	Microsoft Installer
+# False positive with PPT
+#0	string	\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3E\x00\x03\x00\xFE\xFF	Microsoft Installer
 0	string	\320\317\021\340\241\261\032\341	Microsoft Office Document
