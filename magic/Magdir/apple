@@ -189,3 +189,13 @@
 >0		byte		<5		\b
 >>13	byte		0x81	\b
 >>>14	uleshort	x		\b, system %hd
+
+#------------------------------------------------------------------------------
+# CAF: Apple CoreAudio File Format
+#
+# Container format for high-end audio purposes.
+# From: David Remahl <dremahl@apple.com>
+#
+0	string		caff		CoreAudio Format audio file
+>4	beshort		<10		version %d
+>6	beshort		x
