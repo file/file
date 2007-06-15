@@ -41,14 +41,14 @@
 #endif
 #ifndef SIZE_T_MAX
 #ifdef __LP64__
-#define SIZE_T_MAX (size_t)0xfffffffffffffffffU
+#define SIZE_T_MAX (size_t)0xffffffffffffffffU
 #else
 #define SIZE_T_MAX (size_t)0xffffffffU
 #endif
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.32 2007/05/24 17:22:27 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.33 2007/06/15 00:01:15 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
