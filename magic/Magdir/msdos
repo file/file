@@ -625,3 +625,11 @@
 # False positive with PPT
 #0	string	\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3E\x00\x03\x00\xFE\xFF	Microsoft Installer
 0	string	\320\317\021\340\241\261\032\341	Microsoft Office Document
+
+# From: "Nelson A. de Oliveira" <naoliv@gmail.com>
+# Magic type for Dell's BIOS .hdr files
+# Dell's .hdr
+0	string $RBU
+>23	string Dell			%s system BIOS
+>48	string x			version %.3s
+
