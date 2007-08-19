@@ -210,7 +210,7 @@
 
 # XPM icons (Greg Roelofs, newt@uchicago.edu)
 # ideally should go into "images", but entries below would tag XPM as C source
-0	string		/*\ XPM		image/x-xpmi 7bit
+0	string		/*\ XPM		image/x-xpmi
 
 # 3DS (3d Studio files) Conflicts with diff output 0x3d '='
 #16	beshort		0x3d3d		image/x-3ds
@@ -429,11 +429,11 @@
 
 # PBMPLUS
 #					PBM file
-0	string		P1		image/x-portable-bitmap	7bit
+0	string		P1		image/x-portable-bitmap
 #					PGM file
-0	string		P2		image/x-portable-greymap	7bit
+0	string		P2		image/x-portable-greymap
 #					PPM file
-0	string		P3		image/x-portable-pixmap	7bit
+0	string		P3		image/x-portable-pixmap
 #					PBM "rawbits" file
 0	string		P4		image/x-portable-bitmap
 #					PGM "rawbits" file
@@ -501,7 +501,7 @@
 # lisp:  file(1) magic for lisp programs
 #
 # various lisp types, from Daniel Quinlan (quinlan@yggdrasil.com)
-0	string	;;			text/plain	8bit
+0	string	;;			text/plain
 # Emacs 18 - this is always correct, but not very magical.
 0	string	\012(			application/x-elc
 # Emacs 19
@@ -511,17 +511,17 @@
 # mail.news:  file(1) magic for mail and news
 #
 # There are tests to ascmagic.c to cope with mail and news.
-0	string		Relay-Version: 	message/rfc822	7bit
-0	string		#!\ rnews	message/rfc822	7bit
-0	string		N#!\ rnews	message/rfc822	7bit
-0	string		Forward\ to 	message/rfc822	7bit
-0	string		Pipe\ to 	message/rfc822	7bit
-0	string		Return-Path:	message/rfc822	7bit
+0	string		Relay-Version: 	message/rfc822
+0	string		#!\ rnews	message/rfc822
+0	string		N#!\ rnews	message/rfc822
+0	string		Forward\ to 	message/rfc822
+0	string		Pipe\ to 	message/rfc822
+0	string		Return-Path:	message/rfc822
 0	string		Received:	message/rfc822
-0	string		Path:		message/news	8bit
-0	string		Xref:		message/news	8bit
-0	string		From:		message/rfc822	7bit
-0	string		Article 	message/news	8bit
+0	string		Path:		message/news
+0	string		Xref:		message/news
+0	string		From:		message/rfc822
+0	string		Article 	message/news
 #------------------------------------------------------------------------------
 # msword: file(1) magic for MS Word files
 #

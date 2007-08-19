@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.49 2007/01/25 21:05:46 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.50 2007/03/15 14:51:00 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -281,7 +281,7 @@ subtype_identified:
 		}
 
 		if (code_mime) {
-			if (file_printf(ms, "; charset=") == -1)
+			if (file_printf(ms, " charset=") == -1)
 				goto done;
 			if (file_printf(ms, code_mime) == -1)
 				goto done;

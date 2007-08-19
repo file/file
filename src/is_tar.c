@@ -45,7 +45,7 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.26 2006/05/03 15:19:25 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.27 2007/01/12 17:38:28 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
@@ -68,13 +68,12 @@ file_is_tar(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		return 1;
 	case 2:
 		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/x-tar, POSIX" : "POSIX tar archive") == -1)
+		    "application/x-tar" : "POSIX tar archive") == -1)
 			return -1;
 		return 1;
 	case 3:
 		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/x-tar, POSIX (GNU)" :
-		    "POSIX tar archive (GNU)") == -1)
+		    "application/x-tar" : "POSIX tar archive (GNU)") == -1)
 			return -1;
 		return 1;
 	default:

@@ -1,3 +1,20 @@
+2007-08-19  6:30 Christos Zoulas <christos@zoulas.com>
+
+	* Make mime format consistent so that it can
+	  be easily parsed:
+	      mimetype [charset=character-set] [encoding=encoding-mime-type]
+
+	  Remove spurious extra text from some MIME type printouts 
+	  (mostly in is_tar).
+
+	  Fix one case where -i produced nothing at all (for a 1-byte file,
+	  which is now classed as application/octet-stream).
+
+	  Remove 7/8bit classifications, since they were arbitrary
+	  and not based on the file data.
+
+	  This work was done by Reuben Thomas
+
 2007-05-24 10:00 Christos Zoulas <christos@zoulas.com>
 
 	* Fix another integer overflow (Colin Percival)
