@@ -732,5 +732,5 @@
 >4	lelong	0x10003A12	(EPOC release 6)
 0	lelong	0x10201A7A	Symbian installation file (Symbian OS 9.x)
 
-From "Nelson A. de Oliveira" <naoliv@gmail.com>
+# From "Nelson A. de Oliveira" <naoliv@gmail.com>
 0	string	MPQ\032		MoPaQ (MPQ) archive
