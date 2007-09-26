@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.97 2007/03/25 03:13:47 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.99 2007/05/08 14:44:18 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -730,13 +730,17 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 				    offset);
 				return -1;
 			}
-			for (/*EMPTY*/; src < esrc; src++, dst++) {
+			for (/*EMPTY*/; src < esrc; src += 2, dst++) {
 				if (dst < edst)
-					*dst = *src++;
+					*dst = *src;
 				else
 					break;
-				if (*dst == '\0')
-					*dst = ' ';
+				if (*dst == '\0') {
+					if (type == FILE_BESTRING16 ?
+					    *(src - 1) != '\0' :
+					    *(src + 1) != '\0')
+						*dst = ' ';
+				}
 			}
 			*edst = '\0';
 			return 0;
