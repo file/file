@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.62 2007/01/12 17:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.63 2007/01/16 14:56:45 ljt Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -191,15 +191,15 @@ getu64(int swap, uint64_t value)
 #ifdef ELFCORE
 size_t	prpsoffsets32[] = {
 	8,		/* FreeBSD */
-	28,		/* Linux 2.0.36 (short name) */
 	44,		/* Linux (path name) */
+	28,		/* Linux 2.0.36 (short name) */
 	84,		/* SunOS 5.x */
 };
 
 size_t	prpsoffsets64[] = {
 	16,		/* FreeBSD, 64-bit */
-	40,             /* Linux (tested on core from 2.4.x, short name) */
 	56,		/* Linux (path name) */
+	40,             /* Linux (tested on core from 2.4.x, short name) */
 	120,		/* SunOS 5.x, 64-bit */
 };
 
@@ -241,6 +241,7 @@ private const char *os_style_names[] = {
 
 #define FLAGS_DID_CORE		1
 #define FLAGS_DID_NOTE		2
+#define FLAGS_DID_CORE_STYLE	4
 
 private int
 dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
@@ -587,10 +588,11 @@ core:
 	if ((*flags & FLAGS_DID_CORE) != 0)
 		return size;
 
-	if (os_style != -1) {
+	if (os_style != -1 && (*flags & FLAGS_DID_CORE_STYLE) == 0) {
 		if (file_printf(ms, ", %s-style", os_style_names[os_style])
 		    == -1)
 			return size;
+		*flags |= FLAGS_DID_CORE_STYLE;
 	}
 
 	switch (os_style) {
@@ -615,6 +617,7 @@ core:
 			if (file_printf(ms, " (signal %u)",
 			    getu32(swap, signo)) == -1)
 				return size;
+			*flags |= FLAGS_DID_CORE;
 			return size;
 		}
 		break;
@@ -684,6 +687,7 @@ core:
 				if (file_printf(ms, ", from '%.16s'",
 				    &nbuf[doff + prpsoffsets(i)]) == -1)
 					return size;
+				*flags |= FLAGS_DID_CORE;
 				return size;
 
 			tryanother:
@@ -693,7 +697,6 @@ core:
 		break;
 	}
 #endif
-	*flags |= FLAGS_DID_CORE;
 	return offset;
 }
 
