@@ -615,8 +615,7 @@
 # qcow files
 0       string  QFI     Qemu Image, Format: Qcow
 
-# Uncomment the following line to display Magic (only used for
-debugging
+# Uncomment the following line to display Magic (only used for debugging
 # this magic number)
 #>0     string  x       , Magic: %s
 
@@ -633,8 +632,7 @@ debugging
 >>0xc    belong  >0      , Backing File( Offset: %d
 >>>(0xc.L)       string >\0     , Path: %s
 
-# Didnt got the Trick here how qemu stores the "Size" at this
-Position
+# Didnt got the Trick here how qemu stores the "Size" at this Position
 # There is actually something stored but nothing makes sense
 # The header in the sources talks about it
 #>>>16   lelong  x       , Size: %d
