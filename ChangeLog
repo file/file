@@ -1,5 +1,7 @@
 2007-09-26  4:45 Christos Zoulas <christos@zoulas.com>
 
+	* Add magic_descriptor() function.
+
 	* Fix regression in elf reading code where the core name was
 	  not being printed.
 
