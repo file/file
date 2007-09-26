@@ -190,12 +190,6 @@ typedef struct {
     Elf64_Off	sh_entsize;
 } Elf64_Shdr;
 
-/* Notes used in ET_CORE */
-#define NT_PRSTATUS	1
-#define NT_PRFPREG	2
-#define NT_PRPSINFO	3
-#define NT_TASKSTRUCT	4
-
 #define	NT_NETBSD_CORE_PROCINFO		1
 
 /* Note header in a PT_NOTE section */
@@ -211,10 +205,12 @@ typedef struct {
     Elf64_Word	n_type;
 } Elf64_Nhdr;
 
+/* Notes used in ET_CORE */
 #define	NT_PRSTATUS	1
 #define	NT_PRFPREG	2
 #define	NT_PRPSINFO	3
 #define	NT_PRXREG	4
+#define NT_TASKSTRUCT	4
 #define	NT_PLATFORM	5
 #define	NT_AUXV		6
 

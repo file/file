@@ -734,3 +734,9 @@
 
 # From "Nelson A. de Oliveira" <naoliv@gmail.com>
 0	string	MPQ\032		MoPaQ (MPQ) archive
+
+# From: Dirk Jagdmann <doj@cubic.org>
+# xar archive format: http://code.google.com/p/xar/
+0	string	xar!		xar archive
+>6	beshort	x		- version %ld
+

@@ -1,3 +1,10 @@
+2007-09-26  4:45 Christos Zoulas <christos@zoulas.com>
+
+	* Fix regression in elf reading code where the core name was
+	  not being printed.
+
+	* Don't convert NUL's to spaces in {l,b}estring16 (Daniel Dawson)
+
 2007-08-19  6:30 Christos Zoulas <christos@zoulas.com>
 
 	* Make mime format consistent so that it can
