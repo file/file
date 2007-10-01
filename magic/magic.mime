@@ -111,6 +111,7 @@
 
 0	beshort		0xcafe
 >2	beshort		0xbabe		application/java
+>2	beshort		0xd00d		application/x-java-pack200
 
 #------------------------------------------------------------------------------
 # audio:  file(1) magic for sound formats
