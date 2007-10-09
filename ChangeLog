@@ -1,3 +1,8 @@
+
+2007-10-09  3:55 Christos Zoulas <christos@zoulas.com>
+
+	* configure fix for int64 and strndup (Reuben Thomas)
+
 2007-09-26  4:45 Christos Zoulas <christos@zoulas.com>
 
 	* Add magic_descriptor() function.
