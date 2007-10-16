@@ -274,7 +274,8 @@
 0       string          #!/usr/bin/awk          application/x-awk
 0       string          #!\ /usr/bin/awk        application/x-awk
 # update to distinguish from *.vcf files by Joerg Jenderek: joerg dot jenderek at web dot de
-0	regex		BEGIN[[:space:]]*[{]	application/x-awk
+# Too general, \EBEGIN matches in postscript
+#0	regex		BEGIN[[:space:]]*[{]	application/x-awk
 
 # For Larry Wall's perl language.  The ``eval'' line recognizes an
 # outrageously clever hack for USG systems.
