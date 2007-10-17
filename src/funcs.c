@@ -48,7 +48,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.32 2007/05/24 17:22:27 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.33 2007/06/15 00:01:15 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -164,59 +164,73 @@ protected int
 file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
     size_t nb)
 {
-    int m;
+	int m;
+	int mime = ms->flags & MAGIC_MIME;
+
+	if (nb == 0) {
+		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
+		    file_printf(ms, mime ? "application/x-empty" :
+		    "empty") == -1)
+			return -1;
+		return 1;
+	} else if (nb == 1) {
+		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
+		    file_printf(ms, mime ?  "application/octet-stream" :
+		    "very short file (no magic)") == -1)
+			return -1;
+		return 1;
+	}
 
 #ifdef __EMX__
-    if ((ms->flags & MAGIC_NO_CHECK_APPTYPE) == 0 && inname) {
-	switch (file_os2_apptype(ms, inname, buf, nb)) {
-	case -1:
-	    return -1;
-	case 0:
-	    break;
-	default:
-	    return 1;
+	if ((ms->flags & MAGIC_NO_CHECK_APPTYPE) == 0 && inname) {
+		switch (file_os2_apptype(ms, inname, buf, nb)) {
+		case -1:
+			return -1;
+		case 0:
+			break;
+		default:
+			return 1;
+		}
 	}
-    }
 #endif
 
-    /* try compression stuff */
-    if ((ms->flags & MAGIC_NO_CHECK_COMPRESS) != 0 ||
-        (m = file_zmagic(ms, fd, inname, buf, nb)) == 0) {
-	/* Check if we have a tar file */
-	if ((ms->flags & MAGIC_NO_CHECK_TAR) != 0 ||
-	    (m = file_is_tar(ms, buf, nb)) == 0) {
-	    /* try tests in /etc/magic (or surrogate magic file) */
-	    if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
-		(m = file_softmagic(ms, buf, nb)) == 0) {
-		/* try known keywords, check whether it is ASCII */
-		if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
-		    (m = file_ascmagic(ms, buf, nb)) == 0) {
-		    /* abandon hope, all ye who remain here */
-		    if (file_printf(ms, ms->flags & MAGIC_MIME ?
-			(nb ? "application/octet-stream" :
-			    "application/empty") :
-			(nb ? "data" :
-			    "empty")) == -1)
-			    return -1;
-		    m = 1;
+	/* try compression stuff */
+	if ((ms->flags & MAGIC_NO_CHECK_COMPRESS) != 0 ||
+	    (m = file_zmagic(ms, fd, inname, buf, nb)) == 0) {
+	    /* Check if we have a tar file */
+	    if ((ms->flags & MAGIC_NO_CHECK_TAR) != 0 ||
+		(m = file_is_tar(ms, buf, nb)) == 0) {
+		/* try tests in /etc/magic (or surrogate magic file) */
+		if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
+		    (m = file_softmagic(ms, buf, nb)) == 0) {
+		    /* try known keywords, check whether it is ASCII */
+		    if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
+			(m = file_ascmagic(ms, buf, nb)) == 0) {
+			/* abandon hope, all ye who remain here */
+			if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
+			    file_printf(ms, mime ?  "application/octet-stream" :
+				"data") == -1)
+				return -1;
+			m = 1;
+		    }
 		}
 	    }
 	}
-    }
 #ifdef BUILTIN_ELF
-    if ((ms->flags & MAGIC_NO_CHECK_ELF) == 0 && m == 1 && nb > 5 && fd != -1) {
-	/*
-	 * We matched something in the file, so this *might*
-	 * be an ELF file, and the file is at least 5 bytes
-	 * long, so if it's an ELF file it has at least one
-	 * byte past the ELF magic number - try extracting
-	 * information from the ELF headers that cannot easily
-	 * be extracted with rules in the magic file.
-	 */
-	(void)file_tryelf(ms, fd, buf, nb);
-    }
+	if ((ms->flags & MAGIC_NO_CHECK_ELF) == 0 && m == 1 &&
+	    nb > 5 && fd != -1) {
+		/*
+		 * We matched something in the file, so this *might*
+		 * be an ELF file, and the file is at least 5 bytes
+		 * long, so if it's an ELF file it has at least one
+		 * byte past the ELF magic number - try extracting
+		 * information from the ELF headers that cannot easily
+		 * be extracted with rules in the magic file.
+		 */
+		(void)file_tryelf(ms, fd, buf, nb);
+	}
 #endif
-    return m;
+	return m;
 }
 #endif
 

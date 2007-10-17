@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.42 2007/08/19 03:45:08 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.43 2007/09/26 20:45:26 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -260,6 +260,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	struct stat	sb;
 	ssize_t nbytes = 0;	/* number of bytes read from a datafile */
 	int	ispipe = 0;
+	int	mime = ms->flags & MAGIC_MIME;
 
 	/*
 	 * one extra for terminating '\0', and
@@ -343,20 +344,9 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		}
 	}
 
-	if (nbytes == 0) {
-		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/x-empty" : "empty") == -1)
-			goto done;
-	} else if (nbytes == 1) {
-		if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-		    "application/octet-stream" : "very short file (no magic)")
-		    == -1)
-			goto done;
-	} else {
-		(void)memset(buf + nbytes, 0, SLOP); /* NUL terminate */
-		if (file_buffer(ms, fd, inname, buf, (size_t)nbytes) == -1)
-			goto done;
-	}
+	(void)memset(buf + nbytes, 0, SLOP); /* NUL terminate */
+	if (file_buffer(ms, fd, inname, buf, (size_t)nbytes) == -1)
+		goto done;
 	rv = 0;
 done:
 	free(buf);

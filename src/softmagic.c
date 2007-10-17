@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.99 2007/05/08 14:44:18 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.100 2007/09/26 20:19:05 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -254,9 +254,10 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				break;
 			}
 		}
-		firstline = 0;
-		if (printed_something)
+		if (printed_something) {
+			firstline = 0;
 			returnval = 1;
+		}
 		if ((ms->flags & MAGIC_CONTINUE) == 0 && printed_something) {
 			return 1; /* don't keep searching */
 		}			

@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.109 2007/03/15 14:50:34 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.111 2007/05/08 14:44:18 christos Exp $")
 #endif	/* lint */
 
 
@@ -133,8 +133,12 @@ main(int argc, char *argv[])
 	int longindex;
 	static const struct option long_options[] =
 	{
-		{"version", 0, 0, 'v'},
+          /* Put long-only options first */
 		{"help", 0, 0, 0},
+		{"mime-type", 0, 0, 0},
+		{"mime-encoding", 0, 0, 0},
+
+		{"version", 0, 0, 'v'},
 		{"brief", 0, 0, 'b'},
 		{"checking-printout", 0, 0, 'c'},
 		{"debug", 0, 0, 'd'},
@@ -220,9 +224,17 @@ main(int argc, char *argv[])
 		switch (c) {
 #ifdef HAVE_GETOPT_LONG
 		case 0 :
-			if (longindex == 1)
+			switch (longindex) {
+			case 0:
 				help();
-			break;
+				break;
+			case 1:
+				flags |= MAGIC_MIME_TYPE;
+				break;
+			case 2:
+				flags |= MAGIC_MIME_ENCODING;
+				break;
+			}
 #endif
 		case '0':
 			nulsep = 1;
@@ -567,7 +579,10 @@ help(void)
 "                               ascii, apptype, elf, compress, soft, tar\n"
 "  -f, --files-from FILE      read the filenames to be examined from FILE\n"
 "  -F, --separator string     use string as separator instead of `:'\n"
-"  -i, --mime                 output mime type strings\n"
+"  -i, --mime                 output MIME type strings (--mime-type and\n"
+"                               --mime-encoding)\n"
+"      --mime-type            output the MIME type\n"
+"      --mime-encoding        output the MIME encoding\n"
 "  -k, --keep-going           don't stop at the first match\n"
 "  -L, --dereference          causes symlinks to be followed\n"
 "  -n, --no-buffer            do not buffer output\n"

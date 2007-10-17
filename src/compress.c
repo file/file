@@ -55,7 +55,7 @@
 
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.51 2007/03/05 02:41:29 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.52 2007/08/19 03:45:08 christos Exp $")
 #endif
 
 private struct {
@@ -98,6 +98,7 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 	unsigned char *newbuf = NULL;
 	size_t i, nsz;
 	int rv = 0;
+	int mime = ms->flags & MAGIC_MIME;
 
 	if ((ms->flags & MAGIC_COMPRESS) == 0)
 		return 0;
@@ -112,13 +113,18 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 			rv = -1;
 			if (file_buffer(ms, -1, name, newbuf, nsz) == -1)
 				goto error;
-			if (file_printf(ms, (ms->flags & MAGIC_MIME) ?
-			    " compressed-encoding=" : " (") == -1)
+
+			if (mime == MAGIC_MIME || mime == 0) {
+				if (file_printf(ms, mime ?
+				    " compressed-encoding=" : " (") == -1)
+					goto error;
+			}
+
+			if ((mime == 0 || mime & MAGIC_MIME_ENCODING) &&
+			    file_buffer(ms, -1, NULL, buf, nbytes) == -1)
 				goto error;
-			if (file_buffer(ms, -1, NULL, buf, nbytes) == -1)
-				goto error;
-			if (!(ms->flags & MAGIC_MIME) &&
-			    file_printf(ms, ")") == -1)
+
+			if (!mime && file_printf(ms, ")") == -1)
 				goto error;
 			rv = 1;
 			break;
