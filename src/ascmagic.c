@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.51 2007/08/19 03:45:07 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.52 2007/10/17 19:33:31 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -76,6 +76,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	size_t ulen;
 	struct names *p;
 	int rv = -1;
+	int mime = ms->flags & MAGIC_MIME;
 
 	const char *code = NULL;
 	const char *code_mime = NULL;
@@ -271,21 +272,27 @@ subtype_identified:
 	if (seen_cr && nbytes < HOWMANY)
 		n_cr++;
 
-	if ((ms->flags & MAGIC_MIME)) {
-		if (subtype_mime) {
-			if (file_printf(ms, subtype_mime) == -1)
-				goto done;
-		} else {
-			if (file_printf(ms, "text/plain") == -1)
-				goto done;
+	if (mime) {
+		if (mime & MAGIC_MIME_TYPE) {
+			if (subtype_mime) {
+				if (file_printf(ms, subtype_mime) == -1)
+					goto done;
+			} else {
+				if (file_printf(ms, "text/plain") == -1)
+					goto done;
+			}
 		}
 
-		if (code_mime) {
-			if (file_printf(ms, " charset=") == -1)
+		if ((mime == 0 || mime == MAGIC_MIME) && code_mime) {
+			if ((mime & MAGIC_MIME_TYPE) &&
+			    file_printf(ms, " charset=") == -1)
 				goto done;
 			if (file_printf(ms, code_mime) == -1)
 				goto done;
 		}
+
+		if (mime == MAGIC_MIME_ENCODING)
+			file_printf(ms, "binary");
 	} else {
 		if (file_printf(ms, code) == -1)
 			goto done;
