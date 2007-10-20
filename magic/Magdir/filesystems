@@ -1254,3 +1254,8 @@
 >525    byte            x               Level %d
 >525    byte            x               (ODS-%d OpenVMS file system),
 >984    string          x               volume label is '%-12.12s'
+
+# From: Thomas Klausner <wiz@NetBSD.org>
+# http://filext.com/file-extension/DAA
+# describes the daa file format. The magic would be:
+0	string		DAA\x0\x0\x0\x0\x0	PowerISO Direct-Access-Archive
