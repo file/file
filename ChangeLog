@@ -1,4 +1,15 @@
 
+2007-10-20  3:06 Christos Zoulas <christos@zoulas.com>
+
+	* typo in comment, missing ifdef QUICK, remove unneeded code
+		(Charles Longeau)
+
+2007-10-17  3:33 Christos Zoulas <christos@zoulas.com>
+
+	* Fix problem printing -\012 in some entries
+
+	* Separate magic type and encoding flags (Reuben Thomas)
+
 2007-10-09  3:55 Christos Zoulas <christos@zoulas.com>
 
 	* configure fix for int64 and strndup (Reuben Thomas)

@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.104 2007/01/19 19:54:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.105 2007/05/16 20:51:40 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -261,7 +261,6 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
 		if (rv != 0)
 			return -1;
-		mapped = 0;
 	}
 
 	mapped = rv;
@@ -296,10 +295,12 @@ file_delmagic(struct magic *p, int type, size_t entries)
 	if (p == NULL)
 		return;
 	switch (type) {
+#ifdef QUICK
 	case 2:
 		p--;
 		(void)munmap((void *)p, sizeof(*p) * (entries + 1));
 		break;
+#endif
 	case 1:
 		p--;
 		/*FALLTHROUGH*/
