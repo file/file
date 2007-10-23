@@ -1,5 +1,5 @@
 This is a first attempt to document the grammar used by magic(5), with
-hopes of eventually incorporate something like this into the manpage.
+hopes of eventually incorporating something like this into the manpage.
 
 Note: Currently, the parser varies slightly from this, but only in
 very minor ways, e.g., the strflags maybe separated by '/' characters
