@@ -1,7 +1,12 @@
-autom4te.cache
+.deps
 Makefile
 config.h
 config.log
 config.status
 libtool
 stamp-h1
+.libs
+*.lo
+*.la
+Makefile
+file
