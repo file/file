@@ -206,19 +206,26 @@ main(int argc, char *argv[])
 			case 0:
 				help();
 				break;
-			case 10:
+			case 5:
+				bflag++;
+				break;
+			case 6:
+				bflag = 0;
+				break;
+			case 12:
 				flags |= MAGIC_MIME_TYPE;
 				break;
-			case 11:
+			case 13:
 				flags |= MAGIC_MIME_ENCODING;
 				break;
 			}
+			break;
 #endif
 		case '0':
 			nulsep = 1;
 			break;
 		case 'b':
-			++bflag;
+			bflag++;
 			break;
 		case 'c':
 			action = FILE_CHECK;
@@ -277,9 +284,9 @@ main(int argc, char *argv[])
 			flags |= MAGIC_DEVICES;
 			break;
 		case 'v':
-			(void)fprintf(stdout, "%s-%d.%.2d\n", progname,
+			(void)fprintf(stderr, "%s-%d.%.2d\n", progname,
 				       FILE_VERSION_MAJOR, patchlevel);
-			(void)fprintf(stdout, "magic file from %s\n",
+			(void)fprintf(stderr, "magic file from %s\n",
 				       magicfile);
 			return 1;
 		case 'z':
@@ -336,6 +343,13 @@ main(int argc, char *argv[])
 			nw = file_mbswidth(argv[i]);
 			if (nw > wid)
 				wid = nw;
+		}
+		/*
+		 * If bflag is only set once, set it depending on
+		 * number of files
+		 */
+		if (bflag == 1) {
+			bflag = optind >= argc - 1;
 		}
 		for (; optind < argc; optind++)
 			process(argv[optind], wid);
@@ -541,13 +555,14 @@ usage(void)
 private void
 help(void)
 {
-	(void)puts(
+	(void)fputs(
 "Usage: file [OPTION...] [FILE...]\n"
-"Determine file type of FILEs.\n");
+"Determine type of FILEs.\n"
+"\n", stderr);
 #define OPT(shortname, longname, opt, doc)      \
-        printf("  -%c, --" longname doc, shortname);
+        fprintf(stderr, "  -%c, --" longname doc, shortname);
 #define OPT_LONGONLY(longname, opt, doc)        \
-        printf("      --" longname doc);
+        fprintf(stderr, "      --" longname doc);
 #include "file_opts.h"
 #undef OPT
 #undef OPT_LONGONLY
