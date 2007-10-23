@@ -1,3 +1,9 @@
+2007-10-23  3:59 Christos Zoulas <christos@zoulas.com>
+
+	* Rest of the mime split (Reuben Thomas)
+
+	* Make usage message generated from the flags so that
+	  they stay consistent (Reuben Thomas)
 
 2007-10-20  3:06 Christos Zoulas <christos@zoulas.com>
 
