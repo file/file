@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.63 2007/01/16 14:56:45 ljt Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.64 2007/09/26 20:42:55 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -632,7 +632,7 @@ core:
 			 * is in SunOS 5.x and Linux).
 			 *
 			 * Unfortunately, it's at a different offset
-			 * in varous OSes, so try multiple offsets.
+			 * in various OSes, so try multiple offsets.
 			 * If the characters aren't all printable,
 			 * reject it.
 			 */
