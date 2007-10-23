@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.112 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.113 2007/10/23 19:58:59 christos Exp $")
 #endif	/* lint */
 
 
@@ -133,37 +133,15 @@ main(int argc, char *argv[])
 	int longindex;
 	static const struct option long_options[] =
 	{
-          /* Put long-only options first */
-		{"help", 0, 0, 0},
-		{"mime-type", 0, 0, 0},
-		{"mime-encoding", 0, 0, 0},
-
-		{"version", 0, 0, 'v'},
-		{"brief", 0, 0, 'b'},
-		{"checking-printout", 0, 0, 'c'},
-		{"debug", 0, 0, 'd'},
-		{"exclude", 1, 0, 'e' },
-		{"files-from", 1, 0, 'f'},
-		{"separator", 1, 0, 'F'},
-		{"mime", 0, 0, 'i'},
-		{"keep-going", 0, 0, 'k'},
-#ifdef S_IFLNK
-		{"dereference", 0, 0, 'L'},
-		{"no-dereference", 0, 0, 'h'},
-#endif
-		{"magic-file", 1, 0, 'm'},
-#if defined(HAVE_UTIME) || defined(HAVE_UTIMES)
-		{"preserve-date", 0, 0, 'p'},
-#endif
-		{"uncompress", 0, 0, 'z'},
-		{"raw", 0, 0, 'r'},
-		{"no-buffer", 0, 0, 'n'},
-		{"no-pad", 0, 0, 'N'},
-		{"special-files", 0, 0, 's'},
-		{"compile", 0, 0, 'C'},
-		{"print0", 0, 0, '0'},
-		{0, 0, 0, 0},
-	};
+#define OPT(shortname, longname, opt, doc)      \
+    {longname, opt, NULL, shortname},
+#define OPT_LONGONLY(longname, opt, doc)        \
+    {longname, opt, NULL, 0},
+#include "file_opts.h"
+#undef OPT
+#undef OPT_LONGONLY
+    {0, 0, NULL, 0}
+};
 #endif
 
 	static const struct {
@@ -228,10 +206,10 @@ main(int argc, char *argv[])
 			case 0:
 				help();
 				break;
-			case 1:
+			case 10:
 				flags |= MAGIC_MIME_TYPE;
 				break;
-			case 2:
+			case 11:
 				flags |= MAGIC_MIME_ENCODING;
 				break;
 			}
@@ -564,40 +542,15 @@ private void
 help(void)
 {
 	(void)puts(
-"Usage: file [OPTION]... [FILE]...\n"
-"Determine file type of FILEs.\n"
-"\n"
-"  -m, --magic-file LIST      use LIST as a colon-separated list of magic\n"
-"                               number files\n"
-"  -z, --uncompress           try to look inside compressed files\n"
-"  -b, --brief                do not prepend filenames to output lines\n"
-"  -c, --checking-printout    print the parsed form of the magic file, use in\n"
-"                               conjunction with -m to debug a new magic file\n"
-"                               before installing it\n"
-"  -e, --exclude              exclude test from the list of test to be\n"
-"                               performed for file. Valid tests are:\n"
-"                               ascii, apptype, elf, compress, soft, tar\n"
-"  -f, --files-from FILE      read the filenames to be examined from FILE\n"
-"  -F, --separator string     use string as separator instead of `:'\n"
-"  -i, --mime                 output MIME type strings (--mime-type and\n"
-"                               --mime-encoding)\n"
-"      --mime-type            output the MIME type\n"
-"      --mime-encoding        output the MIME encoding\n"
-"  -k, --keep-going           don't stop at the first match\n"
-"  -L, --dereference          causes symlinks to be followed\n"
-"  -n, --no-buffer            do not buffer output\n"
-"  -N, --no-pad               do not pad output\n"
-"  -p, --preserve-date        preserve access times on files\n"
-"  -r, --raw                  don't translate unprintable chars to \\ooo\n"
-"  -s, --special-files        treat special (block/char devices) files as\n"
-"                             ordinary ones\n"
-"or\n"
-"      --help                 display this help and exit\n"
-"or\n"
-"      --version              output version information and exit\n"
-"or\n"
-"  -C, --compile              compile file specified by -m\n"
-);
+"Usage: file [OPTION...] [FILE...]\n"
+"Determine file type of FILEs.\n");
+#define OPT(shortname, longname, opt, doc)      \
+        printf("  -%c, --" longname doc, shortname);
+#define OPT_LONGONLY(longname, opt, doc)        \
+        printf("      --" longname doc);
+#include "file_opts.h"
+#undef OPT
+#undef OPT_LONGONLY
 	exit(0);
 }
 #endif

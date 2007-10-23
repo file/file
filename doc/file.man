@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.65 2007/01/25 21:05:46 christos Exp $
+.\" $File: file.man,v 1.66 2007/10/23 19:58:59 christos Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -8,6 +8,8 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl bchikLnNprsvz
+.Op Fl mime-type
+.Op Fl mime-encoding
 .Op Fl f Ar namefile
 .Op Fl F Ar separator
 .Op Fl m Ar magicfiles
@@ -226,9 +228,8 @@ is not defined.
 .It Fl i , -mime
 Causes the file command to output mime type strings rather than the more
 traditional human readable ones. Thus it may say
-.Dq text/plain; charset=us-ascii
-rather
-than
+.Dq text/plain charset=us-ascii
+rather than
 .Dq ASCII text .
 In order for this option to work, file changes the way
 it handles files recognized by the command itself (such as many of the
@@ -238,6 +239,10 @@ file.
 (See
 .Dq FILES
 section, below).
+.It Fl -mime-type ,  -mime-encoding
+Like
+.Fl i ,
+but print only the specified element(s).
 .It Fl k , -keep-going
 Don't stop at the first match, keep going.
 .It Fl L , -dereference
@@ -251,8 +256,9 @@ is defined.
 Specify an alternate list of files containing magic numbers.
 This can be a single file, or a colon-separated list of files.
 If a compiled magic file is found alongside, it will be used instead.
-With the 
-.Fl i or 
+With the
+.Fl i
+or 
 .Fl "mime"
 option, the program adds
 .Dq .mime
@@ -447,8 +453,7 @@ $ file -s /dev/hda{,1,2,3,4,5,6,7,8,9,10}
 
 $ file -i file.c file /dev/{wd0a,hda}
 file.c:      text/x-c
-file:        application/x-executable, dynamically linked (uses shared libs),
-	     not stripped
+file:        application/x-executable
 /dev/hda:    application/x-not-regular-file
 /dev/wd0a:   application/x-not-regular-file
 

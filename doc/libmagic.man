@@ -87,8 +87,10 @@ If the file is compressed, unpack it and look at the contents.
 .It Dv MAGIC_DEVICES
 If the file is a block or character special device, then open the device
 and try to look in its contents.
-.It Dv MAGIC_MIME
-Return a mime string, instead of a textual description.
+.It Dv MAGIC_MIME_TYPE
+Return a MIME type string, instead of a textual description.
+.It Dv MAGIC_MIME_ENCODING
+Return a MIME encoding, instead of a textual description.
 .It Dv MAGIC_CONTINUE
 Return all matches, not just the first.
 .It Dv MAGIC_CHECK
@@ -164,7 +166,8 @@ The
 .Fn magic_setflags
 function, sets the 
 .Ar flags
-described above.
+described above. Note that using both MIME flags together can also
+return extra information on the charset.
 .Pp
 The
 .Fn magic_check
