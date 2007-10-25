@@ -17,14 +17,7 @@ OPT('v', "version", 0, "              output version information and exit\n")
 OPT('m', "magic-file", 1, " LIST      use LIST as a colon-separated list of magic\n"
     "                               number files\n")
 OPT('z', "uncompress", 0, "           try to look inside compressed files\n")
-OPT('b', "brief", 0, "                do not prepend filenames to output lines\n"
-    "                               If this flag is specified once, then\n"
-    "                               the filename is printed if more than one\n"
-    "                               files are tested.  If this flag is specified\n"
-    "                               more than once, then filenames are never printed\n")
-OPT_LONGONLY("no-filename", 0, "          synonym for --brief\n")
-OPT_LONGONLY("with-filename", 0, "        print the file name for each match.  This is\n"
-    "                               the default.\n")
+OPT('b', "brief", 0, "                do not prepend filenames to output lines\n")
 OPT('c', "checking-printout", 0, "    print the parsed form of the magic file, use in\n"
     "                               conjunction with -m to debug a new magic file\n"
     "                               before installing it\n")
