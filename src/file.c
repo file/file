@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.114 2007/10/23 21:26:56 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.115 2007/10/25 15:33:17 christos Exp $")
 #endif	/* lint */
 
 
@@ -206,16 +206,10 @@ main(int argc, char *argv[])
 			case 0:
 				help();
 				break;
-			case 5:
-				bflag++;
-				break;
-			case 6:
-				bflag = 0;
-				break;
-			case 12:
+			case 10:
 				flags |= MAGIC_MIME_TYPE;
 				break;
-			case 13:
+			case 11:
 				flags |= MAGIC_MIME_ENCODING;
 				break;
 			}
@@ -345,10 +339,10 @@ main(int argc, char *argv[])
 				wid = nw;
 		}
 		/*
-		 * If bflag is only set once, set it depending on
-		 * number of files
+		 * If bflag is only set twice, set it depending on
+		 * number of files [this is undocumented, and subject to change]
 		 */
-		if (bflag == 1) {
+		if (bflag == 2) {
 			bflag = optind >= argc - 1;
 		}
 		for (; optind < argc; optind++)
