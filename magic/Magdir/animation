@@ -678,3 +678,14 @@
 >0x21	byte		x		v%x
 0	string		DVDVIDEO-VMG	Video manager,
 >0x21	byte		x		v%x
+
+# From: Behan Webster <behanw@websterwood.com>
+# NuppelVideo used by Mythtv (*.nuv)
+0	regex		NuppelVideo|MythTVVideo		MythTV NuppelVideo
+>12	string		x		v%s
+>20	long		x		(%d
+>24	long		x		\bx%d
+>36	string		P		progressive
+>36	string		I		interlaced
+>72	byte		x		\b)
+
