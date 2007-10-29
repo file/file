@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.51 2007/08/19 03:45:07 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.52 2007/10/17 19:33:31 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -183,13 +183,6 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 			subtype = "troff or preprocessor input";
 			goto subtype_identified;
 		}
-	}
-
-	if ((ms->flags & MAGIC_NO_CHECK_FORTRAN) == 0 &&
-	    (*buf == 'c' || *buf == 'C') && ISSPC(buf[1])) {
-		subtype_mime = "text/fortran";
-		subtype = "fortran program";
-		goto subtype_identified;
 	}
 
 	/* look for tokens from names.h - this is expensive! */
