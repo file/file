@@ -32,7 +32,7 @@
  * appear at fixed offsets into the file. Don't make HOWMANY
  * too high unless you have a very fast CPU.
  *
- * $File: names.h,v 1.27 2007/05/08 16:47:03 christos Exp $
+ * $File: names.h,v 1.28 2007/10/29 00:54:08 christos Exp $
  */
 
 /*
@@ -63,7 +63,6 @@ static const struct {
 } types[] = {
 	{ "C program",					"text/x-c", },
 	{ "C++ program",				"text/x-c++" },
-	{ "FORTRAN program",				"text/x-fortran" },
 	{ "make commands",				"text/x-makefile" },
 	{ "PL/1 program",				"text/x-pl1" },
 	{ "assembler program",				"text/x-asm" },

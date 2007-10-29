@@ -49,8 +49,10 @@
 #define	MAGIC_NO_CHECK_ELF	0x010000 /* Don't check for elf details */
 #define	MAGIC_NO_CHECK_ASCII	0x020000 /* Don't check for ascii files */
 #define	MAGIC_NO_CHECK_TROFF	0x040000 /* Don't check ascii/troff */
-#define	MAGIC_NO_CHECK_FORTRAN	0x080000 /* Don't check ascii/fortran */
 #define	MAGIC_NO_CHECK_TOKENS	0x100000 /* Don't check ascii/tokens */
+
+/* Defined for backwards compatibility; does nothing */
+#define	MAGIC_NO_CHECK_FORTRAN	0x000000 /* Don't check ascii/fortran */
 
 #ifdef __cplusplus
 extern "C" {

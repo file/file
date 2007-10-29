@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.115 2007/10/25 15:33:17 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.116 2007/10/29 00:54:08 christos Exp $")
 #endif	/* lint */
 
 
@@ -152,7 +152,6 @@ main(int argc, char *argv[])
 		{ "ascii",	MAGIC_NO_CHECK_ASCII },
 		{ "compress",	MAGIC_NO_CHECK_COMPRESS },
 		{ "elf",	MAGIC_NO_CHECK_ELF },
-		{ "fortran",	MAGIC_NO_CHECK_FORTRAN },
 		{ "soft",	MAGIC_NO_CHECK_SOFT },
 		{ "tar",	MAGIC_NO_CHECK_TAR },
 		{ "tokens",	MAGIC_NO_CHECK_TOKENS },

@@ -85,6 +85,7 @@ Magdir/fcs \
 Magdir/filesystems \
 Magdir/flash \
 Magdir/fonts \
+Magdir/fortran \
 Magdir/frame \
 Magdir/freebsd \
 Magdir/fsav \
