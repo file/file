@@ -559,3 +559,7 @@
 # From: "Mateus Caruccio" <mateus@caruccio.com>
 # guitar pro v3,4,5 from http://filext.com/file-extension/gp3
 0	string	\030FICHIER\ GUITAR\ PRO\ v3.	Guitar Pro Ver. 3 Tablature
+
+# From: "Leslie P. Polzer" <leslie.polzer@gmx.net>
+60	string	SONG		SoundFX Module sound file
+
