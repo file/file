@@ -77,6 +77,7 @@ Magdir/digital \
 Magdir/dolby \
 Magdir/dump \
 Magdir/editors \
+Magdir/efi \
 Magdir/elf \
 Magdir/encore \
 Magdir/epoc \
