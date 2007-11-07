@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.65 2007/10/23 19:54:35 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.66 2007/11/07 21:26:32 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -637,6 +637,7 @@ core:
 			 * reject it.
 			 */
 			for (i = 0; i < NOFFSETS; i++) {
+				unsigned char *cname, *cp;
 				size_t reloffset = prpsoffsets(i);
 				size_t noffset = doff + reloffset;
 				for (j = 0; j < 16; j++, noffset++,
@@ -684,8 +685,12 @@ core:
 				/*
 				 * Well, that worked.
 				 */
-				if (file_printf(ms, ", from '%.16s'",
-				    &nbuf[doff + prpsoffsets(i)]) == -1)
+				cname = (unsigned char *)
+				    &nbuf[doff + prpsoffsets(i)];
+				for (cp = cname; *cp && isprint(*cp); cp++)
+					continue;
+				if (file_printf(ms, ", from '%.*s'",
+				    (int)(cp - cname), cp) == -1)
 					return size;
 				*flags |= FLAGS_DID_CORE;
 				return size;
