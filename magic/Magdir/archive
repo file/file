@@ -531,7 +531,7 @@
 
 # ZIP archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 0	string		PK\003\004
->	byte		0x00		Zip archive data
+>4	byte		0x00		Zip archive data
 >4	byte		0x09		Zip archive data, at least v0.9 to extract
 >4	byte		0x0a		Zip archive data, at least v1.0 to extract
 >4	byte		0x0b		Zip archive data, at least v1.1 to extract
