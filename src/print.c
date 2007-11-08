@@ -41,7 +41,7 @@
 #include <time.h>
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.59 2007/03/05 02:41:29 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.60 2007/11/08 00:31:37 christos Exp $")
 #endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
@@ -156,6 +156,16 @@ file_mdump(struct magic *m)
 		case FILE_BEQLDATE:
 			(void)fprintf(stderr, "%s,",
 			    file_fmttime((uint32_t)m->value.q, 0));
+			break;
+		case FILE_FLOAT:
+		case FILE_BEFLOAT:
+		case FILE_LEFLOAT:
+			(void) fprintf(stderr, "%G", m->value.f);
+			break;
+		case FILE_DOUBLE:
+		case FILE_BEDOUBLE:
+		case FILE_LEDOUBLE:
+			(void) fprintf(stderr, "%G", m->value.d);
 			break;
 		case FILE_DEFAULT:
 			/* XXX - do anything here? */

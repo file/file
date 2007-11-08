@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.38 2007/01/27 00:52:08 ljt Exp $
+.\" $File: magic.man,v 1.39 2007/11/08 00:31:37 christos Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -45,6 +45,10 @@ A two-byte value (on most systems) in this machine's native byte order.
 A four-byte value (on most systems) in this machine's native byte order.
 .It Dv quad
 An eight-byte value (on most systems) in this machine's native byte order.
+.It Dv float
+A 32-bit (on most systems) single precision IEEE floating point number in this machine's native byte order.
+.It Dv double
+A 64-bit (on most systems) double precision IEEE floating point number in this machine's native byte order.
 .It Dv string
 A string of bytes.
 The string type specification can be optionally followed
@@ -87,6 +91,10 @@ A two-byte value (on most systems) in big-endian byte order.
 A four-byte value (on most systems) in big-endian byte order.
 .It Dv bequad
 An eight-byte value (on most systems) in big-endian byte order.
+.It Dv befloat
+A 32-bit (on most systems) single precision IEEE floating point number in big-endian byte order.
+.It Dv bedouble
+A 64-bit (on most systems) double precision IEEE floating point number in big-endian byte order.
 .It Dv bedate
 A four-byte value (on most systems) in big-endian byte order,
 interpreted as a Unix date.
@@ -109,6 +117,10 @@ A two-byte value (on most systems) in little-endian byte order.
 A four-byte value (on most systems) in little-endian byte order.
 .It Dv lequad
 An eight-byte value (on most systems) in little-endian byte order.
+.It Dv lefloat
+A 32-bit (on most systems) single precision IEEE floating point number in little-endian byte order.
+.It Dv ledouble
+A 64-bit (on most systems) double precision IEEE floating point number in little-endian byte order.
 .It Dv ledate
 A four-byte value (on most systems) in little-endian byte order,
 interpreted as a UNIX date.
@@ -214,6 +226,12 @@ the value specified after is negated before tested.
 to specify that any value will match.
 If the character is omitted, it is assumed to be
 .Dv = .
+Operators
+.Dv \*[Am] ,
+.Dv ^ ,
+and
+.Dv ~
+don't work with floats and doubles.
 For all tests except
 .Em string
 and
@@ -450,4 +468,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.38 2007/01/27 00:52:08 ljt Exp $
+.\" @(#)$Id: magic.man,v 1.39 2007/11/08 00:31:37 christos Exp $
