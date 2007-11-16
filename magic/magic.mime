@@ -1,5 +1,25 @@
 # Magic data for KMimeMagic (originally for file(1) command)
 #
+# Note on adding additional MIME types:
+#
+# [RFC2045,RFC2046] specifies that Content Types, Content Subtypes, Character
+# Sets, Access Types, and conversion values for MIME mail will be assigned and
+# listed by the IANA.
+# http://www.iana.org/assignments/media-types/
+#
+# Any unregistered file type should be listed with a preceding x-, as in
+# application/x-foo (RFC2045 5.1), or a x., as in application/x.foo (RFC4288
+# 4.3).  Any non x-prefixed type should be registered with IANA and listed at
+# the above address.  Any other behavior is a MIME standards violation!
+#
+# It is preferred that when a registered MIME type exists, that
+# the registered Content-Type and Subtype be used to refer to a file of
+# that type, so don't use application/x-zip when application/zip is
+# registered.
+#
+# If an active RFC suggests that a MIME registration for a new type is in
+# progress, make a note of it pointing to that RFC.
+#
 # The format is 4-5 columns:
 #    Column #1: byte number to begin checking from, ">" indicates continuation
 #    Column #2: type of data to match
@@ -110,7 +130,7 @@
 # Java
 
 0	beshort		0xcafe
->2	beshort		0xbabe		application/java
+>2	beshort		0xbabe		application/x-java-applet
 >2	beshort		0xd00d		application/x-java-pack200
 
 #------------------------------------------------------------------------------
@@ -157,15 +177,15 @@
 
 # Creative Labs AUDIO stuff
 #					Standard MIDI data
-0	string	MThd			audio/unknown
+0	string	MThd			audio/x-midi
 #>9 	byte	>0			(format %d)
 #>11	byte	>1			using %d channels
 #					Creative Music (CMF) data
-0	string	CTMF			audio/unknown
+0	string	CTMF			audio/x-unknown
 #					SoundBlaster instrument data
-0	string	SBI			audio/unknown
+0	string	SBI			audio/x-unknown
 #					Creative Labs voice data
-0	string	Creative\ Voice\ File	audio/unknown
+0	string	Creative\ Voice\ File	audio/x-unknown
 ## is this next line right?  it came this way...
 #>19	byte	0x1A
 #>23	byte	>0			- version %d
@@ -305,7 +325,7 @@
 # gzip (GNU zip, not to be confused with [Info-ZIP/PKWARE] zip archiver)
 0       string          \037\213        application/x-gzip
 
-0		string			PK\003\004		application/x-zip
+0		string			PK\003\004		application/zip
 
 # RAR archiver (Greg Roelofs, newt@uchicago.edu)
 0	string		Rar!		application/x-rar
@@ -391,13 +411,16 @@
 # This stuff came on a FrameMaker demo tape, most of which is
 # copyright, but this file is "published" as witness the following:
 #
-0	string		\<MakerFile	application/x-frame
-0	string		\<MIFFile	application/x-frame
-0	string		\<MakerDictionary	application/x-frame
-0	string		\<MakerScreenFon	application/x-frame
-0	string		\<MML		application/x-frame
-0	string		\<Book		application/x-frame
-0	string		\<Maker		application/x-frame
+# Note that this is the Framemaker Maker Interchange Format, not the
+# Normal format which would be application/vnd.framemaker.
+#
+0	string		\<MakerFile	application/x-mif
+0	string		\<MIFFile	application/x-mif
+0	string		\<MakerDictionary	application/x-mif
+0	string		\<MakerScreenFon	application/x-mif
+0	string		\<MML		application/x-mif
+0	string		\<Book		application/x-mif
+0	string		\<Maker		application/x-mif
 
 #------------------------------------------------------------------------------
 # html:  file(1) magic for HTML (HyperText Markup Language) docs
@@ -458,16 +481,16 @@
 #
 # GRR 950115:  this was mine ("Zip GIF"):
 #					ZIF image (GIF+deflate alpha)
-0	string		GIF94z		image/unknown
+0	string		GIF94z		image/x-unknown
 #
 # GRR 950115:  this is Jeremy Wohl's Free Graphics Format (better):
 #					FGF image (GIF+deflate beta)
-0	string		FGF95a		image/unknown
+0	string		FGF95a		image/x-unknown
 #
 # GRR 950115:  this is Thomas Boutell's Portable Bitmap Format proposal
 # (best; not yet implemented):
 #					PBF image (deflate compression)
-0	string		PBF		image/unknown
+0	string		PBF		image/x-unknown
 
 # GIF
 0	string		GIF		image/gif
@@ -487,7 +510,7 @@
 #0	string		BA		bitmap array
 
 # CDROM Filesystems
-32769    string    CD001     application/x-iso9660
+32769    string    CD001     application/x-iso9660-image
 
 # Newer StuffIt archives (grant@netbsd.org)
 0	string		StuffIt			application/x-stuffit
@@ -620,13 +643,13 @@
 >4      byte&0x1F	   0x07           video/h264
 
 # FLI animation format
-0	leshort		0xAF11				video/fli
+0	leshort		0xAF11				video/x-fli
 # FLC animation format
-0	leshort		0xAF12				video/flc
+0	leshort		0xAF12				video/x-flc
 #
 # SGI and Apple formats
 # Added ISO mimes
-0	string		MOVI	      video/sgi
+0	string		MOVI	      video/x-sgi-movie
 4	string		moov	      video/quicktime
 4	string		mdat	      video/quicktime
 4	string		wide	      video/quicktime
@@ -634,7 +657,7 @@
 4	string		free	      video/quicktime
 4	string		idsc	      image/x-quicktime
 4	string		idat	      image/x-quicktime
-4	string		pckg	      application/x-quicktime
+4	string		pckg	      application/x-quicktime-player
 4	string/B	jP	      image/jp2
 4	string		ftyp
 >8	string		isom	      video/mp4
@@ -656,8 +679,8 @@
 # 255 (hex FF)! DL format SUCKS BIG ROCKS.
 #
 #						DL file version 1 , medium format (160x100, 4 images/screen)
-0	byte		1			video/unknown
-0	byte		2			video/unknown
+0	byte		1			video/x-unknown
+0	byte		2			video/x-unknown
 #
 # Databases
 #
@@ -691,7 +714,7 @@
 0		string	[KDE\ Desktop\ Entry]	application/x-kdelnk
 0		string	#\ KDE\ Config\ File	application/x-kdelnk
 # xmcd database file for kscd
-0		string	#\ xmcd                text/xmcd
+0		string	#\ xmcd                text/x-xmcd
 
 #------------------------------------------------------------------------------
 # pkgadd:  file(1) magic for SysV R4 PKG Datastreams
@@ -712,7 +735,7 @@
 0	string		\211HDF\r\n\032	Hierarchical Data Format (version 5) data
 
 # Adobe Photoshop
-0	string		8BPS			image/x-photoshop
+0	string		8BPS			image/vnd.adobe.photoshop
 
 # Felix von Leitner <felix-file@fefe.de>
 0	string		d8:announce		application/x-bittorrent
@@ -723,7 +746,7 @@
 0	belong	0x00000200 	application/x-123
 
 # MS Access database
-4	string	Standard\ Jet\ DB	application/msaccess
+4	string	Standard\ Jet\ DB	application/x-msaccess
 
 ## magic for XBase files
 #0      byte       0x02
@@ -779,10 +802,10 @@
 # Debian has entries for the old PGP formats:
 # pgp:  file(1) magic for Pretty Good Privacy
 # see http://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
-0       beshort         0x9900                  text/PGP key public ring
-0       beshort         0x9501                  text/PGP key security ring
-0       beshort         0x9500                  text/PGP key security ring
-0       beshort         0xa600                  text/PGP encrypted data
+0       beshort         0x9900                  application/x-pgp-keyring
+0       beshort         0x9501                  application/x-pgp-keyring
+0       beshort         0x9500                  application/x-pgp-keyring
+0       beshort         0xa600                  application/pgp-encrypted
 0       string          -----BEGIN\040PGP       text/PGP armored data
 >15     string          PUBLIC\040KEY\040BLOCK- public key block
 >15     string          MESSAGE-                message
@@ -792,7 +815,7 @@
 #
 # GnuPG Magic:
 #
-0       beshort         0x9901                  text/GnuPG key public ring
+0       beshort         0x9901                  application/x-gnupg-keyring
 0       beshort         0x8501                  text/OpenPGP data
 
 # flash:        file(1) magic for Macromedia Flash file format
@@ -827,14 +850,14 @@
 #
 
 0	string		DOC
->43	byte		0x14		application/ichitaro4
->144	string	JDASH		application/ichitaro4
+>43	byte		0x14		application/x-ichitaro4
+>144	string	JDASH		application/x-ichitaro4
 
 0	string		DOC
->43	byte		0x15		application/ichitaro5
+>43	byte		0x15		application/x-ichitaro5
 
 0	string		DOC
->43	byte		0x16		application/ichitaro6
+>43	byte		0x16		application/x-ichitaro6
 
 #------------------------------------------------------------------------------
 # office97: file(1) magic for MicroSoft Office files
@@ -846,8 +869,8 @@
 #0       string          \320\317\021\340\241\261\032\341
 #>48     byte            0x1B            application/excel
 
-2080	string	Microsoft\ Excel\ 5.0\ Worksheet	application/excel
-2114	string	Biff5					application/excel
+2080	string	Microsoft\ Excel\ 5.0\ Worksheet	application/vnd.ms-excel
+2114	string	Biff5					application/vnd.ms-excel
 
 0       string	\224\246\056		application/msword
 
@@ -888,10 +911,10 @@
 >24		string	@		application/octet-stream
 
 0		string	MZ
->30		string	Copyright\ 1989-1990\ PKWARE\ Inc.	application/x-zip
+>30		string	Copyright\ 1989-1990\ PKWARE\ Inc.	application/zip
 
 0		string	MZ
->30		string	PKLITE\ Copr.	application/x-zip
+>30		string	PKLITE\ Copr.	application/zip
 
 0		string	MZ
 >36		string	LHa's\ SFX	application/x-lha
@@ -915,11 +938,11 @@
 0		lelong&0x8080ffff	0x0000061a	application/x-arc
 
 # Microsoft Outlook's Transport Neutral Encapsulation Format (TNEF)
-0		lelong	0x223e9f78	application/ms-tnef
+0		lelong	0x223e9f78	application/vnd.ms-tnef
 
 # From: stephane.loeuillet@tiscali.f
 # http://www.djvuzone.org/
-0	string		AT&TFORM	image/x.djvu
+0	string		AT&TFORM	image/vnd.djvu
 
 # Danny Milosavljevic <danny.milo@gmx.net>
 # this are adrift (adventure game standard) game files, extension .taf
@@ -952,7 +975,7 @@
 0	string/c	BEGIN:VCARD	text/x-vcard
 0	string		WordPro\0	application/vnd.lotus-wordpro
 0	string		WordPro\r\373	application/vnd.lotus-wordpro
-0	string		CPC\262		image/cpi
+0	string		CPC\262		image/x-cpi
 
 # 
 128	string		DICM		application/dicom
