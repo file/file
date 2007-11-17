@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.66 2007/11/07 21:26:32 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.67 2007/11/17 17:08:27 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -689,8 +689,10 @@ core:
 				    &nbuf[doff + prpsoffsets(i)];
 				for (cp = cname; *cp && isprint(*cp); cp++)
 					continue;
+				if (cp > cname)
+					cp--;
 				if (file_printf(ms, ", from '%.*s'",
-				    (int)(cp - cname), cp) == -1)
+				    (int)(cp - cname), cname) == -1)
 					return size;
 				*flags |= FLAGS_DID_CORE;
 				return size;
