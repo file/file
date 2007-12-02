@@ -49,13 +49,14 @@
 #if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
 #endif
-#ifdef HAVE_LIBZ
+#if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
+#define BUILTIN_DECOMPRESS
 #include <zlib.h>
 #endif
 
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.53 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.54 2007/12/02 00:28:10 christos Exp $")
 #endif
 
 private struct {
@@ -86,7 +87,7 @@ private size_t ncompr = sizeof(compr) / sizeof(compr[0]);
 private ssize_t swrite(int, const void *, size_t);
 private size_t uncompressbuf(struct magic_set *, int, size_t,
     const unsigned char *, unsigned char **, size_t);
-#ifdef HAVE_LIBZ
+#ifdef BUILTIN_DECOMPRESS
 private size_t uncompressgzipped(struct magic_set *, const unsigned char *,
     unsigned char **, size_t);
 #endif
@@ -293,7 +294,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 	return fd;
 }
 
-#ifdef HAVE_LIBZ
+#ifdef BUILTIN_DECOMPRESS
 
 #define FHCRC		(1 << 1)
 #define FEXTRA		(1 << 2)
@@ -372,7 +373,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 	int fdin[2], fdout[2];
 	int r;
 
-#ifdef HAVE_LIBZ
+#ifdef BUILTIN_DECOMPRESS
 	if (method == 2)
 		return uncompressgzipped(ms, old, newch, n);
 #endif

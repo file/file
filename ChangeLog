@@ -1,4 +1,9 @@
 
+2007-12-01 19:55 Christos Zoulas <christos@zoulas.com>
+
+	* make sure we have zlib.h and libz to compile the builtin
+	  decompress code
+
 2007-10-28 20:48 Christos Zoulas <christos@zoulas.com>
 
  	* float and double magic support (Behan Webster) 

@@ -85,6 +85,7 @@ AC_HEADER_STDINT
 AC_CHECK_HEADERS(fcntl.h locale.h stdint.h inttypes.h unistd.h getopt.h)
 AC_CHECK_HEADERS(utime.h wchar.h wctype.h limits.h)
 AC_CHECK_HEADERS(sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h)
+AC_CHECK_HEADERS(zlib.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
