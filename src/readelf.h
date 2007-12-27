@@ -97,6 +97,7 @@ typedef struct {
 
 /* e_type */
 #define ET_EXEC		2
+#define ET_DYN		3
 #define ET_CORE		4
 
 /* sh_type */
