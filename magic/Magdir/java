@@ -8,6 +8,10 @@
 0	beshort		0xaced		Java serialization data
 >2	beshort		>0x0004		\b, version %d
 
+0	belong		0xfeedfeed	Java KeyStore
+
+0	belong		0xcececece	Java JCE KeyStore
+
 # Dalvik .dex format. http://retrodev.com/android/dexformat.html
 # From <mkf@google.com> "Mike Fleming"
 0	string	dex\n

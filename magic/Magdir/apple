@@ -226,3 +226,7 @@
 0	belong		0xfade0cc1	Mac OS X Detached Code Signature
 >8	belong		>1			(%d elements)
 >4	belong		x			- %d bytes
+
+# From: "Nelson A. de Oliveira" <naoliv@gmail.com>
+# .vdi
+4	string innotek\ VirtualBox\ Disk\ Image %s

@@ -744,3 +744,7 @@
 0	string	xar!		xar archive
 >6	beshort	x		- version %ld
 
+# From: "Nelson A. de Oliveira" <naoliv@gmail.com>
+# .kgb
+0	string KGB_arch		KGB Archiver file
+>10	string x		with compression level %.1s
