@@ -48,7 +48,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.33 2007/06/15 00:01:15 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.34 2007/10/17 19:33:31 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -62,12 +62,16 @@ protected int
 file_printf(struct magic_set *ms, const char *fmt, ...)
 {
 	va_list ap;
-	size_t len, size;
+	size_t size;
+	ssize_t len;
 	char *buf;
 
 	va_start(ap, fmt);
 
-	if ((len = vsnprintf(ms->o.ptr, ms->o.left, fmt, ap)) >= ms->o.left) {
+	len = vsnprintf(ms->o.ptr, ms->o.left, fmt, ap);
+	if (len == -1)
+		goto out;
+	if (len >= (ssize_t)ms->o.left) {
 		long diff;	/* XXX: really ptrdiff_t */
 
 		va_end(ap);
@@ -84,11 +88,16 @@ file_printf(struct magic_set *ms, const char *fmt, ...)
 
 		va_start(ap, fmt);
 		len = vsnprintf(ms->o.ptr, ms->o.left, fmt, ap);
+		if (len == -1)
+			goto out;
 	}
 	va_end(ap);
 	ms->o.ptr += len;
 	ms->o.left -= len;
 	return 0;
+out:
+	file_error(ms, errno, "vsnprintf failed");
+	return -1;
 }
 
 /*
