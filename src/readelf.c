@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.66 2007/11/07 21:26:32 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.67 2007/11/17 17:08:27 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -894,6 +894,8 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				return -1;
 			}
 			break;
+		default:
+			break;
 		}
 	}
 	if (file_printf(ms, ", %s linked%s", linking_style, shared_libraries)
@@ -945,6 +947,8 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 
 	if (class == ELFCLASS32) {
 		Elf32_Ehdr elfhdr;
+		uint16_t type;
+
 		if (nbytes <= sizeof (Elf32_Ehdr))
 			return 0;
 
@@ -953,33 +957,36 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 		(void) memcpy(&elfhdr, buf, sizeof elfhdr);
 		swap = (u.c[sizeof(int32_t) - 1] + 1) != elfhdr.e_ident[EI_DATA];
 
-		if (getu16(swap, elfhdr.e_type) == ET_CORE) {
+		type = getu16(swap, elfhdr.e_type);
+		switch (type) {
 #ifdef ELFCORE
+		case ET_CORE:
 			if (dophn_core(ms, class, swap, fd,
 			    (off_t)getu32(swap, elfhdr.e_phoff),
 			    getu16(swap, elfhdr.e_phnum), 
 			    (size_t)getu16(swap, elfhdr.e_phentsize),
 			    fsize, &flags) == -1)
 				return -1;
-#else
-			;
+			break;
 #endif
-		} else {
-			if (getu16(swap, elfhdr.e_type) == ET_EXEC) {
-				if (dophn_exec(ms, class, swap,
-				    fd, (off_t)getu32(swap, elfhdr.e_phoff),
-				    getu16(swap, elfhdr.e_phnum), 
-				    (size_t)getu16(swap, elfhdr.e_phentsize),
-				    fsize, &flags)
-				    == -1)
-					return -1;
-			}
+		case ET_EXEC:
+		case ET_DYN:
+			if (dophn_exec(ms, class, swap,
+			    fd, (off_t)getu32(swap, elfhdr.e_phoff),
+			    getu16(swap, elfhdr.e_phnum), 
+			    (size_t)getu16(swap, elfhdr.e_phentsize),
+			    fsize, &flags) == -1)
+				return -1;
 			if (doshn(ms, class, swap, fd,
 			    (off_t)getu32(swap, elfhdr.e_shoff),
 			    getu16(swap, elfhdr.e_shnum),
 			    (size_t)getu16(swap, elfhdr.e_shentsize),
 			    &flags) == -1)
 				return -1;
+			break;
+
+		default:
+			break;
 		}
 		return 1;
 	}
