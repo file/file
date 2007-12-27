@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.44 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.45 2007/12/27 16:35:59 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -260,7 +260,6 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	struct stat	sb;
 	ssize_t nbytes = 0;	/* number of bytes read from a datafile */
 	int	ispipe = 0;
-	int	mime = ms->flags & MAGIC_MIME;
 
 	/*
 	 * one extra for terminating '\0', and

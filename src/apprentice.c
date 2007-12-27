@@ -46,7 +46,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.107 2007/11/08 00:31:37 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.108 2007/12/27 16:35:58 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -110,6 +110,7 @@ private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
     const char *);
 private int check_format_type(const char *, int);
 private int check_format(struct magic_set *, struct magic *);
+private int get_op(char);
 
 private size_t maxmagic = 0;
 private size_t magicsize = sizeof(struct magic);
@@ -525,7 +526,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	private const char hdr[] =
 		"cont\toffset\ttype\topcode\tmask\tvalue\tdesc";
 	FILE *f;
-	char line[BUFSIZ+1];
+	char line[BUFSIZ];
 	int errs = 0;
 	struct magic_entry *marray;
 	uint32_t marraycount, i, mentrycount = 0;
@@ -554,7 +555,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		(void)fprintf(stderr, "%s\n", hdr);
 
 	/* read and parse this file */
-	for (ms->line = 1; fgets(line, BUFSIZ, f) != NULL; ms->line++) {
+	for (ms->line = 1; fgets(line, sizeof(line), f) != NULL; ms->line++) {
 		size_t len;
 		len = strlen(line);
 		if (len == 0) /* null line, garbage, etc */

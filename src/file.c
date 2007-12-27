@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.116 2007/10/29 00:54:08 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.117 2007/12/27 16:35:58 christos Exp $")
 #endif	/* lint */
 
 
@@ -122,7 +122,8 @@ private void load(const char *, int);
 int
 main(int argc, char *argv[])
 {
-	int c, i;
+	int c;
+	size_t i;
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0;
 	char *home, *usermagic;
@@ -331,9 +332,9 @@ main(int argc, char *argv[])
 		}
 	}
 	else {
-		int i, wid, nw;
-		for (wid = 0, i = optind; i < argc; i++) {
-			nw = file_mbswidth(argv[i]);
+		size_t j, wid, nw;
+		for (wid = 0, j = (size_t)optind; j < (size_t)argc; j++) {
+			nw = file_mbswidth(argv[j]);
 			if (nw > wid)
 				wid = nw;
 		}
@@ -380,7 +381,6 @@ unwrap(char *fn)
 	char buf[MAXPATHLEN];
 	FILE *f;
 	int wid = 0, cwid;
-	size_t len;
 
 	if (strcmp("-", fn) == 0) {
 		f = stdin;
@@ -393,9 +393,7 @@ unwrap(char *fn)
 		}
 
 		while (fgets(buf, MAXPATHLEN, f) != NULL) {
-			len = strlen(buf);
-			if (len > 0 && buf[len - 1] == '\n')
-				buf[len - 1] = '\0';
+			buf[strcspn(buf, "\n")] = '\0';
 			cwid = file_mbswidth(buf);
 			if (cwid > wid)
 				wid = cwid;
@@ -404,10 +402,8 @@ unwrap(char *fn)
 		rewind(f);
 	}
 
-	while (fgets(buf, MAXPATHLEN, f) != NULL) {
-		len = strlen(buf);
-		if (len > 0 && buf[len - 1] == '\n')
-			buf[len - 1] = '\0';
+	while (fgets(buf, sizeof(buf), f) != NULL) {
+		buf[strcspn(buf, "\n")] = '\0';
 		process(buf, wid);
 		if(nobuffer)
 			(void)fflush(stdout);

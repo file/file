@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.102 2007/11/08 00:31:37 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.103 2007/12/27 16:35:59 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -401,11 +401,8 @@ mprint(struct magic_set *ms, struct magic *m)
 			t = ms->offset + m->vallen;
 		}
 		else {
-			if (*m->value.s == '\0') {
-				char *cp = strchr(p->s,'\n');
-				if (cp)
-					*cp = '\0';
-			}
+			if (*m->value.s == '\0')
+				p->s[strcspn(p->s, "\n")] = '\0';
 			if (file_printf(ms, m->desc, p->s) == -1)
 				return -1;
 			t = ms->offset + strlen(p->s);
