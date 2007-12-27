@@ -121,6 +121,10 @@
 
 38	string		\<\!DOCTYPE\040svg	image/svg+xml
 
+0	belong		0xfeedfeed	application/x-java-keystore
+
+0	belong		0xcececece	application/x-java-jce-keystore
+
 
 # xml
 0	string		\<?xml			text/xml
