@@ -72,6 +72,9 @@
 /* Define to 1 if you have the `strndup' function. */
 #undef HAVE_STRNDUP
 
+/* Define to 1 if you have the `strtof' function. */
+#undef HAVE_STRTOF
+
 /* Define to 1 if you have the `strtoul' function. */
 #undef HAVE_STRTOUL
 
