@@ -31,6 +31,7 @@
 
 #include "file.h"
 #include "magic.h"
+#include "patchlevel.h"
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -46,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.108 2007/12/27 16:35:58 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.109 2007/12/27 20:52:36 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1418,7 +1419,11 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 	case FILE_LEFLOAT:
 		if (m->reln != 'x') {
 			char *ep;
+#ifdef HAVE_STRTOF
 			m->value.f = strtof(*p, &ep);
+#else
+			m->value.f = (float)strtod(*p, &ep);
+#endif
 			*p = ep;
 		}
 		return 0;
@@ -1758,8 +1763,9 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	else
 		version = ptr[1];
 	if (version != VERSIONNO) {
-		file_error(ms, 0, "version mismatch (%d != %d) in `%s'",
-		    version, VERSIONNO, dbname);
+		file_error(ms, 0, "File %d.%d supports only %d version magic "
+		    "files. `%s' is version %d", FILE_VERSION_MAJOR, patchlevel,
+		    VERSIONNO, dbname, version);
 		goto error;
 	}
 	*nmagicp = (uint32_t)(st.st_size / sizeof(struct magic)) - 1;
