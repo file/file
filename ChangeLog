@@ -1,3 +1,10 @@
+2007-12-27 11:35 Christos Zoulas <christos@zoulas.com>
+
+	* bring back some fixes from OpenBSD
+
+	* treat ELF dynamic objects as executables
+
+	* fix gcc warnings
 
 2007-12-01 19:55 Christos Zoulas <christos@zoulas.com>
 
