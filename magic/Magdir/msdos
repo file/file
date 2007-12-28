@@ -17,10 +17,6 @@
 100	regex/c =^[\ \t]{0,10}call[\ \t]{1,10}rxfunc OS/2 REXX batch file text
 100	regex/c =^[\ \t]{0,10}say\ ['"]	     OS/2 REXX batch file text
 
-
-100 regex/c =^\\s*call\\s+rxfuncadd.*sysloadfu OS/2 REXX batch file text
-100 regex/c =^\\s*say\ ['"] OS/2 REXX batch file text
-
 0	leshort		0x14c	MS Windows COFF Intel 80386 object file
 #>4	ledate		x	stamp %s
 0	leshort		0x166	MS Windows COFF MIPS R4000 object file
