@@ -1,3 +1,11 @@
+2007-12-28 15:06 Christos Zoulas <christos@zoulas.com>
+
+	* strtof detection
+
+	* remove bogus regex magic that could cause a DoS
+
+	* better mismatch version message
+
 2007-12-27 11:35 Christos Zoulas <christos@zoulas.com>
 
 	* bring back some fixes from OpenBSD
