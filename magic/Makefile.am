@@ -124,6 +124,7 @@ Magdir/maple \
 Magdir/mathematica \
 Magdir/matroska \
 Magdir/mcrypt \
+Magdir/mercurial \
 Magdir/mime \
 Magdir/mips \
 Magdir/mirage \
