@@ -214,6 +214,7 @@ Magdir/vxl \
 Magdir/wordprocessors \
 Magdir/xdelta \
 Magdir/xenix \
+Magdir/xilinx \
 Magdir/xo65 \
 Magdir/xwindows \
 Magdir/zilog \
