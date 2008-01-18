@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $File: README,v 1.35 2007/01/12 17:38:27 christos Exp $
+@(#) $File: README,v 1.36 2008/01/18 21:08:03 christos Exp $
 
 This is Release 4.x of Ian Darwin's (copyright but distributable)
 file(1) command. This version is the standard "file" command for Linux,
@@ -70,6 +70,10 @@ softmagic.c - 2nd set of tests, based on /etc/magic
 readelf.[ch] - Stand-alone elf parsing code.
 compress.c - on-the-fly decompression.
 print.c - print results, errors, warnings.
+
+You can download the latest version of file from:
+
+	ftp://ftp.astron.com/pub/file/
 
 If your gzip sometimes fails to decompress things complaining about a short
 file, apply this patch [which is going to be in the next version of gzip]:
