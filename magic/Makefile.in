@@ -263,6 +263,7 @@ Magdir/maple \
 Magdir/mathematica \
 Magdir/matroska \
 Magdir/mcrypt \
+Magdir/mercurial \
 Magdir/mime \
 Magdir/mips \
 Magdir/mirage \
@@ -352,6 +353,7 @@ Magdir/vxl \
 Magdir/wordprocessors \
 Magdir/xdelta \
 Magdir/xenix \
+Magdir/xilinx \
 Magdir/xo65 \
 Magdir/xwindows \
 Magdir/zilog \

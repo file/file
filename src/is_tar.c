@@ -45,7 +45,7 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.28 2007/08/19 03:45:08 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.29 2007/10/17 19:33:31 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
@@ -53,7 +53,7 @@ FILE_RCSID("@(#)$File: is_tar.c,v 1.28 2007/08/19 03:45:08 christos Exp $")
 private int is_tar(const unsigned char *, size_t);
 private int from_oct(int, const char *);	/* Decode octal number */
 
-static const char *tartype[] = {
+static const char tartype[][32] = {
 	"tar archive",
 	"POSIX tar archive",
 	"POSIX tar archive (GNU)",

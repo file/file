@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.52 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.53 2007/10/29 00:54:08 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -74,7 +74,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	unsigned char *nbuf = NULL;
 	unichar *ubuf = NULL;	
 	size_t ulen;
-	struct names *p;
+	const struct names *p;
 	int rv = -1;
 	int mime = ms->flags & MAGIC_MIME;
 
