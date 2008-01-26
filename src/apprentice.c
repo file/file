@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.109 2007/12/27 20:52:36 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.110 2008/01/26 18:45:16 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -151,13 +151,13 @@ main(int argc, char *argv[])
 #endif /* COMPILE_ONLY */
 
 static const struct type_tbl_s {
-	const char *name;
+	const char name[16];
 	const size_t len;
 	const int type;
 	const int format;
 } type_tbl[] = {
 # define XX(s)		s, (sizeof(s) - 1)
-# define XX_NULL	NULL, 0
+# define XX_NULL	"", 0
 	{ XX("byte"),		FILE_BYTE,		FILE_FMT_NUM },
 	{ XX("short"),		FILE_SHORT,		FILE_FMT_NUM },
 	{ XX("default"),	FILE_DEFAULT,		FILE_FMT_STR },
@@ -206,7 +206,7 @@ get_type(const char *l, const char **t)
 {
 	const struct type_tbl_s *p;
 
-	for (p = type_tbl; p->name; p++) {
+	for (p = type_tbl; p->len; p++) {
 		if (strncmp(l, p->name, p->len) == 0) {
 			if (t)
 				*t = l + p->len;
@@ -226,7 +226,7 @@ init_file_tables(void)
 		return;
 	done++;
 
-	for (p = type_tbl; p->name; p++) {
+	for (p = type_tbl; p->len; p++) {
 		assert(p->type < FILE_NAMES_SIZE);
 		file_names[p->type] = p->name;
 		file_formats[p->type] = p->format;
@@ -771,19 +771,19 @@ get_op(char c)
 private int
 get_cond(const char *l, const char **t)
 {
-	static struct cond_tbl_s {
-		const char *name;
-		const size_t len;
-		const int cond;
+	static const struct cond_tbl_s {
+		char name[8];
+		size_t len;
+		int cond;
 	} cond_tbl[] = {
 		{ "if",		2,	COND_IF },
 		{ "elif",	4,	COND_ELIF },
 		{ "else",	4,	COND_ELSE },
-		{ NULL, 	0,	COND_NONE },
+		{ "",		0,	COND_NONE },
 	};
-	struct cond_tbl_s *p;
+	const struct cond_tbl_s *p;
 
-	for (p = cond_tbl; p->name; p++) {
+	for (p = cond_tbl; p->len; p++) {
 		if (strncmp(l, p->name, p->len) == 0 &&
 		    isspace((unsigned char)l[p->len])) {
 			if (t)

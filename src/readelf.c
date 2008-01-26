@@ -37,7 +37,7 @@
 #include "readelf.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.68 2007/12/27 16:13:26 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.69 2008/01/26 18:45:16 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -189,14 +189,14 @@ getu64(int swap, uint64_t value)
 			 : prpsoffsets64[i])
 
 #ifdef ELFCORE
-size_t	prpsoffsets32[] = {
+static const size_t	prpsoffsets32[] = {
 	8,		/* FreeBSD */
 	44,		/* Linux (path name) */
 	28,		/* Linux 2.0.36 (short name) */
 	84,		/* SunOS 5.x */
 };
 
-size_t	prpsoffsets64[] = {
+static const size_t	prpsoffsets64[] = {
 	16,		/* FreeBSD, 64-bit */
 	56,		/* Linux (path name) */
 	40,             /* Linux (tested on core from 2.4.x, short name) */
@@ -233,7 +233,7 @@ size_t	prpsoffsets64[] = {
 #define	OS_STYLE_FREEBSD	1
 #define	OS_STYLE_NETBSD		2
 
-private const char *os_style_names[] = {
+private const char os_style_names[][8] = {
 	"SVR4",
 	"FreeBSD",
 	"NetBSD",

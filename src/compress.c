@@ -56,13 +56,13 @@
 
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.54 2007/12/02 00:28:10 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.55 2008/01/26 18:45:16 christos Exp $")
 #endif
 
-private struct {
-	const char *magic;
+private const struct {
+	const char magic[8];
 	size_t maglen;
-	const char *const argv[3];
+	const char *argv[3];
 	int silent;
 } compr[] = {
 	{ "\037\235", 2, { "gzip", "-cdq", NULL }, 1 },		/* compressed */
