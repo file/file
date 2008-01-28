@@ -748,3 +748,15 @@
 # .kgb
 0	string KGB_arch		KGB Archiver file
 >10	string x		with compression level %.1s
+
+# xar (eXtensible ARchiver) archive
+# From: "David Remahl" <dremahl@apple.com>
+0	string	xar!		xar archive
+#>4	beshort	x		header size %d
+>6	beshort	x		version %d,
+#>8	quad	x		compressed TOC: %d,
+#>16	quad	x		uncompressed TOC: %d,
+>24	belong	0		no checksum
+>24	belong	1		SHA-1 checksum
+>24	belong	2		MD5 checksum
+
