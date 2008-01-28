@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.110 2008/01/26 18:45:16 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.111 2008/01/28 00:14:38 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1900,6 +1900,7 @@ swap8(uint64_t sv)
 	uint32_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv; 
 	uint8_t *d = (uint8_t *)(void *)&rv; 
+#if 0
 	d[0] = s[3];
 	d[1] = s[2];
 	d[2] = s[1];
@@ -1908,6 +1909,16 @@ swap8(uint64_t sv)
 	d[5] = s[6];
 	d[6] = s[5];
 	d[7] = s[4];
+#else
+	d[0] = s[7];
+	d[1] = s[6];
+	d[2] = s[5];
+	d[3] = s[4];
+	d[4] = s[3];
+	d[5] = s[2];
+	d[6] = s[1];
+	d[7] = s[0];
+#endif
 	return rv;
 }
 
