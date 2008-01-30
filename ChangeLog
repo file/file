@@ -1,3 +1,7 @@
+2007-01-29 15:35 Christos Zoulas <christos@zoulas.com>
+
+	* zero out utime/utimes structs (Gavin Atkinson)
+
 2007-01-26 13:45 Christos Zoulas <christos@zoulas.com>
 
 	* reduce writable data from Diego "Flameeyes" Petten
