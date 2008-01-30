@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.44 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.45 2007/12/27 16:35:59 christos Exp $")
 #endif	/* lint */
 
 #ifdef __EMX__
@@ -218,6 +218,7 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 		 */
 #ifdef HAVE_UTIMES
 		struct timeval  utsbuf[2];
+		(void)memset(utsbuf, 0, sizeof(utsbuf));
 		utsbuf[0].tv_sec = sb->st_atime;
 		utsbuf[1].tv_sec = sb->st_mtime;
 
@@ -225,6 +226,7 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 #elif defined(HAVE_UTIME_H) || defined(HAVE_SYS_UTIME_H)
 		struct utimbuf  utbuf;
 
+		(void)memset(utbuf, 0, sizeof(utbuf));
 		utbuf.actime = sb->st_atime;
 		utbuf.modtime = sb->st_mtime;
 		(void) utime(name, &utbuf); /* don't care if loses */
