@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.38 2007/01/27 00:52:08 ljt Exp $
+.\" $File: magic.man,v 1.39 2007/11/08 00:31:37 christos Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -232,11 +232,7 @@ Operators
 and
 .Dv ~
 don't work with floats and doubles.
-For all tests except
-.Em string
-and
-.Em regex ,
-operation
+For all tests operation
 .Dv !
 specifies that the line matches if the test does
 .Em not
@@ -468,4 +464,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.39 2007/11/08 00:31:37 christos Exp $
+.\" @(#)$Id: magic.man,v 1.40 2008/02/03 21:00:15 christos Exp $
