@@ -45,7 +45,7 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.29 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.30 2008/01/26 18:45:16 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
@@ -85,7 +85,8 @@ file_is_tar(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
  * Return 
  *	0 if the checksum is bad (i.e., probably not a tar archive), 
  *	1 for old UNIX tar file,
- *	2 for Unix Std (POSIX) tar file.
+ *	2 for Unix Std (POSIX) tar file,
+ *	3 for GNU tar file.
  */
 private int
 is_tar(const unsigned char *buf, size_t nbytes)

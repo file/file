@@ -71,7 +71,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.116 2007/10/29 00:54:08 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.117 2007/12/27 16:35:58 christos Exp $")
 #endif	/* lint */
 
 
@@ -349,8 +349,9 @@ main(int argc, char *argv[])
 			process(argv[optind], wid);
 	}
 
+	c = magic->haderr ? 1 : 0;
 	magic_close(magic);
-	return 0;
+	return c;
 }
 
 
