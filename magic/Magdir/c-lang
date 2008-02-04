@@ -6,6 +6,10 @@
 # XPM icons (Greg Roelofs, newt@uchicago.edu)
 # if you uncomment "/*" for C/REXX below, also uncomment this entry
 #0	string		/*\ XPM\ */	X pixmap image data
+#!:mime	image/x-xpmi
+
+# 3DS (3d Studio files) Conflicts with diff output 0x3d '='
+#16	beshort		0x3d3d		image/x-3ds
 
 # this first will upset you if you're a PL/1 shop...
 # in which case rm it; ascmagic will catch real C programs

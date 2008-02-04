@@ -48,7 +48,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.34 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.35 2007/12/27 16:35:59 christos Exp $")
 #endif	/* lint */
 
 #ifndef HAVE_VSNPRINTF
@@ -184,7 +184,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 		return 1;
 	} else if (nb == 1) {
 		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-		    file_printf(ms, mime ?  "application/octet-stream" :
+		    file_printf(ms, mime ? "application/octet-stream" :
 		    "very short file (no magic)") == -1)
 			return -1;
 		return 1;
@@ -217,7 +217,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 			(m = file_ascmagic(ms, buf, nb)) == 0) {
 			/* abandon hope, all ye who remain here */
 			if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-			    file_printf(ms, mime ?  "application/octet-stream" :
+			    file_printf(ms, mime ? "application/octet-stream" :
 				"data") == -1)
 				return -1;
 			m = 1;

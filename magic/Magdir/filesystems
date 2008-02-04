@@ -1115,19 +1115,21 @@
 
 # CDROM Filesystems
 # Modified for UDF by gerardo.cacciari@gmail.com
-32769    string    CD001
->38913   string   !NSR0      ISO 9660 CD-ROM filesystem data
->38913   string    NSR0      UDF filesystem data
->>38917  string    1         (version 1.0)
->>38917  string    2         (version 1.5)
->>38917  string    3         (version 2.0)
->>38917  byte     >0x33      (unknown version, ID 0x%X)
->>38917  byte     <0x31      (unknown version, ID 0x%X)
+32769	string    CD001
+!:mime	application/x-iso9660-image
+>38913	string   !NSR0      ISO 9660 CD-ROM filesystem data
+>38913	string    NSR0      UDF filesystem data
+>>38917	string    1         (version 1.0)
+>>38917	string    2         (version 1.5)
+>>38917	string    3         (version 2.0)
+>>38917	byte     >0x33      (unknown version, ID 0x%X)
+>>38917	byte     <0x31      (unknown version, ID 0x%X)
 # "application id" which appears to be used as a volume label
->32808	 string    >\0       '%s'
->34816	 string    \000CD001\001EL\ TORITO\ SPECIFICATION    (bootable)
-37633    string    CD001     ISO 9660 CD-ROM filesystem data (raw 2352 byte sectors)
-32776    string    CDROM     High Sierra CD-ROM filesystem data
+>32808	string    >\0       '%s'
+>34816	string    \000CD001\001EL\ TORITO\ SPECIFICATION    (bootable)
+37633	string    CD001     ISO 9660 CD-ROM filesystem data (raw 2352 byte sectors)
+!:mime	application/x-iso9660-image
+32776	string    CDROM     High Sierra CD-ROM filesystem data
 
 # cramfs filesystem - russell@coker.com.au
 0       lelong    0x28cd3d45      Linux Compressed ROM File System data, little endian

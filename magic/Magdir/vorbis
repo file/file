@@ -13,6 +13,7 @@
 #
 # --- Ogg Framing ---
 0		string		OggS		Ogg data
+!:mime		application/ogg
 >4		byte		!0		UNKNOWN REVISION %u
 ##>4		byte		0		revision 0
 >4		byte		0

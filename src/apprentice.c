@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.110 2008/01/26 18:45:16 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.111 2008/01/28 00:14:38 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -93,6 +93,8 @@ private const char *getstr(struct magic_set *, const char *, char *, int,
     int *, int);
 private int parse(struct magic_set *, struct magic_entry **, uint32_t *,
     const char *, size_t, int);
+private int parse_mime(struct magic_set *, struct magic_entry **, uint32_t *,
+    const char *);
 private void eatsize(const char **);
 private int apprentice_1(struct magic_set *, const char *, int, struct mlist *);
 private size_t apprentice_magic_strength(const struct magic *);
@@ -116,6 +118,9 @@ private int get_op(char);
 private size_t maxmagic = 0;
 private size_t magicsize = sizeof(struct magic);
 
+private const char usg_hdr[] = "cont\toffset\ttype\topcode\tmask\tvalue\tdesc";
+private const char mime_marker[] = "!:mime";
+private const size_t mime_marker_len = sizeof(mime_marker) - 1;
 
 #ifdef COMPILE_ONLY
 
@@ -327,7 +332,6 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	char *p, *mfn, *afn = NULL;
 	int file_err, errs = -1;
 	struct mlist *mlist;
-	static const char mime[] = ".mime";
 
 	init_file_tables();
 
@@ -355,18 +359,6 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 			*p++ = '\0';
 		if (*fn == '\0')
 			break;
-		if (ms->flags & MAGIC_MIME) {
-			size_t len = strlen(fn) + sizeof(mime);
-			if ((afn = malloc(len)) == NULL) {
-				free(mfn);
-				free(mlist);
-				file_oomem(ms, len);
-				return NULL;
-			}
-			(void)strcpy(afn, fn);
-			(void)strcat(afn, mime);
-			fn = afn;
-		}
 		file_err = apprentice_1(ms, fn, action, mlist);
 		if (file_err > errs)
 			errs = file_err;
@@ -524,8 +516,6 @@ private int
 apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
     const char *fn, int action)
 {
-	private const char hdr[] =
-		"cont\toffset\ttype\topcode\tmask\tvalue\tdesc";
 	FILE *f;
 	char line[BUFSIZ];
 	int errs = 0;
@@ -553,7 +543,7 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 
 	/* print silly verbose header for USG compat. */
 	if (action == FILE_CHECK)
-		(void)fprintf(stderr, "%s\n", hdr);
+		(void)fprintf(stderr, "%s\n", usg_hdr);
 
 	/* read and parse this file */
 	for (ms->line = 1; fgets(line, sizeof(line), f) != NULL; ms->line++) {
@@ -569,6 +559,14 @@ apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 			continue;
 		if (line[0] == '#')	/* comment, do not parse */
 			continue;
+		if (len > mime_marker_len &&
+		    memcmp(line, mime_marker, mime_marker_len) == 0) {
+			/* MIME type */
+			if (parse_mime(ms, &marray, &marraycount,
+			    line + mime_marker_len) != 0)
+				errs++;
+			continue;
+		}
 		if (parse(ms, &marray, &marraycount, line, lineno, action) != 0)
 			errs++;
 	}
@@ -708,14 +706,16 @@ string_modifier_check(struct magic_set *ms, struct magic const *m)
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
 		if (m->str_flags != 0) {
-			file_magwarn(ms, "no modifiers allowed for 16-bit strings\n");
+			file_magwarn(ms,
+			    "no modifiers allowed for 16-bit strings\n");
 			return -1;
 		}
 		break;
 	case FILE_STRING:
 	case FILE_PSTRING:
 		if ((m->str_flags & REGEX_OFFSET_START) != 0) {
-			file_magwarn(ms, "'/%c' only allowed on regex and search\n",
+			file_magwarn(ms,
+			    "'/%c' only allowed on regex and search\n",
 			    CHAR_REGEX_OFFSET_START);
 			return -1;
 		}
@@ -1082,7 +1082,8 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 				case '3':  case '4':  case '5':
 				case '6':  case '7':  case '8':
 				case '9': {
-					if (have_count && ms->flags & MAGIC_CHECK)
+					if (have_count &&
+					    (ms->flags & MAGIC_CHECK))
 						file_magwarn(ms,
 						    "multiple counts");
 					have_count = 1;
@@ -1114,7 +1115,8 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 					return -1;
 				}
 				/* allow multiple '/' for readability */
-				if (l[1] == '/' && !isspace((unsigned char)l[2]))
+				if (l[1] == '/' &&
+				    !isspace((unsigned char)l[2]))
 					l++;
 			}
 			if (string_modifier_check(ms, m) == -1)
@@ -1205,9 +1207,60 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		file_mdump(m);
 	}
 #endif
+	m->mimetype[0] = '\0';		/* initialise MIME type to none */
 	if (m->cont_level == 0)
 		++(*nmentryp);		/* make room for next */
 	return 0;
+}
+
+/*
+ * parse a MIME annotation line from magic file, put into magic[index - 1]
+ * if valid
+ */
+private int
+parse_mime(struct magic_set *ms, struct magic_entry **mentryp,
+    uint32_t *nmentryp, const char *line)
+{
+	size_t i;
+	const char *l = line;
+	struct magic *m;
+	struct magic_entry *me;
+
+	if (*nmentryp == 0) {
+		file_error(ms, 0, "No current entry for MIME type");
+		return -1;
+	}
+
+	me = &(*mentryp)[*nmentryp - 1];
+	m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
+
+	if (m->mimetype[0] != '\0') {
+		file_error(ms, 0, "Current entry already has a MIME type: %s\n"
+		    "Description: %s\nNew type: %s", m->mimetype, m->desc, l);
+		return -1;
+	}	
+
+	EATAB;
+#if 0
+        file_magwarn(ms, "Description: %s\nNew type: %s", m->desc, l);
+#endif
+	for (i = 0;
+	     *l && ((isascii((unsigned char)*l) && isalnum((unsigned char)*l))
+	     || strchr("-+/", *l)) && i < sizeof(m->mimetype);
+	     m->mimetype[i++] = *l++)
+		continue;
+	if (i == sizeof(m->mimetype)) {
+		m->desc[sizeof(m->mimetype) - 1] = '\0';
+		if (ms->flags & MAGIC_CHECK)
+			file_magwarn(ms, "MIME type `%s' truncated %zu",
+			    m->mimetype, i);
+	} else
+		m->mimetype[i] = '\0';
+
+	if (i > 0)
+		return 0;
+	else
+		return -1;
 }
 
 private int

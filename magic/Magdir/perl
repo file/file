@@ -6,12 +6,19 @@
 # Keith Waclena <keith@cerberus.uchicago.edu>
 # Send additions to <perl5-porters@perl.org>
 0	string/b	#!\ /bin/perl			perl script text executable
+!:mime	application/x-perl
 0	string		eval\ "exec\ /bin/perl		perl script text
+!:mime	application/x-perl
 0	string/b	#!\ /usr/bin/perl		perl script text executable
+!:mime	application/x-perl
 0	string		eval\ "exec\ /usr/bin/perl	perl script text
+!:mime	application/x-perl
 0	string/b	#!\ /usr/local/bin/perl		perl script text
+!:mime	application/x-perl
 0	string		eval\ "exec\ /usr/local/bin/perl	perl script text executable
+!:mime	application/x-perl
 0	string		eval\ '(exit\ $?0)'\ &&\ eval\ 'exec	perl script text
+!:mime	application/x-perl
 
 
 # by Dmitry V. Levin and Alexey Tourbin

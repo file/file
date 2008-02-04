@@ -5,6 +5,7 @@
 # Duncan P. Simpson, D.P.Simpson@dcs.warwick.ac.uk
 #
 0	string		{\\rtf		Rich Text Format data,
+!:mime	text/rtf
 >5	byte		x		version %c,
 >6	string		\\ansi		ANSI
 >6	string		\\mac		Apple Macintosh

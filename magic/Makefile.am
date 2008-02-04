@@ -1,10 +1,10 @@
-pkgdata_DATA = magic magic.mime magic.mgc magic.mime.mgc
+pkgdata_DATA = magic magic.mgc
 
-EXTRA_DIST = magic2mime Localstuff Header magic.mime $(magic_FRAGMENTS)
+EXTRA_DIST = Localstuff Header $(magic_FRAGMENTS)
 
-CLEANFILES =  magic magic.mgc magic.mime.mgc
+CLEANFILES =  magic magic.mgc
 
-magic: Header Localstuff $(magic_FRAGMENTS)
+magic: Header Localstuff $(magic_FRAGMENTS) $(top_builddir)/src/file
 	cat $(srcdir)/Header $(srcdir)/Localstuff > $@
 	for frag in $(magic_FRAGMENTS); do \
 	  if test -f $(srcdir)/$$frag; then \
@@ -15,6 +15,8 @@ magic: Header Localstuff $(magic_FRAGMENTS)
           cat $$f; \
 	done >> $@
 
+# FIXME: Build file natively as well so that it can be used to compile
+# the target's magic file
 if IS_CROSS_COMPILE
 FILE_COMPILE = file
 else
@@ -23,9 +25,6 @@ endif
 
 magic.mgc: magic
 	$(FILE_COMPILE) -C -m magic
-
-magic.mime.mgc: magic.mime
-	$(FILE_COMPILE) -C -m $(srcdir)/magic.mime
 
 magic_FRAGMENTS = \
 Magdir/acorn \
@@ -51,23 +50,22 @@ Magdir/blit \
 Magdir/bout \
 Magdir/bsdi \
 Magdir/btsnoop \
+Magdir/c64 \
 Magdir/cad \
 Magdir/cafebabe \
-Magdir/c-lang \
-Magdir/c64 \
 Magdir/cddb \
 Magdir/chord \
 Magdir/cisco \
 Magdir/citrus \
+Magdir/c-lang \
 Magdir/claris \
 Magdir/clipper \
-Magdir/cracklib \
-Magdir/spec \
 Magdir/commands \
 Magdir/communications \
 Magdir/compress \
 Magdir/console \
 Magdir/convex \
+Magdir/cracklib \
 Magdir/ctags \
 Magdir/dact \
 Magdir/database \
@@ -76,6 +74,7 @@ Magdir/diff \
 Magdir/digital \
 Magdir/dolby \
 Magdir/dump \
+Magdir/dyadic \
 Magdir/editors \
 Magdir/efi \
 Magdir/elf \
@@ -91,8 +90,8 @@ Magdir/frame \
 Magdir/freebsd \
 Magdir/fsav \
 Magdir/games \
-Magdir/geos \
 Magdir/gcc \
+Magdir/geos \
 Magdir/gimp \
 Magdir/gnu \
 Magdir/grace \
@@ -173,6 +172,7 @@ Magdir/rpm \
 Magdir/rtf \
 Magdir/sc \
 Magdir/sccs \
+Magdir/scientific \
 Magdir/sendmail \
 Magdir/sequent \
 Magdir/sgi \
@@ -182,9 +182,8 @@ Magdir/sinclair \
 Magdir/sketch \
 Magdir/smalltalk \
 Magdir/sniffer \
-Magdir/dyadic \
-Magdir/scientific \
 Magdir/softquad \
+Magdir/spec \
 Magdir/spectrum \
 Magdir/sql \
 Magdir/sun \
@@ -198,8 +197,8 @@ Magdir/timezone \
 Magdir/troff \
 Magdir/tuxedo \
 Magdir/typeset \
-Magdir/unknown \
 Magdir/unicode \
+Magdir/unknown \
 Magdir/uuencode \
 Magdir/varied.out \
 Magdir/varied.script \

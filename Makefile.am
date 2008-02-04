@@ -1,5 +1,5 @@
 # don't enforce GNU packaging standards
-AUTOMAKE_OPTIONS = foreign no-dependencies
+AUTOMAKE_OPTIONS = foreign
 
 EXTRA_DIST = LEGAL.NOTICE MAINT PORTING
 

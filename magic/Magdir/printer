@@ -5,6 +5,7 @@
 
 # PostScript, updated by Daniel Quinlan (quinlan@yggdrasil.com)
 0	string		%!		PostScript document text
+!:mime	application/postscript
 >2	string		PS-Adobe-	conforming
 >>11	string		>\0		at level %.3s
 >>>15	string		EPS		- type %s
@@ -12,6 +13,7 @@
 >>>15	string		ExitServer	- type %s
 # Some PCs have the annoying habit of adding a ^D as a document separator
 0	string		\004%!		PostScript document text
+!:mime	application/postscript
 >3	string		PS-Adobe-	conforming
 >>12	string		>\0		at level %.3s
 >>>16	string		EPS		- type %s

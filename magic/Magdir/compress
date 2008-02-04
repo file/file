@@ -10,6 +10,7 @@
 
 # standard unix compress
 0	string		\037\235	compress'd data
+!:mime	application/x-compress
 >2	byte&0x80	>0		block compressed
 >2	byte&0x1f	x		%d bits
 
@@ -19,6 +20,7 @@
 #	* Produce shorter output - notably, only report compression methods
 #	  other than 8 ("deflate", the only method defined in RFC 1952).
 0       string          \037\213        gzip compressed data
+!:mime	application/x-gzip
 >2	byte		<8		\b, reserved method
 >2	byte		>8		\b, unknown method
 >3	byte		&0x01		\b, ASCII
@@ -49,23 +51,29 @@
 
 # packed data, Huffman (minimum redundancy) codes on a byte-by-byte basis
 0	string		\037\036	packed data
+!:mime	application/octet-stream
 >2	belong		>1		\b, %d characters originally
 >2	belong		=1		\b, %d character originally
 #
 # This magic number is byte-order-independent.
 0	short		0x1f1f		old packed data
+!:mime	application/octet-stream
 
 # XXX - why *two* entries for "compacted data", one of which is
 # byte-order independent, and one of which is byte-order dependent?
 #
 0	short		0x1fff		compacted data
+!:mime	application/octet-stream
 # This string is valid for SunOS (BE) and a matching "short" is listed
 # in the Ultrix (LE) magic file.
 0	string		\377\037	compacted data
+!:mime	application/octet-stream
 0	short		0145405		huf output
+!:mime	application/octet-stream
 
 # bzip2
 0	string		BZh		bzip2 compressed data
+!:mime	application/x-bzip2
 >3	byte		>47		\b, block size = %c00k
 
 # squeeze and crunch

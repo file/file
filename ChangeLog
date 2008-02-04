@@ -1,3 +1,7 @@
+2007-02-04 11:31 Christos Zoulas <christos@zoulas.com>
+
+	* !mine: annotations in magic files (Reuben Thomas)
+
 2007-01-29 15:35 Christos Zoulas <christos@zoulas.com>
 
 	* zero out utime/utimes structs (Gavin Atkinson)

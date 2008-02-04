@@ -5,6 +5,7 @@
 # BinHex is the Macintosh ASCII-encoded file format (see also "apple")
 # Daniel Quinlan, quinlan@yggdrasil.com
 11	string	must\ be\ converted\ with\ BinHex	BinHex binary text
+!:mime	application/mac-binhex40
 >41	string	x					\b, version %.3s
 
 # Stuffit archives are the de facto standard of compression for Macintosh
@@ -18,6 +19,7 @@
 
 # Newer StuffIt archives (grant@netbsd.org)
 0	string		StuffIt			StuffIt Archive
+!:mime	application/x-stuffit
 #>162	string		>0			: %s
 
 # Macintosh Applications and Installation binaries (franklsm@tuns.ca)
