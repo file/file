@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.66 2007/10/23 19:58:59 christos Exp $
+.\" $File: file.man,v 1.67 2008/02/04 19:11:03 christos Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -256,13 +256,6 @@ is defined.
 Specify an alternate list of files containing magic numbers.
 This can be a single file, or a colon-separated list of files.
 If a compiled magic file is found alongside, it will be used instead.
-With the
-.Fl i
-or 
-.Fl "mime"
-option, the program adds
-.Dq .mime
-to each file name.
 .It Fl n , -no-buffer
 Force stdout to be flushed after checking each file.
 This is only useful if checking a list of files.
@@ -316,18 +309,11 @@ the output. This does not affect the separator which is still printed.
 Print a help message and exit.
 .El
 .Sh FILES
-.Bl -tag -width __MAGIC__.mime.mgc -compact
+.Bl -tag -width __MAGIC__.mgc -compact
 .It Pa __MAGIC__.mgc
 Default compiled list of magic numbers
 .It Pa __MAGIC__
 Default list of magic numbers
-.It Pa __MAGIC__.mime.mgc
-Default compiled list of magic numbers, used to output mime types when
-the 
-.Fl i
-option is specified.
-.It Pa __MAGIC__.mime
-Default list of magic numbers, used to output mime types when the 
 .Fl i
 option is specified.
 .El
@@ -341,8 +327,6 @@ will not attempt to open
 .Pa $HOME/.magic .
 .Nm
 adds
-.Dq .mime
-and/or
 .Dq .mgc
 to the value of this variable as appropriate.
 The environment variable
