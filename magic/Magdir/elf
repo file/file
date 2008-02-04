@@ -15,12 +15,17 @@
 >5	byte		0		invalid byte order
 >5	byte		1		LSB
 >>16	leshort		0		no file type,
+!:mime	application/octet-stream
 >>16	leshort		1		relocatable,
+!:mime	application/x-object
 >>16	leshort		2		executable,
+!:mime	application/x-executable
 >>16	leshort		3		shared object,
+!:mime	application/x-sharedlib
 # Core handling from Peter Tobias <tobias@server.et-inf.fho-emden.de>
 # corrections by Christian 'Dr. Disk' Hechelmann <drdisk@ds9.au.s.shuttle.de>
 >>16	leshort		4		core file
+!:mime	application/x-coredump
 # Core file detection is not reliable.
 #>>>(0x38+0xcc) string	>\0		of '%s'
 #>>>(0x38+0x10) lelong	>0		(signal %d),
@@ -108,10 +113,15 @@
 >>36	lelong		1		MathCoPro/FPU/MAU Required
 >5	byte		2		MSB
 >>16	beshort		0		no file type,
+!:mime	application/octet-stream
 >>16	beshort		1		relocatable,
+!:mime	application/x-object
 >>16	beshort		2		executable,
+!:mime	application/x-executable
 >>16	beshort		3		shared object,
+!:mime	application/x-sharedlib
 >>16	beshort		4		core file,
+!:mime	application/x-coredump
 #>>>(0x38+0xcc) string	>\0		of '%s'
 #>>>(0x38+0x10) belong	>0		(signal %d),
 >>16	beshort		&0xff00		processor-specific,

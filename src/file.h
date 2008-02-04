@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.92 2007/11/08 00:31:37 christos Exp $
+ * @(#)$File: file.h,v 1.93 2008/02/04 16:33:46 christos Exp $
  */
 
 #ifndef __file_h__
@@ -91,8 +91,8 @@
 #define MAXstring 32		/* max leng of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	4
-#define FILE_MAGICSIZE	(32 * 4)
+#define VERSIONNO	5
+#define FILE_MAGICSIZE	(32 * 6)
 
 #define	FILE_LOAD	0
 #define FILE_CHECK	1
@@ -237,6 +237,8 @@ struct magic {
 	} value;		/* either number or string */
 	/* Words 17..31 */
 	char desc[MAXDESC];	/* description */
+	/* Words 32..47 */
+	char mimetype[MAXDESC]; /* MIME type */
 };
 
 #define BIT(A)   (1 << (A))

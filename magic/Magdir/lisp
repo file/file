@@ -6,6 +6,8 @@
 
 # updated by Joerg Jenderek
 0	string	;;			
+!:mime	text/plain
+# FIXME: Is the above MIME type pointless?
 # windows INF files often begin with semicolon and use CRLF as line end
 # lisp files are mainly created on unix system with LF as line end
 >2	search/2048	!\r		Lisp/Scheme program text
@@ -21,12 +23,14 @@
 
 # Emacs 18 - this is always correct, but not very magical.
 0	string	\012(			Emacs v18 byte-compiled Lisp data
+!:mime	application/x-elc
 # Emacs 19+ - ver. recognition added by Ian Springer
 # Also applies to XEmacs 19+ .elc files; could tell them apart if we had regexp
 # support or similar - Chris Chittleborough <cchittleborough@yahoo.com.au>
-0	string	;ELC			
->4	byte	>19			
+0	string	;ELC	
+>4	byte	>18			
 >4	byte    <32			Emacs/XEmacs v%d byte-compiled Lisp data
+!:mime	application/x-elc		
 
 # Files produced by CLISP Common Lisp From: Bruno Haible <haible@ilog.fr>
 0	string	(SYSTEM::VERSION\040'	CLISP byte-compiled Lisp program text
