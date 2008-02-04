@@ -63,8 +63,17 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.46 2008/01/30 20:36:13 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.47 2008/02/04 20:51:17 christos Exp $")
 #endif	/* lint */
+
+#ifndef PIPE_BUF 
+/* Get the PIPE_BUF from pathconf */
+#ifdef _PC_PIPE_BUF
+#define PIPE_BUF pathconf(".", _PC_PIPE_BUF)
+#else
+#define PIPE_BUF 512
+#endif
+#endif
 
 #ifdef __EMX__
 private char *apptypeName = NULL;

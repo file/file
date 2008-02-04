@@ -161,10 +161,13 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-pkgdata_DATA = magic magic.mime magic.mgc magic.mime.mgc
-EXTRA_DIST = magic2mime Localstuff Header magic.mime $(magic_FRAGMENTS)
-CLEANFILES = magic magic.mgc magic.mime.mgc
+pkgdata_DATA = magic magic.mgc
+EXTRA_DIST = Localstuff Header $(magic_FRAGMENTS)
+CLEANFILES = magic magic.mgc
 @IS_CROSS_COMPILE_FALSE@FILE_COMPILE = $(top_builddir)/src/file
+
+# FIXME: Build file natively as well so that it can be used to compile
+# the target's magic file
 @IS_CROSS_COMPILE_TRUE@FILE_COMPILE = file
 magic_FRAGMENTS = \
 Magdir/acorn \
@@ -190,23 +193,23 @@ Magdir/blit \
 Magdir/bout \
 Magdir/bsdi \
 Magdir/btsnoop \
-Magdir/cad \
-Magdir/cafebabe \
 Magdir/c-lang \
 Magdir/c64 \
+Magdir/cad \
+Magdir/cafebabe \
 Magdir/cddb \
 Magdir/chord \
 Magdir/cisco \
 Magdir/citrus \
+Magdir/clarion \
 Magdir/claris \
 Magdir/clipper \
-Magdir/cracklib \
-Magdir/spec \
 Magdir/commands \
 Magdir/communications \
 Magdir/compress \
 Magdir/console \
 Magdir/convex \
+Magdir/cracklib \
 Magdir/ctags \
 Magdir/dact \
 Magdir/database \
@@ -215,11 +218,13 @@ Magdir/diff \
 Magdir/digital \
 Magdir/dolby \
 Magdir/dump \
+Magdir/dyadic \
 Magdir/editors \
 Magdir/efi \
 Magdir/elf \
 Magdir/encore \
 Magdir/epoc \
+Magdir/erlang \
 Magdir/esri \
 Magdir/fcs \
 Magdir/filesystems \
@@ -230,10 +235,11 @@ Magdir/frame \
 Magdir/freebsd \
 Magdir/fsav \
 Magdir/games \
-Magdir/geos \
 Magdir/gcc \
+Magdir/geos \
 Magdir/gimp \
 Magdir/gnu \
+Magdir/gnumeric \
 Magdir/grace \
 Magdir/gringotts \
 Magdir/hitachi-sh \
@@ -243,6 +249,7 @@ Magdir/ibm370 \
 Magdir/ibm6000 \
 Magdir/iff \
 Magdir/images \
+Magdir/inform \
 Magdir/intel \
 Magdir/interleaf \
 Magdir/island \
@@ -250,16 +257,21 @@ Magdir/ispell \
 Magdir/java \
 Magdir/jpeg \
 Magdir/karma \
+Magdir/kde \
 Magdir/lecter \
 Magdir/lex \
 Magdir/lif \
 Magdir/linux \
 Magdir/lisp \
+Magdir/llvm \
+Magdir/lua \
+Magdir/luks \
 Magdir/mach \
 Magdir/macintosh \
 Magdir/magic \
 Magdir/mail.news \
 Magdir/maple \
+Magdir/mathcad \
 Magdir/mathematica \
 Magdir/matroska \
 Magdir/mcrypt \
@@ -273,6 +285,7 @@ Magdir/mlssa \
 Magdir/mmdf \
 Magdir/modem \
 Magdir/motorola \
+Magdir/mozilla \
 Magdir/msdos \
 Magdir/msvc \
 Magdir/mup \
@@ -280,6 +293,7 @@ Magdir/natinst \
 Magdir/ncr \
 Magdir/netbsd \
 Magdir/netscape \
+Magdir/netware \
 Magdir/news \
 Magdir/nitpicker \
 Magdir/ocaml \
@@ -312,6 +326,7 @@ Magdir/rpm \
 Magdir/rtf \
 Magdir/sc \
 Magdir/sccs \
+Magdir/scientific \
 Magdir/sendmail \
 Magdir/sequent \
 Magdir/sgi \
@@ -321,9 +336,8 @@ Magdir/sinclair \
 Magdir/sketch \
 Magdir/smalltalk \
 Magdir/sniffer \
-Magdir/dyadic \
-Magdir/scientific \
 Magdir/softquad \
+Magdir/spec \
 Magdir/spectrum \
 Magdir/sql \
 Magdir/sun \
@@ -337,8 +351,8 @@ Magdir/timezone \
 Magdir/troff \
 Magdir/tuxedo \
 Magdir/typeset \
-Magdir/unknown \
 Magdir/unicode \
+Magdir/unknown \
 Magdir/uuencode \
 Magdir/varied.out \
 Magdir/varied.script \
@@ -548,7 +562,7 @@ uninstall-am: uninstall-pkgdataDATA
 	uninstall uninstall-am uninstall-pkgdataDATA
 
 
-magic: Header Localstuff $(magic_FRAGMENTS)
+magic: Header Localstuff $(magic_FRAGMENTS) $(top_builddir)/src/file
 	cat $(srcdir)/Header $(srcdir)/Localstuff > $@
 	for frag in $(magic_FRAGMENTS); do \
 	  if test -f $(srcdir)/$$frag; then \
@@ -561,9 +575,6 @@ magic: Header Localstuff $(magic_FRAGMENTS)
 
 magic.mgc: magic
 	$(FILE_COMPILE) -C -m magic
-
-magic.mime.mgc: magic.mime
-	$(FILE_COMPILE) -C -m $(srcdir)/magic.mime
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

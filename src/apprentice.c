@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.112 2008/02/04 16:33:46 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.113 2008/02/04 20:51:17 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1241,9 +1241,6 @@ parse_mime(struct magic_set *ms, struct magic_entry **mentryp,
 	}	
 
 	EATAB;
-#if 0
-        file_magwarn(ms, "Description: %s\nNew type: %s", m->desc, l);
-#endif
 	for (i = 0;
 	     *l && ((isascii((unsigned char)*l) && isalnum((unsigned char)*l))
 	     || strchr("-+/", *l)) && i < sizeof(m->mimetype);

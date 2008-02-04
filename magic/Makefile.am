@@ -50,6 +50,7 @@ Magdir/blit \
 Magdir/bout \
 Magdir/bsdi \
 Magdir/btsnoop \
+Magdir/c-lang \
 Magdir/c64 \
 Magdir/cad \
 Magdir/cafebabe \
@@ -57,7 +58,7 @@ Magdir/cddb \
 Magdir/chord \
 Magdir/cisco \
 Magdir/citrus \
-Magdir/c-lang \
+Magdir/clarion \
 Magdir/claris \
 Magdir/clipper \
 Magdir/commands \
@@ -80,6 +81,7 @@ Magdir/efi \
 Magdir/elf \
 Magdir/encore \
 Magdir/epoc \
+Magdir/erlang \
 Magdir/esri \
 Magdir/fcs \
 Magdir/filesystems \
@@ -94,6 +96,7 @@ Magdir/gcc \
 Magdir/geos \
 Magdir/gimp \
 Magdir/gnu \
+Magdir/gnumeric \
 Magdir/grace \
 Magdir/gringotts \
 Magdir/hitachi-sh \
@@ -103,6 +106,7 @@ Magdir/ibm370 \
 Magdir/ibm6000 \
 Magdir/iff \
 Magdir/images \
+Magdir/inform \
 Magdir/intel \
 Magdir/interleaf \
 Magdir/island \
@@ -110,16 +114,21 @@ Magdir/ispell \
 Magdir/java \
 Magdir/jpeg \
 Magdir/karma \
+Magdir/kde \
 Magdir/lecter \
 Magdir/lex \
 Magdir/lif \
 Magdir/linux \
 Magdir/lisp \
+Magdir/llvm \
+Magdir/lua \
+Magdir/luks \
 Magdir/mach \
 Magdir/macintosh \
 Magdir/magic \
 Magdir/mail.news \
 Magdir/maple \
+Magdir/mathcad \
 Magdir/mathematica \
 Magdir/matroska \
 Magdir/mcrypt \
@@ -133,6 +142,7 @@ Magdir/mlssa \
 Magdir/mmdf \
 Magdir/modem \
 Magdir/motorola \
+Magdir/mozilla \
 Magdir/msdos \
 Magdir/msvc \
 Magdir/mup \
@@ -140,6 +150,7 @@ Magdir/natinst \
 Magdir/ncr \
 Magdir/netbsd \
 Magdir/netscape \
+Magdir/netware \
 Magdir/news \
 Magdir/nitpicker \
 Magdir/ocaml \

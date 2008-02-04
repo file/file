@@ -229,5 +229,7 @@ typedef struct {
 #define GNU_OS_LINUX	0
 #define GNU_OS_HURD	1
 #define GNU_OS_SOLARIS	2
+#define GNU_OS_KFREEBSD	3
+#define GNU_OS_KNETBSD	4
 
 #endif

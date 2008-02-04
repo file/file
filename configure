@@ -22288,10 +22288,8 @@ fi
 
    if test "$enable_largefile" != no; then
 
-     { echo "$as_me:$LINENO: checking for special C compiler options needed for large files=
-" >&5
-echo $ECHO_N "checking for special C compiler options needed for large files=
-... $ECHO_C" >&6; }
+     { echo "$as_me:$LINENO: checking for special C compiler options needed for large files" >&5
+echo $ECHO_N "checking for special C compiler options needed for large files... $ECHO_C" >&6; }
 if test "${ac_cv_sys_largefile_CC+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
