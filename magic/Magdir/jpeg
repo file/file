@@ -154,3 +154,8 @@
 
 # From: David Santinoli <david@santinoli.com>
 0	string		\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A	JPEG 2000 image data
+
+# Type: JPEG 2000 codesream
+# From: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+0	belong		0xff4fff51						JPEG 2000 codestream
+45	beshort		0xff52

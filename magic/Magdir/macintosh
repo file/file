@@ -323,7 +323,7 @@
 # cstring. Of course, partitions can contain more than four entries, but 
 # what're you gonna do?
 0x200		beshort		0x504D		Apple Partition data
->0x2		beshort		x		block size: %d,
+>0x2		beshort		x		(block size: %d):
 >0x230		string		x		first type: %s,
 >0x210		string		x		name: %s,
 >0x254		belong		x		number of blocks: %d,
@@ -331,14 +331,22 @@
 >>0x430		string		x		second type: %s,
 >>0x410		string		x		name: %s,
 >>0x454		belong		x		number of blocks: %d,
+>>0x600		beshort		0x504D
+>>>0x630	string		x		third type: %s,
+>>>0x610	string		x		name: %s,
+>>>0x654	belong		x		number of blocks: %d,
 >>0x800		beshort		0x504D		
->>>0x830	string		x		third type: %s,
+>>>0x830	string		x		fourth type: %s,
 >>>0x810	string		x		name: %s,
 >>>0x854	belong		x		number of blocks: %d,
 >>>0xa00	beshort		0x504D		
->>>>0xa30	string		x		fourth type: %s,
+>>>>0xa30	string		x		fifth type: %s,
 >>>>0xa10	string		x		name: %s,
 >>>>0xa54	belong		x		number of blocks: %d
+>>>0xc00	beshort		0x504D
+>>>>0xc30	string		x		sixth type: %s,
+>>>>0xc10	string		x		name: %s,
+>>>>0xc54	belong		x		number of blocks: %d
 # AFAIK, only the signature is different
 0x200		beshort		0x5453		Apple Old Partition data
 >0x2		beshort		x		block size: %d,

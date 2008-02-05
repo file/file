@@ -17,16 +17,16 @@
 >12     string          rmra            \b multiple URLs
 4       string          mdat            Apple QuickTime movie (unoptimized)
 !:mime	video/quicktime
-4       string          wide            Apple QuickTime movie (unoptimized)
-!:mime	video/quicktime
-4       string          skip            Apple QuickTime movie (modified)
-!:mime	video/quicktime
-4       string          free            Apple QuickTime movie (modified)
-!:mime	video/quicktime
+#4       string          wide            Apple QuickTime movie (unoptimized)
+#!:mime	video/quicktime
+#4       string          skip            Apple QuickTime movie (modified)
+#!:mime	video/quicktime
+#4       string          free            Apple QuickTime movie (modified)
+#!:mime	video/quicktime
 4       string          idsc            Apple QuickTime image (fast start)
 !:mime	image/x-quicktime
-4       string          idat            Apple QuickTime image (unoptimized)
-!:mime	image/x-quicktime
+#4       string          idat            Apple QuickTime image (unoptimized)
+#!:mime	image/x-quicktime
 4       string          pckg            Apple QuickTime compressed archive
 !:mime	application/x-quicktime-player
 4	string/B	jP		JPEG 2000 image
@@ -53,6 +53,8 @@
 >8	string		avc1		\b, MPEG v4 system, 3GPP JVT AVC
 !:mime	video/3gpp
 >8	string/B	M4A		\b, MPEG v4 system, iTunes AAC-LC
+!:mime	audio/mp4
+>8	string/B	M4V		\b, MPEG v4 system, iTunes AVC-LC
 !:mime	video/mp4
 >8	string/B	M4P		\b, MPEG v4 system, iTunes AES encrypted
 >8	string/B	M4B		\b, MPEG v4 system, iTunes bookmarked

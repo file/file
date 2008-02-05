@@ -58,3 +58,11 @@
 >1104	ulong	>0		%d x
 >1108	ulong	>0		%d,
 >1120	ulong	>0		%d bits/pixel
+
+# Type: GEDCOME genealogical (family history) data
+# From: Phil Endecott <phil05@chezphil.org>
+0	string	0\ HEAD								GEDCOM text
+0	string	\000\060\000\040\000\110\000\105\000\101\000\104		GEDCOM text
+0	string	\060\000\040\000\110\000\105\000\101\000\104\000		GEDCOM text
+0	string	\376\377\000\060\000\040\000\110\000\105\000\101\000\104	GEDCOM text
+0	string	\377\376\060\000\040\000\110\000\105\000\101\000\104\000	GEDCOM text

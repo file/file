@@ -270,8 +270,8 @@
 # Uncommenting only the first two lines will cover about 2/3 of COM files,
 # but it isn't feasible to match all COM files since there must be at least
 # two dozen different one-byte "magics".
-0	byte		0xe9		DOS executable (COM)
->0x1FE	leshort		0xAA55		\b, boot code
+#0	byte		0xe9		DOS executable (COM)
+#>0x1FE	leshort		0xAA55		\b, boot code
 >6	string		SFX\ of\ LHarc	(%s)
 0	belong	0xffffffff		DOS executable (device driver)
 #CMD640X2.SYS
@@ -294,15 +294,15 @@
 >>77	string	>\x40			
 >>>77	string	<\x5B			
 >>>>77	string	x			\b, name: %.8s
-0	byte		0x8c		DOS executable (COM)
+#0	byte		0x8c		DOS executable (COM)
 # 0xeb conflicts with "sequent" magic
-0	byte		0xeb		DOS executable (COM)
->0x1FE	leshort		0xAA55		\b, boot code
->85	string		UPX		\b, UPX compressed
->4	string		\ $ARX		\b, ARX self-extracting archive
->4	string		\ $LHarc	\b, LHarc self-extracting archive
->0x20e	string		SFX\ by\ LARC	\b, LARC self-extracting archive
-0	byte		0xb8		COM executable
+#0	byte		0xeb		DOS executable (COM)
+#>0x1FE	leshort		0xAA55		\b, boot code
+#>85	string		UPX		\b, UPX compressed
+#>4	string		\ $ARX		\b, ARX self-extracting archive
+#>4	string		\ $LHarc	\b, LHarc self-extracting archive
+#>0x20e	string		SFX\ by\ LARC	\b, LARC self-extracting archive
+#0	byte		0xb8		COM executable
 # modified by Joerg Jenderek
 >1	lelong          !0x21cd4cff	for DOS
 # http://syslinux.zytor.com/comboot.php
@@ -613,17 +613,17 @@
 # syntax available by some file commands you could write:
 # 0 lelong 1
 # &40 ulelong 0x464D4520 Windows Enhanced Metafile (EMF) image data
-40	ulelong 0x464D4520	Windows Enhanced Metafile (EMF) image data
->44	ulelong x		version 0x%x.
+#40	ulelong 0x464D4520	Windows Enhanced Metafile (EMF) image data
+#>44	ulelong x		version 0x%x.
 # If the description has a length greater than zero, it exists and is 
 # found at offset (*64).
->64	ulelong >0		Description available at offset 0x%x
->>60	ulelong	>0		(length 0x%x)
+#>64	ulelong >0		Description available at offset 0x%x
+#>>60	ulelong	>0		(length 0x%x)
 # Note it would be better to print out the description, which is found 
 # as below. Unfortunately the following only prints out the first couple
 # of characters instead of all the "description length"
 # number of characters -- indicated by the ulelong at offset 60.
->>(64.l)  lestring16 >0 Description: %15.15s
+#>>(64.l)  lestring16 >0 Description: %15.15s
 
 # From: Alex Beregszaszi <alex@fsn.hu>
 0	string	COWD		VMWare3
@@ -707,3 +707,16 @@
 0	string $RBU
 >23	string Dell			%s system BIOS
 >48	string x			version %.3s
+
+# Type: Microsoft DirectDraw Surface
+# URL:  http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/graphics/reference/DDSFileReference/ddsfileformat.asp
+# From: Morten Hustveit <morten@debian.org>
+0	string	DDS\040\174\000\000\000	Microsoft DirectDraw Surface (DDS),
+>16	lelong	>0			%hd x
+>12	lelong	>0			%hd,
+>84	string	x			%.4s
+
+# Type: Microsoft Document Imaging Format (.mdi)
+# URL:  http://en.wikipedia.org/wiki/Microsoft_Document_Imaging_Format
+# From: Daniele Sempione <scrows@oziosi.org>
+0	short	0x5045			Microsoft Document Imaging Format
