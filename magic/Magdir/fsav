@@ -58,3 +58,7 @@
 >>>>769	string		ustar\0		\b, tared
 >512	string		\037\213	\b, gzipped
 >769	string		ustar\0		\b, tared
+
+# Type: Grisoft AVG AntiVirus
+# From: David Newgas <david@newgas.net>
+0	string	AVG7_ANTIVIRUS_VAULT_FILE	AVG 7 Antivirus vault file data

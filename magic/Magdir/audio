@@ -83,7 +83,7 @@
 
 # Creative Labs AUDIO stuff
 0	string	MThd			Standard MIDI data
-!:mime	audio/x-midi
+!:mime	audio/midi
 >8 	beshort	x			(format %d)
 >10	beshort	x			using %d track
 >10	beshort		>1		\bs
@@ -633,3 +633,7 @@
 # From: "Leslie P. Polzer" <leslie.polzer@gmx.net>
 60	string	SONG		SoundFX Module sound file
 
+# Type: Adaptive Multi-Rate Codec
+# URL:  http://filext.com/detaillist.php?extdetail=AMR
+# From: Russell Coker <russell@coker.com.au>
+0	string	#!AMR		Adaptive Multi-Rate Codec (GSM telephony)

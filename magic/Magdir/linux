@@ -109,10 +109,12 @@
 0	string	Begin3	Linux Software Map entry text
 0	string	Begin4	Linux Software Map entry text (new format)
 
-# From Matt Zimmerman
-0       belong  0x4f4f4f4d      User-mode Linux COW file
->4      belong  x               \b, version %d
->8      string  >\0             \b, backing file %s
+# From Matt Zimmerman, enhanced for v3 by Matthew Palmer
+0	belong	0x4f4f4f4d	User-mode Linux COW file
+>4	belong	<3		\b, version %d
+>>8	string	>\0		\b, backing file %s
+>4	belong	>2		\b, version %d
+>>32	string	>\0		\b, backing file %s
 
 ############################################################################
 # Linux kernel versions
