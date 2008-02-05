@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.67 2008/02/04 19:11:03 christos Exp $
+.\" $File: file.man,v 1.68 2008/02/05 01:58:43 christos Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -106,7 +106,7 @@ magic file
 .Pa __MAGIC__.mgc ,
 or 
 .Pa __MAGIC__
-if the compile file does not exist. In addition
+if the compiled file does not exist. In addition
 .Nm
 will look in
 .Pa $HOME/.magic.mgc ,
@@ -163,7 +163,8 @@ The language test routines also test for some miscellany
 archives).
 .Pp
 Any file that cannot be identified as having been written
-in any of the character sets listed above is simply said to be ``data''.
+in any of the character sets listed above is simply said to be
+.Dq data .
 .Sh OPTIONS
 .Bl -tag -width indent
 .It Fl b , -brief
@@ -244,7 +245,13 @@ Like
 .Fl i ,
 but print only the specified element(s).
 .It Fl k , -keep-going
-Don't stop at the first match, keep going.
+Don't stop at the first match, keep going. Subsequent matches will be
+have the string
+.Dq "\[rs]012\- "
+prepended.
+(If you want a newline, see the
+.Dq "\-r"
+option.)
 .It Fl L , -dereference
 option causes symlinks to be followed, as the like-named option in
 .Xr ls 1
@@ -329,6 +336,11 @@ will not attempt to open
 adds
 .Dq .mgc
 to the value of this variable as appropriate.
+However,
+.Pa file
+has to exist in order for
+.Pa file.mime
+to be considered.
 The environment variable
 .Dv POSIXLY_CORRECT
 controls (on systems that support symbolic links), if
@@ -575,6 +587,9 @@ This program is slower than some vendors' file commands.
 The new support for multiple character codes makes it even slower.
 .Pp
 This manual page, and particularly this section, is too long.
+.Sh RETURN CODE
+.Nm
+returns 0 on success, and non zero on error.
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
