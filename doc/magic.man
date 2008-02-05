@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.41 2008/02/04 01:40:53 christos Exp $
+.\" $File: magic.man,v 1.42 2008/02/04 18:49:43 christos Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -233,7 +233,7 @@ and
 .Dv ~
 don't work with floats and doubles.
 The operator
-.Dv !
+.Dv !\&
 specifies that the line matches if the test does
 .Em not
 succeed.
@@ -272,9 +272,11 @@ If the string contains a
 .Xr printf 3
 format specification, the value from the file (with any specified masking
 performed) is printed using the message as the format string.
-If the string begins with ``\\b'', the message printed is the
-remainder of the string with no whitespace added before it: multiple
-matches are normally separated by a single space.
+If the string begins with
+.Dq \\b ,
+the message printed is the remainder of the string with no whitespace
+added before it: multiple matches are normally separated by a single
+space.
 .El
 .Pp
 A MIME type is given on a separate line, which must be the next
@@ -475,4 +477,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.42 2008/02/04 18:49:43 christos Exp $
+.\" @(#)$Id: magic.man,v 1.43 2008/02/05 19:53:17 christos Exp $

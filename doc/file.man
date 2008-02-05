@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.67 2008/02/04 19:11:03 christos Exp $
+.\" $File: file.man,v 1.68 2008/02/05 01:58:43 christos Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -482,12 +482,16 @@ Christos Zoulas (christos@astron.com).
 Altered by Chris Lowth, chris@lowth.com, 2000:
 Handle the 
 .Fl i
-option to output mime type strings and using an alternative
+option to output mime type strings, using an alternative
 magic file and internal logic.
 .Pp
 Altered by Eric Fischer (enf@pobox.com), July, 2000,
 to identify character codes and attempt to identify the languages
 of non-ASCII files.
+.Pp
+Altered by Reuben Thomas (rrt@sc3d.org), 2007 to 2008, to improve MIME
+support and re-merge it with non-MIME output, as well as applying many
+bug fixes and improving the build system.
 .Pp
 The list of contributors to the "Magdir" directory (source for the
 .Pa __MAGIC__
@@ -589,7 +593,7 @@ The new support for multiple character codes makes it even slower.
 This manual page, and particularly this section, is too long.
 .Sh RETURN CODE
 .Nm
-returns 0 on success, and non zero on error.
+returns 0 on success, and non-zero on error.
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
