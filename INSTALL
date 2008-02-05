@@ -1,0 +1,39 @@
+               file build and installation instructions
+               ----------------------------------------
+
+To build and install file:
+
+[Only if you're compiling the CVS sources, first make sure you have
+the GNU autotools installed (automake >= 1.8, autoconf >= 2.59) and
+run
+
+        autoreconf -i
+]
+
+1) Run configure:
+
+	./configure
+
+2) Compile the sources:
+
+	make
+
+3) To install file, run
+
+	make install
+
+   By default, file is installed under /usr/local; this can be changed
+   by using the --prefix argument to configure, e.g.
+
+	./configure --prefix=$HOME/file
+
+   You can also run it in place (src/file), but if you do that you'll
+   need to give the path to the magic files explicitly.
+
+
+Options
+-------
+
+For configure options, run
+
+	./configure --help
