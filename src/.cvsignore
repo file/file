@@ -8,5 +8,5 @@ stamp-h1
 .libs
 *.lo
 *.la
-Makefile
+Makefile.in
 file
