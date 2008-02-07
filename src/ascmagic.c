@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.54 2008/01/26 18:45:16 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.55 2008/02/07 00:58:52 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -59,8 +59,10 @@ typedef unsigned long unichar;
 		  || (x) == 0x85 || (x) == '\f')
 
 private int looks_ascii(const unsigned char *, size_t, unichar *, size_t *);
+private int looks_utf8_with_header(const unsigned char *, size_t, unichar *,
+    size_t *);
 private int looks_utf8(const unsigned char *, size_t, unichar *, size_t *);
-private int looks_unicode(const unsigned char *, size_t, unichar *, size_t *);
+private int looks_ucs16(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_latin1(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_extended(const unsigned char *, size_t, unichar *, size_t *);
 private void from_ebcdic(const unsigned char *, size_t, unsigned char *);
@@ -118,11 +120,15 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		code = "ASCII";
 		code_mime = "us-ascii";
 		type = "text";
+	} else if (looks_utf8_with_header(buf, nbytes, ubuf, &ulen)) {
+		code = "UTF-8 Unicode with header";
+		code_mime = "utf-8";
+		type = "text";
 	} else if (looks_utf8(buf, nbytes, ubuf, &ulen)) {
 		code = "UTF-8 Unicode";
 		code_mime = "utf-8";
 		type = "text";
-	} else if ((i = looks_unicode(buf, nbytes, ubuf, &ulen)) != 0) {
+	} else if ((i = looks_ucs16(buf, nbytes, ubuf, &ulen)) != 0) {
 		if (i == 1)
 			code = "Little-endian UTF-16 Unicode";
 		else
@@ -559,7 +565,17 @@ done:
 }
 
 private int
-looks_unicode(const unsigned char *buf, size_t nbytes, unichar *ubuf,
+looks_utf8_with_header(const unsigned char *buf, size_t nbytes, unichar *ubuf,
+    size_t *ulen)
+{
+	if (nbytes > 3 && buf[0] == 0xef && buf[1] == 0xbb && buf[2] == 0xbf)
+		return looks_utf8(buf + 3, nbytes - 3, ubuf, ulen);
+	else
+		return false;
+}
+
+private int
+looks_ucs16(const unsigned char *buf, size_t nbytes, unichar *ubuf,
     size_t *ulen)
 {
 	int bigend;
