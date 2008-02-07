@@ -6,10 +6,15 @@
 
 # troff input
 0	string		.\\"		troff or preprocessor input text
+!:mime	text/troff
 0	string		'\\"		troff or preprocessor input text
+!:mime	text/troff
 0	string		'.\\"		troff or preprocessor input text
+!:mime	text/troff
 0	string		\\"		troff or preprocessor input text
+!:mime	text/troff
 0	string		'''		troff or preprocessor input text
+!:mime	text/troff
 
 # ditroff intermediate output text
 0	string		x\ T		ditroff output text

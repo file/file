@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.68 2008/02/05 01:58:43 christos Exp $
+.\" $File: file.man,v 1.69 2008/02/05 19:53:17 christos Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -477,7 +477,7 @@ Contributions by the `&' operator by Rob McMahon, cudcv@warwick.ac.uk, 1989.
 Guy Harris, guy@netapp.com, made many changes from 1993 to the present.
 .Pp
 Primary development and maintenance from 1990 to the present by
-Christos Zoulas (christos@astron.com).
+Christos Zoulas (christos@zoulas.com).
 .Pp
 Altered by Chris Lowth, chris@lowth.com, 2000:
 Handle the 
@@ -537,24 +537,6 @@ is simplistic, inefficient and requires recompilation to update.
 .\" .Pp
 .\" Regular expression support has been done
 .\" The magic file and keywords should have regular expression support.
-Their use of
-.Dv ASCII TAB
-as a field delimiter is ugly and makes
-it hard to edit the files, but is entrenched.
-.Pp
-It might be advisable to allow upper-case letters in keywords
-for e.g.,
-.Xr troff 1
-commands vs man page macros.
-Regular expression support would make this easy.
-.Pp
-The program doesn't grok 
-.Dv FORTRAN .
-It should be able to figure
-.Dv FORTRAN
-by seeing some keywords which 
-appear indented at the start of line.
-Regular expression support would make this easy.
 .Pp
 The list of keywords in 
 .Dv ascmagic
@@ -586,9 +568,6 @@ versus
 ).
 Still, if the others don't pan out, it should be possible to use the
 first guess.  
-.Pp
-This program is slower than some vendors' file commands.
-The new support for multiple character codes makes it even slower.
 .Pp
 This manual page, and particularly this section, is too long.
 .Sh RETURN CODE

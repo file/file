@@ -1,11 +1,16 @@
-MAGIC	 = $(pkgdatadir)/magic
+MAGIC = $(pkgdatadir)/magic
 lib_LTLIBRARIES = libmagic.la
 include_HEADERS = magic.h
-EXTRA_DIST = test.c
+EXTRA_DIST = getopt_long.c
 
 bin_PROGRAMS = file
 
-AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
+# FIXME: Actually run a test on a magic file
+check_PROGRAMS = test
+test_LDADD = -lmagic
+
+check-local:
+	MAGIC=$(top_builddir)/magic/magic ./test
 
 libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
 	compress.c is_tar.c readelf.c print.c fsmagic.c \

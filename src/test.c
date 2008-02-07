@@ -34,24 +34,22 @@ main(int argc, char **argv)
     const char *m;
     int i;
 
-    if(argc < 2)
-	return 1;
-
     ms = magic_open(MAGIC_NONE);
     if (ms == NULL) {
-	(void) printf("ERROR: out of memory\n");
+	(void) printf("ERROR opening MAGIC_NONE: out of memory\n");
 	return 1;
     }
     if (magic_load(ms, NULL) == -1) {
-	(void) printf("ERROR: %s\n", magic_error(ms));
-	return 1;
+	(void) printf("ERROR loading with NULL file: %s\n", magic_error(ms));
+	return 2;
     }
 
     for (i = 1; i < argc; i++) {
-	if ((m = magic_file(ms, argv[i])) == NULL)
-	    (void) printf("ERROR: %s\n", magic_error(ms));
-	else
-	    (void) printf("%s: %s\n", argv[i], m);
+        if ((m = magic_file(ms, argv[i])) == NULL) {
+            (void) printf("ERROR loading file %s: %s\n", argv[i], magic_error(ms));
+            return 3;
+        }	else
+            (void) printf("%s: %s\n", argv[i], m);
     }
 
     magic_close(ms);

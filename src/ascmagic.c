@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.53 2007/10/29 00:54:08 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.54 2008/01/26 18:45:16 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -158,31 +158,6 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	if (nbytes <= 1) {
 		rv = 0;
 		goto done;
-	}
-
-	/*
-	 * for troff, look for . + letter + letter or .\";
-	 * this must be done to disambiguate tar archives' ./file
-	 * and other trash from real troff input.
-	 *
-	 * I believe Plan 9 troff allows non-ASCII characters in the names
-	 * of macros, so this test might possibly fail on such a file.
-	 */
-	if ((ms->flags & MAGIC_NO_CHECK_TROFF) == 0 && *ubuf == '.') {
-		unichar *tp = ubuf + 1;
-
-		while (ISSPC(*tp))
-			++tp;	/* skip leading whitespace */
-		if ((tp[0] == '\\' && tp[1] == '\"') ||
-		    (isascii((unsigned char)tp[0]) &&
-		     isalnum((unsigned char)tp[0]) &&
-		     isascii((unsigned char)tp[1]) &&
-		     isalnum((unsigned char)tp[1]) &&
-		     ISSPC(tp[2]))) {
-			subtype_mime = "text/troff";
-			subtype = "troff or preprocessor input";
-			goto subtype_identified;
-		}
 	}
 
 	/* look for tokens from names.h - this is expensive! */

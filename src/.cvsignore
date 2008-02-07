@@ -10,3 +10,4 @@ stamp-h1
 *.la
 Makefile.in
 file
+test
