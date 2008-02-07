@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.47 2008/02/04 20:51:17 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.48 2008/02/07 00:58:52 christos Exp $")
 #endif	/* lint */
 
 #ifndef PIPE_BUF 
@@ -307,6 +307,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		errno = 0;
 		if ((fd = open(inname, flags)) < 0) {
 #ifdef __CYGWIN__
+			/* FIXME: Do this with EXEEXT from autotools */
 			char *tmp = alloca(strlen(inname) + 5);
 			(void)strcat(strcpy(tmp, inname), ".exe");
 			if ((fd = open(tmp, flags)) < 0) {

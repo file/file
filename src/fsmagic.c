@@ -57,7 +57,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.48 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.49 2008/02/07 00:58:52 christos Exp $")
 #endif	/* lint */
 
 protected int
@@ -137,7 +137,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		 */
 		if ((ms->flags & MAGIC_DEVICES) != 0)
 			break;
-#ifdef HAVE_ST_RDEV
+#ifdef HAVE_STAT_ST_RDEV
 # ifdef dv_unit
 		if (file_printf(ms, "character special (%d/%d/%d)",
 		    major(sb->st_rdev), dv_unit(sb->st_rdev),
@@ -163,7 +163,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		 */
 		if ((ms->flags & MAGIC_DEVICES) != 0)
 			break;
-#ifdef HAVE_ST_RDEV
+#ifdef HAVE_STAT_ST_RDEV
 # ifdef dv_unit
 		if (file_printf(ms, "block special (%d/%d/%d)",
 		    major(sb->st_rdev), dv_unit(sb->st_rdev),

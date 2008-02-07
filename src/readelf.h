@@ -44,7 +44,7 @@ typedef uint16_t	Elf32_Half;
 typedef uint32_t	Elf32_Word;
 typedef uint8_t		Elf32_Char;
 
-#if SIZEOF_UINT64_T != 8
+#if SIZEOF_LONG_LONG != 8
 #define USE_ARRAY_FOR_64BIT_TYPES
 typedef	uint32_t 	Elf64_Addr[2];
 typedef	uint32_t 	Elf64_Off[2];

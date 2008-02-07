@@ -32,7 +32,7 @@
  * appear at fixed offsets into the file. Don't make HOWMANY
  * too high unless you have a very fast CPU.
  *
- * $File: names.h,v 1.30 2008/01/26 18:45:16 christos Exp $
+ * $File: names.h,v 1.31 2008/02/07 00:58:52 christos Exp $
  */
 
 /*
@@ -144,18 +144,6 @@ static const struct names {
 	{"LDFLAGS",	L_MAKE},
 	{"all:",	L_MAKE},
 	{".PRECIOUS",	L_MAKE},
-/* Too many files of text have these words in them.  Find another way
- * to recognize Fortrash.
- */
-#ifdef	NOTDEF
-	{"subroutine",	L_FORT},
-	{"function",	L_FORT},
-	{"block",	L_FORT},
-	{"common",	L_FORT},
-	{"dimension",	L_FORT},
-	{"integer",	L_FORT},
-	{"data",	L_FORT},
-#endif	/*NOTDEF*/
 	{".ascii",	L_MACH},
 	{".asciiz",	L_MACH},
 	{".byte",	L_MACH},
