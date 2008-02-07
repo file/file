@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.55 2008/02/07 00:58:52 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.56 2008/02/07 03:05:02 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -571,7 +571,7 @@ looks_utf8_with_header(const unsigned char *buf, size_t nbytes, unichar *ubuf,
 	if (nbytes > 3 && buf[0] == 0xef && buf[1] == 0xbb && buf[2] == 0xbf)
 		return looks_utf8(buf + 3, nbytes - 3, ubuf, ulen);
 	else
-		return false;
+		return 0;
 }
 
 private int
