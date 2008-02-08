@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.57 2008/02/07 03:10:20 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.58 2008/02/08 13:31:19 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -59,7 +59,7 @@ typedef unsigned long unichar;
 		  || (x) == 0x85 || (x) == '\f')
 
 private int looks_ascii(const unsigned char *, size_t, unichar *, size_t *);
-private int looks_utf8_with_header(const unsigned char *, size_t, unichar *,
+private int looks_utf8_with_BOM(const unsigned char *, size_t, unichar *,
     size_t *);
 private int looks_utf8(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_ucs16(const unsigned char *, size_t, unichar *, size_t *);
@@ -120,11 +120,11 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		code = "ASCII";
 		code_mime = "us-ascii";
 		type = "text";
-	} else if (looks_utf8_with_header(buf, nbytes, ubuf, &ulen)) {
-		code = "UTF-8 Unicode with header";
+	} else if (looks_utf8_with_BOM(buf, nbytes, ubuf, &ulen) > 0) {
+		code = "UTF-8 Unicode with BOM";
 		code_mime = "utf-8";
 		type = "text";
-	} else if (looks_utf8(buf, nbytes, ubuf, &ulen)) {
+	} else if (looks_utf8(buf, nbytes, ubuf, &ulen) > 1) {
 		code = "UTF-8 Unicode";
 		code_mime = "utf-8";
 		type = "text";
@@ -501,13 +501,21 @@ looks_extended(const unsigned char *buf, size_t nbytes, unichar *ubuf,
 	return 1;
 }
 
+/*
+ * Decide whether some text looks like UTF-8. Returns:
+ *
+ *     -1: invalid UTF-8
+ *      0: uses odd control characters, so doesn't look like text
+ *      1: 7-bit text
+ *      2: definitely UTF-8 text (valid high-bit set bytes)
+ */
 private int
 looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 {
 	size_t i;
 	int n;
 	unichar c;
-	int gotone = 0;
+	int gotone = 0, ctrl = 0;
 
 	*ulen = 0;
 
@@ -519,11 +527,11 @@ looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 			 */
 
 			if (text_chars[buf[i]] != T)
-				return 0;
+				ctrl = 1;
 
 			ubuf[(*ulen)++] = buf[i];
 		} else if ((buf[i] & 0x40) == 0) { /* 10xxxxxx never 1st byte */
-			return 0;
+			return -1;
 		} else {			   /* 11xxxxxx begins UTF-8 */
 			int following;
 
@@ -543,7 +551,7 @@ looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 				c = buf[i] & 0x01;
 				following = 5;
 			} else
-				return 0;
+				return -1;
 
 			for (n = 0; n < following; n++) {
 				i++;
@@ -551,7 +559,7 @@ looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 					goto done;
 
 				if ((buf[i] & 0x80) == 0 || (buf[i] & 0x40))
-					return 0;
+					return -1;
 
 				c = (c << 6) + (buf[i] & 0x3f);
 			}
@@ -561,17 +569,22 @@ looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 		}
 	}
 done:
-	return gotone;   /* don't claim it's UTF-8 if it's all 7-bit */
+	return ctrl ? 0 : (gotone ? 2 : 1);
 }
 
+/*
+ * Decide whether some text looks like UTF-8 with BOM. If there is no
+ * BOM, return -1; otherwise return the result of looks_utf8 on the
+ * rest of the text.
+ */
 private int
-looks_utf8_with_header(const unsigned char *buf, size_t nbytes, unichar *ubuf,
+looks_utf8_with_BOM(const unsigned char *buf, size_t nbytes, unichar *ubuf,
     size_t *ulen)
 {
 	if (nbytes > 3 && buf[0] == 0xef && buf[1] == 0xbb && buf[2] == 0xbf)
 		return looks_utf8(buf + 3, nbytes - 3, ubuf, ulen);
 	else
-		return 0;
+		return -1;
 }
 
 private int
