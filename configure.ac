@@ -1,20 +1,20 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(file, 4.23, christos@astron.com)
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER([config.h])
+AM_CONFIG_HEADER(config.h)
 
 AC_MSG_CHECKING(for builtin ELF support)
 AC_ARG_ENABLE(elf,
 [  --disable-elf            disable builtin ELF support],
 [if test "${enableval}" = yes; then
   AC_MSG_RESULT(yes)
-  AC_DEFINE(BUILTIN_ELF)
+  AC_DEFINE([BUILTIN_ELF], 1, [Define if built-in ELF support is used])
 else
   AC_MSG_RESULT(no)
 fi], [
   # enable by default
   AC_MSG_RESULT(yes)
-  AC_DEFINE(BUILTIN_ELF)
+  AC_DEFINE([BUILTIN_ELF], 1, [Define in built-in ELF support is used])
 ])
 
 AC_MSG_CHECKING(for ELF core file support)
@@ -22,13 +22,13 @@ AC_ARG_ENABLE(elf-core,
 [  --disable-elf-core       disable ELF core file support],
 [if test "${enableval}" = yes; then
   AC_MSG_RESULT(yes)
-  AC_DEFINE(ELFCORE)
+  AC_DEFINE([ELFCORE], 1, [Define for ELF core file support])
 else
   AC_MSG_RESULT(no)
 fi], [
   # enable by default
   AC_MSG_RESULT(yes)
-  AC_DEFINE(ELFCORE)
+  AC_DEFINE([ELFCORE], 1, [Define for ELF core file support])
 ])
 
 AC_MSG_CHECKING(for file formats in man section 5)
@@ -55,32 +55,11 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_LIBTOOL
 
-dnl Templates for autoheader
-AH_TEMPLATE([BUILTIN_ELF],
-	    [Use the builtin ELF recognition code])
-AH_TEMPLATE([ELFCORE],
-	    [Recognize ELF core files])
-AH_TEMPLATE([HAVE_DAYLIGHT], [])
-AH_TEMPLATE([HAVE_LONG_LONG], [])
-AH_TEMPLATE([HAVE_TM_ISDST], [])
-AH_TEMPLATE([SIZEOF_UINT16_T], [])
-AH_TEMPLATE([SIZEOF_UINT32_T], [])
-AH_TEMPLATE([SIZEOF_INT64_T], [])
-AH_TEMPLATE([SIZEOF_UINT64_T], [])
-AH_TEMPLATE([SIZEOF_UINT8_T], [])
-AH_TEMPLATE([int32_t], [])
-AH_TEMPLATE([uint16_t], [])
-AH_TEMPLATE([uint32_t], [])
-AH_TEMPLATE([int64_t], [])
-AH_TEMPLATE([uint64_t], [])
-AH_TEMPLATE([uint8_t], [])
-
 dnl Checks for headers
 AC_HEADER_STDC
 AC_HEADER_MAJOR
 AC_HEADER_SYS_WAIT
-AC_HEADER_STDINT
-AC_CHECK_HEADERS(fcntl.h locale.h stdint.h inttypes.h unistd.h getopt.h)
+AC_CHECK_HEADERS(stdint.h fcntl.h locale.h stdint.h inttypes.h unistd.h)
 AC_CHECK_HEADERS(utime.h wchar.h wctype.h limits.h)
 AC_CHECK_HEADERS(sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h)
 AC_CHECK_HEADERS(zlib.h)
@@ -89,43 +68,49 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
-AC_DIAGNOSE([obsolete],[AC_STRUCT_ST_RDEV:
-	your code should no longer depend upon `HAVE_ST_RDEV', but
-	`HAVE_STRUCT_STAT_ST_RDEV'.  Remove this warning and
-	the `AC_DEFINE' when you adjust the code.])
-AC_CHECK_MEMBERS([struct stat.st_rdev],[AC_DEFINE(HAVE_ST_RDEV, 1,
-			    [Define to 1 if your `struct stat' has `st_rdev'.
-			     Deprecated, use `HAVE_STRUCT_STAT_ST_RDEV'
-			     instead.])])
+AC_CHECK_MEMBERS([struct stat.st_rdev])
 
 AC_STRUCT_TIMEZONE_DAYLIGHT
 AC_SYS_LARGEFILE
+AC_FUNC_FSEEKO
 AC_TYPE_MBSTATE_T
 
-AC_CHECK_TYPE_STDC(uint8_t, unsigned char)
-AC_CHECK_TYPE_STDC(uint16_t, unsigned short)
-AC_CHECK_TYPE_STDC(uint32_t, unsigned int)
-AC_CHECK_TYPE_STDC(int32_t, int)
-AC_C_LONG_LONG
-if test $ac_cv_c_long_long = yes; then
-  ulong64='unsigned long long';
-  long64='long long';
-else
-  ulong64='unsigned long';
-  long64='long';
-fi
-dnl This needs a patch to autoconf 2.13 acgeneral.m4
-AC_CHECK_TYPE2_STDC(uint64_t, $ulong64)
-AC_CHECK_TYPE2_STDC(int64_t, $long64)
-
-AC_CHECK_SIZEOF_STDC_HEADERS(uint8_t, 0)
-AC_CHECK_SIZEOF_STDC_HEADERS(uint16_t, 0)
-AC_CHECK_SIZEOF_STDC_HEADERS(uint32_t, 0)
-AC_CHECK_SIZEOF_STDC_HEADERS(int64_t, 0)
-AC_CHECK_SIZEOF_STDC_HEADERS(uint64_t, 0)
+AC_CHECK_TYPES([uint8_t, uint16_t, uint32_t, int32_t, uint64_t, int64_t])
+AC_CHECK_SIZEOF(long long)
+AH_BOTTOM([
+#ifndef HAVE_UINT8_T
+typedef unsigned char uint8_t;
+#endif
+#ifndef HAVE_UINT16_T
+typedef unsigned short uint16_t;
+#endif
+#ifndef HAVE_UINT32_T
+typedef unsigned int uint32_t;
+#endif
+#ifndef HAVE_INT32_T
+typedef int int32_t;
+#endif
+#ifndef HAVE_UINT64_T
+#if SIZEOF_LONG_LONG == 8
+typedef unsigned long long uint64_t;
+#else
+typedef unsigned long uint64_t;
+#endif
+#endif
+#ifndef HAVE_INT64_T
+#if SIZEOF_LONG_LONG == 8
+typedef long long int64_t;
+#else
+typedef long int64_t;
+#endif
+#endif
+])
 
 dnl Checks for functions
-AC_CHECK_FUNCS(mmap strerror strndup strtoul mbrtowc mkstemp getopt_long utimes utime wcwidth snprintf vsnprintf strtof)
+AC_CHECK_FUNCS(mmap strerror strndup strtoul mbrtowc mkstemp utimes utime wcwidth snprintf vsnprintf strtof)
+
+dnl Provide implementation of some required functions if necessary
+AC_REPLACE_FUNCS(getopt_long)
 
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)
