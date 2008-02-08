@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.42 2008/02/04 18:49:43 christos Exp $
+.\" $File: magic.man,v 1.43 2008/02/05 19:53:17 christos Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -69,10 +69,10 @@ Finally the
 .Dq c
 flag, specifies case insensitive matching: lowercase
 characters in the magic match both lower and upper case characters in the
-target, whereas upper case characters in the magic, only much uppercase
+target, whereas upper case characters in the magic only match uppercase
 characters in the target.
 .It Dv pstring
-A pascal style string where the first byte is interpreted as the an
+A Pascal-style string where the first byte is interpreted as the an
 unsigned length.
 The string is not NUL terminated.
 .It Dv date
@@ -477,4 +477,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.43 2008/02/05 19:53:17 christos Exp $
+.\" @(#)$Id: magic.man,v 1.44 2008/02/08 13:09:56 christos Exp $
