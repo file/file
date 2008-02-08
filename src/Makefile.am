@@ -5,9 +5,11 @@ EXTRA_DIST = getopt_long.c
 
 bin_PROGRAMS = file
 
+AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
+
 # FIXME: Actually run a test on a magic file
 check_PROGRAMS = test
-test_LDADD = -lmagic
+test_LDADD = libmagic.la
 
 check-local:
 	MAGIC=$(top_builddir)/magic/magic ./test
