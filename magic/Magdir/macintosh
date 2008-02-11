@@ -23,34 +23,37 @@
 #>162	string		>0			: %s
 
 # Macintosh Applications and Installation binaries (franklsm@tuns.ca)
-0	string		APPL			Macintosh Application (data)
->2	string		x			\b: %s
+# GRR: Too weak
+#0	string		APPL			Macintosh Application (data)
+#>2	string		x			\b: %s
 
 # Macintosh System files (franklsm@tuns.ca)
-0	string		zsys			Macintosh System File (data)
-0	string		FNDR			Macintosh Finder (data)
-0	string		libr			Macintosh Library (data)
->2	string		x			: %s
-0	string		shlb			Macintosh Shared Library (data)
->2	string		x			: %s
-0	string		cdev			Macintosh Control Panel (data)
->2	string		x			: %s
-0	string		INIT			Macintosh Extension (data)
->2	string		x			: %s
-0	string		FFIL			Macintosh Truetype Font (data)
->2	string		x			: %s
-0	string		LWFN			Macintosh Postscript Font (data)
->2	string		x			: %s
+# GRR: Too weak
+#0	string		zsys			Macintosh System File (data)
+#0	string		FNDR			Macintosh Finder (data)
+#0	string		libr			Macintosh Library (data)
+#>2	string		x			: %s
+#0	string		shlb			Macintosh Shared Library (data)
+#>2	string		x			: %s
+#0	string		cdev			Macintosh Control Panel (data)
+#>2	string		x			: %s
+#0	string		INIT			Macintosh Extension (data)
+#>2	string		x			: %s
+#0	string		FFIL			Macintosh Truetype Font (data)
+#>2	string		x			: %s
+#0	string		LWFN			Macintosh Postscript Font (data)
+#>2	string		x			: %s
 
 # Additional Macintosh Files (franklsm@tuns.ca)
-0	string		PACT			Macintosh Compact Pro Archive (data)
->2	string		x			: %s
-0	string		ttro			Macintosh TeachText File (data)
->2	string		x			: %s
-0	string		TEXT			Macintosh TeachText File (data)
->2	string		x			: %s
-0	string		PDF			Macintosh PDF File (data)
->2	string		x			: %s
+# GRR: Too weak
+#0	string		PACT			Macintosh Compact Pro Archive (data)
+#>2	string		x			: %s
+#0	string		ttro			Macintosh TeachText File (data)
+#>2	string		x			: %s
+#0	string		TEXT			Macintosh TeachText File (data)
+#>2	string		x			: %s
+#0	string		PDF			Macintosh PDF File (data)
+#>2	string		x			: %s
 
 # MacBinary format (Eric Fischer, enf@pobox.com)
 #
