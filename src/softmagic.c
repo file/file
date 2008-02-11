@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.106 2008/02/11 01:02:11 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.107 2008/02/11 22:11:24 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -789,10 +789,6 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 			return 0;
 
 		case FILE_REGEX: {
-			/*
-			 * offset is interpreted as last line to search,
-			 * (starting at 1), not as bytes-from start-of-file
-			 */
 			const char *b;
 			const char *c;
 			const char *last;	/* end of search region */
