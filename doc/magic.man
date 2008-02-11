@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.44 2008/02/08 13:09:56 christos Exp $
+.\" $File: magic.man,v 1.45 2008/02/11 22:14:25 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -159,16 +159,17 @@ or
 flags update the offset to the starting or ending offsets of the
 match (only one should be used).
 By default, regex does not update the offset.
-The regular expression is always tested against the first
+The regular expression is tested against line
+.Dv N + 1
+onwards, where
 .Dv N
-lines, where
-.Dv N
-is the given offset, thus it
-is only useful for (single-byte encoded) text.
+is the given offset.
+Because it looks for newline characters, it is only useful for
+(single-byte encoded) text.
 .Dv ^
 and
 .Dv $
-will match the beginning and end of individual lines, respectively,
+match the beginning and end of individual lines, respectively,
 not beginning and end of file.
 .It Dv search
 A literal string search starting at the given offset.
@@ -273,7 +274,7 @@ If the string contains a
 format specification, the value from the file (with any specified masking
 performed) is printed using the message as the format string.
 If the string begins with
-.Dq \\b ,
+.Dq \eb ,
 the message printed is the remainder of the string with no whitespace
 added before it: multiple matches are normally separated by a single
 space.
@@ -477,4 +478,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.44 2008/02/08 13:09:56 christos Exp $
+.\" @(#)$Id: magic.man,v 1.45 2008/02/11 22:14:25 rrt Exp $
