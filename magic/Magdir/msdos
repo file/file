@@ -658,20 +658,20 @@
 
 # Using the existence of the Backing File Offset to Branch or not
 # to read Backing File Information
->>0xc    belong  >0      , Backing File( Offset: %d
+>>0xc    belong  >0      , Backing File( Offset: %lu
 >>>(0xc.L)       string >\0     , Path: %s
 
-# Didnt got the Trick here how qemu stores the "Size" at this Position
+# Didn't get the trick here how qemu stores the "Size" at this Position
 # There is actually something stored but nothing makes sense
 # The header in the sources talks about it
-#>>>16   lelong  x       , Size: %d
+#>>>16   lelong  x       , Size: %lu
 
 # Modification time of the Backing File
-# Really usefull if you want to know if your backing
+# Really useful if you want to know if your backing
 # file is still usable together with this image
 >>>20    bedate x       , Mtime: %s )
 
-# Dont know how to calculate in Magicfiles
+# Don't know how to calculate in Magicfiles
 # Also: this Information is not reliably
 #       stored in image-files
 >>24     lelong  x       , Disk Size could be: %d * 256 bytes
