@@ -5,7 +5,9 @@ aclocal.m4
 config.guess
 config.h.in
 config.sub
+config.*.lineno
 configure
+configure.lineno
 depcomp
 install-sh
 ltmain.sh
