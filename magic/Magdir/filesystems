@@ -1261,3 +1261,8 @@
 # http://filext.com/file-extension/DAA
 # describes the daa file format. The magic would be:
 0	string		DAA\x0\x0\x0\x0\x0	PowerISO Direct-Access-Archive
+
+# From Albert Cahalan <acahalan@gmail.com>
+# really le32 operation,destination,payloadsize (but quite predictable)
+# 01 00 00 00 00 00 00 c0 00 02 00 00
+0	string		\1\0\0\0\0\0\0\300\0\2\0\0	Marvell Libertas firmware
