@@ -1133,24 +1133,24 @@
 
 # cramfs filesystem - russell@coker.com.au
 0       lelong    0x28cd3d45      Linux Compressed ROM File System data, little endian
->4      lelong  x size %d
+>4      lelong  x size %lu
 >8      lelong  &1 version #2
 >8      lelong  &2 sorted_dirs
 >8      lelong  &4 hole_support
 >32     lelong  x CRC 0x%x,
->36     lelong  x edition %d,
->40     lelong  x %d blocks,
->44     lelong  x %d files
+>36     lelong  x edition %lu,
+>40     lelong  x %lu blocks,
+>44     lelong  x %lu files
 
 0       belong    0x28cd3d45      Linux Compressed ROM File System data, big endian
->4      belong  x size %d
+>4      belong  x size %lu
 >8      belong  &1 version #2
 >8      belong  &2 sorted_dirs
 >8      belong  &4 hole_support
 >32     belong  x CRC 0x%x,
->36     belong  x edition %d,
->40     belong  x %d blocks,
->44     belong  x %d files
+>36     belong  x edition %lu,
+>40     belong  x %lu blocks,
+>44     belong  x %lu files
 
 # reiserfs - russell@coker.com.au
 0x10034		string	ReIsErFs	ReiserFS V3.5
