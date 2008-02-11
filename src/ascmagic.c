@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.57 2008/02/07 03:10:20 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.58 2008/02/08 13:31:19 christos Exp $")
 #endif	/* lint */
 
 typedef unsigned long unichar;
@@ -121,7 +121,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		code_mime = "us-ascii";
 		type = "text";
 	} else if (looks_utf8_with_BOM(buf, nbytes, ubuf, &ulen) > 0) {
-		code = "UTF-8 Unicode with BOM";
+		code = "UTF-8 Unicode (with BOM)";
 		code_mime = "utf-8";
 		type = "text";
 	} else if (looks_utf8(buf, nbytes, ubuf, &ulen) > 1) {

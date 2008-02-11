@@ -32,7 +32,7 @@
  * appear at fixed offsets into the file. Don't make HOWMANY
  * too high unless you have a very fast CPU.
  *
- * $File: names.h,v 1.30 2008/01/26 18:45:16 christos Exp $
+ * $File: names.h,v 1.31 2008/02/07 00:58:52 christos Exp $
  */
 
 /*
@@ -167,6 +167,7 @@ static const struct names {
 	{"<body",	L_HTML},
 	{"<BODY",	L_HTML},
 	{"<html",	L_HTML},
-	{"<HTML",	L_HTML}
+	{"<HTML",	L_HTML},
+	{"<!--",	L_HTML},
 };
 #define NNAMES (sizeof(names)/sizeof(struct names))

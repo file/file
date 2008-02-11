@@ -1,4 +1,10 @@
 
+2007-02-11 00:17 Reuben Thomas <rrt@sc3d.org>
+
+	* Clarify UTF-8 BOM message (Reuben Thomas)
+
+	* Add HTML comment to token list in names.h
+	
 2007-02-04 15:50 Christos Zoulas <christos@astron.com>
 
 	* Debian fixes (Reuben Thomas)
