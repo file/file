@@ -25,8 +25,8 @@
 0	string	\012(			Emacs v18 byte-compiled Lisp data
 !:mime	application/x-elc
 # Emacs 19+ - ver. recognition added by Ian Springer
-# Also applies to XEmacs 19+ .elc files; could tell them apart if we had regexp
-# support or similar - Chris Chittleborough <cchittleborough@yahoo.com.au>
+# Also applies to XEmacs 19+ .elc files; could tell them apart with regexs
+# - Chris Chittleborough <cchittleborough@yahoo.com.au>
 0	string	;ELC	
 >4	byte	>18			
 >4	byte    <32			Emacs/XEmacs v%d byte-compiled Lisp data
