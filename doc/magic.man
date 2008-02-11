@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.45 2008/02/11 22:14:25 rrt Exp $
+.\" $File: magic.man,v 1.46 2008/02/11 23:26:17 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -149,16 +149,12 @@ than UTC.
 .It Dv regex
 A regular expression match in extended POSIX regular expression syntax
 (much like egrep).
-The type specification can be optionally followed by /[cse]*.
+The type specification can be optionally followed by /[c][s].
 The
 .Dq c
 flag makes the match case insensitive, while the
 .Dq s
-or
-.Dq e
-flags update the offset to the starting or ending offsets of the
-match (only one should be used).
-By default, regex does not update the offset.
+flag update the offset to the start offset of the match, rather than the end.
 The regular expression is tested against line
 .Dv N + 1
 onwards, where
@@ -179,7 +175,7 @@ which specifies how many matches shall be attempted (the range).
 This is suitable for searching larger binary expressions with variable
 offsets, using
 .Dv \e
-escapes for special characters.
+escapes for special characters. The offset works as for regex.
 .It Dv default
 This is intended to be used with the text
 .Dv x
@@ -478,4 +474,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.45 2008/02/11 22:14:25 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.46 2008/02/11 23:26:17 rrt Exp $
