@@ -568,3 +568,15 @@
 # http://www.cartesianinc.com/Tech/
 0	string	CPC\262		Cartesian Perceptual Compression image
 !:mime	image/x-cpi
+
+# From Albert Cahalan <acahalan@gmail.com>
+# puredigital used it for the CVS disposable camcorder
+#8       lelong  4       ZBM bitmap image data
+#>4      leshort x       %u x
+#>6      leshort x       %u
+
+# From Albert Cahalan <acahalan@gmail.com>
+# uncompressed 5:6:5 HighColor image for OLPC XO firmware icons
+0       string C565     OLPC firmware icon image data
+>4      leshort x       %u x
+>6      leshort x       %u
