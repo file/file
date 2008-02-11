@@ -1,3 +1,10 @@
+	
+2007-02-11 01:36 Reuben Thomas <rrt@sc3d.org>
+
+	* Change strength of ! from MULT to 0, as it matches almost
+		  anything (Reuben Thomas)
+
+	* Debian fixes (Reuben Thomas)
 
 2007-02-11 00:17 Reuben Thomas <rrt@sc3d.org>
 
