@@ -46,3 +46,4 @@
 
 # From: David Allouche <david@allouche.net>
 0	string	\<TeXmacs|	TeXmacs document text
+!:mime	text/texmacs
