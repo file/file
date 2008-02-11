@@ -833,7 +833,7 @@
 
 # Minix filesystems - Juan Cespedes <cespedes@debian.org>
 0x410	leshort		0x137f		Minix filesystem
-0x410	beshort		0x137f		Minix filesystem (big endian),
+0x410	beshort		0x137f		Minix filesystem (big endian)
 >0x402	beshort		!0		\b, %d zones
 >0x1e	string		minix		\b, bootable
 0x410	leshort		0x138f		Minix filesystem, 30 char names
