@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.112 2008/02/04 16:33:46 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.113 2008/02/04 20:51:17 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -461,10 +461,10 @@ apprentice_magic_strength(const struct magic *m)
 
 	switch (m->reln) {
 	case 'x':	/* matches anything penalize */
+	case '!':       /* matches almost anything penalize */
 		val = 0;
 		break;
 
-	case '!':
 	case '=':	/* Exact match, prefer */
 		val += MULT;
 		break;
