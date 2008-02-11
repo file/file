@@ -10,7 +10,7 @@
 # HyperText Markup Language (HTML) is an SGML document type,
 # from Daniel Quinlan (quinlan@yggdrasil.com)
 # adapted to string extenstions by Anthon van der Neut <anthon@mnt.org)
-0	string/cB	\<!DOCTYPE\ html	HTML document text
+0	string/cB	\<!doctype\ html	HTML document text
 !:mime	text/html
 0	string/cb	\<head			HTML document text
 !:mime	text/html
