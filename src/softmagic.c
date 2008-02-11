@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.104 2008/02/04 16:33:46 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.105 2008/02/07 00:58:52 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -688,10 +688,11 @@ mconvert(struct magic_set *ms, struct magic *m)
 	case FILE_BEQUAD:
 	case FILE_BEQDATE:
 	case FILE_BEQLDATE:
-		p->q = (int64_t)
-		    (((int64_t)p->hq[0]<<56)|((int64_t)p->hq[1]<<48)|
-		     ((int64_t)p->hq[2]<<40)|((int64_t)p->hq[3]<<32)|
-		     (p->hq[4]<<24)|(p->hq[5]<<16)|(p->hq[6]<<8)|(p->hq[7]));
+		p->q = (uint64_t)
+		    (((uint64_t)p->hq[0]<<56)|((uint64_t)p->hq[1]<<48)|
+		     ((uint64_t)p->hq[2]<<40)|((uint64_t)p->hq[3]<<32)|
+		     ((uint64_t)p->hq[4]<<24)|((uint64_t)p->hq[5]<<16)|
+		     ((uint64_t)p->hq[6]<<8)|((uint64_t)p->hq[7]));
 		cvt_64(p, m);
 		return 1;
 	case FILE_LESHORT:
@@ -708,10 +709,11 @@ mconvert(struct magic_set *ms, struct magic *m)
 	case FILE_LEQUAD:
 	case FILE_LEQDATE:
 	case FILE_LEQLDATE:
-		p->q = (int64_t)
-		    (((int64_t)p->hq[7]<<56)|((int64_t)p->hq[6]<<48)|
-		     ((int64_t)p->hq[5]<<40)|((int64_t)p->hq[4]<<32)|
-		     (p->hq[3]<<24)|(p->hq[2]<<16)|(p->hq[1]<<8)|(p->hq[0]));
+		p->q = (uint64_t)
+		    (((uint64_t)p->hq[7]<<56)|((uint64_t)p->hq[6]<<48)|
+		     ((uint64_t)p->hq[5]<<40)|((uint64_t)p->hq[4]<<32)|
+		     ((uint64_t)p->hq[3]<<24)|((uint64_t)p->hq[2]<<16)|
+		     ((uint64_t)p->hq[1]<<8)|((uint64_t)p->hq[0]));
 		cvt_64(p, m);
 		return 1;
 	case FILE_MELONG:
