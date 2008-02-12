@@ -57,8 +57,25 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.48 2007/10/17 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.49 2008/02/07 00:58:52 christos Exp $")
 #endif	/* lint */
+
+private int
+bad_link(struct magic_set *ms, int err, char *buf)
+{
+	char *errfmt;
+	if (err == ELOOP)
+		errfmt = "symbolic link in a loop";
+	else
+		errfmt = "broken symbolic link to `%s'";
+	if (ms->flags & MAGIC_ERROR) {
+		file_error(ms, err, errfmt, buf);
+		return -1;
+	} 
+	if (file_printf(ms, errfmt, buf) == -1)
+		return -1;
+	return 1;
+}
 
 protected int
 file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
@@ -209,23 +226,13 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 			return 1;
 		}
-		buf[nch] = '\0';	/* readlink(2) forgets this */
+		buf[nch] = '\0';	/* readlink(2) does not do this */
 
 		/* If broken symlink, say so and quit early. */
 		if (*buf == '/') {
-		    if (stat(buf, &tstatbuf) < 0) {
-			    if (ms->flags & MAGIC_ERROR) {
-				    file_error(ms, errno, 
-					"broken symbolic link to `%s'", buf);
-				    return -1;
-			    } 
-			    if (file_printf(ms, "broken symbolic link to `%s'",
-				buf) == -1)
-				    return -1;
-			    return 1;
-		    }
-		}
-		else {
+			if (stat(buf, &tstatbuf) < 0)
+				return bad_link(ms, errno, buf);
+		} else {
 			char *tmp;
 			char buf2[BUFSIZ+BUFSIZ+4];
 
@@ -248,18 +255,8 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				(void)strcat(buf2, buf); /* plus (rel) link */
 				tmp = buf2;
 			}
-			if (stat(tmp, &tstatbuf) < 0) {
-				if (ms->flags & MAGIC_ERROR) {
-					file_error(ms, errno, 
-					    "broken symbolic link to `%s'",
-					    buf);
-					return -1;
-				}
-				if (file_printf(ms,
-				    "broken symbolic link to `%s'", buf) == -1)
-					return -1;
-				return 1;
-			}
+			if (stat(tmp, &tstatbuf) < 0)
+				return bad_link(ms, errno, buf);
 		}
 
 		/* Otherwise, handle it. */
