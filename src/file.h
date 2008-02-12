@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.93 2008/02/04 16:33:46 christos Exp $
+ * @(#)$File: file.h,v 1.94 2008/02/07 00:58:52 christos Exp $
  */
 
 #ifndef __file_h__
@@ -303,6 +303,8 @@ struct magic_set {
 		size_t rm_len;		/* match length */
 	} search;
 
+	/* FIXME: Make the string dynamically allocated so that e.g.
+	   strings matched in files can be longer than MAXstring */
 	union VALUETYPE ms_value;	/* either number or string */
 };
 
