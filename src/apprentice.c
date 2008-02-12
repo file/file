@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.115 2008/02/11 22:12:24 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.116 2008/02/12 01:08:39 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -278,7 +278,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 
 	mapped = rv;
 	     
-	if (magic == NULL || nmagic == 0) {
+	if (magic == NULL) {
 		file_delmagic(magic, mapped, nmagic);
 		return -1;
 	}
@@ -1773,7 +1773,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		file_error(ms, errno, "cannot stat `%s'", dbname);
 		goto error;
 	}
-	if (st.st_size < 16) {
+	if (st.st_size < 8) {
 		file_error(ms, 0, "file `%s' is too small", dbname);
 		goto error;
 	}
@@ -1818,7 +1818,9 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		    VERSIONNO, dbname, version);
 		goto error;
 	}
-	*nmagicp = (uint32_t)(st.st_size / sizeof(struct magic)) - 1;
+	*nmagicp = (uint32_t)(st.st_size / sizeof(struct magic));
+	if (*nmagicp > 0)
+		nmagicp--;
 	(*magicp)++;
 	if (needsbyteswap)
 		byteswap(*magicp, *nmagicp);
