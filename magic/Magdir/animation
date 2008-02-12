@@ -69,7 +69,7 @@
 >>5      byte               77             \b, main
 >>5      byte               88             \b, extended
 >>7      byte               x              \b @ L %u
-0        belong&0xFFFFFF00  0x00000100     MPEG sequence
+0        string             \000\000\001   MPEG sequence
 >3       byte               0xBA
 >>4      byte               &0x40          \b, v2, program multiplex
 >>4      byte               ^0x40          \b, v1, system multiplex
