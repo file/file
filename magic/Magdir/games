@@ -1,12 +1,6 @@
 #------------------------------------------------------------------------------
 # games:  file(1) for games
 
-# Thomas M. Ott (ThMO)
-1	string	=WAD		DOOM data,
->0	string	=I		main wad
->0	string	=P		patch wad
->0	byte	x		unknown junk
-
 # Fabio Bonelli <fabiobonelli@libero.it>
 # Quake II - III data files
 0       string  IDP2        	Quake II 3D Model file,
@@ -28,11 +22,6 @@
 #---------------------------------------------------------------------------
 # Doom and Quake
 # submitted by Nicolas Patrois
-
-# DOOM
-
-0       string  IWAD    DOOM or DOOM ][ world
-0       string  PWAD    DOOM or DOOM ][ extension world
 
 0       string  \xcb\x1dBoom\xe6\xff\x03\x01    Boom or linuxdoom demo
 # some doom lmp files don't match, I've got one beginning with \x6d\x02\x01\x01
@@ -155,3 +144,10 @@
 
 0	string	MComprHD	MAME CHD compressed hard disk image,
 >12	belong	x		version %lu
+
+# doom - submitted by Jon Dowland
+
+0	string	=IWAD		doom main IWAD data
+>4	lelong	x		containing %d lumps
+0	string	=PWAD		doom patch PWAD data
+>4	lelong	x		containing %d lumps
