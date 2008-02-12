@@ -135,11 +135,12 @@
 # Nevertheless this will manage to catch a lot of images that happen
 # to have a solid-colored line at the bottom of the screen.
 
-8144	string	\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F	Apple II image with white background
-8144	string	\x55\x2A\x55\x2A\x55\x2A\x55\x2A	Apple II image with purple background
-8144	string	\x2A\x55\x2A\x55\x2A\x55\x2A\x55	Apple II image with green background
-8144	string	\xD5\xAA\xD5\xAA\xD5\xAA\xD5\xAA	Apple II image with blue background
-8144	string	\xAA\xD5\xAA\xD5\xAA\xD5\xAA\xD5	Apple II image with orange background
+# GRR: Magic too weak
+#8144	string	\x7F\x7F\x7F\x7F\x7F\x7F\x7F\x7F	Apple II image with white background
+#8144	string	\x55\x2A\x55\x2A\x55\x2A\x55\x2A	Apple II image with purple background
+#8144	string	\x2A\x55\x2A\x55\x2A\x55\x2A\x55	Apple II image with green background
+#8144	string	\xD5\xAA\xD5\xAA\xD5\xAA\xD5\xAA	Apple II image with blue background
+#8144	string	\xAA\xD5\xAA\xD5\xAA\xD5\xAA\xD5	Apple II image with orange background
 
 # Beagle Bros. Apple Mechanic fonts
 
