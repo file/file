@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.45 2008/02/11 22:14:25 rrt Exp $
+.\" $File: magic.man,v 1.46 2008/02/11 23:26:17 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -177,8 +177,8 @@ offsets, using
 .Dv \e
 escapes for special characters. The offset works as for regex.
 .It Dv default
-This is intended to be used with the text
-.Dv x
+This is intended to be used with the test
+.Em x
 (which is always true) and a message that is to be used if there are
 no other matches.
 .El
@@ -474,4 +474,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.46 2008/02/11 23:26:17 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.47 2008/02/12 15:59:18 rrt Exp $
