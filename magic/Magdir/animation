@@ -278,33 +278,33 @@
 # so don't accept as MP3 until we've tested the rate
 0       beshort&0xFFFE
 # rates
->2      byte&0xF0       0x10           MPEG ADTS, layer III, v1,  32 kBits
+>2      byte&0xF0       0x10           MPEG ADTS, layer III, v1,  32 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x20           MPEG ADTS, layer III, v1,  40 kBits
+>2      byte&0xF0       0x20           MPEG ADTS, layer III, v1,  40 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x30           MPEG ADTS, layer III, v1,  48 kBits
+>2      byte&0xF0       0x30           MPEG ADTS, layer III, v1,  48 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x40           MPEG ADTS, layer III, v1,  56 kBits
+>2      byte&0xF0       0x40           MPEG ADTS, layer III, v1,  56 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x50           MPEG ADTS, layer III, v1,  64 kBits
+>2      byte&0xF0       0x50           MPEG ADTS, layer III, v1,  64 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x60           MPEG ADTS, layer III, v1,  80 kBits
+>2      byte&0xF0       0x60           MPEG ADTS, layer III, v1,  80 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x70           MPEG ADTS, layer III, v1,  96 kBits
+>2      byte&0xF0       0x70           MPEG ADTS, layer III, v1,  96 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x80           MPEG ADTS, layer III, v1, 112 kBits
+>2      byte&0xF0       0x80           MPEG ADTS, layer III, v1, 112 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0x90           MPEG ADTS, layer III, v1, 128 kBits
+>2      byte&0xF0       0x90           MPEG ADTS, layer III, v1, 128 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0xA0           MPEG ADTS, layer III, v1, 160 kBits
+>2      byte&0xF0       0xA0           MPEG ADTS, layer III, v1, 160 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0xB0           MPEG ADTS, layer III, v1, 192 kBits
+>2      byte&0xF0       0xB0           MPEG ADTS, layer III, v1, 192 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0xC0           MPEG ADTS, layer III, v1, 224 kBits
+>2      byte&0xF0       0xC0           MPEG ADTS, layer III, v1, 224 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0xD0           MPEG ADTS, layer III, v1, 256 kBits
+>2      byte&0xF0       0xD0           MPEG ADTS, layer III, v1, 256 kbps
 !:mime	audio/mpeg
->2      byte&0xF0       0xE0           MPEG ADTS, layer III, v1, 320 kBits
+>2      byte&0xF0       0xE0           MPEG ADTS, layer III, v1, 320 kbps
 !:mime	audio/mpeg
 # timing
 >2      byte&0x0C       0x00           \b, 44.1 kHz
@@ -326,20 +326,20 @@
 # MP2, M1A
 0       beshort&0xFFFE  0xFFFC         MPEG ADTS, layer II, v1
 # rates
->2      byte&0xF0       0x10           \b,  32 kBits
->2      byte&0xF0       0x20           \b,  48 kBits
->2      byte&0xF0       0x30           \b,  56 kBits
->2      byte&0xF0       0x40           \b,  64 kBits
->2      byte&0xF0       0x50           \b,  80 kBits
->2      byte&0xF0       0x60           \b,  96 kBits
->2      byte&0xF0       0x70           \b, 112 kBits
->2      byte&0xF0       0x80           \b, 128 kBits
->2      byte&0xF0       0x90           \b, 160 kBits
->2      byte&0xF0       0xA0           \b, 192 kBits
->2      byte&0xF0       0xB0           \b, 224 kBits
->2      byte&0xF0       0xC0           \b, 256 kBits
->2      byte&0xF0       0xD0           \b, 320 kBits
->2      byte&0xF0       0xE0           \b, 384 kBits
+>2      byte&0xF0       0x10           \b,  32 kbps
+>2      byte&0xF0       0x20           \b,  48 kbps
+>2      byte&0xF0       0x30           \b,  56 kbps
+>2      byte&0xF0       0x40           \b,  64 kbps
+>2      byte&0xF0       0x50           \b,  80 kbps
+>2      byte&0xF0       0x60           \b,  96 kbps
+>2      byte&0xF0       0x70           \b, 112 kbps
+>2      byte&0xF0       0x80           \b, 128 kbps
+>2      byte&0xF0       0x90           \b, 160 kbps
+>2      byte&0xF0       0xA0           \b, 192 kbps
+>2      byte&0xF0       0xB0           \b, 224 kbps
+>2      byte&0xF0       0xC0           \b, 256 kbps
+>2      byte&0xF0       0xD0           \b, 320 kbps
+>2      byte&0xF0       0xE0           \b, 384 kbps
 # timing
 >2      byte&0x0C       0x00           \b, 44.1 kHz
 >2      byte&0x0C       0x04           \b, 48 kHz
@@ -365,20 +365,20 @@
 #>2	ubyte&0xF0	>0x0F		
 #>>2	ubyte&0xF0	<0xE1		MPEG ADTS, layer I, v1
 ## rate
-#>>>2      byte&0xF0       0x10           \b,  32 kBits
-#>>>2      byte&0xF0       0x20           \b,  64 kBits
-#>>>2      byte&0xF0       0x30           \b,  96 kBits
-#>>>2      byte&0xF0       0x40           \b, 128 kBits
-#>>>2      byte&0xF0       0x50           \b, 160 kBits
-#>>>2      byte&0xF0       0x60           \b, 192 kBits
-#>>>2      byte&0xF0       0x70           \b, 224 kBits
-#>>>2      byte&0xF0       0x80           \b, 256 kBits
-#>>>2      byte&0xF0       0x90           \b, 288 kBits
-#>>>2      byte&0xF0       0xA0           \b, 320 kBits
-#>>>2      byte&0xF0       0xB0           \b, 352 kBits
-#>>>2      byte&0xF0       0xC0           \b, 384 kBits
-#>>>2      byte&0xF0       0xD0           \b, 416 kBits
-#>>>2      byte&0xF0       0xE0           \b, 448 kBits
+#>>>2      byte&0xF0       0x10           \b,  32 kbps
+#>>>2      byte&0xF0       0x20           \b,  64 kbps
+#>>>2      byte&0xF0       0x30           \b,  96 kbps
+#>>>2      byte&0xF0       0x40           \b, 128 kbps
+#>>>2      byte&0xF0       0x50           \b, 160 kbps
+#>>>2      byte&0xF0       0x60           \b, 192 kbps
+#>>>2      byte&0xF0       0x70           \b, 224 kbps
+#>>>2      byte&0xF0       0x80           \b, 256 kbps
+#>>>2      byte&0xF0       0x90           \b, 288 kbps
+#>>>2      byte&0xF0       0xA0           \b, 320 kbps
+#>>>2      byte&0xF0       0xB0           \b, 352 kbps
+#>>>2      byte&0xF0       0xC0           \b, 384 kbps
+#>>>2      byte&0xF0       0xD0           \b, 416 kbps
+#>>>2      byte&0xF0       0xE0           \b, 448 kbps
 ## timing
 #>>>2      byte&0x0C       0x00           \b, 44.1 kHz
 #>>>2      byte&0x0C       0x04           \b, 48 kHz
@@ -399,20 +399,20 @@
 # MP3, M2A
 0       beshort&0xFFFE  0xFFF2         MPEG ADTS, layer III, v2
 # rate
->2      byte&0xF0       0x10           \b,   8 kBits
->2      byte&0xF0       0x20           \b,  16 kBits
->2      byte&0xF0       0x30           \b,  24 kBits
->2      byte&0xF0       0x40           \b,  32 kBits
->2      byte&0xF0       0x50           \b,  40 kBits
->2      byte&0xF0       0x60           \b,  48 kBits
->2      byte&0xF0       0x70           \b,  56 kBits
->2      byte&0xF0       0x80           \b,  64 kBits
->2      byte&0xF0       0x90           \b,  80 kBits
->2      byte&0xF0       0xA0           \b,  96 kBits
->2      byte&0xF0       0xB0           \b, 112 kBits
->2      byte&0xF0       0xC0           \b, 128 kBits
->2      byte&0xF0       0xD0           \b, 144 kBits
->2      byte&0xF0       0xE0           \b, 160 kBits
+>2      byte&0xF0       0x10           \b,   8 kbps
+>2      byte&0xF0       0x20           \b,  16 kbps
+>2      byte&0xF0       0x30           \b,  24 kbps
+>2      byte&0xF0       0x40           \b,  32 kbps
+>2      byte&0xF0       0x50           \b,  40 kbps
+>2      byte&0xF0       0x60           \b,  48 kbps
+>2      byte&0xF0       0x70           \b,  56 kbps
+>2      byte&0xF0       0x80           \b,  64 kbps
+>2      byte&0xF0       0x90           \b,  80 kbps
+>2      byte&0xF0       0xA0           \b,  96 kbps
+>2      byte&0xF0       0xB0           \b, 112 kbps
+>2      byte&0xF0       0xC0           \b, 128 kbps
+>2      byte&0xF0       0xD0           \b, 144 kbps
+>2      byte&0xF0       0xE0           \b, 160 kbps
 # timing
 >2      byte&0x0C       0x00           \b, 22.05 kHz
 >2      byte&0x0C       0x04           \b, 24 kHz
@@ -433,20 +433,20 @@
 # MP2, M2A
 0       beshort&0xFFFE  0xFFF4         MPEG ADTS, layer II, v2
 # rate 
->2      byte&0xF0       0x10           \b,   8 kBits
->2      byte&0xF0       0x20           \b,  16 kBits 
->2      byte&0xF0       0x30           \b,  24 kBits
->2      byte&0xF0       0x40           \b,  32 kBits
->2      byte&0xF0       0x50           \b,  40 kBits
->2      byte&0xF0       0x60           \b,  48 kBits
->2      byte&0xF0       0x70           \b,  56 kBits
->2      byte&0xF0       0x80           \b,  64 kBits
->2      byte&0xF0       0x90           \b,  80 kBits
->2      byte&0xF0       0xA0           \b,  96 kBits
->2      byte&0xF0       0xB0           \b, 112 kBits
->2      byte&0xF0       0xC0           \b, 128 kBits
->2      byte&0xF0       0xD0           \b, 144 kBits
->2      byte&0xF0       0xE0           \b, 160 kBits
+>2      byte&0xF0       0x10           \b,   8 kbps
+>2      byte&0xF0       0x20           \b,  16 kbps 
+>2      byte&0xF0       0x30           \b,  24 kbps
+>2      byte&0xF0       0x40           \b,  32 kbps
+>2      byte&0xF0       0x50           \b,  40 kbps
+>2      byte&0xF0       0x60           \b,  48 kbps
+>2      byte&0xF0       0x70           \b,  56 kbps
+>2      byte&0xF0       0x80           \b,  64 kbps
+>2      byte&0xF0       0x90           \b,  80 kbps
+>2      byte&0xF0       0xA0           \b,  96 kbps
+>2      byte&0xF0       0xB0           \b, 112 kbps
+>2      byte&0xF0       0xC0           \b, 128 kbps
+>2      byte&0xF0       0xD0           \b, 144 kbps
+>2      byte&0xF0       0xE0           \b, 160 kbps
 # timing
 >2      byte&0x0C       0x00           \b, 22.05 kHz
 >2      byte&0x0C       0x04           \b, 24 kHz
@@ -467,20 +467,20 @@
 # MPA, M2A
 0       beshort&0xFFFE  0xFFF6         MPEG ADTS, layer I, v2
 # rate
->2      byte&0xF0       0x10           \b,  32 kBits
->2      byte&0xF0       0x20           \b,  48 kBits
->2      byte&0xF0       0x30           \b,  56 kBits
->2      byte&0xF0       0x40           \b,  64 kBits
->2      byte&0xF0       0x50           \b,  80 kBits
->2      byte&0xF0       0x60           \b,  96 kBits
->2      byte&0xF0       0x70           \b, 112 kBits
->2      byte&0xF0       0x80           \b, 128 kBits
->2      byte&0xF0       0x90           \b, 144 kBits
->2      byte&0xF0       0xA0           \b, 160 kBits
->2      byte&0xF0       0xB0           \b, 176 kBits
->2      byte&0xF0       0xC0           \b, 192 kBits
->2      byte&0xF0       0xD0           \b, 224 kBits
->2      byte&0xF0       0xE0           \b, 256 kBits
+>2      byte&0xF0       0x10           \b,  32 kbps
+>2      byte&0xF0       0x20           \b,  48 kbps
+>2      byte&0xF0       0x30           \b,  56 kbps
+>2      byte&0xF0       0x40           \b,  64 kbps
+>2      byte&0xF0       0x50           \b,  80 kbps
+>2      byte&0xF0       0x60           \b,  96 kbps
+>2      byte&0xF0       0x70           \b, 112 kbps
+>2      byte&0xF0       0x80           \b, 128 kbps
+>2      byte&0xF0       0x90           \b, 144 kbps
+>2      byte&0xF0       0xA0           \b, 160 kbps
+>2      byte&0xF0       0xB0           \b, 176 kbps
+>2      byte&0xF0       0xC0           \b, 192 kbps
+>2      byte&0xF0       0xD0           \b, 224 kbps
+>2      byte&0xF0       0xE0           \b, 256 kbps
 # timing
 >2      byte&0x0C       0x00           \b, 22.05 kHz
 >2      byte&0x0C       0x04           \b, 24 kHz
@@ -501,20 +501,20 @@
 # MP3, M25A
 0       beshort&0xFFFE  0xFFE2         MPEG ADTS, layer III,  v2.5
 # rate  
->2      byte&0xF0       0x10           \b,   8 kBits
->2      byte&0xF0       0x20           \b,  16 kBits
->2      byte&0xF0       0x30           \b,  24 kBits
->2      byte&0xF0       0x40           \b,  32 kBits
->2      byte&0xF0       0x50           \b,  40 kBits
->2      byte&0xF0       0x60           \b,  48 kBits
->2      byte&0xF0       0x70           \b,  56 kBits
->2      byte&0xF0       0x80           \b,  64 kBits
->2      byte&0xF0       0x90           \b,  80 kBits
->2      byte&0xF0       0xA0           \b,  96 kBits
->2      byte&0xF0       0xB0           \b, 112 kBits
->2      byte&0xF0       0xC0           \b, 128 kBits
->2      byte&0xF0       0xD0           \b, 144 kBits
->2      byte&0xF0       0xE0           \b, 160 kBits
+>2      byte&0xF0       0x10           \b,   8 kbps
+>2      byte&0xF0       0x20           \b,  16 kbps
+>2      byte&0xF0       0x30           \b,  24 kbps
+>2      byte&0xF0       0x40           \b,  32 kbps
+>2      byte&0xF0       0x50           \b,  40 kbps
+>2      byte&0xF0       0x60           \b,  48 kbps
+>2      byte&0xF0       0x70           \b,  56 kbps
+>2      byte&0xF0       0x80           \b,  64 kbps
+>2      byte&0xF0       0x90           \b,  80 kbps
+>2      byte&0xF0       0xA0           \b,  96 kbps
+>2      byte&0xF0       0xB0           \b, 112 kbps
+>2      byte&0xF0       0xC0           \b, 128 kbps
+>2      byte&0xF0       0xD0           \b, 144 kbps
+>2      byte&0xF0       0xE0           \b, 160 kbps
 # timing
 >2      byte&0x0C       0x00           \b, 11.025 kHz
 >2      byte&0x0C       0x04           \b, 12 kHz
