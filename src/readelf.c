@@ -35,9 +35,10 @@
 #endif
 
 #include "readelf.h"
+#include "magic.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.69 2008/01/26 18:45:16 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.70 2008/02/04 20:51:17 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -927,6 +928,8 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	off_t fsize;
 	int flags = 0;
 
+	if (ms->flags & MAGIC_MIME)
+		return 0;
 
 	/*
 	 * ELF executables have multiple section headers in arbitrary
@@ -938,7 +941,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	if (buf[EI_MAG0] != ELFMAG0
 	    || (buf[EI_MAG1] != ELFMAG1 && buf[EI_MAG1] != OLFMAG1)
 	    || buf[EI_MAG2] != ELFMAG2 || buf[EI_MAG3] != ELFMAG3)
-	    return 0;
+		return 0;
 
 	/*
 	 * If we cannot seek, it must be a pipe, socket or fifo.
