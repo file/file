@@ -1025,19 +1025,42 @@
 >&-1248	belong		0		TIME optimization
 >&-1248	belong		1		SPACE optimization
 
-# ext2/ext3 filesystems - Andreas Dilger <adilger@turbolabs.com>
-0x438	leshort		0xEF53		Linux
->0x44c	lelong		x		rev %d
->0x43e	leshort		x		\b.%d
->0x45c	lelong		^0x0000004	ext2 filesystem data
->>0x43a	leshort		^0x0000001	(mounted or unclean)
->0x45c	lelong		&0x0000004	ext3 filesystem data
->>0x460	lelong		&0x0000004	(needs journal recovery)
->0x43a	leshort		&0x0000002	(errors)
->0x460	lelong		&0x0000001	(compressed)
-#>0x460	lelong		&0x0000002	(filetype)
-#>0x464	lelong		&0x0000001	(sparse_super)
->0x464	lelong		&0x0000002	(large files)
+# ext2/ext3 filesystems - Andreas Dilger <adilger@dilger.ca>
+# ext4 filesystem - Eric Sandeen <sandeen@sandeen.net>
+0x438   leshort         0xEF53          Linux
+>0x44c  lelong          x               rev %d
+>0x43e  leshort         x               \b.%d
+# No journal?  ext2
+>0x45c  lelong          ^0x0000004      ext2 filesystem data
+>>0x43a leshort         ^0x0000001      (mounted or unclean)
+# Has a journal?  ext3 or ext4
+>0x45c  lelong          &0x0000004
+#  and small INCOMPAT?
+>>0x460 lelong          <0x0000040
+#   and small RO_COMPAT?
+>>>0x464 lelong         <0x0000008      ext3 filesystem data
+#   else large RO_COMPAT?
+>>>0x464 lelong         >0x0000007      ext4 filesystem data
+#  else large INCOMPAT?
+>>0x460 lelong          >0x000003f      ext4 filesystem data
+# General flags for any ext* fs
+>0x460  lelong          &0x0000004      (needs journal recovery)
+>0x43a  leshort         &0x0000002      (errors)
+# INCOMPAT flags
+>0x460  lelong          &0x0000001      (compressed)
+#>0x460 lelong          &0x0000002      (filetype)
+#>0x460 lelong          &0x0000010      (meta bg)
+>0x460  lelong          &0x0000040      (extents)
+>0x460  lelong          &0x0000080      (64bit)
+#>0x460 lelong          &0x0000100      (mmp)
+#>0x460 lelong          &0x0000200      (flex bg)
+# RO_INCOMPAT flags
+#>0x464 lelong          &0x0000001      (sparse super)
+>0x464  lelong          &0x0000002      (large files)
+>0x464  lelong          &0x0000008      (huge files)
+#>0x464 lelong          &0x0000010      (gdt checksum)
+#>0x464 lelong          &0x0000020      (many subdirs)
+#>0x463 lelong          &0x0000040      (extra isize)
 
 # SGI disk labels - Nathan Scott <nathans@debian.org>
 0	belong		0x0BE5A941	SGI disk label (volume header)
