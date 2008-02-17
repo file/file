@@ -55,9 +55,9 @@
 >>>>>>>>>38	string		!:	
 >>>>>>>>>>38	string		x 	\b%-.1s
 >>>>512	string		\037\213	\b, gzipped
->>>>769	string		ustar\0		\b, tared
+>>>>769	string		ustar\0		\b, tarred
 >512	string		\037\213	\b, gzipped
->769	string		ustar\0		\b, tared
+>769	string		ustar\0		\b, tarred
 
 # Type: Grisoft AVG AntiVirus
 # From: David Newgas <david@newgas.net>
