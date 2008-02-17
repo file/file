@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.46 2008/02/11 23:26:17 rrt Exp $
+.\" $File: magic.man,v 1.47 2008/02/12 15:59:18 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -170,7 +170,7 @@ not beginning and end of file.
 .It Dv search
 A literal string search starting at the given offset.
 It must be followed by
-.Dv \*[Lt]number\*[Gt]
+.Dv /\*[Lt]number\*[Gt]
 which specifies how many matches shall be attempted (the range).
 This is suitable for searching larger binary expressions with variable
 offsets, using
@@ -474,4 +474,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.47 2008/02/12 15:59:18 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.48 2008/02/17 19:26:15 rrt Exp $
