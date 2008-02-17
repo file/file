@@ -48,7 +48,7 @@
 !:mime	application/x-awk
 # update to distinguish from *.vcf files
 # this is broken because postscript has /EBEGIN{ for example.
-#0	regex		BEGIN[[:space:]]*[{]	awk script text
+#0	search/Bb	BEGIN {			awk script text
 
 # AT&T Bell Labs' Plan 9 shell
 0	string/b	#!\ /bin/rc	Plan 9 rc shell script text executable
