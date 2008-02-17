@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.116 2008/02/12 01:08:39 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.117 2008/02/17 19:28:54 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1828,7 +1828,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	}
 	*nmagicp = (uint32_t)(st.st_size / sizeof(struct magic));
 	if (*nmagicp > 0)
-		nmagicp--;
+		(*nmagicp)--;
 	(*magicp)++;
 	if (needsbyteswap)
 		byteswap(*magicp, *nmagicp);
