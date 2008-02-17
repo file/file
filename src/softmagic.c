@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.108 2008/02/11 23:20:51 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.109 2008/02/12 15:28:39 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -884,7 +884,7 @@ mget(struct magic_set *ms, const unsigned char *s,
     struct magic *m, size_t nbytes, unsigned int cont_level)
 {
 	uint32_t offset = ms->offset;
-	uint32_t count = m->str_count;
+	uint32_t count = m->str_range;
 	union VALUETYPE *p = &ms->ms_value;
 
 	if (mcopy(ms, p, m->type, m->flag & INDIR, s, offset, nbytes, count) == -1)
@@ -1448,10 +1448,8 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 	uint64_t v;
 
 	/*
-	 * What we want here is:
-	 * v = strncmp(m->value.s, p->s, m->vallen);
-	 * but ignoring any nulls.  bcmp doesn't give -/+/0
-	 * and isn't universally available anyway.
+	 * What we want here is v = strncmp(s1, s2, len),
+	 * but ignoring any nulls.
 	 */
 	v = 0;
 	if (0L == flags) { /* normal string: do it fast */
@@ -1653,7 +1651,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		v = 0;
 		ms->search.offset = m->offset;
 
-		for (idx = 0; m->str_count == 0 || idx < m->str_count; idx++) {
+		for (idx = 0; m->str_range == 0 || idx < m->str_range; idx++) {
 			if (slen + idx > ms->search.s_len)
 				break;
 

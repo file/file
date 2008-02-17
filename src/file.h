@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.94 2008/02/07 00:58:52 christos Exp $
+ * @(#)$File: file.h,v 1.95 2008/02/12 16:30:48 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -219,7 +219,7 @@ struct magic {
 		} _s;		/* for use with string types */
 	} _u;
 #define num_mask _u._mask
-#define str_count _u._s._count
+#define str_range _u._s._count
 #define str_flags _u._s._flags
 
 	/* Words 9-16 */
@@ -253,6 +253,7 @@ struct magic {
 #define CHAR_IGNORE_UPPERCASE		'C'
 #define CHAR_REGEX_OFFSET_START		's'
 #define STRING_IGNORE_CASE		(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
+#define STRING_DEFAULT_RANGE		100
 
 
 /* list of magic entries */

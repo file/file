@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.115 2008/02/11 22:12:24 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.116 2008/02/12 01:08:39 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -697,7 +697,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 }
 
 private int
-string_modifier_check(struct magic_set *ms, struct magic const *m)
+string_modifier_check(struct magic_set *ms, struct magic *m)
 {
 	if ((ms->flags & MAGIC_CHECK) == 0)
 		return 0;
@@ -721,6 +721,13 @@ string_modifier_check(struct magic_set *ms, struct magic const *m)
 		}
 		break;
 	case FILE_SEARCH:
+		if (m->str_range == 0) {
+			file_magwarn(ms,
+			    "missing range; defaulting to %d\n",
+                            STRING_DEFAULT_RANGE);
+			m->str_range = STRING_DEFAULT_RANGE;
+			return -1;
+		}
 		break;
 	case FILE_REGEX:
 		if ((m->str_flags & STRING_COMPACT_BLANK) != 0) {
@@ -1060,7 +1067,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 			file_magwarn(ms, "'~' invalid for string types");
 		++l;
 	}
-	m->str_count = 0;
+	m->str_range = 0;
 	m->str_flags = 0;
 	m->num_mask = 0;
 	if ((op = get_op(*l)) != -1) {
@@ -1074,23 +1081,24 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 			eatsize(&l);
 		}
 		else if (op == FILE_OPDIVIDE) {
-			int have_count = 0;
+			int have_range = 0;
 			while (!isspace((unsigned char)*++l)) {
 				switch (*l) {
-				/* for portability avoid "case '0' ... '9':" */
 				case '0':  case '1':  case '2':
 				case '3':  case '4':  case '5':
 				case '6':  case '7':  case '8':
-				case '9': {
-					if (have_count &&
+				case '9':
+					if (have_range &&
 					    (ms->flags & MAGIC_CHECK))
 						file_magwarn(ms,
-						    "multiple counts");
-					have_count = 1;
-					m->str_count = strtoul(l, &t, 0);
+						    "multiple ranges");
+					have_range = 1;
+					m->str_range = strtoul(l, &t, 0);
+					if (m->str_range == 0)
+						file_magwarn(ms,
+						    "zero range");
 					l = t - 1;
 					break;
-				}
 				case CHAR_COMPACT_BLANK:
 					m->str_flags |= STRING_COMPACT_BLANK;
 					break;
@@ -1985,7 +1993,7 @@ bs1(struct magic *m)
 	m->in_offset = swap4((uint32_t)m->in_offset);
 	m->lineno = swap4((uint32_t)m->lineno);
 	if (IS_STRING(m->type)) {
-		m->str_count = swap4(m->str_count);
+		m->str_range = swap4(m->str_range);
 		m->str_flags = swap4(m->str_flags);
 	}
 	else {
