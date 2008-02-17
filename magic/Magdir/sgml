@@ -1,8 +1,8 @@
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
-0	string	\<?xml\ version="
->15	string	>\0
->>23	regex	.*\<svg			SVG Scalable Vector Graphics image
+0	string		\<?xml\ version="
+>15	string		>\0
+>>23	search/400	\<svg			SVG Scalable Vector Graphics image
 !:mime	image/svg+xml
 
 #------------------------------------------------------------------------------
