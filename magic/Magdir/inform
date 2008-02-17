@@ -5,4 +5,4 @@
 # URL:  http://www.inform-fiction.org/
 # From: Reuben Thomas <rrt@sc3d.org>
 
-0	regex	[Cc]onstant[[:space:]]+[Ss]tory	Inform source text
+0	search/cB/100	constant\ story		Inform source text
