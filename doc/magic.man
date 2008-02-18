@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.48 2008/02/17 19:26:15 rrt Exp $
+.\" $File: magic.man,v 1.49 2008/02/18 18:09:00 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -40,15 +40,15 @@ The possible values are:
 .It Dv byte
 A one-byte value.
 .It Dv short
-A two-byte value (on most systems) in this machine's native byte order.
+A two-byte value in this machine's native byte order.
 .It Dv long
-A four-byte value (on most systems) in this machine's native byte order.
+A four-byte value in this machine's native byte order.
 .It Dv quad
-An eight-byte value (on most systems) in this machine's native byte order.
+An eight-byte value in this machine's native byte order.
 .It Dv float
-A 32-bit (on most systems) single precision IEEE floating point number in this machine's native byte order.
+A 32-bit single precision IEEE floating point number in this machine's native byte order.
 .It Dv double
-A 64-bit (on most systems) double precision IEEE floating point number in this machine's native byte order.
+A 64-bit double precision IEEE floating point number in this machine's native byte order.
 .It Dv string
 A string of bytes.
 The string type specification can be optionally followed
@@ -86,64 +86,64 @@ local time rather than UTC.
 An eight-byte value interpreted as a UNIX-style date, but interpreted as
 local time rather than UTC.
 .It Dv beshort
-A two-byte value (on most systems) in big-endian byte order.
+A two-byte value in big-endian byte order.
 .It Dv belong
-A four-byte value (on most systems) in big-endian byte order.
+A four-byte value in big-endian byte order.
 .It Dv bequad
-An eight-byte value (on most systems) in big-endian byte order.
+An eight-byte value in big-endian byte order.
 .It Dv befloat
-A 32-bit (on most systems) single precision IEEE floating point number in big-endian byte order.
+A 32-bit single precision IEEE floating point number in big-endian byte order.
 .It Dv bedouble
-A 64-bit (on most systems) double precision IEEE floating point number in big-endian byte order.
+A 64-bit double precision IEEE floating point number in big-endian byte order.
 .It Dv bedate
-A four-byte value (on most systems) in big-endian byte order,
+A four-byte value in big-endian byte order,
 interpreted as a Unix date.
 .It Dv beqdate
-An eight-byte value (on most systems) in big-endian byte order,
+An eight-byte value in big-endian byte order,
 interpreted as a Unix date.
 .It Dv beldate
-A four-byte value (on most systems) in big-endian byte order,
+A four-byte value in big-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv beqldate
-An eight-byte value (on most systems) in big-endian byte order,
+An eight-byte value in big-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv bestring16
 A two-byte unicode (UCS16) string in big-endian byte order.
 .It Dv leshort
-A two-byte value (on most systems) in little-endian byte order.
+A two-byte value in little-endian byte order.
 .It Dv lelong
-A four-byte value (on most systems) in little-endian byte order.
+A four-byte value in little-endian byte order.
 .It Dv lequad
-An eight-byte value (on most systems) in little-endian byte order.
+An eight-byte value in little-endian byte order.
 .It Dv lefloat
-A 32-bit (on most systems) single precision IEEE floating point number in little-endian byte order.
+A 32-bit single precision IEEE floating point number in little-endian byte order.
 .It Dv ledouble
-A 64-bit (on most systems) double precision IEEE floating point number in little-endian byte order.
+A 64-bit double precision IEEE floating point number in little-endian byte order.
 .It Dv ledate
-A four-byte value (on most systems) in little-endian byte order,
+A four-byte value in little-endian byte order,
 interpreted as a UNIX date.
 .It Dv leqdate
-An eight-byte value (on most systems) in little-endian byte order,
+An eight-byte value in little-endian byte order,
 interpreted as a UNIX date.
 .It Dv leldate
-A four-byte value (on most systems) in little-endian byte order,
+A four-byte value in little-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv leqldate
-An eight-byte value (on most systems) in little-endian byte order,
+An eight-byte value in little-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv lestring16
 A two-byte unicode (UCS16) string in little-endian byte order.
 .It Dv melong
-A four-byte value (on most systems) in middle-endian (PDP-11) byte order.
+A four-byte value in middle-endian (PDP-11) byte order.
 .It Dv medate
-A four-byte value (on most systems) in middle-endian (PDP-11) byte order,
+A four-byte value in middle-endian (PDP-11) byte order,
 interpreted as a UNIX date.
 .It Dv meldate
-A four-byte value (on most systems) in middle-endian (PDP-11) byte order,
+A four-byte value in middle-endian (PDP-11) byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv regex
@@ -474,4 +474,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.48 2008/02/17 19:26:15 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.49 2008/02/18 18:09:00 rrt Exp $
