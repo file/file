@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.71 2008/02/14 20:22:05 christos Exp $
+.\" $File: file.man,v 1.72 2008/02/18 21:28:38 rrt Exp $
 .Dd January 8, 2007
 .Dt FILE __CSECTION__
 .Os
@@ -477,7 +477,7 @@ Contributions by the `&' operator by Rob McMahon, cudcv@warwick.ac.uk, 1989.
 Guy Harris, guy@netapp.com, made many changes from 1993 to the present.
 .Pp
 Primary development and maintenance from 1990 to the present by
-Christos Zoulas (christos@zoulas.com).
+Christos Zoulas (christos@astron.com).
 .Pp
 Altered by Chris Lowth, chris@lowth.com, 2000:
 Handle the 
