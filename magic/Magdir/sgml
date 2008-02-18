@@ -4,6 +4,8 @@
 >15	string		>\0
 >>23	search/400	\<svg			SVG Scalable Vector Graphics image
 !:mime	image/svg+xml
+>>23	search/400	\<gnc-v2		GnuCash file
+!:mime	application/x-gnucash
 
 #------------------------------------------------------------------------------
 # sgml:  file(1) magic for Standard Generalized Markup Language
