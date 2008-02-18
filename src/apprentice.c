@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.119 2008/02/18 00:43:45 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.120 2008/02/18 21:45:58 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -99,7 +99,7 @@ private void eatsize(const char **);
 private int apprentice_1(struct magic_set *, const char *, int, struct mlist *);
 private size_t apprentice_magic_strength(const struct magic *);
 private int apprentice_sort(const void *, const void *);
-private int apprentice_file(struct magic_set *, struct magic **, uint32_t *,
+private int apprentice_load(struct magic_set *, struct magic **, uint32_t *,
     const char *, int);
 private void byteswap(struct magic *, uint32_t);
 private void bs1(struct magic *);
@@ -259,7 +259,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 	}
 
 	if (action == FILE_COMPILE) {
-		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
+		rv = apprentice_load(ms, &magic, &nmagic, fn, action);
 		if (rv != 0)
 			return -1;
 		rv = apprentice_compile(ms, &magic, &nmagic, fn);
@@ -271,7 +271,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 	if ((rv = apprentice_map(ms, &magic, &nmagic, fn)) == -1) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "using regular magic file `%s'", fn);
-		rv = apprentice_file(ms, &magic, &nmagic, fn, action);
+		rv = apprentice_load(ms, &magic, &nmagic, fn, action);
 		if (rv != 0)
 			return -1;
 	}
@@ -513,7 +513,7 @@ apprentice_sort(const void *a, const void *b)
  * const char *fn: name of magic file
  */
 private int
-apprentice_file(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
+apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
     const char *fn, int action)
 {
 	FILE *f;
