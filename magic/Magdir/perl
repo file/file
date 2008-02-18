@@ -24,8 +24,8 @@
 # by Dmitry V. Levin and Alexey Tourbin
 # check the first line
 0	string		package
->1	regex		\^package[\ \t]+[A-Za-z_]
->>1	regex		\^package[\ \t]+[0-9A-Za-z_:]*\ *;	Perl5 module source text
+0	regex		\^package[\ \t]+[A-Za-z_]
+>0	regex		\^package[\ \t]+[0-9A-Za-z_:]+\ *;	Perl5 module source text
 # not 'p', check other lines
 0	byte		!0x70
 >0	regex		\^package[\ \t]+[0-9A-Za-z_:]+\ *;

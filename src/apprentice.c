@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.118 2008/02/17 23:40:48 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.119 2008/02/18 00:43:45 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1471,6 +1471,8 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			return -1;
 		}
 		m->vallen = slen;
+		if (m->type == FILE_PSTRING)
+			m->vallen++;
 		return 0;
 	case FILE_FLOAT:
 	case FILE_BEFLOAT:

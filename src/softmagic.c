@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.110 2008/02/17 19:28:54 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.111 2008/02/18 00:43:45 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -413,6 +413,8 @@ mprint(struct magic_set *ms, struct magic *m)
 			if (file_printf(ms, MAGIC_DESC, p->s) == -1)
 				return -1;
 			t = ms->offset + strlen(p->s);
+			if (m->type == FILE_PSTRING)
+				t++;
 		}
 		break;
 
