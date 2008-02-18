@@ -184,8 +184,8 @@
 
 # Type: LZMA
 # URL:  http://www.7-zip.org/sdk.html
-# From: Robert Millan <rmh@aybabtu.com>
-0	string		]\000\000\200\000\377\377\377\377\377\377\377\377	LZMA compressed data
+# From: Robert Millan <rmh@aybabtu.com> and Reuben Thomas <rrt@sc3d.org>
+0	string		]\000\000\200\000	LZMA compressed data
 
 # AFX compressed files (Wolfram Kleff)
 2	string		-afx-		AFX compressed file data
