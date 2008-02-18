@@ -5,13 +5,12 @@
 # various lisp types, from Daniel Quinlan (quinlan@yggdrasil.com)
 
 # updated by Joerg Jenderek
-0	string	;;			
-!:mime	text/plain
-# FIXME: Is the above MIME type pointless?
+# GRR: This lot is too weak
+#0	string	;;			
 # windows INF files often begin with semicolon and use CRLF as line end
 # lisp files are mainly created on unix system with LF as line end
->2	search/2048	!\r		Lisp/Scheme program text
->2	search/2048	\r		Windows INF file
+#>2	search/2048	!\r		Lisp/Scheme program text
+#>2	search/2048	\r		Windows INF file
 
 0	search/256	(if\ 			Lisp/Scheme program text
 0	search/256	(setq\ 			Lisp/Scheme program text
