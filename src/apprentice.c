@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.120 2008/02/18 21:45:58 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.121 2008/02/18 21:50:24 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -329,7 +329,7 @@ file_delmagic(struct magic *p, int type, size_t entries)
 protected struct mlist *
 file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
-	char *p, *mfn, *afn = NULL;
+	char *p, *mfn;
 	int file_err, errs = -1;
 	struct mlist *mlist;
 
@@ -362,10 +362,6 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		file_err = apprentice_1(ms, fn, action, mlist);
 		if (file_err > errs)
 			errs = file_err;
-		if (afn) {
-			free(afn);
-			afn = NULL;
-		}
 		fn = p;
 	}
 	if (errs == -1) {
