@@ -46,7 +46,7 @@
 0	string		ClamAV-VDB:	
 >11	string		>\0		Clam AntiVirus database %-.23s
 >>34	string		:		
->>>35	regex		[^:]+		\b, version 
+>>>35		string		!:	\b, version 
 >>>>35		string		x 	\b%-.1s
 >>>>>36		string 		!:	
 >>>>>>36	string		x 	\b%-.1s
