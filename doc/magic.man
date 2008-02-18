@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.48 2008/02/17 19:26:15 rrt Exp $
+.\" $File: magic.man,v 1.49 2008/02/18 18:09:00 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -148,9 +148,10 @@ interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv regex
 A regular expression match in extended POSIX regular expression syntax
-(much like egrep).
-The type specification can be optionally followed by /[c][s].
-The
+(much like egrep). Regular expressions can easily take exponential
+time to process; their use is discouraged. When used in production
+environments, their performance should be carefully checked. The type
+specification can be optionally followed by /[c][s]. The
 .Dq c
 flag makes the match case insensitive, while the
 .Dq s
@@ -474,4 +475,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.49 2008/02/18 18:09:00 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.50 2008/02/18 18:28:51 rrt Exp $
