@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.50 2008/02/18 18:28:51 rrt Exp $
+.\" $File: magic.man,v 1.51 2008/02/18 18:32:31 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -169,8 +169,9 @@ and
 match the beginning and end of individual lines, respectively,
 not beginning and end of file.
 .It Dv search
-A literal string search starting at the given offset.
-It must be followed by
+A literal string search starting at the given offset. The same
+modifier flags can be used as for string patterns. The modifier flags
+(if any) must be followed by
 .Dv /\*[Lt]number\*[Gt]
 which specifies how many matches shall be attempted (the range).
 This is suitable for searching larger binary expressions with variable
@@ -475,4 +476,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.50 2008/02/18 18:28:51 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.51 2008/02/18 18:32:31 rrt Exp $
