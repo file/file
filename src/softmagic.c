@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.111 2008/02/18 00:43:45 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.112 2008/02/19 00:58:59 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -321,7 +321,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	float vf;
 	double vd;
 	int64_t t = 0;
- 	char buf[512];
+ 	char *buf;
 	union VALUETYPE *p = &ms->ms_value;
 
   	switch (m->type) {
@@ -331,8 +331,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			if (snprintf(buf, sizeof(buf), "%c",
-			    (unsigned char)v) < 0)
+			if (asprintf(&buf, "%c", (unsigned char)v) < 0)
 				return -1;
 			if (file_printf(ms, MAGIC_DESC, buf) == -1)
 				return -1;
@@ -353,8 +352,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			if (snprintf(buf, sizeof(buf), "%hu",
-			    (unsigned short)v) < 0)
+			if (asprintf(&buf, "%hu", (unsigned short)v) < 0)
 				return -1;
 			if (file_printf(ms, MAGIC_DESC, buf) == -1)
 				return -1;
@@ -376,7 +374,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			if (snprintf(buf, sizeof(buf), "%u", (uint32_t)v) < 0)
+			if (asprintf(&buf, "%u", (uint32_t)v) < 0)
 				return -1;
 			if (file_printf(ms, MAGIC_DESC, buf) == -1)
 				return -1;
@@ -462,7 +460,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			if (snprintf(buf, sizeof(buf), "%g", vf) < 0)
+			if (asprintf(&buf, "%g", vf) < 0)
 				return -1;
 			if (file_printf(ms, MAGIC_DESC, buf) == -1)
 				return -1;
@@ -483,7 +481,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			if (snprintf(buf, sizeof(buf), "%g", vd) < 0)
+			if (asprintf(&buf, "%g", vd) < 0)
 				return -1;
 			if (file_printf(ms, MAGIC_DESC, buf) == -1)
 				return -1;

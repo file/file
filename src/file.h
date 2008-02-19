@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.96 2008/02/17 19:28:54 rrt Exp $
+ * @(#)$File: file.h,v 1.97 2008/02/19 00:58:59 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -50,6 +50,7 @@
 #include <sys/types.h>
 /* Do this here and now, because struct stat gets re-defined on solaris */
 #include <sys/stat.h>
+#include <stdarg.h>
 
 #define ENABLE_CONDITIONALS
 
@@ -81,6 +82,10 @@
 
 #ifndef MIN
 #define	MIN(a,b)	(((a) < (b)) ? (a) : (b))
+#endif
+
+#ifndef MAX
+#define	MAX(a,b)	(((a) > (b)) ? (a) : (b))
 #endif
 
 #ifndef HOWMANY
@@ -280,14 +285,8 @@ struct magic_set {
 		} *li;
 	} c;
 	struct out {
-		/* Accumulation buffer */
-		char *buf;
-		char *ptr;
-		size_t left;
-		size_t size;
-		/* Printable buffer */
-		char *pbuf;
-		size_t psize;
+		char *buf;		/* Accumulation buffer */
+		char *pbuf;		/* Printable buffer */
 	} o;
 	uint32_t offset;
 	int error;
@@ -357,8 +356,11 @@ extern char *sys_errlist[];
 #define strtoul(a, b, c)	strtol(a, b, c)
 #endif
 
-#ifndef HAVE_SNPRINTF
-int snprintf(char *, size_t, const char *, ...);
+#ifndef HAVE_VASPRINTF
+int vasprintf(char **ptr, const char *format_string, va_list vargs);
+#endif
+#ifndef HAVE_ASPRINTF
+int asprintf(char **ptr, const char *format_string, ...);
 #endif
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)
