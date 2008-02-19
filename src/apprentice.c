@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.122 2008/02/19 00:58:59 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.123 2008/02/19 17:29:30 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -418,7 +418,7 @@ apprentice_magic_strength(const struct magic *m)
 
 	case FILE_SEARCH:
 	case FILE_REGEX:
-		val += m->vallen;
+		val += m->vallen * MAX(MULT / m->vallen, 1);
 		break;
 
 	case FILE_DATE:
