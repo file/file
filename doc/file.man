@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.72 2008/02/18 21:28:38 rrt Exp $
-.Dd January 8, 2007
+.\" $File: file.man,v 1.73 2008/02/19 17:58:00 rrt Exp $
+.Dd February 19, 2008
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -8,8 +8,8 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl bchikLnNprsvz
-.Op Fl mime-type
-.Op Fl mime-encoding
+.Op Fl -mime-type
+.Op Fl -mime-encoding
 .Op Fl f Ar namefile
 .Op Fl F Ar separator
 .Op Fl m Ar magicfiles
@@ -17,6 +17,8 @@
 .Nm
 .Fl C
 .Op Fl m Ar magicfile
+.Nm
+.Op Fl -help
 .Sh DESCRIPTION
 This manual page documents version __VERSION__ of the
 .Nm
@@ -25,7 +27,7 @@ command.
 .Nm
 tests each argument in an attempt to classify it.
 There are three sets of tests, performed in this order:
-filesystem tests, magic number tests, and language tests.
+filesystem tests, magic tests, and language tests.
 The
 .Em first
 test that succeeds causes the file type to be printed.
@@ -49,11 +51,9 @@ meaning anything else (data is usually
 or non-printable).
 Exceptions are well-known file formats (core files, tar archives)
 that are known to contain binary data.
-When modifying the file
-.Pa __MAGIC__
-or the program itself, make sure to
+When modifying magic files or the program itself, make sure to
 .Em "preserve these keywords" .
-People depend on knowing that all the readable files in a directory
+Users depend on knowing that all the readable files in a directory
 have the word 
 .Dq text
 printed.
@@ -61,12 +61,6 @@ Don't do as Berkeley did and change
 .Dq shell commands text
 to 
 .Dq shell script .
-Note that the file
-.Pa __MAGIC__
-is built mechanically from a large number of small files in
-the subdirectory
-.Pa Magdir
-in the source distribution of this program.
 .Pp
 The filesystem tests are based on examining the return from a
 .Xr stat 2
@@ -80,7 +74,7 @@ are intuited if they are defined in
 the system header file
 .In sys/stat.h .
 .Pp
-The magic number tests are used to check for files with data in
+The magic tests are used to check for files with data in
 particular fixed formats.
 The canonical example of this is a binary executable (compiled program)
 .Dv a.out
@@ -97,22 +91,20 @@ near the beginning of the file that tells the
 .Dv UNIX operating system
 that the file is a binary executable, and which of several types thereof.
 The concept of a
-.Sq "magic number"
+.Sq "magic"
 has been applied by extension to data files.
 Any file with some invariant identifier at a small fixed
 offset into the file can usually be described in this way.
 The information identifying these files is read from the compiled
 magic file
 .Pa __MAGIC__.mgc ,
-or 
+or the files in the directory
 .Pa __MAGIC__
-if the compiled file does not exist. In addition
-.Nm
-will look in
-.Pa $HOME/.magic.mgc ,
+if the compiled file does not exist. In addition, if
+.Pa $HOME/.magic.mgc
 or
 .Pa $HOME/.magic
-for magic entries.
+exists, it will be used in preference to the system magic files.
 .Pp
 If a file does not match any of the entries in the magic file,
 it is examined to see if it seems to be a text file.
@@ -145,9 +137,9 @@ Once
 has determined the character set used in a text-type file,
 it will
 attempt to determine in what language the file is written.
-The language tests look for particular strings (cf
+The language tests look for particular strings (cf.
 .In names.h
-that can appear anywhere in the first few blocks of a file.
+) that can appear anywhere in the first few blocks of a file.
 For example, the keyword
 .Em .br
 indicates that the file is most likely a
@@ -177,7 +169,7 @@ flag to debug a new magic file before installing it.
 .It Fl C , -compile
 Write a
 .Pa magic.mgc
-output file that contains a pre-parsed version of the magic file.
+output file that contains a pre-parsed version of the magic file or directory.
 .It Fl e , -exclude Ar testname
 Exclude the test named in
 .Ar testname
@@ -240,7 +232,7 @@ file.
 (See
 .Dq FILES
 section, below).
-.It Fl -mime-type ,  -mime-encoding
+.It Fl -mime-type , -mime-encoding
 Like
 .Fl i ,
 but print only the specified element(s).
@@ -260,9 +252,9 @@ This is the default if the environment variable
 .Dv POSIXLY_CORRECT
 is defined.
 .It Fl m , -magic-file Ar list
-Specify an alternate list of files containing magic numbers.
-This can be a single file, or a colon-separated list of files.
-If a compiled magic file is found alongside, it will be used instead.
+Specify an alternate list of files and directories containing magic.
+This can be a single item, or a colon-separated list.
+If a compiled magic file is found alongside a file or directory, it will be used instead.
 .It Fl n , -no-buffer
 Force stdout to be flushed after checking each file.
 This is only useful if checking a list of files.
@@ -318,16 +310,14 @@ Print a help message and exit.
 .Sh FILES
 .Bl -tag -width __MAGIC__.mgc -compact
 .It Pa __MAGIC__.mgc
-Default compiled list of magic numbers
+Default compiled list of magic.
 .It Pa __MAGIC__
-Default list of magic numbers
-.Fl i
-option is specified.
+Directory containing default magic files.
 .El
 .Sh ENVIRONMENT
 The environment variable
 .Dv MAGIC
-can be used to set the default magic number file name.
+can be used to set the default magic file name.
 If that variable is set, then
 .Nm
 will not attempt to open
@@ -336,14 +326,9 @@ will not attempt to open
 adds
 .Dq .mgc
 to the value of this variable as appropriate.
-However,
-.Pa file
-has to exist in order for
-.Pa file.mime
-to be considered.
 The environment variable
 .Dv POSIXLY_CORRECT
-controls (on systems that support symbolic links), if
+controls (on systems that support symbolic links), whether
 .Nm
 will attempt to follow symlinks or not. If set, then
 .Nm
@@ -357,7 +342,8 @@ options.
 .Xr magic __FSECTION__ ,
 .Xr strings 1 ,
 .Xr od 1 ,
-.Xr hexdump 1
+.Xr hexdump 1,
+.Xr file 1posix
 .Sh STANDARDS CONFORMANCE
 This program is believed to exceed the System V Interface Definition
 of FILE(CMD), as near as one can determine from the vague language
@@ -461,7 +447,7 @@ command in every
 .Dv UNIX since at least Research Version 4
 (man page dated November, 1973).
 The System V version introduced one significant major change:
-the external list of magic number types.
+the external list of magic types.
 This slowed the program down slightly but made it a lot more flexible.
 .Pp
 This program, based on the System V version,
@@ -490,13 +476,15 @@ to identify character codes and attempt to identify the languages
 of non-ASCII files.
 .Pp
 Altered by Reuben Thomas (rrt@sc3d.org), 2007 to 2008, to improve MIME
-support and re-merge it with non-MIME output, as well as applying many
-bug fixes and improving the build system.
+support and merge MIME and non-MIME magic, support directories as well
+as files of magic, apply many bug fixes and improve the build system.
 .Pp
-The list of contributors to the "Magdir" directory (source for the
-.Pa __MAGIC__
-file) is too long to include here.
+The list of contributors to the
+.Dq magic
+directory (magic files)
+is too long to include here.
 You know who you are; thank you.
+Many contributors are listed in the source files.
 .Sh LEGAL NOTICE
 Copyright (c) Ian F. Darwin, Toronto, Canada, 1986-1999.
 Covered by the standard Berkeley Software Distribution copyright; see the file
