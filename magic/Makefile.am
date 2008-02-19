@@ -1,8 +1,10 @@
-magic_FRAGMENTS = magic/*
+MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/magic
 
-pkgdata_DATA = magic.mgc $(magic_FRAGMENTS)
+MAGIC_FRAGMENTS = $(MAGIC_FRAGMENT_DIR)/*
 
-EXTRA_DIST = Localstuff $(magic_FRAGMENTS)
+pkgdata_DATA = magic.mgc $(MAGIC_FRAGMENTS)
+
+EXTRA_DIST = Localstuff $(MAGIC_FRAGMENTS)
 
 CLEANFILES = magic.mgc
 
@@ -15,4 +17,4 @@ FILE_COMPILE = $(top_builddir)/src/file
 endif
 
 magic.mgc: $(magic_FRAGMENTS) $(FILE_COMPILE)
-	$(FILE_COMPILE) -C -m $(top_srcdir)/magic/magic
+	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
