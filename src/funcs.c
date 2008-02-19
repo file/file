@@ -38,55 +38,38 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.36 2008/02/04 16:33:46 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.37 2008/02/07 00:58:52 christos Exp $")
 #endif	/* lint */
 
-#ifndef HAVE_VSNPRINTF
-int vsnprintf(char *, size_t, const char *, va_list);
-#endif
-
 /*
- * Like printf, only we print to a buffer and advance it.
+ * Like printf, only we append to a buffer.
  */
 protected int
 file_printf(struct magic_set *ms, const char *fmt, ...)
 {
 	va_list ap;
 	size_t size;
-	ssize_t len;
-	char *buf;
+	int len;
+	char *buf, *newstr;
 
 	va_start(ap, fmt);
-
-	len = vsnprintf(ms->o.ptr, ms->o.left, fmt, ap);
-	if (len == -1)
+	len = vasprintf(&buf, fmt, ap);
+	if (len < 0)
 		goto out;
-	if (len >= (ssize_t)ms->o.left) {
-		long diff;	/* XXX: really ptrdiff_t */
-
-		va_end(ap);
-		size = (ms->o.size - ms->o.left) + len + 1024;
-		if ((buf = realloc(ms->o.buf, size)) == NULL) {
-			file_oomem(ms, size);
-			return -1;
-		}
-		diff = ms->o.ptr - ms->o.buf;
-		ms->o.ptr = buf + diff;
-		ms->o.buf = buf;
-		ms->o.left = size - diff;
-		ms->o.size = size;
-
-		va_start(ap, fmt);
-		len = vsnprintf(ms->o.ptr, ms->o.left, fmt, ap);
-		if (len == -1)
-			goto out;
-	}
 	va_end(ap);
-	ms->o.ptr += len;
-	ms->o.left -= len;
+
+	if (ms->o.buf != NULL) {
+		len = asprintf(&newstr, "%s%s", ms->o.buf, buf);
+		free(buf);
+		if (len < 0)
+			goto out;
+		free(ms->o.buf);
+		buf = newstr;
+	}
+	ms->o.buf = buf;
 	return 0;
 out:
-	file_error(ms, errno, "vsnprintf failed");
+	file_error(ms, errno, "vasprintf failed");
 	return -1;
 }
 
@@ -98,21 +81,17 @@ private void
 file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
     uint32_t lineno)
 {
-	size_t len;
 	/* Only the first error is ok */
 	if (ms->haderr)
 		return;
-	len = 0;
 	if (lineno != 0) {
-		(void)snprintf(ms->o.buf, ms->o.size, "line %u: ", lineno);
-		len = strlen(ms->o.buf);
+		free(ms->o.buf);
+		ms->o.buf = NULL;
+		file_printf(ms, "line %u: ", lineno);
 	}
-	(void)vsnprintf(ms->o.buf + len, ms->o.size - len, f, va);
-	if (error > 0) {
-		len = strlen(ms->o.buf);
-		(void)snprintf(ms->o.buf + len, ms->o.size - len, " (%s)",
-		    strerror(error));
-	}
+        file_printf(ms, f, va);
+	if (error > 0)
+		file_printf(ms, " (%s)", strerror(error));
 	ms->haderr++;
 	ms->error = error;
 }
@@ -240,8 +219,7 @@ file_reset(struct magic_set *ms)
 		file_error(ms, 0, "no magic files loaded");
 		return -1;
 	}
-	ms->o.ptr = ms->o.buf;
-	ms->o.left = ms->o.size;
+	ms->o.buf = NULL;
 	ms->haderr = 0;
 	ms->error = -1;
 	return 0;
@@ -267,21 +245,18 @@ file_getbuffer(struct magic_set *ms)
 	if (ms->flags & MAGIC_RAW)
 		return ms->o.buf;
 
-	len = ms->o.size - ms->o.left;
 	/* * 4 is for octal representation, + 1 is for NUL */
+	len = strlen(ms->o.buf);
 	if (len > (SIZE_MAX - 1) / 4) {
 		file_oomem(ms, len);
 		return NULL;
 	}
 	psize = len * 4 + 1;
-	if (ms->o.psize < psize) {
-		if ((pbuf = realloc(ms->o.pbuf, psize)) == NULL) {
-			file_oomem(ms, psize);
-			return NULL;
-		}
-		ms->o.psize = psize;
-		ms->o.pbuf = pbuf;
+	if ((pbuf = realloc(ms->o.pbuf, psize)) == NULL) {
+		file_oomem(ms, psize);
+		return NULL;
 	}
+	ms->o.pbuf = pbuf;
 
 #if defined(HAVE_WCHAR_H) && defined(HAVE_MBRTOWC) && defined(HAVE_WCWIDTH)
 	{
@@ -294,7 +269,7 @@ file_getbuffer(struct magic_set *ms)
 
 		np = ms->o.pbuf;
 		op = ms->o.buf;
-		eop = op + strlen(ms->o.buf);
+		eop = op + len;
 
 		while (op < eop) {
 			bytesconsumed = mbrtowc(&nextchar, op,
@@ -354,28 +329,3 @@ file_check_mem(struct magic_set *ms, unsigned int level)
 #endif /* ENABLE_CONDITIONALS */
 	return 0;
 }
-/*
- * Yes these wrappers suffer from buffer overflows, but if your OS does not
- * have the real functions, maybe you should consider replacing your OS?
- */
-#ifndef HAVE_VSNPRINTF
-int
-vsnprintf(char *buf, size_t len, const char *fmt, va_list ap)
-{
-	return vsprintf(buf, fmt, ap);
-}
-#endif
-
-#ifndef HAVE_SNPRINTF
-/*ARGSUSED*/
-int
-snprintf(char *buf, size_t len, const char *fmt, ...)
-{
-	int rv;
-	va_list ap;
-	va_start(ap, fmt);
-	rv = vsprintf(buf, fmt, ap);
-	va_end(ap);
-	return rv;
-}
-#endif

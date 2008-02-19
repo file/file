@@ -107,10 +107,10 @@ typedef long int64_t;
 ])
 
 dnl Checks for functions
-AC_CHECK_FUNCS(mmap strerror strndup strtoul mbrtowc mkstemp utimes utime wcwidth snprintf vsnprintf strtof)
+AC_CHECK_FUNCS(mmap strerror strndup strtoul mbrtowc mkstemp utimes utime wcwidth strtof)
 
 dnl Provide implementation of some required functions if necessary
-AC_REPLACE_FUNCS(getopt_long)
+AC_REPLACE_FUNCS(getopt_long asprintf vasprintf)
 
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)

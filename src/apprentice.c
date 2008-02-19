@@ -47,7 +47,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.120 2008/02/18 21:45:58 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.121 2008/02/18 21:50:24 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -106,7 +106,7 @@ private void bs1(struct magic *);
 private uint16_t swap2(uint16_t);
 private uint32_t swap4(uint32_t);
 private uint64_t swap8(uint64_t);
-private char *mkdbname(const char *, char *, size_t, int);
+private void mkdbname(const char *, char **, int);
 private int apprentice_map(struct magic_set *, struct magic **, uint32_t *,
     const char *);
 private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
@@ -360,8 +360,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		if (*fn == '\0')
 			break;
 		file_err = apprentice_1(ms, fn, action, mlist);
-		if (file_err > errs)
-			errs = file_err;
+		errs = MAX(errs, file_err);
 		fn = p;
 	}
 	if (errs == -1) {
@@ -1765,40 +1764,40 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	uint32_t *ptr;
 	uint32_t version;
 	int needsbyteswap;
-	char buf[MAXPATHLEN];
-	char *dbname = mkdbname(fn, buf, sizeof(buf), 0);
+	char *dbname = NULL;
 	void *mm = NULL;
 
+	mkdbname(fn, &dbname, 0);
 	if (dbname == NULL)
-		return -1;
+		goto error2;
 
 	if ((fd = open(dbname, O_RDONLY|O_BINARY)) == -1)
-		return -1;
+		goto error2;
 
 	if (fstat(fd, &st) == -1) {
 		file_error(ms, errno, "cannot stat `%s'", dbname);
-		goto error;
+		goto error1;
 	}
 	if (st.st_size < 8) {
 		file_error(ms, 0, "file `%s' is too small", dbname);
-		goto error;
+		goto error1;
 	}
 
 #ifdef QUICK
 	if ((mm = mmap(0, (size_t)st.st_size, PROT_READ|PROT_WRITE,
 	    MAP_PRIVATE|MAP_FILE, fd, (off_t)0)) == MAP_FAILED) {
 		file_error(ms, errno, "cannot map `%s'", dbname);
-		goto error;
+		goto error1;
 	}
 #define RET	2
 #else
 	if ((mm = malloc((size_t)st.st_size)) == NULL) {
 		file_oomem(ms, (size_t)st.st_size);
-		goto error;
+		goto error1;
 	}
 	if (read(fd, mm, (size_t)st.st_size) != (size_t)st.st_size) {
 		file_badread(ms);
-		goto error;
+		goto error1;
 	}
 #define RET	1
 #endif
@@ -1809,7 +1808,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	if (*ptr != MAGICNO) {
 		if (swap4(*ptr) != MAGICNO) {
 			file_error(ms, 0, "bad magic in `%s'");
-			goto error;
+			goto error1;
 		}
 		needsbyteswap = 1;
 	} else
@@ -1822,7 +1821,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		file_error(ms, 0, "File %d.%d supports only %d version magic "
 		    "files. `%s' is version %d", FILE_VERSION_MAJOR, patchlevel,
 		    VERSIONNO, dbname, version);
-		goto error;
+		goto error1;
 	}
 	*nmagicp = (uint32_t)(st.st_size / sizeof(struct magic));
 	if (*nmagicp > 0)
@@ -1830,9 +1829,10 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	(*magicp)++;
 	if (needsbyteswap)
 		byteswap(*magicp, *nmagicp);
+	free(dbname);
 	return RET;
 
-error:
+error1:
 	if (fd != -1)
 		(void)close(fd);
 	if (mm) {
@@ -1845,6 +1845,8 @@ error:
 		*magicp = NULL;
 		*nmagicp = 0;
 	}
+error2:
+	free(dbname);
 	return -1;
 }
 
@@ -1859,44 +1861,49 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
     uint32_t *nmagicp, const char *fn)
 {
 	int fd;
-	char buf[MAXPATHLEN];
-	char *dbname = mkdbname(fn, buf, sizeof(buf), 1);
+	char *dbname;
+	int rv = -1;
+
+	mkdbname(fn, &dbname, 1);
 
 	if (dbname == NULL) 
-		return -1;
+		goto out;
 
 	if ((fd = open(dbname, O_WRONLY|O_CREAT|O_TRUNC|O_BINARY, 0644)) == -1) {
 		file_error(ms, errno, "cannot open `%s'", dbname);
-		return -1;
+		goto out;
 	}
 
 	if (write(fd, ar, sizeof(ar)) != (ssize_t)sizeof(ar)) {
 		file_error(ms, errno, "error writing `%s'", dbname);
-		return -1;
+		goto out;
 	}
 
 	if (lseek(fd, (off_t)sizeof(struct magic), SEEK_SET)
 	    != sizeof(struct magic)) {
 		file_error(ms, errno, "error seeking `%s'", dbname);
-		return -1;
+		goto out;
 	}
 
 	if (write(fd, *magicp, (sizeof(struct magic) * *nmagicp)) 
 	    != (ssize_t)(sizeof(struct magic) * *nmagicp)) {
 		file_error(ms, errno, "error writing `%s'", dbname);
-		return -1;
+		goto out;
 	}
 
 	(void)close(fd);
-	return 0;
+	rv = 0;
+out:
+	free(dbname);
+	return rv;
 }
 
 private const char ext[] = ".mgc";
 /*
  * make a dbname
  */
-private char *
-mkdbname(const char *fn, char *buf, size_t bufsiz, int strip)
+private void
+mkdbname(const char *fn, char **buf, int strip)
 {
 	if (strip) {
 		const char *p;
@@ -1904,8 +1911,11 @@ mkdbname(const char *fn, char *buf, size_t bufsiz, int strip)
 			fn = ++p;
 	}
 
-	(void)snprintf(buf, bufsiz, "%s%s", fn, ext);
-	return buf;
+	(void)asprintf(buf, "%s%s", fn, ext);
+	if (*buf && strlen(*buf) > MAXPATHLEN) {
+		free(*buf);
+		*buf = NULL;
+	}
 }
 
 /*

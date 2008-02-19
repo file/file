@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.48 2008/02/07 00:58:52 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.49 2008/02/17 19:28:54 rrt Exp $")
 #endif	/* lint */
 
 #ifndef PIPE_BUF 
@@ -103,20 +103,14 @@ magic_open(int flags)
 
 	if (magic_setflags(ms, flags) == -1) {
 		errno = EINVAL;
-		goto free1;
+		goto free;
 	}
 
-	ms->o.ptr = ms->o.buf = malloc(ms->o.left = ms->o.size = 1024);
-	if (ms->o.buf == NULL)
-		goto free1;
-
-	ms->o.pbuf = malloc(ms->o.psize = 1024);
-	if (ms->o.pbuf == NULL)
-		goto free2;
+	ms->o.buf = ms->o.pbuf = NULL;
 
 	ms->c.li = malloc((ms->c.len = 10) * sizeof(*ms->c.li));
 	if (ms->c.li == NULL)
-		goto free3;
+		goto free;
 	
 	ms->haderr = 0;
 	ms->error = -1;
@@ -124,11 +118,7 @@ magic_open(int flags)
 	ms->file = "unknown";
 	ms->line = 0;
 	return ms;
-free3:
-	free(ms->o.pbuf);
-free2:
-	free(ms->o.buf);
-free1:
+free:
 	free(ms);
 	return NULL;
 }
