@@ -45,9 +45,11 @@
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
+#include <sys/types.h>
+#include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.121 2008/02/18 21:50:24 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.122 2008/02/19 00:58:59 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -239,7 +241,7 @@ init_file_tables(void)
 }
 
 /*
- * Handle one file.
+ * Handle one file or directory.
  */
 private int
 apprentice_1(struct magic_set *ms, const char *fn, int action,
@@ -325,7 +327,7 @@ file_delmagic(struct magic *p, int type, size_t entries)
 	}
 }
 
-/* const char *fn: list of magic files */
+/* const char *fn: list of magic files and directories */
 protected struct mlist *
 file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
@@ -504,41 +506,20 @@ apprentice_sort(const void *a, const void *b)
 }
 
 /*
- * parse from a file
- * const char *fn: name of magic file
+ * Load and parse one file.
  */
-private int
-apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
-    const char *fn, int action)
+static void load_1(struct magic_set *ms, int action, const char *fn, int *errs,
+   struct magic_entry **marray, uint32_t *marraycount)
 {
-	FILE *f;
 	char line[BUFSIZ];
-	int errs = 0;
-	struct magic_entry *marray;
-	uint32_t marraycount, i, mentrycount = 0;
 	size_t lineno = 0;
-
-	ms->flags |= MAGIC_CHECK;	/* Enable checks for parsed files */
-
-	f = fopen(ms->file = fn, "r");
+	FILE *f = fopen(ms->file = fn, "r");
 	if (f == NULL) {
 		if (errno != ENOENT)
 			file_error(ms, errno, "cannot read magic file `%s'",
-			    fn);
-		return -1;
+				   fn);
+		(*errs)++;
 	}
-
-        maxmagic = MAXMAGIS;
-	if ((marray = calloc(maxmagic, sizeof(*marray))) == NULL) {
-		(void)fclose(f);
-		file_oomem(ms, maxmagic * sizeof(*marray));
-		return -1;
-	}
-	marraycount = 0;
-
-	/* print silly verbose header for USG compat. */
-	if (action == FILE_CHECK)
-		(void)fprintf(stderr, "%s\n", usg_hdr);
 
 	/* read and parse this file */
 	for (ms->line = 1; fgets(line, sizeof(line), f) != NULL; ms->line++) {
@@ -557,18 +538,66 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		if (len > mime_marker_len &&
 		    memcmp(line, mime_marker, mime_marker_len) == 0) {
 			/* MIME type */
-			if (parse_mime(ms, &marray, &marraycount,
-			    line + mime_marker_len) != 0)
-				errs++;
+			if (parse_mime(ms, marray, marraycount,
+				       line + mime_marker_len) != 0)
+				(*errs)++;
 			continue;
 		}
-		if (parse(ms, &marray, &marraycount, line, lineno, action) != 0)
-			errs++;
+		if (parse(ms, marray, marraycount, line, lineno, action) != 0)
+			(*errs)++;
 	}
 
 	(void)fclose(f);
-	if (errs)
-		goto out;
+}
+
+/*
+ * parse a file or directory of files
+ * const char *fn: name of magic file or directory
+ */
+private int
+apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
+    const char *fn, int action)
+{
+	int errs = 0;
+	struct magic_entry *marray;
+	uint32_t marraycount, i, mentrycount = 0;
+	char *subfn;
+	struct stat st;
+	DIR *dir;
+	struct dirent *d;
+
+	ms->flags |= MAGIC_CHECK;	/* Enable checks for parsed files */
+
+        maxmagic = MAXMAGIS;
+	if ((marray = calloc(maxmagic, sizeof(*marray))) == NULL) {
+		file_oomem(ms, maxmagic * sizeof(*marray));
+		return -1;
+	}
+	marraycount = 0;
+
+	/* print silly verbose header for USG compat. */
+	if (action == FILE_CHECK)
+		(void)fprintf(stderr, "%s\n", usg_hdr);
+
+	if (stat(fn, &st) == 0 && S_ISDIR(st.st_mode)) {
+		dir = opendir(fn);
+		if (dir) {
+			while (d = readdir(dir)) {
+				asprintf(&subfn, "%s/%s", fn, d->d_name);
+				if (stat(subfn, &st) == 0 && S_ISREG(st.st_mode)) {
+					load_1(ms, action, (const char *)subfn, &errs,
+					    &marray, &marraycount);
+				}
+				if (errs)
+					goto out;
+			}
+			closedir(dir);
+		} else {
+			load_1(ms, action, fn, &errs, &marray, &marraycount);
+			if (errs)
+				goto out;
+		}
+	}
 
 #ifndef NOORDER
 	qsort(marray, marraycount, sizeof(*marray), apprentice_sort);
