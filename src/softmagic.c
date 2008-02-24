@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.112 2008/02/19 00:58:59 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.113 2008/02/24 01:13:13 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -1345,13 +1345,6 @@ mget(struct magic_set *ms, const unsigned char *s,
 				case FILE_OPMODULO:
 					offset = p->l % off;
 					break;
-			/*	case TOOMANYSWITCHBLOCKS:
-			 *		ugh = p->eye % m->strain;
-			 *		rub;
-			 *	case BEER:
-			 *		off = p->tab & m->in_gest;
-			 *		sleep;
-			 */
 				}
 			} else
 				offset = p->l;
