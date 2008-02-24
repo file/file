@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.100 2008/02/24 01:13:13 rrt Exp $
+ * @(#)$File: file.h,v 1.101 2008/02/24 01:16:08 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -379,6 +379,9 @@ int asprintf(char **ptr, const char *format_string, ...);
 #define O_BINARY	0
 #endif
 
+#ifdef __GNUC__
+static const char *rcsid(const char *) __attribute__((__used__));
+#endif
 #define FILE_RCSID(id) \
 static const char *rcsid(const char *p) { \
 	return rcsid(p = id); \
