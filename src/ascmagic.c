@@ -49,10 +49,8 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.58 2008/02/08 13:31:19 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.59 2008/02/11 00:19:29 rrt Exp $")
 #endif	/* lint */
-
-typedef unsigned long unichar;
 
 #define MAXLINELEN 300	/* longest sane line length */
 #define ISSPC(x) ((x) == ' ' || (x) == '\t' || (x) == '\r' || (x) == '\n' \
@@ -61,7 +59,7 @@ typedef unsigned long unichar;
 private int looks_ascii(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_utf8_with_BOM(const unsigned char *, size_t, unichar *,
     size_t *);
-private int looks_utf8(const unsigned char *, size_t, unichar *, size_t *);
+protected int file_looks_utf8(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_ucs16(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_latin1(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_extended(const unsigned char *, size_t, unichar *, size_t *);
@@ -124,7 +122,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		code = "UTF-8 Unicode (with BOM)";
 		code_mime = "utf-8";
 		type = "text";
-	} else if (looks_utf8(buf, nbytes, ubuf, &ulen) > 1) {
+	} else if (file_looks_utf8(buf, nbytes, ubuf, &ulen) > 1) {
 		code = "UTF-8 Unicode";
 		code_mime = "utf-8";
 		type = "text";
@@ -508,16 +506,20 @@ looks_extended(const unsigned char *buf, size_t nbytes, unichar *ubuf,
  *      0: uses odd control characters, so doesn't look like text
  *      1: 7-bit text
  *      2: definitely UTF-8 text (valid high-bit set bytes)
+ *
+ * If ubuf is non-NULL on entry, text is decoded into ubuf, *ulen;
+ * ubuf must be big enough!
  */
-private int
-looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
+protected int
+file_looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 {
 	size_t i;
 	int n;
 	unichar c;
 	int gotone = 0, ctrl = 0;
 
-	*ulen = 0;
+	if (ubuf)
+		*ulen = 0;
 
 	for (i = 0; i < nbytes; i++) {
 		if ((buf[i] & 0x80) == 0) {	   /* 0xxxxxxx is plain ASCII */
@@ -529,7 +531,8 @@ looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 			if (text_chars[buf[i]] != T)
 				ctrl = 1;
 
-			ubuf[(*ulen)++] = buf[i];
+			if (ubuf)
+				ubuf[(*ulen)++] = buf[i];
 		} else if ((buf[i] & 0x40) == 0) { /* 10xxxxxx never 1st byte */
 			return -1;
 		} else {			   /* 11xxxxxx begins UTF-8 */
@@ -564,7 +567,8 @@ looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 				c = (c << 6) + (buf[i] & 0x3f);
 			}
 
-			ubuf[(*ulen)++] = c;
+			if (ubuf)
+				ubuf[(*ulen)++] = c;
 			gotone = 1;
 		}
 	}
@@ -582,7 +586,7 @@ looks_utf8_with_BOM(const unsigned char *buf, size_t nbytes, unichar *ubuf,
     size_t *ulen)
 {
 	if (nbytes > 3 && buf[0] == 0xef && buf[1] == 0xbb && buf[2] == 0xbf)
-		return looks_utf8(buf + 3, nbytes - 3, ubuf, ulen);
+		return file_looks_utf8(buf + 3, nbytes - 3, ubuf, ulen);
 	else
 		return -1;
 }

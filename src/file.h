@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.99 2008/02/24 01:06:08 rrt Exp $
+ * @(#)$File: file.h,v 1.100 2008/02/24 01:13:13 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -312,6 +312,9 @@ struct magic_set {
 	union VALUETYPE ms_value;	/* either number or string */
 };
 
+/* Type for Unicode characters */
+typedef unsigned long unichar;
+
 struct stat;
 protected const char *file_fmttime(uint32_t, int);
 protected int file_buffer(struct magic_set *, int, const char *, const void *,
@@ -343,6 +346,7 @@ protected size_t file_mbswidth(const char *);
 protected const char *file_getbuffer(struct magic_set *);
 protected ssize_t sread(int, void *, size_t, int);
 protected int file_check_mem(struct magic_set *, unsigned int);
+protected int file_looks_utf8(const unsigned char *, size_t, unichar *, size_t *);
 
 #ifndef COMPILE_ONLY
 extern const char *file_names[];
