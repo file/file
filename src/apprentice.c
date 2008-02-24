@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.124 2008/02/19 18:38:38 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.125 2008/02/24 01:13:13 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -579,6 +579,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	if (action == FILE_CHECK)
 		(void)fprintf(stderr, "%s\n", usg_hdr);
 
+	/* load directory or file */
 	if (stat(fn, &st) == 0 && S_ISDIR(st.st_mode)) {
 		dir = opendir(fn);
 		if (dir) {
@@ -588,16 +589,15 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 					load_1(ms, action, (const char *)subfn, &errs,
 					    &marray, &marraycount);
 				}
-				if (errs)
-					goto out;
+				free(subfn);
 			}
 			closedir(dir);
-		} else {
-			load_1(ms, action, fn, &errs, &marray, &marraycount);
-			if (errs)
-				goto out;
-		}
-	}
+		} else
+			errs++;
+	} else
+		load_1(ms, action, fn, &errs, &marray, &marraycount);
+	if (errs)
+		goto out;
 
 #ifndef NOORDER
 	qsort(marray, marraycount, sizeof(*marray), apprentice_sort);
