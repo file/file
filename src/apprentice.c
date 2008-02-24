@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.124 2008/02/19 18:38:38 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.125 2008/02/24 01:13:13 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1211,13 +1211,12 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 	EATAB;
 	if (l[0] == '\b') {
 		++l;
-		m->nospflag = 1;
+		m->flag |= NOSPACE;
 	} else if ((l[0] == '\\') && (l[1] == 'b')) {
 		++l;
 		++l;
-		m->nospflag = 1;
-	} else
-		m->nospflag = 0;
+		m->flag |= NOSPACE;
+	}
 	for (i = 0; (m->desc[i++] = *l++) != '\0' && i < sizeof(m->desc); )
 		continue;
 	if (i == sizeof(m->desc)) {

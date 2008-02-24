@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.99 2008/02/24 01:06:08 rrt Exp $
+ * @(#)$File: file.h,v 1.100 2008/02/24 01:13:13 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -107,18 +107,21 @@
 struct magic {
 	/* Word 1 */
 	uint16_t cont_level;	/* level of ">" */
-	uint8_t nospflag;	/* supress space character */
 	uint8_t flag;
 #define INDIR		1	/* if '(...)' appears */
 #define OFFADD		2	/* if '>&' or '>...(&' appears */
 #define INDIROFFADD	4	/* if '>&(' appears */
 #define	UNSIGNED	8	/* comparison is unsigned */
+#define NOSPACE		16	/* suppress space character before output */
+#define	TEXTTEST	32	/* test is for a text type (set only
+                                   for top-level tests) */
+	uint8_t dummy1;
 
 	/* Word 2 */
 	uint8_t reln;		/* relation (0=eq, '>'=gt, etc) */
 	uint8_t vallen;		/* length of string value, if any */
-	uint8_t type;		/* int, short, long or string. */
-	uint8_t in_type;	/* type of indirrection */
+	uint8_t type;		/* comparison type (FILE_*) */
+	uint8_t in_type;	/* type of indirection */
 #define 			FILE_INVALID	0
 #define 			FILE_BYTE	1
 #define				FILE_SHORT	2
@@ -181,10 +184,10 @@ struct magic {
 	uint8_t mask_op;	/* operator for mask */
 #ifdef ENABLE_CONDITIONALS
 	uint8_t cond;		/* conditional type */
-	uint8_t dummy1;	
-#else
-	uint8_t dummy1;	
 	uint8_t dummy2;	
+#else
+	uint8_t dummy2;	
+	uint8_t dummy3;	
 #endif
 
 #define				FILE_OPS	"&|^+-*/%"

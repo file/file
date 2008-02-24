@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.112 2008/02/19 00:58:59 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.113 2008/02/24 01:13:13 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -240,7 +240,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				 */
 				/* space if previous printed */
 				if (need_separator
-				    && (m->nospflag == 0)
+				    && ((m->flag & NOSPACE) == 0)
 				    && *MAGIC_DESC) {
 					if (file_printf(ms, " ") == -1)
 						return -1;
