@@ -16,5 +16,5 @@ else
 FILE_COMPILE = $(top_builddir)/src/file
 endif
 
-magic.mgc: $(magic_FRAGMENTS) $(FILE_COMPILE)
+magic.mgc: $(MAGIC_FRAGMENTS) $(FILE_COMPILE)
 	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
