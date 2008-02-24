@@ -1,3 +1,3 @@
 EXTRA_DIST = MAINT
 
-SUBDIRS = src magic doc python
+SUBDIRS = src magic tests doc python

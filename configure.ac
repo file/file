@@ -118,5 +118,5 @@ AC_CHECK_LIB(z,gzopen)
 dnl See if we are cross-compiling
 AM_CONDITIONAL(IS_CROSS_COMPILE, test "$cross_compiling" = yes)
 
-AC_CONFIG_FILES([Makefile src/Makefile magic/Makefile doc/Makefile python/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile magic/Makefile tests/Makefile doc/Makefile python/Makefile])
 AC_OUTPUT
