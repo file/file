@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.97 2008/02/19 00:58:59 rrt Exp $
+ * @(#)$File: file.h,v 1.98 2008/02/19 17:29:30 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -91,7 +91,7 @@
 #ifndef HOWMANY
 # define HOWMANY (256 * 1024)	/* how much of the file to look at */
 #endif
-#define MAXMAGIS 16384		/* max entries in any one magic file
+#define MAXMAGIS 8192		/* max entries in any one magic file
 				   or directory */
 #define MAXDESC	64		/* max leng of text description/MIME type */
 #define MAXstring 32		/* max leng of "string" types */
