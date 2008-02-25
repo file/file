@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.114 2008/02/24 01:17:54 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.115 2008/02/25 01:05:30 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -786,6 +786,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		case FILE_SEARCH:
 			ms->search.s = (const char *)s + offset;
 			ms->search.s_len = nbytes - offset;
+			ms->search.offset = offset;
 			return 0;
 
 		case FILE_REGEX: {
@@ -1641,7 +1642,6 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		slen = MIN(m->vallen, sizeof(m->value.s));
 		l = 0;
 		v = 0;
-		ms->search.offset = m->offset;
 
 		for (idx = 0; m->str_range == 0 || idx < m->str_range; idx++) {
 			if (slen + idx > ms->search.s_len)
@@ -1649,7 +1649,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 
 			v = file_strncmp(m->value.s, ms->search.s + idx, slen, m->str_flags);
 			if (v == 0) {	/* found match */
-				ms->search.offset = m->offset + idx;
+				ms->search.offset += idx;
 				break;
 			}
 		}
