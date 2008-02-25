@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.114 2008/02/24 01:17:54 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.115 2008/02/25 01:05:30 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -187,8 +187,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				 */
 				cont_level = m->cont_level;
 			}
-			if (!(magic[magindex - 1].flag & OFFADD))
-				ms->offset = m->offset;
+			ms->offset = m->offset;
 			if (m->flag & OFFADD) {
 				ms->offset +=
 				    ms->c.li[cont_level - 1].off;
