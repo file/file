@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.125 2008/02/24 01:13:13 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.126 2008/02/24 01:19:36 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -508,7 +508,7 @@ apprentice_sort(const void *a, const void *b)
 /*
  * Load and parse one file.
  */
-static void load_1(struct magic_set *ms, int action, const char *fn, int *errs,
+private void load_1(struct magic_set *ms, int action, const char *fn, int *errs,
    struct magic_entry **marray, uint32_t *marraycount)
 {
 	char line[BUFSIZ];
