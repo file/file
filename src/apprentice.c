@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.126 2008/02/24 01:19:36 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.127 2008/02/25 18:19:48 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -599,7 +599,6 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	if (errs)
 		goto out;
 
-#ifndef NOORDER
 	qsort(marray, marraycount, sizeof(*marray), apprentice_sort);
 	/*
 	 * Make sure that any level 0 "default" line is last (if one exists).
@@ -618,7 +617,6 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 			break;					    
 		}
 	}
-#endif
 
 	for (i = 0; i < marraycount; i++)
 		mentrycount += marray[i].cont_count;
