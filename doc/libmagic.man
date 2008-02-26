@@ -164,7 +164,7 @@ bytes size.
 .Pp
 The
 .Fn magic_setflags
-function, sets the 
+function sets the 
 .Ar flags
 described above. Note that using both MIME flags together can also
 return extra information on the charset.
