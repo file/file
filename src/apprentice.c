@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.129 2008/02/27 17:59:21 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.130 2008/02/27 18:04:53 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -517,9 +517,9 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 	FILE *f = fopen(ms->file = fn, "r");
 	if (f == NULL) {
 		if (errno != ENOENT)
- 			file_error(ms, errno, "cannot read magic file `%s'",
- 				   fn);
- 		(*errs)++;
+			file_error(ms, errno, "cannot read magic file `%s'",
+				   fn);
+		(*errs)++;
 	} else {
 		/* read and parse this file */
 		for (ms->line = 1; fgets(line, sizeof(line), f) != NULL; ms->line++) {
@@ -544,11 +544,11 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 				continue;
 			}
 			if (parse(ms, marray, marraycount, line, lineno, action) != 0)
- 				(*errs)++;
- 		}
+				(*errs)++;
+		}
 
 		(void)fclose(f);
- 	}
+	}
 }
 
 /*
