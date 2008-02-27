@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.60 2008/02/24 01:16:08 rrt Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.61 2008/02/27 15:02:33 rrt Exp $")
 #endif	/* lint */
 
 #define MAXLINELEN 300	/* longest sane line length */
@@ -165,7 +165,6 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	}
 
 	/* look for tokens from names.h - this is expensive! */
-
 	if ((ms->flags & MAGIC_NO_CHECK_TOKENS) != 0)
 		goto subtype_identified;
 
@@ -173,24 +172,18 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	while (i < ulen) {
 		size_t end;
 
-		/*
-		 * skip past any leading space
-		 */
+		/* skip past any leading space */
 		while (i < ulen && ISSPC(ubuf[i]))
 			i++;
 		if (i >= ulen)
 			break;
 
-		/*
-		 * find the next whitespace
-		 */
+		/* find the next whitespace */
 		for (end = i + 1; end < nbytes; end++)
 			if (ISSPC(ubuf[end]))
 				break;
 
-		/*
-		 * compare the word thus isolated against the token list
-		 */
+		/* compare the word thus isolated against the token list */
 		for (p = names; p < names + NNAMES; p++) {
 			if (ascmatch((const unsigned char *)p->name, ubuf + i,
 			    end - i)) {
@@ -205,9 +198,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 
 subtype_identified:
 
-	/*
-	 * Now try to discover other details about the file.
-	 */
+	/* Now try to discover other details about the file. */
 	for (i = 0; i < ulen; i++) {
 		if (ubuf[i] == '\n') {
 			if (seen_cr)
