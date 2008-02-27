@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.128 2008/02/26 03:03:40 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.129 2008/02/27 17:59:21 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -508,7 +508,8 @@ apprentice_sort(const void *a, const void *b)
 /*
  * Load and parse one file.
  */
-private void load_1(struct magic_set *ms, int action, const char *fn, int *errs,
+private void
+load_1(struct magic_set *ms, int action, const char *fn, int *errs,
    struct magic_entry **marray, uint32_t *marraycount)
 {
 	char line[BUFSIZ];
@@ -516,38 +517,38 @@ private void load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 	FILE *f = fopen(ms->file = fn, "r");
 	if (f == NULL) {
 		if (errno != ENOENT)
-			file_error(ms, errno, "cannot read magic file `%s'",
-				   fn);
-		(*errs)++;
-	}
+ 			file_error(ms, errno, "cannot read magic file `%s'",
+ 				   fn);
+ 		(*errs)++;
+	} else {
+		/* read and parse this file */
+		for (ms->line = 1; fgets(line, sizeof(line), f) != NULL; ms->line++) {
+			size_t len;
+			len = strlen(line);
+			if (len == 0) /* null line, garbage, etc */
+				continue;
+			if (line[len - 1] == '\n') {
+				lineno++;
+				line[len - 1] = '\0'; /* delete newline */
+			}
+			if (line[0] == '\0')	/* empty, do not parse */
+				continue;
+			if (line[0] == '#')	/* comment, do not parse */
+				continue;
+			if (len > mime_marker_len &&
+			    memcmp(line, mime_marker, mime_marker_len) == 0) {
+				/* MIME type */
+				if (parse_mime(ms, marray, marraycount,
+					       line + mime_marker_len) != 0)
+					(*errs)++;
+				continue;
+			}
+			if (parse(ms, marray, marraycount, line, lineno, action) != 0)
+ 				(*errs)++;
+ 		}
 
-	/* read and parse this file */
-	for (ms->line = 1; fgets(line, sizeof(line), f) != NULL; ms->line++) {
-		size_t len;
-		len = strlen(line);
-		if (len == 0) /* null line, garbage, etc */
-			continue;
-		if (line[len - 1] == '\n') {
-			lineno++;
-			line[len - 1] = '\0'; /* delete newline */
-		}
-		if (line[0] == '\0')	/* empty, do not parse */
-			continue;
-		if (line[0] == '#')	/* comment, do not parse */
-			continue;
-		if (len > mime_marker_len &&
-		    memcmp(line, mime_marker, mime_marker_len) == 0) {
-			/* MIME type */
-			if (parse_mime(ms, marray, marraycount,
-				       line + mime_marker_len) != 0)
-				(*errs)++;
-			continue;
-		}
-		if (parse(ms, marray, marraycount, line, lineno, action) != 0)
-			(*errs)++;
-	}
-
-	(void)fclose(f);
+		(void)fclose(f);
+ 	}
 }
 
 /*
