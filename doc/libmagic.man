@@ -1,3 +1,4 @@
+.\" $File: libmagic.man,v 1.18 2008/02/28 22:24:46 rrt Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003.
 .\" All Rights Reserved.
