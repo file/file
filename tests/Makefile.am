@@ -1,4 +1,3 @@
-# FIXME: Actually run a test on a magic file
 check_PROGRAMS = test
 test_LDADD = $(top_builddir)/src/libmagic.la
 
