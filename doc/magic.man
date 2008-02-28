@@ -1,11 +1,11 @@
-.\" $File: magic.man,v 1.51 2008/02/18 18:32:31 rrt Exp $
+.\" $File: magic.man,v 1.52 2008/02/28 13:14:26 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7 or Berkeley systems.
 .Sh NAME
 .Nm magic
-.Nd file command's magic number file
+.Nd file command's magic pattern file
 .Sh DESCRIPTION
 This manual page documents the format of the magic file as
 used by the
@@ -15,12 +15,12 @@ The
 .Xr file __CSECTION__
 command identifies the type of a file using,
 among other tests,
-a test for whether the file begins with a certain
-.Dq "magic number" .
+a test for whether the file contains certain
+.Dq "magic patterns" .
 The file
 .Pa __MAGIC__
-specifies what magic numbers are to be tested for, what message or
-MIME type to print if a particular magic number is found,
+specifies what patterns are to be tested for, what message or
+MIME type to print if a particular pattern is found,
 and additional information to extract from the file.
 .Pp
 Each line of the file specifies a test to be performed.
@@ -151,7 +151,9 @@ A regular expression match in extended POSIX regular expression syntax
 (much like egrep). Regular expressions can easily take exponential
 time to process; their use is discouraged. When used in production
 environments, their performance should be carefully checked. The type
-specification can be optionally followed by /[c][s]. The
+specification can be optionally followed by
+.Dv /[c][s] .
+The
 .Dq c
 flag makes the match case insensitive, while the
 .Dq s
@@ -172,10 +174,10 @@ not beginning and end of file.
 A literal string search starting at the given offset. The same
 modifier flags can be used as for string patterns. The modifier flags
 (if any) must be followed by
-.Dv /\*[Lt]number\*[Gt]
-which specifies how many matches shall be attempted (the range).
-This is suitable for searching larger binary expressions with variable
-offsets, using
+.Dv /number
+the range, that is, the number of positions at which the match will be
+attempted, starting from the start offset. This is suitable for
+searching larger binary expressions with variable offsets, using
 .Dv \e
 escapes for special characters. The offset works as for regex.
 .It Dv default
@@ -245,8 +247,8 @@ is octal, and
 .Dv 0x13
 is hexadecimal.
 .Pp
-For string values, the byte string from the
-file must match the specified byte string.
+For string values, the string from the
+file must match the specified string.
 The operators
 .Dv = ,
 .Dv \*[Lt]
@@ -257,10 +259,10 @@ and
 can be applied to strings.
 The length used for matching is that of the string argument
 in the magic file.
-This means that a line can match any string, and
-then presumably print that string, by doing
+This means that a line can match any non-empty string (usually used to
+then print the string), with
 .Em \*[Gt]\e0
-(because all strings are greater than the null string).
+(because all non-empty strings are greater than the empty string).
 .Pp
 The special test
 .Em x
@@ -364,7 +366,7 @@ there is neither PE\e0\e0 nor LE\e0\e0 in the above example)
 .Pp
 If this indirect offset cannot be used as-is, there are simple calculations
 possible: appending
-.Em [+-*/%\*[Am]|^]\*[Lt]number\*[Gt]
+.Em [+-*/%\*[Am]|^]number
 inside parentheses allows one to modify
 the value read from the file before it is used as an offset:
 .Bd -literal -offset indent
@@ -476,4 +478,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.51 2008/02/18 18:32:31 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.52 2008/02/28 13:14:26 rrt Exp $
