@@ -1,8 +1,8 @@
-.\" $File: magic.man,v 1.52 2008/02/28 13:14:26 rrt Exp $
+.\" $File: magic.man,v 1.53 2008/02/28 20:10:10 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
-.\" install as magic.4 on USG, magic.5 on V7 or Berkeley systems.
+.\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
 .Sh NAME
 .Nm magic
 .Nd file command's magic pattern file
@@ -476,4 +476,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.53 2008/02/28 20:10:10 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.54 2008/02/28 22:22:19 rrt Exp $
