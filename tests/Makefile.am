@@ -8,4 +8,4 @@ check-local:
 TEST_BASES = gedcom
 
 EXTRA_DIST = \
-	gedcom.magic gedcom.testfile gedcom.result
+	*.magic *.testfile *.result
