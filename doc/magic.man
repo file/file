@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.51 2008/02/18 18:32:31 rrt Exp $
+.\" $File: magic.man,v 1.52 2008/02/28 13:14:26 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -25,8 +25,7 @@ and additional information to extract from the file.
 .Pp
 Each line of the file specifies a test to be performed.
 A test compares the data starting at a particular offset
-in the file with a 1-byte, 2-byte, or 4-byte numeric value or
-a string.
+in the file with a byte value, a string or a numeric value.
 If the test succeeds, a message is printed.
 The line consists of the following fields:
 .Bl -tag -width ".Dv message"
@@ -148,10 +147,11 @@ interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv regex
 A regular expression match in extended POSIX regular expression syntax
-(much like egrep). Regular expressions can easily take exponential
-time to process; their use is discouraged. When used in production
-environments, their performance should be carefully checked. The type
-specification can be optionally followed by
+(like egrep). Regular expressions can take exponential time to
+process, and their performance is hard to predict, so their use is
+discouraged. When used in production environments, their performance
+should be carefully checked. The type specification can be optionally
+followed by
 .Dv /[c][s] .
 The
 .Dq c
@@ -186,7 +186,6 @@ This is intended to be used with the test
 (which is always true) and a message that is to be used if there are
 no other matches.
 .El
-.El
 .Pp
 The numeric types may optionally be followed by
 .Dv \*[Am]
@@ -196,7 +195,6 @@ numeric value before any comparisons are done.
 Prepending a
 .Dv u
 to the type indicates that ordered comparisons should be unsigned.
-.Bl -tag -width ".Dv message"
 .It Dv test
 The value to be compared with the value from the file.
 If the type is
@@ -360,11 +358,11 @@ That way variable length structures can be examined:
 \*[Gt]\*[Gt](0x3c.l)  string  LX\e0\e0  LX executable (OS/2)
 .Ed
 .Pp
-This strategy of examining has one drawback: You must make sure that
+This strategy of examining has a drawback: You must make sure that
 you eventually print something, or users may get empty output (like, when
 there is neither PE\e0\e0 nor LE\e0\e0 in the above example)
 .Pp
-If this indirect offset cannot be used as-is, there are simple calculations
+If this indirect offset cannot be used directly, simple calculations are
 possible: appending
 .Em [+-*/%\*[Am]|^]number
 inside parentheses allows one to modify
@@ -478,4 +476,4 @@ a system on which the lengths are invariant.
 .\" the changes I posted to the S5R2 version.
 .\"
 .\" Modified for Ian Darwin's version of the file command.
-.\" @(#)$Id: magic.man,v 1.52 2008/02/28 13:14:26 rrt Exp $
+.\" @(#)$Id: magic.man,v 1.53 2008/02/28 20:10:10 rrt Exp $
