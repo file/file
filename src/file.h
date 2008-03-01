@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.101 2008/02/24 01:16:08 rrt Exp $
+ * @(#)$File: file.h,v 1.102 2008/02/24 01:35:58 christos Exp $
  */
 
 #ifndef __file_h__
@@ -108,13 +108,15 @@ struct magic {
 	/* Word 1 */
 	uint16_t cont_level;	/* level of ">" */
 	uint8_t flag;
-#define INDIR		1	/* if '(...)' appears */
-#define OFFADD		2	/* if '>&' or '>...(&' appears */
-#define INDIROFFADD	4	/* if '>&(' appears */
-#define	UNSIGNED	8	/* comparison is unsigned */
-#define NOSPACE		16	/* suppress space character before output */
-#define	TEXTTEST	32	/* test is for a text type (set only
+#define INDIR		0x01	/* if '(...)' appears */
+#define OFFADD		0x02	/* if '>&' or '>...(&' appears */
+#define INDIROFFADD	0x04	/* if '>&(' appears */
+#define UNSIGNED	0x08	/* comparison is unsigned */
+#define NOSPACE		0x10	/* suppress space character before output */
+#define BINTEST		0x20	/* test is for a binary type (set only
                                    for top-level tests) */
+#define TEXTTEST	0	/* for passing to file_softmagic */
+
 	uint8_t dummy1;
 
 	/* Word 2 */
@@ -329,7 +331,7 @@ protected int file_zmagic(struct magic_set *, int, const char *,
     const unsigned char *, size_t);
 protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
-protected int file_softmagic(struct magic_set *, const unsigned char *, size_t);
+protected int file_softmagic(struct magic_set *, const unsigned char *, size_t, int);
 protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
 protected uint64_t file_signextend(struct magic_set *, struct magic *,
     uint64_t);

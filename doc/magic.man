@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.54 2008/02/28 22:22:19 rrt Exp $
+.\" $File: magic.man,v 1.55 2008/02/28 22:24:46 rrt Exp $
 .Dd January 10, 2007
 .Dt MAGIC __FSECTION__
 .Os
@@ -163,8 +163,7 @@ The regular expression is tested against line
 onwards, where
 .Dv N
 is the given offset.
-Because it looks for newline characters, it is only useful for
-(single-byte encoded) text.
+Line endings are assumed to be in the machine's native format.
 .Dv ^
 and
 .Dv $
@@ -186,6 +185,19 @@ This is intended to be used with the test
 (which is always true) and a message that is to be used if there are
 no other matches.
 .El
+.Pp
+Each top-level magic pattern (see below for an explanation of levels)
+is classified as text or binary according to the types used. Types
+.Dq regex
+and
+.Dq search
+are classified as text tests, unless non-printable characters are used
+in the pattern. All other tests are classified as binary. A top-level
+pattern is considered to be a test text when all its patterns are text
+patterns; otherwise, it is considered to be a binary pattern. When
+matching a file, binary patterns are tried first; if no match is
+found, and the file looks like text, then its encoding is determined
+and the text patterns are tried.
 .Pp
 The numeric types may optionally be followed by
 .Dv \*[Am]

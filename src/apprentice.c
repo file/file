@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.129 2008/02/27 17:59:21 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.130 2008/02/27 18:04:53 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -505,6 +505,65 @@ apprentice_sort(const void *a, const void *b)
 		return 1;
 }
 
+private int
+set_test_type(struct magic *mstart, struct magic *m)
+{
+	switch (m->type) {
+	case FILE_BYTE:
+	case FILE_SHORT:
+	case FILE_LONG:
+	case FILE_DATE:
+	case FILE_BESHORT:
+	case FILE_BELONG:
+	case FILE_BEDATE:
+	case FILE_LESHORT:
+	case FILE_LELONG:
+	case FILE_LEDATE:
+	case FILE_LDATE:
+	case FILE_BELDATE:
+	case FILE_LELDATE:
+	case FILE_MEDATE:
+	case FILE_MELDATE:
+	case FILE_MELONG:
+	case FILE_QUAD:
+	case FILE_LEQUAD:
+	case FILE_BEQUAD:
+	case FILE_QDATE:
+	case FILE_LEQDATE:
+	case FILE_BEQDATE:
+	case FILE_QLDATE:
+	case FILE_LEQLDATE:
+	case FILE_BEQLDATE:
+	case FILE_FLOAT:
+	case FILE_BEFLOAT:
+	case FILE_LEFLOAT:
+	case FILE_DOUBLE:
+	case FILE_BEDOUBLE:
+	case FILE_LEDOUBLE:
+	case FILE_STRING:
+	case FILE_PSTRING:
+	case FILE_BESTRING16:
+	case FILE_LESTRING16:
+		/* binary test, set flag */
+		mstart->flag |= BINTEST;
+		break;
+	case FILE_REGEX:
+	case FILE_SEARCH:
+		/* binary test if pattern is not text */
+		if (file_looks_utf8(m->value.s, m->vallen, NULL, NULL) == 0)
+			mstart->flag |= BINTEST;
+		break;
+	case FILE_DEFAULT:
+		/* can't deduce anything; we shouldn't see this at the
+		   top level anyway */
+		break;
+	case FILE_INVALID:
+	default:
+		/* invalid search type, but no need to complain here */
+		break;
+	}
+}
+
 /*
  * Load and parse one file.
  */
@@ -561,7 +620,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 {
 	int errs = 0;
 	struct magic_entry *marray;
-	uint32_t marraycount, i, mentrycount = 0;
+	uint32_t marraycount, i, mentrycount = 0, starttest;
 	char *subfn;
 	struct stat st;
 	DIR *dir;
@@ -600,7 +659,41 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	if (errs)
 		goto out;
 
+	/* Set types of tests */
+	for (i = 0; i < marraycount; ) {
+		if (marray[i].mp->cont_level != 0) {
+			i++;
+			continue;
+		}
+
+		starttest = i;
+		do {
+			set_test_type(marray[starttest].mp, marray[i].mp);
+			if (ms->flags & MAGIC_DEBUG) {
+				(void)fprintf(stderr, "%s%s%s: %s\n",
+					marray[i].mp->mimetype,
+					marray[i].mp->mimetype[0] == '\0' ? "" : "; ",
+					marray[i].mp->desc[0] ? marray[i].mp->desc : "(no description)",
+					marray[i].mp->flag & BINTEST ? "binary" : "text");
+				if (marray[i].mp->flag & BINTEST) {
+#define SYMBOL "text"
+#define SYMLEN sizeof(SYMBOL)
+					char *p = strstr(marray[i].mp->desc, "text");
+					if (p && (p == marray[i].mp->desc || isspace(p[-1])) &&
+					    (p + SYMLEN - marray[i].mp->desc == MAXstring ||
+					     (p[SYMLEN] == '\0' || isspace(p[SYMLEN])))) {
+						(void)fprintf(stderr,
+							      "*** Possible binary test for text type\n");
+					}
+#undef SYMBOL
+#undef SYMLEN
+				}
+			}
+		} while (++i < marraycount && marray[i].mp->cont_level != 0);
+	}
+
 	qsort(marray, marraycount, sizeof(*marray), apprentice_sort);
+
 	/*
 	 * Make sure that any level 0 "default" line is last (if one exists).
 	 */
