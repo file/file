@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.61 2008/02/27 15:02:33 rrt Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.62 2008/03/01 22:21:48 rrt Exp $")
 #endif	/* lint */
 
 #define MAXLINELEN 300	/* longest sane line length */
@@ -65,15 +65,16 @@ private int looks_latin1(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_extended(const unsigned char *, size_t, unichar *, size_t *);
 private void from_ebcdic(const unsigned char *, size_t, unsigned char *);
 private int ascmatch(const unsigned char *, const unichar *, size_t);
+private unsigned char *encode_utf8(unsigned char *, size_t, unichar *, size_t);
 
 
 protected int
 file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 {
 	size_t i;
-	unsigned char *nbuf = NULL;
+	unsigned char *nbuf = NULL, *utf8_buf = NULL, *utf8_end;
 	unichar *ubuf = NULL;	
-	size_t ulen;
+	size_t ulen, mlen;
 	const struct names *p;
 	int rv = -1;
 	int mime = ms->flags & MAGIC_MIME;
@@ -161,6 +162,24 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 
 	if (nbytes <= 1) {
 		rv = 0;
+		goto done;
+	}
+
+	/* Convert ubuf to UTF-8 and try text soft magic */
+	/* If original was ASCII or UTF-8, could use nbuf instead of
+	   re-converting. */
+	/* malloc size is a conservative overestimate; could be
+	   re-converting improved, or at least realloced after
+	   re-converting conversion. */
+	mlen = ulen * 6;
+	if ((utf8_buf = malloc(mlen)) == NULL) {
+		file_oomem(ms, mlen);
+		goto done;
+	}
+	if ((utf8_end = encode_utf8(utf8_buf, mlen, ubuf, ulen)) == NULL)
+		goto done;
+	if (file_softmagic(ms, utf8_buf, utf8_end - utf8_buf, TEXTTEST) != 0) {
+		rv = 1;
 		goto done;
 	}
 
@@ -332,6 +351,8 @@ done:
 		free(nbuf);
 	if (ubuf)
 		free(ubuf);
+	if (utf8_buf)
+		free(utf8_buf);
 
 	return rv;
 }
@@ -488,6 +509,63 @@ looks_extended(const unsigned char *buf, size_t nbytes, unichar *ubuf,
 	}
 
 	return 1;
+}
+
+/*
+ * Encode Unicode string as UTF-8, returning pointer to character
+ * after end of string, or NULL if an invalid character is found.
+ */
+private unsigned char *
+encode_utf8(unsigned char *buf, size_t len, unichar *ubuf, size_t ulen)
+{
+	size_t i;
+	unsigned char *end = buf + len;
+
+	for (i = 0; i < ulen; i++) {
+		if (ubuf[i] <= 0x7f) {
+			if (end - buf < 1)
+				return NULL;
+			*buf++ = (unsigned char)ubuf[i];
+		} else if (ubuf[i] <= 0x7ff) {
+			if (end - buf < 2)
+				return NULL;
+			*buf++ = (unsigned char)((ubuf[i] >> 6) + 0xc0);
+			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+		} else if (ubuf[i] <= 0xffff) {
+			if (end - buf < 3)
+				return NULL;
+			*buf++ = (unsigned char)((ubuf[i] >> 12) + 0xe0);
+			*buf++ = (unsigned char)(((ubuf[i] >> 6) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+		} else if (ubuf[i] <= 0x1fffff) {
+			if (end - buf < 4)
+				return NULL;
+			*buf++ = (unsigned char)((ubuf[i] >> 18) + 0xf0);
+			*buf++ = (unsigned char)(((ubuf[i] >> 12) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)(((ubuf[i] >>  6) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+		} else if (ubuf[i] <= 0x3ffffff) {
+			if (end - buf < 5)
+				return NULL;
+			*buf++ = (unsigned char)((ubuf[i] >> 24) + 0xf8);
+			*buf++ = (unsigned char)(((ubuf[i] >> 18) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)(((ubuf[i] >> 12) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)(((ubuf[i] >>  6) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+		} else if (ubuf[i] <= 0x7fffffff) {
+			if (end - buf < 6)
+				return NULL;
+			*buf++ = (unsigned char)((ubuf[i] >> 30) + 0xfc);
+			*buf++ = (unsigned char)(((ubuf[i] >> 24) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)(((ubuf[i] >> 18) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)(((ubuf[i] >> 12) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)(((ubuf[i] >>  6) & 0x3f) + 0x80);
+			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+		} else /* Invalid character */
+			return NULL;
+	}
+
+	return buf;
 }
 
 /*

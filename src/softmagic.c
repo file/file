@@ -38,11 +38,11 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.116 2008/02/25 02:54:08 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.117 2008/03/01 22:21:49 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
-    const unsigned char *, size_t);
+    const unsigned char *, size_t, int);
 private int mget(struct magic_set *, const unsigned char *,
     struct magic *, size_t, unsigned int);
 private int magiccheck(struct magic_set *, struct magic *);
@@ -69,12 +69,12 @@ private void cvt_64(union VALUETYPE *, const struct magic *);
  */
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
 protected int
-file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
+file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes, int mode)
 {
 	struct mlist *ml;
 	int rv;
 	for (ml = ms->mlist->next; ml != ms->mlist; ml = ml->next)
-		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes)) != 0)
+		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, mode)) != 0)
 			return rv;
 
 	return 0;
@@ -109,7 +109,7 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
  */
 private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
-    const unsigned char *s, size_t nbytes)
+    const unsigned char *s, size_t nbytes, int mode)
 {
 	uint32_t magindex = 0;
 	unsigned int cont_level = 0;
@@ -124,6 +124,14 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	for (magindex = 0; magindex < nmagic; magindex++) {
 		int flush;
 		struct magic *m = &magic[magindex];
+
+		if ((m->flag & BINTEST) != mode) {
+			/* Skip sub-tests */
+			while (magic[magindex + 1].cont_level != 0 &&
+			       ++magindex < nmagic)
+				continue;
+			continue; /* Skip to next top-level test*/
+		}
 
 		ms->offset = m->offset;
 		ms->line = m->lineno;

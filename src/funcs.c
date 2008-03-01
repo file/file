@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.38 2008/02/19 00:58:59 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.39 2008/03/01 22:21:49 rrt Exp $")
 #endif	/* lint */
 
 /*
@@ -180,7 +180,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 		(m = file_is_tar(ms, buf, nb)) == 0) {
 		/* try tests in /etc/magic (or surrogate magic file) */
 		if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
-		    (m = file_softmagic(ms, buf, nb)) == 0) {
+		    (m = file_softmagic(ms, buf, nb, BINTEST)) == 0) {
 		    /* try known keywords, check whether it is ASCII */
 		    if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
 			(m = file_ascmagic(ms, buf, nb)) == 0) {
