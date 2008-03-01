@@ -35,7 +35,7 @@ xrealloc(void *p, size_t n)
 {
 	p = realloc(p, n);
 	if (p == NULL) {
-		fprintf(stderr, "ERROR slurping file: out of memory\n");
+		(void)fprintf(stderr, "ERROR slurping file: out of memory\n");
 		exit(10);
 	}
 	return p;
@@ -76,33 +76,33 @@ main(int argc, char **argv)
 
 	ms = magic_open(MAGIC_NONE);
 	if (ms == NULL) {
-		fprintf(stderr, "ERROR opening MAGIC_NONE: out of memory\n");
+		(void)fprintf(stderr, "ERROR opening MAGIC_NONE: out of memory\n");
 		return 10;
 	}
 	if (magic_load(ms, NULL) == -1) {
-		fprintf(stderr, "ERROR loading with NULL file: %s\n", magic_error(ms));
+		(void)fprintf(stderr, "ERROR loading with NULL file: %s\n", magic_error(ms));
 		return 11;
 	}
 
 	if (argc > 1) {
 		if (argc != 3) {
-			fprintf(stderr, "Usage: test TEST-FILE RESULT\n");
+			(void)fprintf(stderr, "Usage: test TEST-FILE RESULT\n");
 		} else {
 			if ((result = magic_file(ms, argv[1])) == NULL) {
-				fprintf(stderr, "ERROR loading file %s: %s\n", argv[1], magic_error(ms));
+				(void)fprintf(stderr, "ERROR loading file %s: %s\n", argv[1], magic_error(ms));
 				return 12;
 			} else {
 				fp = fopen(argv[2], "r");
 				if (fp == NULL) {
-					fprintf(stderr, "ERROR opening `%s': ", argv[2]);
+					(void)fprintf(stderr, "ERROR opening `%s': ", argv[2]);
 					perror(NULL);
 					return 13;
 				}
 				desired = slurp(fp, &desired_len);
 				fclose(fp);
-				printf("%s: %s\n", argv[1], result);
+				(void)printf("%s: %s\n", argv[1], result);
                                 if (strcmp(result, desired) != 0) {
-					fprintf(stderr, "Error: result was\n%s\nexpected:\n%s\n", result, desired);
+					(void)fprintf(stderr, "Error: result was\n%s\nexpected:\n%s\n", result, desired);
 					return 1;
                                 }
 			}
