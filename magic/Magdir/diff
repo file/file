@@ -1,0 +1,9 @@
+#------------------------------------------------------------------------------
+# diff:  file(1) magic for diff(1) output
+#
+0	search/1	diff\ 		diff output text
+0	search/1	***\ 		diff output text
+0	search/1	Only\ in\ 	diff output text
+0	search/1	Common\ subdirectories:\ 	diff output text
+
+0	search/1	Index:		RCS/CVS diff output text
