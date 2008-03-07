@@ -1,12 +1,12 @@
-MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/magic
+MAGIC_FRAGMENT_BASE = Magdir
+MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
 
-MAGIC_FRAGMENTS = $(MAGIC_FRAGMENT_DIR)
+pkgdata_DATA = magic.mgc $(MAGIC_FRAGMENT_DIR)
 
-pkgdata_DATA = magic.mgc $(MAGIC_FRAGMENTS)
+EXTRA_DIST = Localstuff $(MAGIC_FRAGMENT_DIR)
 
-EXTRA_DIST = Localstuff $(MAGIC_FRAGMENTS)
-
-CLEANFILES = magic.mgc
+MAGIC = magic.mgc
+CLEANFILES = ${MAGIC}
 
 # FIXME: Build file natively as well so that it can be used to compile
 # the target's magic file
@@ -16,5 +16,6 @@ else
 FILE_COMPILE = $(top_builddir)/src/file
 endif
 
-magic.mgc: $(MAGIC_FRAGMENTS) $(FILE_COMPILE)
+${MAGIC}: $(MAGIC_FRAGMENT_DIR) $(FILE_COMPILE)
 	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
+	@mv $(MAGIC_FRAGMENT_DIR).mgc $@
