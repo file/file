@@ -1,6 +1,6 @@
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/magic
 
-MAGIC_FRAGMENTS = $(MAGIC_FRAGMENT_DIR)/*
+MAGIC_FRAGMENTS = $(MAGIC_FRAGMENT_DIR)
 
 pkgdata_DATA = magic.mgc $(MAGIC_FRAGMENTS)
 
