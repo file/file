@@ -10,7 +10,7 @@ include magic_fragments.mak
 
 pkgdata_DATA = magic.mgc $(MAGIC_FRAGMENTS)
 
-EXTRA_DIST = Localstuff $(MAGIC_FRAGMENTS)
+EXTRA_DIST = Localstuff
 
 MAGIC = magic.mgc
 CLEANFILES = ${MAGIC}
