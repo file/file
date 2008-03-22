@@ -2,7 +2,7 @@ check_PROGRAMS = test
 test_LDADD = $(top_builddir)/src/libmagic.la
 
 EXTRA_DIST = \
-	*.magic *.testfile *.result
+	gedcom.magic gedcom.testfile gedcom.result
 
 check-local:
 	MAGIC=$(top_builddir)/magic/magic ./test
