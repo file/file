@@ -1,14 +1,7 @@
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
 
-magic_fragments.mak: FORCE
-	echo MAGIC_FRAGMENTS = $(MAGIC_FRAGMENT_DIR)/* > magic_fragments.mak
-
-FORCE:
-
-include magic_fragments.mak
-
-pkgdata_DATA = magic.mgc $(MAGIC_FRAGMENTS)
+pkgdata_DATA = magic.mgc
 
 EXTRA_DIST = Localstuff
 
