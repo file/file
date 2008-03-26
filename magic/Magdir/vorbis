@@ -29,6 +29,20 @@
 >>28		string		\x7fFLAC	\b, FLAC audio
 # non-Vorbis content: Theora
 >>28		string		\x80theora	\b, Theora video
+# non-Vorbis content: Kate
+>>28		string		\x80kate\0\0\0\0	\b, Kate
+>>>37		ubyte		x		v%hu
+>>>38		ubyte		x		\b.%hu,
+>>>40		byte		0		utf8 encoding,
+>>>40		byte		!0		unknown character encoding,
+>>>60		string		>\0		language %s,
+>>>60		string		\0		no language set,
+>>>76		string		>\0		category %s
+>>>76		string		\0		no category set
+# non-Vorbis content: Skeleton
+>>28		string		fishead\0	\b, Skeleton
+>>>36		short		x		v%hu
+>>>40		short		x		\b.%hu
 # non-Vorbis content: Speex
 >>28		string		Speex\ \ \ 	\b, Speex audio
 # non-Vorbis content: OGM
