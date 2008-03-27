@@ -38,7 +38,7 @@
 #include "magic.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.71 2008/02/14 20:17:59 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.72 2008/02/19 15:53:09 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -192,18 +192,38 @@ getu64(int swap, uint64_t value)
 			 : prpsoffsets64[i])
 
 #ifdef ELFCORE
+/*
+ * Try larger offsets first to avoid false matches
+ * from earlier data that happen to look like strings.
+ */
 static const size_t	prpsoffsets32[] = {
-	8,		/* FreeBSD */
-	44,		/* Linux (path name) */
+#ifdef USE_NT_PSINFO
+	104,		/* SunOS 5.x (command line) */
+	88,		/* SunOS 5.x (short name) */
+#endif /* USE_NT_PSINFO */
+
+	100,		/* SunOS 5.x (command line) */
+	84,		/* SunOS 5.x (short name) */
+
+	44,		/* Linux (command line) */
 	28,		/* Linux 2.0.36 (short name) */
-	84,		/* SunOS 5.x */
+
+	8,		/* FreeBSD */
 };
 
 static const size_t	prpsoffsets64[] = {
-	16,		/* FreeBSD, 64-bit */
-	56,		/* Linux (path name) */
+#ifdef USE_NT_PSINFO
+	152,		/* SunOS 5.x (command line) */
+	136,		/* SunOS 5.x (short name) */
+#endif /* USE_NT_PSINFO */
+
+	136,		/* SunOS 5.x, 64-bit (command line) */
+	120,		/* SunOS 5.x, 64-bit (short name) */
+
+	56,		/* Linux (command line) */
 	40,             /* Linux (tested on core from 2.4.x, short name) */
-	120,		/* SunOS 5.x, 64-bit */
+
+	16,		/* FreeBSD, 64-bit */
 };
 
 #define	NOFFSETS32	(sizeof prpsoffsets32 / sizeof prpsoffsets32[0])
@@ -222,6 +242,14 @@ static const size_t	prpsoffsets64[] = {
  * Linux, a longer string (80 characters, in 5.x, probably other
  * SVR4-flavored systems, and Linux) containing the start of the
  * command line for that program.
+ *
+ * SunOS 5.x core files contain two PT_NOTE sections, with the types
+ * NT_PRPSINFO (old) and NT_PSINFO (new).  These structs contain the
+ * same info about the command name and command line, so it probably
+ * isn't worthwhile to look for NT_PSINFO, but the offsets are provided
+ * above (see USE_NT_PSINFO), in case we ever decide to do so.  The
+ * NT_PRPSINFO and NT_PSINFO sections are always in order and adjacent;
+ * the SunOS 5.x file command relies on this (and prefers the latter).
  *
  * The signal number probably appears in a section of type NT_PRSTATUS,
  * but that's also rather OS-dependent, in ways that are harder to
@@ -700,7 +728,11 @@ core:
 				    &nbuf[doff + prpsoffsets(i)];
 				for (cp = cname; *cp && isprint(*cp); cp++)
 					continue;
-				if (cp > cname)
+				/*
+				 * Linux apparently appends a space at the end
+				 * of the command line: remove it.
+				 */
+				while (cp > cname && isspace(cp[-1]))
 					cp--;
 				if (file_printf(ms, ", from '%.*s'",
 				    (int)(cp - cname), cname) == -1)

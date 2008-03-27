@@ -1,4 +1,20 @@
 	
+2008-03-27 16:16  Robert Byrnes  <byrnes@wildpumpkin.net>
+
+        * src/readelf.c (donote):
+	  ELF core file command name/line bug fixes and enhancements:
+
+	  Try larger offsets first to avoid false matches
+	  from earlier data that happen to look like strings;
+	  this primarily affected SunOS 5.x 32-bit Intel core files.
+
+	  Add support for command line (instead of just short name)
+	  for SunOS 5.x.
+
+	  Add information about NT_PSINFO for SunOS 5.x.
+
+	  Only trim whitespace from end of command line.
+
 2007-02-11 01:36 Reuben Thomas <rrt@sc3d.org>
 
 	* Change strength of ! from MULT to 0, as it matches almost
