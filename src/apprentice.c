@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.130 2008/02/27 18:04:53 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.131 2008/03/01 22:21:48 rrt Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -621,7 +621,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	int errs = 0;
 	struct magic_entry *marray;
 	uint32_t marraycount, i, mentrycount = 0, starttest;
-	char *subfn;
+	char subfn[MAXPATHLEN];
 	struct stat st;
 	DIR *dir;
 	struct dirent *d;
@@ -644,12 +644,12 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		dir = opendir(fn);
 		if (dir) {
 			while (d = readdir(dir)) {
-				asprintf(&subfn, "%s/%s", fn, d->d_name);
+				snprintf(subfn, sizeof(subfn), "%s/%s",
+				    fn, d->d_name);
 				if (stat(subfn, &st) == 0 && S_ISREG(st.st_mode)) {
-					load_1(ms, action, (const char *)subfn, &errs,
+					load_1(ms, action, subfn, &errs,
 					    &marray, &marraycount);
 				}
-				free(subfn);
 			}
 			closedir(dir);
 		} else
@@ -1527,12 +1527,12 @@ check_format(struct magic_set *ms, struct magic *m)
 	assert(file_nformats == file_nnames);
 
 	if (m->type >= file_nformats) {
-		file_error(ms, 0, "Internal error inconsistency between "
+		file_magwarn(ms, "Internal error inconsistency between "
 		    "m->type and format strings");		
 		return -1;
 	}
 	if (file_formats[m->type] == FILE_FMT_NONE) {
-		file_error(ms, 0, "No format string for `%s' with description "
+		file_magwarn(ms, "No format string for `%s' with description "
 		    "`%s'", m->desc, file_names[m->type]);
 		return -1;
 	}
@@ -1543,15 +1543,15 @@ check_format(struct magic_set *ms, struct magic *m)
 		 * TODO: this error message is unhelpful if the format
 		 * string is not one character long
 		 */
-		file_error(ms, 0, "Printf format `%c' is not valid for type "
-		    " `%s' in description `%s'", *ptr,
+		file_magwarn(ms, "Printf format `%c' is not valid for type "
+		    "`%s' in description `%s'", *ptr,
 		    file_names[m->type], m->desc);
 		return -1;
 	}
 	
 	for (; *ptr; ptr++) {
 		if (*ptr == '%') {
-			file_error(ms, 0,
+			file_magwarn(ms,
 			    "Too many format strings (should have at most one) "
 			    "for `%s' with description `%s'",
 			    file_names[m->type], m->desc);
