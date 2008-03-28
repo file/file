@@ -720,7 +720,7 @@
 # URL:  http://en.wikipedia.org/wiki/Microsoft_Document_Imaging_Format
 # From: Daniele Sempione <scrows@oziosi.org>
 0	short	0x5045			Microsoft Document Imaging Format
- 
+
 # MS eBook format (.lit)
 0	string  ITOLITLS		Microsoft Reader eBook Data
 >8	lelong	x			\b, version %u

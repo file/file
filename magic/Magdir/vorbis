@@ -31,8 +31,8 @@
 >>28		string		\x80theora	\b, Theora video
 # non-Vorbis content: Kate
 >>28		string		\x80kate\0\0\0\0	\b, Kate
->>>37		ubyte		x		v%hu
->>>38		ubyte		x		\b.%hu,
+>>>37		ubyte		x		v%u
+>>>38		ubyte		x		\b.%u,
 >>>40		byte		0		utf8 encoding,
 >>>40		byte		!0		unknown character encoding,
 >>>60		string		>\0		language %s,
@@ -41,8 +41,8 @@
 >>>76		string		\0		no category set
 # non-Vorbis content: Skeleton
 >>28		string		fishead\0	\b, Skeleton
->>>36		short		x		v%hu
->>>40		short		x		\b.%hu
+>>>36		short		x		v%u
+>>>40		short		x		\b.%u
 # non-Vorbis content: Speex
 >>28		string		Speex\ \ \ 	\b, Speex audio
 # non-Vorbis content: OGM
