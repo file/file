@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.131 2008/03/01 22:21:48 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.132 2008/03/28 18:19:30 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1261,6 +1261,17 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 	switch (*l) {
 	case '>':
 	case '<':
+  		m->reln = *l;
+  		++l;
+		if (*l == '=') {
+			if (ms->flags & MAGIC_CHECK) {
+				file_magwarn(ms, "%c= not supported",
+				    m->reln);
+				return -1;
+			}
+		   ++l;
+		}
+		break;
 	/* Old-style anding: "0 byte &0x80 dynamically linked" */
 	case '&':
 	case '^':
