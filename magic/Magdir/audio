@@ -273,7 +273,7 @@
 >22	belong&0x00ffffff	x		%d Hz,
 >18	beshort		=0			no loop,
 >18	beshort		=-1			loop,
->21	ubyte		<=127			note %d,
+>21	ubyte		<128			note %d,
 >22	byte		=0			replay 5.485 KHz
 >22	byte		=1			replay 8.084 KHz
 >22	byte		=2			replay 10.971 Khz
