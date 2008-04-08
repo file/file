@@ -5,19 +5,19 @@
 # Keith Waclena <keith@cerberus.uchicago.edu>
 # Send additions to <perl5-porters@perl.org>
 0	search/1/b	#!\ /bin/perl			Perl script text executable
-!:mime	application/x-perl
+!:mime	text/x-perl
 0	search/1	eval\ "exec\ /bin/perl		Perl script text
-!:mime	application/x-perl
+!:mime	text/x-perl
 0	search/1/b	#!\ /usr/bin/perl		Perl script text executable
-!:mime	application/x-perl
+!:mime	text/x-perl
 0	search/1	eval\ "exec\ /usr/bin/perl	Perl script text
-!:mime	application/x-perl
+!:mime	text/x-perl
 0	search/1/b	#!\ /usr/local/bin/perl		Perl script text executable
-!:mime	application/x-perl
+!:mime	text/x-perl
 0	search/1	eval\ "exec\ /usr/local/bin/perl	Perl script text
-!:mime	application/x-perl
+!:mime	text/x-perl
 0	search/1	eval\ '(exit\ $?0)'\ &&\ eval\ 'exec	Perl script text
-!:mime	application/x-perl
+!:mime	text/x-perl
 
 
 # by Dmitry V. Levin and Alexey Tourbin
