@@ -776,9 +776,6 @@
 0	lelong	0x10201A7A	Symbian installation file (Symbian OS 9.x)
 !:mime	x-epoc/x-sisx-app
 
-# Pack200 Java archives, http://jcp.org/en/jsr/detail?id=200
-0	belong	0xcafed00d	Pack200 Java archive
-
 # From "Nelson A. de Oliveira" <naoliv@gmail.com>
 0	string	MPQ\032		MoPaQ (MPQ) archive
 
