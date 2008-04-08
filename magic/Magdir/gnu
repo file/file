@@ -36,3 +36,7 @@
 0	string	\0LOCATE	GNU findutils locate database data
 >7	string	>\0		\b, format %s
 >7	string	02		\b (frcode)
+
+# Files produced by GNU gettext
+0	long	0xDE120495		GNU-format message catalog data
+0	long	0x950412DE		GNU-format message catalog data
