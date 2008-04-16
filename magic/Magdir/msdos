@@ -497,8 +497,17 @@
 # then there is a copyright notice
 
 
-# recycled/info the windows trash bin index
-9	string	\000\000\000\030\001\000\000\000 MS Windows recycled bin info
+# Windows Recycle Bin record file (named INFO2)
+# By Abel Cheung (abelcheung AT gmail dot com)
+# Version 4 always has 280 bytes (0x118) per record, version 5 has 800 bytes
+# Since Vista uses another structure, INFO2 structure probably won't change
+# anymore. Detailed analysis in:
+# http://www.cybersecurityinstitute.biz/downloads/INFO2.pdf
+0	lelong		0x00000004
+>12	lelong		0x00000118	Windows Recycle Bin INFO2 file (Win98 or below)
+
+0	lelong		0x00000005
+>12	lelong		0x00000320	Windows Recycle Bin INFO2 file (Win2k - WinXP)
 
 
 ##### put in Either Magic/font or Magic/news
