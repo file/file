@@ -566,7 +566,7 @@
 !:mime	application/zip
 >4	byte		0x09		Zip archive data, at least v0.9 to extract
 !:mime	application/zip
->4	byte		0x0a		Zip archive data, at least v1.0 to extract
+>4	BYTE		0x0a		Zip archive data, at least v1.0 to extract
 !:mime	application/zip
 >4	byte		0x0b		Zip archive data, at least v1.1 to extract
 !:mime	application/zip
@@ -577,8 +577,10 @@
 !:mime	application/zip
 
 # OpenOffice.org / KOffice / StarOffice documents
+# Listed here because they ARE zip files
+#
 # From: Abel Cheung <abel@oaka.org>
-# Listed here because they are basically zip files
+>4	byte		0x14
 >>30	string		mimetype
 
 # KOffice (1.2 or above) formats
@@ -608,6 +610,7 @@
 >>>>>69	byte	!0x2e			presentation
 >>>>>69	string	.template		template
 >>>>62	string	math			Math document
+>>>>62	string	base			Database file
 
 # OpenDocument formats (for OpenOffice 2.x / StarOffice >= 8)
 # http://lists.oasis-open.org/archives/office/200505/msg00006.html
