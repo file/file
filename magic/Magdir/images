@@ -160,9 +160,6 @@
 
 # CGM image files
 0	string		BEGMF		clear text Computer Graphics Metafile
-# XXX - questionable magic
-#0	beshort&0xffe0	0x0020		binary Computer Graphics Metafile
-#0	beshort		0x3020		character Computer Graphics Metafile
 
 # MGR bitmaps  (Michael Haardt, u31b3hs@pool.informatik.rwth-aachen.de)
 0	string	yz	MGR bitmap, modern format, 8-bit aligned
@@ -292,7 +289,6 @@
 
 # other images
 0	string	This\ is\ a\ BitMap\ file	Lisp Machine bit-array-file
-#0	string		=!!		Bennet Yee's "face" format
 
 # From SunOS 5.5.1 "/etc/magic" - appeared right before Sun raster image
 # stuff.

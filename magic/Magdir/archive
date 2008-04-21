@@ -566,7 +566,7 @@
 !:mime	application/zip
 >4	byte		0x09		Zip archive data, at least v0.9 to extract
 !:mime	application/zip
->4	BYTE		0x0a		Zip archive data, at least v1.0 to extract
+>4	byte		0x0a		Zip archive data, at least v1.0 to extract
 !:mime	application/zip
 >4	byte		0x0b		Zip archive data, at least v1.1 to extract
 !:mime	application/zip
