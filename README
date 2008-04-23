@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $File: README,v 1.39 2008/02/14 20:22:20 christos Exp $
+@(#) $File: README,v 1.40 2008/04/23 03:45:20 christos Exp $
 
 E-mail: christos@astron.com
 Mailing List: file@mx.gw.com
@@ -46,7 +46,7 @@ magic numbers assigned to all sorts of data files that
 are in reasonable circulation. Send your magic numbers,
 in magic(5) format please, to the maintainer, Christos Zoulas.
 
-LEGAL.NOTICE - read this first.
+COPYING - read this first.
 README - read this second (you are currently reading this file).
 PORTING - read this only if the program won't compile.
 Makefile - read this next, adapt it as needed (particularly
@@ -75,6 +75,27 @@ softmagic.c - 2nd set of tests, based on /etc/magic
 readelf.[ch] - Stand-alone elf parsing code.
 compress.c - on-the-fly decompression.
 print.c - print results, errors, warnings.
+
+------------------------------------------------------------------------------
+
+If you submit a new magic entry please make sure you read the following
+guidelines:
+
+- Initial match is preferably at least 32 bits long, and is a _unique_ match
+- If this is not feasible, use additional check
+- Match of <= 16 bits are not accepted
+- Delay printing string as much as possible, don't print output too early
+- Avoid printf arbitrary byte as string, which can be a source of
+  crash and buffer overflow
+
+- Provide complete information with entry:
+  * One line short summary
+  * Optional long description
+  * File extension, if applicable
+  * Full name and contact method (for discussion when entry has problem)
+  * Further reference, such as documentation of format
+
+------------------------------------------------------------------------------
 
 You can download the latest version of file from:
 
