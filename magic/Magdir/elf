@@ -7,7 +7,12 @@
 #
 # What're the correct byte orders for the nCUBE and the Fujitsu VPP500?
 #
-# updated by Daniel Quinlan (quinlan@yggdrasil.com)
+# Created by: unknown
+# Modified by (1): Daniel Quinlan <quinlan@yggdrasil.com>
+# Modified by (2): Peter Tobias <tobias@server.et-inf.fho-emden.de> (core support)
+# Modified by (3): Christian 'Dr. Disk' Hechelmann <drdisk@ds9.au.s.shuttle.de> (fix of core support)
+# Modified by (4): <gerardo.cacciari@gmail.com> (VMS Itanium)
+# Modified by (5): Matthias Urlichs <smurf@debian.org> (Listing of many architectures)
 0	string		\177ELF		ELF
 >4	byte		0		invalid class
 >4	byte		1		32-bit
@@ -22,8 +27,6 @@
 !:mime	application/x-executable
 >>16	leshort		3		shared object,
 !:mime	application/x-sharedlib
-# Core handling from Peter Tobias <tobias@server.et-inf.fho-emden.de>
-# corrections by Christian 'Dr. Disk' Hechelmann <drdisk@ds9.au.s.shuttle.de>
 >>16	leshort		4		core file
 !:mime	application/x-coredump
 # Core file detection is not reliable.
@@ -270,7 +273,6 @@
 >>7	byte		10		(Tru64)
 >>7	byte		11		(Novell Modesto)
 >>7	byte		12		(OpenBSD)
-# VMS Itanium added by gerardo.cacciari@gmail.com
 >8      string          \2
 >>7     byte            13              (OpenVMS)
 >>7	byte		97		(ARM)

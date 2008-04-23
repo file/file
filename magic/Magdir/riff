@@ -135,7 +135,7 @@
 >>>>>>>(104.l+132)      string/c        xvid    XviD
 >>>>>>>(104.l+132)	string/c	h264	H.264
 >>>>>>>(104.l+132)      string/c        wmv3    Windows Media Video 9
->>>>>>>(104.l+132)      string/c        h264    X.264
+>>>>>>>(104.l+132)      string/c        h264    X.264 or H.264
 >>>>>>>(104.l+132)      lelong  0
 ##>>>>>>>(104.l+132)      string  x       (%.4s)
 # skip past first (video) LIST
