@@ -246,9 +246,3 @@
 >>>(0x18.l-26)	lelong		x	CRC32 0x%08x
 >>>(0x18.l-23)	string		x	"%s"
 
-# From: "Nelson A. de Oliveira" <naoliv@gmail.com>
-# .w3g
-0	string Warcraft\ III\ recorded\ game	%s
-# .w3m
-0	string HM3W				Warcraft III map file
-
