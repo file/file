@@ -1,4 +1,10 @@
 	
+2008-04-22 23:45  Christos Zoulas  <christos@astron.com>
+
+	* Add magic submission guidelines (Abel Cheung)
+
+	* split msdos and windows magic (Abel Cheung)
+
 2008-04-04 11:00  Christos Zoulas  <christos@astron.com>
 
         * >= <= is not supported, so fix the magic and warn about it.
