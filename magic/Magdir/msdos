@@ -353,14 +353,6 @@
 #0	byte		0xf0		MS-DOS program library data
 #
 
-#
-# Windows Registry files.
-# updated by Joerg Jenderek
-0	string		regf		Windows NT/XP registry file
-0	string		CREG		Windows 95/98/ME registry file
-0	string		SHCC3		Windows 3.1 registry file
-
-
 # AAF files:
 # <stuartc@rd.bbc.co.uk> Stuart Cunningham
 0	string	\320\317\021\340\241\261\032\341AAFB\015\000OM\006\016\053\064\001\001\001\377			AAF legacy file using MS Structured Storage
@@ -424,19 +416,12 @@
 !:mime	application/vnd.lotus-wordpro
 
 
-# Help files
-0	string	?_\3\0		MS Windows Help Data
-
 #  DeIsL1.isu what this is I don't know
 0	string	\161\250\000\000\001\002	DeIsL1.isu whatever that is
 
 # Winamp .avs
 #0	string	Nullsoft\ AVS\ Preset\ \060\056\061\032	A plug in for Winamp ms-windows Freeware media player
 0	string	Nullsoft\ AVS\ Preset\ 	Winamp plug in
-
-# Hyper terminal:
-0	string	HyperTerminal\ 	hyperterm
->15	string	1.0\ --\ HyperTerminal\ data\ file	MS-windows Hyperterminal
 
 # Windows Metafont .WMF
 0       string  \327\315\306\232        ms-windows metafont .wmf
@@ -460,16 +445,6 @@
 # windows zips files .dmf
 0	string	MDIF\032\000\010\000\000\000\372\046\100\175\001\000\001\036\001\000 MS Windows special zipped file
 
-
-# Windows help file FTG FTS
-0	string	\164\146\115\122\012\000\000\000\001\000\000\000	MS Windows help cache
-
-# grp old windows 3.1 group files
-0 string  \120\115\103\103	MS Windows 3.1 group files
-
-
-# lnk files windows symlinks
-0	string	\114\000\000\000\001\024\002\000\000\000\000\000\300\000\000\000\000\000\000\106	MS Windows shortcut
 
 #ico files
 0	string	\102\101\050\000\000\000\056\000\000\000\000\000\000\000	Icon for MS Windows
@@ -599,24 +574,6 @@
 >52	leshort		>1 		\b, %u files
 >56	leshort		1 		\b, 1 registry entry
 >56	leshort		>1 		\b, %u registry entries
-
-# Outlook Personal Folders
-0	lelong	0x4E444221	Microsoft Outlook binary email folder
->10	leshort 0x0e		(Outlook <=2002)
->10	leshort 0x17		(Outlook >=2003)
-
-
-# From: Dirk Jagdmann <doj@cubic.org>
-0	lelong	0x00035f3f	Windows 3.x help file
-
-# Christophe Monniez
-0	string	Client\ UrlCache\ MMF 	Microsoft Internet Explorer Cache File
->20	string	>\0			Version %s
-0	string	\xCF\xAD\x12\xFE	Microsoft Outlook Express DBX File
->4	byte	=0xC5			Message database
->4	byte	=0xC6			Folder database
->4	byte	=0xC7			Accounts informations
->4	byte	=0x30			Offline database
 
 
 # Windows Enhanced Metafile (EMF)
