@@ -276,7 +276,7 @@
 # modified by Joerg Jenderek
 # GRR the original test are too common for many DOS files
 # so don't accept as MP3 until we've tested the rate
-0       beshort&0xFFFE
+0       beshort&0xFFFE  0xFFFA
 # rates
 >2      byte&0xF0       0x10           MPEG ADTS, layer III, v1,  32 kbps
 !:mime	audio/mpeg
@@ -617,22 +617,30 @@
 #0       beshort         0x4DE1         MPEG-4 LO-EP audio stream
 #!:mime	audio/x-mp4a-latm
 
-# FLI animation format
-4	leshort		0xAF11			FLI file
+# Summary: FLI animation format
+# Created by: Daniel Quinlan <quinlan@yggdrasil.com>
+# Modified by (1): Abel Cheung <abelcheung@gmail.com> (avoid over-generic detection)
+4	leshort		0xAF11
+# standard FLI always has 320x200 resolution and 8 bit color
+>8	leshort		320
+>>10	leshort		200
+>>>12	leshort		8			FLI animation, 320x200x8
 !:mime	video/x-fli
->6	leshort		x			- %d frames,
->8	leshort		x			width=%d pixels,
->10	leshort		x			height=%d pixels,
->12	leshort		x			depth=%d,
->16	leshort		x			ticks/frame=%d
-# FLC animation format
-4	leshort		0xAF12			FLC file
+>>>>6	leshort		x			\b, %d frames
+# frame speed is multiple of 1/70s
+>>>>16	leshort		x			\b, %d/70s per frame
+
+# Summary: FLC animation format
+# Created by: Daniel Quinlan <quinlan@yggdrasil.com>
+# Modified by (1): Abel Cheung <abelcheung@gmail.com> (avoid over-generic detection)
+4	leshort		0xAF12
+# standard FLC always use 8 bit color
+>12	leshort		8			FLC animation
 !:mime	video/x-flc
->6	leshort		x			- %d frames
->8	leshort		x			width=%d pixels,
->10	leshort		x			height=%d pixels,
->12	leshort		x			depth=%d,
->16	leshort		x			ticks/frame=%d
+>>8	leshort		x			\b, %d
+>>10	leshort		x			\bx%dx8
+>>6	uleshort	x			\b, %d frames
+>>16	uleshort	x			\b, %dms per frame
 
 # DL animation format
 # XXX - collision with most `mips' magic
