@@ -1266,6 +1266,21 @@
 >>>2         short   2048       AXP generated)
 >>>2         short   4096       I64 generated)
 
+# Summary: Oracle Clustered Filesystem
+# Created by: Aaron Botsis <redhat@digitalmafia.org>
+8       string          OracleCFS       Oracle Clustered Filesystem,
+>4      long            x               rev %d
+>0      long            x               \b.%d,
+>560    string          x               label: %.64s,
+>136    string          x               mountpoint: %.128s
+
+# Summary: Oracle ASM tagged volume
+# Created by: Aaron Botsis <redhat@digitalmafia.org>
+32      string          ORCLDISK        Oracle ASM Volume,
+>40     string          x               Disk Name: %0.12s
+32      string          ORCLCLRD        Oracle ASM Volume (cleared),
+>40     string          x               Disk Name: %0.12s
+
 # Compaq/HP RILOE floppy image
 # From: Dirk Jagdmann <doj@cubic.org>
 0	string	CPQRFBLO	Compaq/HP RILOE floppy image

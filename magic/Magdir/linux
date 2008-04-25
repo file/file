@@ -247,3 +247,10 @@
 >72	string	x		%s]
 >168	string	x		UUID: %s
 
+
+# Summary: Xen saved domain file
+# Created by: Radek Vokal <rvokal@redhat.com>
+0	string		LinuxGuestRecord	Xen saved domain
+>20	search/256	(name			
+>>&1	string		x			(name %s)
+
