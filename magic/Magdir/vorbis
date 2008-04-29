@@ -17,9 +17,11 @@
 # to be made relative to the search). In any case, if the file has ID3
 # tags, the ID3 information will be printed, not the Ogg information,
 # so until that's fixed, this doesn't matter.
+# FIXME[2]: Disable the above for now, since search assumes text mode.
 #
 # --- Ogg Framing ---
-0		search/1000	OggS		Ogg data
+#0		search/1000	OggS		Ogg data
+0		string	OggS		Ogg data
 !:mime		application/ogg
 >4		byte		!0		UNKNOWN REVISION %u
 ##>4		byte		0		revision 0
