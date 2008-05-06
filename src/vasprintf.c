@@ -367,6 +367,7 @@ static int dispatch(xprintf_struct *s)
   if (*SRCTXT == '.') {
     SRCTXT++;
     if (*SRCTXT == '*') {       /* .prec given by next argument */
+      SRCTXT++;
       prec = va_arg(s->vargs, int);
       if ((size_t)prec >= 0x3fffU) /* 'size_t' to check against negative values too */
         prec = 0x3fff;
@@ -591,9 +592,6 @@ static int core(xprintf_struct *s)
   s->buffer_base = (char *)realloc((void *)(s->buffer_base), save_len + 1);
   if (s->buffer_base == NULL)
     return EOF; /* should rarely happen because we shrink the buffer */
-  return s->pseudo_len;
-
-  free(s->buffer_base);
   return s->pseudo_len;
 
  free_EOF:
