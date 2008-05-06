@@ -9,6 +9,25 @@
 
         * >= <= is not supported, so fix the magic and warn about it.
 	  reported by: Thien-Thi Nguyen <ttn@gnuvola.org>
+2008-05-06 00:13  Robert Byrnes  <byrnes@wildpumpkin.net>
+
+        * src/Makefile.am:
+	  Ensure that getopt_long and [v]asprintf are included in libmagic,
+	  as needed.
+
+	  Remove unnecessary EXTRA_DIST.
+
+        * src/Makefile.in:
+	  Rerun automake.
+
+        * src/vasprintf.c (dispatch):
+	  Fix variable precision bug: be sure to step past '*'.
+
+        * src/vasprintf.c (core):
+	  Remove unreachable code.
+
+        * src/apprentice.c (set_test_type):
+	  Add cast to avoid compiler warning.
 
 2008-03-27 16:16  Robert Byrnes  <byrnes@wildpumpkin.net>
 
