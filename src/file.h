@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.103 2008/03/01 22:21:49 rrt Exp $
+ * @(#)$File: file.h,v 1.104 2008/05/09 14:20:28 christos Exp $
  */
 
 #ifndef __file_h__
@@ -243,6 +243,7 @@ struct magic {
 		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
 		uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
 		char s[MAXstring];	/* the search string or regex pattern */
+		unsigned char us[MAXstring];
 		float f;
 		double d;
 	} value;		/* either number or string */
@@ -323,7 +324,8 @@ protected int file_buffer(struct magic_set *, int, const char *, const void *,
     size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
-protected int file_printf(struct magic_set *, const char *, ...);
+protected int file_printf(struct magic_set *, const char *, ...)
+    __attribute__((__format__(__printf__, 2, 3)));
 protected int file_reset(struct magic_set *);
 protected int file_tryelf(struct magic_set *, int, const unsigned char *,
     size_t);
@@ -339,9 +341,12 @@ protected void file_delmagic(struct magic *, int type, size_t entries);
 protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);
 protected void file_oomem(struct magic_set *, size_t);
-protected void file_error(struct magic_set *, int, const char *, ...);
-protected void file_magerror(struct magic_set *, const char *, ...);
-protected void file_magwarn(struct magic_set *, const char *, ...);
+protected void file_error(struct magic_set *, int, const char *, ...)
+    __attribute__((__format__(__printf__, 3, 4)));
+protected void file_magerror(struct magic_set *, const char *, ...)
+    __attribute__((__format__(__printf__, 2, 3)));
+protected void file_magwarn(struct magic_set *, const char *, ...)
+    __attribute__((__format__(__printf__, 2, 3)));
 protected void file_mdump(struct magic *);
 protected void file_showstr(FILE *, const char *, size_t);
 protected size_t file_mbswidth(const char *);

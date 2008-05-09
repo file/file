@@ -5,6 +5,10 @@ include_HEADERS = magic.h
 bin_PROGRAMS = file
 
 AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
+AM_CFLAGS = -Wall -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith \
+    -Wmissing-declarations -Wredundant-decls -Wnested-externs \
+    -Wsign-compare -Wreturn-type -Wswitch -Wshadow \
+    -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter
 
 libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
 	compress.c is_tar.c readelf.c print.c fsmagic.c \

@@ -57,13 +57,13 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.50 2008/02/12 17:22:54 rrt Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.51 2008/05/09 14:20:28 christos Exp $")
 #endif	/* lint */
 
 private int
 bad_link(struct magic_set *ms, int err, char *buf)
 {
-	char *errfmt;
+	const char *errfmt;
 	if (err == ELOOP)
 		errfmt = "symbolic link in a loop";
 	else

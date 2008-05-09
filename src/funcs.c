@@ -38,7 +38,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.39 2008/03/01 22:21:49 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.40 2008/05/09 14:20:28 christos Exp $")
 #endif	/* lint */
 
 /*
@@ -48,7 +48,6 @@ protected int
 file_printf(struct magic_set *ms, const char *fmt, ...)
 {
 	va_list ap;
-	size_t size;
 	int len;
 	char *buf, *newstr;
 

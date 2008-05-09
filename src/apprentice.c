@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.134 2008/04/29 01:11:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.135 2008/05/09 14:20:28 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -505,7 +505,7 @@ apprentice_sort(const void *a, const void *b)
 		return 1;
 }
 
-private int
+private void
 set_test_type(struct magic *mstart, struct magic *m)
 {
 	switch (m->type) {
@@ -550,7 +550,7 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_REGEX:
 	case FILE_SEARCH:
 		/* binary test if pattern is not text */
-		if (file_looks_utf8(m->value.s, m->vallen, NULL, NULL) <= 0)
+		if (file_looks_utf8(m->value.us, m->vallen, NULL, NULL) <= 0)
 			mstart->flag |= BINTEST;
 		break;
 	case FILE_DEFAULT:
@@ -643,10 +643,11 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	if (stat(fn, &st) == 0 && S_ISDIR(st.st_mode)) {
 		dir = opendir(fn);
 		if (dir) {
-			while (d = readdir(dir)) {
+			while ((d = readdir(dir)) != NULL) {
 				snprintf(subfn, sizeof(subfn), "%s/%s",
 				    fn, d->d_name);
-				if (stat(subfn, &st) == 0 && S_ISREG(st.st_mode)) {
+				if (stat(subfn, &st) == 0 &&
+				    S_ISREG(st.st_mode)) {
 					load_1(ms, action, subfn, &errs,
 					    &marray, &marraycount);
 				}
@@ -668,26 +669,27 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 
 		starttest = i;
 		do {
+			static const char text[] = "text";
+			static const char binary[] = "binary";
+			static const size_t len = sizeof(text);
 			set_test_type(marray[starttest].mp, marray[i].mp);
-			if (ms->flags & MAGIC_DEBUG) {
-				(void)fprintf(stderr, "%s%s%s: %s\n",
-					marray[i].mp->mimetype,
-					marray[i].mp->mimetype[0] == '\0' ? "" : "; ",
-					marray[i].mp->desc[0] ? marray[i].mp->desc : "(no description)",
-					marray[i].mp->flag & BINTEST ? "binary" : "text");
-				if (marray[i].mp->flag & BINTEST) {
-#define SYMBOL "text"
-#define SYMLEN sizeof(SYMBOL)
-					char *p = strstr(marray[i].mp->desc, "text");
-					if (p && (p == marray[i].mp->desc || isspace(p[-1])) &&
-					    (p + SYMLEN - marray[i].mp->desc == MAXstring ||
-					     (p[SYMLEN] == '\0' || isspace(p[SYMLEN])))) {
-						(void)fprintf(stderr,
-							      "*** Possible binary test for text type\n");
-					}
-#undef SYMBOL
-#undef SYMLEN
-				}
+			if ((ms->flags & MAGIC_DEBUG) == 0)
+				continue;
+			(void)fprintf(stderr, "%s%s%s: %s\n",
+			    marray[i].mp->mimetype,
+			    marray[i].mp->mimetype[0] == '\0' ? "" : "; ",
+			    marray[i].mp->desc[0] ? marray[i].mp->desc :
+			    "(no description)",
+			    marray[i].mp->flag & BINTEST ? binary : text);
+			if (marray[i].mp->flag & BINTEST) {
+				char *p = strstr(marray[i].mp->desc, text);
+				if (p && (p == marray[i].mp->desc ||
+				    isspace((unsigned char)p[-1])) &&
+				    (p + len - marray[i].mp->desc == 
+				    MAXstring || (p[len] == '\0' ||
+				    isspace((unsigned char)p[len]))))
+					(void)fprintf(stderr, "*** Possible "
+					    "binary test for text type\n");
 			}
 		} while (++i < marraycount && marray[i].mp->cont_level != 0);
 	}
@@ -1938,7 +1940,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	ptr = (uint32_t *)(void *)*magicp;
 	if (*ptr != MAGICNO) {
 		if (swap4(*ptr) != MAGICNO) {
-			file_error(ms, 0, "bad magic in `%s'");
+			file_error(ms, 0, "bad magic in `%s'", dbname);
 			goto error1;
 		}
 		needsbyteswap = 1;
@@ -2036,14 +2038,18 @@ private const char ext[] = ".mgc";
 private void
 mkdbname(const char *fn, char **buf, int strip)
 {
+	const char *p;
 	if (strip) {
-		const char *p;
 		if ((p = strrchr(fn, '/')) != NULL)
 			fn = ++p;
 	}
 
-	(void)asprintf(buf, "%s%s", fn, ext);
-	if (*buf && strlen(*buf) > MAXPATHLEN) {
+	if ((p = strstr(fn, ext)) != NULL && p[sizeof(ext) - 1] == '\0')
+		*buf = strdup(fn);
+	else
+		(void)asprintf(buf, "%s%s", fn, ext);
+
+	if (buf && *buf && strlen(*buf) > MAXPATHLEN) {
 		free(*buf);
 		*buf = NULL;
 	}
