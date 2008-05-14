@@ -584,3 +584,7 @@
 0	string	\xed\xfe\xda\xbe	Cytovision FLEX file
 0	string	\xed\xab\xed\xfe	Cytovision FLEX file
 0	string	\xad\xfd\xea\xad	Cytovision RATS file
+
+# Wavelet Scalar Quantization format used in gray-scale fingerprint images
+# From Tano M Fotang <mfotang@quanteq.com>
+0	string	\xff\xa0\xff\xa8\x00	Wavelet Scalar Quantization image data
