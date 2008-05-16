@@ -63,7 +63,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.50 2008/02/19 00:58:59 rrt Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.51 2008/05/16 14:25:01 christos Exp $")
 #endif	/* lint */
 
 #ifndef PIPE_BUF 
@@ -302,7 +302,6 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			(void)strcat(strcpy(tmp, inname), ".exe");
 			if ((fd = open(tmp, flags)) < 0) {
 #endif
-				fprintf(stderr, "couldn't open file\n");
 				if (info_from_stat(ms, sb.st_mode) == -1)
 					goto done;
 				rv = 0;
