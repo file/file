@@ -38,24 +38,21 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.39 2008/03/01 22:21:49 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.40 2008/05/09 14:20:28 christos Exp $")
 #endif	/* lint */
 
 /*
  * Like printf, only we append to a buffer.
  */
 protected int
-file_printf(struct magic_set *ms, const char *fmt, ...)
+file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 {
-	va_list ap;
 	int len;
 	char *buf, *newstr;
 
-	va_start(ap, fmt);
 	len = vasprintf(&buf, fmt, ap);
 	if (len < 0)
 		goto out;
-	va_end(ap);
 
 	if (ms->o.buf != NULL) {
 		len = asprintf(&newstr, "%s%s", ms->o.buf, buf);
@@ -70,6 +67,18 @@ file_printf(struct magic_set *ms, const char *fmt, ...)
 out:
 	file_error(ms, errno, "vasprintf failed");
 	return -1;
+}
+
+protected int
+file_printf(struct magic_set *ms, const char *fmt, ...)
+{
+	int rv;
+	va_list ap;
+
+	va_start(ap, fmt);
+	rv = file_vprintf(ms, fmt, ap);
+	va_end(ap);
+	return rv;
 }
 
 /*
@@ -88,7 +97,7 @@ file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
 		ms->o.buf = NULL;
 		file_printf(ms, "line %u: ", lineno);
 	}
-        file_printf(ms, f, va);
+        file_vprintf(ms, f, va);
 	if (error > 0)
 		file_printf(ms, " (%s)", strerror(error));
 	ms->haderr++;
