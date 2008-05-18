@@ -70,7 +70,7 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.118 2008/02/04 20:51:17 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.119 2008/02/07 00:58:52 christos Exp $")
 #endif	/* lint */
 
 
@@ -375,7 +375,7 @@ unwrap(char *fn)
 			exit(1);
 		}
 
-		while (fgets(buf, MAXPATHLEN, f) != NULL) {
+		while (fgets(buf, sizeof(buf), f) != NULL) {
 			buf[strcspn(buf, "\n")] = '\0';
 			cwid = file_mbswidth(buf);
 			if (cwid > wid)
