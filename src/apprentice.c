@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.135 2008/05/09 14:20:28 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.136 2008/05/18 23:20:40 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -1557,7 +1557,8 @@ check_format(struct magic_set *ms, struct magic *m)
 		 * string is not one character long
 		 */
 		file_magwarn(ms, "Printf format `%c' is not valid for type "
-		    "`%s' in description `%s'", *ptr,
+		    "`%s' in description `%s'",
+		    ptr && *ptr ? *ptr : '?',
 		    file_names[m->type], m->desc);
 		return -1;
 	}
