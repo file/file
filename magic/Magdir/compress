@@ -9,8 +9,8 @@
 # because it tries to uncompress it to figure out what's inside.
 
 # standard unix compress
-#0	string		\037\235	compress'd data
-#!:mime	application/x-compress
+0	string		\037\235	compress'd data
+!:mime	application/x-compress
 >2	byte&0x80	>0		block compressed
 >2	byte&0x1f	x		%d bits
 
