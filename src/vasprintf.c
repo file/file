@@ -83,7 +83,7 @@ trying to do any interpretation
 flag:   none   +     -     #     (blank)
 width:  n    0n    *
 prec:   none   .0    .n     .*
-modifier:    F N L h l    ('F' and 'N' are ms-dos/16-bit specific)
+modifier:    F N L h l ll    ('F' and 'N' are ms-dos/16-bit specific)
 type:  d i o u x X f e g E G c s p n
 
 
@@ -436,8 +436,15 @@ static int dispatch(xprintf_struct *s)
   }
 
   if (modifier != -1) {
-    *format_ptr = modifier;
-    format_ptr++;
+    if (modifier == 'L' && strchr("diouxX",type) != NULL) {
+      *format_ptr = 'l';
+      format_ptr++;
+      *format_ptr = 'l';
+      format_ptr++;
+    } else {
+      *format_ptr = modifier;
+      format_ptr++;
+    }
   }
 
   *format_ptr = type;
@@ -460,6 +467,8 @@ static int dispatch(xprintf_struct *s)
     switch (modifier) {
     case -1 :
       return print_it(s, (size_t)approx_width, format_string, va_arg(s->vargs, int));
+    case 'L':
+      return print_it(s, (size_t)approx_width, format_string, va_arg(s->vargs, long long int));
     case 'l':
       return print_it(s, (size_t)approx_width, format_string, va_arg(s->vargs, long int));
     case 'h':

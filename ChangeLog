@@ -1,3 +1,21 @@
+2008-05-28 15:12  Robert Byrnes  <byrnes@wildpumpkin.net>
+
+	* magic/Magdir/elf:
+	  Note invalid byte order for little-endian SPARC32PLUS.
+	  Add SPARC V9 vendor extensions and memory model.
+
+	* src/elfclass.h:
+	  Pass target machine to doshn (for Solaris hardware capabilities).
+
+	* src/readelf.c (doshn):
+	  Add support for Solaris hardware/software capabilities.
+
+	* src/readelf.h:
+	  Ditto.
+
+	* src/vasprintf.c (dispatch):
+	  Add support for ll modifier.
+
 2008-05-16 10:25  Christos Zoulas  <christos@astron.com>
 
 	* Fix compiler warnings.
