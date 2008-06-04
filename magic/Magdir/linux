@@ -231,6 +231,14 @@
 0x618		 string	LVM2\ 001	LVM2 (Linux Logical Volume Manager)
 >(0x614.l+0x600) string	>\0		, UUID: %s
 
+# LVM snapshot
+# from Jason Farrel
+0	string	SnAp	LVM Snapshot (CopyOnWrite store)
+>4	lelong	!0	- valid,
+>4	lelong	0	- invalid,
+>8	lelong	x	version %d,
+>12	lelong	x	chunk_size %d
+
 # SE Linux policy database
 0	lelong	0xf97cff8c		SE Linux policy
 >16	lelong	x			v%d

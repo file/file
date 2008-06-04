@@ -1268,18 +1268,31 @@
 
 # Summary: Oracle Clustered Filesystem
 # Created by: Aaron Botsis <redhat@digitalmafia.org>
-8       string          OracleCFS       Oracle Clustered Filesystem,
->4      long            x               rev %d
->0      long            x               \b.%d,
->560    string          x               label: %.64s,
->136    string          x               mountpoint: %.128s
+8	string		OracleCFS	Oracle Clustered Filesystem,
+>4	long		x		rev %d
+>0	long		x		\b.%d,
+>560	string		x		label: %.64s,
+>136	string		x		mountpoint: %.128s
 
 # Summary: Oracle ASM tagged volume
 # Created by: Aaron Botsis <redhat@digitalmafia.org>
-32      string          ORCLDISK        Oracle ASM Volume,
->40     string          x               Disk Name: %0.12s
-32      string          ORCLCLRD        Oracle ASM Volume (cleared),
->40     string          x               Disk Name: %0.12s
+32	string		ORCLDISK	Oracle ASM Volume,
+>40	string		x		Disk Name: %0.12s
+32	string		ORCLCLRD	Oracle ASM Volume (cleared),
+>40	string		x		Disk Name: %0.12s
+
+# Oracle Clustered Filesystem - Aaron Botsis <redhat@digitalmafia.org>
+8	string		OracleCFS	Oracle Clustered Filesystem,
+>4	long		x		rev %d
+>0	long		x		\b.%d,
+>560	string		x		label: %.64s,
+>136	string		x		mountpoint: %.128s
+
+# Oracle ASM tagged volume - Aaron Botsis <redhat@digitalmafia.org>
+32	string		ORCLDISK	Oracle ASM Volume,
+>40	string		x		Disk Name: %0.12s
+32	string		ORCLCLRD	Oracle ASM Volume (cleared),
+>40	string		x		Disk Name: %0.12s
 
 # Compaq/HP RILOE floppy image
 # From: Dirk Jagdmann <doj@cubic.org>
@@ -1304,3 +1317,9 @@
 # really le32 operation,destination,payloadsize (but quite predictable)
 # 01 00 00 00 00 00 00 c0 00 02 00 00
 0	string		\1\0\0\0\0\0\0\300\0\2\0\0	Marvell Libertas firmware
+
+# From Eric Sandeen
+# GFS2
+0x10000         belong          0x01161970      GFS2 Filesystem
+>0x10024        belong          x               (blocksize %d,
+>0x10060        string          >\0             lockproto %s)
