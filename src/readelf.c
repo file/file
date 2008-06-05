@@ -38,7 +38,7 @@
 #include "magic.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.74 2008/05/28 21:02:29 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.75 2008/06/05 12:59:15 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -46,7 +46,7 @@ private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t,
     off_t, int *);
 #endif
 private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t,
-    off_t, int *);
+    off_t, int *, int);
 private int doshn(struct magic_set *, int, int, int, off_t, int, size_t, int *,
     int);
 private size_t donote(struct magic_set *, unsigned char *, size_t, size_t, int,
@@ -1008,7 +1008,7 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
  */
 private int
 dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
-    int num, size_t size, off_t fsize, int *flags)
+    int num, size_t size, off_t fsize, int *flags, int sh_num)
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
@@ -1077,6 +1077,8 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 					return -1;
 				align = 4;
 			}
+			if (sh_num)
+				break;
 			/*
 			 * This is a PT_NOTE section; loop through all the notes
 			 * in the section.
