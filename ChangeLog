@@ -1,3 +1,9 @@
+2008-06-05 08:59  Christos Zoulas  <christos@astron.com>
+
+	* Don't print warnings about bad namesize in stripped
+	  binaries with PT_NOTE is still there, and the actual
+	  note is gone (Jakub Jelinek)
+
 2008-05-28 15:12  Robert Byrnes  <byrnes@wildpumpkin.net>
 
 	* magic/Magdir/elf:
