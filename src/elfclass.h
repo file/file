@@ -49,7 +49,8 @@
 		    (off_t)elf_getu(swap, elfhdr.e_phoff),
 		    elf_getu16(swap, elfhdr.e_phnum), 
 		    (size_t)elf_getu16(swap, elfhdr.e_phentsize),
-		    fsize, &flags) == -1)
+		    fsize, &flags, elf_getu16(swap, elfhdr.e_shnum))
+		    == -1)
 			return -1;
 		/*FALLTHROUGH*/
 	case ET_REL:
