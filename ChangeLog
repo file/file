@@ -1,3 +1,9 @@
+2008-06-16 21:41  Reuben Thomas  <rrt@sc3d.org>
+
+	* Fix automake error in configure.ac.
+
+	* Add MIME type for Psion Sketch files.
+
 2008-06-05 08:59  Christos Zoulas  <christos@astron.com>
 
 	* Don't print warnings about bad namesize in stripped
