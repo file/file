@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.40 2008/04/23 03:52:38 christos Exp $
+# $File: Makefile.am,v 1.41 2008/06/17 17:49:11 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
@@ -223,10 +223,12 @@ CLEANFILES = ${MAGIC}
 # the target's magic file
 if IS_CROSS_COMPILE
 FILE_COMPILE = file
+FILE_COMPILE_DEP =
 else
 FILE_COMPILE = $(top_builddir)/src/file
+FILE_COMPILE_DEP = $(FILE_COMPILE)
 endif
 
-${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE)
+${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
 	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
 	@mv $(MAGIC_FRAGMENT_BASE).mgc $@
