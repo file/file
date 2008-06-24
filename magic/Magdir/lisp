@@ -39,6 +39,9 @@
 
 # Files produced by CLISP Common Lisp From: Bruno Haible <haible@ilog.fr>
 0	string	(SYSTEM::VERSION\040'	CLISP byte-compiled Lisp program
+0	string	(|SYSTEM|::|VERSION|\040'	CLISP byte-compiled Lisp program
+ text
+
 0	long	0x70768BD2		CLISP memory image data
 0	long	0xD28B7670		CLISP memory image data, other endian
 
