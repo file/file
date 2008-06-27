@@ -721,6 +721,11 @@
 0	string/b	#VRML\ V2.0\ utf8	ISO/IEC 14772 VRML 97 file
 !:mime	model/vrml
 
+# X3D (Extensible 3D) [http://www.web3d.org/specifications/x3d-3.0.dtd]
+# From Michel Briand <michelbriand@free.fr>
+0	search/1000/cb  \<!DOCTYPE\ X3D		X3D (Extensible 3D) model
+!:mime model/x3d
+
 #---------------------------------------------------------------------------
 # HVQM4: compressed movie format designed by Hudson for Nintendo GameCube
 # From Mark Sheppard <msheppard@climax.co.uk>, 2002-10-03
