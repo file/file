@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.105 2008/05/28 21:02:29 christos Exp $
+ * @(#)$File: file.h,v 1.106 2008/07/02 15:22:47 christos Exp $
  */
 
 #ifndef __file_h__
@@ -97,7 +97,7 @@
 #define MAXstring 32		/* max leng of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	5
+#define VERSIONNO	6
 #define FILE_MAGICSIZE	(32 * 6)
 
 #define	FILE_LOAD	0
@@ -117,7 +117,7 @@ struct magic {
                                    for top-level tests) */
 #define TEXTTEST	0	/* for passing to file_softmagic */
 
-	uint8_t dummy1;
+	uint8_t factor;
 
 	/* Word 2 */
 	uint8_t reln;		/* relation (0=eq, '>'=gt, etc) */
@@ -186,11 +186,15 @@ struct magic {
 	uint8_t mask_op;	/* operator for mask */
 #ifdef ENABLE_CONDITIONALS
 	uint8_t cond;		/* conditional type */
-	uint8_t dummy2;	
 #else
-	uint8_t dummy2;	
-	uint8_t dummy3;	
+	uint8_t dummy;
 #endif
+	uint8_t factor_op;	
+#define		FILE_FACTOR_OP_PLUS	'+'
+#define		FILE_FACTOR_OP_MINUS	'-'
+#define		FILE_FACTOR_OP_TIMES	'*'
+#define		FILE_FACTOR_OP_DIV	'/'
+#define		FILE_FACTOR_OP_NONE	'\0'
 
 #define				FILE_OPS	"&|^+-*/%"
 #define				FILE_OPAND	0

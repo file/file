@@ -107,3 +107,9 @@
 0	string		SHCC3		MS Windows 3.1 registry file
 
 
+# Summary: Windows Registry text
+# Extension: .reg
+# Submitted by: Abel Cheung <abelcheung@gmail.com>
+0	string		REGEDIT4\r\n\r\n	Windows Registry text (Win95 or above)
+0	string		Windows\ Registry\ Editor\ 
+>&0	string		Version\ 5.00\r\n\r\n	Windows Registry text (Win2K or above)

@@ -35,11 +35,13 @@
 >>>20   long            >0              TIFF starts at byte %d
 >>>>24  long            >0              length %d
 
-# Adobe's PostScript Printer Description (PPD) files
-#       Yves Arrouye <arrouye@marin.fdn.fr>
+# Summary: Adobe's PostScript Printer Description File
+# Extension: .ppd
+# Reference: http://partners.adobe.com/public/developer/en/ps/5003.PPD_Spec_v4.3.pdf, Section 3.8
+# Submitted by: Yves Arrouye <arrouye@marin.fdn.fr>
 #
-0      string          *PPD-Adobe:    PPD file
->13    string          x              \b, ve
+0	string		*PPD-Adobe:\x20	PPD file
+>&0	string		x		\b, version %s
 
 # HP Printer Job Language
 0	string		\033%-12345X@PJL	HP Printer Job Language data

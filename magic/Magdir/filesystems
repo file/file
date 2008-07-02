@@ -1323,3 +1323,7 @@
 0x10000         belong          0x01161970      GFS2 Filesystem
 >0x10024        belong          x               (blocksize %d,
 >0x10060        string          >\0             lockproto %s)
+
+# dvdisaster's .ecc
+# From: "Nelson A. de Oliveira" <naoliv@gmail.com>
+0	string	*dvdisaster*	dvdisaster error correction file
