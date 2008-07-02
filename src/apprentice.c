@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.135 2008/05/09 14:20:28 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.136 2008/05/18 23:20:40 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -95,8 +95,6 @@ private const char *getstr(struct magic_set *, const char *, char *, int,
     int *, int);
 private int parse(struct magic_set *, struct magic_entry **, uint32_t *,
     const char *, size_t, int);
-private int parse_mime(struct magic_set *, struct magic_entry **, uint32_t *,
-    const char *);
 private void eatsize(const char **);
 private int apprentice_1(struct magic_set *, const char *, int, struct mlist *);
 private size_t apprentice_magic_strength(const struct magic *);
@@ -116,13 +114,27 @@ private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
 private int check_format_type(const char *, int);
 private int check_format(struct magic_set *, struct magic *);
 private int get_op(char);
+private int parse_mime(struct magic_set *, struct magic_entry *, const char *);
+private int parse_strength(struct magic_set *, struct magic_entry *,
+    const char *);
+
 
 private size_t maxmagic = 0;
 private size_t magicsize = sizeof(struct magic);
 
 private const char usg_hdr[] = "cont\toffset\ttype\topcode\tmask\tvalue\tdesc";
-private const char mime_marker[] = "!:mime";
-private const size_t mime_marker_len = sizeof(mime_marker) - 1;
+
+private struct {
+	const char *name;
+	size_t len;
+	int (*fun)(struct magic_set *, struct magic_entry *, const char *);
+} bang[] = {
+#define	DECLARE_FIELD(name) { # name, sizeof(# name) - 1, parse_ ## name }
+	DECLARE_FIELD(mime),
+	DECLARE_FIELD(strength),
+#undef	DECLARE_FIELD
+	{ NULL, 0, NULL }
+};
 
 #ifdef COMPILE_ONLY
 
@@ -387,6 +399,8 @@ apprentice_magic_strength(const struct magic *m)
 
 	switch (m->type) {
 	case FILE_DEFAULT:	/* make sure this sorts last */
+		if (m->factor_op != FILE_FACTOR_OP_NONE)
+			abort();
 		return 0;
 
 	case FILE_BYTE:
@@ -484,6 +498,24 @@ apprentice_magic_strength(const struct magic *m)
 	if (val == 0)	/* ensure we only return 0 for FILE_DEFAULT */
 		val = 1;
 
+	switch (m->factor_op) {
+	case FILE_FACTOR_OP_NONE:
+		break;
+	case FILE_FACTOR_OP_PLUS:
+		val += m->factor;
+		break;
+	case FILE_FACTOR_OP_MINUS:
+		val -= m->factor;
+		break;
+	case FILE_FACTOR_OP_TIMES:
+		val *= m->factor;
+		break;
+	case FILE_FACTOR_OP_DIV:
+		val /= m->factor;
+		break;
+	default:
+		abort();
+	}
 	return val;
 }
 
@@ -594,15 +626,38 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 				continue;
 			if (line[0] == '#')	/* comment, do not parse */
 				continue;
-			if (len > mime_marker_len &&
-			    memcmp(line, mime_marker, mime_marker_len) == 0) {
-				/* MIME type */
-				if (parse_mime(ms, marray, marraycount,
-					       line + mime_marker_len) != 0)
+			if (line[0] == '!' && line[1] == ':') {
+				size_t i;
+
+				for (i = 0; bang[i].name != NULL; i++) {
+					if (len - 2 > bang[i].len &&
+					    memcmp(bang[i].name, line + 2,
+					    bang[i].len) == 0)
+						break;
+				}
+				if (bang[i].name == NULL) {
+					file_error(ms, 0,
+					    "Unknown !: entry `%s'", line);
 					(*errs)++;
+					continue;
+				}
+				if (*marraycount == 0) {
+					file_error(ms, 0,
+					    "No current entry for :!%s type",
+						bang[i].name);
+					(*errs)++;
+					continue;
+				}
+				if ((*bang[i].fun)(ms, 
+				    &(*marray)[*marraycount - 1],
+				    line + bang[i].len + 2) != 0) {
+					(*errs)++;
+					continue;
+				}
 				continue;
 			}
-			if (parse(ms, marray, marraycount, line, lineno, action) != 0)
+			if (parse(ms, marray, marraycount, line, lineno,
+			    action) != 0)
 				(*errs)++;
 		}
 
@@ -1041,6 +1096,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		} else
 			m = me->mp;
 		(void)memset(m, 0, sizeof(*m));
+		m->factor_op = FILE_FACTOR_OP_NONE;
 		m->cont_level = 0;
 		me->cont_count = 1;
 	}
@@ -1350,29 +1406,73 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 }
 
 /*
+ * parse a STRENGTH annotation line from magic file, put into magic[index - 1]
+ * if valid
+ */
+private int
+parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line)
+{
+	const char *l = line;
+	char *el;
+	unsigned long factor;
+	struct magic *m = &me->mp[0];
+
+	if (m->factor_op != FILE_FACTOR_OP_NONE) {
+		file_magwarn(ms,
+		    "Current entry already has a strength type: %c %d",
+		    m->factor_op, m->factor);
+		return -1;
+	}
+	EATAB;
+	switch (*l) {
+	case FILE_FACTOR_OP_NONE:
+	case FILE_FACTOR_OP_PLUS:
+	case FILE_FACTOR_OP_MINUS:
+	case FILE_FACTOR_OP_TIMES:
+	case FILE_FACTOR_OP_DIV:
+		m->factor_op = *l++;
+		break;
+	default:
+		file_magwarn(ms, "Unknown factor op `%c'", *l);
+		return -1;
+	}
+	EATAB;
+	factor = strtoul(l, &el, 0);
+	if (factor > 255) {
+		file_magwarn(ms, "Too large factor `%lu'", factor);
+		goto out;
+	}
+	if (*el && !isspace((unsigned char)*el)) {
+		file_magwarn(ms, "Bad factor `%s'", l);
+		goto out;
+	}
+	m->factor = (uint8_t)factor;
+	if (m->factor == 0 && m->factor_op == FILE_FACTOR_OP_DIV) {
+		file_magwarn(ms, "Cannot have factor op `%c' and factor %u",
+		    m->factor_op, m->factor);
+		goto out;
+	}
+	return 0;
+out:
+	m->factor_op = FILE_FACTOR_OP_NONE;
+	m->factor = 0;
+	return -1;
+}
+
+/*
  * parse a MIME annotation line from magic file, put into magic[index - 1]
  * if valid
  */
 private int
-parse_mime(struct magic_set *ms, struct magic_entry **mentryp,
-    uint32_t *nmentryp, const char *line)
+parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 {
 	size_t i;
 	const char *l = line;
-	struct magic *m;
-	struct magic_entry *me;
-
-	if (*nmentryp == 0) {
-		file_error(ms, 0, "No current entry for MIME type");
-		return -1;
-	}
-
-	me = &(*mentryp)[*nmentryp - 1];
-	m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
+	struct magic *m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
 
 	if (m->mimetype[0] != '\0') {
-		file_error(ms, 0, "Current entry already has a MIME type: %s\n"
-		    "Description: %s\nNew type: %s", m->mimetype, m->desc, l);
+		file_magwarn(ms, "Current entry already has a MIME type `%s',"
+		    " new type `%s'", m->mimetype, l);
 		return -1;
 	}	
 

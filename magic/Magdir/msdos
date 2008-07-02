@@ -10,9 +10,9 @@
 !:mime	text/x-msdos-batch
 >1	string/cB	echo\ off	MS-DOS batch file text
 !:mime	text/x-msdos-batch
->1	string/cB	rem\		MS-DOS batch file text
+>1	string/cB	rem\ 		MS-DOS batch file text
 !:mime	text/x-msdos-batch
->1	string/cB	set\		MS-DOS batch file text
+>1	string/cB	set\ 		MS-DOS batch file text
 !:mime	text/x-msdos-batch
 
 
@@ -247,11 +247,11 @@
 >0x40	string aPKG \b, aPackage self-extracting archive
 
 >32	 string AIN
->>35	 string 2	       \b, AIN 2.x compressed
->>35	 string <2	       \b, AIN 1.x compressed
->>35	 string >2	       \b, AIN 1.x compressed
->28	 string UC2X	       \b, UCEXE compressed
->28	 string WWP\	       \b, WWPACK compressed
+>>35	 string 2		\b, AIN 2.x compressed
+>>35	 string <2		\b, AIN 1.x compressed
+>>35	 string >2		\b, AIN 1.x compressed
+>28	 string UC2X		\b, UCEXE compressed
+>28	 string WWP\  		\b, WWPACK compressed
 
 # skip to the end of the exe
 >(4.s*512)	long	x 
@@ -427,12 +427,16 @@
 !:mime	application/vnd.lotus-wordpro
 
 
-#  DeIsL1.isu what this is I don't know
-0	string	\161\250\000\000\001\002	DeIsL1.isu whatever that is
+# Summary: Script used by InstallScield to uninstall applications
+# Extension: .isu
+# Submitted by: unknown
+# Modified by (1): Abel Cheung <abelcheung@gmail.com> (replace useless entry)
+0		string		\x71\xa8\x00\x00\x01\x02
+>12		string		Stirling\ Technologies,		InstallShield Uninstall Script
 
 # Winamp .avs
 #0	string	Nullsoft\ AVS\ Preset\ \060\056\061\032 A plug in for Winamp ms-windows Freeware media player
-0	string	Nullsoft\ AVS\ Preset\	Winamp plug in
+0	string	Nullsoft\ AVS\ Preset\ 	Winamp plug in
 
 # Windows Metafont .WMF
 0	string	\327\315\306\232	ms-windows metafont .wmf

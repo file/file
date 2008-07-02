@@ -20,6 +20,7 @@
 >5	byte		0		invalid byte order
 >5	byte		1		LSB
 >>16	leshort		0		no file type,
+!:strength *2
 !:mime	application/octet-stream
 >>16	leshort		1		relocatable,
 !:mime	application/x-object

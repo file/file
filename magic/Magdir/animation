@@ -724,7 +724,8 @@
 # X3D (Extensible 3D) [http://www.web3d.org/specifications/x3d-3.0.dtd]
 # From Michel Briand <michelbriand@free.fr>
 0	string		\<?xml\ version="
->20	search/1000/cb  \<!DOCTYPE\ X3D		X3D (Extensible 3D) model
+!:strength +1
+>20	search/1000/cb  \<!DOCTYPE\ X3D		X3D (Extensible 3D) model xml text
 !:mime model/x3d
 
 #---------------------------------------------------------------------------

@@ -1,3 +1,7 @@
+2008-07-02 11:15  Christos Zoulas  <christos@astron.com>
+
+	* add !:strength op to adjust magic strength (experimental)
+
 2008-06-16 21:41  Reuben Thomas  <rrt@sc3d.org>
 
 	* Fix automake error in configure.ac.
