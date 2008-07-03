@@ -36,9 +36,12 @@
 #if defined(HAVE_WCTYPE_H)
 #include <wctype.h>
 #endif
+#if defined(HAVE_LIMITS_H)
+#include <limits.h>
+#endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.41 2008/05/16 14:25:01 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.42 2008/07/03 15:48:18 christos Exp $")
 #endif	/* lint */
 
 #ifndef SIZE_MAX
