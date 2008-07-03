@@ -38,8 +38,12 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.41 2008/05/16 14:25:01 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.42 2008/07/03 15:48:18 christos Exp $")
 #endif	/* lint */
+
+#ifndef SIZE_MAX
+#define SIZE_MAX	((size_t)~0)
+#endif
 
 /*
  * Like printf, only we append to a buffer.

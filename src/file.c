@@ -60,7 +60,11 @@
 #include <wchar.h>
 #endif
 
+#ifdef HAVE_GETOPT_H
 #include <getopt.h>
+#else
+#include "mygetopt.h"
+#endif
 #ifndef HAVE_GETOPT_LONG
 int getopt_long(int argc, char * const *argv, const char *optstring, const struct option *longopts, int *longindex);
 #endif
@@ -70,7 +74,7 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.120 2008/05/18 23:21:17 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.121 2008/07/03 15:48:18 christos Exp $")
 #endif	/* lint */
 
 
