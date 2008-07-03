@@ -105,8 +105,9 @@ A buffer overflow can only occur if your sprintf() do strange things or when
 you use strange formats.
 
 */
-
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 #include <assert.h>
 #include <stdio.h>
@@ -114,7 +115,9 @@ you use strange formats.
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
+#ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif
 
 #define ALLOC_CHUNK 2048
 #define ALLOC_SECURITY_MARGIN 1024   /* big value because some platforms have very big 'G' exponent */

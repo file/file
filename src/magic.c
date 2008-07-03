@@ -38,7 +38,9 @@
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
+#ifdef HAVE_LIMITS_H
 #include <limits.h>	/* for PIPE_BUF */
+#endif
 
 #if defined(HAVE_UTIMES)
 # include <sys/time.h>
@@ -63,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.51 2008/05/16 14:25:01 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.52 2008/07/03 15:53:10 christos Exp $")
 #endif	/* lint */
 
 #ifndef PIPE_BUF 
