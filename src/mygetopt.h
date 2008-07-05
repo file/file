@@ -62,9 +62,7 @@ struct option {
 	int val;
 };
 
-__BEGIN_DECLS
 int getopt_long(int, char * const *, const char *,
     const struct option *, int *);
-__END_DECLS
  
 #endif /* !_GETOPT_H_ */
