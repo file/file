@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.106 2008/07/02 15:22:47 christos Exp $
+ * @(#)$File: file.h,v 1.107 2008/07/15 17:45:13 christos Exp $
  */
 
 #ifndef __file_h__
@@ -77,6 +77,12 @@
 	 (__GNUC__ > (x)))
 #else
 #define	__GNUC_PREREQ__(x, y)	0
+#endif
+#endif
+
+#ifndef __GNUC__
+#ifndef __attribute__
+#define __attribute__(a)
 #endif
 #endif
 
