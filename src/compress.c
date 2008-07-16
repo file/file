@@ -56,7 +56,7 @@
 
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.56 2008/02/07 00:58:52 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.57 2008/07/16 18:00:57 christos Exp $")
 #endif
 
 private const struct {
@@ -330,7 +330,7 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 
 	if (data_start >= n)
 		return 0;
-	if ((*newch = (unsigned char *)malloc(HOWMANY + 1)) == NULL) {
+	if ((*newch = CAST(unsigned char *, malloc(HOWMANY + 1))) == NULL) {
 		return 0;
 	}
 	

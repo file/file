@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.137 2008/07/02 15:22:47 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.138 2008/07/16 18:00:57 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -297,7 +297,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 		return -1;
 	}
 
-	if ((ml = malloc(sizeof(*ml))) == NULL) {
+	if ((ml = CAST(struct mlist *, malloc(sizeof(*ml)))) == NULL) {
 		file_delmagic(magic, mapped, nmagic);
 		file_oomem(ms, sizeof(*ml));
 		return -1;
@@ -360,7 +360,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	}
 	fn = mfn;
 
-	if ((mlist = malloc(sizeof(*mlist))) == NULL) {
+	if ((mlist = CAST(struct mlist *, malloc(sizeof(*mlist)))) == NULL) {
 		free(mfn);
 		file_oomem(ms, sizeof(*mlist));
 		return NULL;
@@ -525,8 +525,8 @@ apprentice_magic_strength(const struct magic *m)
 private int
 apprentice_sort(const void *a, const void *b)
 {
-	const struct magic_entry *ma = a;
-	const struct magic_entry *mb = b;
+	const struct magic_entry *ma = CAST(const struct magic_entry *, a);
+	const struct magic_entry *mb = CAST(const struct magic_entry *, b);
 	size_t sa = apprentice_magic_strength(ma->mp);
 	size_t sb = apprentice_magic_strength(mb->mp);
 	if (sa == sb)
@@ -676,6 +676,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	int errs = 0;
 	struct magic_entry *marray;
 	uint32_t marraycount, i, mentrycount = 0, starttest;
+	size_t slen;
 	char subfn[MAXPATHLEN];
 	struct stat st;
 	DIR *dir;
@@ -684,7 +685,8 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	ms->flags |= MAGIC_CHECK;	/* Enable checks for parsed files */
 
         maxmagic = MAXMAGIS;
-	if ((marray = calloc(maxmagic, sizeof(*marray))) == NULL) {
+	if ((marray = CAST(struct magic_entry *, calloc(maxmagic,
+	    sizeof(*marray)))) == NULL) {
 		file_oomem(ms, maxmagic * sizeof(*marray));
 		return -1;
 	}
@@ -772,8 +774,9 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	for (i = 0; i < marraycount; i++)
 		mentrycount += marray[i].cont_count;
 
-	if ((*magicp = malloc(sizeof(**magicp) * mentrycount)) == NULL) {
-		file_oomem(ms, sizeof(**magicp) * mentrycount);
+	slen = sizeof(**magicp) * mentrycount;
+	if ((*magicp = CAST(struct magic *, malloc(slen))) == NULL) {
+		file_oomem(ms, slen);
 		errs++;
 		goto out;
 	}
@@ -1061,7 +1064,8 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		if (me->cont_count == me->max_count) {
 			struct magic *nm;
 			size_t cnt = me->max_count + ALLOC_CHUNK;
-			if ((nm = realloc(me->mp, sizeof(*nm) * cnt)) == NULL) {
+			if ((nm = CAST(struct magic *, realloc(me->mp,
+			    sizeof(*nm) * cnt))) == NULL) {
 				file_oomem(ms, sizeof(*nm) * cnt);
 				return -1;
 			}
@@ -1076,7 +1080,8 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 			struct magic_entry *mp;
 
 			maxmagic += ALLOC_INCR;
-			if ((mp = realloc(*mentryp, sizeof(*mp) * maxmagic)) ==
+			if ((mp = CAST(struct magic_entry *,
+			    realloc(*mentryp, sizeof(*mp) * maxmagic))) ==
 			    NULL) {
 				file_oomem(ms, sizeof(*mp) * maxmagic);
 				return -1;
@@ -1087,8 +1092,9 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		}
 		me = &(*mentryp)[*nmentryp];
 		if (me->mp == NULL) {
-			if ((m = malloc(sizeof(*m) * ALLOC_CHUNK)) == NULL) {
-				file_oomem(ms, sizeof(*m) * ALLOC_CHUNK);
+			size_t len = sizeof(*m) * ALLOC_CHUNK;
+			if ((m = CAST(struct magic *, malloc(len))) == NULL) {
+				file_oomem(ms, len);
 				return -1;
 			}
 			me->mp = m;
@@ -2025,7 +2031,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	}
 #define RET	2
 #else
-	if ((mm = malloc((size_t)st.st_size)) == NULL) {
+	if ((mm = CAST(void *, malloc((size_t)st.st_size))) == NULL) {
 		file_oomem(ms, (size_t)st.st_size);
 		goto error1;
 	}
@@ -2035,7 +2041,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	}
 #define RET	1
 #endif
-	*magicp = mm;
+	*magicp = CAST(struct magic *, mm);
 	(void)close(fd);
 	fd = -1;
 	ptr = (uint32_t *)(void *)*magicp;

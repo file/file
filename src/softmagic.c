@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.117 2008/03/01 22:21:49 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.118 2008/07/16 18:00:57 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -906,8 +906,8 @@ mget(struct magic_set *ms, const unsigned char *s,
 	if (m->flag & INDIR) {
 		int off = m->in_offset;
 		if (m->in_op & FILE_OPINDIRECT) {
-			const union VALUETYPE *q =
-			    ((const void *)(s + offset + off));
+			const union VALUETYPE *q = CAST(const union VALUETYPE *,
+			    ((const void *)(s + offset + off)));
 			switch (m->in_type) {
 			case FILE_BYTE:
 				off = q->b;

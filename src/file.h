@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.107 2008/07/15 17:45:13 christos Exp $
+ * @(#)$File: file.h,v 1.108 2008/07/16 18:00:57 christos Exp $
  */
 
 #ifndef __file_h__
@@ -109,6 +109,20 @@
 #define	FILE_LOAD	0
 #define FILE_CHECK	1
 #define FILE_COMPILE	2
+
+union VALUETYPE {
+	uint8_t b;
+	uint16_t h;
+	uint32_t l;
+	uint64_t q;
+	uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
+	uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
+	uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
+	char s[MAXstring];	/* the search string or regex pattern */
+	unsigned char us[MAXstring];
+	float f;
+	double d;
+}; 
 
 struct magic {
 	/* Word 1 */
@@ -242,21 +256,8 @@ struct magic {
 #define num_mask _u._mask
 #define str_range _u._s._count
 #define str_flags _u._s._flags
-
 	/* Words 9-16 */
-	union VALUETYPE {
-		uint8_t b;
-		uint16_t h;
-		uint32_t l;
-		uint64_t q;
-		uint8_t hs[2];	/* 2 bytes of a fixed-endian "short" */
-		uint8_t hl[4];	/* 4 bytes of a fixed-endian "long" */
-		uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
-		char s[MAXstring];	/* the search string or regex pattern */
-		unsigned char us[MAXstring];
-		float f;
-		double d;
-	} value;		/* either number or string */
+	union VALUETYPE value;		/* either number or string */
 	/* Words 17..31 */
 	char desc[MAXDESC];	/* description */
 	/* Words 32..47 */
@@ -288,18 +289,25 @@ struct mlist {
 	struct mlist *next, *prev;
 };
 
+#ifdef __cplusplus
+#define CAST(T, b)	static_cast<T>(b)
+#else
+#define CAST(T, b)	(b)
+#endif
+
+struct level_info {
+	int32_t off;
+	int got_match;
+#ifdef ENABLE_CONDITIONALS
+	int last_match;
+	int last_cond;	/* used for error checking by parse() */
+#endif
+} *li;
 struct magic_set {
 	struct mlist *mlist;
 	struct cont {
 		size_t len;
-		struct level_info {
-			int32_t off;
-			int got_match;
-#ifdef ENABLE_CONDITIONALS
-			int last_match;
-			int last_cond;	/* used for error checking by parse() */
-#endif
-		} *li;
+		struct level_info *li;
 	} c;
 	struct out {
 		char *buf;		/* Accumulation buffer */
@@ -397,6 +405,7 @@ int asprintf(char **ptr, const char *format_string, ...);
 #define O_BINARY	0
 #endif
 
+#ifndef __cplusplus
 #ifdef __GNUC__
 static const char *rcsid(const char *) __attribute__((__used__));
 #endif
@@ -404,5 +413,8 @@ static const char *rcsid(const char *) __attribute__((__used__));
 static const char *rcsid(const char *p) { \
 	return rcsid(p = id); \
 }
+#else
+#define FILE_RCSID(id)
+#endif
 
 #endif /* __file_h__ */

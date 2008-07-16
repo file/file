@@ -38,7 +38,7 @@
 #include "magic.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.75 2008/06/05 12:59:15 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.76 2008/07/16 18:00:57 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -49,7 +49,7 @@ private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t,
     off_t, int *, int);
 private int doshn(struct magic_set *, int, int, int, off_t, int, size_t, int *,
     int);
-private size_t donote(struct magic_set *, unsigned char *, size_t, size_t, int,
+private size_t donote(struct magic_set *, void *, size_t, size_t, int,
     int, size_t, int *);
 
 #define	ELF_ALIGN(a)	((((a) + align - 1) / align) * align)
@@ -135,72 +135,72 @@ getu64(int swap, uint64_t value)
 # define elf_getu64(swap, value) getu64(swap, value)
 #endif
 
-#define xsh_addr	(class == ELFCLASS32			\
+#define xsh_addr	(clazz == ELFCLASS32			\
 			 ? (void *) &sh32			\
 			 : (void *) &sh64)
-#define xsh_sizeof	(class == ELFCLASS32			\
+#define xsh_sizeof	(clazz == ELFCLASS32			\
 			 ? sizeof sh32				\
 			 : sizeof sh64)
-#define xsh_size	(class == ELFCLASS32			\
+#define xsh_size	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, sh32.sh_size)	\
 			 : elf_getu64(swap, sh64.sh_size))
-#define xsh_offset	(class == ELFCLASS32			\
+#define xsh_offset	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, sh32.sh_offset)	\
 			 : elf_getu64(swap, sh64.sh_offset))
-#define xsh_type	(class == ELFCLASS32			\
+#define xsh_type	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, sh32.sh_type)	\
 			 : elf_getu32(swap, sh64.sh_type))
-#define xph_addr	(class == ELFCLASS32			\
+#define xph_addr	(clazz == ELFCLASS32			\
 			 ? (void *) &ph32			\
 			 : (void *) &ph64)
-#define xph_sizeof	(class == ELFCLASS32			\
+#define xph_sizeof	(clazz == ELFCLASS32			\
 			 ? sizeof ph32				\
 			 : sizeof ph64)
-#define xph_type	(class == ELFCLASS32			\
+#define xph_type	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, ph32.p_type)	\
 			 : elf_getu32(swap, ph64.p_type))
-#define xph_offset	(off_t)(class == ELFCLASS32		\
+#define xph_offset	(off_t)(clazz == ELFCLASS32		\
 			 ? elf_getu32(swap, ph32.p_offset)	\
 			 : elf_getu64(swap, ph64.p_offset))
-#define xph_align	(size_t)((class == ELFCLASS32		\
+#define xph_align	(size_t)((clazz == ELFCLASS32		\
 			 ? (off_t) (ph32.p_align ? 		\
 			    elf_getu32(swap, ph32.p_align) : 4) \
 			 : (off_t) (ph64.p_align ?		\
 			    elf_getu64(swap, ph64.p_align) : 4)))
-#define xph_filesz	(size_t)((class == ELFCLASS32		\
+#define xph_filesz	(size_t)((clazz == ELFCLASS32		\
 			 ? elf_getu32(swap, ph32.p_filesz)	\
 			 : elf_getu64(swap, ph64.p_filesz)))
-#define xnh_addr	(class == ELFCLASS32			\
+#define xnh_addr	(clazz == ELFCLASS32			\
 			 ? (void *) &nh32			\
 			 : (void *) &nh64)
-#define xph_memsz	(size_t)((class == ELFCLASS32		\
+#define xph_memsz	(size_t)((clazz == ELFCLASS32		\
 			 ? elf_getu32(swap, ph32.p_memsz)	\
 			 : elf_getu64(swap, ph64.p_memsz)))
-#define xnh_sizeof	(class == ELFCLASS32			\
+#define xnh_sizeof	(clazz == ELFCLASS32			\
 			 ? sizeof nh32				\
 			 : sizeof nh64)
-#define xnh_type	(class == ELFCLASS32			\
+#define xnh_type	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, nh32.n_type)	\
 			 : elf_getu32(swap, nh64.n_type))
-#define xnh_namesz	(class == ELFCLASS32			\
+#define xnh_namesz	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, nh32.n_namesz)	\
 			 : elf_getu32(swap, nh64.n_namesz))
-#define xnh_descsz	(class == ELFCLASS32			\
+#define xnh_descsz	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, nh32.n_descsz)	\
 			 : elf_getu32(swap, nh64.n_descsz))
-#define prpsoffsets(i)	(class == ELFCLASS32			\
+#define prpsoffsets(i)	(clazz == ELFCLASS32			\
 			 ? prpsoffsets32[i]			\
 			 : prpsoffsets64[i])
-#define xcap_addr	(class == ELFCLASS32			\
+#define xcap_addr	(clazz == ELFCLASS32			\
 			 ? (void *) &cap32			\
 			 : (void *) &cap64)
-#define xcap_sizeof	(class == ELFCLASS32			\
+#define xcap_sizeof	(clazz == ELFCLASS32			\
 			 ? sizeof cap32				\
 			 : sizeof cap64)
-#define xcap_tag	(class == ELFCLASS32			\
+#define xcap_tag	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, cap32.c_tag)	\
 			 : elf_getu64(swap, cap64.c_tag))
-#define xcap_val	(class == ELFCLASS32			\
+#define xcap_val	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, cap32.c_un.c_val)	\
 			 : elf_getu64(swap, cap64.c_un.c_val))
 
@@ -242,7 +242,7 @@ static const size_t	prpsoffsets64[] = {
 #define	NOFFSETS32	(sizeof prpsoffsets32 / sizeof prpsoffsets32[0])
 #define NOFFSETS64	(sizeof prpsoffsets64 / sizeof prpsoffsets64[0])
 
-#define NOFFSETS	(class == ELFCLASS32 ? NOFFSETS32 : NOFFSETS64)
+#define NOFFSETS	(clazz == ELFCLASS32 ? NOFFSETS32 : NOFFSETS64)
 
 /*
  * Look through the program headers of an executable image, searching
@@ -288,7 +288,7 @@ private const char os_style_names[][8] = {
 #define FLAGS_DID_CORE_STYLE	4
 
 private int
-dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
+dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
     int num, size_t size, off_t fsize, int *flags)
 {
 	Elf32_Phdr ph32;
@@ -353,7 +353,7 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 			if (offset >= (size_t)bufsize)
 				break;
 			offset = donote(ms, nbuf, offset, (size_t)bufsize,
-			    class, swap, 4, flags);
+			    clazz, swap, 4, flags);
 			if (offset == 0)
 				break;
 
@@ -364,8 +364,8 @@ dophn_core(struct magic_set *ms, int class, int swap, int fd, off_t off,
 #endif
 
 private size_t
-donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
-    int class, int swap, size_t align, int *flags)
+donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
+    int clazz, int swap, size_t align, int *flags)
 {
 	Elf32_Nhdr nh32;
 	Elf64_Nhdr nh64;
@@ -374,6 +374,7 @@ donote(struct magic_set *ms, unsigned char *nbuf, size_t offset, size_t size,
 	int os_style = -1;
 #endif
 	uint32_t namesz, descsz;
+	unsigned char *nbuf = CAST(unsigned char *, vbuf);
 
 	(void)memcpy(xnh_addr, &nbuf[offset], xnh_sizeof);
 	offset += xnh_sizeof;
@@ -814,7 +815,7 @@ static const cap_desc_t cap_desc_386[] = {
 };
 
 private int
-doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
+doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
     size_t size, int *flags, int mach)
 {
 	Elf32_Shdr sh32;
@@ -877,7 +878,7 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
 				if (noff >= (size_t)xsh_size)
 					break;
 				noff = donote(ms, nbuf, (size_t)noff,
-				    (size_t)xsh_size, class, swap, 4,
+				    (size_t)xsh_size, clazz, swap, 4,
 				    flags);
 				if (noff == 0)
 					break;
@@ -1007,7 +1008,7 @@ doshn(struct magic_set *ms, int class, int swap, int fd, off_t off, int num,
  * otherwise it's statically linked.
  */
 private int
-dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
+dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
     int num, size_t size, off_t fsize, int *flags, int sh_num)
 {
 	Elf32_Phdr ph32;
@@ -1099,7 +1100,7 @@ dophn_exec(struct magic_set *ms, int class, int swap, int fd, off_t off,
 				if (offset >= (size_t)bufsize)
 					break;
 				offset = donote(ms, nbuf, offset,
-				    (size_t)bufsize, class, swap, align,
+				    (size_t)bufsize, clazz, swap, align,
 				    flags);
 				if (offset == 0)
 					break;
@@ -1128,7 +1129,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 		int32_t l;
 		char c[sizeof (int32_t)];
 	} u;
-	int class;
+	int clazz;
 	int swap;
 	struct stat st;
 	off_t fsize;
@@ -1163,9 +1164,9 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	}
 	fsize = st.st_size;
 
-	class = buf[EI_CLASS];
+	clazz = buf[EI_CLASS];
 
-	switch (class) {
+	switch (clazz) {
 	case ELFCLASS32:
 #undef elf_getu
 #define elf_getu(a, b)	elf_getu32(a, b)
@@ -1179,7 +1180,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 #define elfhdr elf64hdr
 #include "elfclass.h"
 	default:
-	    if (file_printf(ms, ", unknown class %d", class) == -1)
+	    if (file_printf(ms, ", unknown class %d", clazz) == -1)
 		    return -1;
 	    break;
 	}
