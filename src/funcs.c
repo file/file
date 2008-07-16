@@ -41,7 +41,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.42 2008/07/03 15:48:18 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.43 2008/07/03 15:53:10 christos Exp $")
 #endif	/* lint */
 
 #ifndef SIZE_MAX
@@ -159,6 +159,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 {
 	int m;
 	int mime = ms->flags & MAGIC_MIME;
+	const unsigned char *ubuf = CAST(const unsigned char *, buf);
 
 	if (nb == 0) {
 		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
@@ -189,16 +190,16 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 
 	/* try compression stuff */
 	if ((ms->flags & MAGIC_NO_CHECK_COMPRESS) != 0 ||
-	    (m = file_zmagic(ms, fd, inname, buf, nb)) == 0) {
+	    (m = file_zmagic(ms, fd, inname, ubuf, nb)) == 0) {
 	    /* Check if we have a tar file */
 	    if ((ms->flags & MAGIC_NO_CHECK_TAR) != 0 ||
-		(m = file_is_tar(ms, buf, nb)) == 0) {
+		(m = file_is_tar(ms, ubuf, nb)) == 0) {
 		/* try tests in /etc/magic (or surrogate magic file) */
 		if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
-		    (m = file_softmagic(ms, buf, nb, BINTEST)) == 0) {
+		    (m = file_softmagic(ms, ubuf, nb, BINTEST)) == 0) {
 		    /* try known keywords, check whether it is ASCII */
 		    if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
-			(m = file_ascmagic(ms, buf, nb)) == 0) {
+			(m = file_ascmagic(ms, ubuf, nb)) == 0) {
 			/* abandon hope, all ye who remain here */
 			if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
 			    file_printf(ms, mime ? "application/octet-stream" :
@@ -220,7 +221,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 		 * information from the ELF headers that cannot easily
 		 * be extracted with rules in the magic file.
 		 */
-		(void)file_tryelf(ms, fd, buf, nb);
+		(void)file_tryelf(ms, fd, ubuf, nb);
 	}
 #endif
 	return m;
@@ -267,7 +268,7 @@ file_getbuffer(struct magic_set *ms)
 		return NULL;
 	}
 	psize = len * 4 + 1;
-	if ((pbuf = realloc(ms->o.pbuf, psize)) == NULL) {
+	if ((pbuf = CAST(char *, realloc(ms->o.pbuf, psize))) == NULL) {
 		file_oomem(ms, psize);
 		return NULL;
 	}
@@ -330,8 +331,9 @@ file_check_mem(struct magic_set *ms, unsigned int level)
 
 	if (level >= ms->c.len) {
 		len = (ms->c.len += 20) * sizeof(*ms->c.li);
-		ms->c.li = (ms->c.li == NULL) ? malloc(len) :
-		    realloc(ms->c.li, len);
+		ms->c.li = CAST(struct level_info *, (ms->c.li == NULL) ?
+		    malloc(len) :
+		    realloc(ms->c.li, len));
 		if (ms->c.li == NULL) {
 			file_oomem(ms, len);
 			return -1;

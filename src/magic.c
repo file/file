@@ -65,7 +65,7 @@
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.51 2008/05/16 14:25:01 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.52 2008/07/03 15:53:10 christos Exp $")
 #endif	/* lint */
 
 #ifndef PIPE_BUF 
@@ -99,8 +99,10 @@ public struct magic_set *
 magic_open(int flags)
 {
 	struct magic_set *ms;
+	size_t len;
 
-	if ((ms = calloc((size_t)1, sizeof(struct magic_set))) == NULL)
+	if ((ms = CAST(magic_set *, calloc((size_t)1,
+	    sizeof(struct magic_set)))) == NULL)
 		return NULL;
 
 	if (magic_setflags(ms, flags) == -1) {
@@ -109,9 +111,9 @@ magic_open(int flags)
 	}
 
 	ms->o.buf = ms->o.pbuf = NULL;
+	len = (ms->c.len = 10) * sizeof(*ms->c.li);
 
-	ms->c.li = malloc((ms->c.len = 10) * sizeof(*ms->c.li));
-	if (ms->c.li == NULL)
+	if ((ms->c.li = CAST(struct level_info *, malloc(len))) == NULL)
 		goto free;
 	
 	ms->haderr = 0;
@@ -269,7 +271,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	 * some overlapping space for matches near EOF
 	 */
 #define SLOP (1 + sizeof(union VALUETYPE))
-	if ((buf = malloc(HOWMANY + SLOP)) == NULL)
+	if ((buf = CAST(unsigned char *, malloc(HOWMANY + SLOP))) == NULL)
 		return NULL;
 
 	if (file_reset(ms) == -1)
