@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.138 2008/07/16 18:00:57 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.139 2008/07/18 17:24:06 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -516,6 +516,13 @@ apprentice_magic_strength(const struct magic *m)
 	default:
 		abort();
 	}
+
+	/*
+	 * Magic entries with no description get a bonus because they depend
+	 * on subsequent magic entries to print something.
+	 */
+	if (m->desc[0] == '\0')
+		val++;
 	return val;
 }
 
