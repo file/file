@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.117 2008/03/01 22:21:49 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.118 2008/07/16 18:00:57 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -664,9 +664,12 @@ mconvert(struct magic_set *ms, struct magic *m)
 		
 		/* Null terminate and eat *trailing* return */
 		p->s[sizeof(p->s) - 1] = '\0';
+#if 0
+		/* Why? breaks magic numbers that end with \xa */
 		len = strlen(p->s);
 		if (len-- && p->s[len] == '\n')
 			p->s[len] = '\0';
+#endif
 		return 1;
 	}
 	case FILE_PSTRING: {
@@ -677,9 +680,12 @@ mconvert(struct magic_set *ms, struct magic *m)
 		while (len--)
 			*ptr1++ = *ptr2++;
 		*ptr1 = '\0';
+#if 0
+		/* Why? breaks magic numbers that end with \xa */
 		len = strlen(p->s);
 		if (len-- && p->s[len] == '\n')
 			p->s[len] = '\0';
+#endif
 		return 1;
 	}
 	case FILE_BESHORT:
