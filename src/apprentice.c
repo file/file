@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.139 2008/07/18 17:24:06 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.140 2008/07/20 04:02:15 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -2216,7 +2216,7 @@ swap4(uint32_t sv)
 private uint64_t
 swap8(uint64_t sv)
 {
-	uint32_t rv;
+	uint64_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv; 
 	uint8_t *d = (uint8_t *)(void *)&rv; 
 #if 0
