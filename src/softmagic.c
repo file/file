@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.119 2008/07/19 14:32:21 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.120 2008/07/28 17:25:21 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -660,8 +660,6 @@ mconvert(struct magic_set *ms, struct magic *m)
 	case FILE_STRING:
 	case FILE_BESTRING16:
 	case FILE_LESTRING16: {
-		size_t len;
-		
 		/* Null terminate and eat *trailing* return */
 		p->s[sizeof(p->s) - 1] = '\0';
 #if 0
