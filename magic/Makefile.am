@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.42 2008/07/28 19:08:29 christos Exp $
+# $File: Makefile.am,v 1.43 2008/08/08 08:24:06 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
@@ -206,6 +206,7 @@ $(MAGIC_FRAGMENT_DIR)/vms \
 $(MAGIC_FRAGMENT_DIR)/vmware \
 $(MAGIC_FRAGMENT_DIR)/vorbis \
 $(MAGIC_FRAGMENT_DIR)/vxl \
+$(MAGIC_FRAGMENT_DIR)/warc \
 $(MAGIC_FRAGMENT_DIR)/weak \
 $(MAGIC_FRAGMENT_DIR)/windows \
 $(MAGIC_FRAGMENT_DIR)/wordprocessors \
