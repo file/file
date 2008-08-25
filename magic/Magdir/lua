@@ -5,9 +5,13 @@
 
 # Lua scripts
 0	search/1/b	#!\ /usr/bin/lua	Lua script text executable
+!:mime	text/x-lua
 0	search/1/b	#!\ /usr/local/bin/lua	Lua script text executable
+!:mime	text/x-lua
 0	search/1	#!/usr/bin/env\ lua	Lua script text executable
+!:mime	text/x-lua
 0	search/1	#!\ /usr/bin/env\ lua	Lua script text executable
+!:mime	text/x-lua
 
 # Lua bytecode
 0	string		\033Lua			Lua bytecode,
