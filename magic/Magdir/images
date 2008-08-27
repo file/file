@@ -77,17 +77,17 @@
 #
 0	string		\x89PNG\x0d\x0a\x1a\x0a		PNG image
 !:mime	image/png
->>16	belong		x		\b, %ld x
->>20	belong		x		%ld,
->>24	byte		x		%d-bit
->>25	byte		0		grayscale,
->>25	byte		2		\b/color RGB,
->>25	byte		3		colormap,
->>25	byte		4		gray+alpha,
->>25	byte		6		\b/color RGBA,
-#>>26	byte		0		deflate/32K,
->>28	byte		0		non-interlaced
->>28	byte		1		interlaced
+>16	belong		x		\b, %ld x
+>20	belong		x		%ld,
+>24	byte		x		%d-bit
+>25	byte		0		grayscale,
+>25	byte		2		\b/color RGB,
+>25	byte		3		colormap,
+>25	byte		4		gray+alpha,
+>25	byte		6		\b/color RGBA,
+#>26	byte		0		deflate/32K,
+>28	byte		0		non-interlaced
+>28	byte		1		interlaced
 
 # possible GIF replacements; none yet released!
 # (Greg Roelofs, newt@uchicago.edu)
