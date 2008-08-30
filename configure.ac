@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(file, 4.25, christos@astron.com)
+AC_INIT(file, 4.26, christos@astron.com)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 
