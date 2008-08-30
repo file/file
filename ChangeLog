@@ -1,3 +1,9 @@
+2008-08-30 12:54  Christos Zoulas <christos@astron.com>
+
+	* Don't eat trailing \n in magic enties.
+
+	* Cast defines to allow compilation using a c++ compiler.
+
 2008-07-26 00:59  Reuben Thomas  <rrt@sc3d.org>
 
 	* Add MIME types for special files.
