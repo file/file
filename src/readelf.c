@@ -38,7 +38,7 @@
 #include "magic.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.75 2008/06/05 12:59:15 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.76 2008/07/16 18:00:57 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -929,7 +929,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 					if (file_printf(ms,
 					    ", with unknown capability "
 					    "0x%llx = 0x%llx",
-					    xcap_tag, xcap_val) == -1)
+					    (unsigned long long)xcap_tag,
+					    (unsigned long long)xcap_val) == -1)
 						return -1;
 					break;
 				}
@@ -976,11 +977,12 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			if (cap_hw1)
 				if (file_printf(ms,
 				    " unknown hardware capability 0x%llx",
-				    cap_hw1) == -1)
+				    (unsigned long long)cap_hw1) == -1)
 					return -1;
 		} else {
 			if (file_printf(ms,
-			    " hardware capability 0x%llx", cap_hw1) == -1)
+			    " hardware capability 0x%llx",
+			    (unsigned long long)cap_hw1) == -1)
 				return -1;
 		}
 	}
@@ -996,7 +998,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		if (cap_sf1)
 			if (file_printf(ms,
 			    ", with unknown software capability 0x%llx",
-			    cap_sf1) == -1)
+			    (unsigned long long)cap_sf1) == -1)
 				return -1;
 	}
 	return 0;
