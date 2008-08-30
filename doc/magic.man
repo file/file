@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.56 2008/03/01 22:21:48 rrt Exp $
-.Dd January 10, 2007
+.\" $File: magic.man,v 1.57 2008/08/30 09:50:20 christos Exp $
+.Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -300,6 +300,26 @@ file type, and has the following format:
 i.e. the literal string
 .Dq !:mime
 followed by the MIME type.
+.Pp
+An optional strength can be supplied on a separate line which refers to
+the current magic description using the following format:
+.Bd -literal -offset indent 
+!:strength OP VALUE
+.Ed
+.Pp
+The operand
+.Dv OP
+can be: 
+.Dv + ,
+.Dv - ,
+.Dv * ,
+or
+.Dv /
+and
+.Dv VALUE
+is a constant between 0 and 255.
+This constant is applied using the specified operand
+to the currently computed default magic strength.
 .Pp
 Some file formats contain additional information which is to be printed
 along with the file type or need additional tests to determine the true
