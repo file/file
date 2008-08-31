@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.139 2008/07/18 17:24:06 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.140 2008/07/20 04:02:15 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -589,7 +589,8 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_REGEX:
 	case FILE_SEARCH:
 		/* binary test if pattern is not text */
-		if (file_looks_utf8(m->value.us, m->vallen, NULL, NULL) <= 0)
+		if (file_looks_utf8(m->value.us, (size_t)m->vallen, NULL,
+		    NULL) <= 0)
 			mstart->flag |= BINTEST;
 		break;
 	case FILE_DEFAULT:
