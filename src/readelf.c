@@ -38,7 +38,7 @@
 #include "magic.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.77 2008/08/30 17:51:09 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.78 2008/08/31 07:58:00 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -907,7 +907,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			for (;;) {
 				Elf32_Cap cap32;
 				Elf64_Cap cap64;
-				char cbuf[MAX(sizeof cap32, sizeof cap64)];
+				char cbuf[/*CONSTCOND*/
+				    MAX(sizeof cap32, sizeof cap64)];
 				if ((coff += xcap_sizeof) >= (size_t)xsh_size)
 					break;
 				if (read(fd, cbuf, (size_t)xcap_sizeof) !=

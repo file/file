@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.64 2008/07/16 18:00:57 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.65 2008/08/31 07:58:00 christos Exp $")
 #endif	/* lint */
 
 #define MAXLINELEN 300	/* longest sane line length */
@@ -179,7 +179,8 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	}
 	if ((utf8_end = encode_utf8(utf8_buf, mlen, ubuf, ulen)) == NULL)
 		goto done;
-	if (file_softmagic(ms, utf8_buf, utf8_end - utf8_buf, TEXTTEST) != 0) {
+	if (file_softmagic(ms, utf8_buf, (size_t)(utf8_end - utf8_buf),
+	    TEXTTEST) != 0) {
 		rv = 1;
 		goto done;
 	}
