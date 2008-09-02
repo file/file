@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.107 2008/07/15 17:45:13 christos Exp $
+ * @(#)$File: file.h,v 1.108 2008/07/16 18:00:57 christos Exp $
  */
 
 #ifndef __file_h__
@@ -302,7 +302,7 @@ struct level_info {
 	int last_match;
 	int last_cond;	/* used for error checking by parse() */
 #endif
-} *li;
+};
 struct magic_set {
 	struct mlist *mlist;
 	struct cont {
