@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.121 2008/08/31 04:52:03 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.122 2008/09/23 14:34:25 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -904,7 +904,9 @@ mget(struct magic_set *ms, const unsigned char *s,
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
 		mdebug(offset, (char *)(void *)p, sizeof(union VALUETYPE));
+#ifndef COMPILE_ONLY
 		file_mdump(m);
+#endif
 	}
 
 	if (m->flag & INDIR) {
@@ -1374,7 +1376,9 @@ mget(struct magic_set *ms, const unsigned char *s,
 		if ((ms->flags & MAGIC_DEBUG) != 0) {
 			mdebug(offset, (char *)(void *)p,
 			    sizeof(union VALUETYPE));
+#ifndef COMPILE_ONLY
 			file_mdump(m);
+#endif
 		}
 	}
 
