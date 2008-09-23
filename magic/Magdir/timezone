@@ -6,6 +6,8 @@
 # this should work on Linux, SunOS, and maybe others
 # Added new official magic number for recent versions of the Olson code
 0	string	TZif	timezone data
+>4	byte	0	(old version)
+>4	byte	>0	(version %c)
 0	string	\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1\0	old timezone data
 0	string	\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\2\0	old timezone data
 0	string  \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\3\0	old timezone data
