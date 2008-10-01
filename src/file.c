@@ -74,7 +74,7 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.120 2008/05/18 23:21:17 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.121 2008/07/03 15:48:18 christos Exp $")
 #endif	/* lint */
 
 
@@ -87,7 +87,7 @@ FILE_RCSID("@(#)$File: file.c,v 1.120 2008/05/18 23:21:17 christos Exp $")
 # define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNrsvz0] [-e test] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
 
 #ifndef MAXPATHLEN
-#define	MAXPATHLEN	512
+#define	MAXPATHLEN	1024
 #endif
 
 private int 		/* Global command-line options 		*/
@@ -96,7 +96,7 @@ private int 		/* Global command-line options 		*/
 	nobuffer = 0,   /* Do not buffer stdout 		*/
 	nulsep = 0;	/* Append '\0' to the separator		*/
 
-private const char *magicfile = 0;	/* where the magic is	*/
+private const char *magicfile;		/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
 private const char *separator = ":";	/* Default field separator	*/
 
@@ -124,8 +124,8 @@ main(int argc, char *argv[])
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0;
 	char *home, *usermagic;
-	struct stat sb;
 	static const char hmagic[] = "/.magic";
+	char magicpath[2 * MAXPATHLEN + 2];
 #define OPTSTRING	"bcCde:f:F:hikLm:nNprsvz0"
 	int longindex;
 	static const struct option long_options[] =
@@ -171,14 +171,12 @@ main(int argc, char *argv[])
 		magicfile = usermagic;
 	else
 		if ((home = getenv("HOME")) != NULL) {
-			if ((usermagic = malloc(strlen(home)
-			    + sizeof(hmagic))) != NULL) {
-				(void)strcpy(usermagic, home);
-				(void)strcat(usermagic, hmagic);
-				if (stat(usermagic, &sb)<0) 
-					free(usermagic);
-				else
-					magicfile = usermagic;
+			(void)snprintf(magicpath, sizeof(magicpath), "%s%s",
+			     home, hmagic);
+			if (access(magicpath, R_OK) == 0) {
+				(void)snprintf(magicpath, sizeof(magicpath),
+				    "%s%s:%s", home, hmagic, magicfile);
+				magicfile = magicpath;
 			}
 		}
 
@@ -293,6 +291,12 @@ main(int argc, char *argv[])
 	switch(action) {
 	case FILE_CHECK:
 	case FILE_COMPILE:
+		/*
+		 * Don't try to check/compile ~/.magic unless we explicitly
+		 * ask for it.
+		 */
+		if (magicfile == magicpath)
+			magicfile = default_magicfile;
 		magic = magic_open(flags|MAGIC_CHECK);
 		if (magic == NULL) {
 			(void)fprintf(stderr, "%s: %s\n", progname,
