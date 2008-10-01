@@ -1,3 +1,8 @@
+2008-10-01 10:30  Christos Zoulas <christos@astron.com>
+
+	* Read ~/.magic in addition to the default magic file not instead
+	  of, as documented in the man page.
+
 2008-08-30 12:54  Christos Zoulas <christos@astron.com>
 
 	* Don't eat trailing \n in magic enties.
