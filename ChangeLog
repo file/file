@@ -1,3 +1,7 @@
+2008-10-09 16:40  Christos Zoulas <christos@astron.com>
+
+	* filesystem and msdos patches (Joerg Jenderek)
+
 2008-10-09 13:20  Christos Zoulas <christos@astron.com>
 
 	* correct --exclude documentation issues: remove troff and fortran 
