@@ -1,7 +1,7 @@
 2008-10-09 13:20  Christos Zoulas <christos@astron.com>
 
-	* correct --exclude issues: add troff and fortran and fix misdocumented
-	  "token". (Randy McMurchy)
+	* correct --exclude documentation issues: remove troff and fortran 
+	  and rename "token" to "tokens". (Randy McMurchy)
 
 2008-10-01 10:30  Christos Zoulas <christos@astron.com>
 
