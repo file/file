@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.73 2008/02/19 17:58:00 rrt Exp $
+.\" $File: file.man,v 1.74 2008/10/09 17:19:11 christos Exp $
 .Dd February 19, 2008
 .Dt FILE __CSECTION__
 .Os
@@ -192,7 +192,7 @@ Don't look for fortran sequences inside ascii files.
 Don't consult magic files.
 .It tar
 Don't examine tar files.
-.It token
+.It tokens
 Don't look for known tokens inside ascii files.
 .It troff
 Don't look for troff sequences inside ascii files.

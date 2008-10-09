@@ -74,7 +74,7 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.122 2008/10/01 14:30:45 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.123 2008/10/09 17:19:12 christos Exp $")
 #endif	/* lint */
 
 
@@ -148,9 +148,11 @@ main(int argc, char *argv[])
 		{ "ascii",	MAGIC_NO_CHECK_ASCII },
 		{ "compress",	MAGIC_NO_CHECK_COMPRESS },
 		{ "elf",	MAGIC_NO_CHECK_ELF },
+		{ "fortran",	MAGIC_NO_CHECK_FORTRAN },
 		{ "soft",	MAGIC_NO_CHECK_SOFT },
 		{ "tar",	MAGIC_NO_CHECK_TAR },
 		{ "tokens",	MAGIC_NO_CHECK_TOKENS },
+		{ "troff",	MAGIC_NO_CHECK_TROFF },
 	};
 
 	/* makes islower etc work for other langs */
