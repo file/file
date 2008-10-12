@@ -40,7 +40,7 @@ typedef int32_t cdf_secid_t;
 
 typedef struct {
 	uint64_t	h_magic;
-#define CDF_MAGIC	0xD0CF11E0A1B11AE1LL
+#define CDF_MAGIC	0xE11AB1A1E011CFD0LL
 	uint64_t	h_uuid[2];
 	uint16_t	h_revision;
 	uint16_t	h_version;
@@ -170,10 +170,19 @@ typedef struct {
 #define CDF_PROPERTY_SECURITY			0x00000013
 #define CDF_PROPERTY_LOCALE_ID			0x80000000
 
+#define CDF_NEED_SWAP	cdf_need_swap()
+
+#define CDF_TOLE8(x)	(CDF_NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x))
+#define CDF_TOLE4(x)	(CDF_NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x))
+#define CDF_TOLE2(x)	(CDF_NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x))
+
 struct timespec;
 int cdf_timestamp_to_timespec(struct timespec *, cdf_timestamp_t);
 int cdf_timespec_to_timestamp(cdf_timestamp_t *, const struct timespec *);
+int cdf_need_swap(void);
 int cdf_read_header(int, cdf_header_t *);
+void cdf_swap_header(cdf_header_t *);
+void cdf_swap_dir(cdf_directory_t *);
 ssize_t cdf_read_sector(int, void *, size_t, size_t, const cdf_header_t *,
     cdf_secid_t);
 int cdf_read_sat(int, cdf_header_t *, cdf_sat_t *);
@@ -189,6 +198,9 @@ int cdf_read_summary_info(int, const cdf_header_t *, const cdf_sat_t *,
 int cdf_print_classid(char *, size_t, const cdf_classid_t *);
 int cdf_print_property_name(char *, size_t, uint32_t);
 int cdf_print_elapsed_time(char *, size_t, cdf_timestamp_t);
+uint16_t cdf_tole2(uint16_t);
+uint32_t cdf_tole4(uint32_t);
+uint64_t cdf_tole8(uint64_t);
 
 #ifdef CDF_DEBUG
 void cdf_dump_header(const cdf_header_t *);
