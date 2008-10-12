@@ -47,12 +47,25 @@
 #define DPRINTF(a)
 #endif
 
-#ifdef notyet
+static union {
+	char s[4];
+	uint32_t u;
+} cdf_bo;
+
+#define NEED_SWAP	(cdf_bo.u == (uint32_t)0x01020304)
+
+#undef CDF_TOLE8
+#define CDF_TOLE8(x)	(NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x))
+#undef CDF_TOLE4
+#define CDF_TOLE4(x)	(NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x))
+#undef CDF_TOLE2
+#define CDF_TOLE2(x)	(NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x))
+
 /*
  * swap a short
  */
-static uint16_t
-swap2(uint16_t sv)
+uint16_t
+cdf_tole2(uint16_t sv)
 {
 	uint16_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv; 
@@ -65,8 +78,8 @@ swap2(uint16_t sv)
 /*
  * swap an int
  */
-static uint32_t
-swap4(uint32_t sv)
+uint32_t
+cdf_tole4(uint32_t sv)
 {
 	uint32_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv; 
@@ -77,27 +90,16 @@ swap4(uint32_t sv)
 	d[3] = s[0];
 	return rv;
 }
-#endif
 
 /*
  * swap a quad
  */
-static uint64_t
-swap8(uint64_t sv)
+uint64_t
+cdf_tole8(uint64_t sv)
 {
 	uint64_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv; 
 	uint8_t *d = (uint8_t *)(void *)&rv; 
-#if 0
-	d[0] = s[3];
-	d[1] = s[2];
-	d[2] = s[1];
-	d[3] = s[0];
-	d[4] = s[7];
-	d[5] = s[6];
-	d[6] = s[5];
-	d[7] = s[4];
-#else
 	d[0] = s[7];
 	d[1] = s[6];
 	d[2] = s[5];
@@ -106,19 +108,70 @@ swap8(uint64_t sv)
 	d[5] = s[2];
 	d[6] = s[1];
 	d[7] = s[0];
-#endif
 	return rv;
+}
+
+int
+cdf_need_swap(void)
+{
+	return NEED_SWAP;
+}
+
+
+void
+cdf_swap_header(cdf_header_t *h)
+{
+	size_t i;
+
+	h->h_magic = CDF_TOLE8(h->h_magic);
+	h->h_uuid[0] = CDF_TOLE8(h->h_uuid[0]);
+	h->h_uuid[1] = CDF_TOLE8(h->h_uuid[1]);
+	h->h_revision = CDF_TOLE2(h->h_revision);
+	h->h_version = CDF_TOLE2(h->h_version);
+	h->h_byte_order = CDF_TOLE2(h->h_byte_order);
+	h->h_sec_size_p2 = CDF_TOLE2(h->h_sec_size_p2);
+	h->h_short_sec_size_p2 = CDF_TOLE2(h->h_short_sec_size_p2);
+	h->h_num_sectors_in_sat = CDF_TOLE4(h->h_num_sectors_in_sat);
+	h->h_secid_first_directory = CDF_TOLE4(h->h_secid_first_directory);
+	h->h_min_size_standard_stream = CDF_TOLE4(h->h_min_size_standard_stream);
+	h->h_secid_first_sector_in_short_sat =
+	    CDF_TOLE4(h->h_secid_first_sector_in_short_sat);
+	h->h_num_sectors_in_short_sat = CDF_TOLE4(h->h_num_sectors_in_short_sat);
+	h->h_secid_first_sector_in_master_sat =
+	    CDF_TOLE4(h->h_secid_first_sector_in_master_sat);
+	h->h_num_sectors_in_master_sat =
+	    CDF_TOLE4(h->h_num_sectors_in_master_sat);
+	for (i = 0; i < __arraycount(h->h_master_sat); i++)
+		h->h_master_sat[i] = CDF_TOLE4(h->h_master_sat[i]);
+}
+
+void
+cdf_swap_dir(cdf_directory_t *d)
+{
+	d->d_namelen = CDF_TOLE2(d->d_namelen);
+	d->d_left_child = CDF_TOLE4(d->d_left_child);
+	d->d_right_child = CDF_TOLE4(d->d_right_child);
+	d->d_storage = CDF_TOLE4(d->d_storage);
+	d->d_storage_uuid[0] = CDF_TOLE8(d->d_storage_uuid[0]);
+	d->d_storage_uuid[1] = CDF_TOLE8(d->d_storage_uuid[1]);
+	d->d_flags = CDF_TOLE4(d->d_flags);
+	d->d_created = CDF_TOLE8(d->d_created);
+	d->d_modified = CDF_TOLE8(d->d_modified);
+	d->d_stream_first_sector = CDF_TOLE4(d->d_stream_first_sector);
+	d->d_size = CDF_TOLE4(d->d_size);
 }
 
 int
 cdf_read_header(int fd, cdf_header_t *h)
 {
+	(void)memcpy(cdf_bo.s, "\01\02\03\04", 4);
 	assert(sizeof(*h) == 512);
 	if (lseek(fd, (off_t)0, SEEK_SET) == (off_t)-1)
 		return -1;
 	if (read(fd, h, sizeof(*h)) != sizeof(*h))
 		return -1;
-	if (swap8(h->h_magic) != CDF_MAGIC) {
+	cdf_swap_header(h);
+	if (h->h_magic != CDF_MAGIC) {
 		errno = EFTYPE;
 		return -1;
 	}
@@ -186,7 +239,7 @@ cdf_read_sat(int fd, cdf_header_t *h, cdf_sat_t *sat)
 				free(msa);
 				return -1;
 			}
-		mid = msa[(ss / sizeof(mid)) - 1];
+		mid = CDF_TOLE4(msa[(ss / sizeof(mid)) - 1]);
 	}
 	free(msa);
 	return 0;
@@ -204,7 +257,7 @@ cdf_count_chain(const cdf_header_t *h, const cdf_sat_t *sat, cdf_secid_t sid)
 			errno = EFTYPE;
 			return (size_t)-1;
 		}
-		sid = sat->sat_tab[sid];
+		sid = CDF_TOLE4(sat->sat_tab[sid]);
 	}
 	DPRINTF(("\n"));
 	return i;
@@ -233,7 +286,7 @@ cdf_read_stream(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 			free(sst->sst_tab);
 			return -1;
 		}
-		sid = sat->sat_tab[sid];
+		sid = CDF_TOLE4(sat->sat_tab[sid]);
 	}
 	return 0;
 }
@@ -263,8 +316,11 @@ cdf_read_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 			free(dir->dir_tab);
 			return -1;
 		}
-		sid = sat->sat_tab[sid];
+		sid = CDF_TOLE4(sat->sat_tab[sid]);
 	}
+	if (NEED_SWAP)
+		for (i = 0; i < dir->dir_len; i++)
+			cdf_swap_dir(&dir->dir_tab[i]);
 	return 0;
 }
 
@@ -292,7 +348,7 @@ cdf_read_ssat(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 			free(sat->sat_tab);
 			return -1;
 		}
-		sid = sat->sat_tab[sid];
+		sid = CDF_TOLE4(sat->sat_tab[sid]);
 	}
 	return 0;
 }
@@ -337,7 +393,8 @@ cdf_read_summary_info(int fd, const cdf_header_t *h,
 
 	for (i = 0; i < dir->dir_len; i++)
 		if (dir->dir_tab[i].d_type == CDF_DIR_TYPE_USER_STREAM &&
-		    cdf_namecmp(name, dir->dir_tab[i].d_name, sizeof(name)) == 0)
+		    cdf_namecmp(name, dir->dir_tab[i].d_name, sizeof(name))
+		    == 0)
 			break;
 
 	if (i == dir->dir_len) {
@@ -468,7 +525,7 @@ cdf_dump_sat(const char *prefix, const cdf_header_t *h, const cdf_sat_t *sat)
 	for (i = 0; i < sat->sat_len; i++) {
 		printf("%s[%zu]:\n", prefix, i);
 		for (j = 0; j < s; j++) {
-			printf("%5d, ", sat->sat_tab[s * i + j]);
+			printf("%5d, ", CDF_TOLE4(sat->sat_tab[s * i + j]));
 			if ((j + 1) % 10 == 0)
 				printf("\n");
 		}
@@ -552,7 +609,8 @@ cdf_dump_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 void
 cdf_dump_section_info(const cdf_stream_t *sst, uint32_t offs)
 {
-	const cdf_section_header_t *sh;
+	const cdf_section_header_t *shp;
+	cdf_section_header_t sh;
 	const uint32_t *p, *q, *e;
 	size_t i, len;
 	uint32_t u32;
@@ -562,37 +620,40 @@ cdf_dump_section_info(const cdf_stream_t *sst, uint32_t offs)
 	struct timespec ts;
 	char buf[64];
 
-	sh = (const void *)((const char *)sst->sst_tab + offs);
-	printf("Length %d, Properties %d\n", sh->sh_len, sh->sh_properties);
-	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(*sh));
-	q = p + (sh->sh_properties << 1);
-	e = (void *)(((char *)sh) + sh->sh_len);
-	for (i = 0; i < sh->sh_properties; i++) {
-		cdf_print_property_name(buf, sizeof(buf), p[i << 1]);
+	shp = (const void *)((const char *)sst->sst_tab + offs);
+	sh.sh_len = CDF_TOLE4(shp->sh_len);
+	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
+	printf("Length %d, Properties %d\n", sh.sh_len, sh.sh_properties);
+	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(sh));
+	q = p + (sh.sh_properties << 1);
+	e = (void *)(((char *)shp) + sh.sh_len);
+	for (i = 0; i < sh.sh_properties; i++) {
+		cdf_print_property_name(buf, sizeof(buf), CDF_TOLE4(p[i << 1]));
 		printf("%zu) %s: ", i, buf); 
-		switch (q[0]) {
+		switch (CDF_TOLE4(q[0])) {
 		case CDF_SIGNED16:
 			(void)memcpy(&s16, &q[1], sizeof(s16));
-			printf("signed 16 [%hd]\n", s16);
+			printf("signed 16 [%hd]\n", CDF_TOLE2(s16));
 			len = 2;
 			break;
 		case CDF_SIGNED32:
 			(void)memcpy(&s32, &q[1], sizeof(s32));
-			printf("signed 32 [%d]\n", s32);
+			printf("signed 32 [%d]\n", CDF_TOLE4(s32));
 			len = 4;
 			break;
 		case CDF_UNSIGNED32:
 			(void)memcpy(&u32, &q[1], sizeof(u32));
-			printf("unsigned 32 [%u]\n", u32);
+			printf("unsigned 32 [%u]\n", CDF_TOLE4(u32));
 			len = 4;
 			break;
 		case CDF_LENGTH32_STRING:
-			printf("string %u [%.*s]\n", q[1], q[1],
+			printf("string %u [%.*s]\n", CDF_TOLE4(q[1]), CDF_TOLE4(q[1]),
 			    (const char *)(&q[2]));
-			len = 4 + q[1];
+			len = 4 + CDF_TOLE4(q[1]);
 			break;
 		case CDF_FILETIME:
 			(void)memcpy(&tp, &q[1], sizeof(tp));
+			tp = CDF_TOLE8(tp);
 			if (tp < 1000000000000000LL) {
 				cdf_print_elapsed_time(buf, sizeof(buf), tp);
 				printf("timestamp %s\n", buf);
@@ -604,11 +665,12 @@ cdf_dump_section_info(const cdf_stream_t *sst, uint32_t offs)
 			break;
 		case CDF_CLIPBOARD:
 			printf("\n");
-			len = 4 + q[1];
+			len = 4 + CDF_TOLE4(q[1]);
 			break;
 		default:
 			len = 4;
-			DPRINTF(("Don't know how to deal with %x\n", q[0]));
+			DPRINTF(("Don't know how to deal with %x\n",
+			    CDF_TOLE4(q[0])));
 			break;
 		}
 		q++;
@@ -637,11 +699,12 @@ cdf_dump_summary_info(const cdf_header_t *h, const cdf_stream_t *sst)
 	printf("Os %d\n", si->si_os);
 	cdf_print_classid(buf, sizeof(buf), &si->si_class);
 	printf("Class %s\n", buf);
-	printf("Count %d\n", si->si_count);
-	for (i = 0; i < si->si_count; i++) {
+	printf("Count %d\n", CDF_TOLE4(si->si_count));
+	for (i = 0; i < CDF_TOLE4(si->si_count); i++) {
 		cdf_print_classid(buf, sizeof(buf), &sd->sd_class);
-		printf("Section %zu: %s %x\n", i, buf, sd->sd_offset);
-		cdf_dump_section_info(sst, sd->sd_offset);
+		printf("Section %zu: %s %x\n", i, buf,
+		    CDF_TOLE4(sd->sd_offset));
+		cdf_dump_section_info(sst, CDF_TOLE4(sd->sd_offset));
 	}
 }
 #endif

@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.78 2008/08/31 07:58:00 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.1 2008/10/12 15:38:52 christos Exp $")
 #endif
 
 #include <stdio.h>
@@ -48,7 +48,8 @@ private int
 cdf_file_section_info(struct magic_set *ms, const cdf_stream_t *sst,
     uint32_t offs)
 {
-	const cdf_section_header_t *sh;
+	const cdf_section_header_t *shp;
+	cdf_section_header_t sh;
 	const uint32_t *p, *q, *e;
 	const char *s;
 	size_t i, len;
@@ -60,15 +61,18 @@ cdf_file_section_info(struct magic_set *ms, const cdf_stream_t *sst,
 	char buf[64];
 	const char *str = "vnd.ms-office";
 
-	sh = (const void *)((const char *)sst->sst_tab + offs);
-	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(*sh));
-	q = p + (sh->sh_properties << 1);
-	e = (const void *)(((const char *)sh) + sh->sh_len);
-	for (i = 0; i < sh->sh_properties; i++) {
-		cdf_print_property_name(buf, sizeof(buf), p[i << 1]);
-		switch (q[0]) {
+	shp = (const void *)((const char *)sst->sst_tab + offs);
+	sh.sh_len = CDF_TOLE4(shp->sh_len);
+	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
+	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(sh));
+	q = p + (sh.sh_properties << 1);
+	e = (const void *)(((const char *)shp) + sh.sh_len);
+	for (i = 0; i < sh.sh_properties; i++) {
+		cdf_print_property_name(buf, sizeof(buf), CDF_TOLE4(p[i << 1]));
+		switch (CDF_TOLE4(q[0])) {
 		case CDF_SIGNED16:
 			(void)memcpy(&s16, &q[1], sizeof(s16));
+			s16 = CDF_TOLE2(s16);
 			if (NOTMIME(ms) && file_printf(ms, ", %s: %hd", buf,
 			    s16) == -1)
 				return -1;
@@ -76,6 +80,7 @@ cdf_file_section_info(struct magic_set *ms, const cdf_stream_t *sst,
 			break;
 		case CDF_SIGNED32:
 			(void)memcpy(&s32, &q[1], sizeof(s32));
+			s32 = CDF_TOLE4(s32);
 			if (NOTMIME(ms) && file_printf(ms, ", %s: %d", buf, s32)
 			    == -1)
 				return -1;
@@ -83,6 +88,7 @@ cdf_file_section_info(struct magic_set *ms, const cdf_stream_t *sst,
 			break;
 		case CDF_UNSIGNED32:
 			(void)memcpy(&u32, &q[1], sizeof(u32));
+			u32 = CDF_TOLE4(u32);
 			if (NOTMIME(ms) && file_printf(ms, ", %s: %u", buf, u32)
 			    == -1)
 				return -1;
@@ -93,9 +99,9 @@ cdf_file_section_info(struct magic_set *ms, const cdf_stream_t *sst,
 				s = (const char *)(&q[2]);
 				if (NOTMIME(ms)) {
 					if (file_printf(ms, ", %s: %.*s", buf,
-					    q[1], s) == -1)
+					    CDF_TOLE4(q[1]), s) == -1)
 						return -1;
-				} else if (p[i << 1] == 
+				} else if (CDF_TOLE4(p[i << 1]) == 
 					CDF_PROPERTY_NAME_OF_APPLICATION) {
 					if (strstr(s, "Word"))
 						str = "msword";
@@ -109,6 +115,7 @@ cdf_file_section_info(struct magic_set *ms, const cdf_stream_t *sst,
 			break;
 		case CDF_FILETIME:
 			(void)memcpy(&tp, &q[1], sizeof(tp));
+			tp = CDF_TOLE8(tp);
 			if (tp != 0) {
 				if (tp < 1000000000000000LL) {
 					char tbuf[64];
@@ -132,7 +139,7 @@ cdf_file_section_info(struct magic_set *ms, const cdf_stream_t *sst,
 			len = 8;
 			break;
 		case CDF_CLIPBOARD:
-			len = 4 + q[1];
+			len = 4 + CDF_TOLE4(q[1]);
 			break;
 		default:
 			len = 4;
@@ -162,25 +169,26 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_stream_t *sst)
 	const cdf_section_declaration_t *sd = (const void *)
 	    ((const char *)sst->sst_tab + CDF_SECTION_DECLARATION_OFFSET);
 
-	if (si->si_byte_order != 0xfffe)
+	if (CDF_TOLE4(si->si_byte_order) != 0xfffe)
 		return 0;
 
 	if (NOTMIME(ms) && file_printf(ms, "CDF V2 Document") == -1)
 		return -1;
 
 	if (NOTMIME(ms) && file_printf(ms, ", %s Endian",
-	    si->si_byte_order == 0xfffe ?  "Little" : "Big") == -1)
+	    CDF_TOLE4(si->si_byte_order) == 0xfffe ?  "Little" : "Big") == -1)
 		return -1;
 
-	if (NOTMIME(ms) && file_printf(ms, ", Os Version %d.%d",
+	if (NOTMIME(ms) && file_printf(ms, ", Os Version: %d.%d",
 	    si->si_os_version & 0xff, si->si_os_version >> 8) == -1)
 		return -1;
 
-	if (NOTMIME(ms) && file_printf(ms, ", Os %d", si->si_os) == -1)
+	if (NOTMIME(ms) && file_printf(ms, ", Os: %d", si->si_os) == -1)
 		return -1;
 
 	for (i = 0; i < si->si_count; i++)
-		if (cdf_file_section_info(ms, sst, sd->sd_offset) == -1)
+		if (cdf_file_section_info(ms, sst, CDF_TOLE4(sd->sd_offset))
+		    == -1)
 			return -1;
 	return 1;
 }
