@@ -142,6 +142,28 @@ typedef struct {
 	uint32_t	sh_properties;
 } cdf_section_header_t;
 
+typedef struct {
+	uint32_t	pi_id;
+	uint32_t	pi_type;
+	union {
+		uint16_t	_pi_u16;
+		int16_t		_pi_s16;
+		uint32_t	_pi_u32;
+		int32_t		_pi_s32;
+		cdf_timestamp_t	_pi_tp;
+		struct {
+			uint32_t s_len;
+			const char *s_buf;
+		} _pi_str;
+	} pi_val;
+#define pi_u32	pi_val._pi_u32
+#define pi_s32	pi_val._pi_s32
+#define pi_u16	pi_val._pi_u16
+#define pi_s16	pi_val._pi_s16
+#define pi_tp	pi_val._pi_tp
+#define pi_str	pi_val._pi_str
+} cdf_property_info_t;
+
 #define CDF_ROUND(val, by)     (((val) + (by) - 1) & ~((by) - 1))
 
 #define CDF_SIGNED16		0x00000002
@@ -172,21 +194,15 @@ typedef struct {
 #define CDF_PROPERTY_SECURITY			0x00000013
 #define CDF_PROPERTY_LOCALE_ID			0x80000000
 
-#define CDF_NEED_SWAP	cdf_need_swap()
-
-#define CDF_TOLE8(x)	(CDF_NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x))
-#define CDF_TOLE4(x)	(CDF_NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x))
-#define CDF_TOLE2(x)	(CDF_NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x))
-
 struct timespec;
 int cdf_timestamp_to_timespec(struct timespec *, cdf_timestamp_t);
 int cdf_timespec_to_timestamp(cdf_timestamp_t *, const struct timespec *);
-int cdf_need_swap(void);
 int cdf_read_header(int, cdf_header_t *);
 void cdf_swap_header(cdf_header_t *);
 void cdf_unpack_header(cdf_header_t *, char *);
 void cdf_swap_dir(cdf_directory_t *);
 void cdf_unpack_dir(cdf_directory_t *, char *);
+void cdf_swap_class(cdf_classid_t *);
 ssize_t cdf_read_sector(int, void *, size_t, size_t, const cdf_header_t *,
     cdf_secid_t);
 int cdf_read_sat(int, cdf_header_t *, cdf_sat_t *);
@@ -197,8 +213,12 @@ int cdf_read_dir(int, const cdf_header_t *, const cdf_sat_t *, cdf_dir_t *);
 int cdf_read_ssat(int, const cdf_header_t *, const cdf_sat_t *, cdf_sat_t *);
 int cdf_read_short_stream(int, const cdf_header_t *, const cdf_sat_t *,
     const cdf_dir_t *, cdf_stream_t *);
+int cdf_read_property_info(const cdf_stream_t *, uint32_t,
+    cdf_property_info_t **, size_t *, size_t *);
 int cdf_read_summary_info(int, const cdf_header_t *, const cdf_sat_t *,
     const cdf_dir_t *, cdf_stream_t *);
+int cdf_unpack_summary_info(const cdf_stream_t *, cdf_summary_info_header_t *,
+    cdf_property_info_t **, size_t *);
 int cdf_print_classid(char *, size_t, const cdf_classid_t *);
 int cdf_print_property_name(char *, size_t, uint32_t);
 int cdf_print_elapsed_time(char *, size_t, cdf_timestamp_t);
@@ -212,7 +232,7 @@ void cdf_dump_sat(const char *, const cdf_header_t *, const cdf_sat_t *);
 void cdf_dump(void *, size_t);
 void cdf_dump_stream(const cdf_header_t *, const cdf_stream_t *);
 void cdf_dump_dir(int, const cdf_header_t *, const cdf_sat_t *, const cdf_dir_t *);
-void cdf_dump_section_info(const cdf_stream_t *, uint32_t);
+void cdf_dump_property_info(const cdf_property_info_t *, uint32_t);
 void cdf_dump_summary_info(const cdf_header_t *, const cdf_stream_t *);
 #endif
 
