@@ -117,6 +117,10 @@ cdf_need_swap(void)
 	return NEED_SWAP;
 }
 
+#define CDF_UNPACK(a)	\
+    (void)memcpy(&(a), &buf[len], sizeof(a)), len += sizeof(a)
+#define CDF_UNPACKA(a)	\
+    (void)memcpy((a), &buf[len], sizeof(a)), len += sizeof(a)
 
 void
 cdf_swap_header(cdf_header_t *h)
@@ -146,6 +150,32 @@ cdf_swap_header(cdf_header_t *h)
 }
 
 void
+cdf_unpack_header(cdf_header_t *h, char *buf)
+{
+	size_t i;
+	size_t len = 0;
+
+	CDF_UNPACK(h->h_magic);
+	CDF_UNPACKA(h->h_uuid);
+	CDF_UNPACK(h->h_revision);
+	CDF_UNPACK(h->h_version);
+	CDF_UNPACK(h->h_byte_order);
+	CDF_UNPACK(h->h_sec_size_p2);
+	CDF_UNPACK(h->h_short_sec_size_p2);
+	CDF_UNPACKA(h->h_unused0);
+	CDF_UNPACK(h->h_num_sectors_in_sat);
+	CDF_UNPACK(h->h_secid_first_directory);
+	CDF_UNPACKA(h->h_unused1);
+	CDF_UNPACK(h->h_min_size_standard_stream);
+	CDF_UNPACK(h->h_secid_first_sector_in_short_sat);
+	CDF_UNPACK(h->h_num_sectors_in_short_sat);
+	CDF_UNPACK(h->h_secid_first_sector_in_master_sat);
+	CDF_UNPACK(h->h_num_sectors_in_master_sat);
+	for (i = 0; i < __arraycount(h->h_master_sat); i++)
+		CDF_UNPACK(h->h_master_sat[i]);
+}
+
+void
 cdf_swap_dir(cdf_directory_t *d)
 {
 	d->d_namelen = CDF_TOLE2(d->d_namelen);
@@ -161,15 +191,36 @@ cdf_swap_dir(cdf_directory_t *d)
 	d->d_size = CDF_TOLE4(d->d_size);
 }
 
+void
+cdf_unpack_dir(cdf_directory_t *d, char *buf)
+{
+	size_t len = 0;
+
+	CDF_UNPACKA(d->d_name);
+	CDF_UNPACK(d->d_namelen);
+	CDF_UNPACK(d->d_type);
+	CDF_UNPACK(d->d_color);
+	CDF_UNPACK(d->d_left_child);
+	CDF_UNPACK(d->d_right_child);
+	CDF_UNPACK(d->d_storage);
+	CDF_UNPACKA(d->d_storage_uuid);
+	CDF_UNPACK(d->d_flags);
+	CDF_UNPACK(d->d_created);
+	CDF_UNPACK(d->d_modified);
+	CDF_UNPACK(d->d_stream_first_sector);
+	CDF_UNPACK(d->d_size);
+	CDF_UNPACK(d->d_unused0);
+}
 int
 cdf_read_header(int fd, cdf_header_t *h)
 {
 	(void)memcpy(cdf_bo.s, "\01\02\03\04", 4);
-	assert(sizeof(*h) == 512);
+	char buf[512];
 	if (lseek(fd, (off_t)0, SEEK_SET) == (off_t)-1)
 		return -1;
-	if (read(fd, h, sizeof(*h)) != sizeof(*h))
+	if (read(fd, buf, sizeof(buf)) != sizeof(buf))
 		return -1;
+	cdf_unpack_header(h, buf);
 	cdf_swap_header(h);
 	if (h->h_magic != CDF_MAGIC) {
 		errno = EFTYPE;
@@ -296,8 +347,9 @@ int
 cdf_read_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
     cdf_dir_t *dir)
 {
-	size_t i;
+	size_t i, j;
 	size_t ss = CDF_SEC_SIZE(h), ns;
+	char *buf;
 	cdf_secid_t sid = h->h_secid_first_directory;
 
 	ns = cdf_count_chain(h, sat, sid);
@@ -307,14 +359,24 @@ cdf_read_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 	dir->dir_tab = calloc(ns, sizeof(dir->dir_tab[0]));
 	if (dir->dir_tab == NULL)
 		return -1;
-	dir->dir_len = ns * ss / sizeof(dir->dir_tab[0]);
+	dir->dir_len = ns * ss / CDF_DIRECTORY_SIZE;
+
+	if ((buf = malloc(ss)) == NULL) {
+		free(dir->dir_tab);
+		return -1;
+	}
 
 	for (i = 0; i < ns; i++) {
-		if (cdf_read_sector(fd, dir->dir_tab, i * ss, ss, h, sid) !=
-		    (ssize_t)ss) {
+		if (cdf_read_sector(fd, buf, 0, ss, h, sid) != (ssize_t)ss) {
 			warnx("Reading directory sector %d", sid);
 			free(dir->dir_tab);
+			free(buf);
 			return -1;
+		}
+		for (j = 0; j < ss / CDF_DIRECTORY_SIZE; j++) {
+			cdf_unpack_dir(&dir->dir_tab[j],
+			    &buf[j * CDF_DIRECTORY_SIZE]);
+
 		}
 		sid = CDF_TOLE4(sat->sat_tab[sid]);
 	}
