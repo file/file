@@ -96,6 +96,8 @@ typedef struct {
 	uint32_t	d_unused0;
 } cdf_directory_t;
 
+#define CDF_DIRECTORY_SIZE	128
+
 typedef struct {
 	cdf_secid_t *sat_tab;
 	size_t sat_len;
@@ -182,7 +184,9 @@ int cdf_timespec_to_timestamp(cdf_timestamp_t *, const struct timespec *);
 int cdf_need_swap(void);
 int cdf_read_header(int, cdf_header_t *);
 void cdf_swap_header(cdf_header_t *);
+void cdf_unpack_header(cdf_header_t *, char *);
 void cdf_swap_dir(cdf_directory_t *);
+void cdf_unpack_dir(cdf_directory_t *, char *);
 ssize_t cdf_read_sector(int, void *, size_t, size_t, const cdf_header_t *,
     cdf_secid_t);
 int cdf_read_sat(int, cdf_header_t *, cdf_sat_t *);
