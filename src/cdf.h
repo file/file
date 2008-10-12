@@ -232,7 +232,7 @@ void cdf_dump_sat(const char *, const cdf_header_t *, const cdf_sat_t *);
 void cdf_dump(void *, size_t);
 void cdf_dump_stream(const cdf_header_t *, const cdf_stream_t *);
 void cdf_dump_dir(int, const cdf_header_t *, const cdf_sat_t *, const cdf_dir_t *);
-void cdf_dump_property_info(const cdf_property_info_t *, uint32_t);
+void cdf_dump_property_info(const cdf_property_info_t *, size_t);
 void cdf_dump_summary_info(const cdf_header_t *, const cdf_stream_t *);
 #endif
 

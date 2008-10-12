@@ -284,8 +284,8 @@ cdf_read_sat(int fd, cdf_header_t *h, cdf_sat_t *sat)
 		}
 		for (k = 0; k < (ss / sizeof(mid)) - 1; k++, i++)
 			if (cdf_read_sector(fd, sat->sat_tab, ss * i, ss, h,
-			    msa[k]) != (ssize_t)ss) {
-				warnx("Reading sector %d", msa[k]);
+			    CDF_TOLE4(msa[k])) != (ssize_t)ss) {
+				warnx("Reading sector %d", CDF_TOLE4(msa[k]));
 				free(sat->sat_tab);
 				free(msa);
 				return -1;
@@ -830,10 +830,10 @@ cdf_dump_summary_info(const cdf_header_t *h, const cdf_stream_t *sst)
 	char buf[128];
 	cdf_summary_info_header_t ssi;
 	cdf_property_info_t *info;
-	size_t i, count;
+	size_t count;
 
 	(void)&h;
-	if (cdf_unpack_summary_info(h, sst, &ssi, &info, &count) == -1)
+	if (cdf_unpack_summary_info(sst, &ssi, &info, &count) == -1)
 		return;
 	printf("Endian: %x\n", ssi.si_byte_order);
 	printf("Os Version %d.%d\n", ssi.si_os_version & 0xff,
