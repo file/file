@@ -348,7 +348,7 @@ cdf_read_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
     cdf_dir_t *dir)
 {
 	size_t i, j;
-	size_t ss = CDF_SEC_SIZE(h), ns;
+	size_t ss = CDF_SEC_SIZE(h), ns, nd;
 	char *buf;
 	cdf_secid_t sid = h->h_secid_first_directory;
 
@@ -359,7 +359,8 @@ cdf_read_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 	dir->dir_tab = calloc(ns, sizeof(dir->dir_tab[0]));
 	if (dir->dir_tab == NULL)
 		return -1;
-	dir->dir_len = ns * ss / CDF_DIRECTORY_SIZE;
+	nd = ss / CDF_DIRECTORY_SIZE;
+	dir->dir_len = ns * nd;
 
 	if ((buf = malloc(ss)) == NULL) {
 		free(dir->dir_tab);
@@ -373,10 +374,9 @@ cdf_read_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 			free(buf);
 			return -1;
 		}
-		for (j = 0; j < ss / CDF_DIRECTORY_SIZE; j++) {
-			cdf_unpack_dir(&dir->dir_tab[j],
+		for (j = 0; j < nd; j++) {
+			cdf_unpack_dir(&dir->dir_tab[i * nd + j],
 			    &buf[j * CDF_DIRECTORY_SIZE]);
-
 		}
 		sid = CDF_TOLE4(sat->sat_tab[sid]);
 	}
@@ -440,8 +440,8 @@ static int
 cdf_namecmp(const char *d, const uint16_t *s, size_t l)
 {
 	for (; l--; d++, s++)
-		if (*d != *s)
-			return (unsigned char)*d - *s;
+		if (*d != CDF_TOLE2(*s))
+			return (unsigned char)*d - CDF_TOLE2(*s);
 	return 0;
 }
 
@@ -632,7 +632,7 @@ cdf_dump_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 	for (i = 0; i < dir->dir_len; i++) {
 		d = &dir->dir_tab[i];
 		for (j = 0; j < sizeof(name); j++)
-			name[j] = (char)d->d_name[j];
+			name[j] = (char)CDF_TOLE2(d->d_name[j]);
 		printf("Directory %zu: %s\n", i, name);
 		if (d->d_type < __arraycount(types))
 			printf("Type: %s\n", types[d->d_type]);
@@ -688,7 +688,7 @@ cdf_dump_section_info(const cdf_stream_t *sst, uint32_t offs)
 	printf("Length %d, Properties %d\n", sh.sh_len, sh.sh_properties);
 	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(sh));
 	q = p + (sh.sh_properties << 1);
-	e = (void *)(((char *)shp) + sh.sh_len);
+	e = (const void *)(((const char *)shp) + sh.sh_len);
 	for (i = 0; i < sh.sh_properties; i++) {
 		cdf_print_property_name(buf, sizeof(buf), CDF_TOLE4(p[i << 1]));
 		printf("%zu) %s: ", i, buf); 
@@ -736,7 +736,8 @@ cdf_dump_section_info(const cdf_stream_t *sst, uint32_t offs)
 			break;
 		}
 		q++;
-		q = (void *)(((char *)q) + CDF_ROUND(len, sizeof(*q)));
+		q = (const void *)(((const char *)q) +
+		    CDF_ROUND(len, sizeof(*q)));
 		if (q > e) {
 			DPRINTF(("Ran of the end %p > %p\n", q, e));
 			return;
@@ -755,6 +756,7 @@ cdf_dump_summary_info(const cdf_header_t *h, const cdf_stream_t *sst)
 	const cdf_section_declaration_t *sd = (const void *)
 	    ((const char *)sst->sst_tab + CDF_SECTION_DECLARATION_OFFSET);
 
+	(void)&h;
 	printf("Endian: %x\n", si->si_byte_order);
 	printf("Os Version %d.%d\n", si->si_os_version & 0xff,
 		si->si_os_version >> 8);

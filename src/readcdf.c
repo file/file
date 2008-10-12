@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.2 2008/10/12 17:07:14 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.3 2008/10/12 19:37:04 christos Exp $")
 #endif
 
 #include <stdio.h>
@@ -169,7 +169,7 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_stream_t *sst)
 	const cdf_section_declaration_t *sd = (const void *)
 	    ((const char *)sst->sst_tab + CDF_SECTION_DECLARATION_OFFSET);
 
-	if (CDF_TOLE4(si->si_byte_order) != 0xfffe)
+	if (CDF_TOLE2(si->si_byte_order) != 0xfffe)
 		return 0;
 
 	if (NOTMIME(ms) && file_printf(ms, "CDF V2 Document") == -1)
