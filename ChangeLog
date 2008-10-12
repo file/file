@@ -1,3 +1,7 @@
+2008-10-12 10:20  Christos Zoulas <christos@astron.com>
+
+	* Added CDF parsing
+
 2008-10-09 16:40  Christos Zoulas <christos@astron.com>
 
 	* filesystem and msdos patches (Joerg Jenderek)
