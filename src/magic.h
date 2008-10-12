@@ -48,6 +48,7 @@
 #define	MAGIC_NO_CHECK_APPTYPE	0x008000 /* Don't check application type */
 #define	MAGIC_NO_CHECK_ELF	0x010000 /* Don't check for elf details */
 #define	MAGIC_NO_CHECK_ASCII	0x020000 /* Don't check for ascii files */
+#define	MAGIC_NO_CHECK_CDF	0x040000 /* Don't check for cdf files */
 #define	MAGIC_NO_CHECK_TOKENS	0x100000 /* Don't check ascii/tokens */
 
 /* Defined for backwards compatibility; do nothing */

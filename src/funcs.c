@@ -41,7 +41,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.43 2008/07/03 15:53:10 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.44 2008/07/16 18:00:57 christos Exp $")
 #endif	/* lint */
 
 #ifndef SIZE_MAX
@@ -194,18 +194,23 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 	    /* Check if we have a tar file */
 	    if ((ms->flags & MAGIC_NO_CHECK_TAR) != 0 ||
 		(m = file_is_tar(ms, ubuf, nb)) == 0) {
-		/* try tests in /etc/magic (or surrogate magic file) */
-		if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
-		    (m = file_softmagic(ms, ubuf, nb, BINTEST)) == 0) {
-		    /* try known keywords, check whether it is ASCII */
-		    if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
-			(m = file_ascmagic(ms, ubuf, nb)) == 0) {
-			/* abandon hope, all ye who remain here */
-			if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-			    file_printf(ms, mime ? "application/octet-stream" :
-				"data") == -1)
-				return -1;
-			m = 1;
+		/* Check if we have a CDF file */
+		if ((ms->flags & MAGIC_NO_CHECK_CDF) != 0 ||
+		    (m = file_trycdf(ms, fd, ubuf, nb)) == 0) {
+		    /* try tests in /etc/magic (or surrogate magic file) */
+		    if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
+			(m = file_softmagic(ms, ubuf, nb, BINTEST)) == 0) {
+			/* try known keywords, check whether it is ASCII */
+			if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
+			    (m = file_ascmagic(ms, ubuf, nb)) == 0) {
+			    /* abandon hope, all ye who remain here */
+			    if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
+				file_printf(ms, mime ?
+				    "application/octet-stream" :
+				    "data") == -1)
+				    return -1;
+			    m = 1;
+			}
 		    }
 		}
 	    }

@@ -74,7 +74,7 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.123 2008/10/09 17:19:12 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.124 2008/10/09 17:24:03 christos Exp $")
 #endif	/* lint */
 
 
@@ -146,6 +146,7 @@ main(int argc, char *argv[])
 	} nv[] = {
 		{ "apptype",	MAGIC_NO_CHECK_APPTYPE },
 		{ "ascii",	MAGIC_NO_CHECK_ASCII },
+		{ "cdf",	MAGIC_NO_CHECK_CDF },
 		{ "compress",	MAGIC_NO_CHECK_COMPRESS },
 		{ "elf",	MAGIC_NO_CHECK_ELF },
 		{ "soft",	MAGIC_NO_CHECK_SOFT },
