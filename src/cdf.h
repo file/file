@@ -205,9 +205,17 @@ void cdf_unpack_dir(cdf_directory_t *, char *);
 void cdf_swap_class(cdf_classid_t *);
 ssize_t cdf_read_sector(int, void *, size_t, size_t, const cdf_header_t *,
     cdf_secid_t);
+ssize_t cdf_read_short_sector(const cdf_stream_t *, void *, size_t, size_t,
+    const cdf_header_t *, cdf_secid_t);
 int cdf_read_sat(int, cdf_header_t *, cdf_sat_t *);
-size_t cdf_count_chain(const cdf_header_t *, const cdf_sat_t *, cdf_secid_t);
-int cdf_read_stream(int, const cdf_header_t *, const cdf_sat_t *, cdf_secid_t,
+size_t cdf_count_chain(const cdf_header_t *, const cdf_sat_t *,
+    cdf_secid_t);
+int cdf_read_long_sector_chain(int, const cdf_header_t *,
+    const cdf_sat_t *, cdf_secid_t, size_t, cdf_stream_t *);
+int cdf_read_short_sector_chain(const cdf_header_t *, const cdf_sat_t *,
+    const cdf_stream_t *, cdf_secid_t, size_t, cdf_stream_t *);
+int cdf_read_sector_chain(int, const cdf_header_t *,
+    const cdf_sat_t *, const cdf_sat_t *, const cdf_stream_t *, cdf_secid_t,
     size_t, cdf_stream_t *);
 int cdf_read_dir(int, const cdf_header_t *, const cdf_sat_t *, cdf_dir_t *);
 int cdf_read_ssat(int, const cdf_header_t *, const cdf_sat_t *, cdf_sat_t *);
@@ -216,7 +224,8 @@ int cdf_read_short_stream(int, const cdf_header_t *, const cdf_sat_t *,
 int cdf_read_property_info(const cdf_stream_t *, uint32_t,
     cdf_property_info_t **, size_t *, size_t *);
 int cdf_read_summary_info(int, const cdf_header_t *, const cdf_sat_t *,
-    const cdf_dir_t *, cdf_stream_t *);
+    const cdf_sat_t *, const cdf_stream_t *, const cdf_dir_t *,
+    cdf_stream_t *);
 int cdf_unpack_summary_info(const cdf_stream_t *, cdf_summary_info_header_t *,
     cdf_property_info_t **, size_t *);
 int cdf_print_classid(char *, size_t, const cdf_classid_t *);
@@ -231,7 +240,8 @@ void cdf_dump_header(const cdf_header_t *);
 void cdf_dump_sat(const char *, const cdf_header_t *, const cdf_sat_t *);
 void cdf_dump(void *, size_t);
 void cdf_dump_stream(const cdf_header_t *, const cdf_stream_t *);
-void cdf_dump_dir(int, const cdf_header_t *, const cdf_sat_t *, const cdf_dir_t *);
+void cdf_dump_dir(int, const cdf_header_t *, const cdf_sat_t *,
+    const cdf_sat_t *, const cdf_stream_t *, const cdf_dir_t *);
 void cdf_dump_property_info(const cdf_property_info_t *, size_t);
 void cdf_dump_summary_info(const cdf_header_t *, const cdf_stream_t *);
 #endif
