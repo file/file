@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.3 2008/10/12 19:37:04 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.4 2008/10/12 21:04:49 christos Exp $")
 #endif
 
 #include <stdio.h>
@@ -171,7 +171,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 {
 	cdf_header_t h;
 	cdf_sat_t sat, ssat;
-	cdf_stream_t sst;
+	cdf_stream_t sst, scn;
 	cdf_dir_t dir;
 	int i;
 	(void)&nbytes;
@@ -206,24 +206,30 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 		free(ssat.sat_tab);
 		return -1;
 	}
-#ifdef CDF_DEBUG
-	cdf_dump_dir(fd, &h, &sat, &dir);
-#endif
 
-	if (cdf_read_summary_info(fd, &h, &sat, &dir, &sst) == -1) {
+	if (cdf_read_short_stream(fd, &h, &sat, &dir, &sst) == -1)
+		err(1, "Cannot read short stream");
+
+#ifdef CDF_DEBUG
+	cdf_dump_dir(fd, &h, &sat, &ssat, &sst, &dir);
+#endif
+	if (cdf_read_summary_info(fd, &h, &sat, &ssat, &sst, &dir, &scn)
+	    == -1) {
 		file_error(ms, errno, "Can't read summary_info");
 		free(sat.sat_tab);
 		free(ssat.sat_tab);
+		free(sst.sst_tab);
 		free(dir.dir_tab);
 		return -1;
 	}
 #ifdef CDF_DEBUG
-	cdf_dump_summary_info(&h, &sst);
+	cdf_dump_summary_info(&h, &scn);
 #endif
-	i = cdf_file_summary_info(ms, &sst);
+	i = cdf_file_summary_info(ms, &scn);
 	free(sat.sat_tab);
 	free(ssat.sat_tab);
 	free(dir.dir_tab);
 	free(sst.sst_tab);
+	free(scn.sst_tab);
 	return i;
 }
