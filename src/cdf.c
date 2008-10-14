@@ -237,9 +237,7 @@ cdf_read_sector(int fd, void *buf, size_t offs, size_t len,
 	assert((size_t)CDF_SEC_SIZE(h) == len);
 	if (lseek(fd, (off_t)CDF_SEC_POS(h, id), SEEK_SET) == (off_t)-1)
 		return -1;
-	if (read(fd, ((char *)buf) + offs, len) != (ssize_t)len)
-		return -1;
-	return len;
+	return read(fd, ((char *)buf) + offs, len);
 }
 
 ssize_t
@@ -331,6 +329,7 @@ cdf_read_long_sector_chain(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
     cdf_secid_t sid, size_t len, cdf_stream_t *scn)
 {
 	size_t ss = CDF_SEC_SIZE(h), i;
+	ssize_t nr;
 	scn->sst_len = cdf_count_chain(h, sat, sid);
 	scn->sst_dirlen = len;
 
@@ -342,8 +341,12 @@ cdf_read_long_sector_chain(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 		return -1;
 
 	for (i = 0; sid >= 0; i++) {
-		if (cdf_read_sector(fd, scn->sst_tab, i * ss, ss, h, sid)
-		    != (ssize_t)ss) {
+		if ((nr = cdf_read_sector(fd, scn->sst_tab, i * ss, ss, h,
+		    sid)) != (ssize_t)ss) {
+			if (i == scn->sst_len - 1 && nr > 0) {
+				/* Last sector might be truncated */
+				return 0;
+			}
 			DPRINTF(("Reading long sector chain %d", sid));
 			free(scn->sst_tab);
 			return -1;
@@ -485,12 +488,14 @@ cdf_read_short_stream(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 	d = &dir->dir_tab[i];
 
 	/* If the it is not there, just fake it; some docs don't have it */
-	if (cdf_read_long_sector_chain(fd, h, sat,
-	    d->d_stream_first_sector, d->d_size, scn) == -1) {
-	    scn->sst_tab = NULL;
-	    scn->sst_len = 0;
+	if (d->d_stream_first_sector < 0) {
+		scn->sst_tab = NULL;
+		scn->sst_len = 0;
+		return 0;
 	}
-	return 0;
+
+	return  cdf_read_long_sector_chain(fd, h, sat,
+	    d->d_stream_first_sector, d->d_size, scn);
 }
 
 static int
