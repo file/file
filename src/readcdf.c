@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.4 2008/10/12 21:04:49 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.5 2008/10/13 18:23:47 christos Exp $")
 #endif
 
 #include <stdio.h>
@@ -144,25 +144,39 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_stream_t *sst)
 	if (si.si_byte_order != 0xfffe)
 		return 0;
 
-	if (NOTMIME(ms) && file_printf(ms, "CDF V2 Document") == -1)
-		return -1;
+	if (NOTMIME(ms)) {
+		if (file_printf(ms, "CDF V2 Document") == -1)
+			return -1;
 
-	if (NOTMIME(ms) && file_printf(ms, ", %s Endian",
-	    si.si_byte_order == 0xfffe ?  "Little" : "Big") == -1)
-		return -1;
-
-	if (NOTMIME(ms) && file_printf(ms, ", Os Version: %d.%d",
-	    si.si_os_version & 0xff, si.si_os_version >> 8) == -1)
-		return -1;
-
-	if (NOTMIME(ms) && file_printf(ms, ", Os: %d", si.si_os) == -1)
-		return -1;
+		if (file_printf(ms, ", %s Endian",
+		    si.si_byte_order == 0xfffe ?  "Little" : "Big") == -1)
+			return -1;
+		switch (si.si_os) {
+		case 2:
+			if (file_printf(ms, ", Os: Windows, Version %d.%d",
+			    si.si_os_version & 0xff, si.si_os_version >> 8)
+			    == -1)
+				return -1;
+			break;
+		case 1:
+			if (file_printf(ms, ", Os: MacOS, Version %d.%d",
+			    si.si_os_version >> 8, si.si_os_version & 0xff)
+			    == -1)
+				return -1;
+			break;
+		default:
+			if (file_printf(ms, ", Os %d, Version: %d.%d", si.si_os,
+			    si.si_os_version & 0xff, si.si_os_version >> 8)
+			    == -1)
+				return -1;
+			break;
+		}
+	}
 
 	m = cdf_file_property_info(ms, info, count);
 	free(info);
 
 	return m;
-/*###164 [cc] warning: this function may return with or without a value%%%*/
 }
 
 protected int
