@@ -57,7 +57,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.52 2008/07/25 23:59:01 rrt Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.53 2008/10/16 16:31:16 christos Exp $")
 #endif	/* lint */
 
 private int
@@ -82,6 +82,17 @@ bad_link(struct magic_set *ms, int err, char *buf)
 			return -1;
 	}
 	return 1;
+}
+
+private int
+handle_mime(struct magic_set *ms, int mime, const char *str)
+{
+	if ((mime & MAGIC_MIME_TYPE) && file_printf(ms, "application/%s", str)
+	    == -1)
+		return -1;
+	if ((mime & MAGIC_MIME_ENCODING) && file_printf(ms, "binary") == -1)
+		return -1;
+	return 0;
 }
 
 protected int
@@ -140,11 +151,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	
 	switch (sb->st_mode & S_IFMT) {
 	case S_IFDIR:
-		if ((mime & MAGIC_MIME_TYPE) &&
-		    file_printf(ms, "application/x-directory")
-		    == -1)
-			return -1;
-		if (!mime && file_printf(ms, "directory") == -1)
+		if (mime) {
+			if (handle_mime(ms, mime, "x-directory") == -1)
+				return -1;
+		} else if (file_printf(ms, "directory") == -1)
 			return -1;
 		return 1;
 #ifdef S_IFCHR
@@ -156,20 +166,20 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		 */
 		if ((ms->flags & MAGIC_DEVICES) != 0)
 			break;
-		if ((mime & MAGIC_MIME_TYPE) &&
-		    file_printf(ms, "application/x-character-device")
-		    == -1)
-			return -1;
-		if (!mime) {
+		if (mime) {
+			if (handle_mime(ms, mime, "x-character-device") == -1)
+				return -1;
+		} else {
 #ifdef HAVE_STAT_ST_RDEV
 # ifdef dv_unit
 			if (file_printf(ms, "character special (%d/%d/%d)",
-					major(sb->st_rdev), dv_unit(sb->st_rdev),
+			    major(sb->st_rdev), dv_unit(sb->st_rdev),
 					dv_subunit(sb->st_rdev)) == -1)
 				return -1;
 # else
 			if (file_printf(ms, "character special (%ld/%ld)",
-					(long) major(sb->st_rdev), (long) minor(sb->st_rdev)) == -1)
+			    (long)major(sb->st_rdev), (long)minor(sb->st_rdev))
+			    == -1)
 				return -1;
 # endif
 #else
@@ -188,11 +198,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		 */
 		if ((ms->flags & MAGIC_DEVICES) != 0)
 			break;
-		if ((mime & MAGIC_MIME_TYPE) &&
-		    file_printf(ms, "application/x-block-device")
-		    == -1)
-			return -1;
-		if (!mime) {
+		if (mime) {
+			if (handle_mime(ms, mime, "x-block-device") == -1)
+				return -1;
+		} else {
 #ifdef HAVE_STAT_ST_RDEV
 # ifdef dv_unit
 			if (file_printf(ms, "block special (%d/%d/%d)",
@@ -216,21 +225,19 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	case S_IFIFO:
 		if((ms->flags & MAGIC_DEVICES) != 0)
 			break;
-		if ((mime & MAGIC_MIME_TYPE) &&
-		    file_printf(ms, "application/x-fifo")
-		    == -1)
-			return -1;
-		if (!mime && file_printf(ms, "fifo (named pipe)") == -1)
+		if (mime) {
+			if (handle_mime(ms, mime, "x-fifo") == -1)
+				return -1;
+		} else if (file_printf(ms, "fifo (named pipe)") == -1)
 			return -1;
 		return 1;
 #endif
 #ifdef	S_IFDOOR
 	case S_IFDOOR:
-		if ((mime & MAGIC_MIME_TYPE) &&
-		    file_printf(ms, "application/x-door")
-		    == -1)
-			return -1;
-		if (!mime && file_printf(ms, "door") == -1)
+		if (mime) {
+			if (handle_mime(ms, mime, "x-door") == -1)
+				return -1;
+		} else if (file_printf(ms, "door") == -1)
 			return -1;
 		return 1;
 #endif
@@ -242,11 +249,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				fn);
 			    return -1;
 			}
-			if ((mime & MAGIC_MIME_TYPE) &&
-			    file_printf(ms, "application/x-symlink")
-			    == -1)
-				return -1;
-			if (!mime && file_printf(ms,
+			if (mime) {
+				if (handle_mime(ms, mime, "x-symlink") == -1)
+					return -1;
+			} else if (file_printf(ms,
 			    "unreadable symlink `%s' (%s)", fn,
 			    strerror(errno)) == -1)
 				return -1;
@@ -271,11 +277,11 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 						    "path too long: `%s'", buf);
 						return -1;
 					}
-					if ((mime & MAGIC_MIME_TYPE) &&
-					    file_printf(ms, "application/x-path-too-long")
-					    == -1)
-						return -1;
-					if (!mime && file_printf(ms,
+					if (mime) {
+						if (handle_mime(ms, mime,
+						    "x-path-too-long") == -1)
+							return -1;
+					} else if (file_printf(ms,
 					    "path too long: `%s'", fn) == -1)
 						return -1;
 					return 1;
@@ -297,11 +303,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			ms->flags |= MAGIC_SYMLINK;
 			return p != NULL ? 1 : -1;
 		} else { /* just print what it points to */
-			if ((mime & MAGIC_MIME_TYPE) &&
-			    file_printf(ms, "application/x-symlink")
-			    == -1)
-				return -1;
-			if (!mime && file_printf(ms, "symbolic link to `%s'",
+			if (mime) {
+				if (handle_mime(ms, mime, "x-symlink") == -1)
+					return -1;
+			} else if (file_printf(ms, "symbolic link to `%s'",
 			    buf) == -1)
 				return -1;
 		}
@@ -310,11 +315,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 #ifdef	S_IFSOCK
 #ifndef __COHERENT__
 	case S_IFSOCK:
-		if ((mime & MAGIC_MIME_TYPE) &&
-		    file_printf(ms, "application/x-socket")
-		    == -1)
-			return -1;
-		if (!mime && file_printf(ms, "socket") == -1)
+		if (mime) {
+			if (handle_mime(ms, mime, "x-socket") == -1)
+				return -1;
+		} else if (file_printf(ms, "socket") == -1)
 			return -1;
 		return 1;
 #endif
@@ -340,9 +344,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	 * when we read the file.)
 	 */
 	if ((ms->flags & MAGIC_DEVICES) == 0 && sb->st_size == 0) {
-		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-		    file_printf(ms, mime ? "application/x-empty" :
-		    "empty") == -1)
+		if (mime) {
+			if (handle_mime(ms, mime, "x-empty") == -1)
+				return -1;
+		} else if (file_printf(ms, "empty") == -1)
 			return -1;
 		return 1;
 	}
