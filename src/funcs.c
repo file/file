@@ -41,7 +41,7 @@
 #endif
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.45 2008/10/12 15:38:52 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.46 2008/10/16 16:30:34 christos Exp $")
 #endif	/* lint */
 
 #ifndef SIZE_MAX
@@ -265,6 +265,9 @@ file_getbuffer(struct magic_set *ms)
 
 	if (ms->flags & MAGIC_RAW)
 		return ms->o.buf;
+
+	if (ms->o.buf == NULL)
+		return NULL;
 
 	/* * 4 is for octal representation, + 1 is for NUL */
 	len = strlen(ms->o.buf);
