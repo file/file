@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.64 2008/07/16 18:00:57 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.65 2008/08/31 07:58:00 christos Exp $")
 #endif	/* lint */
 
 #define MAXLINELEN 300	/* longest sane line length */
@@ -75,6 +75,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	unichar *ubuf = NULL;	
 	size_t ulen, mlen;
 	const struct names *p;
+	const char *encoding = "binary";
 	int rv = -1;
 	int mime = ms->flags & MAGIC_MIME;
 
@@ -103,12 +104,16 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	while (nbytes > 1 && buf[nbytes - 1] == '\0')
 		nbytes--;
 
-	if ((nbuf = CAST(unsigned char *, calloc((size_t)1,
-	    (nbytes + 1) * sizeof(nbuf[0])))) == NULL)
+	mlen = (nbytes + 1) * sizeof(nbuf[0]);
+	if ((nbuf = CAST(unsigned char *, calloc((size_t)1, mlen))) == NULL) {
+		file_oomem(ms, mlen);
 		goto done;
-	if ((ubuf = CAST(unichar *, calloc((size_t)1,
-	    (nbytes + 1) * sizeof(ubuf[0])))) == NULL)
+	}
+	mlen = (nbytes + 1) * sizeof(ubuf[0]);
+	if ((ubuf = CAST(unichar *, calloc((size_t)1, mlen))) == NULL) {
+		file_oomem(ms, mlen);
 		goto done;
+	}
 
 	/*
 	 * Then try to determine whether it's any character code we can
@@ -120,6 +125,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		code = "ASCII";
 		code_mime = "us-ascii";
 		type = "text";
+		encoding = "7bit";
 	} else if (looks_utf8_with_BOM(buf, nbytes, ubuf, &ulen) > 0) {
 		code = "UTF-8 Unicode (with BOM)";
 		code_mime = "utf-8";
@@ -156,6 +162,9 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 			type = "character data";
 			code_mime = "ebcdic";
 		} else {
+			if (mime == MAGIC_MIME_ENCODING)
+				if (file_printf(ms, "%s", encoding) == -1)
+					goto done;
 			rv = 0;
 			goto done;  /* doesn't look like text at all */
 		}
@@ -179,11 +188,11 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	}
 	if ((utf8_end = encode_utf8(utf8_buf, mlen, ubuf, ulen)) == NULL)
 		goto done;
-	if (file_softmagic(ms, utf8_buf, (size_t)(utf8_end - utf8_buf),
-	    TEXTTEST) != 0) {
-		rv = 1;
+	if ((rv = file_softmagic(ms, utf8_buf, (size_t)(utf8_end - utf8_buf),
+	    TEXTTEST)) != 0)
 		goto done;
-	}
+	else
+		rv = -1;
 
 	/* look for tokens from names.h - this is expensive! */
 	if ((ms->flags & MAGIC_NO_CHECK_TOKENS) != 0)
@@ -276,7 +285,8 @@ subtype_identified:
 		}
 
 		if (mime == MAGIC_MIME_ENCODING)
-			file_printf(ms, "binary");
+			if (file_printf(ms, "%s", encoding) == -1)
+				goto done;
 	} else {
 		if (file_printf(ms, code) == -1)
 			goto done;
