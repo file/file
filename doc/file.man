@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.74 2008/10/09 17:19:11 christos Exp $
+.\" $File: file.man,v 1.75 2008/10/09 17:25:01 christos Exp $
 .Dd October 9, 2008
 .Dt FILE __CSECTION__
 .Os
@@ -182,6 +182,8 @@ Check for
 application type (only on EMX).
 .It ascii
 Check for various types of ascii files.
+.It cdf
+Don't look for Compound Document Files.
 .It compress
 Don't look for, or inside compressed files.
 .It elf

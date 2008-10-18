@@ -1,3 +1,7 @@
+2008-10-18 16:45  Christos Zoulas <christos@astron.com>
+	
+	* Added APPLE file creator/type
+
 2008-10-12 10:20  Christos Zoulas <christos@astron.com>
 
 	* Added CDF parsing

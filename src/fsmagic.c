@@ -57,7 +57,7 @@
 #undef HAVE_MAJOR
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.52 2008/07/25 23:59:01 rrt Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.53 2008/10/16 16:31:16 christos Exp $")
 #endif	/* lint */
 
 private int
@@ -106,6 +106,8 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	struct stat tstatbuf;
 #endif
 
+	if (ms->flags & MAGIC_APPLE)
+		return 0;
 	if (fn == NULL)
 		return 0;
 

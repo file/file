@@ -45,7 +45,7 @@
 #include "tar.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.30 2008/01/26 18:45:16 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.31 2008/02/04 20:51:17 christos Exp $")
 #endif
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
@@ -66,13 +66,14 @@ file_is_tar(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	 * Do the tar test first, because if the first file in the tar
 	 * archive starts with a dot, we can confuse it with an nroff file.
 	 */
-	int tar = is_tar(buf, nbytes);
+	int tar;
 	int mime = ms->flags & MAGIC_MIME;
 
-	if (tar < 1 || tar > 3)
+	if ((ms->flags & MAGIC_APPLE) != 0 || mime == MAGIC_MIME_ENCODING)
 		return 0;
 
-	if (mime == MAGIC_MIME_ENCODING)
+	tar = is_tar(buf, nbytes);
+	if (tar < 1 || tar > 3)
 		return 0;
 
 	if (file_printf(ms, mime ? "application/x-tar" :

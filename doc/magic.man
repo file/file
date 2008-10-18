@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.56 2008/03/01 22:21:48 rrt Exp $
+.\" $File: magic.man,v 1.57 2008/08/30 09:50:20 christos Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -289,6 +289,11 @@ the message printed is the remainder of the string with no whitespace
 added before it: multiple matches are normally separated by a single
 space.
 .El
+.Pp
+An APPLE 4+4 character APPLE creator and type can be specified as:
+.Bd -literal -offset indent 
+!:apple	CREATYPE
+.Ed
 .Pp
 A MIME type is given on a separate line, which must be the next
 non-blank or comment line after the magic line that identifies the

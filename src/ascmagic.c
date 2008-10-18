@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.65 2008/08/31 07:58:00 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.66 2008/10/16 16:31:16 christos Exp $")
 #endif	/* lint */
 
 #define MAXLINELEN 300	/* longest sane line length */
@@ -96,6 +96,9 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 
 	size_t last_line_end = (size_t)-1;
 	int has_long_lines = 0;
+
+	if (ms->flags & MAGIC_APPLE)
+		return 0;
 
 	/*
 	 * Undo the NUL-termination kindly provided by process()
