@@ -110,6 +110,7 @@
 # GIF
 0	string		GIF8		GIF image data
 !:mime	image/gif
+!:apple	8BIMGIFf
 >4	string		7a		\b, version 8%s,
 >4	string		9a		\b, version 8%s,
 >6	leshort		>0		%hd x

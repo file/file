@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.6 2008/10/14 10:38:22 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.7 2008/10/18 20:47:48 christos Exp $")
 #endif
 
 #include <stdio.h>
@@ -191,6 +191,8 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 	(void)&nbytes;
 	(void)&buf;
 
+	if (ms->flags & MAGIC_APPLE)
+		return 0;
 	if (cdf_read_header(fd, &h) == -1)
 		return 0;
 #ifdef CDF_DEBUG

@@ -11,6 +11,7 @@
 # standard unix compress
 0	string		\037\235	compress'd data
 !:mime	application/x-compress
+!:apple	LZIVZIVU
 >2	byte&0x80	>0		block compressed
 >2	byte&0x1f	x		%d bits
 

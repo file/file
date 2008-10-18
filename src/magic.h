@@ -42,6 +42,7 @@
 #define	MAGIC_ERROR		0x000200 /* Handle ENOENT etc as real errors */
 #define	MAGIC_MIME_ENCODING	0x000400 /* Return only the MIME encoding */
 #define MAGIC_MIME		(MAGIC_MIME_TYPE|MAGIC_MIME_ENCODING)
+#define	MAGIC_APPLE		0x000800 /* Return APPLE CREATOR/TYPE */
 #define	MAGIC_NO_CHECK_COMPRESS	0x001000 /* Don't check for compressed files */
 #define	MAGIC_NO_CHECK_TAR	0x002000 /* Don't check for tar files */
 #define	MAGIC_NO_CHECK_SOFT	0x004000 /* Don't check magic entries */

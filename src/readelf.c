@@ -38,7 +38,7 @@
 #include "magic.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.79 2008/10/12 19:06:36 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.80 2008/10/18 20:47:48 christos Exp $")
 #endif
 
 #ifdef	ELFCORE
@@ -1141,7 +1141,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	Elf64_Ehdr elf64hdr;
 	uint16_t type;
 
-	if (ms->flags & MAGIC_MIME)
+	if (ms->flags & (MAGIC_MIME|MAGIC_APPLE))
 		return 0;
 	/*
 	 * ELF executables have multiple section headers in arbitrary

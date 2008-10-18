@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.123 2008/10/16 16:31:16 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.124 2008/10/18 20:47:48 christos Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -52,7 +52,7 @@ private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, size_t);
 private int mconvert(struct magic_set *, struct magic *);
 private int print_sep(struct magic_set *, int);
-private int handle_mime(struct magic_set *, struct magic *);
+private int handle_annotation(struct magic_set *, struct magic *);
 private void cvt_8(union VALUETYPE *, const struct magic *);
 private void cvt_16(union VALUETYPE *, const struct magic *);
 private void cvt_32(union VALUETYPE *, const struct magic *);
@@ -168,7 +168,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		if (*m->desc) {
 			need_separator = 1;
 			printed_something = 1;
-			if ((e = handle_mime(ms, m)) != 0)
+			if ((e = handle_annotation(ms, m)) != 0)
 				return e;
 			if (print_sep(ms, firstline) == -1)
 				return -1;
@@ -236,7 +236,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				 */
 				if (*m->desc) {
 					printed_something = 1;
-					if ((e = handle_mime(ms, m)) != 0)
+					if ((e = handle_annotation(ms, m)) != 0)
 						return e;
 					if (print_sep(ms, firstline) == -1)
 						return -1;
@@ -1592,7 +1592,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	
 		default:
 			matched = 0;
-			file_magerror(ms, "cannot happen with float: invalid relation `%c'", m->reln);
+			file_magerror(ms, "cannot happen with float: invalid relation `%c'",
+			    m->reln);
 			return -1;
 		}
 		return matched;
@@ -1820,10 +1821,17 @@ magiccheck(struct magic_set *ms, struct magic *m)
 }
 
 private int
-handle_mime(struct magic_set *ms, struct magic *m)
+handle_annotation(struct magic_set *ms, struct magic *m)
 {
-	if (ms->flags & MAGIC_MIME_TYPE)
-		return file_printf(ms, "%s", m->mimetype);
+	if (ms->flags & MAGIC_APPLE) {
+		if (file_printf(ms, "%.8s", m->apple) == -1)
+			return -1;
+		return 1;
+	}
+	if (ms->flags & MAGIC_MIME_TYPE) {
+		if (file_printf(ms, "%.8s", m->mimetype) == -1)
+		return 1;
+	}
 	return 0;
 }
 

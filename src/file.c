@@ -74,7 +74,7 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.125 2008/10/12 15:38:51 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.126 2008/10/18 20:47:48 christos Exp $")
 #endif	/* lint */
 
 
@@ -193,9 +193,12 @@ main(int argc, char *argv[])
 				help();
 				break;
 			case 10:
-				flags |= MAGIC_MIME_TYPE;
+				flags |= MAGIC_APPLE;
 				break;
 			case 11:
+				flags |= MAGIC_MIME_TYPE;
+				break;
+			case 12:
 				flags |= MAGIC_MIME_ENCODING;
 				break;
 			}

@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.141 2008/08/31 07:58:00 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.142 2008/10/18 20:47:48 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -115,8 +115,8 @@ private int check_format_type(const char *, int);
 private int check_format(struct magic_set *, struct magic *);
 private int get_op(char);
 private int parse_mime(struct magic_set *, struct magic_entry *, const char *);
-private int parse_strength(struct magic_set *, struct magic_entry *,
-    const char *);
+private int parse_strength(struct magic_set *, struct magic_entry *, const char *);
+private int parse_apple(struct magic_set *, struct magic_entry *, const char *);
 
 
 private size_t maxmagic = 0;
@@ -131,6 +131,7 @@ private struct {
 } bang[] = {
 #define	DECLARE_FIELD(name) { # name, sizeof(# name) - 1, parse_ ## name }
 	DECLARE_FIELD(mime),
+	DECLARE_FIELD(apple),
 	DECLARE_FIELD(strength),
 #undef	DECLARE_FIELD
 	{ NULL, 0, NULL }
@@ -1474,6 +1475,38 @@ out:
 }
 
 /*
+ * Parse an Apple CREATOR/TYPE annotation from magic file and put it into magic[index - 1]
+ */
+private int
+parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
+{
+	size_t i;
+	const char *l = line;
+	struct magic *m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
+
+	if (m->apple[0] != '\0') {
+		file_magwarn(ms, "Current entry already has a APPLE type `%.8s',"
+		    " new type `%s'", m->mimetype, l);
+		return -1;
+	}	
+
+	EATAB;
+	for (i = 0; *l && ((isascii((unsigned char)*l) && isalnum((unsigned char)*l))
+	     || strchr("-+/.", *l)) && i < sizeof(m->apple); m->apple[i++] = *l++)
+		continue;
+	if (i == sizeof(m->apple) && *l) {
+		if (ms->flags & MAGIC_CHECK)
+			file_magwarn(ms, "APPLE type `%s' truncated %zu",
+			    line, i);
+	}
+
+	if (i > 0)
+		return 0;
+	else
+		return -1;
+}
+
+/*
  * parse a MIME annotation line from magic file, put into magic[index - 1]
  * if valid
  */
@@ -1491,10 +1524,8 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 	}	
 
 	EATAB;
-	for (i = 0;
-	     *l && ((isascii((unsigned char)*l) && isalnum((unsigned char)*l))
-	     || strchr("-+/.", *l)) && i < sizeof(m->mimetype);
-	     m->mimetype[i++] = *l++)
+	for (i = 0; *l && ((isascii((unsigned char)*l) && isalnum((unsigned char)*l))
+	     || strchr("-+/.", *l)) && i < sizeof(m->mimetype); m->mimetype[i++] = *l++)
 		continue;
 	if (i == sizeof(m->mimetype)) {
 		m->desc[sizeof(m->mimetype) - 1] = '\0';
