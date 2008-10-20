@@ -23,11 +23,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <sys/types.h>
 #include <stdio.h>
 #include <time.h>
+#ifdef TEST
 #include <err.h>
+#endif
 #include <string.h>
 #include <errno.h>
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
 
 #include "cdf.h"
 
