@@ -23,10 +23,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <assert.h>
 #include <stdio.h>
+#ifdef CDF_DEBUG
 #include <err.h>
+#endif
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
@@ -34,6 +39,16 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+
+#ifndef EFTYPE
+#define EFTYPE EINVAL
+#endif
 
 #include "cdf.h"
 
