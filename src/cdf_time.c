@@ -105,7 +105,9 @@ int
 cdf_timestamp_to_timespec(struct timespec *ts, cdf_timestamp_t t)
 {
 	struct tm tm;
+#ifdef HAVE_STRUCT_TM_TM_ZONE
 	static char UTC[] = "UTC";
+#endif
 
 	/* Unit is 100's of nanoseconds */
 	ts->tv_nsec = (t % CDF_TIME_PREC) * 100;
@@ -130,8 +132,12 @@ cdf_timestamp_to_timespec(struct timespec *ts, cdf_timestamp_t t)
 	tm.tm_wday = 0;
 	tm.tm_yday = 0;
 	tm.tm_isdst = 0;
+#ifdef HAVE_STRUCT_TM_TM_GMTOFF
 	tm.tm_gmtoff = 0;
+#endif
+#ifdef HAVE_STRUCT_TM_TM_ZONE
 	tm.tm_zone = UTC;
+#endif
 	tm.tm_year -= 1900;
 	ts->tv_sec = mktime(&tm);
 	if (ts->tv_sec == -1) {
