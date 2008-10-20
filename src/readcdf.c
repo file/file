@@ -26,11 +26,10 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.7 2008/10/18 20:47:48 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.8 2008/10/20 17:20:41 christos Exp $")
 #endif
 
 #include <stdio.h>
-#include <err.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
@@ -207,45 +206,44 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 	cdf_dump_sat("SAT", &h, &sat);
 #endif
 
-	if (cdf_read_ssat(fd, &h, &sat, &ssat) == -1) {
+	if ((i = cdf_read_ssat(fd, &h, &sat, &ssat)) == -1) {
 		file_error(ms, errno, "Can't read SAT");
-		free(sat.sat_tab);
-		return -1;
+		goto out1;
 	}
 #ifdef CDF_DEBUG
 	cdf_dump_sat("SSAT", &h, &ssat);
 #endif
 
-	if (cdf_read_dir(fd, &h, &sat, &dir) == -1) {
+	if ((i = cdf_read_dir(fd, &h, &sat, &dir)) == -1) {
 		file_error(ms, errno, "Can't read directory");
-		free(sat.sat_tab);
-		free(ssat.sat_tab);
-		return -1;
+		goto out2;
 	}
 
-	if (cdf_read_short_stream(fd, &h, &sat, &dir, &sst) == -1)
-		err(1, "Cannot read short stream");
+	if ((i = cdf_read_short_stream(fd, &h, &sat, &dir, &sst)) == -1) {
+		file_error(ms, errno, "Cannot read short stream");
+		goto out3;
+	}
 
 #ifdef CDF_DEBUG
 	cdf_dump_dir(fd, &h, &sat, &ssat, &sst, &dir);
 #endif
-	if (cdf_read_summary_info(fd, &h, &sat, &ssat, &sst, &dir, &scn)
+	if ((i = cdf_read_summary_info(fd, &h, &sat, &ssat, &sst, &dir, &scn))
 	    == -1) {
 		file_error(ms, errno, "Can't read summary_info");
-		free(sat.sat_tab);
-		free(ssat.sat_tab);
-		free(sst.sst_tab);
-		free(dir.dir_tab);
-		return -1;
+		goto out4;
 	}
 #ifdef CDF_DEBUG
 	cdf_dump_summary_info(&h, &scn);
 #endif
 	i = cdf_file_summary_info(ms, &scn);
-	free(sat.sat_tab);
-	free(ssat.sat_tab);
-	free(dir.dir_tab);
-	free(sst.sst_tab);
 	free(scn.sst_tab);
+out4:
+	free(sst.sst_tab);
+out3:
+	free(dir.dir_tab);
+out2:
+	free(ssat.sat_tab);
+out1:
+	free(sat.sat_tab);
 	return i;
 }
