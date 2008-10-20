@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.8 2008/10/20 17:20:41 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.9 2008/10/20 19:04:12 christos Exp $")
 #endif
 
 #include <stdio.h>
@@ -137,8 +137,12 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_stream_t *sst)
 	size_t count;
 	int m;
 
-	if (cdf_unpack_summary_info(sst, &si, &info, &count) == -1)
-		return -1;
+	if (cdf_unpack_summary_info(sst, &si, &info, &count) == -1) {
+		if (si.si_byte_order != 0xfffe)
+			return 0;
+		else
+			return -1;
+	}
 
 	if (si.si_byte_order != 0xfffe)
 		return 0;
@@ -235,7 +239,8 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 #ifdef CDF_DEBUG
 	cdf_dump_summary_info(&h, &scn);
 #endif
-	i = cdf_file_summary_info(ms, &scn);
+	if ((i = cdf_file_summary_info(ms, &scn)) == -1)
+		file_error(ms, errno, "Can't expand summary_info");
 	free(scn.sst_tab);
 out4:
 	free(sst.sst_tab);
