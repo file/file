@@ -38,7 +38,7 @@
 
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.124 2008/10/18 20:47:48 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.125 2008/10/30 10:43:49 rrt Exp $")
 #endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -1823,16 +1823,18 @@ magiccheck(struct magic_set *ms, struct magic *m)
 private int
 handle_annotation(struct magic_set *ms, struct magic *m)
 {
+	int ret = 0;
 	if (ms->flags & MAGIC_APPLE) {
 		if (file_printf(ms, "%.8s", m->apple) == -1)
 			return -1;
-		return 1;
+		ret = 1;
 	}
 	if (ms->flags & MAGIC_MIME_TYPE) {
-		if (file_printf(ms, "%.8s", m->mimetype) == -1)
-		return 1;
+		if (file_printf(ms, "%s", m->mimetype) == -1)
+			 return -1;
+		ret = 1;
 	}
-	return 0;
+	return ret;
 }
 
 private int
