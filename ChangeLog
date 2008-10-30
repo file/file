@@ -1,4 +1,4 @@
-2008-10-18 11:00  Reuben Thomas <rrt@sc3d.org>
+2008-10-30 11:00  Reuben Thomas <rrt@sc3d.org>
 
 	* Correct words counts in comments of struct magic.
 
@@ -11,6 +11,9 @@
 
 	* Fix potential attacks via conversion specifications in magic
 	  strings.
+
+	* Add a FIXME for Debian bug #488562 (magic files should be
+	  read in a defined order, by sorting the names).
 
 2008-10-18 16:45  Christos Zoulas <christos@astron.com>
 
