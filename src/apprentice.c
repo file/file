@@ -49,7 +49,7 @@
 #include <dirent.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.141 2008/08/31 07:58:00 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.142 2008/10/18 20:47:48 christos Exp $")
 #endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -706,6 +706,8 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		(void)fprintf(stderr, "%s\n", usg_hdr);
 
 	/* load directory or file */
+        /* FIXME: Read file names and sort them to prevent
+           non-determinism. See Debian bug #488562. */
 	if (stat(fn, &st) == 0 && S_ISDIR(st.st_mode)) {
 		dir = opendir(fn);
 		if (dir) {
