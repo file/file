@@ -49,7 +49,7 @@
 #include "names.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.67 2008/10/18 20:47:48 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.68 2008/10/30 10:50:24 rrt Exp $")
 #endif	/* lint */
 
 #define MAXLINELEN 300	/* longest sane line length */
@@ -271,7 +271,7 @@ subtype_identified:
 	if (mime) {
 		if (mime & MAGIC_MIME_TYPE) {
 			if (subtype_mime) {
-				if (file_printf(ms, subtype_mime) == -1)
+				if (file_printf(ms, "%s", subtype_mime) == -1)
 					goto done;
 			} else {
 				if (file_printf(ms, "text/plain") == -1)
@@ -281,9 +281,9 @@ subtype_identified:
 
 		if ((mime == 0 || mime == MAGIC_MIME) && code_mime) {
 			if ((mime & MAGIC_MIME_TYPE) &&
-			    file_printf(ms, " charset=") == -1)
+			    file_printf(ms, "; charset=") == -1)
 				goto done;
-			if (file_printf(ms, code_mime) == -1)
+			if (file_printf(ms, "%s", code_mime) == -1)
 				goto done;
 		}
 
@@ -291,19 +291,19 @@ subtype_identified:
 			if (file_printf(ms, "%s", encoding) == -1)
 				goto done;
 	} else {
-		if (file_printf(ms, code) == -1)
+		if (file_printf(ms, "%s", code) == -1)
 			goto done;
 
 		if (subtype) {
 			if (file_printf(ms, " ") == -1)
 				goto done;
-			if (file_printf(ms, subtype) == -1)
+			if (file_printf(ms, "%s", subtype) == -1)
 				goto done;
 		}
 
 		if (file_printf(ms, " ") == -1)
 			goto done;
-		if (file_printf(ms, type) == -1)
+		if (file_printf(ms, "%s", type) == -1)
 			goto done;
 
 		if (has_long_lines)

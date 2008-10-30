@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.76 2008/10/18 20:47:47 christos Exp $
+.\" $File: file.man,v 1.77 2008/10/30 10:50:24 rrt Exp $
 .Dd October 9, 2008
 .Dt FILE __CSECTION__
 .Os
@@ -219,7 +219,7 @@ is not defined.
 .It Fl i , -mime
 Causes the file command to output mime type strings rather than the more
 traditional human readable ones. Thus it may say
-.Dq text/plain charset=us-ascii
+.Dq text/plain; charset=us-ascii
 rather than
 .Dq ASCII text .
 In order for this option to work, file changes the way

@@ -6,6 +6,12 @@
 	  printed, and to return correct code if MIME type is
 	  printed (1, not 0) or if there's an error (-1 not 1).
 
+	* Fix output of charset for MIME type (precede with semi-colon;
+	  fixes Debian bug #501460).
+
+	* Fix potential attacks via conversion specifications in magic
+	  strings.
+
 2008-10-18 16:45  Christos Zoulas <christos@astron.com>
 
 	* Added APPLE file creator/type
