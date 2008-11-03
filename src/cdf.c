@@ -23,6 +23,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+/*
+ * Parse composite document files, the format used in Microsoft Office
+ * document files before they switched to zipped xml.
+ * Info from: http://sc.openoffice.org/compdocfileformat.pdf
+ */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -51,6 +57,11 @@
 #endif
 
 #include "cdf.h"
+
+#include "file.h"
+#ifndef lint
+FILE_RCSID("@(#)$File: readelf.c,v 1.80 2008/10/18 20:47:48 christos Exp $")
+#endif
 
 #ifndef __arraycount
 #define __arraycount(a) (sizeof(a) / sizeof(a[0]))
