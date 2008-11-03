@@ -23,6 +23,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+/*
+ * Parse composite document files, the format used in Microsoft Office
+ * document files before they switched to zipped xml.
+ * Info from: http://sc.openoffice.org/compdocfileformat.pdf
+ */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -51,6 +57,11 @@
 #endif
 
 #include "cdf.h"
+
+#include "file.h"
+#ifndef lint
+FILE_RCSID("@(#)$File: cdf.c,v 1.11 2008/11/03 05:34:27 christos Exp $")
+#endif
 
 #ifndef __arraycount
 #define __arraycount(a) (sizeof(a) / sizeof(a[0]))
