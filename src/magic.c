@@ -26,6 +26,11 @@
  */
 
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: magic.c,v 1.55 2008/11/04 16:38:28 christos Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 
 #include <stdio.h>
@@ -63,10 +68,6 @@
 #include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
-
-#ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.54 2008/07/25 23:30:32 rrt Exp $")
-#endif	/* lint */
 
 #ifndef PIPE_BUF
 /* Get the PIPE_BUF from pathconf */

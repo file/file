@@ -26,6 +26,10 @@
  */
 #include "file.h"
 
+#ifndef lint
+FILE_RCSID("@(#)$File: readelf.c,v 1.81 2008/11/04 16:38:28 christos Exp $")
+#endif
+
 #ifdef BUILTIN_ELF
 #include <string.h>
 #include <ctype.h>
@@ -36,10 +40,6 @@
 
 #include "readelf.h"
 #include "magic.h"
-
-#ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.80 2008/10/18 20:47:48 christos Exp $")
-#endif
 
 #ifdef	ELFCORE
 private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t,

@@ -30,6 +30,11 @@
  */
 
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.55 2008/11/04 16:38:28 christos Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 #include <string.h>
 #ifdef HAVE_UNISTD_H
@@ -55,10 +60,6 @@
 # define minor(dev)  ((dev) & 0xff)
 #endif
 #undef HAVE_MAJOR
-
-#ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.54 2008/10/18 20:47:48 christos Exp $")
-#endif	/* lint */
 
 private int
 bad_link(struct magic_set *ms, int err, char *buf)

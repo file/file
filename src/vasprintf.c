@@ -105,9 +105,11 @@ A buffer overflow can only occur if your sprintf() do strange things or when
 you use strange formats.
 
 */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.6 2008/11/04 16:38:28 christos Exp $")
+#endif	/* lint */
 
 #include <assert.h>
 #include <stdio.h>

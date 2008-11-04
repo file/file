@@ -25,6 +25,11 @@
  * SUCH DAMAGE.
  */
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: funcs.c,v 1.47 2008/11/04 16:38:28 christos Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 #include <stdarg.h>
 #include <stdlib.h>
@@ -39,10 +44,6 @@
 #if defined(HAVE_LIMITS_H)
 #include <limits.h>
 #endif
-
-#ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.46 2008/10/16 16:30:34 christos Exp $")
-#endif	/* lint */
 
 #ifndef SIZE_MAX
 #define SIZE_MAX	((size_t)~0)

@@ -29,8 +29,10 @@
  * Info from: http://sc.openoffice.org/compdocfileformat.pdf
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "file.h"
+
+#ifndef lint
+FILE_RCSID("@(#)$File: cdf.c,v 1.12 2008/11/04 16:38:28 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -57,11 +59,6 @@
 #endif
 
 #include "cdf.h"
-
-#include "file.h"
-#ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.11 2008/11/03 05:34:27 christos Exp $")
-#endif
 
 #ifndef __arraycount
 #define __arraycount(a) (sizeof(a) / sizeof(a[0]))

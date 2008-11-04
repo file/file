@@ -30,6 +30,11 @@
  */
 
 #include "file.h"
+
+#ifndef lint
+FILE_RCSID("@(#)$File: print.c,v 1.65 2008/11/04 16:38:28 christos Exp $")
+#endif  /* lint */
+
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -39,10 +44,6 @@
 #include <unistd.h>
 #endif
 #include <time.h>
-
-#ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.64 2008/10/20 15:14:17 christos Exp $")
-#endif  /* lint */
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
 

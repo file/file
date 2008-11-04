@@ -23,8 +23,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+
+#include "file.h"
+
+#ifndef lint
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.4 2008/11/04 16:38:28 christos Exp $")
 #endif
 
 #include <sys/types.h>
