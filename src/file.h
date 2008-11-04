@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.111 2008/10/18 20:47:48 christos Exp $
+ * @(#)$File: file.h,v 1.112 2008/10/30 09:51:46 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -411,12 +411,14 @@ int asprintf(char **ptr, const char *format_string, ...);
 
 #ifndef __cplusplus
 #ifdef __GNUC__
-static const char *rcsid(const char *) __attribute__((__used__));
-#endif
+#define FILE_RCSID(id) \
+static const char rcsid[] __attribute__((__used__)) = id;
+#else
 #define FILE_RCSID(id) \
 static const char *rcsid(const char *p) { \
 	return rcsid(p = id); \
 }
+#endif
 #else
 #define FILE_RCSID(id)
 #endif
