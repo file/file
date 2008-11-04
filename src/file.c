@@ -30,6 +30,11 @@
  */
 
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: file.c,v 1.126 2008/10/18 20:47:48 christos Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 
 #include <stdio.h>
@@ -72,11 +77,6 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
-
-#ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.125 2008/10/12 15:38:51 christos Exp $")
-#endif	/* lint */
-
 
 #ifdef S_IFLNK
 #define SYMLINKFLAG "Lh"

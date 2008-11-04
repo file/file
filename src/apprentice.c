@@ -30,6 +30,11 @@
  */
 
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: apprentice.c,v 1.143 2008/10/30 10:54:07 rrt Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 #include "patchlevel.h"
 #include <stdlib.h>
@@ -47,10 +52,6 @@
 #endif
 #include <sys/types.h>
 #include <dirent.h>
-
-#ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.142 2008/10/18 20:47:48 christos Exp $")
-#endif	/* lint */
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
 		      isspace((unsigned char) *l))  ++l;}

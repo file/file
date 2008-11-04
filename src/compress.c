@@ -33,6 +33,11 @@
  *					    using method, return sizeof new
  */
 #include "file.h"
+
+#ifndef lint
+FILE_RCSID("@(#)$File: compress.c,v 1.57 2008/07/16 18:00:57 christos Exp $")
+#endif
+
 #include "magic.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,11 +57,6 @@
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 #define BUILTIN_DECOMPRESS
 #include <zlib.h>
-#endif
-
-
-#ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.56 2008/02/07 00:58:52 christos Exp $")
 #endif
 
 private const struct {

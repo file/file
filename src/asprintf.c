@@ -26,6 +26,12 @@
  * SUCH DAMAGE.
  */
 
+#include "file.h"
+
+#ifndef lint
+FILE_RCSID("@(#)$File: cdf.c,v 1.11 2008/11/03 05:34:27 christos Exp $")
+#endif
+
 #include <stdarg.h>
 
 int vasprintf(char **ptr, const char *format_string, va_list vargs);

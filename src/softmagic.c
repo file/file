@@ -30,16 +30,17 @@
  */
 
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: softmagic.c,v 1.125 2008/10/30 10:43:49 rrt Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
 
-
-#ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.124 2008/10/18 20:47:48 christos Exp $")
-#endif	/* lint */
 
 private int match(struct magic_set *, struct magic *, uint32_t,
     const unsigned char *, size_t, int);

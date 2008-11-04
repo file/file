@@ -37,6 +37,11 @@
  */
 
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.68 2008/10/30 10:50:24 rrt Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 #include <stdio.h>
 #include <string.h>
@@ -47,10 +52,6 @@
 #include <unistd.h>
 #endif
 #include "names.h"
-
-#ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.67 2008/10/18 20:47:48 christos Exp $")
-#endif	/* lint */
 
 #define MAXLINELEN 300	/* longest sane line length */
 #define ISSPC(x) ((x) == ' ' || (x) == '\t' || (x) == '\r' || (x) == '\n' \

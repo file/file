@@ -29,9 +29,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: funcs.c,v 1.46 2008/10/16 16:30:34 christos Exp $")
+#endif	/* lint */
+
 #include <assert.h>
 #ifdef HAVE_ERR_H
 #include <err.h>
