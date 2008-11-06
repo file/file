@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.48 2008/11/06 21:17:45 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.49 2008/11/06 22:49:08 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -158,7 +158,7 @@ protected int
 file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
     size_t nb)
 {
-	int m = 0, rv = 0;
+	int m = 0, rv = 0, looks_text = 0;
 	int mime = ms->flags & MAGIC_MIME;
 	const unsigned char *ubuf = CAST(const unsigned char *, buf);
 	unichar *u8buf = NULL;
@@ -206,13 +206,14 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 		    (m = file_trycdf(ms, fd, ubuf, nb)) == 0) {
 		    /* try to discover text encoding */
 		    if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0)
-			file_encoding(ms, ubuf, nb, &u8buf, &ulen, &code, &code_mime, &type);
+			looks_text = file_encoding(ms, ubuf, nb, &u8buf, &ulen, &code, &code_mime, &type);
 		    /* try soft magic tests */
 		    if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
 			(m = file_softmagic(ms, ubuf, nb, BINTEST)) == 0) {
 			/* try text properties (and possibly text tokens) */
 			if ((ms->flags & MAGIC_NO_CHECK_TEXT) != 0 ||
-			    (m = file_ascmagic_with_encoding(ms, ubuf, nb, u8buf, ulen, code, code_mime, type)) == 0) {
+			    ((ms->flags & MAGIC_NO_CHECK_ENCODING) != 0 && (m = file_ascmagic(ms, ubuf, nb)) == 0) ||
+			    looks_text == 0 || (m = file_ascmagic_with_encoding(ms, ubuf, nb, u8buf, ulen, code, code_mime, type)) == 0) {
 			    /* give up */
 			    if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
 				file_printf(ms, mime ?

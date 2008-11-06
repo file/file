@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.78 2008/11/06 21:17:45 rrt Exp $
+.\" $File: file.man,v 1.79 2008/11/06 22:49:08 rrt Exp $
 .Dd October 9, 2008
 .Dt FILE __CSECTION__
 .Os
@@ -55,12 +55,12 @@ When modifying magic files or the program itself, make sure to
 .Em "preserve these keywords" .
 Users depend on knowing that all the readable files in a directory
 have the word
-.Dq text
+.Sq text
 printed.
 Don't do as Berkeley did and change
-.Dq shell commands text
+.Sq shell commands text
 to
-.Dq shell script .
+.Sq shell script .
 .Pp
 The filesystem tests are based on examining the return from a
 .Xr stat 2
@@ -117,10 +117,10 @@ in each set.
 If a file passes any of these tests, its character set is reported.
 ASCII, ISO-8859-x, UTF-8, and extended-ASCII files are identified
 as
-.Dq text
+.Sq text
 because they will be mostly readable on nearly any terminal;
 UTF-16 and EBCDIC are only
-.Dq character data
+.Sq character data
 because, while
 they contain text, it is text that will require translation
 before it can be read.
@@ -156,7 +156,7 @@ archives).
 .Pp
 Any file that cannot be identified as having been written
 in any of the character sets listed above is simply said to be
-.Dq data .
+.Sq data .
 .Sh OPTIONS
 .Bl -tag -width indent
 .It Fl b , -brief
@@ -180,9 +180,11 @@ are:
 .Dv EMX
 application type (only on EMX).
 .It text
-Various types of text files.
+Various types of text files (this test will try to guess the text encoding, irrespective of the setting of the
+.Sq encoding
+option).
 .It encoding
-Different text encodings.
+Different text encodings for soft magic tests.
 .It tokens
 Looks for known tokens inside text files.
 .It cdf
@@ -220,17 +222,15 @@ is not defined.
 .It Fl i , -mime
 Causes the file command to output mime type strings rather than the more
 traditional human readable ones. Thus it may say
-.Dq text/plain; charset=us-ascii
+.Sq text/plain; charset=us-ascii
 rather than
-.Dq ASCII text .
+.Sq ASCII text .
 In order for this option to work, file changes the way
 it handles files recognized by the command itself (such as many of the
 text file types, directories etc), and makes use of an alternative
-.Dq magic
+.Sq magic
 file.
-(See
-.Dq FILES
-section, below).
+(See the FILES section, below).
 .It Fl -mime-type , -mime-encoding
 Like
 .Fl i ,
@@ -238,10 +238,10 @@ but print only the specified element(s).
 .It Fl k , -keep-going
 Don't stop at the first match, keep going. Subsequent matches will be
 have the string
-.Dq "\[rs]012\- "
+.Sq "\[rs]012\- "
 prepended.
 (If you want a newline, see the
-.Dq "\-r"
+.Sq "\-r"
 option.)
 .It Fl L , -dereference
 option causes symlinks to be followed, as the like-named option in
@@ -323,7 +323,7 @@ will not attempt to open
 .Pa $HOME/.magic .
 .Nm
 adds
-.Dq .mgc
+.Sq .mgc
 to the value of this variable as appropriate.
 The environment variable
 .Dv POSIXLY_CORRECT
@@ -479,7 +479,7 @@ support and merge MIME and non-MIME magic, support directories as well
 as files of magic, apply many bug fixes and improve the build system.
 .Pp
 The list of contributors to the
-.Dq magic
+.Sq magic
 directory (magic files)
 is too long to include here.
 You know who you are; thank you.
@@ -524,15 +524,15 @@ than position within the magic file?
 .Pp
 The program should provide a way to give an estimate
 of
-.Dq how good
+.Sq how good
 a guess is.
 We end up removing guesses (e.g.
-.Dq From\
+.Sq From\
 as first 5 chars of file) because
 they are not as good as other guesses (e.g.
-.Dq Newsgroups:
+.Sq Newsgroups:
 versus
-.Dq Return-Path:
+.Sq Return-Path:
 ).
 Still, if the others don't pan out, it should be possible to use the
 first guess.
