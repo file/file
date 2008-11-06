@@ -2,7 +2,7 @@
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
  * maintained 1995-present by Christos Zoulas and others.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -12,7 +12,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.127 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.128 2008/11/06 21:17:45 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -149,6 +149,7 @@ main(int argc, char *argv[])
 		{ "cdf",	MAGIC_NO_CHECK_CDF },
 		{ "compress",	MAGIC_NO_CHECK_COMPRESS },
 		{ "elf",	MAGIC_NO_CHECK_ELF },
+		{ "encoding",	MAGIC_NO_CHECK_ENCODING },
 		{ "soft",	MAGIC_NO_CHECK_SOFT },
 		{ "tar",	MAGIC_NO_CHECK_TAR },
 		{ "tokens",	MAGIC_NO_CHECK_TOKENS },
@@ -228,7 +229,7 @@ main(int argc, char *argv[])
 			else
 				flags |= nv[i].value;
 			break;
-			
+
 		case 'f':
 			if(action)
 				usage();
@@ -343,7 +344,7 @@ main(int argc, char *argv[])
 			process(argv[optind], wid);
 	}
 
-	c = magic->haderr ? 1 : 0;
+	c = (magic->event_flags & EVENT_HAD_ERR) ? 1 : 0;
 	magic_close(magic);
 	return c;
 }
@@ -483,9 +484,9 @@ help(void)
 "Determine type of FILEs.\n"
 "\n", stderr);
 #define OPT(shortname, longname, opt, doc)      \
-        fprintf(stderr, "  -%c, --" longname doc, shortname);
+	fprintf(stderr, "  -%c, --" longname doc, shortname);
 #define OPT_LONGONLY(longname, opt, doc)        \
-        fprintf(stderr, "      --" longname doc);
+	fprintf(stderr, "      --" longname doc);
 #include "file_opts.h"
 #undef OPT
 #undef OPT_LONGONLY

@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.55 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.56 2008/11/06 21:17:45 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -117,7 +117,7 @@ magic_open(int flags)
 	if ((ms->c.li = CAST(struct level_info *, malloc(len))) == NULL)
 		goto free;
 
-	ms->haderr = 0;
+	ms->event_flags = 0;
 	ms->error = -1;
 	ms->mlist = NULL;
 	ms->file = "unknown";
@@ -386,13 +386,13 @@ magic_buffer(struct magic_set *ms, const void *buf, size_t nb)
 public const char *
 magic_error(struct magic_set *ms)
 {
-	return ms->haderr ? ms->o.buf : NULL;
+	return (ms->event_flags & EVENT_HAD_ERR) ? ms->o.buf : NULL;
 }
 
 public int
 magic_errno(struct magic_set *ms)
 {
-	return ms->haderr ? ms->error : 0;
+	return (ms->event_flags & EVENT_HAD_ERR) ? ms->error : 0;
 }
 
 public int

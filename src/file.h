@@ -2,7 +2,7 @@
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
  * maintained 1995-present by Christos Zoulas and others.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -12,7 +12,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.113 2008/11/04 16:48:42 christos Exp $
+ * @(#)$File: file.h,v 1.114 2008/11/06 21:17:45 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -122,7 +122,7 @@ union VALUETYPE {
 	unsigned char us[MAXstring];
 	float f;
 	double d;
-}; 
+};
 
 struct magic {
 	/* Word 1 */
@@ -134,7 +134,7 @@ struct magic {
 #define UNSIGNED	0x08	/* comparison is unsigned */
 #define NOSPACE		0x10	/* suppress space character before output */
 #define BINTEST		0x20	/* test is for a binary type (set only
-                                   for top-level tests) */
+				   for top-level tests) */
 #define TEXTTEST	0	/* for passing to file_softmagic */
 
 	uint8_t factor;
@@ -209,7 +209,7 @@ struct magic {
 #else
 	uint8_t dummy;
 #endif
-	uint8_t factor_op;	
+	uint8_t factor_op;
 #define		FILE_FACTOR_OP_PLUS	'+'
 #define		FILE_FACTOR_OP_MINUS	'-'
 #define		FILE_FACTOR_OP_TIMES	'*'
@@ -317,8 +317,10 @@ struct magic_set {
 	} o;
 	uint32_t offset;
 	int error;
-	int flags;
-	int haderr;
+	int flags;			/* Control magic tests. */
+	int event_flags;		/* Note things that happened. */
+#define 		EVENT_HAD_ERR		0x01
+#define 		EVENT_WROTE_MIME_TYPE	0x02
 	const char *file;
 	size_t line;			/* current magic line number */
 
@@ -355,6 +357,8 @@ protected int file_trycdf(struct magic_set *, int, const unsigned char *,
 protected int file_zmagic(struct magic_set *, int, const char *,
     const unsigned char *, size_t);
 protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
+protected int file_ascmagic_with_encoding(struct magic_set *, const unsigned char *, size_t, unichar *, size_t, const char *, const char *, const char *);
+protected int file_encoding(struct magic_set *, const unsigned char *, size_t, unichar **, size_t *, const char **, const char **, const char **);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t, int);
 protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
