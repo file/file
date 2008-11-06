@@ -323,6 +323,7 @@
 >>>2597	belong&0xfffff0		0x0fa000	\b, 64 kHz
 >>>2601	byte&0xf		>0		\b, >4G samples
 >2584	string	!fLaC		\b, MP3 encoding
+# FIXME: Previous line is dodgy! It could be something else, e.g. Ogg.
 
 # NSF (NES sound file) magic
 0	string		NESM\x1a	NES Sound File
