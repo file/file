@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.128 2008/11/06 21:17:45 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.129 2008/11/06 22:49:08 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -535,6 +535,10 @@ mprint(struct magic_set *ms, struct magic *m)
 		t = ms->offset;
 		break;
 
+	case FILE_INDIRECT:
+		t = ms->offset;
+		break;
+
 	default:
 		file_magerror(ms, "invalid m->type (%d) in mprint()", m->type);
 		return -1;
@@ -929,9 +933,11 @@ mget(struct magic_set *ms, const unsigned char *s,
 				off = q->l;
 				break;
 			case FILE_BELONG:
+			case FILE_BEID3:
 				off = (int32_t)((q->hl[0]<<24)|(q->hl[1]<<16)|
 						 (q->hl[2]<<8)|(q->hl[3]));
 				break;
+			case FILE_LEID3:
 			case FILE_LELONG:
 				off = (int32_t)((q->hl[3]<<24)|(q->hl[2]<<16)|
 						 (q->hl[1]<<8)|(q->hl[0]));
@@ -1119,6 +1125,7 @@ mget(struct magic_set *ms, const unsigned char *s,
 				offset = ~offset;
 			break;
 		case FILE_BELONG:
+		case FILE_BEID3:
 			if (nbytes < (offset + 4))
 				return 0;
 			if (off) {
@@ -1189,6 +1196,7 @@ mget(struct magic_set *ms, const unsigned char *s,
 				offset = ~offset;
 			break;
 		case FILE_LELONG:
+		case FILE_LEID3:
 			if (nbytes < (offset + 4))
 				return 0;
 			if (off) {
@@ -1365,8 +1373,21 @@ mget(struct magic_set *ms, const unsigned char *s,
 			break;
 		}
 
-		if (m->flag & INDIROFFADD)
+		switch (m->in_type) {
+		case FILE_LEID3:
+		case FILE_BEID3:
+			offset = ((((offset >>  0) & 0x7f) <<  0) |
+				 (((offset >>  8) & 0x7f) <<  7) |
+				 (((offset >> 16) & 0x7f) << 14) |
+				 (((offset >> 24) & 0x7f) << 21)) + 10;
+			break;
+		default:
+			break;
+		}
+
+		if (m->flag & INDIROFFADD) {
 			offset += ms->c.li[cont_level-1].off;
+		}
 		if (mcopy(ms, p, m->type, 0, s, offset, nbytes, count) == -1)
 			return -1;
 		ms->offset = offset;
@@ -1431,6 +1452,12 @@ mget(struct magic_set *ms, const unsigned char *s,
 		if (nbytes < offset)
 			return 0;
 		break;
+
+	case FILE_INDIRECT:
+	  	if (file_printf(ms, m->desc) == -1)
+			return -1;
+		return file_softmagic(ms, s + offset, nbytes - offset,
+		    BINTEST);
 
 	case FILE_DEFAULT:	/* nothing to check */
 	default:
@@ -1730,6 +1757,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			return -1;
 		break;
 	}
+	case FILE_INDIRECT:
+		return 1;
 	default:
 		file_magerror(ms, "invalid type %d in magiccheck()", m->type);
 		return -1;

@@ -286,7 +286,16 @@
 # SGI SoundTrack <mpruett@sgi.com>
 0	string		_SGI_SoundTrack		SGI SoundTrack project file
 # ID3 version 2 tags <waschk@informatik.uni-rostock.de>
-0	string		ID3	Audio file with ID3 version 2.
+0	string		ID3	Audio file with ID3 version 2
+>3	byte		x	\b.%d
+>4	byte		x	\b.%d
+>>5	byte		&0x80	\b, unsynchronized frames
+>>5	byte		&0x40	\b, extended header
+>>5	byte		&0x20	\b, experimental
+>>5	byte		&0x10	\b, footer present
+>(6.I)	indirect	x	\b, contains: 
+
+0	string		this\ is\ crap
 # Such a file is often an MP3 file, but this will give false positives
 #!:mime	audio/mpeg
 >3	ubyte	<0xff	\b%d

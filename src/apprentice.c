@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.143 2008/10/30 10:54:07 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.144 2008/11/04 16:38:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -217,6 +217,9 @@ static const struct type_tbl_s {
 	{ XX("double"),		FILE_DOUBLE,		FILE_FMT_DOUBLE },
 	{ XX("bedouble"),	FILE_BEDOUBLE,		FILE_FMT_DOUBLE },
 	{ XX("ledouble"),	FILE_LEDOUBLE,		FILE_FMT_DOUBLE },
+	{ XX("leid3"),		FILE_LEID3,		FILE_FMT_NUM },
+	{ XX("beid3"),		FILE_BEID3,		FILE_FMT_NUM },
+	{ XX("indirect"),	FILE_INDIRECT,		FILE_FMT_NONE },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 # undef XX
 # undef XX_NULL
@@ -873,6 +876,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_REGEX:
 		case FILE_SEARCH:
 		case FILE_DEFAULT:
+		case FILE_INDIRECT:
 			break;
 		default:
 			if (ms->flags & MAGIC_CHECK)
@@ -1188,6 +1192,12 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 			case 'F':
 			case 'G':
 				m->in_type = FILE_BEDOUBLE;
+				break;
+			case 'i':
+				m->in_type = FILE_LEID3;
+				break;
+			case 'I':
+				m->in_type = FILE_BEID3;
 				break;
 			default:
 				if (ms->flags & MAGIC_CHECK)
