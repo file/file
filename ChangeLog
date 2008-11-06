@@ -1,3 +1,7 @@
+2008-11-06 18:18  Christos Zoulas <christos@zoulas.com>
+
+	* Handle ID3 format files.
+
 2008-11-06 23:00  Reuben Thomas <rrt@sc3d.org>
 
 	* Fix --mime, --mime-type and --mime-encoding under new scheme.
