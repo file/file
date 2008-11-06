@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.127 2008/11/06 15:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.128 2008/11/06 21:17:45 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1828,15 +1828,17 @@ handle_annotation(struct magic_set *ms, struct magic *m)
 		return 1;
 	}
 	if (ms->flags & MAGIC_MIME) {
-		if (ms->flags & MAGIC_MIME_TYPE) {
+		if ((ms->flags & MAGIC_MIME_TYPE) && m->mimetype[0]) {
+			ms->event_flags |= EVENT_WROTE_MIME_TYPE;
 			if (file_printf(ms, "%s", m->mimetype) == -1)
 				return -1;
 		}
-		if (ms->flags & MAGIC_MIME_ENCODING) {
-			ms->event_flags |= EVENT_WROTE_MIME_TYPE;
-			return 0; /* Let ascmagic find the encoding */
-		}
-		return 1;
+		/* If we want an encoding, let ascmagic find it. */
+		if ((ms->flags & MAGIC_MIME_ENCODING))
+			return 0;
+		/* If we didn't write a MIME type, and we want one,
+		   allow ascmagic to run.*/
+		return m->mimetype[0] != '\0';
 	}
 	return -2;
 }

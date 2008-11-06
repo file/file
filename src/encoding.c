@@ -39,7 +39,7 @@
 #include <stdlib.h>
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.68 2008/10/30 10:50:24 rrt Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.1 2008/11/06 21:17:45 rrt Exp $")
 #endif	/* lint */
 
 private int looks_ascii(const unsigned char *, size_t, unichar *, size_t *);
@@ -60,7 +60,7 @@ protected int
 file_encoding(struct magic_set *ms, const unsigned char *buf, size_t nbytes, unichar **ubuf, size_t *ulen, const char **code, const char **code_mime, const char **type)
 {
 	size_t mlen;
-	int rv = 0, ucs_type;
+	int rv = 1, ucs_type;
 	unsigned char *nbuf = NULL;
 
 	mlen = (nbytes + 1) * sizeof(nbuf[0]);
@@ -74,18 +74,16 @@ file_encoding(struct magic_set *ms, const unsigned char *buf, size_t nbytes, uni
 		goto done;
 	}
 
+	*type = "text";
 	if (looks_ascii(buf, nbytes, *ubuf, ulen)) {
 		*code = "ASCII";
 		*code_mime = "us-ascii";
-		*type = "text";
 	} else if (looks_utf8_with_BOM(buf, nbytes, *ubuf, ulen) > 0) {
 		*code = "UTF-8 Unicode (with BOM)";
 		*code_mime = "utf-8";
-		*type = "text";
 	} else if (file_looks_utf8(buf, nbytes, *ubuf, ulen) > 1) {
 		*code = "UTF-8 Unicode";
 		*code_mime = "utf-8";
-		*type = "text";
 	} else if ((ucs_type = looks_ucs16(buf, nbytes, *ubuf, ulen)) != 0) {
 		if (ucs_type == 1) {
 			*code = "Little-endian UTF-16 Unicode";
@@ -94,28 +92,25 @@ file_encoding(struct magic_set *ms, const unsigned char *buf, size_t nbytes, uni
 			*code = "Big-endian UTF-16 Unicode";
 			*code_mime = "utf-16be";
 		}
-		*type = "character data";
 	} else if (looks_latin1(buf, nbytes, *ubuf, ulen)) {
 		*code = "ISO-8859";
-		*type = "text";
 		*code_mime = "iso-8859-1";
 	} else if (looks_extended(buf, nbytes, *ubuf, ulen)) {
 		*code = "Non-ISO extended-ASCII";
-		*type = "text";
 		*code_mime = "unknown-8bit";
 	} else {
 		from_ebcdic(buf, nbytes, nbuf);
 
 		if (looks_ascii(nbuf, nbytes, *ubuf, ulen)) {
 			*code = "EBCDIC";
-			*type = "character data";
 			*code_mime = "ebcdic";
 		} else if (looks_latin1(nbuf, nbytes, *ubuf, ulen)) {
 			*code = "International EBCDIC";
-			*type = "character data";
 			*code_mime = "ebcdic";
-		} else /* Doesn't look like text at all */
-			rv = -1;
+		} else { /* Doesn't look like text at all */
+			rv = 0;
+			*type = "binary";
+		}
 	}
 
  done:
