@@ -287,8 +287,8 @@
 0	string		_SGI_SoundTrack		SGI SoundTrack project file
 # ID3 version 2 tags <waschk@informatik.uni-rostock.de>
 0	string		ID3	Audio file with ID3 version 2.
-# ??? Normally such a file is an MP3 file, but this will give false positives
-!:mime	audio/mpeg
+# Such a file is often an MP3 file, but this will give false positives
+#!:mime	audio/mpeg
 >3	ubyte	<0xff	\b%d
 #>4	ubyte	<0xff	\b%d tag
 >2584	string	fLaC		\b, FLAC encoding
