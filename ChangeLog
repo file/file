@@ -1,3 +1,8 @@
+2008-11-06 10:35  Christos Zoulas <christos@astron.com>
+
+	* use memchr instead of strchr because the string
+	  might not be NUL terminated (Scott MacVicar)
+
 2008-10-30 11:00  Reuben Thomas <rrt@sc3d.org>
 
 	* Correct words counts in comments of struct magic.
