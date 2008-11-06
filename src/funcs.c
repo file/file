@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Christos Zoulas 2003.
  * All Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -11,7 +11,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.46 2008/10/16 16:30:34 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.47 2008/11/04 16:38:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -98,17 +98,17 @@ file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
     uint32_t lineno)
 {
 	/* Only the first error is ok */
-	if (ms->haderr)
+	if (ms->event_flags & EVENT_HAD_ERR)
 		return;
 	if (lineno != 0) {
 		free(ms->o.buf);
 		ms->o.buf = NULL;
 		file_printf(ms, "line %u: ", lineno);
 	}
-        file_vprintf(ms, f, va);
+	file_vprintf(ms, f, va);
 	if (error > 0)
 		file_printf(ms, " (%s)", strerror(error));
-	ms->haderr++;
+	ms->event_flags |= EVENT_HAD_ERR;
 	ms->error = error;
 }
 
@@ -158,9 +158,15 @@ protected int
 file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
     size_t nb)
 {
-	int m;
+	int m = 0, rv = 0;
 	int mime = ms->flags & MAGIC_MIME;
 	const unsigned char *ubuf = CAST(const unsigned char *, buf);
+	unichar *u8buf = NULL;
+	size_t ulen;
+
+	const char *code = NULL;
+	const char *code_mime = NULL;
+	const char *type = NULL;
 
 	if (nb == 0) {
 		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
@@ -198,24 +204,35 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 		/* Check if we have a CDF file */
 		if ((ms->flags & MAGIC_NO_CHECK_CDF) != 0 ||
 		    (m = file_trycdf(ms, fd, ubuf, nb)) == 0) {
-		    /* try tests in /etc/magic (or surrogate magic file) */
+		    /* try to discover text encoding */
+		    if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0)
+			file_encoding(ms, ubuf, nb, &u8buf, &ulen, &code, &code_mime, &type);
+		    /* try soft magic tests */
 		    if ((ms->flags & MAGIC_NO_CHECK_SOFT) != 0 ||
 			(m = file_softmagic(ms, ubuf, nb, BINTEST)) == 0) {
-			/* try known keywords, check whether it is ASCII */
-			if ((ms->flags & MAGIC_NO_CHECK_ASCII) != 0 ||
-			    (m = file_ascmagic(ms, ubuf, nb)) == 0) {
-			    /* abandon hope, all ye who remain here */
+			/* try text properties (and possibly text tokens) */
+			if ((ms->flags & MAGIC_NO_CHECK_TEXT) != 0 ||
+			    (m = file_ascmagic_with_encoding(ms, ubuf, nb, u8buf, ulen, code, code_mime, type)) == 0) {
+			    /* give up */
 			    if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
 				file_printf(ms, mime ?
-				    "application/octet-stream" :
-				    "data") == -1)
-				    return -1;
-			    m = 1;
+					    "application/octet-stream" :
+					    "data") == -1) {
+				    rv = -1;
+				    goto done;
+			    }
 			}
+			m = 1;
 		    }
 		}
 	    }
 	}
+ done:
+	if (u8buf)
+		free(u8buf);
+	if (rv)
+		return rv;
+
 #ifdef BUILTIN_ELF
 	if ((ms->flags & MAGIC_NO_CHECK_ELF) == 0 && m == 1 &&
 	    nb > 5 && fd != -1) {
@@ -242,7 +259,7 @@ file_reset(struct magic_set *ms)
 		return -1;
 	}
 	ms->o.buf = NULL;
-	ms->haderr = 0;
+	ms->event_flags &= ~EVENT_HAD_ERR;
 	ms->error = -1;
 	return 0;
 }
@@ -261,7 +278,7 @@ file_getbuffer(struct magic_set *ms)
 	char *pbuf, *op, *np;
 	size_t psize, len;
 
-	if (ms->haderr)
+	if (ms->event_flags & EVENT_HAD_ERR)
 		return NULL;
 
 	if (ms->flags & MAGIC_RAW)
@@ -324,7 +341,7 @@ file_getbuffer(struct magic_set *ms)
 
 	for (np = ms->o.pbuf, op = ms->o.buf; *op; op++) {
 		if (isprint((unsigned char)*op)) {
-			*np++ = *op;	
+			*np++ = *op;
 		} else {
 			OCTALIFY(np, op);
 		}
