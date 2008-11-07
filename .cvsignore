@@ -18,3 +18,4 @@ config.status
 libtool
 stamp-h1
 file-*.tar.gz
+.libs
