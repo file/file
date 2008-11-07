@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.144 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.145 2008/11/06 23:22:54 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -107,7 +107,7 @@ private void bs1(struct magic *);
 private uint16_t swap2(uint16_t);
 private uint32_t swap4(uint32_t);
 private uint64_t swap8(uint64_t);
-private void mkdbname(const char *, char **, int);
+private char *mkdbname(struct magic_set *, const char *, int);
 private int apprentice_map(struct magic_set *, struct magic **, uint32_t *,
     const char *);
 private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
@@ -2059,7 +2059,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	char *dbname = NULL;
 	void *mm = NULL;
 
-	mkdbname(fn, &dbname, 0);
+	dbname = mkdbname(ms, fn, 0);
 	if (dbname == NULL)
 		goto error2;
 
@@ -2156,7 +2156,7 @@ apprentice_compile(struct magic_set *ms, struct magic **magicp,
 	char *dbname;
 	int rv = -1;
 
-	mkdbname(fn, &dbname, 1);
+	dbname = mkdbname(ms, fn, 1);
 
 	if (dbname == NULL) 
 		goto out;
@@ -2194,24 +2194,45 @@ private const char ext[] = ".mgc";
 /*
  * make a dbname
  */
-private void
-mkdbname(const char *fn, char **buf, int strip)
+private char *
+mkdbname(struct magic_set *ms, const char *fn, int strip)
 {
-	const char *p;
+	const char *p, *q;
+	char *buf;
+
 	if (strip) {
 		if ((p = strrchr(fn, '/')) != NULL)
 			fn = ++p;
 	}
 
-	if ((p = strstr(fn, ext)) != NULL && p[sizeof(ext) - 1] == '\0')
-		*buf = strdup(fn);
-	else
-		(void)asprintf(buf, "%s%s", fn, ext);
+	for (q = fn; *q; q++)
+		continue;
+	/* Look for .mgc */
+	for (p = ext + sizeof(ext) - 1; p >= ext && q >= fn; p--, q--)
+		if (*p != *q)
+			break;
 
-	if (buf && *buf && strlen(*buf) > MAXPATHLEN) {
-		free(*buf);
-		*buf = NULL;
+	/* Did not find .mgc, restore q */
+	if (p >= ext)
+		while (*q)
+			q++;
+
+	q++;
+	/* Compatibility with old code that looked in .mime */
+	if (ms->flags & MAGIC_MIME) {
+		asprintf(&buf, "%.*s.mime%s", (int)(q - fn), fn, ext);
+		if (access(buf, R_OK) != -1) {
+			ms->flags &= MAGIC_MIME_TYPE;
+			return buf;
+		}
+		free(buf);
 	}
+	asprintf(&buf, "%.*s%s", (int)(q - fn), fn, ext);
+
+	/* Compatibility with old code that looked in .mime */
+	if (strstr(p, ".mime") != NULL)
+		ms->flags &= MAGIC_MIME_TYPE;
+	return buf;
 }
 
 /*
