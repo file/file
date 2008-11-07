@@ -325,6 +325,7 @@
 
 # MP2, M1A
 0       beshort&0xFFFE  0xFFFC         MPEG ADTS, layer II, v1
+!:mime	audio/mpeg
 # rates
 >2      byte&0xF0       0x10           \b,  32 kbps
 >2      byte&0xF0       0x20           \b,  48 kbps
@@ -399,6 +400,7 @@
 
 # MP3, M2A
 0       beshort&0xFFFE  0xFFF2         MPEG ADTS, layer III, v2
+!:mime	audio/mpeg
 # rate
 >2      byte&0xF0       0x10           \b,   8 kbps
 >2      byte&0xF0       0x20           \b,  16 kbps
