@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.49 2008/11/06 22:49:08 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.50 2008/11/07 17:27:22 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -158,11 +158,15 @@ protected int
 file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
     size_t nb)
 {
-	int m = 0, rv = 0;
+	int m = 0, rv = 0, looks_text = 0;
 	int mime = ms->flags & MAGIC_MIME;
 	const unsigned char *ubuf = CAST(const unsigned char *, buf);
 	unichar *u8buf = NULL;
 	size_t ulen;
+	const char *code = NULL;
+	const char *code_mime = "binary";
+	const char *type = NULL;
+
 
 
 	if (nb == 0) {
@@ -177,6 +181,11 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 		    "very short file (no magic)") == -1)
 			return -1;
 		return 1;
+	}
+
+	if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0) {
+		looks_text = file_encoding(ms, ubuf, nb, &u8buf, &ulen,
+		    &code, &code_mime, &type);
 	}
 
 #ifdef __EMX__
@@ -253,17 +262,9 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 
 		/* try to discover text encoding */
 		if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0) {
-			const char *code = NULL;
-			const char *code_mime = NULL;
-			const char *type = NULL;
-			int looks_text = 0;
-
-			looks_text = file_encoding(ms, ubuf, nb, &u8buf, &ulen,
-			    &code, &code_mime, &type);
 			if (looks_text == 0)
 				if ((m = file_ascmagic_with_encoding( ms, ubuf,
-				    nb, u8buf, ulen, code, code_mime, type))
-				    != 0) {
+				    nb, u8buf, ulen, code, type)) != 0) {
 					if ((ms->flags & MAGIC_DEBUG) != 0)
 						(void)fprintf(stderr,
 						    "ascmagic/enc %d\n", m);
@@ -279,6 +280,13 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 	    rv = -1;
 	}
  done:
+	if ((ms->flags & MAGIC_MIME_ENCODING) != 0) {
+		if (ms->flags & MAGIC_MIME_TYPE)
+			if (file_printf(ms, "; charset=") == -1)
+				rv = -1;
+		if (file_printf(ms, "%s", code_mime) == -1)
+			rv = -1;
+	}
 	if (u8buf)
 		free(u8buf);
 	if (rv)

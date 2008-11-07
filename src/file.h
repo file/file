@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.114 2008/11/06 21:17:45 rrt Exp $
+ * @(#)$File: file.h,v 1.115 2008/11/06 23:22:54 christos Exp $
  */
 
 #ifndef __file_h__
@@ -323,7 +323,6 @@ struct magic_set {
 	int flags;			/* Control magic tests. */
 	int event_flags;		/* Note things that happened. */
 #define 		EVENT_HAD_ERR		0x01
-#define 		EVENT_WROTE_MIME_TYPE	0x02
 	const char *file;
 	size_t line;			/* current magic line number */
 
@@ -360,10 +359,14 @@ protected int file_trycdf(struct magic_set *, int, const unsigned char *,
 protected int file_zmagic(struct magic_set *, int, const char *,
     const unsigned char *, size_t);
 protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
-protected int file_ascmagic_with_encoding(struct magic_set *, const unsigned char *, size_t, unichar *, size_t, const char *, const char *, const char *);
-protected int file_encoding(struct magic_set *, const unsigned char *, size_t, unichar **, size_t *, const char **, const char **, const char **);
+protected int file_ascmagic_with_encoding(struct magic_set *,
+    const unsigned char *, size_t, unichar *, size_t, const char *,
+    const char *);
+protected int file_encoding(struct magic_set *, const unsigned char *, size_t,
+    unichar **, size_t *, const char **, const char **, const char **);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
-protected int file_softmagic(struct magic_set *, const unsigned char *, size_t, int);
+protected int file_softmagic(struct magic_set *, const unsigned char *, size_t,
+    int);
 protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
 protected uint64_t file_signextend(struct magic_set *, struct magic *,
     uint64_t);

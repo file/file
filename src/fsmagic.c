@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.55 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.56 2008/11/07 17:25:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -92,7 +92,7 @@ handle_mime(struct magic_set *ms, int mime, const char *str)
 		if (file_printf(ms, "application/%s", str) == -1)
 			return -1;
 		if ((mime & MAGIC_MIME_ENCODING) && file_printf(ms,
-		    "; encoding=") == -1)
+		    "; charset=") == -1)
 			return -1;
 	}
 	if ((mime & MAGIC_MIME_ENCODING) && file_printf(ms, "binary") == -1)
