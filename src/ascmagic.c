@@ -36,7 +36,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.70 2008/11/06 21:17:45 rrt Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.71 2008/11/06 21:36:44 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -226,7 +226,7 @@ subtype_identified:
 
 	if (mime) {
 		if ((mime & MAGIC_MIME_TYPE) &&
-		    !(ms->event_flags && EVENT_WROTE_MIME_TYPE)) {
+		    !(ms->event_flags & EVENT_WROTE_MIME_TYPE)) {
 			if (subtype_mime) {
 				if (file_printf(ms, "%s", subtype_mime) == -1)
 					goto done;
