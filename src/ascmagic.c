@@ -36,7 +36,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.72 2008/11/07 17:26:17 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.73 2008/11/07 18:57:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -88,12 +88,14 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	nbytes = trim_nuls(buf, nbytes);
 
 	/* If file doesn't look like any sort of text, give up. */
-	if (file_encoding(ms, buf, nbytes, &ubuf, &ulen, &code, &code_mime, &type) == 0) {
+	if (file_encoding(ms, buf, nbytes, &ubuf, &ulen, &code, &code_mime,
+	    &type) == 0) {
 		rv = 0;
 		goto done;
 	}
 
-	rv = file_ascmagic_with_encoding(ms, buf, nbytes, ubuf, ulen, code, code_mime, type);
+	rv = file_ascmagic_with_encoding(ms, buf, nbytes, ubuf, ulen, code, 
+	    type);
 
  done:
 	if (ubuf)
@@ -103,7 +105,9 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 }
 
 protected int
-file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t ulen, const char *code, const char *code_mime, const char *type)
+file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
+    size_t nbytes, unichar *ubuf, size_t ulen, const char *code,
+    const char *type)
 {
 	unsigned char *utf8_buf = NULL, *utf8_end;
 	size_t mlen, i;
@@ -225,8 +229,7 @@ subtype_identified:
 		n_cr++;
 
 	if (mime) {
-		if ((mime & MAGIC_MIME_TYPE) &&
-		    !(ms->event_flags & EVENT_WROTE_MIME_TYPE)) {
+		if ((mime & MAGIC_MIME_TYPE) != 0) {
 			if (subtype_mime) {
 				if (file_printf(ms, "%s", subtype_mime) == -1)
 					goto done;
@@ -235,18 +238,6 @@ subtype_identified:
 					goto done;
 			}
 		}
-
-		if ((mime == 0 || mime == MAGIC_MIME) && code_mime) {
-			if ((mime & MAGIC_MIME_TYPE) &&
-			    file_printf(ms, "; charset=") == -1)
-				goto done;
-			if (file_printf(ms, "%s", code_mime) == -1)
-				goto done;
-		}
-
-		if (mime == MAGIC_MIME_ENCODING)
-			if (file_printf(ms, "%s", code_mime) == -1)
-				goto done;
 	} else {
 		if (file_printf(ms, "%s", code) == -1)
 			goto done;
