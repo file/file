@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.54 2008/10/18 20:47:48 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.55 2008/11/04 16:38:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -88,9 +88,13 @@ bad_link(struct magic_set *ms, int err, char *buf)
 private int
 handle_mime(struct magic_set *ms, int mime, const char *str)
 {
-	if ((mime & MAGIC_MIME_TYPE) && file_printf(ms, "application/%s", str)
-	    == -1)
-		return -1;
+	if ((mime & MAGIC_MIME_TYPE)) {
+		if (file_printf(ms, "application/%s", str) == -1)
+			return -1;
+		if ((mime & MAGIC_MIME_ENCODING) && file_printf(ms,
+		    "; encoding=") == -1)
+			return -1;
+	}
 	if ((mime & MAGIC_MIME_ENCODING) && file_printf(ms, "binary") == -1)
 		return -1;
 	return 0;
