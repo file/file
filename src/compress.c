@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.58 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.59 2008/11/22 17:01:28 chl Exp $")
 #endif
 
 #include "magic.h"
@@ -237,7 +237,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 	char buf[4096];
 	int r, tfd;
 
-	(void)strcpy(buf, "/tmp/file.XXXXXX");
+	(void)strlcpy(buf, "/tmp/file.XXXXXX", sizeof buf);
 #ifndef HAVE_MKSTEMP
 	{
 		char *ptr = mktemp(buf);

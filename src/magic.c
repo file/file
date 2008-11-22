@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.56 2008/11/06 21:17:45 rrt Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.57 2008/11/22 17:01:28 chl Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -303,8 +303,9 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		if ((fd = open(inname, flags)) < 0) {
 #ifdef __CYGWIN__
 			/* FIXME: Do this with EXEEXT from autotools */
-			char *tmp = alloca(strlen(inname) + 5);
-			(void)strcat(strcpy(tmp, inname), ".exe");
+			size_t len = strlen(inname) + 5;
+			char *tmp = alloca(len);
+			(void)strlcat(strlcpy(tmp, inname, len), ".exe", len);
 			if ((fd = open(tmp, flags)) < 0) {
 #endif
 				if (unreadable_info(ms, sb.st_mode,
