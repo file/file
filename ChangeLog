@@ -1,3 +1,9 @@
+2008-11-09 20:42  Charles Longeau <chl@tuxfamily.org>
+
+	* Replace all str{cpy,cat} functions with strl{cpy,cat}
+	* Ensure that strl{cpy,cat} are included in libmagic,
+	  as needed.
+
 2008-11-06 18:18  Christos Zoulas <christos@zoulas.com>
 
 	* Handle ID3 format files.
@@ -6,7 +12,7 @@
 
 	* Fix --mime, --mime-type and --mime-encoding under new scheme.
 
-        * Rename "ascii" to "text" and add "encoding" test.
+	* Rename "ascii" to "text" and add "encoding" test.
 
 	* Return a precise ("utf-16le" or "utf-16be") MIME charset for
 	  UTF-16.

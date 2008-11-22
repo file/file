@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.115 2008/11/06 23:22:54 christos Exp $
+ * @(#)$File: file.h,v 1.116 2008/11/07 18:57:28 christos Exp $
  */
 
 #ifndef __file_h__
@@ -409,6 +409,13 @@ int vasprintf(char **, const char *, va_list);
 #endif
 #ifndef HAVE_ASPRINTF
 int asprintf(char **ptr, const char *format_string, ...);
+#endif
+
+#ifndef HAVE_STRLCPY
+size_t strlcpy(char *dst, const char *src, size_t siz);
+#endif
+#ifndef HAVE_STRLCAT
+size_t strlcat(char *dst, const char *src, size_t siz);
 #endif
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)

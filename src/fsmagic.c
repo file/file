@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.56 2008/11/07 17:25:59 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.57 2008/11/07 18:57:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -293,9 +293,11 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 						return -1;
 					return 1;
 				}
-				(void)strcpy(buf2, fn);  /* take dir part */
+				/* take dir part */
+				(void)strlcpy(buf2, fn, sizeof buf2);
 				buf2[tmp - fn + 1] = '\0';
-				(void)strcat(buf2, buf); /* plus (rel) link */
+				/* plus (rel) link */
+				(void)strlcat(buf2, buf, sizeof buf2);
 				tmp = buf2;
 			}
 			if (stat(tmp, &tstatbuf) < 0)
