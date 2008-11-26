@@ -77,6 +77,11 @@
 !:mime	application/x-bzip2
 >3	byte		>47		\b, block size = %c00k
 
+# lzip
+0	string		LZIP		lzip compressed data
+!:mime application/x-lzip
+>4	byte		x		\b, version: %d
+
 # squeeze and crunch
 # Michael Haardt <michael@cantor.informatik.rwth-aachen.de>
 0	beshort		0x76FF		squeezed data,
