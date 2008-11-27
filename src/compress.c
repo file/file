@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.58 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.59 2008/11/22 17:01:28 chl Exp $")
 #endif
 
 #include "magic.h"
@@ -77,6 +77,7 @@ private const struct {
 	{ "PK\3\4",   4, { "gzip", "-cdq", NULL }, 1 },		/* pkzipped, */
 					    /* ...only first file examined */
 	{ "BZh",      3, { "bzip2", "-cd", NULL }, 1 },		/* bzip2-ed */
+	{ "LZIP",     4, { "lzip", "-cdq", NULL }, 1 },
 };
 
 private size_t ncompr = sizeof(compr) / sizeof(compr[0]);
