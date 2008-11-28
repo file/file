@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.12 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.13 2008/11/28 17:08:28 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -297,35 +297,35 @@ cdf_read_sat(int fd, cdf_header_t *h, cdf_sat_t *sat)
 		if (cdf_read_sector(fd, sat->sat_tab, ss * i, ss, h,
 		    h->h_master_sat[i]) != (ssize_t)ss) {
 			DPRINTF(("Reading sector %d", h->h_master_sat[i]));
-			free(sat->sat_tab);
-			return -1;
+			goto out1;
 		}
 	}
 
 	if ((msa = calloc(1, ss)) == NULL)
-		return -1;
+		goto out1;
 
 	mid = h->h_secid_first_sector_in_master_sat;
 	for (j = 0; j < h->h_num_sectors_in_master_sat; j++) {
 		if (cdf_read_sector(fd, msa, 0, ss, h, mid) != (ssize_t)ss) {
 			DPRINTF(("Reading master sector %d", mid));
-			free(sat->sat_tab);
-			free(msa);
-			return -1;
+			goto out2;
 		}
 		for (k = 0; k < (ss / sizeof(mid)) - 1; k++, i++)
 			if (cdf_read_sector(fd, sat->sat_tab, ss * i, ss, h,
 			    CDF_TOLE4(msa[k])) != (ssize_t)ss) {
 				DPRINTF(("Reading sector %d",
 				    CDF_TOLE4(msa[k])));
-				free(sat->sat_tab);
-				free(msa);
-				return -1;
+				goto out2;
 			}
 		mid = CDF_TOLE4(msa[(ss / sizeof(mid)) - 1]);
 	}
 	free(msa);
 	return 0;
+out2:
+	free(msa);
+out1:
+	free(sat->sat_tab);
+	return -1;
 }
 
 size_t
@@ -461,6 +461,7 @@ cdf_read_dir(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 	if (NEED_SWAP)
 		for (i = 0; i < dir->dir_len; i++)
 			cdf_swap_dir(&dir->dir_tab[i]);
+	free(buf);
 	return 0;
 }
 
@@ -474,18 +475,18 @@ cdf_read_ssat(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 	cdf_secid_t sid = h->h_secid_first_sector_in_short_sat;
 
 	ssat->sat_len = cdf_count_chain(h, sat, sid);
-	if (sat->sat_len == (size_t)-1)
+	if (ssat->sat_len == (size_t)-1)
 		return -1;
 
 	ssat->sat_tab = calloc(ssat->sat_len, ss);
-	if (sat->sat_tab == NULL)
+	if (ssat->sat_tab == NULL)
 		return -1;
 
 	for (i = 0; sid >= 0; i++) {
 		if (cdf_read_sector(fd, ssat->sat_tab, i * ss, ss, h, sid) !=
 		    (ssize_t)ss) {
 			DPRINTF(("Reading short sat sector %d", sid));
-			free(sat->sat_tab);
+			free(ssat->sat_tab);
 			return -1;
 		}
 		sid = CDF_TOLE4(sat->sat_tab[sid]);
