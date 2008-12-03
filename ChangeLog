@@ -1,3 +1,10 @@
+2008-12-03 13:05  Christos Zoulas <christos@zoulas.com>
+
+	* fix memory botches on cdf file parsing.
+
+	* exit with non-zero value for any error, not just for the last
+	  file processed.
+
 2008-11-09 20:42  Charles Longeau <chl@tuxfamily.org>
 
 	* Replace all str{cpy,cat} functions with strl{cpy,cat}
