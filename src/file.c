@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.128 2008/11/06 21:17:45 rrt Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.129 2008/12/03 18:05:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -96,21 +96,45 @@ private int 		/* Global command-line options 		*/
 	nobuffer = 0,   /* Do not buffer stdout 		*/
 	nulsep = 0;	/* Append '\0' to the separator		*/
 
-private const char *magicfile;		/* where the magic is	*/
 private const char *default_magicfile = MAGIC;
 private const char *separator = ":";	/* Default field separator	*/
+private	const char hmagic[] = "/.magic";
+private const struct option long_options[] = {
+#define OPT(shortname, longname, opt, doc)      \
+    {longname, opt, NULL, shortname},
+#define OPT_LONGONLY(longname, opt, doc)        \
+    {longname, opt, NULL, 0},
+#include "file_opts.h"
+#undef OPT
+#undef OPT_LONGONLY
+    {0, 0, NULL, 0}
+};
+#define OPTSTRING	"bcCde:f:F:hikLm:nNprsvz0"
+
+private const struct {
+	const char *name;
+	int value;
+} nv[] = {
+	{ "apptype",	MAGIC_NO_CHECK_APPTYPE },
+	{ "ascii",	MAGIC_NO_CHECK_ASCII },
+	{ "cdf",	MAGIC_NO_CHECK_CDF },
+	{ "compress",	MAGIC_NO_CHECK_COMPRESS },
+	{ "elf",	MAGIC_NO_CHECK_ELF },
+	{ "encoding",	MAGIC_NO_CHECK_ENCODING },
+	{ "soft",	MAGIC_NO_CHECK_SOFT },
+	{ "tar",	MAGIC_NO_CHECK_TAR },
+	{ "tokens",	MAGIC_NO_CHECK_TOKENS },
+};
 
 private char *progname;		/* used throughout 		*/
 
-private struct magic_set *magic;
-
-private void unwrap(char *);
 private void usage(void);
 private void help(void);
-
 int main(int, char *[]);
-private void process(const char *, int);
-private void load(const char *, int);
+
+private int unwrap(struct magic_set *, const char *);
+private int process(struct magic_set *ms, const char *, int);
+private struct magic_set *load(const char *, int);
 
 
 /*
@@ -122,38 +146,12 @@ main(int argc, char *argv[])
 	int c;
 	size_t i;
 	int action = 0, didsomefiles = 0, errflg = 0;
-	int flags = 0;
+	int flags = 0, e = 0;
 	char *home, *usermagic;
-	static const char hmagic[] = "/.magic";
+	struct magic_set *magic = NULL;
 	char magicpath[2 * MAXPATHLEN + 2];
-#define OPTSTRING	"bcCde:f:F:hikLm:nNprsvz0"
 	int longindex;
-	static const struct option long_options[] =
-	{
-#define OPT(shortname, longname, opt, doc)      \
-    {longname, opt, NULL, shortname},
-#define OPT_LONGONLY(longname, opt, doc)        \
-    {longname, opt, NULL, 0},
-#include "file_opts.h"
-#undef OPT
-#undef OPT_LONGONLY
-    {0, 0, NULL, 0}
-};
-
-	static const struct {
-		const char *name;
-		int value;
-	} nv[] = {
-		{ "apptype",	MAGIC_NO_CHECK_APPTYPE },
-		{ "ascii",	MAGIC_NO_CHECK_ASCII },
-		{ "cdf",	MAGIC_NO_CHECK_CDF },
-		{ "compress",	MAGIC_NO_CHECK_COMPRESS },
-		{ "elf",	MAGIC_NO_CHECK_ELF },
-		{ "encoding",	MAGIC_NO_CHECK_ENCODING },
-		{ "soft",	MAGIC_NO_CHECK_SOFT },
-		{ "tar",	MAGIC_NO_CHECK_TAR },
-		{ "tokens",	MAGIC_NO_CHECK_TOKENS },
-	};
+	const char *magicfile;		/* where the magic is	*/
 
 	/* makes islower etc work for other langs */
 	(void)setlocale(LC_CTYPE, "");
@@ -233,8 +231,10 @@ main(int argc, char *argv[])
 		case 'f':
 			if(action)
 				usage();
-			load(magicfile, flags);
-			unwrap(optarg);
+			if (magic == NULL)
+				if ((magic = load(magicfile, flags)) == NULL)
+					return 1;
+			e |= unwrap(magic, optarg);
 			++didsomefiles;
 			break;
 		case 'F':
@@ -292,6 +292,8 @@ main(int argc, char *argv[])
 	if (errflg) {
 		usage();
 	}
+	if (e)
+		return e;
 
 	switch(action) {
 	case FILE_CHECK:
@@ -313,18 +315,19 @@ main(int argc, char *argv[])
 		if (c == -1) {
 			(void)fprintf(stderr, "%s: %s\n", progname,
 			    magic_error(magic));
-			return -1;
+			return 1;
 		}
 		return 0;
 	default:
-		load(magicfile, flags);
+		if (magic == NULL)
+			if ((magic = load(magicfile, flags)) == NULL)
+				return 1;
 		break;
 	}
 
 	if (optind == argc) {
-		if (!didsomefiles) {
+		if (!didsomefiles)
 			usage();
-		}
 	}
 	else {
 		size_t j, wid, nw;
@@ -341,42 +344,43 @@ main(int argc, char *argv[])
 			bflag = optind >= argc - 1;
 		}
 		for (; optind < argc; optind++)
-			process(argv[optind], wid);
+			e |= process(magic, argv[optind], wid);
 	}
 
-	c = (magic->event_flags & EVENT_HAD_ERR) ? 1 : 0;
-	magic_close(magic);
-	return c;
+	if (magic)
+		magic_close(magic);
+	return e;
 }
 
 
-private void
+private struct magic_set *
 /*ARGSUSED*/
-load(const char *m, int flags)
+load(const char *magicfile, int flags)
 {
-	if (magic || m == NULL)
-		return;
-	magic = magic_open(flags);
+	struct magic_set *magic = magic_open(flags);
 	if (magic == NULL) {
 		(void)fprintf(stderr, "%s: %s\n", progname, strerror(errno));
-		exit(1);
+		return NULL;
 	}
 	if (magic_load(magic, magicfile) == -1) {
 		(void)fprintf(stderr, "%s: %s\n",
 		    progname, magic_error(magic));
-		exit(1);
+		magic_close(magic);
+		return NULL;
 	}
+	return magic;
 }
 
 /*
  * unwrap -- read a file of filenames, do each one.
  */
-private void
-unwrap(char *fn)
+private int
+unwrap(struct magic_set *ms, const char *fn)
 {
 	char buf[MAXPATHLEN];
 	FILE *f;
 	int wid = 0, cwid;
+	int e = 0;
 
 	if (strcmp("-", fn) == 0) {
 		f = stdin;
@@ -385,7 +389,7 @@ unwrap(char *fn)
 		if ((f = fopen(fn, "r")) == NULL) {
 			(void)fprintf(stderr, "%s: Cannot open `%s' (%s).\n",
 			    progname, fn, strerror(errno));
-			exit(1);
+			return 1;
 		}
 
 		while (fgets(buf, sizeof(buf), f) != NULL) {
@@ -400,19 +404,20 @@ unwrap(char *fn)
 
 	while (fgets(buf, sizeof(buf), f) != NULL) {
 		buf[strcspn(buf, "\n")] = '\0';
-		process(buf, wid);
+		e |= process(ms, buf, wid);
 		if(nobuffer)
 			(void)fflush(stdout);
 	}
 
 	(void)fclose(f);
+	return e;
 }
 
 /*
  * Called for each input file on the command line (or in a list of files)
  */
-private void
-process(const char *inname, int wid)
+private int
+process(struct magic_set *ms, const char *inname, int wid)
 {
 	const char *type;
 	int std_in = strcmp(inname, "-") == 0;
@@ -427,11 +432,14 @@ process(const char *inname, int wid)
 		    (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
 	}
 
-	type = magic_file(magic, std_in ? NULL : inname);
-	if (type == NULL)
-		(void)printf("ERROR: %s\n", magic_error(magic));
-	else
+	type = magic_file(ms, std_in ? NULL : inname);
+	if (type == NULL) {
+		(void)printf("ERROR: %s\n", magic_error(ms));
+		return 1;
+	} else {
 		(void)printf("%s\n", type);
+		return 0;
+	}
 }
 
 size_t
