@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.12 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.13 2008/11/28 17:08:28 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -582,7 +582,7 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		inp = malloc(*maxcount * sizeof(*inp));
 	}
 	if (inp == NULL)
-		return -1;
+		goto out;
 	*info = inp;
 	inp += *count;
 	*count += sh.sh_properties;
@@ -604,18 +604,18 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			len = 4;
 		}
 		if (inp[i].pi_type & (CDF_ARRAY|CDF_BYREF|CDF_RESERVED))
-			goto out;
+			goto unknown;
 		switch (inp[i].pi_type & CDF_TYPEMASK) {
 		case CDF_SIGNED16:
 			if (inp[i].pi_type & CDF_VECTOR)
-				goto out;
+				goto unknown;
 			(void)memcpy(&s16, &q[o], sizeof(s16));
 			inp[i].pi_s16 = CDF_TOLE2(s16);
 			len += 4;
 			break;
 		case CDF_SIGNED32:
 			if (inp[i].pi_type & CDF_VECTOR)
-				goto out;
+				goto unknown;
 			(void)memcpy(&s32, &q[o], sizeof(s32));
 			inp[i].pi_s32 = CDF_TOLE4(s32);
 			len += 4;
@@ -623,17 +623,20 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		case CDF_BOOL:
 		case CDF_UNSIGNED32:
 			if (inp[i].pi_type & CDF_VECTOR)
-				goto out;
+				goto unknown;
 			(void)memcpy(&u32, &q[o], sizeof(u32));
 			inp[i].pi_u32 = CDF_TOLE4(u32);
 			len += 4;
 			break;
 		case CDF_LENGTH32_STRING:
 			if (nelements > 1) {
+				size_t nelem = inp - *info;
 				*maxcount += nelements;
 				inp = realloc(*info, *maxcount * sizeof(*inp));
 				if (inp == NULL)
-					return -1;
+					goto out;
+				*info = inp;
+				inp = *info + nelem;
 			}
 			DPRINTF(("nelements = %d\n", nelements));
 			for (j = 0; j < nelements; j++, i++) {
@@ -650,32 +653,33 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			break;
 		case CDF_FILETIME:
 			if (inp[i].pi_type & CDF_VECTOR)
-				goto out;
+				goto unknown;
 			(void)memcpy(&tp, &q[o], sizeof(tp));
 			inp[i].pi_tp = CDF_TOLE8(tp);
 			len += 8;
 			break;
 		case CDF_CLIPBOARD:
 			if (inp[i].pi_type & CDF_VECTOR)
-				goto out;
+				goto unknown;
 			len += 4 + CDF_ROUND(CDF_TOLE4(q[o]), 4);
 			break;
 		default:
-		out:
+		unknown:
 			len += 4;
 			DPRINTF(("Don't know how to deal with %x\n",
 			    inp[i].pi_type));
-			free(*info);
-			return -1;
+			goto out;
 		}
 		q = (const void *)(((const char *)q) + len);
 		if (q > e) {
 			DPRINTF(("Ran of the end %p > %p\n", q, e));
-			free(*info);
-			return -1;
+			goto out;
 		}
 	}
 	return 0;
+out:
+	free(*info);
+	return -1;
 }
 
 int
@@ -695,6 +699,7 @@ cdf_unpack_summary_info(const cdf_stream_t *sst, cdf_summary_info_header_t *ssi,
 	ssi->si_count = CDF_TOLE2(si->si_count);
 	*count = 0;
 	maxcount = 0;
+	*info = NULL;
 	for (i = 0; i < CDF_TOLE4(si->si_count); i++) {
 		if (cdf_read_property_info(sst, CDF_TOLE4(sd->sd_offset),
 		    info, count, &maxcount) == -1)
