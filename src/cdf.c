@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.14 2008/12/03 16:16:30 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.15 2008/12/03 22:49:41 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -151,10 +151,12 @@ cdf_swap_header(cdf_header_t *h)
 	h->h_short_sec_size_p2 = CDF_TOLE2(h->h_short_sec_size_p2);
 	h->h_num_sectors_in_sat = CDF_TOLE4(h->h_num_sectors_in_sat);
 	h->h_secid_first_directory = CDF_TOLE4(h->h_secid_first_directory);
-	h->h_min_size_standard_stream = CDF_TOLE4(h->h_min_size_standard_stream);
+	h->h_min_size_standard_stream =
+	    CDF_TOLE4(h->h_min_size_standard_stream);
 	h->h_secid_first_sector_in_short_sat =
 	    CDF_TOLE4(h->h_secid_first_sector_in_short_sat);
-	h->h_num_sectors_in_short_sat = CDF_TOLE4(h->h_num_sectors_in_short_sat);
+	h->h_num_sectors_in_short_sat =
+	    CDF_TOLE4(h->h_num_sectors_in_short_sat);
 	h->h_secid_first_sector_in_master_sat =
 	    CDF_TOLE4(h->h_secid_first_sector_in_master_sat);
 	h->h_num_sectors_in_master_sat =
@@ -246,6 +248,7 @@ cdf_read_header(int fd, cdf_header_t *h)
 	cdf_unpack_header(h, buf);
 	cdf_swap_header(h);
 	if (h->h_magic != CDF_MAGIC) {
+		DPRINTF(("Bad magic 0x%x != 0x$x\n", h->h_magic, CDF_MAGIC));
 		errno = EFTYPE;
 		return -1;
 	}
@@ -333,11 +336,13 @@ cdf_count_chain(const cdf_header_t *h, const cdf_sat_t *sat,
     cdf_secid_t sid)
 {
 	size_t i, s = CDF_SEC_SIZE(h) / sizeof(cdf_secid_t);
+	cdf_secid_t maxsector = (cdf_secid_t)(sat->sat_len * s);
 
 	DPRINTF(("Chain:"));
 	for (i = 0; sid >= 0; i++) {
 		DPRINTF((" %d", sid));
-		if (sid > (cdf_secid_t)(sat->sat_len * s)) {
+		if (sid > maxsector) {
+			DPRINTF(("Sector %d > %d\n", sid, maxsector));
 			errno = EFTYPE;
 			return (size_t)-1;
 		}
@@ -506,6 +511,7 @@ cdf_read_short_stream(int fd, const cdf_header_t *h, const cdf_sat_t *sat,
 			break;
 
 	if (i == dir->dir_len) {
+		DPRINTF(("Cannot find root storage node\n"));
 		errno = EFTYPE;
 		return -1;
 	}
@@ -547,6 +553,7 @@ cdf_read_summary_info(int fd, const cdf_header_t *h,
 			break;
 
 	if (i == dir->dir_len) {
+		DPRINTF(("Cannot find summary information section\n"));
 		errno = EFTYPE;
 		return -1;
 	}
@@ -565,8 +572,10 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	int16_t s16;
 	int32_t s32;
 	uint32_t u32;
+	int64_t s64;
+	uint64_t u64;
 	cdf_timestamp_t tp;
-	size_t i, len, o, nelements, j;
+	size_t i, o, nelements, j;
 	cdf_property_info_t *inp;
 
 	shp = (const void *)((const char *)sst->sst_tab + offs);
@@ -587,38 +596,41 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	inp += *count;
 	*count += sh.sh_properties;
 	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(sh));
-	q = p + (sh.sh_properties << 1);
 	e = (const void *)(((const char *)shp) + sh.sh_len);
 	for (i = 0; i < sh.sh_properties; i++) {
+		q = (const uint32_t *)((const char *)p +
+		    CDF_TOLE4(p[(i << 1) + 1])) - 2;
+		if (q > e) {
+			DPRINTF(("Ran of the end %p > %p\n", q, e));
+			goto out;
+		}
 		inp[i].pi_id = CDF_TOLE4(p[i << 1]);
 		inp[i].pi_type = CDF_TOLE4(q[0]);
-		DPRINTF(("%d) id=%x type=%x\n", i, inp[i].pi_id,
-		    inp[i].pi_type));
+		DPRINTF(("%d) id=%x type=%x offs=%x\n", i, inp[i].pi_id,
+		    inp[i].pi_type, (const char *)q - (const char *)p));
 		if (inp[i].pi_type & CDF_VECTOR) {
 			nelements = CDF_TOLE4(q[1]);
 			o = 2;
-			len = 12;
 		} else {
 			nelements = 1;
 			o = 1;
-			len = 4;
 		}
 		if (inp[i].pi_type & (CDF_ARRAY|CDF_BYREF|CDF_RESERVED))
 			goto unknown;
 		switch (inp[i].pi_type & CDF_TYPEMASK) {
+		case CDF_EMPTY:
+			break;
 		case CDF_SIGNED16:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
 			(void)memcpy(&s16, &q[o], sizeof(s16));
 			inp[i].pi_s16 = CDF_TOLE2(s16);
-			len += 4;
 			break;
 		case CDF_SIGNED32:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
 			(void)memcpy(&s32, &q[o], sizeof(s32));
 			inp[i].pi_s32 = CDF_TOLE4(s32);
-			len += 4;
 			break;
 		case CDF_BOOL:
 		case CDF_UNSIGNED32:
@@ -626,7 +638,18 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 				goto unknown;
 			(void)memcpy(&u32, &q[o], sizeof(u32));
 			inp[i].pi_u32 = CDF_TOLE4(u32);
-			len += 4;
+			break;
+		case CDF_SIGNED64:
+			if (inp[i].pi_type & CDF_VECTOR)
+				goto unknown;
+			(void)memcpy(&s64, &q[o], sizeof(s64));
+			inp[i].pi_s64 = CDF_TOLE4(s64);
+			break;
+		case CDF_UNSIGNED64:
+			if (inp[i].pi_type & CDF_VECTOR)
+				goto unknown;
+			(void)memcpy(&u64, &q[o], sizeof(u64));
+			inp[i].pi_u64 = CDF_TOLE4(u64);
 			break;
 		case CDF_LENGTH32_STRING:
 			if (nelements > 1) {
@@ -643,11 +666,11 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 				uint32_t l = CDF_TOLE4(q[o]);
 				inp[i].pi_str.s_len = l;
 				inp[i].pi_str.s_buf = (const char *)(&q[o+1]);
-				DPRINTF(("l = %d, s = %s\n", l,
+				DPRINTF(("l = %d, r = %d, s = %s\n", l,
+				    CDF_ROUND(l, sizeof(l)),
 				    inp[i].pi_str.s_buf));
 				l = 4 + CDF_ROUND(l, sizeof(l));
 				o += l >> 2;
-				len += l;
 			}
 			i--;
 			break;
@@ -656,23 +679,15 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 				goto unknown;
 			(void)memcpy(&tp, &q[o], sizeof(tp));
 			inp[i].pi_tp = CDF_TOLE8(tp);
-			len += 8;
 			break;
 		case CDF_CLIPBOARD:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
-			len += 4 + CDF_ROUND(CDF_TOLE4(q[o]), 4);
 			break;
 		default:
 		unknown:
-			len += 4;
 			DPRINTF(("Don't know how to deal with %x\n",
 			    inp[i].pi_type));
-			goto out;
-		}
-		q = (const void *)(((const char *)q) + len);
-		if (q > e) {
-			DPRINTF(("Ran of the end %p > %p\n", q, e));
 			goto out;
 		}
 	}

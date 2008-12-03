@@ -150,12 +150,16 @@ typedef struct {
 		int16_t		_pi_s16;
 		uint32_t	_pi_u32;
 		int32_t		_pi_s32;
+		uint64_t	_pi_u64;
+		int64_t		_pi_s64;
 		cdf_timestamp_t	_pi_tp;
 		struct {
 			uint32_t s_len;
 			const char *s_buf;
 		} _pi_str;
 	} pi_val;
+#define pi_u64	pi_val._pi_u64
+#define pi_s64	pi_val._pi_s64
 #define pi_u32	pi_val._pi_u32
 #define pi_s32	pi_val._pi_s32
 #define pi_u16	pi_val._pi_u16
