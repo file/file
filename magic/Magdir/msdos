@@ -578,6 +578,7 @@
 # From Stuart Caie <kyzer@4u.net> (developer of cabextract)
 # Microsoft Cabinet files
 0	string		MSCF\0\0\0\0	Microsoft Cabinet archive data
+!:mime application/vnd.ms-cab-compressed
 >8	lelong		x		\b, %u bytes
 >28	leshort		1		\b, 1 file
 >28	leshort		>1		\b, %u files
