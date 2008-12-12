@@ -1,3 +1,10 @@
+2008-12-12 15:50  Christos Zoulas <christos@zoulas.com>
+
+	* fix initial offset calculation for non 4K sector files
+
+	* add loop limits to avoid DoS attacks by constructing
+	  looping sector references.
+
 2008-12-03 13:05  Christos Zoulas <christos@zoulas.com>
 
 	* fix memory botches on cdf file parsing.
