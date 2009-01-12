@@ -1381,6 +1381,14 @@
 >0x10024        belong          x               (blocksize %d,
 >0x10060        string          >\0             lockproto %s)
 
+# BTRFS
+0x10040         string          _BHRfS_M        BTRFS Filesystem
+>0x1012b        string          >\0             (label "%s",
+>0x10090        lelong          x               sectorsize %d,
+>0x10094        lelong          x               nodesize %d,
+>0x10098        lelong          x               leafsize %d)
+
+
 # dvdisaster's .ecc
 # From: "Nelson A. de Oliveira" <naoliv@gmail.com>
 0	string	*dvdisaster*	dvdisaster error correction file
