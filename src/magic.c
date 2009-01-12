@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.56 2008/11/06 21:17:45 rrt Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.57 2008/11/22 17:01:28 chl Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -230,7 +230,7 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 #elif defined(HAVE_UTIME_H) || defined(HAVE_SYS_UTIME_H)
 		struct utimbuf  utbuf;
 
-		(void)memset(utbuf, 0, sizeof(utbuf));
+		(void)memset(&utbuf, 0, sizeof(utbuf));
 		utbuf.actime = sb->st_atime;
 		utbuf.modtime = sb->st_mtime;
 		(void) utime(name, &utbuf); /* don't care if loses */
