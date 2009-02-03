@@ -32,18 +32,14 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.128 2008/11/06 21:17:45 rrt Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.129 2008/12/03 18:05:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/param.h>	/* for MAXPATHLEN */
-#include <sys/stat.h>
 #ifdef RESTORE_TIME
 # if (__COHERENT__ >= 0x420)
 #  include <sys/utime.h>

@@ -108,11 +108,10 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.125 2008/10/30 10:43:49 rrt Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.6 2008/11/04 16:38:28 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>

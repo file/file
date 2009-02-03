@@ -33,14 +33,16 @@
  */
 
 #include "file.h"
+
+#ifndef	lint
+FILE_RCSID("@(#)$File: encoding.c,v 1.2 2008/11/06 22:49:08 rrt Exp $")
+#endif	/* lint */
+
 #include "magic.h"
 #include <string.h>
 #include <memory.h>
 #include <stdlib.h>
 
-#ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.1 2008/11/06 21:17:45 rrt Exp $")
-#endif	/* lint */
 
 private int looks_ascii(const unsigned char *, size_t, unichar *, size_t *);
 private int looks_utf8_with_BOM(const unsigned char *, size_t, unichar *,

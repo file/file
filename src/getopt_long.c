@@ -32,14 +32,13 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.46 2008/10/16 16:30:34 christos Exp $")
+FILE_RCSID("@(#)$File: getopt_long.c,v 1.4 2008/11/04 16:38:28 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
 #ifdef HAVE_ERR_H
 #include <err.h>
 #else
-#include <stdio.h>
 #define warnx printf
 #endif
 #include <errno.h>

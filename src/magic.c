@@ -28,18 +28,14 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.57 2008/11/22 17:01:28 chl Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.58 2009/01/12 20:15:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/param.h>	/* for MAXPATHLEN */
-#include <sys/stat.h>
 #ifdef QUICK
 #include <sys/mman.h>
 #endif

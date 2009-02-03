@@ -29,10 +29,8 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.11 2008/11/03 05:34:27 christos Exp $")
+FILE_RCSID("@(#)$File: asprintf.c,v 1.2 2008/11/04 16:38:28 christos Exp $")
 #endif
-
-#include <stdarg.h>
 
 int vasprintf(char **ptr, const char *format_string, va_list vargs);
 

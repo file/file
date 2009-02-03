@@ -35,18 +35,16 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.59 2008/11/22 17:01:28 chl Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.60 2008/11/27 22:16:54 christos Exp $")
 #endif
 
 #include "magic.h"
-#include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #include <string.h>
 #include <errno.h>
-#include <sys/types.h>
 #include <sys/ioctl.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
