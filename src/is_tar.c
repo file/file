@@ -40,13 +40,12 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.35 2008/11/07 18:57:28 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.36 2009/02/03 20:27:51 christos Exp $")
 #endif
 
 #include "magic.h"
 #include <string.h>
 #include <ctype.h>
-#include <sys/types.h>
 #include "tar.h"
 
 #define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )

@@ -32,27 +32,18 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.16 2008/12/12 20:53:02 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.17 2009/02/03 20:27:51 christos Exp $")
 #endif
 
 #include <assert.h>
-#include <stdio.h>
 #ifdef CDF_DEBUG
 #include <err.h>
 #endif
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
 
 #ifndef EFTYPE
 #define EFTYPE EINVAL

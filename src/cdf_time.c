@@ -27,23 +27,14 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf_time.c,v 1.4 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.5 2009/02/03 20:27:51 christos Exp $")
 #endif
 
-#include <sys/types.h>
-#include <stdio.h>
 #include <time.h>
 #ifdef TEST
 #include <err.h>
 #endif
 #include <string.h>
-#include <errno.h>
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
 
 #include "cdf.h"
 

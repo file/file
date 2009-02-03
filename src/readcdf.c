@@ -26,14 +26,11 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.10 2008/12/03 22:54:02 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.11 2009/02/03 20:27:51 christos Exp $")
 #endif
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <string.h>
 #include <time.h>
 #include <ctype.h>

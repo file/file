@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.58 2008/11/22 17:01:28 chl Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.59 2009/02/03 20:27:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -41,7 +41,6 @@ FILE_RCSID("@(#)$File: fsmagic.c,v 1.58 2008/11/22 17:01:28 chl Exp $")
 #include <unistd.h>
 #endif
 #include <stdlib.h>
-#include <sys/stat.h>
 /* Since major is a function on SVR4, we cannot use `ifndef major'.  */
 #ifdef MAJOR_IN_MKDEV
 # include <sys/mkdev.h>
