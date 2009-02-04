@@ -1,3 +1,7 @@
+2009-02-04 13:25  Christos Zoulas <christos@zoulas.com>
+
+	* fix OS/2 warnings.
+
 2008-12-12 15:50  Christos Zoulas <christos@zoulas.com>
 
 	* fix initial offset calculation for non 4K sector files
