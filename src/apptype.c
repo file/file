@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apptype.c,v 1.9 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: apptype.c,v 1.10 2009/02/03 20:27:51 christos Exp $")
 #endif /* lint */
 
 #include <stdlib.h>
@@ -76,7 +76,7 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const void *buf,
 		}
 		(void)fclose(fp);
 	}
-	rc = DosQueryAppType(path, &type);
+	rc = DosQueryAppType((unsigned char *)path, &type);
 
 	if (fn == NULL) {
 		unlink(path);

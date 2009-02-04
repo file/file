@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.58 2009/01/12 20:15:11 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.59 2009/02/03 20:27:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -73,12 +73,6 @@ FILE_RCSID("@(#)$File: magic.c,v 1.58 2009/01/12 20:15:11 christos Exp $")
 #define PIPE_BUF 512
 #endif
 #endif
-
-#ifdef __EMX__
-private char *apptypeName = NULL;
-protected int file_os2_apptype(struct magic_set *ms, const char *fn,
-    const void *buf, size_t nb);
-#endif /* __EMX__ */
 
 private void free_mlist(struct mlist *);
 private void close_and_restore(const struct magic_set *, const char *, int,
