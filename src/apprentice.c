@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.147 2009/02/03 20:27:51 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.148 2009/02/04 18:24:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -324,11 +324,15 @@ file_delmagic(struct magic *p, int type, size_t entries)
 	if (p == NULL)
 		return;
 	switch (type) {
-#ifdef QUICK
 	case 2:
+#ifdef QUICK
 		p--;
 		(void)munmap((void *)p, sizeof(*p) * (entries + 1));
 		break;
+#else
+		(void)&entries;
+		abort();
+		/*NOTREACHED*/
 #endif
 	case 1:
 		p--;
@@ -2084,7 +2088,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		file_oomem(ms, (size_t)st.st_size);
 		goto error1;
 	}
-	if (read(fd, mm, (size_t)st.st_size) != (size_t)st.st_size) {
+	if (read(fd, mm, (size_t)st.st_size) != (ssize_t)st.st_size) {
 		file_badread(ms);
 		goto error1;
 	}
