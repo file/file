@@ -2,6 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(file, 5.00, christos@astron.com)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
+#AC_CONFIG_MACRO_DIR([m4])
 
 AC_MSG_CHECKING(for builtin ELF support)
 AC_ARG_ENABLE(elf,
@@ -81,6 +82,8 @@ AC_STRUCT_TIMEZONE_DAYLIGHT
 AC_SYS_LARGEFILE
 AC_FUNC_FSEEKO
 AC_TYPE_MBSTATE_T
+
+AC_STRUCT_OPTION_GETOPT_H
 
 AC_CHECK_TYPES([uint8_t, uint16_t, uint32_t, int32_t, uint64_t, int64_t])
 AC_CHECK_SIZEOF(long long)

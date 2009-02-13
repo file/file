@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: getopt_long.c,v 1.4 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: getopt_long.c,v 1.5 2009/02/03 20:27:51 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -42,7 +42,7 @@ FILE_RCSID("@(#)$File: getopt_long.c,v 1.4 2008/11/04 16:38:28 christos Exp $")
 #define warnx printf
 #endif
 #include <errno.h>
-#ifdef HAVE_GETOPT_H
+#if defined(HAVE_GETOPT_H) && defined(HAVE_STRUCT_OPTION)
 #include <getopt.h>
 #else
 #include "mygetopt.h"

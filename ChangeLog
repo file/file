@@ -1,3 +1,9 @@
+2009-02-13 13:45  Christos Zoulas <christos@zoulas.com>
+
+	* look for struct option to determine if getopt.h is usable for IRIX.
+
+	* sanitize cdf document strings
+
 2009-02-04 13:25  Christos Zoulas <christos@zoulas.com>
 
 	* fix OS/2 warnings.
