@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.50 2008/11/07 17:27:22 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.51 2008/11/07 18:57:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -303,7 +303,10 @@ file_reset(struct magic_set *ms)
 		file_error(ms, 0, "no magic files loaded");
 		return -1;
 	}
-	ms->o.buf = NULL;
+	if (ms->o.buf) {
+		free(ms->o.buf);
+		ms->o.buf = NULL;
+	}
 	ms->event_flags &= ~EVENT_HAD_ERR;
 	ms->error = -1;
 	return 0;
