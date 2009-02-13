@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.11 2009/02/03 20:27:51 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.12 2009/02/13 18:46:48 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -75,9 +75,23 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 			if (len > 1) {
 				s = info[i].pi_str.s_buf;
 				if (NOTMIME(ms)) {
-					if (file_printf(ms, ", %s: %.*s", buf,
-					    len, s) == -1)
-						return -1;
+					char vbuf[1024];
+					size_t j;
+					for (j = 0; j < sizeof(vbuf) && len--;
+					    j++, s++) {
+						if (*s == '\0')
+							break;
+						if (isprint((unsigned char)*s))
+							vbuf[j] = *s;
+					}
+					if (j == sizeof(vbuf))
+						--j;
+					vbuf[j] = '\0';
+					if (vbuf[0]) {
+						if (file_printf(ms, ", %s: %s",
+						    buf, vbuf) == -1)
+							return -1;
+					}
 				} else if (info[i].pi_id == 
 					CDF_PROPERTY_NAME_OF_APPLICATION) {
 					if (strstr(s, "Word"))
