@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.148 2009/02/04 18:24:32 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.149 2009/02/10 16:17:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1716,8 +1716,7 @@ check_format(struct magic_set *ms, struct magic *m)
 		 * string is not one character long
 		 */
 		file_magwarn(ms, "Printf format `%c' is not valid for type "
-		    "`%s' in description `%s'",
-		    ptr && *ptr ? *ptr : '?',
+		    "`%s' in description `%s'", *ptr ? *ptr : '?',
 		    file_names[m->type], m->desc);
 		return -1;
 	}
