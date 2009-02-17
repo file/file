@@ -47,6 +47,7 @@ fi], [
   fsect=4
 ])
 
+AC_SUBST([pkgdatadir], ['$(datadir)/misc'])
 AC_SUBST(fsect)
 AM_CONDITIONAL(FSECT5, test x$fsect = x5)
 
