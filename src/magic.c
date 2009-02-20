@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.59 2009/02/03 20:27:51 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.60 2009/02/04 18:24:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -291,26 +291,10 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 
 		errno = 0;
 		if ((fd = open(inname, flags)) < 0) {
-#ifdef __CYGWIN__
-			/* FIXME: Do this with EXEEXT from autotools */
-			size_t len = strlen(inname) + 5;
-			char *tmp = alloca(len);
-			(void)strlcat(strlcpy(tmp, inname, len), ".exe", len);
-			if ((fd = open(tmp, flags)) < 0) {
-#endif
-				if (unreadable_info(ms, sb.st_mode,
-#ifdef __CYGWIN
-						    tmp
-#else
-						    inname
-#endif
-						    ) == -1)
-					goto done;
-				rv = 0;
+			if (unreadable_info(ms, sb.st_mode, inname) == -1)
 				goto done;
-#ifdef __CYGWIN__
-			}
-#endif
+			rv = 0;
+			goto done;
 		}
 #ifdef O_NONBLOCK
 		if ((flags = fcntl(fd, F_GETFL)) != -1) {
