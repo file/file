@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.18 2009/02/23 20:44:47 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.19 2009/02/23 20:51:55 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -239,7 +239,7 @@ cdf_read(const cdf_info_t *info, off_t off, void *buf, size_t len)
 
 	if (info->i_buf != NULL && info->i_len >= siz) {
 		(void)memcpy(buf, &info->i_buf[off], len);
-		return 0;
+		return (ssize_t)len;
 	}
 
 	if (info->i_fd == -1)
