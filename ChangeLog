@@ -1,3 +1,8 @@
+2009-02-23 15:45  Christos Zoulas <christos@zoulas.com>
+
+	* make the cdf code use the buffer first if available,
+	  and then the fd code.
+
 2009-02-13 13:45  Christos Zoulas <christos@zoulas.com>
 
 	* look for struct option to determine if getopt.h is usable for IRIX.
