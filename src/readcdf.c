@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.12 2009/02/13 18:46:48 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.13 2009/02/23 20:44:47 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -129,7 +129,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 		case CDF_CLIPBOARD:
 			break;
 		default:
-			file_error(ms, 0, "Internal parsing error");
+			errno = EFTYPE;
 			return -1;
 		}
 	}
@@ -197,66 +197,64 @@ protected int
 file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
     size_t nbytes)
 {
+	cdf_info_t info;
 	cdf_header_t h;
 	cdf_sat_t sat, ssat;
 	cdf_stream_t sst, scn;
 	cdf_dir_t dir;
 	int i;
-	(void)&nbytes;
-	(void)&buf;
+	const char *expn = "";
 
+	info.i_fd = fd;
+	info.i_buf = buf;
+	info.i_len = nbytes;
 	if (ms->flags & MAGIC_APPLE)
 		return 0;
-	if (cdf_read_header(fd, &h) == -1)
+	if (cdf_read_header(&info, &h) == -1)
 		return 0;
 #ifdef CDF_DEBUG
 	cdf_dump_header(&h);
 #endif
 
-	if (cdf_read_sat(fd, &h, &sat) == -1) {
-		file_error(ms, errno, "Can't read SAT");
+	if (cdf_read_sat(&info, &h, &sat) == -1) {
+		expn = "Can't read SAT";
 		return -1;
 	}
 #ifdef CDF_DEBUG
 	cdf_dump_sat("SAT", &h, &sat);
 #endif
 
-	if ((i = cdf_read_ssat(fd, &h, &sat, &ssat)) == -1) {
-		file_error(ms, errno, "Can't read SAT");
+	if ((i = cdf_read_ssat(&info, &h, &sat, &ssat)) == -1) {
+		expn = "Can't read SSAT";
 		goto out1;
 	}
 #ifdef CDF_DEBUG
 	cdf_dump_sat("SSAT", &h, &ssat);
 #endif
 
-	if ((i = cdf_read_dir(fd, &h, &sat, &dir)) == -1) {
-		file_error(ms, errno, "Can't read directory");
+	if ((i = cdf_read_dir(&info, &h, &sat, &dir)) == -1) {
+		expn = "Can't read directory";
 		goto out2;
 	}
 
-	if ((i = cdf_read_short_stream(fd, &h, &sat, &dir, &sst)) == -1) {
-		file_error(ms, errno, "Cannot read short stream");
+	if ((i = cdf_read_short_stream(&info, &h, &sat, &dir, &sst)) == -1) {
+		expn = "Cannot read short stream";
 		goto out3;
 	}
 
 #ifdef CDF_DEBUG
 	cdf_dump_dir(fd, &h, &sat, &ssat, &sst, &dir);
 #endif
-	if ((i = cdf_read_summary_info(fd, &h, &sat, &ssat, &sst, &dir, &scn))
-	    == -1) {
-		/* Some files don't have summary info! */
-#ifdef notyet
-		file_error(ms, errno, "Can't read summary_info");
-#else
-		i = 0;
-#endif
+	if ((i = cdf_read_summary_info(&info, &h, &sat, &ssat, &sst, &dir,
+	    &scn)) == -1) {
+		expn = "";
 		goto out4;
 	}
 #ifdef CDF_DEBUG
 	cdf_dump_summary_info(&h, &scn);
 #endif
 	if ((i = cdf_file_summary_info(ms, &scn)) == -1)
-		file_error(ms, errno, "Can't expand summary_info");
+		expn = "Can't expand summary_info";
 	free(scn.sst_tab);
 out4:
 	free(sst.sst_tab);
@@ -266,5 +264,13 @@ out2:
 	free(ssat.sat_tab);
 out1:
 	free(sat.sat_tab);
+	if (i != 1) {
+		if (file_printf(ms, "CDF V2 Document") == -1)
+			return -1;
+		if (*expn)
+			if (file_printf(ms, ", corrupt: %s", expn) == -1)
+				return -1;
+		i = 1;
+	}
 	return i;
 }
