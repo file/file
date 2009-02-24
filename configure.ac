@@ -120,7 +120,7 @@ typedef long int64_t;
 AC_MSG_CHECKING(for gcc compiler warnings)
 AC_ARG_ENABLE(warnings,
 [  --disable-warnings	disable compiler warnings],
-[if test "${enableval}" = no -o $GCC = no; then
+[if test "${enableval}" = no -o "$GCC" = no; then
    AC_MSG_RESULT(no)
    WARNINGS=
 else
@@ -130,7 +130,7 @@ else
        -Wsign-compare -Wreturn-type -Wswitch -Wshadow \
        -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter"
 fi], [
-if test $GCC = no; then
+if test "$GCC" = no; then
    WARNINGS=
    AC_MSG_RESULT(no)
 else
