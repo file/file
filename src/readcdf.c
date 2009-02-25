@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.13 2009/02/23 20:44:47 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.14 2009/02/25 14:01:25 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -129,7 +129,6 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 		case CDF_CLIPBOARD:
 			break;
 		default:
-			errno = EFTYPE;
 			return -1;
 		}
 	}
