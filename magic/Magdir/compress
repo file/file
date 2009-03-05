@@ -195,6 +195,9 @@
 # bug #364260)
 #0	string		]\000\000\200\000	LZMA compressed data
 
+# http://tukaani.org/xz/xz-file-format.txt
+0	ustring		\xFD7zXZ\x00		xz compressed data
+
 # AFX compressed files (Wolfram Kleff)
 2	string		-afx-		AFX compressed file data
 
