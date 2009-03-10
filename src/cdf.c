@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.19 2009/02/23 20:51:55 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.20 2009/03/10 11:44:29 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -257,8 +257,9 @@ cdf_read(const cdf_info_t *info, off_t off, void *buf, size_t len)
 int
 cdf_read_header(const cdf_info_t *info, cdf_header_t *h)
 {
-	(void)memcpy(cdf_bo.s, "\01\02\03\04", 4);
 	char buf[512];
+
+	(void)memcpy(cdf_bo.s, "\01\02\03\04", 4);
 	if (cdf_read(info, (off_t)0, buf, sizeof(buf)) == -1)
 		return -1;
 	cdf_unpack_header(h, buf);
@@ -415,7 +416,7 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 	return 0;
 out:
 	free(scn->sst_tab);
-	return (size_t)-1;
+	return -1;
 }
 
 int
@@ -450,7 +451,7 @@ cdf_read_short_sector_chain(const cdf_header_t *h,
 	return 0;
 out:
 	free(scn->sst_tab);
-	return (size_t)-1;
+	return -1;
 }
 
 int

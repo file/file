@@ -1,3 +1,7 @@
+2009-03-10  7:45  Christos Zoulas <christos@zoulas.com>
+
+	* avoid c99 syntax.
+
 2009-02-23 15:45  Christos Zoulas <christos@zoulas.com>
 
 	* make the cdf code use the buffer first if available,
