@@ -1,3 +1,7 @@
+2009-03-10  16:50  Christos Zoulas <christos@zoulas.com>
+
+	* don't use strlen in strndup() (Toby Peterson)
+
 2009-03-10  7:45  Christos Zoulas <christos@zoulas.com>
 
 	* avoid c99 syntax.

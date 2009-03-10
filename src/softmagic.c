@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.132 2008/11/07 18:57:28 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.133 2008/11/07 22:50:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -338,14 +338,13 @@ strndup(const char *str, size_t n)
 	size_t len;
 	char *copy;
 
-	len = strlen(str);
-	if (len > n)
-		len = n;
-	if (!(copy = malloc(len + 1)))
-		return (NULL);
-	(void) memcpy(copy, str, len + 1);
+	for (len = 0; len < n && str[len]; len++)
+		continue;
+	if ((copy = malloc(len + 1)) == NULL)
+		return NULL;
+	(void)memcpy(copy, str, len);
 	copy[len] = '\0';
-	return (copy);
+	return copy;
 }
 #endif /* HAVE_STRNDUP */
 
