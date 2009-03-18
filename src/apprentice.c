@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.150 2009/02/17 16:29:03 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.151 2009/03/18 15:19:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -89,8 +89,8 @@ const size_t file_nnames = FILE_NAMES_SIZE;
 
 private int getvalue(struct magic_set *ms, struct magic *, const char **, int);
 private int hextoint(int);
-private const char *getstr(struct magic_set *, const char *, char *, int,
-    int *, int);
+private const char *getstr(struct magic_set *, struct magic *, const char *,
+    int);
 private int parse(struct magic_set *, struct magic_entry **, uint32_t *,
     const char *, size_t, int);
 private void eatsize(const char **);
@@ -1741,8 +1741,6 @@ check_format(struct magic_set *ms, struct magic *m)
 private int
 getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 {
-	int slen;
-
 	switch (m->type) {
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
@@ -1750,16 +1748,13 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 	case FILE_PSTRING:
 	case FILE_REGEX:
 	case FILE_SEARCH:
-		*p = getstr(ms, *p, m->value.s, sizeof(m->value.s), &slen, action);
+		*p = getstr(ms, m, *p, action == FILE_COMPILE);
 		if (*p == NULL) {
 			if (ms->flags & MAGIC_CHECK)
 				file_magwarn(ms, "cannot get string from `%s'",
 				    m->value.s);
 			return -1;
 		}
-		m->vallen = slen;
-		if (m->type == FILE_PSTRING)
-			m->vallen++;
 		return 0;
 	case FILE_FLOAT:
 	case FILE_BEFLOAT:
@@ -1798,13 +1793,15 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 /*
  * Convert a string containing C character escapes.  Stop at an unescaped
  * space or tab.
- * Copy the converted version to "p", returning its length in *slen.
- * Return updated scan pointer as function result.
+ * Copy the converted version to "m->value.s", and the length in m->vallen.
+ * Return updated scan pointer as function result. Warn if set.
  */
 private const char *
-getstr(struct magic_set *ms, const char *s, char *p, int plen, int *slen, int action)
+getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 {
 	const char *origs = s;
+	char	*p = m->value.s;
+	size_t  plen = sizeof(m->value.s);
 	char 	*origp = p;
 	char	*pmax = p + plen - 1;
 	int	c;
@@ -1821,25 +1818,33 @@ getstr(struct magic_set *ms, const char *s, char *p, int plen, int *slen, int ac
 			switch(c = *s++) {
 
 			case '\0':
-				if (action == FILE_COMPILE)
+				if (warn)
 					file_magwarn(ms, "incomplete escape");
 				goto out;
 
 			case '\t':
-				if (action == FILE_COMPILE) {
+				if (warn) {
 					file_magwarn(ms,
 					    "escaped tab found, use \\t instead");
-					action++;
+					warn = 0;	/* already did */
 				}
 				/*FALLTHROUGH*/
 			default:
-				if (action == FILE_COMPILE) {
-					if (isprint((unsigned char)c))
-					    file_magwarn(ms,
-						"no need to escape `%c'", c);
-					else
-					    file_magwarn(ms,
-						"unknown escape sequence: \\%03o", c);
+				if (warn) {
+					if (isprint((unsigned char)c)) {
+						/* Allow escaping of 
+						 * ``relations'' */
+						if (strchr("<>&^=!", c)
+						    == NULL) {
+							file_magwarn(ms, "no "
+							    "need to escape "
+							    "`%c'", c);
+						}
+					} else {
+						file_magwarn(ms,
+						    "unknown escape sequence: "
+						    "\\%03o", c);
+					}
 				}
 				/*FALLTHROUGH*/
 			/* space, perhaps force people to use \040? */
@@ -1938,7 +1943,9 @@ getstr(struct magic_set *ms, const char *s, char *p, int plen, int *slen, int ac
 	}
 out:
 	*p = '\0';
-	*slen = p - origp;
+	m->vallen = p - origp;
+	if (m->type == FILE_PSTRING)
+		m->vallen++;
 	return s;
 }
 
