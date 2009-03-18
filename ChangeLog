@@ -1,3 +1,11 @@
+2009-03-18  16:50  Christos Zoulas <christos@zoulas.com>
+
+	* Allow escaping of relation characters, so that we can say \^[A-Z]
+	  and the ^ is not eaten as a relation char.
+
+	* Fix troff and fortran to their previous glory using
+	  regex. This was broken since their removel from ascmagic.
+
 2009-03-10  16:50  Christos Zoulas <christos@zoulas.com>
 
 	* don't use strlen in strndup() (Toby Peterson)
