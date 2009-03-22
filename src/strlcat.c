@@ -17,6 +17,7 @@
  */
 
 /* OPENBSD ORIGINAL: lib/libc/string/strlcat.c */
+#include "file.h"
 
 #include <sys/types.h>
 #include <string.h>
