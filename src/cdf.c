@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.20 2009/03/10 11:44:29 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.21 2009/03/22 23:27:33 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -232,7 +232,7 @@ cdf_read(const cdf_info_t *info, off_t off, void *buf, size_t len)
 {
 	size_t siz = (size_t)off + len;
 
-	if (off + len != (off_t)siz) {
+	if ((off_t)(off + len) != (off_t)siz) {
 		errno = EINVAL;
 		return -1;
 	}
