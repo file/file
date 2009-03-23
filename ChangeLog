@@ -1,3 +1,8 @@
+2009-03-23  10:20  Christos Zoulas <christos@zoulas.com>
+
+	* Avoid file descriptor leak in compress code from
+	  Daniel Novotny
+
 2009-03-18  16:50  Christos Zoulas <christos@zoulas.com>
 
 	* Allow escaping of relation characters, so that we can say \^[A-Z]
