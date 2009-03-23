@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.62 2009/03/05 22:40:28 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.63 2009/03/23 14:21:51 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -487,6 +487,8 @@ err:
 #else
 		(void)wait(NULL);
 #endif
+		(void) close(fdin[0]);
+	    
 		return n;
 	}
 }
