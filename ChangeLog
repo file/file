@@ -1,3 +1,8 @@
+2009-03-27  18:43  Christos Zoulas <christos@zoulas.com>
+
+	* don't print \012- separators in the same magic entry 
+	  if it consists of multiple magic printing lines.
+
 2009-03-23  10:20  Christos Zoulas <christos@zoulas.com>
 
 	* Avoid file descriptor leak in compress code from
