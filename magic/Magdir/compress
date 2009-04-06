@@ -197,6 +197,7 @@
 
 # http://tukaani.org/xz/xz-file-format.txt
 0	ustring		\xFD7zXZ\x00		xz compressed data
+!:mime	application/x-xz
 
 # AFX compressed files (Wolfram Kleff)
 2	string		-afx-		AFX compressed file data
