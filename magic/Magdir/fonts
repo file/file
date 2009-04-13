@@ -6,10 +6,9 @@
 0	short		017001		byte-swapped Berkeley vfont data
 
 # PostScript fonts (must precede "printer" entries), quinlan@yggdrasil.com
-0	search/1	%!PS-AdobeFont-1.	PostScript Type 1 font text
->20	search/1	>\0			(%s)
+0	string		%!PS-AdobeFont-1.	PostScript Type 1 font text
+>20	string		>\0			(%s)
 6	string		%!PS-AdobeFont-1.	PostScript Type 1 font program data
-#0	string		%!PS-AdobeFont-1.	PostScript Type 1 font text
 
 # X11 font files in SNF (Server Natural Format) format
 0	belong		00000004		X11 SNF font data, MSB first
