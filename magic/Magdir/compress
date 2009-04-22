@@ -212,3 +212,8 @@
 >4	byte		x		- version %d
 >5	byte		x		\b.%d
 >6	belong		x		(%d bytes)
+
+# Type: XZ
+# URL: http://tukaani.org/xz/
+0	string		\xfd\x37\x7a\x58\x5a\x00	XZ compressed data
+!:mime application/x-xz
