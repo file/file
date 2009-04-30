@@ -1,3 +1,8 @@
+2009-04-30  17:10  Christos Zoulas <christos@zoulas.com>
+
+	* Fix more cdf lossage. All the documents I have
+	  right now print the correct information.
+
 2009-03-27  18:43  Christos Zoulas <christos@zoulas.com>
 
 	* don't print \012- separators in the same magic entry 
