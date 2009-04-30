@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.14 2009/02/25 14:01:25 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.15 2009/04/30 21:03:26 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -220,7 +220,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 		return -1;
 	}
 #ifdef CDF_DEBUG
-	cdf_dump_sat("SAT", &h, &sat);
+	cdf_dump_sat("SAT", &sat, CDF_SEC_SIZE(&h));
 #endif
 
 	if ((i = cdf_read_ssat(&info, &h, &sat, &ssat)) == -1) {
@@ -228,7 +228,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 		goto out1;
 	}
 #ifdef CDF_DEBUG
-	cdf_dump_sat("SSAT", &h, &ssat);
+	cdf_dump_sat("SSAT", &ssat, CDF_SHORT_SEC_SIZE(&h));
 #endif
 
 	if ((i = cdf_read_dir(&info, &h, &sat, &dir)) == -1) {
@@ -240,10 +240,10 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 		expn = "Cannot read short stream";
 		goto out3;
 	}
-
 #ifdef CDF_DEBUG
-	cdf_dump_dir(fd, &h, &sat, &ssat, &sst, &dir);
+	cdf_dump_dir(&info, &h, &sat, &ssat, &sst, &dir);
 #endif
+
 	if ((i = cdf_read_summary_info(&info, &h, &sat, &ssat, &sst, &dir,
 	    &scn)) == -1) {
 		expn = "";

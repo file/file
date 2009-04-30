@@ -262,8 +262,7 @@ ssize_t cdf_read_sector(const cdf_info_t *, void *, size_t, size_t,
 ssize_t cdf_read_short_sector(const cdf_stream_t *, void *, size_t, size_t,
     const cdf_header_t *, cdf_secid_t);
 int cdf_read_sat(const cdf_info_t *, cdf_header_t *, cdf_sat_t *);
-size_t cdf_count_chain(const cdf_header_t *, const cdf_sat_t *,
-    cdf_secid_t);
+size_t cdf_count_chain(const cdf_sat_t *, cdf_secid_t, size_t);
 int cdf_read_long_sector_chain(const cdf_info_t *, const cdf_header_t *,
     const cdf_sat_t *, cdf_secid_t, size_t, cdf_stream_t *);
 int cdf_read_short_sector_chain(const cdf_header_t *, const cdf_sat_t *,
@@ -293,7 +292,7 @@ uint64_t cdf_tole8(uint64_t);
 
 #ifdef CDF_DEBUG
 void cdf_dump_header(const cdf_header_t *);
-void cdf_dump_sat(const char *, const cdf_header_t *, const cdf_sat_t *);
+void cdf_dump_sat(const char *, const cdf_sat_t *, size_t);
 void cdf_dump(void *, size_t);
 void cdf_dump_stream(const cdf_header_t *, const cdf_stream_t *);
 void cdf_dump_dir(const cdf_info_t *, const cdf_header_t *, const cdf_sat_t *,
