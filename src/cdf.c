@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.22 2009/04/30 21:03:26 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.23 2009/05/01 22:36:58 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -309,6 +309,13 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 		if (h->h_master_sat[i] == CDF_SECID_FREE)
 			break;
 
+	if (h->h_num_sectors_in_master_sat > UINT32_MAX / 2) {
+		DPRINTF(("Number of sectors in master SAT too big %u\n",
+		    h->h_num_sectors_in_master_sat));
+		errno = EFTYPE;
+		return -1;
+	}
+
 	sat->sat_len = h->h_num_sectors_in_master_sat + i;
 	DPRINTF(("sat_len = %zu ss = %zu\n", sat->sat_len, ss));
 	if ((sat->sat_tab = calloc(sat->sat_len, ss)) == NULL)
@@ -339,6 +346,12 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 			goto out2;
 		}
 		for (k = 0; k < nsatpersec; k++, i++) {
+			if (i >= sat->sat_len) {
+			    DPRINTF(("Out of bounds reading MSA %u >= %u",
+				i, sat->sat_len));
+			    errno = EFTYPE;
+			    goto out2;
+			}
 			if (cdf_read_sector(info, sat->sat_tab, ss * i, ss, h,
 			    CDF_TOLE4(msa[k])) != (ssize_t)ss) {
 				DPRINTF(("Reading sector %d",
@@ -399,6 +412,17 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 		return -1;
 
 	for (j = i = 0; sid >= 0; i++, j++) {
+		if (j >= CDF_LOOP_LIMIT) {
+			DPRINTF(("Read long sector chain loop limit"));
+			errno = EFTYPE;
+			goto out;
+		}
+		if (i >= scn->sst_len) {
+			DPRINTF(("Out of bounds reading long sector chain "
+			    "%u > %u\n", i, scn->sst_len));
+			errno = EFTYPE;
+			goto out;
+		}
 		if ((nr = cdf_read_sector(info, scn->sst_tab, i * ss, ss, h,
 		    sid)) != (ssize_t)ss) {
 			if (i == scn->sst_len - 1 && nr > 0) {
@@ -409,11 +433,6 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 			goto out;
 		}
 		sid = CDF_TOLE4(sat->sat_tab[sid]);
-		if (j >= CDF_LOOP_LIMIT) {
-			DPRINTF(("Read long sector chain loop limit"));
-			errno = EFTYPE;
-			goto out;
-		}
 	}
 	return 0;
 out:
@@ -440,6 +459,12 @@ cdf_read_short_sector_chain(const cdf_header_t *h,
 	for (j = i = 0; sid >= 0; i++, j++) {
 		if (j >= CDF_LOOP_LIMIT) {
 			DPRINTF(("Read short sector chain loop limit"));
+			errno = EFTYPE;
+			goto out;
+		}
+		if (i >= scn->sst_len) {
+			DPRINTF(("Out of bounds reading short sector chain "
+			    "%u > %u\n", i, scn->sst_len));
 			errno = EFTYPE;
 			goto out;
 		}
@@ -544,6 +569,12 @@ cdf_read_ssat(const cdf_info_t *info, const cdf_header_t *h,
 			errno = EFTYPE;
 			goto out;
 		}
+		if (i >= ssat->sat_len) {
+			DPRINTF(("Out of bounds reading short sector chain "
+			    "%u > %u\n", i, scn->sst_len));
+			errno = EFTYPE;
+			goto out;
+		}
 		if (cdf_read_sector(info, ssat->sat_tab, i * ss, ss, h, sid) !=
 		    (ssize_t)ss) {
 			DPRINTF(("Reading short sat sector %d", sid));
@@ -640,6 +671,8 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	shp = (const void *)((const char *)sst->sst_tab + offs);
 	sh.sh_len = CDF_TOLE4(shp->sh_len);
 	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
+	if (sh.sh_properties > UINT32_MAX / 4)
+		goto out;
 	DPRINTF(("section len: %d properties %d\n", sh.sh_len,
 	    sh.sh_properties));
 	if (*maxcount) {
@@ -713,6 +746,9 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		case CDF_LENGTH32_STRING:
 			if (nelements > 1) {
 				size_t nelem = inp - *info;
+				if (*maxcount > UINT32_MAX / 2 ||
+				    nelements > UINT32_MAX / 4)
+					goto out;
 				*maxcount += nelements;
 				inp = realloc(*info, *maxcount * sizeof(*inp));
 				if (inp == NULL)
