@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.14 2009/02/25 14:01:25 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.15 2009/04/30 21:03:26 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -215,9 +215,9 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 	cdf_dump_header(&h);
 #endif
 
-	if (cdf_read_sat(&info, &h, &sat) == -1) {
+	if ((i = cdf_read_sat(&info, &h, &sat)) == -1) {
 		expn = "Can't read SAT";
-		return -1;
+		goto out0;
 	}
 #ifdef CDF_DEBUG
 	cdf_dump_sat("SAT", &sat, CDF_SEC_SIZE(&h));
@@ -263,6 +263,7 @@ out2:
 	free(ssat.sat_tab);
 out1:
 	free(sat.sat_tab);
+out0:
 	if (i != 1) {
 		if (file_printf(ms, "CDF V2 Document") == -1)
 			return -1;
