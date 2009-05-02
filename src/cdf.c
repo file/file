@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.24 2009/05/02 00:04:14 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.25 2009/05/02 16:36:17 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -302,7 +302,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 {
 	size_t i, j, k;
 	size_t ss = CDF_SEC_SIZE(h);
-	cdf_secid_t *msa, mid;
+	cdf_secid_t *msa, mid, sec;
 	size_t nsatpersec = (ss / sizeof(mid)) - 1;
 
 	for (i = 0; i < __arraycount(h->h_master_sat); i++)
@@ -311,14 +311,14 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 
 #define CDF_SEC_LIMIT (UINT32_MAX / (4 * ss))
 	if (h->h_num_sectors_in_master_sat > CDF_SEC_LIMIT ||
-	    i > CDF_SEC_LIMIT) {
+	    i > CDF_SEC_LIMIT / nsatpersec) {
 		DPRINTF(("Number of sectors in master SAT too big %u %zu\n",
 		    h->h_num_sectors_in_master_sat, i));
 		errno = EFTYPE;
 		return -1;
 	}
 
-	sat->sat_len = h->h_num_sectors_in_master_sat + i;
+	sat->sat_len = h->h_num_sectors_in_master_sat + i * nsatpersec;
 	DPRINTF(("sat_len = %zu ss = %zu\n", sat->sat_len, ss));
 	if ((sat->sat_tab = calloc(sat->sat_len, ss)) == NULL)
 		return -1;
@@ -348,6 +348,11 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 			goto out2;
 		}
 		for (k = 0; k < nsatpersec; k++, i++) {
+			sec = CDF_TOLE4(msa[k]);
+			if (sec < 0) {
+				sat->sat_len = i;
+				break;
+			}
 			if (i >= sat->sat_len) {
 			    DPRINTF(("Out of bounds reading MSA %u >= %u",
 				i, sat->sat_len));
@@ -355,7 +360,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 			    goto out2;
 			}
 			if (cdf_read_sector(info, sat->sat_tab, ss * i, ss, h,
-			    CDF_TOLE4(msa[k])) != (ssize_t)ss) {
+			    sec) != (ssize_t)ss) {
 				DPRINTF(("Reading sector %d",
 				    CDF_TOLE4(msa[k])));
 				goto out2;
@@ -573,7 +578,7 @@ cdf_read_ssat(const cdf_info_t *info, const cdf_header_t *h,
 		}
 		if (i >= ssat->sat_len) {
 			DPRINTF(("Out of bounds reading short sector chain "
-			    "%u > %u\n", i, scn->sst_len));
+			    "%u > %u\n", i, ssat->sat_len));
 			errno = EFTYPE;
 			goto out;
 		}
