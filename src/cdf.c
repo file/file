@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.22 2009/04/30 21:03:26 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.23 2009/05/01 22:36:58 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -309,9 +309,11 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 		if (h->h_master_sat[i] == CDF_SECID_FREE)
 			break;
 
-	if (h->h_num_sectors_in_master_sat > UINT32_MAX / 2) {
-		DPRINTF(("Number of sectors in master SAT too big %u\n",
-		    h->h_num_sectors_in_master_sat));
+#define CDF_SEC_LIMIT (UINT32_MAX / (4 * ss))
+	if (h->h_num_sectors_in_master_sat > CDF_SEC_LIMIT ||
+	    i > CDF_SEC_LIMIT) {
+		DPRINTF(("Number of sectors in master SAT too big %u %zu\n",
+		    h->h_num_sectors_in_master_sat, i));
 		errno = EFTYPE;
 		return -1;
 	}
@@ -671,11 +673,14 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	shp = (const void *)((const char *)sst->sst_tab + offs);
 	sh.sh_len = CDF_TOLE4(shp->sh_len);
 	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
-	if (sh.sh_properties > UINT32_MAX / 4)
+#define CDF_PROP_LIM (UINT32_MAX / (4 * sizeof(*inp)))
+	if (sh.sh_properties > CDF_PROP_LIM)
 		goto out;
-	DPRINTF(("section len: %d properties %d\n", sh.sh_len,
+	DPRINTF(("section len: %u properties %u\n", sh.sh_len,
 	    sh.sh_properties));
 	if (*maxcount) {
+		if (*maxcount > CDF_PROP_LIM)
+			goto out;
 		*maxcount += sh.sh_properties;
 		inp = realloc(*info, *maxcount * sizeof(*inp));
 	} else {
@@ -746,8 +751,8 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		case CDF_LENGTH32_STRING:
 			if (nelements > 1) {
 				size_t nelem = inp - *info;
-				if (*maxcount > UINT32_MAX / 2 ||
-				    nelements > UINT32_MAX / 4)
+				if (*maxcount > CDF_PROP_LIM
+				    || nelements > CDF_PROP_LIM)
 					goto out;
 				*maxcount += nelements;
 				inp = realloc(*info, *maxcount * sizeof(*inp));
