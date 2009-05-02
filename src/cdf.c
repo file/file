@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.25 2009/05/02 16:36:17 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.26 2009/05/02 20:06:55 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -268,10 +268,21 @@ cdf_read_header(const cdf_info_t *info, cdf_header_t *h)
 		DPRINTF(("Bad magic 0x%llx != 0x%llx\n",
 		    (unsigned long long)h->h_magic,
 		    (unsigned long long)CDF_MAGIC));
-		errno = EFTYPE;
-		return -1;
+		goto out;
+	}
+	if (h->h_sec_size_p2 > 20) {
+		DPRINTF(("Bad sector size 0x%u\n", h->h_sec_size_p2));
+		goto out;
+	}
+	if (h->h_short_sec_size_p2 > 20) {
+		DPRINTF(("Bad short sector size 0x%u\n",
+		    h->h_short_sec_size_p2));
+		goto out;
 	}
 	return 0;
+out:
+	errno = EFTYPE;
+	return -1;
 }
 
 
