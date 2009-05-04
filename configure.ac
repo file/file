@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(file, 5.01, christos@astron.com)
+AC_INIT(file, 5.02, christos@astron.com)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 #AC_CONFIG_MACRO_DIR([m4])
