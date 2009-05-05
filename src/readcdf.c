@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.15 2009/04/30 21:03:26 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.16 2009/05/01 22:36:58 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -246,7 +246,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 
 	if ((i = cdf_read_summary_info(&info, &h, &sat, &ssat, &sst, &dir,
 	    &scn)) == -1) {
-		expn = "";
+		expn = "Cannot read summary info";
 		goto out4;
 	}
 #ifdef CDF_DEBUG
