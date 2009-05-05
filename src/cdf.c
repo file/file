@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.26 2009/05/02 20:06:55 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.27 2009/05/05 22:48:51 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -227,6 +227,19 @@ cdf_unpack_dir(cdf_directory_t *d, char *buf)
 	CDF_UNPACK(d->d_unused0);
 }
 
+static int
+cdf_check_stream_offset(const cdf_stream_t *sst, const void *p, size_t tail)
+{
+	const char *b = (const char *)sst->sst_tab;
+	const char *e = ((const char *)p) + tail;
+	if ((size_t)(e - b) < sst->sst_dirlen * sst->sst_len)
+		return 0;
+	DPRINTF((stderr, "offset begin %p end %p %zu >= %zu\n", b, e,
+	    (size_t)(e - b), sst->sst_dirlen * sst->sst_len));
+	errno = EFTYPE;
+	return -1;
+}
+
 static ssize_t
 cdf_read(const cdf_info_t *info, off_t off, void *buf, size_t len)
 {
@@ -321,15 +334,15 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 			break;
 
 #define CDF_SEC_LIMIT (UINT32_MAX / (4 * ss))
-	if (h->h_num_sectors_in_master_sat > CDF_SEC_LIMIT ||
-	    i > CDF_SEC_LIMIT / nsatpersec) {
+	if (h->h_num_sectors_in_master_sat > CDF_SEC_LIMIT / nsatpersec ||
+	    i > CDF_SEC_LIMIT) {
 		DPRINTF(("Number of sectors in master SAT too big %u %zu\n",
 		    h->h_num_sectors_in_master_sat, i));
 		errno = EFTYPE;
 		return -1;
 	}
 
-	sat->sat_len = h->h_num_sectors_in_master_sat + i * nsatpersec;
+	sat->sat_len = h->h_num_sectors_in_master_sat * nsatpersec + i;
 	DPRINTF(("sat_len = %zu ss = %zu\n", sat->sat_len, ss));
 	if ((sat->sat_tab = calloc(sat->sat_len, ss)) == NULL)
 		return -1;
@@ -349,6 +362,8 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 
 	mid = h->h_secid_first_sector_in_master_sat;
 	for (j = 0; j < h->h_num_sectors_in_master_sat; j++) {
+		if (mid < 0)
+			goto out;
 		if (j >= CDF_LOOP_LIMIT) {
 			DPRINTF(("Reading master sector loop limit"));
 			errno = EFTYPE;
@@ -360,10 +375,8 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 		}
 		for (k = 0; k < nsatpersec; k++, i++) {
 			sec = CDF_TOLE4(msa[k]);
-			if (sec < 0) {
-				sat->sat_len = i;
-				break;
-			}
+			if (sec < 0)
+				goto out;
 			if (i >= sat->sat_len) {
 			    DPRINTF(("Out of bounds reading MSA %u >= %u",
 				i, sat->sat_len));
@@ -379,6 +392,8 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 		}
 		mid = CDF_TOLE4(msa[nsatpersec]);
 	}
+out:
+	sat->sat_len = i;
 	free(msa);
 	return 0;
 out2:
@@ -686,8 +701,19 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	size_t i, o, nelements, j;
 	cdf_property_info_t *inp;
 
+	if (offs > UINT32_MAX / 4) {
+		errno = EFTYPE;
+		goto out;
+	}
 	shp = (const void *)((const char *)sst->sst_tab + offs);
+	if (cdf_check_stream_offset(sst, shp, sizeof(*shp)) == -1)
+		goto out;
 	sh.sh_len = CDF_TOLE4(shp->sh_len);
+#define CDF_SHLEN_LIM (UINT32_MAX / 8)
+	if (sh.sh_len > CDF_SHLEN_LIM) {
+		errno = EFTYPE;
+		goto out;
+	}
 	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
 #define CDF_PROP_LIM (UINT32_MAX / (4 * sizeof(*inp)))
 	if (sh.sh_properties > CDF_PROP_LIM)
@@ -710,6 +736,8 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	*count += sh.sh_properties;
 	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(sh));
 	e = (const void *)(((const char *)shp) + sh.sh_len);
+	if (cdf_check_stream_offset(sst, e, 0) == -1)
+		goto out;
 	for (i = 0; i < sh.sh_properties; i++) {
 		q = (const uint32_t *)((const char *)p +
 		    CDF_TOLE4(p[(i << 1) + 1])) - 2;
@@ -822,6 +850,9 @@ cdf_unpack_summary_info(const cdf_stream_t *sst, cdf_summary_info_header_t *ssi,
 	const cdf_section_declaration_t *sd = (const void *)
 	    ((const char *)sst->sst_tab + CDF_SECTION_DECLARATION_OFFSET);
 
+	if (cdf_check_stream_offset(sst, si, sizeof(*si)) == -1 ||
+	    cdf_check_stream_offset(sst, sd, sizeof(*sd)) == -1)
+		return -1;
 	ssi->si_byte_order = CDF_TOLE2(si->si_byte_order);
 	ssi->si_os_version = CDF_TOLE2(si->si_os_version);
 	ssi->si_os = CDF_TOLE2(si->si_os);
@@ -936,11 +967,13 @@ cdf_dump_header(const cdf_header_t *h)
 	size_t i;
 
 #define DUMP(a, b) (void)fprintf(stderr, "%40.40s = " a "\n", # b, h->h_ ## b)
+#define DUMP2(a, b) (void)fprintf(stderr, "%40.40s = " a " (" a ")\n", # b, \
+    h->h_ ## b, 1 << h->h_ ## b)
 	DUMP("%d", revision);
 	DUMP("%d", version);
 	DUMP("0x%x", byte_order);
-	DUMP("%d", sec_size_p2);
-	DUMP("%d", short_sec_size_p2);
+	DUMP2("%d", sec_size_p2);
+	DUMP2("%d", short_sec_size_p2);
 	DUMP("%d", num_sectors_in_sat);
 	DUMP("%d", secid_first_directory);
 	DUMP("%d", min_size_standard_stream);
