@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.27 2009/05/05 22:48:51 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.28 2009/05/06 14:23:06 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -482,7 +482,7 @@ cdf_read_short_sector_chain(const cdf_header_t *h,
 	scn->sst_len = cdf_count_chain(ssat, sid, CDF_SEC_SIZE(h));
 	scn->sst_dirlen = len;
 
-	if (scn->sst_len == (size_t)-1)
+	if (sst->sst_tab == NULL || scn->sst_len == (size_t)-1)
 		return -1;
 
 	scn->sst_tab = calloc(scn->sst_len, ss);
@@ -633,22 +633,21 @@ cdf_read_short_stream(const cdf_info_t *info, const cdf_header_t *h,
 			break;
 
 	/* If the it is not there, just fake it; some docs don't have it */
-	if (i == dir->dir_len) {
-		scn->sst_tab = NULL;
-		scn->sst_len = 0;
-		return 0;
-	}
+	if (i == dir->dir_len)
+		goto out;
 	d = &dir->dir_tab[i];
 
 	/* If the it is not there, just fake it; some docs don't have it */
-	if (d->d_stream_first_sector < 0) {
-		scn->sst_tab = NULL;
-		scn->sst_len = 0;
-		return 0;
-	}
+	if (d->d_stream_first_sector < 0)
+		goto out;
 
 	return  cdf_read_long_sector_chain(info, h, sat,
 	    d->d_stream_first_sector, d->d_size, scn);
+out:
+	scn->sst_tab = NULL;
+	scn->sst_len = 0;
+	scn->sst_dirlen = 0;
+	return 0;
 }
 
 static int
