@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.29 2009/05/06 14:27:30 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.30 2009/05/06 14:29:47 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -708,19 +708,19 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	if (cdf_check_stream_offset(sst, shp, sizeof(*shp)) == -1)
 		goto out;
 	sh.sh_len = CDF_TOLE4(shp->sh_len);
-#define CDF_SHLEN_LIM (UINT32_MAX / 8)
-	if (sh.sh_len > CDF_SHLEN_LIM) {
+#define CDF_SHLEN_LIMIT (UINT32_MAX / 8)
+	if (sh.sh_len > CDF_SHLEN_LIMIT) {
 		errno = EFTYPE;
 		goto out;
 	}
 	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
-#define CDF_PROP_LIM (UINT32_MAX / (4 * sizeof(*inp)))
-	if (sh.sh_properties > CDF_PROP_LIM)
+#define CDF_PROP_LIMIT (UINT32_MAX / (4 * sizeof(*inp)))
+	if (sh.sh_properties > CDF_PROP_LIMIT)
 		goto out;
 	DPRINTF(("section len: %u properties %u\n", sh.sh_len,
 	    sh.sh_properties));
 	if (*maxcount) {
-		if (*maxcount > CDF_PROP_LIM)
+		if (*maxcount > CDF_PROP_LIMIT)
 			goto out;
 		*maxcount += sh.sh_properties;
 		inp = realloc(*info, *maxcount * sizeof(*inp));
@@ -794,8 +794,8 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		case CDF_LENGTH32_STRING:
 			if (nelements > 1) {
 				size_t nelem = inp - *info;
-				if (*maxcount > CDF_PROP_LIM
-				    || nelements > CDF_PROP_LIM)
+				if (*maxcount > CDF_PROP_LIMIT
+				    || nelements > CDF_PROP_LIMIT)
 					goto out;
 				*maxcount += nelements;
 				inp = realloc(*info, *maxcount * sizeof(*inp));
