@@ -1,3 +1,9 @@
+2009-05-06  10:25  Christos Zoulas <christos@zoulas.com>
+
+	* Avoid null dereference in cdf code (Drew Yao)
+
+	* More cdf bounds checks and overflow checks
+
 2009-05-01  18:37  Christos Zoulas <christos@zoulas.com>
 
 	* Buffer overflow fixes from Drew Yao
