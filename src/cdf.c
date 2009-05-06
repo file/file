@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.28 2009/05/06 14:23:06 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.29 2009/05/06 14:27:30 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -232,7 +232,7 @@ cdf_check_stream_offset(const cdf_stream_t *sst, const void *p, size_t tail)
 {
 	const char *b = (const char *)sst->sst_tab;
 	const char *e = ((const char *)p) + tail;
-	if ((size_t)(e - b) < sst->sst_dirlen * sst->sst_len)
+	if (e >= b && (size_t)(e - b) < sst->sst_dirlen * sst->sst_len)
 		return 0;
 	DPRINTF((stderr, "offset begin %p end %p %zu >= %zu\n", b, e,
 	    (size_t)(e - b), sst->sst_dirlen * sst->sst_len));
