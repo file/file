@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.63 2009/03/23 14:21:51 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.64 2009/05/08 17:41:58 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -144,7 +144,7 @@ error:
 private ssize_t
 swrite(int fd, const void *buf, size_t n)
 {
-	int rv;
+	ssize_t rv;
 	size_t rn = n;
 
 	do
@@ -155,7 +155,7 @@ swrite(int fd, const void *buf, size_t n)
 			return -1;
 		default:
 			n -= rv;
-			buf = ((const char *)buf) + rv;
+			buf = CAST(const char *, buf) + rv;
 			break;
 		}
 	while (n > 0);
@@ -169,7 +169,7 @@ swrite(int fd, const void *buf, size_t n)
 protected ssize_t
 sread(int fd, void *buf, size_t n, int canbepipe)
 {
-	int rv, cnt;
+	ssize_t rv, cnt;
 #ifdef FIONREAD
 	int t = 0;
 #endif
@@ -235,7 +235,8 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
     size_t nbytes)
 {
 	char buf[4096];
-	int r, tfd;
+	ssize_t r;
+	int tfd, te;
 
 	(void)strlcpy(buf, "/tmp/file.XXXXXX", sizeof buf);
 #ifndef HAVE_MKSTEMP
@@ -248,9 +249,9 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 	}
 #else
 	tfd = mkstemp(buf);
-	r = errno;
+	te = errno;
 	(void)unlink(buf);
-	errno = r;
+	errno = te;
 #endif
 	if (tfd == -1) {
 		file_error(ms, errno,
@@ -337,13 +338,14 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 	/* XXX: const castaway, via strchr */
 	z.next_in = (Bytef *)strchr((const char *)old + data_start,
 	    old[data_start]);
-	z.avail_in = n - data_start;
+	z.avail_in = CAST(uint32_t, (n - data_start));
 	z.next_out = *newch;
 	z.avail_out = HOWMANY;
 	z.zalloc = Z_NULL;
 	z.zfree = Z_NULL;
 	z.opaque = Z_NULL;
 
+	/* LINTED bug in header macro */
 	rc = inflateInit2(&z, -15);
 	if (rc != Z_OK) {
 		file_error(ms, 0, "zlib: %s", z.msg);
@@ -371,7 +373,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
     const unsigned char *old, unsigned char **newch, size_t n)
 {
 	int fdin[2], fdout[2];
-	int r;
+	ssize_t r;
 
 #ifdef BUILTIN_DECOMPRESS
         /* FIXME: This doesn't cope with bzip2 */

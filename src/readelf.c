@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.81 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.82 2009/05/08 17:41:59 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1019,7 +1019,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	const char *linking_style = "statically";
 	const char *shared_libraries = "";
 	unsigned char nbuf[BUFSIZ];
-	int bufsize;
+	ssize_t bufsize;
 	size_t offset, align;
 	off_t savedoffset = (off_t)-1;
 	struct stat st;
@@ -1074,7 +1074,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			shared_libraries = " (uses shared libs)";
 			break;
 		case PT_NOTE:
-			if ((align = xph_align) & 0x80000000) {
+			if ((align = xph_align) & 0x80000000UL) {
 				if (file_printf(ms, 
 				    ", invalid note alignment 0x%lx",
 				    (unsigned long)align) == -1)

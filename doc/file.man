@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.79 2008/11/06 22:49:08 rrt Exp $
+.\" $File: file.man,v 1.80 2009/05/08 17:41:58 christos Exp $
 .Dd October 9, 2008
 .Dt FILE __CSECTION__
 .Os
@@ -175,7 +175,7 @@ Exclude the test named in
 .Ar testname
 from the list of tests made to determine the file type. Valid test names
 are:
-.Bl -tag -width
+.Bl -tag -width compress
 .It apptype
 .Dv EMX
 application type (only on EMX).

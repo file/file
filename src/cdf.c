@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.30 2009/05/06 14:29:47 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.31 2009/05/08 17:41:58 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -68,9 +68,9 @@ static union {
 
 #define NEED_SWAP	(cdf_bo.u == (uint32_t)0x01020304)
 
-#define CDF_TOLE8(x)	(NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x))
-#define CDF_TOLE4(x)	(NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x))
-#define CDF_TOLE2(x)	(NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x))
+#define CDF_TOLE8(x)	((uint64_t)(NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x)))
+#define CDF_TOLE4(x)	((uint32_t)(NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x)))
+#define CDF_TOLE2(x)	((uint16_t)(NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x)))
 
 /*
  * swap a short
@@ -145,15 +145,15 @@ cdf_swap_header(cdf_header_t *h)
 	h->h_min_size_standard_stream =
 	    CDF_TOLE4(h->h_min_size_standard_stream);
 	h->h_secid_first_sector_in_short_sat =
-	    CDF_TOLE4(h->h_secid_first_sector_in_short_sat);
+	    CDF_TOLE4((uint32_t)h->h_secid_first_sector_in_short_sat);
 	h->h_num_sectors_in_short_sat =
 	    CDF_TOLE4(h->h_num_sectors_in_short_sat);
 	h->h_secid_first_sector_in_master_sat =
-	    CDF_TOLE4(h->h_secid_first_sector_in_master_sat);
+	    CDF_TOLE4((uint32_t)h->h_secid_first_sector_in_master_sat);
 	h->h_num_sectors_in_master_sat =
 	    CDF_TOLE4(h->h_num_sectors_in_master_sat);
 	for (i = 0; i < __arraycount(h->h_master_sat); i++)
-		h->h_master_sat[i] = CDF_TOLE4(h->h_master_sat[i]);
+		h->h_master_sat[i] = CDF_TOLE4((uint32_t)h->h_master_sat[i]);
 }
 
 void
@@ -186,15 +186,15 @@ void
 cdf_swap_dir(cdf_directory_t *d)
 {
 	d->d_namelen = CDF_TOLE2(d->d_namelen);
-	d->d_left_child = CDF_TOLE4(d->d_left_child);
-	d->d_right_child = CDF_TOLE4(d->d_right_child);
-	d->d_storage = CDF_TOLE4(d->d_storage);
+	d->d_left_child = CDF_TOLE4((uint32_t)d->d_left_child);
+	d->d_right_child = CDF_TOLE4((uint32_t)d->d_right_child);
+	d->d_storage = CDF_TOLE4((uint32_t)d->d_storage);
 	d->d_storage_uuid[0] = CDF_TOLE8(d->d_storage_uuid[0]);
 	d->d_storage_uuid[1] = CDF_TOLE8(d->d_storage_uuid[1]);
 	d->d_flags = CDF_TOLE4(d->d_flags);
-	d->d_created = CDF_TOLE8(d->d_created);
-	d->d_modified = CDF_TOLE8(d->d_modified);
-	d->d_stream_first_sector = CDF_TOLE4(d->d_stream_first_sector);
+	d->d_created = CDF_TOLE8((uint64_t)d->d_created);
+	d->d_modified = CDF_TOLE8((uint64_t)d->d_modified);
+	d->d_stream_first_sector = CDF_TOLE4((uint32_t)d->d_stream_first_sector);
 	d->d_size = CDF_TOLE4(d->d_size);
 }
 
@@ -374,7 +374,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 			goto out2;
 		}
 		for (k = 0; k < nsatpersec; k++, i++) {
-			sec = CDF_TOLE4(msa[k]);
+			sec = CDF_TOLE4((uint32_t)msa[k]);
 			if (sec < 0)
 				goto out;
 			if (i >= sat->sat_len) {
@@ -390,7 +390,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 				goto out2;
 			}
 		}
-		mid = CDF_TOLE4(msa[nsatpersec]);
+		mid = CDF_TOLE4((uint32_t)msa[nsatpersec]);
 	}
 out:
 	sat->sat_len = i;
@@ -422,7 +422,7 @@ cdf_count_chain(const cdf_sat_t *sat, cdf_secid_t sid, size_t size)
 			errno = EFTYPE;
 			return (size_t)-1;
 		}
-		sid = CDF_TOLE4(sat->sat_tab[sid]);
+		sid = CDF_TOLE4((uint32_t)sat->sat_tab[sid]);
 	}
 	DPRINTF(("\n"));
 	return i;
@@ -465,7 +465,7 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 			DPRINTF(("Reading long sector chain %d", sid));
 			goto out;
 		}
-		sid = CDF_TOLE4(sat->sat_tab[sid]);
+		sid = CDF_TOLE4((uint32_t)sat->sat_tab[sid]);
 	}
 	return 0;
 out:
@@ -506,7 +506,7 @@ cdf_read_short_sector_chain(const cdf_header_t *h,
 			DPRINTF(("Reading short sector chain %d", sid));
 			goto out;
 		}
-		sid = CDF_TOLE4(ssat->sat_tab[sid]);
+		sid = CDF_TOLE4((uint32_t)ssat->sat_tab[sid]);
 	}
 	return 0;
 out:
@@ -566,7 +566,7 @@ cdf_read_dir(const cdf_info_t *info, const cdf_header_t *h,
 			cdf_unpack_dir(&dir->dir_tab[i * nd + j],
 			    &buf[j * CDF_DIRECTORY_SIZE]);
 		}
-		sid = CDF_TOLE4(sat->sat_tab[sid]);
+		sid = CDF_TOLE4((uint32_t)sat->sat_tab[sid]);
 	}
 	if (NEED_SWAP)
 		for (i = 0; i < dir->dir_len; i++)
@@ -613,7 +613,7 @@ cdf_read_ssat(const cdf_info_t *info, const cdf_header_t *h,
 			DPRINTF(("Reading short sat sector %d", sid));
 			goto out;
 		}
-		sid = CDF_TOLE4(sat->sat_tab[sid]);
+		sid = CDF_TOLE4((uint32_t)sat->sat_tab[sid]);
 	}
 	return 0;
 out:
@@ -733,12 +733,14 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	*info = inp;
 	inp += *count;
 	*count += sh.sh_properties;
-	p = (const void *)((const char *)sst->sst_tab + offs + sizeof(sh));
-	e = (const void *)(((const char *)shp) + sh.sh_len);
+	p = (const void *)((const char *)(const void *)sst->sst_tab +
+	    offs + sizeof(sh));
+	e = (const void *)(((const char *)(const void *)shp) + sh.sh_len);
 	if (cdf_check_stream_offset(sst, e, 0) == -1)
 		goto out;
 	for (i = 0; i < sh.sh_properties; i++) {
-		q = (const uint32_t *)((const char *)p +
+		q = (const uint32_t *)(const void *)
+		    ((const char *)(const void *)p +
 		    CDF_TOLE4(p[(i << 1) + 1])) - 2;
 		if (q > e) {
 			DPRINTF(("Ran of the end %p > %p\n", q, e));
@@ -770,7 +772,7 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
 			(void)memcpy(&s32, &q[o], sizeof(s32));
-			inp[i].pi_s32 = CDF_TOLE4(s32);
+			inp[i].pi_s32 = CDF_TOLE4((uint32_t)s32);
 			break;
 		case CDF_BOOL:
 		case CDF_UNSIGNED32:
@@ -783,13 +785,13 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
 			(void)memcpy(&s64, &q[o], sizeof(s64));
-			inp[i].pi_s64 = CDF_TOLE4(s64);
+			inp[i].pi_s64 = CDF_TOLE8((uint64_t)s64);
 			break;
 		case CDF_UNSIGNED64:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
 			(void)memcpy(&u64, &q[o], sizeof(u64));
-			inp[i].pi_u64 = CDF_TOLE4(u64);
+			inp[i].pi_u64 = CDF_TOLE8((uint64_t)u64);
 			break;
 		case CDF_LENGTH32_STRING:
 			if (nelements > 1) {
@@ -808,11 +810,12 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			for (j = 0; j < nelements; j++, i++) {
 				uint32_t l = CDF_TOLE4(q[o]);
 				inp[i].pi_str.s_len = l;
-				inp[i].pi_str.s_buf = (const char *)(&q[o+1]);
+				inp[i].pi_str.s_buf =
+				    (const char *)(const void *)(&q[o+1]);
 				DPRINTF(("l = %d, r = %d, s = %s\n", l,
 				    CDF_ROUND(l, sizeof(l)),
 				    inp[i].pi_str.s_buf));
-				l = 4 + CDF_ROUND(l, sizeof(l));
+				l = 4 + (uint32_t)CDF_ROUND(l, sizeof(l));
 				o += l >> 2;
 			}
 			i--;
@@ -821,7 +824,7 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
 			(void)memcpy(&tp, &q[o], sizeof(tp));
-			inp[i].pi_tp = CDF_TOLE8(tp);
+			inp[i].pi_tp = CDF_TOLE8((uint64_t)tp);
 			break;
 		case CDF_CLIPBOARD:
 			if (inp[i].pi_type & CDF_VECTOR)
@@ -926,32 +929,32 @@ cdf_print_property_name(char *buf, size_t bufsiz, uint32_t p)
 int
 cdf_print_elapsed_time(char *buf, size_t bufsiz, cdf_timestamp_t ts)
 {
-	size_t len = 0;
+	int len = 0;
 	int days, hours, mins, secs;
 
 	ts /= CDF_TIME_PREC;
-	secs = ts % 60;
+	secs = (int)(ts % 60);
 	ts /= 60;
-	mins = ts % 60;
+	mins = (int)(ts % 60);
 	ts /= 60;
-	hours = ts % 24;
+	hours = (int)(ts % 24);
 	ts /= 24;
-	days = ts;
+	days = (int)ts;
 
 	if (days) {
 		len += snprintf(buf + len, bufsiz - len, "%dd+", days);
-		if (len >= bufsiz)
+		if ((size_t)len >= bufsiz)
 			return len;
 	}
 
 	if (days || hours) {
 		len += snprintf(buf + len, bufsiz - len, "%.2d:", hours);
-		if (len >= bufsiz)
+		if ((size_t)len >= bufsiz)
 			return len;
 	}
 
 	len += snprintf(buf + len, bufsiz - len, "%.2d:", mins);
-	if (len >= bufsiz)
+	if ((size_t)len >= bufsiz)
 		return len;
 
 	len += snprintf(buf + len, bufsiz - len, "%.2d", secs);

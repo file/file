@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.62 2009/03/20 21:25:41 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.63 2009/05/08 17:41:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -88,7 +88,7 @@ magic_open(int flags)
 	struct magic_set *ms;
 	size_t len;
 
-	if ((ms = CAST(magic_set *, calloc((size_t)1,
+	if ((ms = CAST(struct magic_set *, calloc((size_t)1,
 	    sizeof(struct magic_set)))) == NULL)
 		return NULL;
 
