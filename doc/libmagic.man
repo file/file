@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.19 2008/10/06 20:16:04 christos Exp $
+.\" $File: libmagic.man,v 1.20 2009/05/08 23:02:44 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003.
 .\" All Rights Reserved.
@@ -12,7 +12,7 @@
 .\" 2. Redistributions in binary form must reproduce the above copyright
 .\"    notice, this list of conditions and the following disclaimer in the
 .\"    documentation and/or other materials provided with the distribution.
-.\" 
+.\"
 .\" THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
 .\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 .\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -73,7 +73,7 @@ in
 The function
 .Fn magic_open
 creates a magic cookie pointer and returns it. It returns NULL if
-there was an error allocating the magic cookie. The 
+there was an error allocating the magic cookie. The
 .Ar flags
 argument specifies how the other magic functions should behave:
 .Bl -tag -width MAGIC_COMPRESS
@@ -165,7 +165,7 @@ bytes size.
 .Pp
 The
 .Fn magic_setflags
-function sets the 
+function sets the
 .Ar flags
 described above. Note that using both MIME flags together can also
 return extra information on the charset.
@@ -219,7 +219,7 @@ functions return 0 on success and -1 on failure.
 The
 .Fn magic_file ,
 and
-.Fn magic_buffer 
+.Fn magic_buffer
 functions return a string on success and NULL on failure. The
 .Fn magic_error
 function returns a textual description of the errors of the above
@@ -242,7 +242,7 @@ The compiled default magic database.
 .El
 .Sh SEE ALSO
 .Xr file __CSECTION__ ,
-.Xr magic __FSECTION__ 
+.Xr magic __FSECTION__
 .Sh AUTHORS
 Måns Rullgård Initial libmagic implementation,
 and configuration.
