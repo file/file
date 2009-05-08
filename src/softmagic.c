@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.136 2009/05/08 17:41:59 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.137 2009/05/08 23:25:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -924,7 +924,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 	if (indir == 0) {
 		switch (type) {
 		case FILE_SEARCH:
-			ms->search.s = CAST(const char *, s) + offset;
+			ms->search.s = (const char *)s + offset;
 			ms->search.s_len = nbytes - offset;
 			ms->search.offset = offset;
 			return 0;
@@ -942,19 +942,21 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 				ms->search.s = NULL;
 				return 0;
 			}
-			buf = CAST(const char *, s) + offset;
-			end = last = CAST(const char *, s) + nbytes;
+			buf = (const char *)s + offset;
+			end = last = (const char *)s + nbytes;
 			/* mget() guarantees buf <= last */
 			for (lines = linecnt, b = buf; lines &&
-			     ((b = memchr(c = b, '\n', CAST(size_t, (end - b))))
-			     || (b = memchr(c, '\r', CAST(size_t, (end - c)))));
+			     ((b = CAST(const char *,
+				 memchr(c = b, '\n', CAST(size_t, (end - b)))))
+			     || (b = CAST(const char *,
+				 memchr(c, '\r', CAST(size_t, (end - c))))));
 			     lines--, b++) {
 				last = b;
 				if (b[0] == '\r' && b[1] == '\n')
 					b++;
 			}
 			if (lines)
-				last = CAST(const char *, s) + nbytes;
+				last = (const char *)s + nbytes;
 
 			ms->search.s = buf;
 			ms->search.s_len = last - buf;

@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.120 2009/05/08 17:41:58 christos Exp $
+ * @(#)$File: file.h,v 1.121 2009/05/08 23:25:46 christos Exp $
  */
 
 #ifndef __file_h__
@@ -41,6 +41,9 @@
 #include <errno.h>
 #include <fcntl.h>	/* For open and flags */
 #ifdef HAVE_STDINT_H
+#ifndef __STDC_LIMIT_MACROS
+#define __STDC_LIMIT_MACROS
+#endif
 #include <stdint.h>
 #endif
 #ifdef HAVE_INTTYPES_H
@@ -298,7 +301,7 @@ struct mlist {
 #ifdef __cplusplus
 #define CAST(T, b)	static_cast<T>(b)
 #else
-#define CAST(T, b)	(T)(b)
+#define CAST(T, b)	(b)
 #endif
 
 struct level_info {
