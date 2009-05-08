@@ -1211,6 +1211,9 @@
 !:mime	application/x-iso9660-image
 32776	string    CDROM     High Sierra CD-ROM filesystem data
 
+# .cso files
+0    string    CISO	Compressed ISO CD image
+
 # cramfs filesystem - russell@coker.com.au
 0       lelong    0x28cd3d45      Linux Compressed ROM File System data, little endian
 >4      lelong  x size %lu

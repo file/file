@@ -574,6 +574,7 @@
 !:mime	application/zip
 >4	byte		0x14
 >>30	ubelong		!0x6d696d65	Zip archive data, at least v2.0 to extract
+>0x161	string		WINZIP		Zip archive data, WinZIP self-extracting
 !:mime	application/zip
 
 # OpenOffice.org / KOffice / StarOffice documents

@@ -1,3 +1,7 @@
+2009-05-08  13:40  Christos Zoulas <christos@zoulas.com>
+	
+	* lint fixes and more from NetBSD
+
 2009-05-06  10:25  Christos Zoulas <christos@zoulas.com>
 
 	* Avoid null dereference in cdf code (Drew Yao)

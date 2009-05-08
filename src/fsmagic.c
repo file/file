@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.58 2008/11/22 17:01:28 chl Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.59 2009/02/03 20:27:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -106,7 +106,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	int mime = ms->flags & MAGIC_MIME;
 #ifdef	S_IFLNK
 	char buf[BUFSIZ+4];
-	int nch;
+	ssize_t nch;
 	struct stat tstatbuf;
 #endif
 
