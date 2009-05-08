@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.30 2009/05/06 14:29:47 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.31 2009/05/08 17:41:58 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -44,6 +44,9 @@ FILE_RCSID("@(#)$File: cdf.c,v 1.30 2009/05/06 14:29:47 christos Exp $")
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
 
 #ifndef EFTYPE
 #define EFTYPE EINVAL
@@ -344,7 +347,8 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 
 	sat->sat_len = h->h_num_sectors_in_master_sat * nsatpersec + i;
 	DPRINTF(("sat_len = %zu ss = %zu\n", sat->sat_len, ss));
-	if ((sat->sat_tab = calloc(sat->sat_len, ss)) == NULL)
+	if ((sat->sat_tab = CAST(cdf_secid_t *, calloc(sat->sat_len, ss)))
+	    == NULL)
 		return -1;
 
 	for (i = 0; i < __arraycount(h->h_master_sat); i++) {
@@ -357,7 +361,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 		}
 	}
 
-	if ((msa = calloc(1, ss)) == NULL)
+	if ((msa = CAST(cdf_secid_t *, calloc(1, ss))) == NULL)
 		goto out1;
 
 	mid = h->h_secid_first_sector_in_master_sat;
@@ -543,11 +547,12 @@ cdf_read_dir(const cdf_info_t *info, const cdf_header_t *h,
 	nd = ss / CDF_DIRECTORY_SIZE;
 
 	dir->dir_len = ns * nd;
-	dir->dir_tab = calloc(dir->dir_len, sizeof(dir->dir_tab[0]));
+	dir->dir_tab = CAST(cdf_directory_t *, 
+	    calloc(dir->dir_len, sizeof(dir->dir_tab[0])));
 	if (dir->dir_tab == NULL)
 		return -1;
 
-	if ((buf = malloc(ss)) == NULL) {
+	if ((buf = CAST(char *, malloc(ss))) == NULL) {
 		free(dir->dir_tab);
 		return -1;
 	}
@@ -592,7 +597,7 @@ cdf_read_ssat(const cdf_info_t *info, const cdf_header_t *h,
 	if (ssat->sat_len == (size_t)-1)
 		return -1;
 
-	ssat->sat_tab = calloc(ssat->sat_len, ss);
+	ssat->sat_tab = CAST(cdf_secid_t *, calloc(ssat->sat_len, ss));
 	if (ssat->sat_tab == NULL)
 		return -1;
 
@@ -704,7 +709,8 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		errno = EFTYPE;
 		goto out;
 	}
-	shp = (const void *)((const char *)sst->sst_tab + offs);
+	shp = CAST(const cdf_section_header_t *, (const void *)
+	    ((const char *)sst->sst_tab + offs));
 	if (cdf_check_stream_offset(sst, shp, sizeof(*shp)) == -1)
 		goto out;
 	sh.sh_len = CDF_TOLE4(shp->sh_len);
@@ -723,19 +729,23 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		if (*maxcount > CDF_PROP_LIMIT)
 			goto out;
 		*maxcount += sh.sh_properties;
-		inp = realloc(*info, *maxcount * sizeof(*inp));
+		inp = CAST(cdf_property_info_t *,
+		    realloc(*info, *maxcount * sizeof(*inp)));
 	} else {
 		*maxcount = sh.sh_properties;
-		inp = malloc(*maxcount * sizeof(*inp));
+		inp = CAST(cdf_property_info_t *,
+		    malloc(*maxcount * sizeof(*inp)));
 	}
 	if (inp == NULL)
 		goto out;
 	*info = inp;
 	inp += *count;
 	*count += sh.sh_properties;
-	p = (const void *)((const char *)(const void *)sst->sst_tab +
-	    offs + sizeof(sh));
-	e = (const void *)(((const char *)(const void *)shp) + sh.sh_len);
+	p = CAST(const uint32_t *, (const void *)
+	    ((const char *)(const void *)sst->sst_tab +
+	    offs + sizeof(sh)));
+	e = CAST(const uint32_t *, (const void *)
+	    (((const char *)(const void *)shp) + sh.sh_len));
 	if (cdf_check_stream_offset(sst, e, 0) == -1)
 		goto out;
 	for (i = 0; i < sh.sh_properties; i++) {
@@ -800,7 +810,8 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 				    || nelements > CDF_PROP_LIMIT)
 					goto out;
 				*maxcount += nelements;
-				inp = realloc(*info, *maxcount * sizeof(*inp));
+				inp = CAST(cdf_property_info_t *,
+				    realloc(*info, *maxcount * sizeof(*inp)));
 				if (inp == NULL)
 					goto out;
 				*info = inp;
@@ -848,9 +859,11 @@ cdf_unpack_summary_info(const cdf_stream_t *sst, cdf_summary_info_header_t *ssi,
     cdf_property_info_t **info, size_t *count)
 {
 	size_t i, maxcount;
-	const cdf_summary_info_header_t *si = sst->sst_tab;
-	const cdf_section_declaration_t *sd = (const void *)
-	    ((const char *)sst->sst_tab + CDF_SECTION_DECLARATION_OFFSET);
+	const cdf_summary_info_header_t *si =
+	    CAST(const cdf_summary_info_header_t *, sst->sst_tab);
+	const cdf_section_declaration_t *sd =
+	    CAST(const cdf_section_declaration_t *, (const void *)
+	    ((const char *)sst->sst_tab + CDF_SECTION_DECLARATION_OFFSET));
 
 	if (cdf_check_stream_offset(sst, si, sizeof(*si)) == -1 ||
 	    cdf_check_stream_offset(sst, sd, sizeof(*sd)) == -1)
