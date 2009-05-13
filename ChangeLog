@@ -1,3 +1,8 @@
+2009-05-13  10:44  Christos Zoulas <christos@zoulas.com>
+
+	* off by one in parsing hw capabilities in elf
+	  (Cheng Renquan)
+
 2009-05-08  13:40  Christos Zoulas <christos@zoulas.com>
 	
 	* lint fixes and more from NetBSD
