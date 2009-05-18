@@ -130,15 +130,15 @@ else
        -Wsign-compare -Wreturn-type -Wswitch -Wshadow \
        -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter"
 fi], [
-if test "$GCC" = no; then
-   WARNINGS=
-   AC_MSG_RESULT(no)
-else
+if test "$GCC" = yes; then
    AC_MSG_RESULT(yes)
    WARNINGS="-Wall -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith \
        -Wmissing-declarations -Wredundant-decls -Wnested-externs \
        -Wsign-compare -Wreturn-type -Wswitch -Wshadow \
        -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter"
+else
+   WARNINGS=
+   AC_MSG_RESULT(no)
 fi])
 
 dnl Checks for functions
