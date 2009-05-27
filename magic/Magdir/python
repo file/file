@@ -1,4 +1,3 @@
-
 #------------------------------------------------------------------------------
 # python:  file(1) magic for python
 #
@@ -17,5 +16,11 @@
 0	belong		0xd1f20d0a	python 2.6 byte-compiled
 
 
-0	string/b  #!\ /usr/bin/python	python script text executable
-
+0	search/1/b	#!\ /usr/bin/python	Python script text executable
+!:mime text/x-python
+0	search/1/b	#!\ /usr/local/bin/python	Python script text executable
+!:mime text/x-python
+0	search/1	#!/usr/bin/env\ python	Python script text executable
+!:mime text/x-python
+0	search/1	#!\ /usr/bin/env\ ruby	Python script text executable
+!:mime text/x-python
