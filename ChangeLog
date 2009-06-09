@@ -1,4 +1,8 @@
-2008-11-06 23:00  Reuben Thomas <rrt@sc3d.org>
+2009-06-09 22:13  Reuben Thomas <rrt@sc3d.org>
+
+	* Add a couple of missing MP3 MIME types.
+
+2009-05-27 23:00  Reuben Thomas <rrt@sc3d.org>
 
 	* Add full range of hash-bang tests for Python and Ruby.
 
