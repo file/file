@@ -9,6 +9,7 @@
 0	string		%!PS-AdobeFont-1.	PostScript Type 1 font text
 >20	string		>\0			(%s)
 6	string		%!PS-AdobeFont-1.	PostScript Type 1 font program data
+0	string		%!FontType1	PostScript Type 1 font program data
 6	string		%!FontType1	PostScript Type 1 font program data
 0	string		%!PS-Adobe-3.0\ Resource-Font	PostScript Type 1 font text
 
