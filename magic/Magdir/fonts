@@ -9,6 +9,8 @@
 0	string		%!PS-AdobeFont-1.	PostScript Type 1 font text
 >20	string		>\0			(%s)
 6	string		%!PS-AdobeFont-1.	PostScript Type 1 font program data
+6	string		%!FontType1	PostScript Type 1 font program data
+0	string		%!PS-Adobe-3.0\ Resource-Font	PostScript Type 1 font text
 
 # X11 font files in SNF (Server Natural Format) format
 0	belong		00000004		X11 SNF font data, MSB first
@@ -58,7 +60,7 @@
 0	string		ttcf		TrueType font collection data
 
 # Opentype font data from Avi Bercovich
-0	string		OTTO		OpenType font data 
+0	string		OTTO		OpenType font data
 
 # Gürkan Sengün <gurkan@linuks.mine.nu>, www.linuks.mine.nu 
 0	string		SplineFontDB:	Spline Font Database 
