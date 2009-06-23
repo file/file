@@ -11,8 +11,6 @@
 #>2	search/4096	!\r		Lisp/Scheme program text
 #>2	search/4096	\r		Windows INF file
 
-0	search/4096	(if\ 			Lisp/Scheme program text
-!:mime	text/x-lisp
 0	search/4096	(setq\ 			Lisp/Scheme program text
 !:mime	text/x-lisp
 0	search/4096	(defvar\ 		Lisp/Scheme program text
