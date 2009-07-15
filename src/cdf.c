@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.31 2009/05/08 17:41:58 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.32 2009/05/08 23:25:46 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -237,7 +237,7 @@ cdf_check_stream_offset(const cdf_stream_t *sst, const void *p, size_t tail)
 	const char *e = ((const char *)p) + tail;
 	if (e >= b && (size_t)(e - b) < sst->sst_dirlen * sst->sst_len)
 		return 0;
-	DPRINTF((stderr, "offset begin %p end %p %zu >= %zu\n", b, e,
+	DPRINTF(("offset begin %p end %p %zu >= %zu\n", b, e,
 	    (size_t)(e - b), sst->sst_dirlen * sst->sst_len));
 	errno = EFTYPE;
 	return -1;
@@ -770,6 +770,7 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		if (inp[i].pi_type & (CDF_ARRAY|CDF_BYREF|CDF_RESERVED))
 			goto unknown;
 		switch (inp[i].pi_type & CDF_TYPEMASK) {
+		case CDF_NULL:
 		case CDF_EMPTY:
 			break;
 		case CDF_SIGNED16:
@@ -804,6 +805,7 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			inp[i].pi_u64 = CDF_TOLE8((uint64_t)u64);
 			break;
 		case CDF_LENGTH32_STRING:
+		case CDF_LENGTH32_WSTRING:
 			if (nelements > 1) {
 				size_t nelem = inp - *info;
 				if (*maxcount > CDF_PROP_LIMIT
@@ -1112,12 +1114,14 @@ cdf_dump_property_info(const cdf_property_info_t *info, size_t count)
 	cdf_timestamp_t tp;
 	struct timespec ts;
 	char buf[64];
-	size_t i;
+	size_t i, j;
 
 	for (i = 0; i < count; i++) {
 		cdf_print_property_name(buf, sizeof(buf), info[i].pi_id);
 		(void)fprintf(stderr, "%zu) %s: ", i, buf); 
 		switch (info[i].pi_type) {
+		case CDF_NULL:
+			break;
 		case CDF_SIGNED16:
 			(void)fprintf(stderr, "signed 16 [%hd]\n",
 			    info[i].pi_s16);
@@ -1134,6 +1138,13 @@ cdf_dump_property_info(const cdf_property_info_t *info, size_t count)
 			(void)fprintf(stderr, "string %u [%.*s]\n",
 			    info[i].pi_str.s_len,
 			    info[i].pi_str.s_len, info[i].pi_str.s_buf);
+			break;
+		case CDF_LENGTH32_WSTRING:
+			(void)fprintf(stderr, "string %u [", 
+			    info[i].pi_str.s_len);
+			for (j = 0; j < info[i].pi_str.s_len - 1; j++)
+			    (void)fputc(info[i].pi_str.s_buf[j << 1], stderr);
+			(void)fprintf(stderr, "]\n"); 
 			break;
 		case CDF_FILETIME:
 			tp = info[i].pi_tp;
@@ -1219,7 +1230,7 @@ main(int argc, char *argv[])
 		if (cdf_read_ssat(&info, &h, &sat, &ssat) == -1)
 			err(1, "Cannot read ssat");
 #ifdef CDF_DEBUG
-		cdf_dump_sat("SSAT", &h, &ssat, CDF_SHORT_SEC_SIZE(&h));
+		cdf_dump_sat("SSAT", &ssat, CDF_SHORT_SEC_SIZE(&h));
 #endif
 
 		if (cdf_read_dir(&info, &h, &sat, &dir) == -1)
