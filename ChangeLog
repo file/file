@@ -1,3 +1,11 @@
+2009-07-15  10:05  Christos Zoulas <christos@zoulas.com>
+
+	* Fix logic for including mygetopts.h
+
+	* Make cdf.c compile again with debugging
+
+	* Add the necessary field handling for crystal reports files to work
+
 2009-06-23 01:34  Reuben Thomas <rrt@sc3d.org>
 
 	* Stop "(if" identifying Lisp files, that's plain dumb!
