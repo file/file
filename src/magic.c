@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.63 2009/05/08 17:41:59 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.64 2009/07/15 14:08:43 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -56,8 +56,6 @@ FILE_RCSID("@(#)$File: magic.c,v 1.63 2009/05/08 17:41:59 christos Exp $")
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>	/* for read() */
 #endif
-
-#include <netinet/in.h>		/* for byte swapping */
 
 #include "patchlevel.h"
 
