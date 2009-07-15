@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.19 2009/05/08 17:41:59 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.20 2009/07/15 15:17:44 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -55,6 +55,8 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 	for (i = 0; i < count; i++) {
 		cdf_print_property_name(buf, sizeof(buf), info[i].pi_id);
 		switch (info[i].pi_type) {
+		case CDF_NULL:
+			break;
 		case CDF_SIGNED16:
 			if (NOTMIME(ms) && file_printf(ms, ", %s: %hd", buf,
 			    info[i].pi_s16) == -1)
@@ -71,22 +73,26 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 				return -1;
 			break;
 		case CDF_LENGTH32_STRING:
+		case CDF_LENGTH32_WSTRING:
 			len = info[i].pi_str.s_len;
 			if (len > 1) {
+				char vbuf[1024];
+				size_t j, k = 1;
+
+				if (info[i].pi_type == CDF_LENGTH32_WSTRING)
+				    k++;
 				s = info[i].pi_str.s_buf;
+				for (j = 0; j < sizeof(vbuf) && len--;
+				    j++, s += k) {
+					if (*s == '\0')
+						break;
+					if (isprint((unsigned char)*s))
+						vbuf[j] = *s;
+				}
+				if (j == sizeof(vbuf))
+					--j;
+				vbuf[j] = '\0';
 				if (NOTMIME(ms)) {
-					char vbuf[1024];
-					size_t j;
-					for (j = 0; j < sizeof(vbuf) && len--;
-					    j++, s++) {
-						if (*s == '\0')
-							break;
-						if (isprint((unsigned char)*s))
-							vbuf[j] = *s;
-					}
-					if (j == sizeof(vbuf))
-						--j;
-					vbuf[j] = '\0';
 					if (vbuf[0]) {
 						if (file_printf(ms, ", %s: %s",
 						    buf, vbuf) == -1)
@@ -94,11 +100,11 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 					}
 				} else if (info[i].pi_id == 
 					CDF_PROPERTY_NAME_OF_APPLICATION) {
-					if (strstr(s, "Word"))
+					if (strstr(vbuf, "Word"))
 						str = "msword";
-					else if (strstr(s, "Excel"))
+					else if (strstr(vbuf, "Excel"))
 						str = "vnd.ms-excel";
-					else if (strstr(s, "Powerpoint"))
+					else if (strstr(vbuf, "Powerpoint"))
 						str = "vnd.ms-powerpoint";
 				}
 			}
