@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.131 2009/02/13 18:48:05 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.132 2009/07/15 14:08:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -63,14 +63,12 @@ FILE_RCSID("@(#)$File: file.c,v 1.131 2009/02/13 18:48:05 christos Exp $")
 
 #if defined(HAVE_GETOPT_H) && defined(HAVE_STRUCT_OPTION)
 #include <getopt.h>
-#else
-#include "mygetopt.h"
-#endif
 #ifndef HAVE_GETOPT_LONG
 int getopt_long(int argc, char * const *argv, const char *optstring, const struct option *longopts, int *longindex);
 #endif
-
-#include <netinet/in.h>		/* for byte swapping */
+#else
+#include "mygetopt.h"
+#endif
 
 #include "patchlevel.h"
 
