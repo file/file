@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.45 2009/03/05 22:40:59 christos Exp $
+# $File: Makefile.am,v 1.46 2009/08/12 17:22:22 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
@@ -221,7 +221,7 @@ $(MAGIC_FRAGMENT_DIR)/zilog \
 $(MAGIC_FRAGMENT_DIR)/zyxel 
 
 MAGIC = magic.mgc
-CLEANFILES = ${MAGIC}
+CLEANFILES = ${MAGIC} $(MAGIC_FRAGMENT_DIR)/Localstuff
 
 # FIXME: Build file natively as well so that it can be used to compile
 # the target's magic file
@@ -234,5 +234,6 @@ FILE_COMPILE_DEP = $(FILE_COMPILE)
 endif
 
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
+	@cp -f Localstuff $(MAGIC_FRAGMENT_DIR)
 	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
 	@mv $(MAGIC_FRAGMENT_BASE).mgc $@
