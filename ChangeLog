@@ -29,6 +29,10 @@
 	
 	* lint fixes and more from NetBSD
 
+2009-08-12  12:28  Robert Byrnes  <byrnes@wildpumpkin.net>
+
+	* Include Localstuff when compiling magic.
+
 2009-05-06  10:25  Christos Zoulas <christos@zoulas.com>
 
 	* Avoid null dereference in cdf code (Drew Yao)
