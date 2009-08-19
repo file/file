@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.151 2009/03/18 15:19:23 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.152 2009/05/08 17:41:58 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1512,6 +1512,7 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 	     || strchr("-+/.", *l)) && i < sizeof(m->apple); m->apple[i++] = *l++)
 		continue;
 	if (i == sizeof(m->apple) && *l) {
+		m->apple[sizeof(m->apple) - 1] = '\0';
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "APPLE type `%s' truncated %zu",
 			    line, i);
@@ -1545,7 +1546,7 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 	     || strchr("-+/.", *l)) && i < sizeof(m->mimetype); m->mimetype[i++] = *l++)
 		continue;
 	if (i == sizeof(m->mimetype)) {
-		m->desc[sizeof(m->mimetype) - 1] = '\0';
+		m->mimetype[sizeof(m->mimetype) - 1] = '\0';
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "MIME type `%s' truncated %zu",
 			    m->mimetype, i);
@@ -1978,14 +1979,15 @@ file_showstr(FILE *fp, const char *s, size_t len)
 	char	c;
 
 	for (;;) {
-		c = *s++;
 		if (len == ~0U) {
+			c = *s++;
 			if (c == '\0')
 				break;
 		}
 		else  {
 			if (len-- == 0)
 				break;
+			c = *s++;
 		}
 		if (c >= 040 && c <= 0176)	/* TODO isprint && !iscntrl */
 			(void) fputc(c, fp);
