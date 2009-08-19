@@ -1,3 +1,10 @@
+2009-08-19  15:55  Christos Zoulas <christos@zoulas.com>
+
+	* Fix 3 bugs (From Ian Darwin):
+	    - file_showstr could move one past the end of the array
+	    - parse_apple did not nul terminate the string in the overflow case
+	    - parse_mime truncated the wrong string in the overflow case
+
 2009-07-15  10:05  Christos Zoulas <christos@zoulas.com>
 
 	* Fix logic for including mygetopts.h
