@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.152 2009/05/08 17:41:58 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.153 2009/08/19 19:54:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1512,7 +1512,7 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 	     || strchr("-+/.", *l)) && i < sizeof(m->apple); m->apple[i++] = *l++)
 		continue;
 	if (i == sizeof(m->apple) && *l) {
-		m->apple[sizeof(m->apple) - 1] = '\0';
+		/* We don't need to NUL terminate here, printing handles it */
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "APPLE type `%s' truncated %zu",
 			    line, i);
