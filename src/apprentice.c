@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.155 2009/09/11 22:40:50 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.156 2009/09/11 23:39:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -721,36 +721,41 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	/* load directory or file */
 	if (stat(fn, &st) == 0 && S_ISDIR(st.st_mode)) {
 		dir = opendir(fn);
-		if (dir) {
-			while ((d = readdir(dir)) != NULL) {
-				snprintf(subfn, sizeof(subfn), "%s/%s",
-				    fn, d->d_name);
-				if (stat(subfn, &st) == 0 &&
-				    S_ISREG(st.st_mode)) {
-                                        if ((mfn = strdup(subfn)) == NULL) {
-                                                file_oomem(ms, strlen(subfn));
-                                                errs++;
-                                                goto out;
-                                        }
-                                        if (files >= maxfiles) {
-                                                maxfiles = (maxfiles + 1) * 2;
-                                                if ((filearr = CAST(char **, realloc(filearr, maxfiles * sizeof(*filearr)))) == NULL) {
-                                                        file_oomem(ms, files * sizeof(*filearr));
-                                                        errs++;
-                                                        goto out;
-                                                }
-                                        }
-                                        filearr[files++] = mfn;
+		if (!dir) {
+			errs++;
+			goto out;
+		}
+		while ((d = readdir(dir)) != NULL) {
+			(void)snprintf(subfn, sizeof(subfn), "%s/%s",
+			    fn, d->d_name);
+			if (stat(subfn, &st) == -1 || !S_ISREG(st.st_mode))
+				continue;
+			if ((mfn = strdup(subfn)) == NULL) {
+				file_oomem(ms, strlen(subfn));
+				errs++;
+				goto out;
+			}
+			if (files >= maxfiles) {
+				size_t mlen;
+				maxfiles = (maxfiles + 1) * 2;
+				mlen = maxfiles * sizeof(*filearr);
+				if ((filearr = CAST(char **,
+				    realloc(filearr, mlen))) == NULL) {
+					file_oomem(ms, mlen);
+					errs++;
+					goto out;
 				}
 			}
-			closedir(dir);
-			qsort((void *)filearr, files, sizeof(char *), cmpstrp);
-                        for (i = 0; i < files; i++) {
-                                load_1(ms, action, filearr[i], &errs, &marray, &marraycount);
-				free(filearr[i]);
-			}
-		} else
-			errs++;
+			filearr[files++] = mfn;
+		}
+		closedir(dir);
+		qsort(filearr, files, sizeof(*filearr), cmpstrp);
+		for (i = 0; i < files; i++) {
+			load_1(ms, action, filearr[i], &errs, &marray,
+			    &marraycount);
+			free(filearr[i]);
+		}
+		free(filearr);
 	} else
 		load_1(ms, action, fn, &errs, &marray, &marraycount);
 	if (errs)
