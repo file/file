@@ -1,3 +1,8 @@
+2009-09-11  13:11  Reuben Thomas <rrt@sc3d.org>
+	* Combine overlapping epoc and psion magic files into one (epoc).
+
+	* Add some more EPOC MIME types.
+
 2009-08-19  15:55  Christos Zoulas <christos@zoulas.com>
 
 	* Fix 3 bugs (From Ian Darwin):
