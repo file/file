@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.47 2009/08/25 12:38:27 christos Exp $
+# $File: Makefile.am,v 1.48 2009/09/11 16:26:39 rrt Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
@@ -157,7 +157,6 @@ $(MAGIC_FRAGMENT_DIR)/plus5 \
 $(MAGIC_FRAGMENT_DIR)/printer \
 $(MAGIC_FRAGMENT_DIR)/project \
 $(MAGIC_FRAGMENT_DIR)/psdbms \
-$(MAGIC_FRAGMENT_DIR)/psion \
 $(MAGIC_FRAGMENT_DIR)/pulsar \
 $(MAGIC_FRAGMENT_DIR)/pyramid \
 $(MAGIC_FRAGMENT_DIR)/python \
@@ -235,5 +234,5 @@ endif
 
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
 	@cp -f Localstuff $(MAGIC_FRAGMENT_DIR)
-	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)/*
+	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
 	@mv $(MAGIC_FRAGMENT_BASE).mgc $@
