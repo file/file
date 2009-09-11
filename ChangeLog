@@ -1,4 +1,10 @@
+2009-09-11  23:38  Reuben Thomas <rrt@sc3d.org>
+
+	* When magic argument is a directory, read the files in
+	  strcmp-sorted order (fixes Debian bug #488562 and our own FIXME).
+
 2009-09-11  13:11  Reuben Thomas <rrt@sc3d.org>
+
 	* Combine overlapping epoc and psion magic files into one (epoc).
 
 	* Add some more EPOC MIME types.
