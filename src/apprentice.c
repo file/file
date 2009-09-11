@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.154 2009/08/20 12:51:10 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.155 2009/09/11 22:40:50 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -686,14 +686,20 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
  * const char *fn: name of magic file or directory
  */
 private int
+cmpstrp(const void *p1, const void *p2)
+{
+        return strcmp(*(char *const *)p1, *(char *const *)p2);
+}
+
+private int
 apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
     const char *fn, int action)
 {
 	int errs = 0;
 	struct magic_entry *marray;
 	uint32_t marraycount, i, mentrycount = 0, starttest;
-	size_t slen;
-	char subfn[MAXPATHLEN];
+	size_t slen, files = 0, maxfiles = 0;
+	char subfn[MAXPATHLEN], **filearr = NULL, *mfn;
 	struct stat st;
 	DIR *dir;
 	struct dirent *d;
@@ -713,8 +719,6 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		(void)fprintf(stderr, "%s\n", usg_hdr);
 
 	/* load directory or file */
-        /* FIXME: Read file names and sort them to prevent
-           non-determinism. See Debian bug #488562. */
 	if (stat(fn, &st) == 0 && S_ISDIR(st.st_mode)) {
 		dir = opendir(fn);
 		if (dir) {
@@ -723,11 +727,28 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 				    fn, d->d_name);
 				if (stat(subfn, &st) == 0 &&
 				    S_ISREG(st.st_mode)) {
-					load_1(ms, action, subfn, &errs,
-					    &marray, &marraycount);
+                                        if ((mfn = strdup(subfn)) == NULL) {
+                                                file_oomem(ms, strlen(subfn));
+                                                errs++;
+                                                goto out;
+                                        }
+                                        if (files >= maxfiles) {
+                                                maxfiles = (maxfiles + 1) * 2;
+                                                if ((filearr = CAST(char **, realloc(filearr, maxfiles * sizeof(*filearr)))) == NULL) {
+                                                        file_oomem(ms, files * sizeof(*filearr));
+                                                        errs++;
+                                                        goto out;
+                                                }
+                                        }
+                                        filearr[files++] = mfn;
 				}
 			}
 			closedir(dir);
+			qsort((void *)filearr, files, sizeof(char *), cmpstrp);
+                        for (i = 0; i < files; i++) {
+                                load_1(ms, action, filearr[i], &errs, &marray, &marraycount);
+				free(filearr[i]);
+			}
 		} else
 			errs++;
 	} else
