@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.19 2009/05/08 17:41:59 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.20 2009/07/15 15:17:44 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -202,6 +202,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 	cdf_dir_t dir;
 	int i;
 	const char *expn = "";
+	const char *corrupt = "corrupt: ";
 
 	info.i_fd = fd;
 	info.i_buf = buf;
@@ -245,7 +246,12 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 
 	if ((i = cdf_read_summary_info(&info, &h, &sat, &ssat, &sst, &dir,
 	    &scn)) == -1) {
-		expn = "Cannot read summary info";
+		if (errno == ESRCH) {
+			corrupt = expn;
+			expn = "No summary info";
+		} else {
+			expn = "Cannot read summary info";
+		}
 		goto out4;
 	}
 #ifdef CDF_DEBUG
@@ -267,7 +273,7 @@ out0:
 		if (file_printf(ms, "CDF V2 Document") == -1)
 			return -1;
 		if (*expn)
-			if (file_printf(ms, ", corrupt: %s", expn) == -1)
+			if (file_printf(ms, ", %s%s", corrupt, expn) == -1)
 				return -1;
 		i = 1;
 	}
