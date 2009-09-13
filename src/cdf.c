@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.34 2009/08/12 17:22:22 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.35 2009/09/13 23:25:16 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -231,14 +231,17 @@ cdf_unpack_dir(cdf_directory_t *d, char *buf)
 }
 
 static int
-cdf_check_stream_offset(const cdf_stream_t *sst, const void *p, size_t tail)
+cdf_check_stream_offset(const cdf_stream_t *sst, const void *p, size_t tail,
+    int line)
 {
 	const char *b = (const char *)sst->sst_tab;
 	const char *e = ((const char *)p) + tail;
+	(void)&line;
 	if (e >= b && (size_t)(e - b) < sst->sst_dirlen * sst->sst_len)
 		return 0;
-	DPRINTF(("offset begin %p end %p %zu >= %zu\n", b, e,
-	    (size_t)(e - b), sst->sst_dirlen * sst->sst_len));
+	DPRINTF(("%d: offset begin %p end %p %zu >= %zu [%zu %zu]\n",
+	    line, b, e, (size_t)(e - b), sst->sst_dirlen * sst->sst_len,
+	    sst->sst_dirlen, sst->sst_len));
 	errno = EFTYPE;
 	return -1;
 }
@@ -681,7 +684,7 @@ cdf_read_summary_info(const cdf_info_t *info, const cdf_header_t *h,
 
 	if (i == dir->dir_len) {
 		DPRINTF(("Cannot find summary information section\n"));
-		errno = EFTYPE;
+		errno = ESRCH;
 		return -1;
 	}
 	d = &dir->dir_tab[i];
@@ -711,7 +714,7 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	}
 	shp = CAST(const cdf_section_header_t *, (const void *)
 	    ((const char *)sst->sst_tab + offs));
-	if (cdf_check_stream_offset(sst, shp, sizeof(*shp)) == -1)
+	if (cdf_check_stream_offset(sst, shp, sizeof(*shp), __LINE__) == -1)
 		goto out;
 	sh.sh_len = CDF_TOLE4(shp->sh_len);
 #define CDF_SHLEN_LIMIT (UINT32_MAX / 8)
@@ -746,7 +749,7 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	    offs + sizeof(sh)));
 	e = CAST(const uint32_t *, (const void *)
 	    (((const char *)(const void *)shp) + sh.sh_len));
-	if (cdf_check_stream_offset(sst, e, 0) == -1)
+	if (cdf_check_stream_offset(sst, e, 0, __LINE__) == -1)
 		goto out;
 	for (i = 0; i < sh.sh_properties; i++) {
 		q = (const uint32_t *)(const void *)
@@ -867,8 +870,8 @@ cdf_unpack_summary_info(const cdf_stream_t *sst, cdf_summary_info_header_t *ssi,
 	    CAST(const cdf_section_declaration_t *, (const void *)
 	    ((const char *)sst->sst_tab + CDF_SECTION_DECLARATION_OFFSET));
 
-	if (cdf_check_stream_offset(sst, si, sizeof(*si)) == -1 ||
-	    cdf_check_stream_offset(sst, sd, sizeof(*sd)) == -1)
+	if (cdf_check_stream_offset(sst, si, sizeof(*si), __LINE__) == -1 ||
+	    cdf_check_stream_offset(sst, sd, sizeof(*sd), __LINE__) == -1)
 		return -1;
 	ssi->si_byte_order = CDF_TOLE2(si->si_byte_order);
 	ssi->si_os_version = CDF_TOLE2(si->si_os_version);
