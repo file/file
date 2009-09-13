@@ -19,13 +19,13 @@
 # HyperText Markup Language (HTML) is an SGML document type,
 # from Daniel Quinlan (quinlan@yggdrasil.com)
 # adapted to string extenstions by Anthon van der Neut <anthon@mnt.org)
-0	search/1/cB	\<!doctype\ html	HTML document text
+0	search/400/cB	\<!doctype\ html	HTML document text
 !:mime	text/html
-0	search/1/cb	\<head			HTML document text
+0	search/400/cb	\<head			HTML document text
 !:mime	text/html
-0	search/1/cb	\<title			HTML document text
+0	search/400/cb	\<title			HTML document text
 !:mime	text/html
-0	search/1/cb	\<html			HTML document text
+0	search/400/cb	\<html			HTML document text
 !:mime	text/html
 
 # Extensible markup language (XML), a subset of SGML
