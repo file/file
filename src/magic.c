@@ -28,7 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.64 2009/07/15 14:08:43 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.65 2009/09/14 17:50:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -72,6 +72,7 @@ private void free_mlist(struct mlist *);
 private void close_and_restore(const struct magic_set *, const char *, int,
     const struct stat *);
 private int unreadable_info(struct magic_set *, mode_t, const char *);
+private const char* get_default_magic(void);
 #ifndef COMPILE_ONLY
 private const char *file_or_fd(struct magic_set *, const char *, int);
 #endif
@@ -79,6 +80,41 @@ private const char *file_or_fd(struct magic_set *, const char *, int);
 #ifndef	STDIN_FILENO
 #define	STDIN_FILENO	0
 #endif
+
+private const char *
+get_default_magic(void)
+{
+	static const char hmagic[] = "/.magic";
+	static char default_magic[2 * MAXPATHLEN + 2];
+	char *home;
+	char hmagicpath[MAXPATHLEN + 1];
+
+	if ((home = getenv("HOME")) == NULL)
+		return MAGIC;
+
+	(void)snprintf(hmagicpath, sizeof(hmagicpath), "%s%s", home, hmagic);
+
+	if (access(hmagicpath, R_OK) == -1)
+		return MAGIC;
+
+	(void)snprintf(default_magic, sizeof(default_magic), "%s:%s",
+	    hmagicpath, MAGIC);
+
+	return default_magic;
+}
+
+public const char *
+magic_getpath(const char *magicfile, int action)
+{
+	if (magicfile != NULL)
+		return magicfile;
+
+	magicfile = getenv("MAGIC");
+	if (magicfile != NULL)
+		return magicfile;
+
+	return action == FILE_LOAD ? get_default_magic() : MAGIC;
+}
 
 public struct magic_set *
 magic_open(int flags)
