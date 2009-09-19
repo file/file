@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: mips,v 1.5 2009/09/19 16:28:10 christos Exp $
 # mips:  file(1) magic for Silicon Graphics (MIPS, IRIS, IRIX, etc.)
 #                         Dec Ultrix (MIPS)
 # all of SGI's *current* machines and OSes run in big-endian mode on the

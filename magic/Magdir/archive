@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: archive,v 1.54 2009/09/19 16:28:08 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #

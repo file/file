@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: mail.news,v 1.17 2009/09/19 16:28:10 christos Exp $
 # mail.news:  file(1) magic for mail and news
 #
 # Unfortunately, saved netnews also has From line added in some news software.

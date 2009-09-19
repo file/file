@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: wordprocessors,v 1.14 2009/09/19 16:28:13 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:

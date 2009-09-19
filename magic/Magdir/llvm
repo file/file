@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: llvm,v 1.4 2009/09/19 16:28:10 christos Exp $
 # llvm:  file(1) magic for LLVM byte-codes
 # URL:  http://llvm.cs.uiuc.edu/docs/BytecodeFormat.html#signature
 # From: Al Stone <ahs3@fc.hp.com>

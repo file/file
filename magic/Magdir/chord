@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: chord,v 1.4 2009/09/19 16:28:08 christos Exp $
 # chord: file(1) magic for Chord music sheet typesetting utility input files
 #
 # From Philippe De Muyter <phdm@macqel.be>

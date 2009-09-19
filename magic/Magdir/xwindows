@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: xwindows,v 1.6 2009/09/19 16:28:13 christos Exp $
 # xwindows:  file(1) magic for various X/Window system file formats.
 
 # Compiled X Keymap 

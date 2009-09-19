@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: apple,v 1.23 2009/09/19 16:28:08 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1	FiLeStArTfIlEsTaRt	binscii (apple ][) text

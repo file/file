@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: lisp,v 1.23 2009/09/19 16:28:10 christos Exp $
 # lisp:  file(1) magic for lisp programs
 #
 # various lisp types, from Daniel Quinlan (quinlan@yggdrasil.com)

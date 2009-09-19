@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: python,v 1.11 2009/09/19 16:28:12 christos Exp $
 # python:  file(1) magic for python
 #
 # From: David Necas <yeti@physics.muni.cz>
@@ -16,9 +18,9 @@
 0	belong		0xd1f20d0a	python 2.6 byte-compiled
 
 
-0	search/1/b	#!\ /usr/bin/python	Python script text executable
+0	search/1/w	#!\ /usr/bin/python	Python script text executable
 !:mime text/x-python
-0	search/1/b	#!\ /usr/local/bin/python	Python script text executable
+0	search/1/w	#!\ /usr/local/bin/python	Python script text executable
 !:mime text/x-python
 0	search/1	#!/usr/bin/env\ python	Python script text executable
 !:mime text/x-python

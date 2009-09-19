@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: kde,v 1.4 2009/09/19 16:28:10 christos Exp $
 # kde:  file(1) magic for KDE
 
 0		string	[KDE\ Desktop\ Entry]	KDE desktop entry

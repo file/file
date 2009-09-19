@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: intel,v 1.8 2009/09/19 16:28:10 christos Exp $
 # intel:  file(1) magic for x86 Unix
 #
 # Various flavors of x86 UNIX executable/object (other than Xenix, which

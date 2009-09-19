@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: filesystems,v 1.51 2009/09/19 16:28:09 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem

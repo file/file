@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: linux,v 1.32 2009/09/19 16:28:10 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>

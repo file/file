@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: revision,v 1.6 2009/09/19 16:28:12 christos Exp $
 # file(1) magic for revision control files
 # From Hendrik Scholz <hendrik@scholz.net>
 0	string	/1\ :pserver:	cvs password text file

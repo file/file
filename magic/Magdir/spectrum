@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: spectrum,v 1.6 2009/09/19 16:28:12 christos Exp $
 # spectrum:  file(1) magic for Spectrum emulator files.
 #
 # John Elliott <jce@seasip.demon.co.uk>

@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: tex,v 1.16 2009/09/19 16:28:12 christos Exp $
 # tex:  file(1) magic for TeX files
 #
 # XXX - needs byte-endian stuff (big-endian and little-endian DVI?)

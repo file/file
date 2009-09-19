@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: ocaml,v 1.4 2009/09/19 16:28:11 christos Exp $
 # ocaml: file(1) magic for Objective Caml files.
 0	string	Caml1999	Objective caml
 >8	string	X		exec file

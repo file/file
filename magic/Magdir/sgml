@@ -1,17 +1,19 @@
+
 #------------------------------------------------------------------------------
+# $File: sgml,v 1.23 2009/09/19 16:28:12 christos Exp $
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
 0	string		\<?xml\ version="
 >15	string		>\0
->>23	search/400	\<svg			SVG Scalable Vector Graphics image
+>>23	search/2048	\<svg			SVG Scalable Vector Graphics image
 !:mime	image/svg+xml
->>23	search/400	\<gnc-v2		GnuCash file
+>>23	search/2048	\<gnc-v2		GnuCash file
 !:mime	application/x-gnucash
 
 # Sitemap file
 0	string		\<?xml\ version="
 >15	string		>\0
->>23	search/400	\<urlset		XML Sitemap document text
+>>23	search/2048	\<urlset		XML Sitemap document text
 !:mime	application/xml-sitemap
 
 #------------------------------------------------------------------------------
@@ -19,18 +21,24 @@
 # HyperText Markup Language (HTML) is an SGML document type,
 # from Daniel Quinlan (quinlan@yggdrasil.com)
 # adapted to string extenstions by Anthon van der Neut <anthon@mnt.org)
-0	search/400/cB	\<!doctype\ html	HTML document text
+0	search/2048/cWbt	\<!doctype\ html	HTML document text
 !:mime	text/html
-0	search/400/cb	\<head			HTML document text
+0	search/2048/cwbt	\<head			HTML document text
 !:mime	text/html
-0	search/400/cb	\<title			HTML document text
+0	search/2048/cwbt	\<title			HTML document text
 !:mime	text/html
-0	search/400/cb	\<html			HTML document text
+0	search/2048/cwbt	\<html			HTML document text
+!:mime	text/html
+0	search/2048/cwbt	\<script 		HTML document text
+!:mime	text/html
+0	search/2048/cwbt	\<style 		HTML document text
+!:mime	text/html
+0	search/2048/cwbt	\<table			HTML document text
 !:mime	text/html
 
 # Extensible markup language (XML), a subset of SGML
 # from Marc Prud'hommeaux (marc@apocalypse.org)
-0	search/1/cb	\<?xml			XML document text
+0	search/1/cwbt	\<?xml			XML document text
 !:mime	application/xml
 0	string		\<?xml\ version\ "	XML
 !:mime	application/xml
@@ -44,16 +52,16 @@
 >15	search/1	>\0			%.3s document text
 >>23	search/1	\<xsl:stylesheet	(XSL stylesheet)
 >>24	search/1	\<xsl:stylesheet	(XSL stylesheet)
-0	search/1/b	\<?xml			XML document text
+0	search/1/wbt	\<?xml			XML document text
 !:mime	application/xml
-0	search/1/b	\<?XML			broken XML document text
+0	search/1/wbt	\<?XML			broken XML document text
 !:mime	application/xml
 
 
 # SGML, mostly from rph@sq
-0	search/1/cb	\<!doctype		exported SGML document text
-0	search/1/cb	\<!subdoc		exported SGML subdocument text
-0	search/1/cb	\<!--			exported SGML document text
+0	search/2048/cwbt	\<!doctype		exported SGML document text
+0	search/2048/cwbt	\<!subdoc		exported SGML subdocument text
+0	search/2048/cwbt	\<!--			exported SGML document text
 
 # Web browser cookie files
 # (Mozilla, Galeon, Netscape 4, Konqueror..)

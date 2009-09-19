@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: mime,v 1.5 2009/09/19 16:28:10 christos Exp $
 # mime:  file(1) magic for MIME encoded files
 #
 0	string		Content-Type:\ 

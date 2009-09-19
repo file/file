@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: erlang,v 1.5 2009/09/19 16:28:09 christos Exp $
 # erlang:  file(1) magic for Erlang JAM and BEAM files
 # URL:  http://www.erlang.org/faq/x779.html#AEN812
 

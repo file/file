@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: animation,v 1.38 2009/09/19 16:28:07 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -29,7 +30,7 @@
 #!:mime	image/x-quicktime
 4       string          pckg            Apple QuickTime compressed archive
 !:mime	application/x-quicktime-player
-4	string/B	jP		JPEG 2000 image
+4	string/W	jP		JPEG 2000 image
 !:mime	image/jp2
 4	string		ftyp		ISO Media
 >8	string		isom		\b, MPEG v4 system, version 1
@@ -41,7 +42,7 @@
 !:mime	video/mp4
 >8	string		mp7t		\b, MPEG v4 system, MPEG v7 XML
 >8	string		mp7b		\b, MPEG v4 system, MPEG v7 binary XML
->8	string/B	jp2		\b, JPEG 2000
+>8	string/W	jp2		\b, JPEG 2000
 !:mime	image/jp2
 >8	string		3gp		\b, MPEG v4 system, 3GPP
 !:mime	video/3gpp
@@ -52,13 +53,13 @@
 !:mime	video/mp4
 >8	string		avc1		\b, MPEG v4 system, 3GPP JVT AVC
 !:mime	video/3gpp
->8	string/B	M4A		\b, MPEG v4 system, iTunes AAC-LC
+>8	string/W	M4A		\b, MPEG v4 system, iTunes AAC-LC
 !:mime	audio/mp4
->8	string/B	M4V		\b, MPEG v4 system, iTunes AVC-LC
+>8	string/W	M4V		\b, MPEG v4 system, iTunes AVC-LC
 !:mime	video/mp4
->8	string/B	M4P		\b, MPEG v4 system, iTunes AES encrypted
->8	string/B	M4B		\b, MPEG v4 system, iTunes bookmarked
->8	string/B	qt		\b, Apple QuickTime movie
+>8	string/W	M4P		\b, MPEG v4 system, iTunes AES encrypted
+>8	string/W	M4B		\b, MPEG v4 system, iTunes bookmarked
+>8	string/W	qt		\b, Apple QuickTime movie
 !:mime	video/quicktime
 
 # MPEG sequences
@@ -720,16 +721,16 @@
 3	string		\x0D\x0AVersion:Vivo	Vivo video data
 
 # VRML (Virtual Reality Modelling Language)
-0       string/b        #VRML\ V1.0\ ascii	VRML 1 file
+0       string/w        #VRML\ V1.0\ ascii	VRML 1 file
 !:mime	model/vrml
-0	string/b	#VRML\ V2.0\ utf8	ISO/IEC 14772 VRML 97 file
+0	string/w	#VRML\ V2.0\ utf8	ISO/IEC 14772 VRML 97 file
 !:mime	model/vrml
 
 # X3D (Extensible 3D) [http://www.web3d.org/specifications/x3d-3.0.dtd]
 # From Michel Briand <michelbriand@free.fr>
 0	string		\<?xml\ version="
 !:strength +1
->20	search/1000/cb  \<!DOCTYPE\ X3D		X3D (Extensible 3D) model xml text
+>20	search/1000/cw  \<!DOCTYPE\ X3D		X3D (Extensible 3D) model xml text
 !:mime model/x3d
 
 #---------------------------------------------------------------------------

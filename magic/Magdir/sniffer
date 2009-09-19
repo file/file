@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File: sniffer,v 1.14 2009/09/19 16:28:12 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)

@@ -1,12 +1,14 @@
+
 #------------------------------------------------------------------------------
+# $File: ruby,v 1.3 2009/09/19 16:28:12 christos Exp $
 # ruby:  file(1) magic for Ruby scripting language
 # URL:  http://www.ruby-lang.org/
 # From: Reuben Thomas <rrt@sc3d.org>
 
 # Ruby scripts
-0	search/1/b	#!\ /usr/bin/ruby	Ruby script text executable
+0	search/1/w	#!\ /usr/bin/ruby	Ruby script text executable
 !:mime text/x-ruby
-0	search/1/b	#!\ /usr/local/bin/ruby	Ruby script text executable
+0	search/1/w	#!\ /usr/local/bin/ruby	Ruby script text executable
 !:mime text/x-ruby
 0	search/1	#!/usr/bin/env\ ruby	Ruby script text executable
 !:mime text/x-ruby

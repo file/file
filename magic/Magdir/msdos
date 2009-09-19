@@ -1,18 +1,19 @@
 
 #------------------------------------------------------------------------------
+# $File: msdos,v 1.65 2009/09/19 16:28:11 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
 # .BAT files (Daniel Quinlan, quinlan@yggdrasil.com)
 # updated by Joerg Jenderek at Oct 2008
 0	string	@			
->1	string/cB	\ echo\ off	DOS batch file text
+>1	string/cW	\ echo\ off	DOS batch file text
 !:mime	text/x-msdos-batch
->1	string/cB	echo\ off	DOS batch file text
+>1	string/cW	echo\ off	DOS batch file text
 !:mime	text/x-msdos-batch
->1	string/cB	rem\ 		DOS batch file text
+>1	string/cW	rem\ 		DOS batch file text
 !:mime	text/x-msdos-batch
->1	string/cB	set\ 		DOS batch file text
+>1	string/cW	set\ 		DOS batch file text
 !:mime	text/x-msdos-batch
 
 

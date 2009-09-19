@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: rpm,v 1.8 2009/09/19 16:28:12 christos Exp $
 #
 # RPM: file(1) magic for Red Hat Packages   Erik Troan (ewt@redhat.com)
 #

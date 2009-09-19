@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File: images,v 1.62 2009/09/19 16:28:09 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
