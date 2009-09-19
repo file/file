@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the

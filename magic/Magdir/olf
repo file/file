@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # olf:  file(1) magic for OLF executables
 #
 # We have to check the byte order flag to see what byte order all the

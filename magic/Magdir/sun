@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # sun:  file(1) magic for Sun machines
 #
 # Values for big-endian Sun (MC680x0, SPARC) binaries on pre-5.x

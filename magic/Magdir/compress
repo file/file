@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.

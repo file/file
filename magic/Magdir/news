@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # news:  file(1) magic for SunOS NeWS fonts (not "news" as in "netnews")
 #
 0	string		StartFontMetrics	ASCII font metrics

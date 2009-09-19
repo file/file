@@ -1,3 +1,6 @@
+
+#------------------------------------------------------------------------------
+# $File$
 # GNOME keyring
 # Contributed by Josh Triplett
 # FIXME: Could be simplified if pstring supported two-byte counts

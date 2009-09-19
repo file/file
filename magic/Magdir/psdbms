@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # psdbms:  file(1) magic for psdatabase
 #
 0	belong&0xff00ffff	0x56000000	ps database

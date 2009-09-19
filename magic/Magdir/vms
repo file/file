@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # vms:  file(1) magic for VMS executables (experimental)
 #
 # VMS .exe formats, both VAX and AXP (Greg Roelofs, newt@uchicago.edu)

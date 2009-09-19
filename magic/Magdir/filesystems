@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem

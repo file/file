@@ -1,4 +1,6 @@
-#
+
+#------------------------------------------------------------------------------
+# $File$
 # i80960 b.out objects and archives
 #
 0	long		0x10d		i960 b.out relocatable object

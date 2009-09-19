@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File$
 # graphviz:  file(1) magic for http://www.graphviz.org/
 
 # FIXME: These patterns match too generally. For example, the first

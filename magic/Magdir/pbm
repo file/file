@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # pbm:  file(1) magic for Portable Bitmap files
 #
 # XXX - byte order?

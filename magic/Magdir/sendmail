@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # sendmail:  file(1) magic for sendmail config files
 #
 # XXX - byte order?

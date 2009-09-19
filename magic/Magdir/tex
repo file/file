@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File$
 # tex:  file(1) magic for TeX files
 #
 # XXX - needs byte-endian stuff (big-endian and little-endian DVI?)

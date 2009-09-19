@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File$
 # varied.script:  file(1) magic for various interpreter scripts
 
 0	string		#!\ /			a

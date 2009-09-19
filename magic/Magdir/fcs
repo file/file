@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # fcs: file(1) magic for FCS (Flow Cytometry Standard) data files
 # From Roger Leigh <roger@whinlatter.uklinux.net>
 0       string          FCS1.0          Flow Cytometry Standard (FCS) data, version 1.0

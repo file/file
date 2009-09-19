@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # file(1) magic(5) data for xdelta  Josh MacDonald <jmacd@CS.Berkeley.EDU>
 #
 0	string	%XDELTA%	XDelta binary patch file 0.14

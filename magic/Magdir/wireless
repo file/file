@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File$
 # wireless-regdb:        file(1) magic for CRDA wireless-regdb file format
 #
 0	string	RGDB	CRDA wireless regulatory database file

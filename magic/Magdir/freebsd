@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # freebsd:  file(1) magic for FreeBSD objects
 #
 # All new-style FreeBSD magic numbers are in host byte order (i.e.,

@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # warc:  file(1) magic for WARC files
 
 0	string	WARC/	WARC Archive

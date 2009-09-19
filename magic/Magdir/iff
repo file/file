@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # iff:	file(1) magic for Interchange File Format (see also "audio" & "images")
 #
 # Daniel Quinlan (quinlan@yggdrasil.com) -- IFF was designed by Electronic

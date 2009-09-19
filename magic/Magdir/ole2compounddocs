@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (http://en.wikipedia.org/wiki/Structured_Storage)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.

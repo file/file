@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File$
 # convex:  file(1) magic for Convex boxes
 #
 # Convexes are big-endian.

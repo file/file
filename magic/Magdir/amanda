@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File$
 # amanda:  file(1) magic for amanda file format
 #
 0	string	AMANDA:\ 		AMANDA 

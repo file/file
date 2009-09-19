@@ -1,5 +1,6 @@
 
 #------------------------------------------------------------------------------
+# $File$
 # ocaml: file(1) magic for Objective Caml files.
 0	string	Caml1999	Objective caml
 >8	string	X		exec file

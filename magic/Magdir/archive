@@ -1,4 +1,6 @@
+
 #------------------------------------------------------------------------------
+# $File$
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
