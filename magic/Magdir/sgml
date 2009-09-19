@@ -1,39 +1,54 @@
-
 #------------------------------------------------------------------------------
-# $File$
+# $File: sgml,v 1.23 2009/09/19 16:28:12 christos Exp $
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
 0	string		\<?xml\ version="
 >15	string		>\0
->>23	search/2048	\<svg			SVG Scalable Vector Graphics image
+>>19	search/4096	\<svg			SVG Scalable Vector Graphics image
 !:mime	image/svg+xml
->>23	search/2048	\<gnc-v2		GnuCash file
+>>19	search/4096	\<gnc-v2		GnuCash file
 !:mime	application/x-gnucash
 
 # Sitemap file
 0	string		\<?xml\ version="
 >15	string		>\0
->>23	search/2048	\<urlset		XML Sitemap document text
+>>19	search/4096	\<urlset		XML Sitemap document text
 !:mime	application/xml-sitemap
+
+# xhtml
+0	string		\<?xml\ version="
+>15	string		>\0
+>>19	search/4096/cWbt	\<!doctype\ html	xHTML document text
+!:mime	text/html
+0	string		\<?xml\ version='
+>15	string		>\0
+>>19	search/4096/cWbt	\<!doctype\ html	xHTML document text
+!:mime	text/html
+0	string		\<?xml\ version="
+>15	string		>\0
+>>19	search/4096/cWbt	\<html	broken xHTML document text
+!:mime	text/html
 
 #------------------------------------------------------------------------------
 # sgml:  file(1) magic for Standard Generalized Markup Language
 # HyperText Markup Language (HTML) is an SGML document type,
 # from Daniel Quinlan (quinlan@yggdrasil.com)
 # adapted to string extenstions by Anthon van der Neut <anthon@mnt.org)
-0	search/2048/cWbt	\<!doctype\ html	HTML document text
+0	search/4096/cWbt	\<!doctype\ html	HTML document text
 !:mime	text/html
-0	search/2048/cwbt	\<head			HTML document text
+0	search/4096/cwbt	\<head			HTML document text
 !:mime	text/html
-0	search/2048/cwbt	\<title			HTML document text
+0	search/4096/cwbt	\<title			HTML document text
 !:mime	text/html
-0	search/2048/cwbt	\<html			HTML document text
+0	search/4096/cwbt	\<html			HTML document text
 !:mime	text/html
-0	search/2048/cwbt	\<script 		HTML document text
+0	search/4096/cwbt	\<script 		HTML document text
 !:mime	text/html
-0	search/2048/cwbt	\<style 		HTML document text
+0	search/4096/cwbt	\<style 		HTML document text
 !:mime	text/html
-0	search/2048/cwbt	\<table			HTML document text
+0	search/4096/cwbt	\<table			HTML document text
+!:mime	text/html
+0	search/4096/cwbt	\<a\ href=		HTML document text
 !:mime	text/html
 
 # Extensible markup language (XML), a subset of SGML
@@ -54,14 +69,17 @@
 >>24	search/1	\<xsl:stylesheet	(XSL stylesheet)
 0	search/1/wbt	\<?xml			XML document text
 !:mime	application/xml
+!:strength - 10
 0	search/1/wbt	\<?XML			broken XML document text
 !:mime	application/xml
+!:strength - 10
 
 
 # SGML, mostly from rph@sq
-0	search/2048/cwbt	\<!doctype		exported SGML document text
-0	search/2048/cwbt	\<!subdoc		exported SGML subdocument text
-0	search/2048/cwbt	\<!--			exported SGML document text
+0	search/4096/cwbt	\<!doctype		exported SGML document text
+0	search/4096/cwbt	\<!subdoc		exported SGML subdocument text
+0	search/4096/cwbt	\<!--			exported SGML document text
+!:strength - 10
 
 # Web browser cookie files
 # (Mozilla, Galeon, Netscape 4, Konqueror..)
