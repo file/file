@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: filesystems,v 1.51 2009/09/19 16:28:09 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1259,11 +1259,103 @@
 0	string	VoIP\ Startup\ and	Aculab VoIP firmware
 >35	string	x	format %s
 
-# u-boot/PPCBoot image file
-# From: Mark Brown <broonie@sirena.org.uk>
-0	belong	0x27051956	u-boot/PPCBoot image
->4	string  PPCBoot
->>12	string  x		version %s
+# From: Mark Brown <broonie@sirena.org.uk> [old]
+# From: Behan Webster <behanw@websterwood.com>
+0	belong	0x27051956	u-boot legacy uImage,
+>32	string	x		%s,
+>28	byte	0		Invalid os/
+>28	byte	1		OpenBSD/
+>28	byte	2		NetBSD/
+>28	byte	3		FreeBSD/
+>28	byte	4		4.4BSD/
+>28	byte	5		Linux/
+>28	byte	6		SVR4/
+>28	byte	7		Esix/
+>28	byte	8		Solaris/
+>28	byte	9		Irix/
+>28	byte	10		SCO/
+>28	byte	11		Dell/
+>28	byte	12		NCR/
+>28	byte	13		LynxOS/
+>28	byte	14		VxWorks/
+>28	byte	15		pSOS/
+>28	byte	16		QNX/
+>28	byte	17		Firmware/
+>28	byte	18		RTEMS/
+>28	byte	19		ARTOS/
+>28	byte	20		Unity OS/
+>28	byte	21		INTEGRITY/
+>29	byte	0		\bInvalid CPU,
+>29	byte	1		\bAlpha,
+>29	byte	2		\bARM,
+>29	byte	3		\bIntel x86,
+>29	byte	4		\bIA64,
+>29	byte	5		\bMIPS,
+>29	byte	6		\bMIPS 64-bit,
+>29	byte	7		\bPowerPC,
+>29	byte	8		\bIBM S390,
+>29	byte	9		\bSuperH,
+>29	byte	10		\bSparc,
+>29	byte	11		\bSparc 64-bit,
+>29	byte	12		\bM68K,
+>29	byte	13		\bNios-32,
+>29	byte	14		\bMicroBlaze,
+>29	byte	15		\bNios-II,
+>29	byte	16		\bBlackfin,
+>29	byte	17		\bAVR32,
+>29	byte	18		\bSTMicroelectronics ST200,
+>30	byte	0		Invalid Image
+>30	byte	1		Standalone Program
+>30	byte	2		OS Kernel Image
+>30	byte	3		RAMDisk Image
+>30	byte	4		Multi-File Image
+>30	byte	5		Firmware Image
+>30	byte	6		Script File
+>30	byte	7		Filesystem Image (any type)
+>30	byte	8		Binary Flat Device Tree BLOB
+>31	byte	0		(Not compressed),
+>31	byte	1		(gzip),
+>31	byte	2		(bzip2),
+>31	byte	3		(lzma),
+>12	belong	x		%d bytes,
+>8	bedate	x		%s,
+>16	belong	x		Load Address: 0x%08X,
+>20	belong	x		Entry Point: 0x%08X,
+>4	belong	x		Header CRC: 0x%08X,
+>24	belong	x		Data CRC: 0x%08X
+
+--------------060504020300020704030604
+Content-Type: text/sanitizer-log; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment; filename="sanitizer.log"
+
+This message has been 'sanitized'.  This means that potentially
+dangerous content has been rewritten or removed.  The following
+log describes which actions were taken.
+
+Sanitizer (start="1253554299"):
+  Part (pos="1717"):
+    SanitizeFile (filename="unnamed.txt", mimetype="text/plain"):
+      Match (names="unnamed.txt", rule="2"):
+        Enforced policy: accept
+
+  Part (pos="4665"):
+    SanitizeFile (filename="magic-uImage", mimetype="text/plain"):
+      Match (rule="default"):
+        Enforced policy: defang
+
+      Replaced mime type with: application/DEFANGED-0
+      Replaced file name with: magic-uImage.DEFANGED-0
+
+  Total modifications so far: 1
+
+
+Anomy 0.0.0 : Sanitizer.pm
+$Id: filesystems,v 1.52 2009/09/21 18:59:05 christos Exp $
+$Id: filesystems,v 1.52 2009/09/21 18:59:05 christos Exp $
+
+--------------060504020300020704030604--
+
 
 # JFFS2 file system
 0	leshort	0x1984		Linux old jffs2 filesystem data little endian
