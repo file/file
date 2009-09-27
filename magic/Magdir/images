@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.62 2009/09/19 16:28:09 christos Exp $
+# $File: images,v 1.63 2009/09/27 21:48:20 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -568,11 +568,14 @@
 # Submitted by: Stephane Loeuillet <stephane.loeuillet@tiscali.fr>
 # Modified by (1): Abel Cheung <abelcheung@gmail.com>
 0	string	AT&TFORM
-!:mime	image/vnd.djvu
 >12	string	DJVM		DjVu multiple page document
+!:mime	image/vnd.djvu
 >12	string	DJVU		DjVu image or single page document
+!:mime	image/vnd.djvu
 >12	string	DJVI		DjVu shared document
+!:mime	image/vnd.djvu
 >12	string	THUM		DjVu page thumbnails
+!:mime	image/vnd.djvu
 
 
 # From Marc Espie
