@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.38 2009/09/19 16:28:07 christos Exp $
+# $File: animation,v 1.39 2009/09/27 19:02:12 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -72,6 +72,7 @@
 >>7      byte               x              \b @ L %u
 0        belong&0xFFFFFF00  0x00000100     
 >3       byte               0xBA           MPEG sequence
+!:mime  video/mpeg
 >>4      byte               &0x40          \b, v2, program multiplex
 >>4      byte               ^0x40          \b, v1, system multiplex
 >3       byte               0xBB           MPEG sequence, v1/2, multiplex (missing pack header)
@@ -81,6 +82,7 @@
 >>4      byte               88             \b, extended
 >>6      byte               x              \b @ L %u
 >3       byte               0xB0           MPEG sequence, v4
+!:mime  video/mpeg4-generic
 >>5      belong             0x000001B5
 >>>9     byte               &0x80
 >>>>10   byte&0xF0          16             \b, video
@@ -700,6 +702,7 @@
 
 # Microsoft Advanced Streaming Format (ASF) <mpruett@sgi.com>
 0	belong			0x3026b275	Microsoft ASF
+!:mime  video/x-ms-asf
 
 # MNG Video Format, <URL:http://www.libpng.org/pub/mng/spec/>
 0	string			\x8aMNG		MNG video data,
