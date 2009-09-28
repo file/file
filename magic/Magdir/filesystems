@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.51 2009/09/19 16:28:09 christos Exp $
+# $File: filesystems,v 1.52 2009/09/21 18:59:05 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -883,13 +883,37 @@
 
 
 # Minix filesystems - Juan Cespedes <cespedes@debian.org>
-0x410	leshort		0x137f		Minix filesystem
-0x410	beshort		0x137f		Minix filesystem (big endian)
->0x402	beshort		!0		\b, %d zones
+0x410	leshort		0x137f
+>0x402	beshort		< 100		Minix filesystem, V1, %d zones
 >0x1e	string		minix		\b, bootable
-0x410	leshort		0x138f		Minix filesystem, 30 char names
-0x410	leshort		0x2468		Minix filesystem, version 2
-0x410	leshort		0x2478		Minix filesystem, version 2, 30 char names
+0x410	beshort		0x137f
+>0x402	beshort		< 100		Minix filesystem, V1 (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x138f
+>0x402	beshort		< 100		Minix filesystem, V1, 30 char names, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	beshort		0x138f
+>0x402	beshort		< 100		Minix filesystem, V1, 30 char names (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x2468
+>0x402	beshort		< 100		Minix filesystem, V2, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	beshort		0x2468
+>0x402	beshort		< 100		Minix filesystem, V2 (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+
+0x410	leshort		0x2478
+>0x402	beshort		< 100		Minix filesystem, V2, 30 char names, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x2478
+>0x402	beshort		< 100		Minix filesystem, V2, 30 char names, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	beshort		0x2478
+>0x402	beshort		!0		Minix filesystem, V2, 30 char names (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x4d5a
+>0x402	beshort		!0		Minix filesystem, V3, %d zones
+>0x1e	string		minix		\b, bootable
 
 # romfs filesystems - Juan Cespedes <cespedes@debian.org>
 0	string		-rom1fs-	romfs filesystem, version 1
@@ -1323,39 +1347,6 @@
 >20	belong	x		Entry Point: 0x%08X,
 >4	belong	x		Header CRC: 0x%08X,
 >24	belong	x		Data CRC: 0x%08X
-
---------------060504020300020704030604
-Content-Type: text/sanitizer-log; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: attachment; filename="sanitizer.log"
-
-This message has been 'sanitized'.  This means that potentially
-dangerous content has been rewritten or removed.  The following
-log describes which actions were taken.
-
-Sanitizer (start="1253554299"):
-  Part (pos="1717"):
-    SanitizeFile (filename="unnamed.txt", mimetype="text/plain"):
-      Match (names="unnamed.txt", rule="2"):
-        Enforced policy: accept
-
-  Part (pos="4665"):
-    SanitizeFile (filename="magic-uImage", mimetype="text/plain"):
-      Match (rule="default"):
-        Enforced policy: defang
-
-      Replaced mime type with: application/DEFANGED-0
-      Replaced file name with: magic-uImage.DEFANGED-0
-
-  Total modifications so far: 1
-
-
-Anomy 0.0.0 : Sanitizer.pm
-$Id: filesystems,v 1.52 2009/09/21 18:59:05 christos Exp $
-$Id: filesystems,v 1.52 2009/09/21 18:59:05 christos Exp $
-
---------------060504020300020704030604--
-
 
 # JFFS2 file system
 0	leshort	0x1984		Linux old jffs2 filesystem data little endian
