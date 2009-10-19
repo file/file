@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.137 2009/05/08 23:25:46 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.138 2009/10/19 13:10:20 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -123,7 +123,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		int flush = 0;
 		struct magic *m = &magic[magindex];
 
-		if ((m->flag & BINTEST) != mode) {
+		if ((m->flag & mode) != mode) {
 			/* Skip sub-tests */
 			while (magic[magindex + 1].cont_level != 0 &&
 			       ++magindex < nmagic)
@@ -800,7 +800,7 @@ mconvert(struct magic_set *ms, struct magic *m)
 	}
 	case FILE_PSTRING: {
 		char *ptr1 = p->s, *ptr2 = ptr1 + 1;
-		size_t len = *p->s;
+	size_t len = *p->s;
 		if (len >= sizeof(p->s))
 			len = sizeof(p->s) - 1;
 		while (len--)
@@ -1636,7 +1636,7 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 				if ((v = toupper(*b++) - *a++) != '\0')
 					break;
 			}
-			else if ((flags & STRING_COMPACT_BLANK) &&
+			else if ((flags & STRING_COMPACT_WHITESPACE) &&
 			    isspace(*a)) {
 				a++;
 				if (isspace(*b++)) {
@@ -1648,7 +1648,7 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 					break;
 				}
 			}
-			else if ((flags & STRING_COMPACT_OPTIONAL_BLANK) &&
+			else if ((flags & STRING_COMPACT_OPTIONAL_WHITESPACE) &&
 			    isspace(*a)) {
 				a++;
 				while (isspace(*b))
