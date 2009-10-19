@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.65 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.66 2009/02/03 20:27:51 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -77,10 +77,10 @@ file_mdump(struct magic *m)
 	if (IS_STRING(m->type)) {
 		if (m->str_flags) {
 			(void) fputc('/', stderr);
-			if (m->str_flags & STRING_COMPACT_BLANK) 
-				(void) fputc(CHAR_COMPACT_BLANK, stderr);
-			if (m->str_flags & STRING_COMPACT_OPTIONAL_BLANK) 
-				(void) fputc(CHAR_COMPACT_OPTIONAL_BLANK,
+			if (m->str_flags & STRING_COMPACT_WHITESPACE) 
+				(void) fputc(CHAR_COMPACT_WHITESPACE, stderr);
+			if (m->str_flags & STRING_COMPACT_OPTIONAL_WHITESPACE) 
+				(void) fputc(CHAR_COMPACT_OPTIONAL_WHITESPACE,
 				    stderr);
 			if (m->str_flags & STRING_IGNORE_LOWERCASE) 
 				(void) fputc(CHAR_IGNORE_LOWERCASE, stderr);

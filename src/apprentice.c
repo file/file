@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.156 2009/09/11 23:39:25 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.157 2009/09/14 17:50:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -592,10 +592,21 @@ set_test_type(struct magic *mstart, struct magic *m)
 		break;
 	case FILE_REGEX:
 	case FILE_SEARCH:
+		/* Check for override */
+		if (mstart->str_flags & STRING_BINTEST)
+			mstart->flag |= BINTEST;
+		if (mstart->str_flags & STRING_TEXTTEST)
+			mstart->flag |= TEXTTEST;
+		    
+		if (mstart->flag & (TEXTTEST|BINTEST))
+			break;
+
 		/* binary test if pattern is not text */
 		if (file_looks_utf8(m->value.us, (size_t)m->vallen, NULL,
 		    NULL) <= 0)
 			mstart->flag |= BINTEST;
+		else
+			mstart->flag |= TEXTTEST;
 		break;
 	case FILE_DEFAULT:
 		/* can't deduce anything; we shouldn't see this at the
@@ -949,14 +960,14 @@ string_modifier_check(struct magic_set *ms, struct magic *m)
 		}
 		break;
 	case FILE_REGEX:
-		if ((m->str_flags & STRING_COMPACT_BLANK) != 0) {
+		if ((m->str_flags & STRING_COMPACT_WHITESPACE) != 0) {
 			file_magwarn(ms, "'/%c' not allowed on regex\n",
-			    CHAR_COMPACT_BLANK);
+			    CHAR_COMPACT_WHITESPACE);
 			return -1;
 		}
-		if ((m->str_flags & STRING_COMPACT_OPTIONAL_BLANK) != 0) {
+		if ((m->str_flags & STRING_COMPACT_OPTIONAL_WHITESPACE) != 0) {
 			file_magwarn(ms, "'/%c' not allowed on regex\n",
-			    CHAR_COMPACT_OPTIONAL_BLANK);
+			    CHAR_COMPACT_OPTIONAL_WHITESPACE);
 			return -1;
 		}
 		break;
@@ -1329,12 +1340,12 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 						    "zero range");
 					l = t - 1;
 					break;
-				case CHAR_COMPACT_BLANK:
-					m->str_flags |= STRING_COMPACT_BLANK;
+				case CHAR_COMPACT_WHITESPACE:
+					m->str_flags |= STRING_COMPACT_WHITESPACE;
 					break;
-				case CHAR_COMPACT_OPTIONAL_BLANK:
+				case CHAR_COMPACT_OPTIONAL_WHITESPACE:
 					m->str_flags |=
-					    STRING_COMPACT_OPTIONAL_BLANK;
+					    STRING_COMPACT_OPTIONAL_WHITESPACE;
 					break;
 				case CHAR_IGNORE_LOWERCASE:
 					m->str_flags |= STRING_IGNORE_LOWERCASE;
@@ -1344,6 +1355,12 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 					break;
 				case CHAR_REGEX_OFFSET_START:
 					m->str_flags |= REGEX_OFFSET_START;
+					break;
+				case CHAR_BINTEST:
+					m->str_flags |= STRING_BINTEST;
+					break;
+				case CHAR_TEXTTEST:
+					m->str_flags |= STRING_TEXTTEST;
 					break;
 				default:
 					if (ms->flags & MAGIC_CHECK)

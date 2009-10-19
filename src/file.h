@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.121 2009/05/08 23:25:46 christos Exp $
+ * @(#)$File: file.h,v 1.122 2009/07/15 15:16:52 christos Exp $
  */
 
 #ifndef __file_h__
@@ -139,7 +139,7 @@ struct magic {
 #define NOSPACE		0x10	/* suppress space character before output */
 #define BINTEST		0x20	/* test is for a binary type (set only
 				   for top-level tests) */
-#define TEXTTEST	0	/* for passing to file_softmagic */
+#define TEXTTEST	0x40	/* for passing to file_softmagic */
 
 	uint8_t factor;
 
@@ -274,16 +274,20 @@ struct magic {
 };
 
 #define BIT(A)   (1 << (A))
-#define STRING_COMPACT_BLANK		BIT(0)
-#define STRING_COMPACT_OPTIONAL_BLANK	BIT(1)
-#define STRING_IGNORE_LOWERCASE		BIT(2)
-#define STRING_IGNORE_UPPERCASE		BIT(3)
-#define REGEX_OFFSET_START		BIT(4)
-#define CHAR_COMPACT_BLANK		'B'
-#define CHAR_COMPACT_OPTIONAL_BLANK	'b'
-#define CHAR_IGNORE_LOWERCASE		'c'
-#define CHAR_IGNORE_UPPERCASE		'C'
-#define CHAR_REGEX_OFFSET_START		's'
+#define STRING_COMPACT_WHITESPACE		BIT(0)
+#define STRING_COMPACT_OPTIONAL_WHITESPACE	BIT(1)
+#define STRING_IGNORE_LOWERCASE			BIT(2)
+#define STRING_IGNORE_UPPERCASE			BIT(3)
+#define REGEX_OFFSET_START			BIT(4)
+#define STRING_TEXTTEST				BIT(5)
+#define STRING_BINTEST				BIT(6)
+#define CHAR_COMPACT_WHITESPACE			'W'
+#define CHAR_COMPACT_OPTIONAL_WHITESPACE	'w'
+#define CHAR_IGNORE_LOWERCASE			'c'
+#define CHAR_IGNORE_UPPERCASE			'C'
+#define CHAR_REGEX_OFFSET_START			's'
+#define CHAR_TEXTTEST				't'
+#define CHAR_BINTEST				'b'
 #define STRING_IGNORE_CASE		(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 #define STRING_DEFAULT_RANGE		100
 
