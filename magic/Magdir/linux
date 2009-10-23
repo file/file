@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.32 2009/09/19 16:28:10 christos Exp $
+# $File: linux,v 1.33 2009/10/23 16:44:59 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -63,6 +63,9 @@
 >0x404	long		x		size %d pages
 >>4086	string		SWAPSPACE2	
 >>>1052	string		>\0		Label %s
+# From Daniel Novotny <dnovotny@redhat.com>
+# swap file for PowerPC
+65526	string		SWAPSPACE2	Linux/ppc swap file
 # ECOFF magic for OSF/1 and Linux (only tested under Linux though)
 #
 #	from Erik Troan (ewt@redhat.com) examining od dumps, so this
