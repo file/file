@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.80 2009/05/08 17:41:58 christos Exp $
+.\" $File: file.man,v 1.81 2009/11/04 17:27:37 christos Exp $
 .Dd October 9, 2008
 .Dt FILE __CSECTION__
 .Os
@@ -8,9 +8,11 @@
 .Sh SYNOPSIS
 .Nm
 .Bk -words
-.Op Fl bchikLNnprsvz
+.Op Fl bchikLNnprsvz0
+.Op Fl -apple
 .Op Fl -mime-encoding
 .Op Fl -mime-type
+.Op Fl e Ar testname
 .Op Fl F Ar separator
 .Op Fl f Ar namefile
 .Op Fl m Ar magicfiles
