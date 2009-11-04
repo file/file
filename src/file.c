@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.132 2009/07/15 14:08:23 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.133 2009/09/14 17:50:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -73,12 +73,16 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifdef S_IFLNK
-#define SYMLINKFLAG "Lh"
+#define FILE_FLAGS "-bchikLNnrsvz0"
 #else
-#define SYMLINKFLAG ""
+#define FILE_FLAGS "-bcikNnrsvz0"
 #endif
 
-# define USAGE  "Usage: %s [-bcik" SYMLINKFLAG "nNrsvz0] [-e test] [-f namefile] [-F separator] [-m magicfiles] file...\n       %s -C -m magicfiles\n"
+# define USAGE  
+    "Usage: %s [" FILE_FLAGS \
+	"] [-e test] [-f namefile] [-F separator] [-m magicfiles] file...\n" \
+    "       %s -C -m magicfiles\n" \
+    "       %s [--help]\n"
 
 #ifndef MAXPATHLEN
 #define	MAXPATHLEN	1024
@@ -455,8 +459,7 @@ file_mbswidth(const char *s)
 private void
 usage(void)
 {
-	(void)fprintf(stderr, USAGE, progname, progname);
-	(void)fputs("Try `file --help' for more information.\n", stderr);
+	(void)fprintf(stderr, USAGE, progname, progname, progname);
 	exit(1);
 }
 

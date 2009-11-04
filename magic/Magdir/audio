@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: audio,v 1.58 2009/09/19 16:28:08 christos Exp $
 # audio:  file(1) magic for sound formats (see also "iff")
 #
 # Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
@@ -278,8 +278,8 @@
 >21	ubyte		<128			note %d,
 >22	byte		=0			replay 5.485 KHz
 >22	byte		=1			replay 8.084 KHz
->22	byte		=2			replay 10.971 Khz
->22	byte		=3			replay 16.168 Khz
+>22	byte		=2			replay 10.971 KHz
+>22	byte		=3			replay 16.168 KHz
 >22	byte		=4			replay 21.942 KHz
 >22	byte		=5			replay 32.336 KHz
 >22	byte		=6			replay 43.885 KHz
