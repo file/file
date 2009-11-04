@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.134 2009/11/04 17:27:37 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.135 2009/11/04 22:30:35 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -73,15 +73,16 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #include "patchlevel.h"
 
 #ifdef S_IFLNK
-#define FILE_FLAGS "-bchikLNnrsvz0"
+#define FILE_FLAGS "-bchikLNnprsvz0"
 #else
-#define FILE_FLAGS "-bcikNnrsvz0"
+#define FILE_FLAGS "-bcikNnprsvz0"
 #endif
 
 # define USAGE  
     "Usage: %s [" FILE_FLAGS \
-	"] [-e test] [-f namefile] [-F separator] [-m magicfiles] file...\n" \
-    "       %s -C -m magicfiles\n" \
+	"] [--apple] [--mime-encoding] [--mime-type]\n" \
+    "            [-e testname] [-F separator] [-f namefile] [-m magicfiles] file ...\n" \
+    "       %s -C [-m magicfiles]\n" \
     "       %s [--help]\n"
 
 #ifndef MAXPATHLEN
