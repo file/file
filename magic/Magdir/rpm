@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: rpm,v 1.8 2009/09/19 16:28:12 christos Exp $
+# $File: rpm,v 1.9 2009/11/06 13:53:52 christos Exp $
 #
 # RPM: file(1) magic for Red Hat Packages   Erik Troan (ewt@redhat.com)
 #
@@ -21,6 +21,12 @@
 >>>8	beshort		8		RS6000
 >>>8	beshort		9		IA64
 >>>8	beshort		10		Sparc64
+
+#delta RPM    Daniel Novotny (dnovotny@redhat.com)
+0	string	drpm	Delta RPM
+!:mime  application/x-rpm
+>12	string 	x	%s
+
 >>>8	beshort		11		MIPSel
 >>>8	beshort		12		ARM
 >>>8	beshort		13		MiNT
