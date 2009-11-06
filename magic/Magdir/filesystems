@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.52 2009/09/21 18:59:05 christos Exp $
+# $File: filesystems,v 1.53 2009/09/28 21:26:59 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1399,6 +1399,10 @@
 >>>>>>>>&0      bedate          !0                      incremental since: %s
 
 #----------------------------------------------------------
+#delta ISO    Daniel Novotny (dnovotny@redhat.com)
+0	string  DISO	Delta ISO data
+>4	belong  x	version %d
+
 # VMS backup savesets - gerardo.cacciari@gmail.com
 #
 4            string  \x01\x00\x01\x00\x01\x00
