@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: flash,v 1.8 2009/09/19 16:28:09 christos Exp $
 # flash:	file(1) magic for Macromedia Flash file format
 #
 # See
@@ -18,5 +18,8 @@
 !:mime	video/x-flv
 
 #
+# Yosu Gomez
+0       string AGD2\xbe\xb8\xbb\xcd\x00 Macromedia Freehand 7 Document
+0       string AGD3\xbe\xb8\xbb\xcc\x00 Macromedia Freehand 8 Document
 # From Dave Wilson
 0	string AGD4\xbe\xb8\xbb\xcb\x00	Macromedia Freehand 9 Document
