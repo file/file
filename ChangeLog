@@ -1,3 +1,8 @@
+2009-11-17  18:35  Christos Zoulas <christos@zoulas.com<
+
+	* ctime/asctime can return NULL on some OS's although
+	  they should not (Toshit Antani)
+
 2009-09-14  13:49  Christos Zoulas <christos@zoulas.com<
 
 	* Centralize magic path handling routines and remove the
