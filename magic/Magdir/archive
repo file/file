@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: archive,v 1.54 2009/09/19 16:28:08 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -561,6 +561,10 @@
 # UC2 archiver (Greg Roelofs, newt@uchicago.edu)
 # [JW] see exe section for self-extracting version
 0	string		UC2\x1a		UC2 archive data
+
+# PKZIP multi-volume archive
+0	string		PK\x07\x08PK\x03\x04	Zip multi-volume archive data, at least PKZIP v2.50 to extract
+!:mime	application/zip
 
 # ZIP archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 0	string		PK\003\004
