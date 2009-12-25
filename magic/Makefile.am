@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.47 2009/08/25 12:38:27 christos Exp $
+# $File: Makefile.am,v 1.48 2009/09/11 16:26:39 rrt Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
@@ -200,6 +200,7 @@ $(MAGIC_FRAGMENT_DIR)/varied.out \
 $(MAGIC_FRAGMENT_DIR)/varied.script \
 $(MAGIC_FRAGMENT_DIR)/vax \
 $(MAGIC_FRAGMENT_DIR)/vicar \
+$(MAGIC_FRAGMENT_DIR)/virtual \
 $(MAGIC_FRAGMENT_DIR)/virtutech \
 $(MAGIC_FRAGMENT_DIR)/visx \
 $(MAGIC_FRAGMENT_DIR)/vms \
