@@ -1,3 +1,9 @@
+2010-01-16  18:42  Charles Longeau <chl@tuxfamily.org>
+
+	* bring back some fixes from OpenBSD:
+		- make gcc2 builds file
+		- fix typos in a magic file comment
+
 2009-11-17  18:35  Christos Zoulas <christos@zoulas.com<
 
 	* ctime/asctime can return NULL on some OS's although

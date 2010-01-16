@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.53 2009/09/28 21:26:59 christos Exp $
+# $File: filesystems,v 1.54 2009/11/06 13:53:52 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -203,7 +203,7 @@
 # http://www.bcdwb.de/bcdw/index_e.htm
 >3	string	BCDL				
 >>498	string	BCDL\ \ \ \ BIN			\b, Bootable CD Loader (1.50Z)
-# mbr partion table entries
+# mbr partition table entries
 # OEM-ID does not contain MicroSoft,NEWLDR,DOS,SYSLINUX,or MTOOLs
 >3			string		!MS
 >>3			string		!SYSLINUX
@@ -257,7 +257,7 @@
 #>>>>>>>>>>>>496		ubeshort&1023	x	\b, startcylinder? %d
 >>>>>>>>>>>>502		ulelong		x	\b, startsector %u
 >>>>>>>>>>>>506		ulelong		x	\b, %u sectors
-# mbr partion table entries end
+# mbr partition table entries end
 # http://www.acronis.de/
 #FAT label=ACRONIS\ SZ
 #OEM-ID=BOOTWIZ0
