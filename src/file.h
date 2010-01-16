@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.123 2009/10/19 13:10:20 christos Exp $
+ * @(#)$File: file.h,v 1.124 2010/01/16 17:45:12 chl Exp $
  */
 
 #ifndef __file_h__
@@ -441,7 +441,7 @@ size_t strlcat(char *dst, const char *src, size_t siz);
 #endif
 
 #ifndef __cplusplus
-#ifdef __GNUC__
+#if defined(__GNUC__) && (__GNUC__ >= 3)
 #define FILE_RCSID(id) \
 static const char rcsid[] __attribute__((__used__)) = id;
 #else
