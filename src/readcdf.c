@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.21 2009/09/13 23:23:31 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.22 2010/01/20 01:36:55 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -106,6 +106,9 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 						str = "vnd.ms-excel";
 					else if (strstr(vbuf, "Powerpoint"))
 						str = "vnd.ms-powerpoint";
+					else if (strstr(vbuf,
+					    "Crystal Reports"))
+						str = "x-rpt";
 				}
 			}
 			break;
