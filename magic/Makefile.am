@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.49 2009/12/25 16:04:29 christos Exp $
+# $File: Makefile.am,v 1.50 2010/01/22 21:14:58 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
@@ -234,6 +234,6 @@ FILE_COMPILE_DEP = $(FILE_COMPILE)
 endif
 
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
-	@cp -f Localstuff $(MAGIC_FRAGMENT_DIR)
+	@cp -f $(top_srcdir)/magic/Localstuff $(MAGIC_FRAGMENT_DIR)
 	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
 	@mv $(MAGIC_FRAGMENT_BASE).mgc $@
