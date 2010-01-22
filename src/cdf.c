@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.35 2009/09/13 23:25:16 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.36 2010/01/22 20:56:26 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -676,18 +676,18 @@ cdf_read_summary_info(const cdf_info_t *info, const cdf_header_t *h,
 	const cdf_directory_t *d;
 	static const char name[] = "\05SummaryInformation";
 
-	for (i = 0; i < dir->dir_len; i++)
-		if (dir->dir_tab[i].d_type == CDF_DIR_TYPE_USER_STREAM &&
-		    cdf_namecmp(name, dir->dir_tab[i].d_name, sizeof(name))
+	for (i = dir->dir_len; i > 0; i--)
+		if (dir->dir_tab[i - 1].d_type == CDF_DIR_TYPE_USER_STREAM &&
+		    cdf_namecmp(name, dir->dir_tab[i - 1].d_name, sizeof(name))
 		    == 0)
 			break;
 
-	if (i == dir->dir_len) {
+	if (i == 0) {
 		DPRINTF(("Cannot find summary information section\n"));
 		errno = ESRCH;
 		return -1;
 	}
-	d = &dir->dir_tab[i];
+	d = &dir->dir_tab[i - 1];
 	return cdf_read_sector_chain(info, h, sat, ssat, sst,
 	    d->d_stream_first_sector, d->d_size, scn);
 }
