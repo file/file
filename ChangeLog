@@ -1,15 +1,19 @@
+2010-01-22  15:45  Christos Zoulas <christos@zoulas.com>
+
+	* print proper mime for crystal reports file
+
 2010-01-16  18:42  Charles Longeau <chl@tuxfamily.org>
 
 	* bring back some fixes from OpenBSD:
 		- make gcc2 builds file
 		- fix typos in a magic file comment
 
-2009-11-17  18:35  Christos Zoulas <christos@zoulas.com<
+2009-11-17  18:35  Christos Zoulas <christos@zoulas.com>
 
 	* ctime/asctime can return NULL on some OS's although
 	  they should not (Toshit Antani)
 
-2009-09-14  13:49  Christos Zoulas <christos@zoulas.com<
+2009-09-14  13:49  Christos Zoulas <christos@zoulas.com>
 
 	* Centralize magic path handling routines and remove the
 	  special-casing from file.c so that the python module for
