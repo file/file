@@ -41,6 +41,10 @@
 	    - parse_apple did not nul terminate the string in the overflow case
 	    - parse_mime truncated the wrong string in the overflow case
 
+2009-08-12  12:28  Robert Byrnes  <byrnes@wildpumpkin.net>
+
+	* Include Localstuff when compiling magic.
+
 2009-07-15  10:05  Christos Zoulas <christos@zoulas.com>
 
 	* Fix logic for including mygetopts.h
@@ -71,10 +75,6 @@
 2009-05-08  13:40  Christos Zoulas <christos@zoulas.com>
 	
 	* lint fixes and more from NetBSD
-
-2009-08-12  12:28  Robert Byrnes  <byrnes@wildpumpkin.net>
-
-	* Include Localstuff when compiling magic.
 
 2009-05-06  10:25  Christos Zoulas <christos@zoulas.com>
 
