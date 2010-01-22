@@ -2,6 +2,9 @@
 
 	* print proper mime for crystal reports file
 
+	* print the last summary information of a cdf document, not the
+	  first so that nested documents print the right info
+
 2010-01-16  18:42  Charles Longeau <chl@tuxfamily.org>
 
 	* bring back some fixes from OpenBSD:
