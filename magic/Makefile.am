@@ -1,12 +1,15 @@
 #
-# $File: Makefile.am,v 1.49 2009/12/25 16:04:29 christos Exp $
+# $File: Makefile.am,v 1.50 2010/01/22 21:14:58 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
-MAGIC_FRAGMENT_DIR = $(top_srcdir)/magic/$(MAGIC_FRAGMENT_BASE)
+MAGIC_DIR = $(top_srcdir)/magic
+MAGIC_FRAGMENT_DIR = $(MAGIC_DIR)/$(MAGIC_FRAGMENT_BASE)
 
 pkgdata_DATA = magic.mgc
 
-EXTRA_DIST = Header Localstuff \
+EXTRA_DIST = \
+$(MAGIC_DIR)/Header \
+$(MAGIC_DIR)/Localstuff \
 $(MAGIC_FRAGMENT_DIR)/acorn \
 $(MAGIC_FRAGMENT_DIR)/adi \
 $(MAGIC_FRAGMENT_DIR)/adventure \
@@ -234,6 +237,6 @@ FILE_COMPILE_DEP = $(FILE_COMPILE)
 endif
 
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
-	@cp -f $(top_srcdir)/magic/Localstuff $(MAGIC_FRAGMENT_DIR)
-	$(FILE_COMPILE) -C -m $(MAGIC_FRAGMENT_DIR)
-	@mv $(MAGIC_FRAGMENT_BASE).mgc $@
+	mkdir magic && cp -p $(EXTRA_DIST) magic
+	$(FILE_COMPILE) -C -m magic
+	@rm -fr magic
