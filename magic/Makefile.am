@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.50 2010/01/22 21:14:58 christos Exp $
+# $File: Makefile.am,v 1.51 2010/01/22 21:43:47 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -237,6 +237,6 @@ FILE_COMPILE_DEP = $(FILE_COMPILE)
 endif
 
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
-	mkdir magic && cp -p $(EXTRA_DIST) magic
+	@mkdir magic && cp -p $(EXTRA_DIST) magic
 	$(FILE_COMPILE) -C -m magic
 	@rm -fr magic
