@@ -43,6 +43,7 @@
 #define	MAGIC_MIME_ENCODING	0x000400 /* Return the MIME encoding */
 #define MAGIC_MIME		(MAGIC_MIME_TYPE|MAGIC_MIME_ENCODING)
 #define	MAGIC_APPLE		0x000800 /* Return the Apple creator and type */
+
 #define	MAGIC_NO_CHECK_COMPRESS	0x001000 /* Don't check for compressed files */
 #define	MAGIC_NO_CHECK_TAR	0x002000 /* Don't check for tar files */
 #define	MAGIC_NO_CHECK_SOFT	0x004000 /* Don't check magic entries */
@@ -52,6 +53,9 @@
 #define	MAGIC_NO_CHECK_CDF	0x040000 /* Don't check for cdf files */
 #define	MAGIC_NO_CHECK_TOKENS	0x100000 /* Don't check tokens */
 #define MAGIC_NO_CHECK_ENCODING 0x200000 /* Don't check text encodings */
+
+/* No built-in tests; only consult the magic file */
+#define MAGIC_NO_CHECK_BUILTIN	0x3fb000
 
 /* Defined for backwards compatibility (renamed) */
 #define	MAGIC_NO_CHECK_ASCII	MAGIC_NO_CHECK_TEXT
