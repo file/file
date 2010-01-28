@@ -1,3 +1,8 @@
+2010-01-28  18:25  Christos Zoulas <christos@zoulas.com>
+
+	* Fix core-dump from unbound loop:
+	  https://bugzilla.redhat.com/show_bug.cgi?id=533245
+
 2010-01-22  15:45  Christos Zoulas <christos@zoulas.com>
 
 	* print proper mime for crystal reports file
