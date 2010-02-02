@@ -1,3 +1,7 @@
+2010-02-02  21:50  Reuben Thomas <rrt@sc3d.org>
+
+	* Add support for OCF (EPUB) files (application/epub+zip)
+
 2010-01-28  18:25  Christos Zoulas <christos@zoulas.com>
 
 	* Fix core-dump from unbound loop:
