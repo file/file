@@ -13,3 +13,5 @@ Add syntax for other sorts of counted string (Debian bug #466032). Use
 to fix bug #283760.
 
 Add syntax for relative offsets after current level (Debian bug #466037).
+
+Make file -ki work, i.e. give multiple MIME types.
