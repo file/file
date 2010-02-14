@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.55 2009/12/04 15:00:47 christos Exp $
+# $File: archive,v 1.56 2010/02/02 21:51:46 rrt Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -565,27 +565,14 @@
 0	string		PK\x07\x08PK\x03\x04	Zip multi-volume archive data, at least PKZIP v2.50 to extract
 !:mime	application/zip
 
-# ZIP archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
+# Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 0	string		PK\003\004
->30	ubelong		!0x6d696d65
->>4	byte		0x00		Zip archive data
-!:mime	application/zip
->>4	byte		0x09		Zip archive data, at least v0.9 to extract
-!:mime	application/zip
->>4	byte		0x0a		Zip archive data, at least v1.0 to extract
-!:mime	application/zip
->>4	byte		0x0b		Zip archive data, at least v1.1 to extract
-!:mime	application/zip
->>0x161	string		WINZIP          Zip archive data, WinZIP self-extracting
-!:mime	application/zip
->>4	byte		0x14		Zip archive data, at least v2.0 to extract
-!:mime	application/zip
+
+# Specialised zip formats
+>30	string		mimetype
 
 # OpenOffice.org / KOffice / StarOffice documents
-# Listed here because they ARE zip files
-#
 # From: Abel Cheung <abel@oaka.org>
->30	string		mimetype
 
 # KOffice (1.2 or above) formats
 >>50	string	vnd.kde.		KOffice (>=1.2)
@@ -664,6 +651,23 @@
 # OEBPS Container Format (OCF) 1.0
 >>50	string	epub+zip		OEBPS Container Format (OCF) 1.0 (EPUB)
 !:mime	application/epub+zip
+
+# Generic zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
+# N.B. Must come after specialised formats
+# Next line simply matches anything, including "mimetype" as used above
+>30	byte		x
+>>4	byte		0x00		Zip archive data
+!:mime	application/zip
+>>4	byte		0x09		Zip archive data, at least v0.9 to extract
+!:mime	application/zip
+>>4	byte		0x0a		Zip archive data, at least v1.0 to extract
+!:mime	application/zip
+>>4	byte		0x0b		Zip archive data, at least v1.1 to extract
+!:mime	application/zip
+>>0x161	string		WINZIP          Zip archive data, WinZIP self-extracting
+!:mime	application/zip
+>>4	byte		0x14		Zip archive data, at least v2.0 to extract
+!:mime	application/zip
 
 # Zoo archiver
 20	lelong		0xfdc4a7dc	Zoo archive data
