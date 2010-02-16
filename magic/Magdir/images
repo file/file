@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.64 2009/12/06 00:38:50 christos Exp $
+# $File: images,v 1.65 2010/02/16 16:49:05 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -590,7 +590,7 @@
 # specifications at http://hdf.ncsa.uiuc.edu/
 0	belong	0x0e031301	Hierarchical Data Format (version 4) data
 !:mime	application/x-hdf
-0	string	\211HDF\r\n\032	Hierarchical Data Format (version 5) data
+0	string	\211HDF\r\n\032\n	Hierarchical Data Format (version 5) data
 !:mime	application/x-hdf
 
 # From: Tobias Burnus <burnus@net-b.de>
