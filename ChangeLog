@@ -1,3 +1,7 @@
+2010-02-20  15:18  Reuben Thomas <rrt@sc3d.org>
+
+	* Clarify which sort of CDF we mean.
+
 2010-02-14  22:58  Reuben Thomas <rrt@sc3d.org>
 
 	* Re-jig Zip file type magic so that unsupported special
