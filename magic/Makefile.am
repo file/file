@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.51 2010/01/22 21:43:47 christos Exp $
+# $File: Makefile.am,v 1.52 2010/01/22 21:44:30 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -76,6 +76,7 @@ $(MAGIC_FRAGMENT_DIR)/freebsd \
 $(MAGIC_FRAGMENT_DIR)/fsav \
 $(MAGIC_FRAGMENT_DIR)/games \
 $(MAGIC_FRAGMENT_DIR)/gcc \
+$(MAGIC_FRAGMENT_DIR)/geo \
 $(MAGIC_FRAGMENT_DIR)/geos \
 $(MAGIC_FRAGMENT_DIR)/gimp \
 $(MAGIC_FRAGMENT_DIR)/gnome-keyring \
