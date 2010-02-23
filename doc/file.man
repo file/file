@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.81 2009/11/04 17:27:37 christos Exp $
-.Dd October 9, 2008
+.\" $File: file.man,v 1.82 2009/11/04 22:30:34 christos Exp $
+.Dd February 23, 2010
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -104,7 +104,8 @@ magic file
 .Pa __MAGIC__.mgc ,
 or the files in the directory
 .Pa __MAGIC__
-if the compiled file does not exist. In addition, if
+if the compiled file does not exist.
+In addition, if
 .Pa $HOME/.magic.mgc
 or
 .Pa $HOME/.magic
@@ -177,8 +178,8 @@ flag to debug a new magic file before installing it.
 .It Fl e , -exclude Ar testname
 Exclude the test named in
 .Ar testname
-from the list of tests made to determine the file type. Valid test names
-are:
+from the list of tests made to determine the file type.
+Valid test names are:
 .Bl -tag -width compress
 .It apptype
 .Dv EMX
@@ -204,7 +205,8 @@ Examines tar files.
 .El
 .It Fl F , -separator Ar separator
 Use the specified string as the separator between the filename and the
-file result returned. Defaults to
+file result returned.
+Defaults to
 .Sq \&: .
 .It Fl f , -files-from Ar namefile
 Read the names of the files to be examined from
@@ -219,13 +221,14 @@ to test the standard input, use
 as a filename argument.
 .It Fl h , -no-dereference
 option causes symlinks not to be followed
-(on systems that support symbolic links). This is the default if the
-environment variable
+(on systems that support symbolic links).
+This is the default if the environment variable
 .Dv POSIXLY_CORRECT
 is not defined.
 .It Fl i , -mime
 Causes the file command to output mime type strings rather than the more
-traditional human readable ones. Thus it may say
+traditional human readable ones.
+Thus it may say
 .Sq text/plain; charset=us-ascii
 rather than
 .Sq ASCII text .
@@ -240,7 +243,8 @@ Like
 .Fl i ,
 but print only the specified element(s).
 .It Fl k , -keep-going
-Don't stop at the first match, keep going. Subsequent matches will be
+Don't stop at the first match, keep going.
+Subsequent matches will be
 have the string
 .Sq "\[rs]012\- "
 prepended.
@@ -304,9 +308,11 @@ Try to look inside compressed files.
 .It Fl 0 , -print0
 Output a null character
 .Sq \e0
-after the end of the filename. Nice to
+after the end of the filename.
+Nice to
 .Xr cut 1
-the output. This does not affect the separator which is still printed.
+the output.
+This does not affect the separator which is still printed.
 .It Fl -help
 Print a help message and exit.
 .El
@@ -333,10 +339,11 @@ The environment variable
 .Dv POSIXLY_CORRECT
 controls (on systems that support symbolic links), whether
 .Nm
-will attempt to follow symlinks or not. If set, then
+will attempt to follow symlinks or not.
+If set, then
 .Nm
-follows symlink, otherwise it does not. This is also controlled
-by the
+follows symlink, otherwise it does not.
+This is also controlled by the
 .Fl L
 and
 .Fl h
@@ -491,7 +498,7 @@ Many contributors are listed in the source files.
 .Sh LEGAL NOTICE
 Copyright (c) Ian F. Darwin, Toronto, Canada, 1986-1999.
 Covered by the standard Berkeley Software Distribution copyright; see the file
-LEGAL.NOTICE in the source distribution.
+COPYING in the source distribution.
 .Pp
 The files
 .Dv tar.h
