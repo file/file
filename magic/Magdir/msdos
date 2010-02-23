@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: msdos,v 1.65 2009/09/19 16:28:11 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -35,114 +35,111 @@
 0	leshort		0x290	MS Windows COFF PA-RISC object file
 #>4	ledate		x	stamp %s
 
-# XXX - according to Microsoft's spec, at an offset of 0x3c in a
-# PE-format executable is the offset in the file of the PE header;
-# unfortunately, that's a little-endian offset, and there's no way
-# to specify an indirect offset with a specified byte order.
-# So, for now, we assume the standard MS-DOS stub, which puts the
-# PE header at 0x80 = 128.
+# Tests for various EXE types.
 #
-# Required OS version and subsystem version were 4.0 on some NT 3.51
-# executables built with Visual C++ 4.0, so it's not clear that
-# they're interesting.	The user version was 0.0, but there's
-# probably some linker directive to set it.  The linker version was
-# 3.0, except for one ".exe" which had it as 4.20 (same damn linker!).
-#
-# many of the compressed formats were extraced from IDARC 1.23 source code
+# Many of the compressed formats were extraced from IDARC 1.23 source code.
 #
 0	string	MZ
 !:mime	application/x-dosexec
->0x18  leshort <0x40 MS-DOS executable
->0 string MZ\0\0\0\0\0\0\0\0\0\0PE\0\0 \b, PE for MS Windows
->>&18	leshort&0x2000	>0	(DLL)
->>&88	leshort		0	(unknown subsystem)
->>&88	leshort		1	(native)
->>&88	leshort		2	(GUI)
->>&88	leshort		3	(console)
->>&88	leshort		7	(POSIX)
->>&0	leshort		0x0	unknown processor
->>&0	leshort		0x14c	Intel 80386
->>&0	leshort		0x166	MIPS R4000
->>&0	leshort		0x184	Alpha
->>&0	leshort		0x268	Motorola 68000
->>&0	leshort		0x1f0	PowerPC
->>&0	leshort		0x290	PA-RISC
->>&18	leshort&0x0100	>0	32-bit
->>&18	leshort&0x1000	>0	system file
->>&0xf4 search/0x140 \x0\x40\x1\x0
->>>(&0.l+(4)) string MSCF \b, WinHKI CAB self-extracting archive
->30		string	Copyright\ 1989-1990\ PKWARE\ Inc.	Self-extracting PKZIP archive
-!:mime	application/zip
-# Is next line correct? One might expect "Corp." not "Copr." If it is right, add a note to that effect.
->30		string	PKLITE\ Copr.	Self-extracting PKZIP archive
-!:mime	application/zip
+# All non-DOS EXE extensions have the relocation table more than 0x40 bytes into the file.
+>0x18	leshort <0x40 MS-DOS executable
+# These traditional tests usually work but not always.  When test quality support is
+# implemented these can be turned on.
+#>>0x18	leshort	0x1c	(Borland compiler)
+#>>0x18	leshort	0x1e	(MS compiler)
 
+# If the relocation table is 0x40 or more bytes into the file, it's definitely
+# not a DOS EXE.
 >0x18  leshort >0x3f
+
+# Maybe it's a PE?
 >>(0x3c.l) string PE\0\0 PE
->>>(0x3c.l+25) byte		1 \b32 executable
->>>(0x3c.l+25) byte		2 \b32+ executable
-# hooray, there's a DOS extender using the PE format, with a valid PE
-# executable inside (which just prints a message and exits if run in win)
->>>(0x3c.l+92)	leshort		<10
->>>>(8.s*16) string 32STUB for MS-DOS, 32rtm DOS extender
->>>>(8.s*16) string !32STUB for MS Windows
->>>>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
->>>>>(0x3c.l+92)	leshort		0	(unknown subsystem)
->>>>>(0x3c.l+92)	leshort		1	(native)
->>>>>(0x3c.l+92)	leshort		2	(GUI)
->>>>>(0x3c.l+92)	leshort		3	(console)
->>>>>(0x3c.l+92)	leshort		7	(POSIX)
+>>>(0x3c.l+24)	leshort		0x010b	\b32 executable
+>>>(0x3c.l+24)	leshort		0x020b	\b32+ executable
+>>>(0x3c.l+24)	leshort		0x0107	ROM image
+>>>(0x3c.l+24)	default		x	Unknown PE signature
+>>>>&0 		leshort		x	0x%x
+>>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
+>>>(0x3c.l+92)	leshort		1	(native)
+>>>(0x3c.l+92)	leshort		2	(GUI)
+>>>(0x3c.l+92)	leshort		3	(console)
+>>>(0x3c.l+92)	leshort		7	(POSIX)
+>>>(0x3c.l+92)	leshort		9	(Windows CE)
 >>>(0x3c.l+92)	leshort		10	(EFI application)
 >>>(0x3c.l+92)	leshort		11	(EFI boot service driver)
 >>>(0x3c.l+92)	leshort		12	(EFI runtime driver)
->>>(0x3c.l+92)	leshort		13	(XBOX)
->>>(0x3c.l+4)	leshort		0x0	unknown processor
+>>>(0x3c.l+92)	leshort		13	(EFI ROM)
+>>>(0x3c.l+92)	leshort		14	(XBOX)
+>>>(0x3c.l+92)	leshort		15	(Windows boot application)
+>>>(0x3c.l+92)	default		x	(Unknown subsystem
+>>>>&0		leshort		x	0x%x)
 >>>(0x3c.l+4)	leshort		0x14c	Intel 80386
 >>>(0x3c.l+4)	leshort		0x166	MIPS R4000
+>>>(0x3c.l+4)	leshort		0x168	MIPS R10000
 >>>(0x3c.l+4)	leshort		0x184	Alpha
->>>(0x3c.l+4)	leshort		0x268	Motorola 68000
+>>>(0x3c.l+4)	leshort		0x1a2	Hitachi SH3
+>>>(0x3c.l+4)	leshort		0x1a6	Hitachi SH4
+>>>(0x3c.l+4)	leshort		0x1c0	ARM
+>>>(0x3c.l+4)	leshort		0x1c2	ARM Thumb
 >>>(0x3c.l+4)	leshort		0x1f0	PowerPC
->>>(0x3c.l+4)	leshort		0x290	PA-RISC
 >>>(0x3c.l+4)	leshort		0x200	Intel Itanium
->>>(0x3c.l+22)	leshort&0x0100	>0	32-bit
+>>>(0x3c.l+4)	leshort		0x266	MIPS16
+>>>(0x3c.l+4)	leshort		0x268	Motorola 68000
+>>>(0x3c.l+4)	leshort		0x290	PA-RISC
+>>>(0x3c.l+4)	leshort		0x366	MIPSIV
+>>>(0x3c.l+4)	leshort		0x466	MIPS16 with FPU
+>>>(0x3c.l+4)	leshort		0xebc	EFI byte code
+>>>(0x3c.l+4)	leshort		0x8664	x86-64
+>>>(0x3c.l+4)	leshort		0xc0ee	MSIL
+>>>(0x3c.l+4)	default		x	Unknown processor type
+>>>>&0		leshort		x	0x%x
+>>>(0x3c.l+22)	leshort&0x0200	>0	(stripped to external PDB)
 >>>(0x3c.l+22)	leshort&0x1000	>0	system file
->>>(0x3c.l+232) lelong	>0	Mono/.Net assembly
+>>>(0x3c.l+24)	leshort		0x010b
+>>>>(0x3c.l+232) lelong	>0	Mono/.Net assembly
+>>>(0x3c.l+24)	leshort		0x020b
+>>>>(0x3c.l+248) lelong	>0	Mono/.Net assembly
 
->>>>(0x3c.l+0xf8)	string		UPX0 \b, UPX compressed
->>>>(0x3c.l+0xf8)	search/0x140	PEC2 \b, PECompact2 compressed
->>>>(0x3c.l+0xf8)	search/0x140	UPX2
->>>>>(&0x10.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
->>>>(0x3c.l+0xf8)	search/0x140	.idata
->>>>>(&0xe.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
->>>>>(&0xe.l+(-4))	string		ZZ0 \b, ZZip self-extracting archive
->>>>>(&0xe.l+(-4))	string		ZZ1 \b, ZZip self-extracting archive
->>>>(0x3c.l+0xf8)	search/0x140	.rsrc
->>>>>(&0x0f.l+(-4))	string		a\\\4\5 \b, WinHKI self-extracting archive
->>>>>(&0x0f.l+(-4))	string		Rar! \b, RAR self-extracting archive
->>>>>(&0x0f.l+(-4))	search/0x3000	MSCF \b, InstallShield self-extracting archive
->>>>>(&0x0f.l+(-4))	search/32	Nullsoft \b, Nullsoft Installer self-extracting archive
->>>>(0x3c.l+0xf8)	search/0x140	.data
->>>>>(&0x0f.l)		string		WEXTRACT \b, MS CAB-Installer self-extracting archive
->>>>(0x3c.l+0xf8)	search/0x140	.petite\0 \b, Petite compressed
->>>>>(0x3c.l+0xf7)	byte		x
->>>>>>(&0x104.l+(-4))	string		=!sfx! \b, ACE self-extracting archive
->>>>(0x3c.l+0xf8)	search/0x140	.WISE \b, WISE installer self-extracting archive
->>>>(0x3c.l+0xf8)	search/0x140	.dz\0\0\0 \b, Dzip self-extracting archive
->>>>(0x3c.l+0xf8)	search/0x140	.reloc
->>>>>(&0xe.l+(-4))	search/0x180	PK\3\4 \b, ZIP self-extracting archive (WinZip)
+# hooray, there's a DOS extender using the PE format, with a valid PE
+# executable inside (which just prints a message and exits if run in win)
+>>>(8.s*16)		string		32STUB	\b, 32rtm DOS extender
+>>>(8.s*16)		string		!32STUB	\b, for MS Windows
+>>>(0x3c.l+0xf8)	string		UPX0 \b, UPX compressed
+>>>(0x3c.l+0xf8)	search/0x140	PEC2 \b, PECompact2 compressed
+>>>(0x3c.l+0xf8)	search/0x140	UPX2
+>>>>(&0x10.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
+>>>(0x3c.l+0xf8)	search/0x140	.idata
+>>>>(&0xe.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
+>>>>(&0xe.l+(-4))	string		ZZ0 \b, ZZip self-extracting archive
+>>>>(&0xe.l+(-4))	string		ZZ1 \b, ZZip self-extracting archive
+>>>(0x3c.l+0xf8)	search/0x140	.rsrc
+>>>>(&0x0f.l+(-4))	string		a\\\4\5 \b, WinHKI self-extracting archive
+>>>>(&0x0f.l+(-4))	string		Rar! \b, RAR self-extracting archive
+>>>>(&0x0f.l+(-4))	search/0x3000	MSCF \b, InstallShield self-extracting archive
+>>>>(&0x0f.l+(-4))	search/32	Nullsoft \b, Nullsoft Installer self-extracting archive
+>>>(0x3c.l+0xf8)	search/0x140	.data
+>>>>(&0x0f.l)		string		WEXTRACT \b, MS CAB-Installer self-extracting archive
+>>>(0x3c.l+0xf8)	search/0x140	.petite\0 \b, Petite compressed
+>>>>(0x3c.l+0xf7)	byte		x
+>>>>>(&0x104.l+(-4))	string		=!sfx! \b, ACE self-extracting archive
+>>>(0x3c.l+0xf8)	search/0x140	.WISE \b, WISE installer self-extracting archive
+>>>(0x3c.l+0xf8)	search/0x140	.dz\0\0\0 \b, Dzip self-extracting archive
+>>>&(0x3c.l+0xf8)	search/0x100	_winzip_ \b, ZIP self-extracting archive (WinZip)
+>>>&(0x3c.l+0xf8)	search/0x100	SharedD \b, Microsoft Installer self-extracting archive
+>>>0x30			string		Inno \b, InnoSetup self-extracting archive
 
->>>>&(0x3c.l+0xf8)	search/0x100	_winzip_ \b, ZIP self-extracting archive (WinZip)
->>>>&(0x3c.l+0xf8)	search/0x100	SharedD \b, Microsoft Installer self-extracting archive
->>>>0x30		string		Inno \b, InnoSetup self-extracting archive
-
+# Hmm, not a PE but the relocation table is too high for a traditional DOS exe,
+# must be one of the unusual subformats.
 >>(0x3c.l) string !PE\0\0 MS-DOS executable
 
 >>(0x3c.l)		string		NE \b, NE
->>>(0x3c.l+0x36)	byte		0 (unknown OS)
 >>>(0x3c.l+0x36)	byte		1 for OS/2 1.x
 >>>(0x3c.l+0x36)	byte		2 for MS Windows 3.x
 >>>(0x3c.l+0x36)	byte		3 for MS-DOS
->>>(0x3c.l+0x36)	byte		>3 (unknown OS)
+>>>(0x3c.l+0x36)	byte		4 for Windows 386
+>>>(0x3c.l+0x36)	byte		5 for Borland Operating System Services
+>>>(0x3c.l+0x36)	default		x
+>>>>(0x3c.l+0x36)	byte		x (unknown OS %x)
 >>>(0x3c.l+0x36)	byte		0x81 for MS-DOS, Phar Lap DOS extender
 >>>(0x3c.l+0x0c)	leshort&0x8003	0x8002 (DLL)
 >>>(0x3c.l+0x0c)	leshort&0x8003	0x8001 (driver)
@@ -226,16 +223,32 @@
 
 >(8.s*16) string $WdX \b, WDos/X DOS extender
 
-# .EXE formats (Greg Roelofs, newt@uchicago.edu)
+# By now an executable type should have been printed out.  The executable
+# may be a self-uncompressing archive, so look for evidence of that and 
+# print it out.  
+#
+# Some signatures below from Greg Roelofs, newt@uchicago.edu.
 #
 >0x35	string	\x8e\xc0\xb9\x08\x00\xf3\xa5\x4a\x75\xeb\x8e\xc3\x8e\xd8\x33\xff\xbe\x30\x00\x05 \b, aPack compressed
->0xe7	string	LH/2\ Self-Extract \b, %s
->0x1c	string	diet \b, diet compressed
->0x1c	string	LZ09 \b, LZEXE v0.90 compressed
->0x1c	string	LZ91 \b, LZEXE v0.91 compressed
->0x1c	string	tz \b, TinyProg compressed
->0x1e	string	PKLITE \b, %s compressed
->0x64	string	W\ Collis\0\0 \b, Compack compressed
+>0xe7	string	LH/2\ 	Self-Extract \b, %s
+>0x1c	string	UC2X	\b, UCEXE compressed
+>0x1c	string	WWP\ 	\b, WWPACK compressed
+>0x1c	string	RJSX 	\b, ARJ self-extracting archive
+>0x1c	string	diet 	\b, diet compressed
+>0x1c	string	LZ09 	\b, LZEXE v0.90 compressed
+>0x1c	string	LZ91 	\b, LZEXE v0.91 compressed
+>0x1c	string	tz 	\b, TinyProg compressed
+>0x1e	string	Copyright\ 1989-1990\ PKWARE\ Inc.	Self-extracting PKZIP archive
+!:mime	application/zip
+# Yes, this really is "Copr", not "Corp."
+>0x1e	string	PKLITE\ Copr.	Self-extracting PKZIP archive
+!:mime	application/zip
+# winarj stores a message in the stub instead of the sig in the MZ header
+>0x20	search/0xe0	aRJsfX \b, ARJ self-extracting archive
+>0x20	string AIN
+>>0x23	string 2	\b, AIN 2.x compressed
+>>0x23	string <2	\b, AIN 1.x compressed
+>>0x23	string >2	\b, AIN 1.x compressed
 >0x24	string	LHa's\ SFX \b, LHa self-extracting archive
 !:mime	application/x-lha
 >0x24	string	LHA's\ SFX \b, LHa self-extracting archive
@@ -243,18 +256,17 @@
 >0x24	string	\ $ARX \b, ARX self-extracting archive
 >0x24	string	\ $LHarc \b, LHarc self-extracting archive
 >0x20	string	SFX\ by\ LARC \b, LARC self-extracting archive
+>0x40	string aPKG \b, aPackage self-extracting archive
+>0x64	string	W\ Collis\0\0 \b, Compack compressed
+>0x7a	string		Windows\ self-extracting\ ZIP	\b, ZIP self-extracting archive
+>>&0xf4 search/0x140 \x0\x40\x1\x0
+>>>(&0.l+(4)) string MSCF \b, WinHKI CAB self-extracting archive
 >1638	string	-lh5- \b, LHa self-extracting archive v2.13S
 >0x17888 string Rar! \b, RAR self-extracting archive
->0x40	string aPKG \b, aPackage self-extracting archive
 
->32	 string AIN
->>35	 string 2		\b, AIN 2.x compressed
->>35	 string <2		\b, AIN 1.x compressed
->>35	 string >2		\b, AIN 1.x compressed
->28	 string UC2X		\b, UCEXE compressed
->28	 string WWP\  		\b, WWPACK compressed
-
-# skip to the end of the exe
+# Skip to the end of the EXE.  This will usually work fine in the PE case
+# because the MZ image is hardcoded into the toolchain and almost certainly
+# won't match any of these signatures.
 >(4.s*512)	long	x 
 >>&(2.s-517)	byte	x 
 >>>&0	string		PK\3\4 \b, ZIP self-extracting archive
@@ -266,13 +278,8 @@
 >>>&7	search/400	**ACE** \b, ACE self-extracting archive
 >>>&0	search/0x480	UC2SFX\ Header \b, UC2 self-extracting archive
 
->0x1c	string		RJSX \b, ARJ self-extracting archive
-# winarj stores a message in the stub instead of the sig in the MZ header
->0x20	search/0xe0	aRJsfX \b, ARJ self-extracting archive
-
 # a few unknown ZIP sfxes, no idea if they are needed or if they are
 # already captured by the generic patterns above
->122		string		Windows\ self-extracting\ ZIP	\b, ZIP self-extracting archive
 >(8.s*16)	search/0x20	PKSFX \b, ZIP self-extracting archive (PKZIP)
 # TODO: how to add this? >FileSize-34 string Windows\ Self-Installing\ Executable \b, ZIP self-extracting archive
 #
@@ -714,3 +721,7 @@
 0	string	ITOLITLS		Microsoft Reader eBook Data
 >8	lelong	x			\b, version %u
 !:mime					application/x-ms-reader
+
+# Windows CE Binary Image Data Format
+# From: Dr. Jesus <j@hug.gs>
+0	string	B000FF\n	Windows Embedded CE binary image
