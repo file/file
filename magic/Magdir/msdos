@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.65 2009/09/19 16:28:11 christos Exp $
+# $File: msdos,v 1.66 2010/02/23 23:37:42 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -341,6 +341,9 @@
 # start with assembler instructions mov eax,21cd4cffh
 0	uleshort&0xc0ff	0xc0b8		
 >1	lelong		0x21cd4cff	COM executable (32-bit COMBOOT)
+# start with assembler instructions mov eax,21cd4cfeh
+0	uleshort&0xc0ff	0xc0b8		
+>1	lelong		0x21cd4cfe	COM executable (32-bit COMBOOT, relocatable)
 0	string	\x81\xfc		
 >4	string	\x77\x02\xcd\x20\xb9	
 >>36	string	UPX!			FREE-DOS executable (COM), UPX compressed
