@@ -1,6 +1,5 @@
-
 #------------------------------------------------------------------------------
-# $File: compress,v 1.42 2009/09/19 16:28:08 christos Exp $
+# $File: compress,v 1.43 2010/03/08 20:57:01 rrt Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -20,7 +19,7 @@
 #   Edited by Chris Chittleborough <cchittleborough@yahoo.com.au>, March 2002
 #	* Original filename is only at offset 10 if "extra field" absent
 #	* Produce shorter output - notably, only report compression methods
-#	  other than 8 ("deflate", the only method defined in RFC 1952).
+#         other than 8 ("deflate", the only method defined in RFC 1952).
 0       string          \037\213        gzip compressed data
 !:mime	application/x-gzip
 >2	byte		<8		\b, reserved method
@@ -183,18 +182,15 @@
 >4	belong		0x090A0C0D	best compression
 
 # 7-zip archiver, from Thomas Klausner (wiz@danbala.tuwien.ac.at)
-# http://www.7-zip.org or DOC/7zFormat.txt 
+# http://www.7-zip.org or DOC/7zFormat.txt
 #
 0	string		7z\274\257\047\034	7-zip archive data,
 >6	byte		x			version %d
 >7	byte		x			\b.%d
 
 # Type: LZMA
-# URL:  http://www.7-zip.org/sdk.html
-# From: Robert Millan <rmh@aybabtu.com> and Reuben Thomas <rrt@sc3d.org>
-# Commented out because apparently not reliable (according to Debian
-# bug #364260)
-#0	string		]\000\000\200\000	LZMA compressed data
+#!:mime	application/x-lzma
+# LZMA can't reasonably be detected, as it has no fixed magic
 
 # http://tukaani.org/xz/xz-file-format.txt
 0	ustring		\xFD7zXZ\x00		xz compressed data
