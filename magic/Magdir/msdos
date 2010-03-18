@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.67 2010/03/07 17:08:10 christos Exp $
+# $File: msdos,v 1.68 2010/03/18 19:51:08 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -728,3 +728,6 @@
 # Windows CE Binary Image Data Format
 # From: Dr. Jesus <j@hug.gs>
 0	string	B000FF\n	Windows Embedded CE binary image
+
+# Windows Imaging (WIM) Image
+0	string	MSWIM\000\000\000	Windows imaging (WIM) image
