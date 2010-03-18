@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.8 2009/09/19 16:28:09 christos Exp $
+# $File: games,v 1.9 2010/03/18 12:51:31 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -154,6 +154,11 @@
 0	string	=PWAD		doom patch PWAD data
 >4	lelong	x		containing %d lumps
 
+# Build engine group files (Duke Nukem, Shadow Warrior, ...)
+# Extension: .grp
+# Created by: "Ganael Laplanche" <ganael.laplanche@martymac.org>
+0	string	KenSilverman	Build engine group file
+>12	lelong	x		containing %d files
 
 # Summary: Warcraft 3 save
 # Extension: .w3g
