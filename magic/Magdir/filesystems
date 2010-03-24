@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.54 2009/11/06 13:53:52 christos Exp $
+# $File: filesystems,v 1.55 2010/01/16 17:45:12 chl Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1359,28 +1359,46 @@
 >28	beshort <3
 >>8	belong	x	%d bytes,
 >28	beshort >2
->>63	bequad x	%lld bytes,
+>>28 beshort <4
+>>>63	bequad x	%lld bytes,
+>>28 beshort >3
+>>>40	bequad x	%lld bytes,
 #>>67	belong	x	%d bytes,
 >4	belong	x	%d inodes,
 >28	beshort <2
 >>32	beshort	x	blocksize: %d bytes,
 >28	beshort >1
->>51	belong	x	blocksize: %d bytes,
->39	bedate	x	created: %s
+>>28 beshort <4
+>>>51	belong	x	blocksize: %d bytes,
+>>28 beshort >3
+>>>12	belong	x	blocksize: %d bytes,
+>28 beshort <4
+>>39	bedate	x	created: %s
+>28 beshort >3
+>>8	bedate	x	created: %s
 0	string	hsqs	Squashfs filesystem, little endian,
 >28	leshort	x	version %d.
 >30	leshort	x	\b%d,
 >28	leshort <3
 >>8	lelong	x	%d bytes,
 >28	leshort >2
->>63	lequad x	%lld bytes,
+>>28 leshort <4
+>>>63	lequad x	%lld bytes,
+>>28 leshort >3
+>>>40	lequad x	%lld bytes,
 #>>63	lelong	x	%d bytes,
 >4	lelong	x	%d inodes,
 >28	leshort <2
 >>32	leshort	x	blocksize: %d bytes,
 >28	leshort >1
->>51	lelong	x	blocksize: %d bytes,
->39	ledate	x	created: %s
+>>28 leshort <4
+>>>51	lelong	x	blocksize: %d bytes,
+>>28 leshort >3
+>>>12	lelong	x	blocksize: %d bytes,
+>28 leshort <4
+>>39	ledate	x	created: %s
+>28 leshort >3
+>>8	ledate	x	created: %s
 
 0	string		td\000		floppy image data (TeleDisk)
 
