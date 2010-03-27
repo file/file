@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.53 2010/02/23 23:40:07 christos Exp $
+# $File: Makefile.am,v 1.54 2010/03/27 16:17:09 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -97,6 +97,7 @@ $(MAGIC_FRAGMENT_DIR)/intel \
 $(MAGIC_FRAGMENT_DIR)/interleaf \
 $(MAGIC_FRAGMENT_DIR)/island \
 $(MAGIC_FRAGMENT_DIR)/ispell \
+$(MAGIC_FRAGMENT_DIR)/isz \
 $(MAGIC_FRAGMENT_DIR)/java \
 $(MAGIC_FRAGMENT_DIR)/jpeg \
 $(MAGIC_FRAGMENT_DIR)/karma \
