@@ -1,3 +1,7 @@
+2010-04-22  12:55  Christos Zoulas <christos@zoulas.com>
+
+	* Try more elf offsets for Debian core files.  (Arnaud Giersch)
+
 2010-02-20  15:18  Reuben Thomas <rrt@sc3d.org>
 
 	* Clarify which sort of CDF we mean.
