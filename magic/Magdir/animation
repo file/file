@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.39 2009/09/27 19:02:12 christos Exp $
+# $File: animation,v 1.40 2010/05/05 17:38:18 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -152,6 +152,7 @@
 >>4      byte               252            \b, FGS @ L4
 >>4      byte               253            \b, FGS @ L5
 >3       byte               0xB5           MPEG sequence, v4
+!:mime  video/mpeg4-generic
 >>4      byte               &0x80
 >>>5     byte&0xF0          16             \b, video (missing profile header)
 >>>5     byte&0xF0          32             \b, still texture (missing profile header)
@@ -162,6 +163,7 @@
 >>4      byte&0xF8          24             \b, mesh (missing profile header)
 >>4      byte&0xF8          32             \b, face (missing profile header)
 >3       byte               0xB3           MPEG sequence
+!:mime  video/mpeg
 >>12     belong             0x000001B8     \b, v1, progressive Y'CbCr 4:2:0 video
 >>12     belong             0x000001B2     \b, v1, progressive Y'CbCr 4:2:0 video
 >>12     belong             0x000001B5     \b, v2,
