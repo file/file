@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.20 2009/05/08 23:02:44 christos Exp $
+.\" $File: libmagic.man,v 1.21 2009/11/24 21:16:14 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003.
 .\" All Rights Reserved.
@@ -25,14 +25,14 @@
 .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 .\" SUCH DAMAGE.
 .\"
-.Dd November 24, 2009
+.Dd July 1, 2010
 .Dt LIBMAGIC 3
 .Os
 .Sh NAME
 .Nm magic_open ,
 .Nm magic_close ,
 .Nm magic_error ,
-.Nm magic_file ,
+.Nm magic_descriptor ,
 .Nm magic_buffer ,
 .Nm magic_setflags ,
 .Nm magic_check ,
@@ -51,6 +51,8 @@
 .Fn magic_error "magic_t cookie"
 .Ft int
 .Fn magic_errno "magic_t cookie"
+.Ft const char *
+.Fn magic_descriptor "magic_t cookie, "int fd"
 .Ft const char *
 .Fn magic_file "magic_t cookie, const char *filename"
 .Ft const char *
@@ -154,6 +156,12 @@ argument, or NULL if an error occurred.
 If the
 .Ar filename
 is NULL, then stdin is used.
+.Pp
+The
+.Fn magic_descriptor
+function returns a textual description of the contents of the
+.Ar fd
+argument, or NULL if an error occurred.
 .Pp
 The
 .Fn magic_buffer
