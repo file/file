@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.59 2008/11/06 23:22:53 christos Exp $
+.\" $File: magic.man,v 1.60 2009/05/08 23:02:44 christos Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -283,7 +283,7 @@ then print the string), with
 The special test
 .Em x
 always evaluates to true.
-.Dv message
+.It Dv message
 The message to be printed if the comparison succeeds.
 If the string contains a
 .Xr printf 3
