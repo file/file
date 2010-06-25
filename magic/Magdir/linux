@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.33 2009/10/23 16:44:59 christos Exp $
+# $File: linux,v 1.34 2010/06/25 14:29:45 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -44,6 +44,9 @@
 # LILO boot/chain loaders, from Daniel Quinlan <quinlan@yggdrasil.com>
 # this can be overridden by the DOS executable (COM) entry
 2	string		LILO		Linux/i386 LILO boot/chain loader
+#
+# Linux make config build file, from Ole Aamot <oka@oka.no>
+28 	string		make\ config	Linux make config build file
 #
 # PSF fonts, from H. Peter Anvin <hpa@yggdrasil.com>
 0	leshort		0x0436		Linux/i386 PC Screen Font data,
