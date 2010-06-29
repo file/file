@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: adventure,v 1.10 2009/09/19 16:28:07 christos Exp $
+# $File: adventure,v 1.11 2010/06/29 12:42:32 christos Exp $
 # adventure: file(1) magic for Adventure game files
 #
 # from Allen Garvin <earendil@faeryland.tamu-commerce.edu>
@@ -18,12 +18,12 @@
 #------------------------------------------------------------------------------
 # Z-machine:  file(1) magic for Z-machine binaries.
 #
-# This will match ${TEX_BASE}/texmf/omega/ocp/char2uni/inbig5.ocp which
-# appears to be a version-0 Z-machine binary.
-#
-# The (false match) message is to correct that behavior.  Perhaps it is
-# not needed.
-#
+#http://www.gnelson.demon.co.uk/zspec/sect11.html
+#http://www.jczorkmid.net/~jpenney/ZSpec11-latest.txt
+#http://en.wikipedia.org/wiki/Z-machine
+# The first byte is the Z-machine version number which is 0 < v < 9
+0	ubyte			>0
+>0	ubyte			<9
 16	belong&0xfe00f0f0	0x3030	Infocom game data
 >0	ubyte			0	(false match)
 >0	ubyte			>0	(Z-machine %d,
