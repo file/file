@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.55 2010/01/16 17:45:12 chl Exp $
+# $File: filesystems,v 1.56 2010/03/24 14:17:43 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1465,13 +1465,17 @@
 0	string	CPQRFBLO	Compaq/HP RILOE floppy image
 
 #------------------------------------------------------------------------------
-# Files-11 On-Disk Structure (OpenVMS file system) - gerardo.cacciari@gmail.com
-# These bits come from LBN 1 (home block) of ODS-2 and ODS-5 volumes, which is
-# mapped to VBN 2 of [000000]INDEXF.SYS;1
+# Files-11 On-Disk Structure (File system for various RSX-11 and VMS flavours).
+# These bits come from LBN 1 (home block) of ODS-1, ODS-2 and ODS-5 volumes,
+# which is mapped to VBN 2 of [000000]INDEXF.SYS;1 - gerardo.cacciari@gmail.com
 #
-1008    string          DECFILE11B      Files-11 On-Disk Structure
+1008    string          DECFILE11       Files-11 On-Disk Structure
 >525    byte            x               Level %d
->525    byte            x               (ODS-%d OpenVMS file system),
+>525    byte            x               (ODS-%d);
+>1017   string          A               RSX-11, VAX/VMS or OpenVMS VAX file system;
+>1017   string          B
+>>525   byte            2               VAX/VMS or OpenVMS file system;
+>>525   byte            5               OpenVMS Alpha or Itanium file system;
 >984    string          x               volume label is '%-12.12s'
 
 # From: Thomas Klausner <wiz@NetBSD.org>
