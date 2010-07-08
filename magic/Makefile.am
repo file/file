@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.54 2010/03/27 16:17:09 christos Exp $
+# $File: Makefile.am,v 1.55 2010/07/02 00:07:39 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -152,6 +152,7 @@ $(MAGIC_FRAGMENT_DIR)/os9 \
 $(MAGIC_FRAGMENT_DIR)/osf1 \
 $(MAGIC_FRAGMENT_DIR)/palm \
 $(MAGIC_FRAGMENT_DIR)/parix \
+$(MAGIC_FRAGMENT_DIR)/parrot \
 $(MAGIC_FRAGMENT_DIR)/pbm \
 $(MAGIC_FRAGMENT_DIR)/pdf \
 $(MAGIC_FRAGMENT_DIR)/pdp \
