@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.84 2010/04/22 16:54:17 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.85 2010/07/19 14:56:53 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -286,6 +286,7 @@ private const char os_style_names[][8] = {
 #define FLAGS_DID_CORE		1
 #define FLAGS_DID_NOTE		2
 #define FLAGS_DID_CORE_STYLE	4
+#define FLAGS_IS_CORE		8
 
 private int
 dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
@@ -676,7 +677,7 @@ core:
 		break;
 
 	default:
-		if (xnh_type == NT_PRPSINFO) {
+		if (xnh_type == NT_PRPSINFO && *flags & FLAGS_IS_CORE) {
 			size_t i, j;
 			unsigned char c;
 			/*

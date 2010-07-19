@@ -35,6 +35,7 @@
 	switch (type) {
 #ifdef ELFCORE
 	case ET_CORE:
+		flags |= FLAGS_IS_CORE;
 		if (dophn_core(ms, clazz, swap, fd,
 		    (off_t)elf_getu(swap, elfhdr.e_phoff),
 		    elf_getu16(swap, elfhdr.e_phnum), 
