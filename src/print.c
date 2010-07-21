@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.67 2009/10/19 13:10:20 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.68 2009/11/18 23:35:14 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -120,7 +120,7 @@ file_mdump(struct magic *m)
 		case FILE_BEQUAD:
 		case FILE_LEQUAD:
 		case FILE_QUAD:
-			(void) fprintf(stderr, "%lld",
+			(void) fprintf(stderr, "%" INT64_T_FORMAT "d",
 			    (unsigned long long)m->value.q);
 			break;
 		case FILE_PSTRING:

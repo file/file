@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.123 2009/10/19 13:10:20 christos Exp $
+ * @(#)$File: file.h,v 1.124 2010/01/16 17:45:12 chl Exp $
  */
 
 #ifndef __file_h__
@@ -35,6 +35,18 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#ifdef WIN32
+  #ifdef _WIN64
+    #define SIZE_T_FORMAT "I64"
+  #else
+    #define SIZE_T_FORMAT ""
+  #endif
+  #define INT64_T_FORMAT "I64"
+#else
+  #define SIZE_T_FORMAT "z"
+  #define INT64_T_FORMAT "ll"
 #endif
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
@@ -62,7 +74,7 @@
 #define MAGIC "/etc/magic"
 #endif
 
-#ifdef __EMX__
+#if defined(__EMX__) || defined (WIN32)
 #define PATHSEP	';'
 #else
 #define PATHSEP	':'
@@ -364,8 +376,10 @@ protected int file_tryelf(struct magic_set *, int, const unsigned char *,
     size_t);
 protected int file_trycdf(struct magic_set *, int, const unsigned char *,
     size_t);
+#if HAVE_FORK
 protected int file_zmagic(struct magic_set *, int, const char *,
     const unsigned char *, size_t);
+#endif
 protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t);
 protected int file_ascmagic_with_encoding(struct magic_set *,
     const unsigned char *, size_t, unichar *, size_t, const char *,

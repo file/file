@@ -35,6 +35,12 @@
 #ifndef _H_CDF_
 #define _H_CDF_
 
+#ifdef WIN32
+#include <winsock2.h>
+#define timespec timeval
+#define tv_nsec tv_usec
+#endif
+
 typedef int32_t cdf_secid_t;
 
 #define CDF_LOOP_LIMIT					10000
