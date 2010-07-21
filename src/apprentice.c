@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.158 2009/10/19 13:10:20 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.159 2010/07/21 16:47:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1555,8 +1555,8 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 	if (i == sizeof(m->apple) && *l) {
 		/* We don't need to NUL terminate here, printing handles it */
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "APPLE type `%s' truncated %zu",
-			    line, i);
+			file_magwarn(ms, "APPLE type `%s' truncated %"
+			    SIZE_T_FORMAT "u", line, i);
 	}
 
 	if (i > 0)
@@ -1589,8 +1589,8 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 	if (i == sizeof(m->mimetype)) {
 		m->mimetype[sizeof(m->mimetype) - 1] = '\0';
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "MIME type `%s' truncated %zu",
-			    m->mimetype, i);
+			file_magwarn(ms, "MIME type `%s' truncated %"
+			    SIZE_T_FORMAT "u", m->mimetype, i);
 	} else
 		m->mimetype[i] = '\0';
 
@@ -1879,8 +1879,10 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 					if (isprint((unsigned char)c)) {
 						/* Allow escaping of 
 						 * ``relations'' */
-						if (strchr("<>&^=!", c)
-						    == NULL) {
+						if (strchr("<>&^=!", c) == NULL
+						    && (m->type != FILE_REGEX ||
+						    strchr("[]().*?^$|{}", c)
+						    == NULL)) {
 							file_magwarn(ms, "no "
 							    "need to escape "
 							    "`%c'", c);

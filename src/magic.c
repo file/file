@@ -25,10 +25,15 @@
  * SUCH DAMAGE.
  */
 
+#ifdef WIN32
+#include <windows.h>
+#include <shlwapi.h>
+#endif
+
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.65 2009/09/14 17:50:38 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.66 2010/07/21 16:47:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -81,14 +86,33 @@ private const char *file_or_fd(struct magic_set *, const char *, int);
 #define	STDIN_FILENO	0
 #endif
 
+#ifdef WIN32
+BOOL WINAPI DllMain(HINSTANCE hinstDLL,
+    DWORD fdwReason __attribute__((__unused__)),
+    LPVOID lpvReserved __attribute__((__unused__)));
+
+CHAR dllpath[MAX_PATH + 1] = { 0 };
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL,
+    DWORD fdwReason __attribute__((__unused__)),
+    LPVOID lpvReserved __attribute__((__unused__)))
+{
+	if (dllpath[0] == 0 &&
+	    GetModuleFileNameA(hinstDLL, dllpath, MAX_PATH) != 0)
+		PathRemoveFileSpec(dllpath);
+	return TRUE;
+}
+#endif
+
 private const char *
 get_default_magic(void)
 {
 	static const char hmagic[] = "/.magic";
 	static char default_magic[2 * MAXPATHLEN + 2];
 	char *home;
-	char hmagicpath[MAXPATHLEN + 1];
+	char hmagicpath[MAXPATHLEN + 1] = {0};
 
+#ifndef WIN32
 	if ((home = getenv("HOME")) == NULL)
 		return MAGIC;
 
@@ -99,6 +123,59 @@ get_default_magic(void)
 
 	(void)snprintf(default_magic, sizeof(default_magic), "%s:%s",
 	    hmagicpath, MAGIC);
+#else
+	char *hmagicp = hmagicpath;
+	char tmppath[MAXPATHLEN + 1] = {0};
+	char *hmagicend = &hmagicpath[sizeof(hmagicpath) - 1];
+
+#define APPENDPATH() \
+	if (access(tmppath, R_OK) != -1)
+		hmagicp += snprintf(hmagicp, hmagicend - hmagicp, \
+		    "%s%s", hmagicp == hmagicpath ? "" : ":", tmppath)
+	/* First, try to get user-specific magic file */
+	if ((home = getenv("LOCALAPPDATA")) == NULL) {
+		if ((home = getenv("USERPROFILE")) != NULL)
+			(void)snprintf(tmppath, sizeof(tmppath),
+			    "%s/Local Settings/Application Data%s", home,
+			    hmagic);
+	} else {
+		(void)snprintf(tmppath, sizeof(tmppath), "%s%s",
+		    home, hmagic);
+	}
+	if (tmppath[0] != '\0') {
+		APPENDPATH();
+	}
+
+	/* Second, try to get a magic file from Common Files */
+	if ((home = getenv("COMMONPROGRAMFILES")) != NULL) {
+		(void)snprintf(tmppath, sizeof(tmppath), "%s%s", home, hmagic);
+		APPENDPATH();
+	}
+
+
+	/* Third, try to get magic file relative to dll location */
+	if (dllpath[0] != 0) {
+		if (strlen(dllpath) > 3 &&
+		    stricmp(&dllpath[strlen(dllpath) - 3], "bin") == 0) {
+			(void)snprintf(tmppath, sizeof(tmppath),
+			    "%s/../share/misc/magic.mgc", dllpath);
+			APPENDPATH();
+		} else {
+			(void)snprintf(tmppath, sizeof(tmppath),
+			    "%s/share/misc/magic.mgc", dllpath);
+			APPENDPATH()
+			else {
+				(void)snprintf(tmppath, sizeof(tmppath),
+				    "%s/magic.mgc", dllpath);
+				APPENDPATH();
+			}
+		}
+	}
+
+	/* Don't put MAGIC constant - it likely points to a file within MSys
+	tree */
+	(void)strlcpy(default_magic, hmagicpath, sizeof(default_magic));
+#endif
 
 	return default_magic;
 }
@@ -315,7 +392,9 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		int flags = O_RDONLY|O_BINARY;
 
 		if (stat(inname, &sb) == 0 && S_ISFIFO(sb.st_mode)) {
+#ifdef O_NONBLOCK
 			flags |= O_NONBLOCK;
+#endif
 			ispipe = 1;
 		}
 

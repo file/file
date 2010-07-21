@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.60 2009/05/08 17:41:59 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.61 2010/07/21 16:47:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -59,7 +59,7 @@ FILE_RCSID("@(#)$File: fsmagic.c,v 1.60 2009/05/08 17:41:59 christos Exp $")
 # define minor(dev)  ((dev) & 0xff)
 #endif
 #undef HAVE_MAJOR
-
+#ifdef	S_IFLNK
 private int
 bad_link(struct magic_set *ms, int err, char *buf)
 {
@@ -83,7 +83,7 @@ bad_link(struct magic_set *ms, int err, char *buf)
 	}
 	return 1;
 }
-
+#endif
 private int
 handle_mime(struct magic_set *ms, int mime, const char *str)
 {

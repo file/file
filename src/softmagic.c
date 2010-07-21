@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.139 2010/01/28 23:25:18 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.140 2010/07/21 16:47:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1902,39 +1902,41 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	switch (m->reln) {
 	case 'x':
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "%llu == *any* = 1\n",
-			    (unsigned long long)v);
+			(void) fprintf(stderr, "%" INT64_T_FORMAT
+			    "u == *any* = 1\n", (unsigned long long)v);
 		matched = 1;
 		break;
 
 	case '!':
 		matched = v != l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "%llu != %llu = %d\n",
-			    (unsigned long long)v, (unsigned long long)l,
-			    matched);
+			(void) fprintf(stderr, "%" INT64_T_FORMAT "u != %"
+			    INT64_T_FORMAT "u = %d\n", (unsigned long long)v,
+			    (unsigned long long)l, matched);
 		break;
 
 	case '=':
 		matched = v == l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "%llu == %llu = %d\n",
-			    (unsigned long long)v, (unsigned long long)l,
-			    matched);
+			(void) fprintf(stderr, "%" INT64_T_FORMAT "u == %"
+			    INT64_T_FORMAT "u = %d\n", (unsigned long long)v,
+			    (unsigned long long)l, matched);
 		break;
 
 	case '>':
 		if (m->flag & UNSIGNED) {
 			matched = v > l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%llu > %llu = %d\n",
+				(void) fprintf(stderr, "%" INT64_T_FORMAT
+				    "u > %" INT64_T_FORMAT "u = %d\n",
 				    (unsigned long long)v,
 				    (unsigned long long)l, matched);
 		}
 		else {
 			matched = (int64_t) v > (int64_t) l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%lld > %lld = %d\n",
+				(void) fprintf(stderr, "%" INT64_T_FORMAT
+				    "d > %" INT64_T_FORMAT "d = %d\n",
 				    (long long)v, (long long)l, matched);
 		}
 		break;
@@ -1943,32 +1945,38 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		if (m->flag & UNSIGNED) {
 			matched = v < l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%llu < %llu = %d\n",
+				(void) fprintf(stderr, "%" INT64_T_FORMAT
+				    "u < %" INT64_T_FORMAT "u = %d\n",
 				    (unsigned long long)v,
 				    (unsigned long long)l, matched);
 		}
 		else {
 			matched = (int64_t) v < (int64_t) l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
-				(void) fprintf(stderr, "%lld < %lld = %d\n",
-				       (long long)v, (long long)l, matched);
+				(void) fprintf(stderr, "%" INT64_T_FORMAT
+				    "d < %" INT64_T_FORMAT "d = %d\n",
+				     (long long)v, (long long)l, matched);
 		}
 		break;
 
 	case '&':
 		matched = (v & l) == l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "((%llx & %llx) == %llx) = %d\n",
-			    (unsigned long long)v, (unsigned long long)l,
-			    (unsigned long long)l, matched);
+			(void) fprintf(stderr, "((%" INT64_T_FORMAT "x & %"
+			    INT64_T_FORMAT "x) == %" INT64_T_FORMAT
+			    "x) = %d\n", (unsigned long long)v,
+			    (unsigned long long)l, (unsigned long long)l,
+			    matched);
 		break;
 
 	case '^':
 		matched = (v & l) != l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			(void) fprintf(stderr, "((%llx & %llx) != %llx) = %d\n",
-			    (unsigned long long)v, (unsigned long long)l,
-			    (unsigned long long)l, matched);
+			(void) fprintf(stderr, "((%" INT64_T_FORMAT "x & %"
+			    INT64_T_FORMAT "x) != %" INT64_T_FORMAT
+			    "x) = %d\n", (unsigned long long)v,
+			    (unsigned long long)l, (unsigned long long)l,
+			    matched);
 		break;
 
 	default:

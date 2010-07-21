@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.85 2010/07/19 14:56:53 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.86 2010/07/21 16:47:18 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -949,7 +949,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				default:
 					if (file_printf(ms,
 					    ", with unknown capability "
-					    "0x%llx = 0x%llx",
+					    "0x%" INT64_T_FORMAT "x = 0x%"
+					    INT64_T_FORMAT "x",
 					    (unsigned long long)xcap_tag,
 					    (unsigned long long)xcap_val) == -1)
 						return -1;
@@ -997,12 +998,13 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			}
 			if (cap_hw1)
 				if (file_printf(ms,
-				    " unknown hardware capability 0x%llx",
+				    " unknown hardware capability 0x%"
+				    INT64_T_FORMAT "x",
 				    (unsigned long long)cap_hw1) == -1)
 					return -1;
 		} else {
 			if (file_printf(ms,
-			    " hardware capability 0x%llx",
+			    " hardware capability 0x%" INT64_T_FORMAT "x",
 			    (unsigned long long)cap_hw1) == -1)
 				return -1;
 		}
@@ -1018,7 +1020,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		cap_sf1 &= ~SF1_SUNW_MASK;
 		if (cap_sf1)
 			if (file_printf(ms,
-			    ", with unknown software capability 0x%llx",
+			    ", with unknown software capability 0x%"
+			    INT64_T_FORMAT "x",
 			    (unsigned long long)cap_sf1) == -1)
 				return -1;
 	}

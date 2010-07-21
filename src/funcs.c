@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.54 2009/05/08 17:41:59 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.55 2010/07/21 16:47:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -103,7 +103,7 @@ file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
 	if (lineno != 0) {
 		free(ms->o.buf);
 		ms->o.buf = NULL;
-		file_printf(ms, "line %zu: ", lineno);
+		file_printf(ms, "line %" SIZE_T_FORMAT "u: ", lineno);
 	}
 	file_vprintf(ms, f, va);
 	if (error > 0)
@@ -138,7 +138,8 @@ file_magerror(struct magic_set *ms, const char *f, ...)
 protected void
 file_oomem(struct magic_set *ms, size_t len)
 {
-	file_error(ms, errno, "cannot allocate %zu bytes", len);
+	file_error(ms, errno, "cannot allocate %" SIZE_T_FORMAT "u bytes",
+	    len);
 }
 
 protected void
@@ -155,8 +156,8 @@ file_badread(struct magic_set *ms)
 
 #ifndef COMPILE_ONLY
 protected int
-file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
-    size_t nb)
+file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unused)),
+    const void *buf, size_t nb)
 {
 	int m = 0, rv = 0, looks_text = 0;
 	int mime = ms->flags & MAGIC_MIME;
@@ -200,7 +201,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 		}
 	}
 #endif
-
+#if HAVE_FORK
 	/* try compression stuff */
 	if ((ms->flags & MAGIC_NO_CHECK_COMPRESS) == 0)
 		if ((m = file_zmagic(ms, fd, inname, ubuf, nb)) != 0) {
@@ -208,7 +209,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname, const void *buf,
 				(void)fprintf(stderr, "zmagic %d\n", m);
 			goto done;
 		}
-
+#endif
 	/* Check if we have a tar file */
 	if ((ms->flags & MAGIC_NO_CHECK_TAR) == 0)
 		if ((m = file_is_tar(ms, ubuf, nb)) != 0) {
