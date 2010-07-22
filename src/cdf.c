@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.37 2010/02/20 15:19:53 rrt Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.38 2010/07/21 16:47:17 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -77,6 +77,19 @@ static union {
 #define CDF_TOLE8(x)	((uint64_t)(NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x)))
 #define CDF_TOLE4(x)	((uint32_t)(NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x)))
 #define CDF_TOLE2(x)	((uint16_t)(NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x)))
+#define CDF_GETUINT32(x, y)	cdf_getuint32(x, y)
+
+/*
+ * grab a uint32_t from a possibly unaligned address, and return it in
+ * the native host order.
+ */
+static uint32_t
+cdf_getuint32(const uint8_t *p, size_t offs)
+{
+	uint32_t rv;
+	(void)memcpy(&rv, p + offs * sizeof(uint32_t), sizeof(rv));
+	return CDF_TOLE4(rv);
+}
 
 /*
  * swap a short
@@ -704,14 +717,14 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 {
 	const cdf_section_header_t *shp;
 	cdf_section_header_t sh;
-	const uint32_t *p, *q, *e;
+	const uint8_t *p, *q, *e;
 	int16_t s16;
 	int32_t s32;
 	uint32_t u32;
 	int64_t s64;
 	uint64_t u64;
 	cdf_timestamp_t tp;
-	size_t i, o, nelements, j;
+	size_t i, o, o4, nelements, j;
 	cdf_property_info_t *inp;
 
 	if (offs > UINT32_MAX / 4) {
@@ -750,32 +763,33 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 	*info = inp;
 	inp += *count;
 	*count += sh.sh_properties;
-	p = CAST(const uint32_t *, (const void *)
+	p = CAST(const uint8_t *, (const void *)
 	    ((const char *)(const void *)sst->sst_tab +
 	    offs + sizeof(sh)));
-	e = CAST(const uint32_t *, (const void *)
+	e = CAST(const uint8_t *, (const void *)
 	    (((const char *)(const void *)shp) + sh.sh_len));
 	if (cdf_check_stream_offset(sst, e, 0, __LINE__) == -1)
 		goto out;
 	for (i = 0; i < sh.sh_properties; i++) {
-		q = (const uint32_t *)(const void *)
+		q = (const uint8_t *)(const void *)
 		    ((const char *)(const void *)p +
-		    CDF_TOLE4(p[(i << 1) + 1])) - 2;
+		    CDF_GETUINT32(p, (i << 1) + 1)) - 2 * sizeof(uint32_t);
 		if (q > e) {
 			DPRINTF(("Ran of the end %p > %p\n", q, e));
 			goto out;
 		}
-		inp[i].pi_id = CDF_TOLE4(p[i << 1]);
-		inp[i].pi_type = CDF_TOLE4(q[0]);
-		DPRINTF(("%d) id=%x type=%x offs=%x\n", i, inp[i].pi_id,
-		    inp[i].pi_type, (const char *)q - (const char *)p));
+		inp[i].pi_id = CDF_GETUINT32(p, i << 1);
+		inp[i].pi_type = CDF_GETUINT32(q, 0);
+		DPRINTF(("%d) id=%x type=%x offs=%x,%d\n", i, inp[i].pi_id,
+		    inp[i].pi_type, q - p, CDF_GETUINT32(p, (i << 1) + 1)));
 		if (inp[i].pi_type & CDF_VECTOR) {
-			nelements = CDF_TOLE4(q[1]);
+			nelements = CDF_GETUINT32(q, 1);
 			o = 2;
 		} else {
 			nelements = 1;
 			o = 1;
 		}
+		o4 = o * sizeof(uint32_t);
 		if (inp[i].pi_type & (CDF_ARRAY|CDF_BYREF|CDF_RESERVED))
 			goto unknown;
 		switch (inp[i].pi_type & CDF_TYPEMASK) {
@@ -785,32 +799,32 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		case CDF_SIGNED16:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
-			(void)memcpy(&s16, &q[o], sizeof(s16));
+			(void)memcpy(&s16, &q[o4], sizeof(s16));
 			inp[i].pi_s16 = CDF_TOLE2(s16);
 			break;
 		case CDF_SIGNED32:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
-			(void)memcpy(&s32, &q[o], sizeof(s32));
+			(void)memcpy(&s32, &q[o4], sizeof(s32));
 			inp[i].pi_s32 = CDF_TOLE4((uint32_t)s32);
 			break;
 		case CDF_BOOL:
 		case CDF_UNSIGNED32:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
-			(void)memcpy(&u32, &q[o], sizeof(u32));
+			(void)memcpy(&u32, &q[o4], sizeof(u32));
 			inp[i].pi_u32 = CDF_TOLE4(u32);
 			break;
 		case CDF_SIGNED64:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
-			(void)memcpy(&s64, &q[o], sizeof(s64));
+			(void)memcpy(&s64, &q[o4], sizeof(s64));
 			inp[i].pi_s64 = CDF_TOLE8((uint64_t)s64);
 			break;
 		case CDF_UNSIGNED64:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
-			(void)memcpy(&u64, &q[o], sizeof(u64));
+			(void)memcpy(&u64, &q[o4], sizeof(u64));
 			inp[i].pi_u64 = CDF_TOLE8((uint64_t)u64);
 			break;
 		case CDF_LENGTH32_STRING:
@@ -830,22 +844,23 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 			}
 			DPRINTF(("nelements = %d\n", nelements));
 			for (j = 0; j < nelements; j++, i++) {
-				uint32_t l = CDF_TOLE4(q[o]);
+				uint32_t l = CDF_GETUINT32(q, o);
 				inp[i].pi_str.s_len = l;
 				inp[i].pi_str.s_buf =
-				    (const char *)(const void *)(&q[o+1]);
+				    (const char *)(const void *)(&q[o4 + 1]);
 				DPRINTF(("l = %d, r = %d, s = %s\n", l,
 				    CDF_ROUND(l, sizeof(l)),
 				    inp[i].pi_str.s_buf));
 				l = 4 + (uint32_t)CDF_ROUND(l, sizeof(l));
 				o += l >> 2;
+				o4 = o * sizeof(uint32_t);
 			}
 			i--;
 			break;
 		case CDF_FILETIME:
 			if (inp[i].pi_type & CDF_VECTOR)
 				goto unknown;
-			(void)memcpy(&tp, &q[o], sizeof(tp));
+			(void)memcpy(&tp, &q[o4], sizeof(tp));
 			inp[i].pi_tp = CDF_TOLE8((uint64_t)tp);
 			break;
 		case CDF_CLIPBOARD:
