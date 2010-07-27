@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.39 2009/09/27 19:02:12 christos Exp $
+# $File: animation,v 1.40 2010/05/05 17:38:18 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -44,8 +44,16 @@
 >8	string		mp7b		\b, MPEG v4 system, MPEG v7 binary XML
 >8	string/W	jp2		\b, JPEG 2000
 !:mime	image/jp2
+>8	string		3ge		\b, MPEG v4 system, 3GPP
+!:mime	video/3gpp
+>8	string		3gg		\b, MPEG v4 system, 3GPP
+!:mime	video/3gpp
 >8	string		3gp		\b, MPEG v4 system, 3GPP
 !:mime	video/3gpp
+>8	string		3gs		\b, MPEG v4 system, 3GPP
+!:mime	video/3gpp
+>8	string		3g2		\b, MPEG v4 system, 3GPP2
+!:mime	video/3gpp2
 >>11	byte		4		\b v4 (H.263/AMR GSM 6.10)
 >>11	byte		5		\b v5 (H.263/AMR GSM 6.10)
 >>11	byte		6		\b v6 (ITU H.264/AMR GSM 6.10)
