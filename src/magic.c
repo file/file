@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.66 2010/07/21 16:47:17 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.67 2010/08/10 09:53:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -99,7 +99,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,
 {
 	if (dllpath[0] == 0 &&
 	    GetModuleFileNameA(hinstDLL, dllpath, MAX_PATH) != 0)
-		PathRemoveFileSpec(dllpath);
+		PathRemoveFileSpecA(dllpath);
 	return TRUE;
 }
 #endif
@@ -107,7 +107,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,
 private const char *
 get_default_magic(void)
 {
-	static const char hmagic[] = "/.magic";
+	static const char hmagic[] = "/.magic/magic.mgc";
 	static char default_magic[2 * MAXPATHLEN + 2];
 	char *home;
 	char hmagicpath[MAXPATHLEN + 1] = {0};
@@ -298,6 +298,14 @@ public int
 magic_check(struct magic_set *ms, const char *magicfile)
 {
 	struct mlist *ml = file_apprentice(ms, magicfile, FILE_CHECK);
+	free_mlist(ml);
+	return ml ? 0 : -1;
+}
+
+public int
+magic_list(struct magic_set *ms, const char *magicfile)
+{
+	struct mlist *ml = file_apprentice(ms, magicfile, FILE_LIST);
 	free_mlist(ml);
 	return ml ? 0 : -1;
 }
