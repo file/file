@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.40 2010/05/05 17:38:18 christos Exp $
+# $File: animation,v 1.41 2010/07/27 21:51:17 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -810,7 +810,8 @@
 !:mime	video/h264
 
 # Type: Bink Video
-# URL:  http://wiki.multimedia.cx/index.php?title=3DBink_Container
+# Extension: .bik
+# URL:  http://wiki.multimedia.cx/index.php?title=Bink_Container
 # From: <hoehle@users.sourceforge.net>  2008-07-18
 0	string		BIK	Bink Video
 >3	regex		=[a-z]	rev.%s

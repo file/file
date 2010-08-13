@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.8 2009/09/19 16:28:09 christos Exp $
+# $File: games,v 1.9 2010/03/18 12:51:31 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -220,13 +220,6 @@
 >>&0	string		38]	(Tamsk)
 >>&0	string		39]	(Gipf)
 >>&0	string		40]	(Kropki)
-
-
-# Summary: Civilization 4 video
-# Extension: .bik
-# Created by: Abel Cheung <abelcheung@gmail.com>
-0	string	BIKi	Civilization 4 Video
-
 
 ##############################################
 # NetImmerse/Gamebryo game engine entries
