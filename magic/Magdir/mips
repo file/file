@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mips,v 1.5 2009/09/19 16:28:10 christos Exp $
+# $File: mips,v 1.6 2010/08/13 16:12:30 christos Exp $
 # mips:  file(1) magic for Silicon Graphics (MIPS, IRIS, IRIX, etc.)
 #                         Dec Ultrix (MIPS)
 # all of SGI's *current* machines and OSes run in big-endian mode on the
@@ -171,8 +171,12 @@
 # GLF is OpenGL stream encoding
 0	string	glfHeadMagic();		GLF_TEXT
 4	belong	0x7d000000		GLF_BINARY_LSB_FIRST
+!:strength -30
 4	belong	0x0000007d		GLF_BINARY_MSB_FIRST
+!:strength -30
 # GLS is OpenGL stream encoding; GLS is the successor of GLF
 0	string	glsBeginGLS(		GLS_TEXT
 4	belong	0x10000000		GLS_BINARY_LSB_FIRST
+!:strength -30
 4	belong	0x00000010		GLS_BINARY_MSB_FIRST
+!:strength -30
