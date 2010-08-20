@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.66 2010/07/21 16:47:17 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.67 2010/08/10 09:53:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -111,6 +111,7 @@ get_default_magic(void)
 	static char default_magic[2 * MAXPATHLEN + 2];
 	char *home;
 	char hmagicpath[MAXPATHLEN + 1] = {0};
+	static const char pathsep[] = { PATHSEP, '\0' };
 
 #ifndef WIN32
 	if ((home = getenv("HOME")) == NULL)
@@ -131,7 +132,7 @@ get_default_magic(void)
 #define APPENDPATH() \
 	if (access(tmppath, R_OK) != -1)
 		hmagicp += snprintf(hmagicp, hmagicend - hmagicp, \
-		    "%s%s", hmagicp == hmagicpath ? "" : ":", tmppath)
+		    "%s%s", hmagicp == hmagicpath ? "" : pathsep, tmppath)
 	/* First, try to get user-specific magic file */
 	if ((home = getenv("LOCALAPPDATA")) == NULL) {
 		if ((home = getenv("USERPROFILE")) != NULL)
