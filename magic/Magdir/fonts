@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.20 2009/11/23 15:42:07 christos Exp $
+# $File: fonts,v 1.21 2009/12/06 23:17:52 rrt Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -71,3 +71,7 @@
 0	string		SplineFontDB:	Spline Font Database 
 !:mime application/vnd.font-fontforge-sfd
 >14	string		x		version %s
+
+# EOT
+34	string		LP		Embedded OpenType (EOT)
+!:mime application/vnd.ms-fontobject
