@@ -19,3 +19,7 @@
 
 - Add a zip library so we can peek inside Office2007 documents to
   figure out what they are.
+
+- Don't complain when ~/.magic is not compiled.
+
+- Add a separate option to print URL's for the sources of the file descriptions.
