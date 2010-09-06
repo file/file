@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.43 2010/03/08 20:57:01 rrt Exp $
+# $File: compress,v 1.44 2010/09/06 13:38:27 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -214,3 +214,6 @@
 # URL: http://tukaani.org/xz/
 0	string		\xfd\x37\x7a\x58\x5a\x00	XZ compressed data
 !:mime application/x-xz
+
+0	string		ArC\x01		FreeArc archive <http://freearc.org>
+
