@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.64 2009/12/06 00:38:50 christos Exp $
+# $File: images,v 1.65 2010/02/16 16:49:05 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -630,3 +630,7 @@
 # JPEG 2000 Code Stream Bitmap
 # From Petr Splichal <psplicha@redhat.com>
 0	string	\xFF\x4F\xFF\x51\x00	JPEG-2000 Code Stream Bitmap data
+
+# From: Rick Richardson <rick.richardson@comcast.net>
+0	string	GARMIN\ BITMAP\ 01	Garmin Bitmap file
+
