@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.158 2009/10/19 13:10:20 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.159 2010/07/21 16:47:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -97,6 +97,7 @@ private void eatsize(const char **);
 private int apprentice_1(struct magic_set *, const char *, int, struct mlist *);
 private size_t apprentice_magic_strength(const struct magic *);
 private int apprentice_sort(const void *, const void *);
+private void apprentice_list(struct mlist *, int );
 private int apprentice_load(struct magic_set *, struct magic **, uint32_t *,
     const char *, int);
 private void byteswap(struct magic *, uint32_t);
@@ -314,6 +315,13 @@ apprentice_1(struct magic_set *ms, const char *fn, int action,
 	ml->next = mlist;
 	mlist->prev = ml;
 
+	if (action == FILE_LIST) {
+		printf("Binary patterns:\n");
+		apprentice_list(mlist, BINTEST);
+		printf("Text patterns:\n");
+		apprentice_list(mlist, TEXTTEST);
+	}
+	
 	return 0;
 #endif /* COMPILE_ONLY */
 }
@@ -546,6 +554,43 @@ apprentice_sort(const void *a, const void *b)
 		return -1;
 	else
 		return 1;
+}
+
+/*  
+ * Shows sorted patterns list in the order which is used for the matching
+ */
+private void
+apprentice_list(struct mlist *mlist, int mode)
+{
+	uint32_t magindex = 0;
+	struct mlist *ml;
+	for (ml = mlist->next; ml != mlist; ml = ml->next) {
+		for (magindex = 0; magindex < ml->nmagic; magindex++) {
+			struct magic *m = &ml->magic[magindex];
+			if ((m->flag & mode) != mode) {
+				/* Skip sub-tests */
+				while (ml->magic[magindex + 1].cont_level != 0
+				    && ++magindex < ml->nmagic)
+					continue;
+				continue; /* Skip to next top-level test*/
+			}
+
+			/*
+			 * Try to iterate over the tree until we find item with
+			 * description/mimetype.
+			 */
+			while (ml->magic[magindex + 1].cont_level != 0 &&
+			    *ml->magic[magindex].desc == '\0' &&
+			    *ml->magic[magindex].mimetype == '\0' &&
+			    magindex + 1 < ml->nmagic)
+				magindex++;
+
+			printf("Strength = %3" SIZE_T_FORMAT "u : %s [%s]\n",
+			    apprentice_magic_strength(m),
+			    ml->magic[magindex].desc,
+			    ml->magic[magindex].mimetype);
+		}
+	}
 }
 
 private void
@@ -816,7 +861,8 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 				if (marray[i].mp->cont_level == 0)
 					break;
 			if (i != marraycount) {
-				ms->line = marray[i].mp->lineno; /* XXX - Ugh! */
+				/* XXX - Ugh! */
+				ms->line = marray[i].mp->lineno;
 				file_magwarn(ms,
 				    "level 0 \"default\" did not sort last");
 			}
@@ -1341,7 +1387,8 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 					l = t - 1;
 					break;
 				case CHAR_COMPACT_WHITESPACE:
-					m->str_flags |= STRING_COMPACT_WHITESPACE;
+					m->str_flags |=
+					    STRING_COMPACT_WHITESPACE;
 					break;
 				case CHAR_COMPACT_OPTIONAL_WHITESPACE:
 					m->str_flags |=
@@ -1365,8 +1412,8 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 				default:
 					if (ms->flags & MAGIC_CHECK)
 						file_magwarn(ms,
-						"string extension `%c' invalid",
-						*l);
+						    "string extension `%c' "
+						    "invalid", *l);
 					return -1;
 				}
 				/* allow multiple '/' for readability */
@@ -1533,7 +1580,8 @@ out:
 }
 
 /*
- * Parse an Apple CREATOR/TYPE annotation from magic file and put it into magic[index - 1]
+ * Parse an Apple CREATOR/TYPE annotation from magic file and put it into
+ * magic[index - 1]
  */
 private int
 parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
@@ -1543,14 +1591,15 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 	struct magic *m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
 
 	if (m->apple[0] != '\0') {
-		file_magwarn(ms, "Current entry already has a APPLE type `%.8s',"
-		    " new type `%s'", m->mimetype, l);
+		file_magwarn(ms, "Current entry already has a APPLE type "
+		    "`%.8s', new type `%s'", m->mimetype, l);
 		return -1;
 	}	
 
 	EATAB;
-	for (i = 0; *l && ((isascii((unsigned char)*l) && isalnum((unsigned char)*l))
-	     || strchr("-+/.", *l)) && i < sizeof(m->apple); m->apple[i++] = *l++)
+	for (i = 0; *l && ((isascii((unsigned char)*l) &&
+	    isalnum((unsigned char)*l)) || strchr("-+/.", *l)) &&
+	    i < sizeof(m->apple); m->apple[i++] = *l++)
 		continue;
 	if (i == sizeof(m->apple) && *l) {
 		/* We don't need to NUL terminate here, printing handles it */
@@ -1583,8 +1632,9 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 	}	
 
 	EATAB;
-	for (i = 0; *l && ((isascii((unsigned char)*l) && isalnum((unsigned char)*l))
-	     || strchr("-+/.", *l)) && i < sizeof(m->mimetype); m->mimetype[i++] = *l++)
+	for (i = 0; *l && ((isascii((unsigned char)*l) &&
+	    isalnum((unsigned char)*l)) || strchr("-+/.", *l)) &&
+	    i < sizeof(m->mimetype); m->mimetype[i++] = *l++)
 		continue;
 	if (i == sizeof(m->mimetype)) {
 		m->mimetype[sizeof(m->mimetype) - 1] = '\0';

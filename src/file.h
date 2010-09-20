@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.124 2010/01/16 17:45:12 chl Exp $
+ * @(#)$File: file.h,v 1.125 2010/07/21 16:47:17 christos Exp $
  */
 
 #ifndef __file_h__
@@ -125,6 +125,7 @@
 #define	FILE_LOAD	0
 #define FILE_CHECK	1
 #define FILE_COMPILE	2
+#define FILE_LIST	3
 
 union VALUETYPE {
 	uint8_t b;
