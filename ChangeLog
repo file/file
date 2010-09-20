@@ -7,7 +7,7 @@
 2010-07-19  10:55  Christos Zoulas <christos@zoulas.com>
 
 	* Only try to print prpsinfo for core files. (Jan Kaluza)
-	`
+
 2010-04-22  12:55  Christos Zoulas <christos@zoulas.com>
 
 	* Try more elf offsets for Debian core files.  (Arnaud Giersch)
