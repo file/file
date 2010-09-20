@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.68 2010/08/20 21:17:06 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.69 2010/09/20 14:14:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -110,8 +110,7 @@ get_default_magic(void)
 	static const char hmagic[] = "/.magic/magic.mgc";
 	static char default_magic[2 * MAXPATHLEN + 2];
 	char *home;
-	char hmagicpath[MAXPATHLEN + 1] = {0};
-	static const char pathsep[] = { PATHSEP, '\0' };
+	char hmagicpath[MAXPATHLEN + 1] = { 0 };
 
 #ifndef WIN32
 	if ((home = getenv("HOME")) == NULL)
@@ -126,8 +125,9 @@ get_default_magic(void)
 	    hmagicpath, MAGIC);
 #else
 	char *hmagicp = hmagicpath;
-	char tmppath[MAXPATHLEN + 1] = {0};
+	char tmppath[MAXPATHLEN + 1] = { 0 };
 	char *hmagicend = &hmagicpath[sizeof(hmagicpath) - 1];
+	static const char pathsep[] = { PATHSEP, '\0' };
 
 #define APPENDPATH() \
 	if (access(tmppath, R_OK) != -1)
