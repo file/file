@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.59 2010/09/20 19:19:17 rrt Exp $
+# $File: filesystems,v 1.60 2010/09/20 21:11:35 rrt Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -884,15 +884,19 @@
 
 # Minix filesystems - Juan Cespedes <cespedes@debian.org>
 0x410	leshort		0x137f
+!:strength / 2
 >0x402	beshort		< 100		Minix filesystem, V1, %d zones
 >0x1e	string		minix		\b, bootable
 0x410	beshort		0x137f
+!:strength / 2
 >0x402	beshort		< 100		Minix filesystem, V1 (big endian), %d zones
 >0x1e	string		minix		\b, bootable
 0x410	leshort		0x138f
+!:strength / 2
 >0x402	beshort		< 100		Minix filesystem, V1, 30 char names, %d zones
 >0x1e	string		minix		\b, bootable
 0x410	beshort		0x138f
+!:strength / 2
 >0x402	beshort		< 100		Minix filesystem, V1, 30 char names (big endian), %d zones
 >0x1e	string		minix		\b, bootable
 0x410	leshort		0x2468
@@ -1229,7 +1233,7 @@
 
 # CDROM Filesystems
 # Modified for UDF by gerardo.cacciari@gmail.com
-32769	string    CD001
+32769	string    CD001     #
 !:mime	application/x-iso9660-image
 >38913	string   !NSR0      ISO 9660 CD-ROM filesystem data
 >38913	string    NSR0      UDF filesystem data
