@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.136 2009/12/06 23:18:04 rrt Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.137 2010/09/20 14:14:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -422,9 +422,8 @@ process(struct magic_set *ms, const char *inname, int wid)
 	if (wid > 0 && !bflag) {
 		(void)printf("%s", std_in ? "/dev/stdin" : inname);
 		if (nulsep)
-			(void)putc('\0', stdout);
-		else
-			(void)printf("%s", separator);
+			(void)putc('\0', stdout);		
+		(void)printf("%s", separator);
 		(void)printf("%*s ",
 		    (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
 	}
