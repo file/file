@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.65 2010/02/16 16:49:05 christos Exp $
+# $File: images,v 1.66 2010/09/11 00:24:00 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -310,11 +310,20 @@
 #   As described in /usr/X11R6/include/X11/XWDFile.h
 #   used by the xwd program.
 #   Bradford Castalia, idaeim, 1/01
-4	belong	7			XWD X Window Dump image data
->100	string	>\0			\b, "%s"
->16	belong	x			\b, %dx
->20	belong	x			\b%dx
->12	belong	x			\b%d
+#   updated by Adam Buchbinder, 2/09
+# The following assumes version 7 of the format; the first long is the length
+# of the header, which is at least 25 4-byte longs, and the one at offset 8
+# is a constant which is always either 1 or 2. Offset 12 is the pixmap depth,
+# which is a maximum of 32.
+0	belong	>100
+>8	belong	<3
+>>12	belong	<33
+>>>4	belong	7			XWD X Window Dump image data
+!:mime	image/x-xwindowdump
+>>>>100	string	>\0			\b, "%s"
+>>>>16	belong	x			\b, %dx
+>>>>20	belong	x			\b%dx
+>>>>12	belong	x			\b%d
 
 # PDS - Planetary Data System
 #   These files use Parameter Value Language in the header section.
@@ -551,11 +560,16 @@
 # Bio-Rad .PIC is an image format used by microscope control systems
 # and related image processing software used by biologists.
 # From: Vebjorn Ljosa <vebjorn@ljosa.com>
-54	leshort 12345		Bio-Rad .PIC Image File
->0	leshort >0		%hd x
->2	leshort >0		%hd,
->4	leshort =1		1 image in file
->4	leshort >1		%hd images in file
+# BOOL values are two-byte integers; use them to rule out false positives.
+# http://web.archive.org/web/20050317223257/www.cs.ubc.ca/spider/ladic/text/biorad.txt
+# Samples: http://www.loci.wisc.edu/software/sample-data
+14	leshort <2
+>62	leshort <2
+>>54	leshort 12345		Bio-Rad .PIC Image File
+>>>0	leshort >0		%hd x
+>>>2	leshort >0		%hd,
+>>>4	leshort =1		1 image in file
+>>>4	leshort >1		%hd images in file
 
 # From Jan "Yenya" Kasprzak <kas@fi.muni.cz>
 # The description of *.mrw format can be found at

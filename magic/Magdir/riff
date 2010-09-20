@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.18 2009/09/19 16:28:12 christos Exp $
+# $File: riff,v 1.19 2010/09/15 18:08:20 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -40,12 +40,14 @@
 >>20	leshort		2		\b, Microsoft ADPCM
 >>20	leshort		6		\b, ITU G.711 A-law
 >>20	leshort		7		\b, ITU G.711 mu-law
+>>20	leshort		8		\b, Microsoft DTS
 >>20	leshort		17		\b, IMA ADPCM
 >>20	leshort		20		\b, ITU G.723 ADPCM (Yamaha)
 >>20	leshort		49		\b, GSM 6.10
 >>20	leshort		64		\b, ITU G.721 ADPCM
 >>20	leshort		80		\b, MPEG
 >>20	leshort		85		\b, MPEG Layer 3
+>>20	leshort		0x2001		\b, DTS
 >>22	leshort		=1		\b, mono
 >>22	leshort		=2		\b, stereo
 >>22	leshort		>2		\b, %d channels

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.56 2010/03/24 14:17:43 christos Exp $
+# $File: filesystems,v 1.57 2010/07/07 21:28:43 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1109,6 +1109,8 @@
 
 # ext2/ext3 filesystems - Andreas Dilger <adilger@dilger.ca>
 # ext4 filesystem - Eric Sandeen <sandeen@sandeen.net>
+# volume label and UUID Russell Coker
+# http://etbe.coker.com.au/2008/07/08/label-vs-uuid-vs-device/
 0x438   leshort         0xEF53          Linux
 >0x44c  lelong          x               rev %d
 >0x43e  leshort         x               \b.%d
@@ -1124,25 +1126,32 @@
 #   else large RO_COMPAT?
 >>>0x464 lelong         >0x0000007      ext4 filesystem data
 #  else large INCOMPAT?
->>0x460 lelong          >0x000003f      ext4 filesystem data
+>>0x460	lelong          >0x000003f      ext4 filesystem data
+>0x468	belong		x		\b, UUID=%08x
+>0x46c	beshort		x		\b-%04x
+>0x46e	beshort		x		\b-%04x
+>0x470	beshort		x		\b-%04x
+>0x472	belong		x		\b-%08x
+>0x476	beshort		x		\b%04x
+>0x478	string		>0		\b, volume name "%s"
 # General flags for any ext* fs
->0x460  lelong          &0x0000004      (needs journal recovery)
->0x43a  leshort         &0x0000002      (errors)
+>0x460	lelong          &0x0000004      (needs journal recovery)
+>0x43a	leshort         &0x0000002      (errors)
 # INCOMPAT flags
->0x460  lelong          &0x0000001      (compressed)
-#>0x460 lelong          &0x0000002      (filetype)
-#>0x460 lelong          &0x0000010      (meta bg)
->0x460  lelong          &0x0000040      (extents)
->0x460  lelong          &0x0000080      (64bit)
-#>0x460 lelong          &0x0000100      (mmp)
-#>0x460 lelong          &0x0000200      (flex bg)
+>0x460	lelong          &0x0000001      (compressed)
+#>0x460	lelong          &0x0000002      (filetype)
+#>0x460	lelong          &0x0000010      (meta bg)
+>0x460	lelong          &0x0000040      (extents)
+>0x460	lelong          &0x0000080      (64bit)
+#>0x460	lelong          &0x0000100      (mmp)
+#>0x460	lelong          &0x0000200      (flex bg)
 # RO_INCOMPAT flags
-#>0x464 lelong          &0x0000001      (sparse super)
->0x464  lelong          &0x0000002      (large files)
->0x464  lelong          &0x0000008      (huge files)
-#>0x464 lelong          &0x0000010      (gdt checksum)
-#>0x464 lelong          &0x0000020      (many subdirs)
-#>0x463 lelong          &0x0000040      (extra isize)
+#>0x464	lelong          &0x0000001      (sparse super)
+>0x464	lelong          &0x0000002      (large files)
+>0x464	lelong          &0x0000008      (huge files)
+#>0x464	lelong          &0x0000010      (gdt checksum)
+#>0x464	lelong          &0x0000020      (many subdirs)
+#>0x463	lelong          &0x0000040      (extra isize)
 
 # SGI disk labels - Nathan Scott <nathans@debian.org>
 0	belong		0x0BE5A941	SGI disk label (volume header)
@@ -1263,6 +1272,7 @@
 # reiserfs - russell@coker.com.au
 0x10034		string	ReIsErFs	ReiserFS V3.5
 0x10034		string	ReIsEr2Fs	ReiserFS V3.6
+0x10034		string	ReIsEr3Fs	ReiserFS V3.6.19
 >0x1002c 	leshort	x		block size %d
 >0x10032	leshort	&2		(mounted or unclean)
 >0x10000	lelong	x		num blocks %d

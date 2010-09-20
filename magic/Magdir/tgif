@@ -1,8 +1,7 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: tgif,v 1.5 2009/09/19 16:28:12 christos Exp $
 # file(1) magic for tgif(1) files
 # From Hendrik Scholz <hendrik@scholz.net>
-
-0	string	%TGIF\ x 		Tgif file version %s
-
+0	string	%TGIF\			Tgif file version
+>6	string	x			%s
