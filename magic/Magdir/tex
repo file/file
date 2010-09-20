@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: tex,v 1.16 2009/09/19 16:28:12 christos Exp $
+# $File: tex,v 1.17 2010/09/20 19:19:17 rrt Exp $
 # tex:  file(1) magic for TeX files
 #
 # XXX - needs byte-endian stuff (big-endian and little-endian DVI?)
@@ -93,3 +93,5 @@
 0	search/1	%\ BibTeX\ `	BibTeX custom bibliography style text file
 
 0	search/1	@c\ @mapfile{	TeX font aliases text file
+
+0	string		#LyX		LyX document text

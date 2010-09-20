@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: audio,v 1.60 2010/09/20 18:55:20 rrt Exp $
+# $File: audio,v 1.61 2010/09/20 19:19:16 rrt Exp $
 # audio:  file(1) magic for sound formats (see also "iff")
 #
 # Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
@@ -308,6 +308,15 @@
 >122	byte&0x1	=1		PAL
 >122	byte&0x1	=0		NTSC
 
+# Type: SNES SPC700 sound files
+# From: Josh Triplett <josh@freedesktop.org>
+0	string	SNES-SPC700\ Sound\ File\ Data\ v	SNES SPC700 sound file
+>&0	string	0.30					\b, version %s
+>>0x23	byte	0x1B					\b, without ID666 tag
+>>0x23	byte	0x1A					\b, with ID666 tag
+>>>0x2E	string	>\0					\b, song "%.32s"
+>>>0x4E	string	>\0					\b, game "%.32s"
+
 # Impulse tracker module (audio/x-it)
 0	string		IMPM		Impulse Tracker module sound data -
 !:mime	audio/x-mod
@@ -606,3 +615,8 @@
 # URL:  http://filext.com/detaillist.php?extdetail=AMR
 # From: Russell Coker <russell@coker.com.au>
 0	string	#!AMR		Adaptive Multi-Rate Codec (GSM telephony)
+
+# Type: SuperCollider 3 Synth Definition File Format
+# From: Mario Lang <mlang@debian.org>
+0	string	SCgf	SuperCollider3 Synth Definition file,
+>4	belong	x	version %d

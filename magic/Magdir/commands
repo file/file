@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.37 2010/09/20 18:55:20 rrt Exp $
+# $File: commands,v 1.38 2010/09/20 19:19:16 rrt Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string		:			shell archive or script for antique kernel text
@@ -86,3 +86,8 @@
 0	string		Zend\x00		PHP script Zend Optimizer data
 
 0	string		$!			DCL command file
+
+# Type: Pdmenu
+# URL:  http://packages.debian.org/pdmenu
+# From: Edward Betts <edward@debian.org>
+0	string	#!/usr/bin/pdmenu	Pdmenu configuration file text
