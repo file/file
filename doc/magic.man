@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.61 2010/06/02 17:10:59 christos Exp $
+.\" $File: magic.man,v 1.62 2010/09/20 20:15:36 rrt Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -348,7 +348,7 @@ If a the test on a line at level
 .Em n
 succeeds, all following tests at level
 .Em n+1
-are performed, and the messages printed if the tests succeed, untile a line
+are performed, and the messages printed if the tests succeed, until a line
 with level
 .Em n
 (or less) appears.
