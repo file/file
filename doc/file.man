@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.82 2009/11/04 22:30:34 christos Exp $
+.\" $File: file.man,v 1.83 2010/02/23 23:33:48 christos Exp $
 .Dd February 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -184,7 +184,7 @@ Valid test names are:
 .It apptype
 .Dv EMX
 application type (only on EMX).
-.It text
+.It ascii
 Various types of text files (this test will try to guess the text encoding, irrespective of the setting of the
 .Sq encoding
 option).
@@ -335,6 +335,11 @@ will not attempt to open
 adds
 .Sq .mgc
 to the value of this variable as appropriate.
+However,
+.Pa file
+has to exist in order for
+.Pa file.mime
+to be considered.
 The environment variable
 .Dv POSIXLY_CORRECT
 controls (on systems that support symbolic links), whether
@@ -352,7 +357,7 @@ options.
 .Xr magic __FSECTION__ ,
 .Xr strings 1 ,
 .Xr od 1 ,
-.Xr hexdump 1,
+.Xr hexdump 1 ,
 .Xr file 1posix
 .Sh STANDARDS CONFORMANCE
 This program is believed to exceed the System V Interface Definition
