@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.60 2009/05/08 17:41:59 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.61 2010/07/21 16:47:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -134,7 +134,8 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		if (file_printf(ms, "cannot open `%s' (%s)",
 		    fn, strerror(errno)) == -1)
 			return -1;
-		return 1;
+		ms->event_flags |= EVENT_HAD_ERR;
+		return -1;
 	}
 
 	if (!mime) {
