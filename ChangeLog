@@ -1,3 +1,8 @@
+2010-09-20  15:24  Reuben Thomas <rrt@sc3d.org>
+
+	* Minor security fix to softmagic.c (don't use untrusted
+	  string as printf format).
+
 2010-07-21  12:20  Christos Zoulas <christos@zoulas.com>
 
 	* MINGW32 portability from LRN
