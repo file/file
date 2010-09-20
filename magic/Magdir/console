@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.16 2009/09/19 16:28:08 christos Exp $
+# $File: console,v 1.17 2010/02/23 23:37:42 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 #    ines:  file(1) magic for Marat's iNES Nintendo Entertainment System
@@ -258,3 +258,7 @@
 >>>(0x18.l-26)	lelong		x	CRC32 0x%08x
 >>>(0x18.l-23)	string		x	"%s"
 
+# Type: scummVM savegame files
+# From: Sven Hartge <debian@ds9.argh.org>
+0	string	SCVM	ScummVM savegame
+>12	string	>\0	"%s"

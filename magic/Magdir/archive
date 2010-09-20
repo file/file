@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.56 2010/02/02 21:51:46 rrt Exp $
+# $File: archive,v 1.57 2010/02/14 23:00:09 rrt Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -669,6 +669,12 @@
 >>4	byte		0x14		Zip archive data, at least v2.0 to extract
 !:mime	application/zip
 
+# EPUB (OEBPS) books using OCF (Open Container Format)
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+# URL: http://www.idpf.org/ocf/ocf1.0/download/ocf10.htm, section 4.
+>>38	string	application/epub+zip	EPUB ebook
+!:mime	application/epub+zip
+
 # Zoo archiver
 20	lelong		0xfdc4a7dc	Zoo archive data
 !:mime	application/x-zoo
@@ -837,3 +843,13 @@
 >24	belong	0		no checksum
 >24	belong	1		SHA-1 checksum
 >24	belong	2		MD5 checksum
+
+# Type: Parity Archive
+# From: Daniel van Eeden <daniel_e@dds.nl>
+0	string	PAR2		Parity Archive Volume Set
+
+# Bacula volume format. (Volumes always start with a block header.)
+# URL: http://bacula.org/3.0.x-manuals/en/developers/developers/Block_Header.html
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+12	string	BB02		Bacula volume
+>20	bedate	x		\b, started %s

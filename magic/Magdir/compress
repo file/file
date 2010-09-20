@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.44 2010/09/06 13:38:27 christos Exp $
+# $File: compress,v 1.45 2010/09/20 18:55:20 rrt Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -220,3 +220,10 @@
 
 0	string		ArC\x01		FreeArc archive <http://freearc.org>
 
+# Type:	DACT compressed files
+0	long	0x444354C3	DACT compressed data
+>4	byte	>-1		(version %i.
+>5	byte	>-1		%i.
+>6	byte	>-1		%i)
+>7	long	>0		, original size: %i bytes
+>15	long	>30		, block size: %i bytes

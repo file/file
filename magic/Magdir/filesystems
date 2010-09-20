@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.57 2010/07/07 21:28:43 christos Exp $
+# $File: filesystems,v 1.58 2010/09/20 18:55:20 rrt Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1522,3 +1522,42 @@
 0	string XFSM
 >0x200	string XFSB	XFS filesystem metadump image
 
+# Type:	CROM filesystem
+# From:	Werner Fink <werner@suse.de>
+0	string	CROMFS	CROMFS
+>6	string	>\0	\b version %2.2s,
+>8	ulequad	>0	\b block data at %lld,
+>16	ulequad	>0	\b fblock table at %lld,
+>24	ulequad	>0	\b inode table at %lld,
+>32	ulequad	>0	\b root at %lld,
+>40	ulelong	>0	\b fblock size = %ld,
+>44	ulelong	>0	\b block size = %ld,
+>48	ulequad	>0	\b bytes = %lld
+
+# Type:	xfs metadump image
+# From:	Daniel Novotny <dnovotny@redhat.com>
+# mb_magic XFSM at 0; superblock magic XFSB at 1 << mb_blocklog
+# but can we do the << ? For now it's always 512 (0x200) anyway.
+0	string	XFSM
+>0x200	string	XFSB	XFS filesystem metadump image
+
+# Type:	delta ISO
+# From:	Daniel Novotny <dnovotny@redhat.com>
+0	string	DISO	Delta ISO data,
+>4	belong	x	version %d
+
+# JFS2 (Journaling File System) image. (Old JFS1 has superblock at 0x1000.)
+# See linux/fs/jfs/jfs_superblock.h for layout; see jfs_filsys.h for flags.
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+0x8000	string	JFS1
+# Because it's text-only magic, check a binary value (version) to be sure.
+# Should always be 2, but mkfs.jfs writes it as 1. Needs to be 2 or 1 to be
+# mountable.
+>&0	lelong	<3	JFS2 filesystem image
+# Label is followed by a UUID; we have to limit string length to avoid
+# appending the UUID in the case of a 16-byte label.
+>>&144	regex	[\x20-\x7E]{1,16}	(label "%s")
+>>&0	lequad	x	\b, %lld blocks
+>>&8	lelong	x	\b, blocksize %d
+>>&32	lelong&0x00000006	>0	(dirty)
+>>&36	lelong	>0	(compressed)

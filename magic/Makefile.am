@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.55 2010/07/02 00:07:39 christos Exp $
+# $File: Makefile.am,v 1.56 2010/07/08 20:18:40 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -28,10 +28,12 @@ $(MAGIC_FRAGMENT_DIR)/att3b \
 $(MAGIC_FRAGMENT_DIR)/audio \
 $(MAGIC_FRAGMENT_DIR)/basis \
 $(MAGIC_FRAGMENT_DIR)/bflt \
+$(MAGIC_FRAGMENT_DIR)/blcr \
 $(MAGIC_FRAGMENT_DIR)/blender \
 $(MAGIC_FRAGMENT_DIR)/blit \
 $(MAGIC_FRAGMENT_DIR)/bout \
 $(MAGIC_FRAGMENT_DIR)/bsdi \
+$(MAGIC_FRAGMENT_DIR)/bsi \
 $(MAGIC_FRAGMENT_DIR)/btsnoop \
 $(MAGIC_FRAGMENT_DIR)/c-lang \
 $(MAGIC_FRAGMENT_DIR)/c64 \
@@ -176,12 +178,14 @@ $(MAGIC_FRAGMENT_DIR)/sc \
 $(MAGIC_FRAGMENT_DIR)/sccs \
 $(MAGIC_FRAGMENT_DIR)/scientific \
 $(MAGIC_FRAGMENT_DIR)/securitycerts \
+$(MAGIC_FRAGMENT_DIR)/selinux \
 $(MAGIC_FRAGMENT_DIR)/sendmail \
 $(MAGIC_FRAGMENT_DIR)/sequent \
 $(MAGIC_FRAGMENT_DIR)/sgi \
 $(MAGIC_FRAGMENT_DIR)/sgml \
 $(MAGIC_FRAGMENT_DIR)/sharc \
 $(MAGIC_FRAGMENT_DIR)/sinclair \
+$(MAGIC_FRAGMENT_DIR)/sisu \
 $(MAGIC_FRAGMENT_DIR)/sketch \
 $(MAGIC_FRAGMENT_DIR)/smalltalk \
 $(MAGIC_FRAGMENT_DIR)/sniffer \
@@ -189,6 +193,8 @@ $(MAGIC_FRAGMENT_DIR)/softquad \
 $(MAGIC_FRAGMENT_DIR)/spec \
 $(MAGIC_FRAGMENT_DIR)/spectrum \
 $(MAGIC_FRAGMENT_DIR)/sql \
+$(MAGIC_FRAGMENT_DIR)/ssh \
+$(MAGIC_FRAGMENT_DIR)/ssl \
 $(MAGIC_FRAGMENT_DIR)/sun \
 $(MAGIC_FRAGMENT_DIR)/sysex \
 $(MAGIC_FRAGMENT_DIR)/teapot \

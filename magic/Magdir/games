@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.9 2010/03/18 12:51:31 christos Exp $
+# $File: games,v 1.10 2010/08/13 16:13:01 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -35,6 +35,7 @@
 # Quake
 
 0       string  PACK    Quake I or II world or extension
+>8	lelong	>0	\b, %d entries
 
 #0       string  -1\x0a  Quake I demo
 #>30     string  x        version %.4s
@@ -243,3 +244,14 @@
 >&0		string		n\ 					NetImmerse game engine file
 >>&0		regex		[0-9a-z.]+				\b, version %s
 
+# Type:	SGF Smart Game Format
+# URL:	http://www.red-bean.com/sgf/
+# From:	Eduardo Sabbatella <eduardo_sabbatella@yahoo.com.ar>
+2	regex/c	\\(;.*GM\\[[0-9]{1,2}\\]	Smart Game Format
+>2	regex/c	GM\\[1\\]			- Go Game
+>2	regex/c	GM\\[6\\]			- BackGammon Game
+>2	regex/c	GM\\[11\\]			- Hex Game
+>2	regex/c	GM\\[18\\]			- Amazons Game
+>2	regex/c	GM\\[19\\]			- Octi Game
+>2	regex/c	GM\\[20\\]			- Gess Game
+>2	regex/c	GM\\[21\\]			- twix Game

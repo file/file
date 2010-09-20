@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.66 2010/09/11 00:24:00 christos Exp $
+# $File: images,v 1.67 2010/09/20 18:55:20 rrt Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -62,6 +62,25 @@
 # [GRR:  this *must* go before TIFF]
 0	string		IIN1		NIFF image data
 !:mime	image/x-niff
+
+# Canon RAW version 1 (CRW) files are a type of Canon Image File Format
+# (CIFF) file. These are apparently all little-endian.
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+# URL: http://www.sno.phy.queensu.ca/~phil/exiftool/canon_raw.html
+0	string		II\x1a\0\0\0HEAPCCDR	Canon CIFF raw image data
+!:mime	image/x-canon-crw
+>16	leshort		x	\b, version %d.
+>14	leshort		x	\b%d
+
+# Canon RAW version 2 (CR2) files are a kind of TIFF with an extra magic
+# number. Put this above the TIFF test to make sure we detect them.
+# These are apparently all little-endian.
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+# URL: http://libopenraw.freedesktop.org/wiki/Canon_CR2
+0	string		II\x2a\0\x10\0\0\0CR	Canon CR2 raw image data
+!:mime	image/x-canon-cr2
+>10	byte		x	\b, version %d.
+>11	byte		x	\b%d
 
 # Tag Image File Format, from Daniel Quinlan (quinlan@yggdrasil.com)
 # The second word of TIFF files is the TIFF version number, 42, which has
@@ -648,3 +667,60 @@
 # From: Rick Richardson <rick.richardson@comcast.net>
 0	string	GARMIN\ BITMAP\ 01	Garmin Bitmap file
 
+# Type:	Ulead Photo Explorer5 (.pe5)
+# URL:	http://www.jisyo.com/cgibin/view.cgi?EXT=pe5 (Japanese)
+# From:	Simon Horman <horms@debian.org>
+0	string	IIO2H			Ulead Photo Explorer5
+
+# Type:	X11 cursor
+# URL:	http://webcvs.freedesktop.org/mime/shared-mime-info/freedesktop.org.xml.in?view=markup
+# From:	Mathias Brodala <info@noctus.net>
+0	string	Xcur			X11 cursor
+
+# Type:	Olympus ORF raw images.
+# URL:	http://libopenraw.freedesktop.org/wiki/Olympus_ORF
+# From:	Adam Buchbinder <adam.buchbinder@gmail.com>
+0	string		MMOR		Olympus ORF raw image data, big-endian
+!:mime	image/x-olympus-orf
+0	string		IIRO		Olympus ORF raw image data, little-endian
+!:mime	image/x-olympus-orf
+0	string		IIRS		Olympus ORF raw image data, little-endian
+!:mime	image/x-olympus-orf
+
+# Type: files used in modern AVCHD camcoders to store clip information
+# Extension: .cpi
+# From: Alexander Danilov <alexander.a.danilov@gmail.com>
+0	string	HDMV0100	AVCHD Clip Information
+
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+# URL: http://local.wasp.uwa.edu.au/~pbourke/dataformats/pic/
+# Radiance HDR; usually has .pic or .hdr extension.
+0	string	#?RADIANCE\n	Radiance HDR image data
+#!mime	image/vnd.radiance
+
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+# URL: http://www.mpi-inf.mpg.de/resources/pfstools/pfs_format_spec.pdf
+# Used by the pfstools packages. The regex matches for the image size could
+# probably use some work. The MIME type is made up; if there's one in
+# actual common use, it should replace the one below.
+0	string	PFS1\x0a	PFS HDR image data
+#!mime	image/x-pfs
+>1	regex	[0-9]*\ 		\b, %s
+>>1	regex	\ [0-9]{4}		\bx%s
+
+# Type: Foveon X3F
+# URL:  http://www.photofo.com/downloads/x3f-raw-format.pdf
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+# Note that the MIME type isn't defined anywhere that I can find; if
+# there's a canonical type for this format, it should replace this one.
+0	string	FOVb	Foveon X3F raw image data
+!:mime	image/x-x3f
+>6	leshort	x	\b, version %d.
+>4	leshort	x	\b%d
+>28	lelong	x	\b, %dx
+>32	lelong	x	\b%d
+
+# Paint.NET file
+# From Adam Buchbinder <adam.buchbinder@gmail.com>
+0	string	PDN3	Paint.NET image data
+!:mime	image/x-paintnet
