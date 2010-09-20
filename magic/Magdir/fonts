@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.22 2010/09/06 13:38:27 christos Exp $
+# $File: fonts,v 1.23 2010/09/20 18:55:20 rrt Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -61,7 +61,15 @@
 0	string		\007\001\001\000Copyright\ (c)\ 199	Adobe Multiple Master font
 0	string		\012\001\001\000Copyright\ (c)\ 199	Adobe Multiple Master font
 
+# TrueType/OpenType font collections (.ttc)
+# http://www.microsoft.com/typography/otspec/otff.htm
 0	string		ttcf		TrueType font collection data
+>4	belong		0x00010000	\b, 1.0
+>>8	belong		>0		\b, %d fonts
+>4	belong		0x00020000	\b, 2.0
+>>8	belong		>0		\b, %d fonts
+# 0x44454947 = 'DSIG'
+>>>16	belong		0x44534947	\b, digitally signed
 
 # Opentype font data from Avi Bercovich
 0	string		OTTO		OpenType font data

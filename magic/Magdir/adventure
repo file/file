@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: adventure,v 1.11 2010/06/29 12:42:32 christos Exp $
+# $File: adventure,v 1.12 2010/09/20 18:55:20 rrt Exp $
 # adventure: file(1) magic for Adventure game files
 #
 # from Allen Garvin <earendil@faeryland.tamu-commerce.edu>
@@ -17,18 +17,26 @@
 # Infocom (see z-machine)
 #------------------------------------------------------------------------------
 # Z-machine:  file(1) magic for Z-machine binaries.
+# Updated by Adam Buchbinder <adam.buchbinder@gmail.com>
 #
 #http://www.gnelson.demon.co.uk/zspec/sect11.html
 #http://www.jczorkmid.net/~jpenney/ZSpec11-latest.txt
 #http://en.wikipedia.org/wiki/Z-machine
-# The first byte is the Z-machine version number which is 0 < v < 9
+# The first byte is the Z-machine revision; it is always between 1 and 8. We
+# had false matches (for instance, inbig5.ocp from the Omega TeX extension as
+# well as an occasional MP3 file), so we sanity-check the version number.
+#
+# It might be possible to sanity-check the release number as well, as it seems
+# (at least in classic Infocom games) to always be a relatively small number,
+# always under 150 or so, but as this isn't rigorous, we'll wait on that until
+# it becomes clear that it's needed.
+#
 0	ubyte			>0
 >0	ubyte			<9
-16	belong&0xfe00f0f0	0x3030	Infocom game data
->0	ubyte			0	(false match)
->0	ubyte			>0	(Z-machine %d,
->>2	ubeshort		x	Release %d /
->>18	string			>\0	Serial %.6s)
+>>16	belong&0xfe00f0f0	0x3030	Infocom game data
+>>>0	ubyte			x	(Z-machine %d,
+>>>>2	ubeshort		x	Release %d /
+>>>>18	string			>\0	Serial %.6s)
 
 #------------------------------------------------------------------------------
 # Glulx:  file(1) magic for Glulx binaries.
