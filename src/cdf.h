@@ -40,6 +40,10 @@
 #define timespec timeval
 #define tv_nsec tv_usec
 #endif
+#ifdef __DJGPP__
+#define timespec timeval
+#define tv_nsec tv_usec
+#endif
 
 typedef int32_t cdf_secid_t;
 

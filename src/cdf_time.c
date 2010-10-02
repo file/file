@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf_time.c,v 1.8 2009/06/20 20:47:30 christos Exp $")
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.9 2010/10/02 15:36:15 christos Exp $")
 #endif
 
 #include <time.h>
@@ -44,12 +44,6 @@ FILE_RCSID("@(#)$File: cdf_time.c,v 1.8 2009/06/20 20:47:30 christos Exp $")
 static const int mdays[] = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
-
-#ifdef __DJGPP__
-#define timespec timeval
-#define tv_nsec tv_usec
-#endif
-
 
 /*
  * Return the number of days between jan 01 1601 and jan 01 of year.
