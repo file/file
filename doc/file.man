@@ -1,5 +1,5 @@
 .\" $File: file.man,v 1.83 2010/02/23 23:33:48 christos Exp $
-.Dd February 23, 2010
+.Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -8,7 +8,7 @@
 .Sh SYNOPSIS
 .Nm
 .Bk -words
-.Op Fl bchikLNnprsvz0
+.Op Fl bchiklLNnprsvz0
 .Op Fl -apple
 .Op Fl -mime-encoding
 .Op Fl -mime-type
@@ -251,6 +251,8 @@ prepended.
 (If you want a newline, see the
 .Sq "\-r"
 option.)
+.It Fl l , -list
+Print information about the strength of each magic pattern.
 .It Fl L , -dereference
 option causes symlinks to be followed, as the like-named option in
 .Xr ls 1
@@ -258,6 +260,8 @@ option causes symlinks to be followed, as the like-named option in
 This is the default if the environment variable
 .Dv POSIXLY_CORRECT
 is defined.
+.It Fl l
+Shows sorted patterns list in the order which is used for the matching.
 .It Fl m , -magic-file Ar magicfiles
 Specify an alternate list of files and directories containing magic.
 This can be a single item, or a colon-separated list.
