@@ -1,3 +1,7 @@
+2010-10-06  21:05  Christos Zoulas <christos@zoulas.com>
+
+	* allow string/t to work (Jan Kaluza)
+
 2010-09-20  22:11  Reuben Thomas <rrt@sc3d.org>
 
 	* Apply some patches from Ubuntu and Fedora.
