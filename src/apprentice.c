@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.160 2010/09/20 14:14:49 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.161 2010/10/07 00:33:20 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -632,8 +632,11 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_PSTRING:
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
-		/* binary test, set flag */
-		mstart->flag |= BINTEST;
+		/* Allow text overrides */
+		if (mstart->str_flags & STRING_TEXTTEST)
+			mstart->flag |= TEXTTEST;
+		else
+			mstart->flag |= BINTEST;
 		break;
 	case FILE_REGEX:
 	case FILE_SEARCH:
