@@ -36,7 +36,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.74 2008/11/07 19:10:25 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.75 2009/02/03 20:27:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -125,6 +125,7 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 	int n_lf = 0;
 	int n_cr = 0;
 	int n_nel = 0;
+	int score, curtype;
 
 	size_t last_line_end = (size_t)-1;
 	int has_long_lines = 0;
@@ -161,6 +162,8 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 		goto subtype_identified;
 
 	i = 0;
+	score = 0;
+	curtype = -1;
 	while (i < ulen) {
 		size_t end;
 
@@ -179,9 +182,18 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 		for (p = names; p < names + NNAMES; p++) {
 			if (ascmatch((const unsigned char *)p->name, ubuf + i,
 			    end - i)) {
-				subtype = types[p->type].human;
-				subtype_mime = types[p->type].mime;
-				goto subtype_identified;
+				if (curtype == -1)
+					curtype = p->type;
+				else if (curtype != p->type) {
+					score = p->score;
+					curtype = p->type;
+				} else
+					score += p->score;
+				if (score > 1) {
+					subtype = types[p->type].human;
+					subtype_mime = types[p->type].mime;
+					goto subtype_identified;
+				}
 			}
 		}
 
