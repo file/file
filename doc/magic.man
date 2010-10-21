@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.61 2010/06/02 17:10:59 christos Exp $
+.\" $File: magic.man,v 1.62 2010/09/20 20:15:36 rrt Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -365,7 +365,7 @@ being examined.
 If the first character following the last
 .Em \*[Gt]
 is a
-.Em (
+.Em \&(
 then the string after the parenthesis is interpreted as an indirect offset.
 That means that the number after the parenthesis is used as an offset in
 the file.
