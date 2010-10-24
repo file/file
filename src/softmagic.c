@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.140 2010/07/21 16:47:18 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.141 2010/09/20 14:24:01 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1640,8 +1640,9 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 			    isspace(*a)) {
 				a++;
 				if (isspace(*b++)) {
-					while (isspace(*b))
-						b++;
+					if (!isspace(*a))
+						while (isspace(*b))
+							b++;
 				}
 				else {
 					v = 1;
