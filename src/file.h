@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.125 2010/07/21 16:47:17 christos Exp $
+ * @(#)$File: file.h,v 1.126 2010/09/20 14:14:49 christos Exp $
  */
 
 #ifndef __file_h__
@@ -278,11 +278,11 @@ struct magic {
 #define str_flags _u._s._flags
 	/* Words 9-16 */
 	union VALUETYPE value;	/* either number or string */
-	/* Words 17-24 */
+	/* Words 17-32 */
 	char desc[MAXDESC];	/* description */
-	/* Words 25-32 */
+	/* Words 33-48 */
 	char mimetype[MAXDESC]; /* MIME type */
-	/* Words 33-34 */
+	/* Words 49-50 */
 	char apple[8];
 };
 
