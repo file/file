@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.58 2010/09/20 19:19:16 rrt Exp $
+# $File: archive,v 1.59 2010/10/25 22:48:38 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -586,6 +586,7 @@
 >>>58	string	kword			KWord document
 
 # OpenOffice formats (for OpenOffice 1.x / StarOffice 6/7)
+#  mimetype contains 'application/vnd.sun.xml.<SUBTYPE>'
 >>50	string	vnd.sun.xml.		OpenOffice.org 1.x
 >>>62	string	writer			Writer
 >>>>68	byte	!0x2e			document
@@ -605,6 +606,7 @@
 
 # OpenDocument formats (for OpenOffice 2.x / StarOffice >= 8)
 # http://lists.oasis-open.org/archives/office/200505/msg00006.html
+#  mimetype contains 'application/vnd.oasis.opendocument.<SUBTYPE>'
 >>50	string	vnd.oasis.opendocument.	OpenDocument
 >>>73	string	text
 >>>>77	byte	!0x2d			Text
@@ -674,6 +676,22 @@
 # URL: http://www.idpf.org/ocf/ocf1.0/download/ocf10.htm, section 4.
 >>38	string	application/epub+zip	EPUB ebook
 !:mime	application/epub+zip
+
+# EPUB documents (.epub eBooks) are also zip archives starting with a
+# 'mimetype' member, which contains 'application/epub+zip'.
+>>50   string          epub+zip        epub eBook data
+!:mime application/epub+zip
+
+# Catch other ZIP-with-mimetype formats
+>>50           string          !epub+zip
+>>>50          string          !vnd.oasis.opendocument.
+>>>>50         string          !vnd.sun.xml.
+>>>>>50                string          !vnd.kde.
+>>>>>>38       regex           [!-OQ-~]+       Zip data (mimetype "%s"?)
+>26    string          \x8\0\0\0mimetype
+>>38   string          !application/
+>>>38  regex           [!-OQ-~]+               Zip data (mimetype "%s"?)
+
 
 # Zoo archiver
 20	lelong		0xfdc4a7dc	Zoo archive data
