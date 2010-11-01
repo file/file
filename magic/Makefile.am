@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.56 2010/07/08 20:18:40 christos Exp $
+# $File: Makefile.am,v 1.57 2010/09/20 19:19:16 rrt Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -197,6 +197,7 @@ $(MAGIC_FRAGMENT_DIR)/ssh \
 $(MAGIC_FRAGMENT_DIR)/ssl \
 $(MAGIC_FRAGMENT_DIR)/sun \
 $(MAGIC_FRAGMENT_DIR)/sysex \
+$(MAGIC_FRAGMENT_DIR)/tcl \
 $(MAGIC_FRAGMENT_DIR)/teapot \
 $(MAGIC_FRAGMENT_DIR)/terminfo \
 $(MAGIC_FRAGMENT_DIR)/tex \

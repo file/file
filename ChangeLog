@@ -1,3 +1,6 @@
+2010-11-01  18:35  Reuben Thomas <rrt@sc3d.org>
+	* Add tcl magic from Gustaf Neumann
+
 2010-10-24  10:42  Christos Zoulas <christos@zoulas.com>
 
 	* Fix the whitespace comparing code (Christopher Chittleborough)
