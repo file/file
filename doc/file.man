@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.83 2010/02/23 23:33:48 christos Exp $
+.\" $File: file.man,v 1.85 2010/10/07 01:15:20 christos Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -494,9 +494,10 @@ Altered by Eric Fischer (enf@pobox.com), July, 2000,
 to identify character codes and attempt to identify the languages
 of non-ASCII files.
 .Pp
-Altered by Reuben Thomas (rrt@sc3d.org), 2007 to 2008, to improve MIME
+Altered by Reuben Thomas (rrt@sc3d.org), 2007-2009, to improve MIME
 support and merge MIME and non-MIME magic, support directories as well
-as files of magic, apply many bug fixes and improve the build system.
+as files of magic, apply many bug fixes, update and fix a lot of magic,
+and improve the build system.
 .Pp
 The list of contributors to the
 .Sq magic
@@ -518,9 +519,9 @@ were written by John Gilmore from his public-domain
 program, and are not covered by the above license.
 .Sh BUGS
 .Pp
-There must be a better way to automate the construction of the Magic
-file from all the glop in Magdir.
-What is it?
+Please report bugs and send patches to the bug tracker at
+http://bugs.gw.com/
+or the mailing list at file@mx.gw.com.
 .Pp
 .Nm
 uses several algorithms that favor speed over accuracy,
