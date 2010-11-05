@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.85 2010/10/07 01:15:20 christos Exp $
+.\" $File: file.man,v 1.86 2010/11/05 17:25:55 rrt Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -520,8 +520,9 @@ program, and are not covered by the above license.
 .Sh BUGS
 .Pp
 Please report bugs and send patches to the bug tracker at
-http://bugs.gw.com/
-or the mailing list at file@mx.gw.com.
+.Pa http://bugs.gw.com/
+or the mailing list at
+.Aq file@mx.gw.com .
 .Pp
 .Nm
 uses several algorithms that favor speed over accuracy,
