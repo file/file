@@ -1,9 +1,9 @@
 
 #------------------------------------------------------------------------------
-# $File: revision,v 1.6 2009/09/19 16:28:12 christos Exp $
+# $File: revision,v 1.7 2010/09/20 19:19:17 rrt Exp $
 # file(1) magic for revision control files
 # From Hendrik Scholz <hendrik@scholz.net>
-0	string	/1\ :pserver:	cvs password text file
+0	string/t	/1\ :pserver:	cvs password text file
 
 # Conary changesets
 # From: Jonathan Smith <smithj@rpath.com>

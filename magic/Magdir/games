@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.10 2010/08/13 16:13:01 christos Exp $
+# $File: games,v 1.11 2010/09/20 19:19:17 rrt Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -180,7 +180,7 @@
 # Modified by (1): Abel Cheung (regex, more game format)
 # FIXME: Some games don't have GM (game type)
 0	regex		\\(;.*GM\\[[0-9]{1,2}\\]	Smart Game Format
->2	search/0x200	GM[
+>2	search/0x200/b	GM[
 >>&0	string		1]	(Go)
 >>&0	string		2]	(Othello)
 >>&0	string		3]	(chess)
