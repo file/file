@@ -1,11 +1,11 @@
 
 #------------------------------------------------------------------------------
-# $File: printer,v 1.22 2009/09/19 16:28:11 christos Exp $
+# $File: printer,v 1.23 2010/11/25 15:00:12 christos Exp $
 # printer:  file(1) magic for printer-formatted files
 #
 
 # PostScript, updated by Daniel Quinlan (quinlan@yggdrasil.com)
-0	string		%!		PostScript document text
+0	string/t		%!		PostScript document text
 !:mime	application/postscript
 !:apple	ASPSTEXT
 >2	string		PS-Adobe-	conforming

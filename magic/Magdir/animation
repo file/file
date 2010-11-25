@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.43 2010/09/20 19:19:16 rrt Exp $
+# $File: animation,v 1.44 2010/11/25 15:00:12 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -741,7 +741,7 @@
 
 # X3D (Extensible 3D) [http://www.web3d.org/specifications/x3d-3.0.dtd]
 # From Michel Briand <michelbriand@free.fr>
-0	string		\<?xml\ version="
+0	string/t		\<?xml\ version="
 !:strength +1
 >20	search/1000/cw  \<!DOCTYPE\ X3D		X3D (Extensible 3D) model xml text
 !:mime model/x3d
