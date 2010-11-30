@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.138 2010/09/20 21:00:44 rrt Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.139 2010/10/08 22:03:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -253,7 +253,7 @@ main(int argc, char *argv[])
 			flags |= MAGIC_DEVICES;
 			break;
 		case 'v':
-			if (magicfile == NULL) 
+			if (magicfile == NULL)
 				magicfile = magic_getpath(magicfile, action);
 			(void)fprintf(stderr, "%s-%d.%.2d\n", progname,
 				       FILE_VERSION_MAJOR, patchlevel);
@@ -423,7 +423,7 @@ process(struct magic_set *ms, const char *inname, int wid)
 	if (wid > 0 && !bflag) {
 		(void)printf("%s", std_in ? "/dev/stdin" : inname);
 		if (nulsep)
-			(void)putc('\0', stdout);		
+			(void)putc('\0', stdout);
 		(void)printf("%s", separator);
 		(void)printf("%*s ",
 		    (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
