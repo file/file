@@ -1,3 +1,8 @@
+2010-11-26  18:39  Reuben Thomas <rrt@sc3d.org>
+	* Fix "-e soft": it was ignored when softmagic was called
+	  during asciimagic.
+	* Improve comments and use "unsigned char" in tar.h/is_tar.c.
+
 2010-11-05  17:26  Reuben Thomas <rrt@sc3d.org>
 	* Make bug reporting addresses more visible.
 

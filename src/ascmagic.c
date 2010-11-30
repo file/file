@@ -36,7 +36,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.76 2010/10/08 21:58:44 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.77 2010/11/30 14:58:53 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -93,7 +93,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 		goto done;
 	}
 
-	rv = file_ascmagic_with_encoding(ms, buf, nbytes, ubuf, ulen, code, 
+	rv = file_ascmagic_with_encoding(ms, buf, nbytes, ubuf, ulen, code,
 	    type);
 
  done:
@@ -141,21 +141,23 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 		goto done;
 	}
 
-	/* Convert ubuf to UTF-8 and try text soft magic */
-	/* malloc size is a conservative overestimate; could be
-	   improved, or at least realloced after conversion. */
-	mlen = ulen * 6;
-	if ((utf8_buf = CAST(unsigned char *, malloc(mlen))) == NULL) {
-		file_oomem(ms, mlen);
-		goto done;
+	if ((ms->flags & MAGIC_NO_CHECK_SOFT) == 0) {
+		/* Convert ubuf to UTF-8 and try text soft magic */
+		/* malloc size is a conservative overestimate; could be
+		   improved, or at least realloced after conversion. */
+		mlen = ulen * 6;
+		if ((utf8_buf = CAST(unsigned char *, malloc(mlen))) == NULL) {
+			file_oomem(ms, mlen);
+			goto done;
+		}
+		if ((utf8_end = encode_utf8(utf8_buf, mlen, ubuf, ulen)) == NULL)
+			goto done;
+		if ((rv = file_softmagic(ms, utf8_buf, (size_t)(utf8_end - utf8_buf),
+					 TEXTTEST)) != 0)
+			goto done;
+		else
+			rv = -1;
 	}
-	if ((utf8_end = encode_utf8(utf8_buf, mlen, ubuf, ulen)) == NULL)
-		goto done;
-	if ((rv = file_softmagic(ms, utf8_buf, (size_t)(utf8_end - utf8_buf),
-	    TEXTTEST)) != 0)
-		goto done;
-	else
-		rv = -1;
 
 	/* look for tokens from names.h - this is expensive! */
 	if ((ms->flags & MAGIC_NO_CHECK_TOKENS) != 0)
