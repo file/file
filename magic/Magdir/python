@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.13 2010/08/12 16:16:44 christos Exp $
+# $File: python,v 1.14 2010/11/25 15:00:12 christos Exp $
 # python:  file(1) magic for python
 #
 # From: David Necas <yeti@physics.muni.cz>
@@ -28,4 +28,32 @@
 0	search/1	#!/usr/bin/env\ python	Python script text executable
 !:mime text/x-python
 0	search/1	#!\ /usr/bin/env\ ruby	Python script text executable
+!:mime text/x-python
+
+
+# from module.submodule import func1, func2
+0	regex/b	\^from\\s+(\\w|\\.)+\\s+import.*$	Python script text executable
+!:mime text/x-python
+
+# def __init__ (self, ...):
+0	search/4096	def\ __init__
+>&0	search/64 self	Python script text executable
+!:mime text/x-python
+
+# comments
+0	search/4096	'''
+>&0	regex	.*'''$	Python script text executable
+!:mime text/x-python
+
+0	search/4096	"""
+>&0	regex	.*"""$	Python script text executable
+!:mime text/x-python
+
+# try:
+# except: or finally:
+# block
+0	search/4096	try:
+>&0	regex	\^\\s*except.*:	Python script text executable
+!:mime text/x-python
+>&0	search/4096	finally:	Python script text executable
 !:mime text/x-python
