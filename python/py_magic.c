@@ -36,6 +36,7 @@ typedef struct {
 } magic_cookie_hnd;
 
 static int py_magic_init(PyObject *self, PyObject *args, PyObject *kwds);
+static void py_magic_dealloc(PyObject *self);
 static PyObject *py_magic_open(PyObject *self, PyObject *args);
 static PyObject *py_magic_close(PyObject *self, PyObject *args);
 static PyObject *py_magic_error(PyObject *self, PyObject *args);
@@ -47,59 +48,6 @@ static PyObject *py_magic_compile(PyObject *self, PyObject *args);
 static PyObject *py_magic_load(PyObject *self, PyObject *args);
 static PyObject *py_magic_errno(PyObject *self, PyObject *args);
 
-// The meta-type for PyQt classes.
-static PyTypeObject magic_cookie_type = {
-	PyVarObject_HEAD_INIT(0,0)
-	"Magic cookie",
-	sizeof (magic_cookie_hnd), /* tp_basicsize */
-	0,                      /* tp_itemsize */
-	py_magic_dealloc,       /* tp_dealloc */
-	0,                      /* tp_print */
-	0,                      /* tp_getattr */
-	0,                      /* tp_setattr */
-	0,                      /* tp_compare */
-	0,                      /* tp_repr */
-	0,                      /* tp_as_number */
-	0,                      /* tp_as_sequence */
-	0,                      /* tp_as_mapping */
-	0,                      /* tp_hash */
-	0,                      /* tp_call */
-	0,                      /* tp_str */
-	PyObject_GenericGetAttr,/* tp_getattro */
-	0,                      /* tp_setattro */
-	0,                      /* tp_as_buffer */
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
-	"Magic objects",        /* tp_doc */
-	0,                      /* tp_traverse */
-	0,                      /* tp_clear */
-	0,                      /* tp_richcompare */
-	0,                      /* tp_weaklistoffset */
-	0,                      /* tp_iter */
-	0,                      /* tp_iternext */
-	magic_cookie_hnd_methods, /* tp_methods */
-	/*0,                       tp_methods */
-	0,                      /* tp_members */
-	0,                      /* tp_getset */
-	0,                      /* tp_base */
-	0,                      /* tp_dict */
-	0,                      /* tp_descr_get */
-	0,                      /* tp_descr_set */
-	0,                      /* tp_dictoffset */
-	py_magic_init,          /* tp_init */
-	0,                      /* tp_alloc */
-	0,                      /* tp_new */
-	0,                      /* tp_free */
-	0,                      /* tp_is_gc */
-	0,                      /* tp_bases */
-	0,                      /* tp_mro */
-	0,                      /* tp_cache */
-	0,                      /* tp_subclasses */
-	0,                      /* tp_weaklist */
-	0,                      /* tp_del */
-#if PY_VERSION_HEX >= 0x02070000
-	0,                      /* tp_version_tag */
-#endif
-};
 
 /* Documentation */
 static char _magic_close__doc__[] =
@@ -195,6 +143,69 @@ static struct const_vals {
 	{ "MAGIC_NO_CHECK_ENCODING", MAGIC_NO_CHECK_ENCODING },
 	{ NULL, 0 }
 };
+
+// The meta-type for PyQt classes.
+static PyTypeObject magic_cookie_type = {
+#if PY_VERSION_HEX >= 0x02070000
+	PyVarObject_HEAD_INIT(0,0)
+#else
+	PyObject_HEAD_INIT(NULL)
+	0,
+#endif
+	"Magic cookie",
+	sizeof (magic_cookie_hnd), /* tp_basicsize */
+	0,                      /* tp_itemsize */
+	py_magic_dealloc,       /* tp_dealloc */
+	0,                      /* tp_print */
+	0,                      /* tp_getattr */
+	0,                      /* tp_setattr */
+	0,                      /* tp_compare */
+	0,                      /* tp_repr */
+	0,                      /* tp_as_number */
+	0,                      /* tp_as_sequence */
+	0,                      /* tp_as_mapping */
+	0,                      /* tp_hash */
+	0,                      /* tp_call */
+	0,                      /* tp_str */
+	PyObject_GenericGetAttr,/* tp_getattro */
+	0,                      /* tp_setattro */
+	0,                      /* tp_as_buffer */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
+	"Magic objects",        /* tp_doc */
+	0,                      /* tp_traverse */
+	0,                      /* tp_clear */
+	0,                      /* tp_richcompare */
+	0,                      /* tp_weaklistoffset */
+	0,                      /* tp_iter */
+	0,                      /* tp_iternext */
+	magic_cookie_hnd_methods, /* tp_methods */
+	/*0,                       tp_methods */
+	0,                      /* tp_members */
+	0,                      /* tp_getset */
+	0,                      /* tp_base */
+	0,                      /* tp_dict */
+	0,                      /* tp_descr_get */
+	0,                      /* tp_descr_set */
+	0,                      /* tp_dictoffset */
+	py_magic_init,          /* tp_init */
+	0,                      /* tp_alloc */
+	0,                      /* tp_new */
+	0,                      /* tp_free */
+	0,                      /* tp_is_gc */
+	0,                      /* tp_bases */
+	0,                      /* tp_mro */
+	0,                      /* tp_cache */
+	0,                      /* tp_subclasses */
+	0,                      /* tp_weaklist */
+	0,                      /* tp_del */
+#if PY_VERSION_HEX >= 0x02070000
+	0,                      /* tp_version_tag */
+#endif
+};
+
+#if PY_VERSION_HEX < 0x02070000
+#define PyUnicode_FromString(m)	PyString_FromString(m)
+#endif
 
 /* Exceptions raised by this module */
 
@@ -346,9 +357,6 @@ py_magic_dealloc(PyObject *self)
 {
 	PyObject_Del(self);
 }
-
-
-
 
 static int
 py_magic_init(PyObject *self, PyObject *args, PyObject *kwds)
