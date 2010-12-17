@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.36 2010/09/20 19:19:17 rrt Exp $
+# $File: linux,v 1.37 2010/12/17 14:19:51 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -69,6 +69,8 @@
 # From: Jeff Bailey <jbailey@ubuntu.com>
 # Linux swap file with swsusp1 image, from Jeff Bailey <jbailey@ubuntu.com>
 4076	string		SWAPSPACE2S1SUSPEND	Linux/i386 swap file (new style) with SWSUSP1 image
+# From: James Hunt <james.hunt@ubuntu.com>
+4076    string          SWAPSPACE2LINHIB0001    Linux/i386 swap file (new style) (compressed hibernate)
 # according to man page of mkswap (8) March 1999
 # volume label and UUID Russell Coker
 # http://etbe.coker.com.au/2008/07/08/label-vs-uuid-vs-device/
