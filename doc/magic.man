@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.63 2010/10/21 22:08:34 christos Exp $
+.\" $File: magic.man,v 1.64 2010/12/22 18:14:05 christos Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -71,8 +71,22 @@ characters in the magic match both lower and upper case characters in the
 target, whereas upper case characters in the magic only match uppercase
 characters in the target.
 .It Dv pstring
-A Pascal-style string where the first byte is interpreted as the an
+A Pascal-style string where the first byte/short/int is interpreted as the an
 unsigned length.
+The length defaults to byte and can be specified as a modifier.
+The following modifiers are supported:
+.Bl -tag -compact -width B
+.It B
+A byte length (default).
+.It H
+A 2 byte big endian length.
+.It h
+A 2 byte big little length.
+.It L
+A 4 byte big endian length.
+.It l
+A 4 byte big little length.
+.El
 The string is not NUL terminated.
 .It Dv date
 A four-byte value interpreted as a UNIX date.

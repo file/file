@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.128 2010/11/23 18:02:08 christos Exp $
+ * @(#)$File: file.h,v 1.129 2010/12/22 18:14:06 christos Exp $
  */
 
 #ifndef __file_h__
@@ -294,6 +294,14 @@ struct magic {
 #define REGEX_OFFSET_START			BIT(4)
 #define STRING_TEXTTEST				BIT(5)
 #define STRING_BINTEST				BIT(6)
+#define PSTRING_1_BE				BIT(7)
+#define PSTRING_1_LE				BIT(7)
+#define PSTRING_2_BE				BIT(8)
+#define PSTRING_2_LE				BIT(9)
+#define PSTRING_4_BE				BIT(10)
+#define PSTRING_4_LE				BIT(11)
+#define PSTRING_LEN	\
+    (PSTRING_1_BE|PSTRING_2_LE|PSTRING_2_BE|PSTRING_4_LE|PSTRING_4_BE)
 #define CHAR_COMPACT_WHITESPACE			'W'
 #define CHAR_COMPACT_OPTIONAL_WHITESPACE	'w'
 #define CHAR_IGNORE_LOWERCASE			'c'
@@ -301,6 +309,12 @@ struct magic {
 #define CHAR_REGEX_OFFSET_START			's'
 #define CHAR_TEXTTEST				't'
 #define CHAR_BINTEST				'b'
+#define CHAR_PSTRING_1_BE			'B'
+#define CHAR_PSTRING_1_LE			'B'
+#define CHAR_PSTRING_2_BE			'H'
+#define CHAR_PSTRING_2_LE			'h'
+#define CHAR_PSTRING_4_BE			'L'
+#define CHAR_PSTRING_4_LE			'l'
 #define STRING_IGNORE_CASE		(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 #define STRING_DEFAULT_RANGE		100
 
@@ -411,6 +425,8 @@ protected ssize_t sread(int, void *, size_t, int);
 protected int file_check_mem(struct magic_set *, unsigned int);
 protected int file_looks_utf8(const unsigned char *, size_t, unichar *,
     size_t *);
+protected size_t file_pstring_length_size(const struct magic *);
+protected size_t file_pstring_get_length(const struct magic *, const char *);
 #ifdef __EMX__
 protected int file_os2_apptype(struct magic_set *, const char *, const void *,
     size_t);
