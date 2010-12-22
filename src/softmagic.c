@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.141 2010/09/20 14:24:01 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.142 2010/10/24 14:42:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -168,6 +168,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			continue;
 		}
 
+		if ((e = handle_annotation(ms, m)) != 0)
+			return e;
 		/*
 		 * If we are going to print something, we'll need to print
 		 * a blank before we print something else.
@@ -175,8 +177,6 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		if (*m->desc) {
 			need_separator = 1;
 			printed_something = 1;
-			if ((e = handle_annotation(ms, m)) != 0)
-				return e;
 			if (print_sep(ms, firstline) == -1)
 				return -1;
 		}
@@ -251,13 +251,13 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 					ms->c.li[cont_level].got_match = 0;
 					break;
 				}
+				if ((e = handle_annotation(ms, m)) != 0)
+					return e;
 				/*
 				 * If we are going to print something,
 				 * make sure that we have a separator first.
 				 */
 				if (*m->desc) {
-					if ((e = handle_annotation(ms, m)) != 0)
-						return e;
 					if (!printed_something) {
 						printed_something = 1;
 						if (print_sep(ms, firstline)
@@ -449,7 +449,7 @@ mprint(struct magic_set *ms, struct magic *m)
 				return -1;
 			t = ms->offset + strlen(p->s);
 			if (m->type == FILE_PSTRING)
-				t++;
+				t += file_pstring_length_size(m);
 		}
 		break;
 
@@ -614,7 +614,7 @@ moffset(struct magic_set *ms, struct magic *m)
 				p->s[strcspn(p->s, "\n")] = '\0';
 			t = CAST(uint32_t, (ms->offset + strlen(p->s)));
 			if (m->type == FILE_PSTRING)
-				t++;
+				t += file_pstring_length_size(m);
 			return t;
 		}
 
@@ -799,8 +799,8 @@ mconvert(struct magic_set *ms, struct magic *m)
 		return 1;
 	}
 	case FILE_PSTRING: {
-		char *ptr1 = p->s, *ptr2 = ptr1 + 1;
-	size_t len = *p->s;
+		char *ptr1 = p->s, *ptr2 = ptr1 + file_pstring_length_size(m);
+		size_t len = file_pstring_get_length(m, ptr1);
 		if (len >= sizeof(p->s))
 			len = sizeof(p->s) - 1;
 		while (len--)

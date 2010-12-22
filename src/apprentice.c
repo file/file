@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.160 2010/09/20 14:14:49 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.161 2010/10/07 00:33:20 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -981,6 +981,11 @@ string_modifier_check(struct magic_set *ms, struct magic *m)
 	if ((ms->flags & MAGIC_CHECK) == 0)
 		return 0;
 
+	if (m->type != FILE_PSTRING && (m->str_flags & PSTRING_LEN) != 0) {
+		file_magwarn(ms,
+		    "'/BHhLl' modifiers are only allowed for pascal strings\n");
+		return -1;
+	}
 	switch (m->type) {
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
@@ -1357,7 +1362,7 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 		++l;
 	}
 	m->str_range = 0;
-	m->str_flags = 0;
+	m->str_flags = m->type == FILE_PSTRING ? PSTRING_1_LE : 0;
 	m->num_mask = 0;
 	if ((op = get_op(*l)) != -1) {
 		if (!IS_STRING(m->type)) {
@@ -1412,6 +1417,32 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 				case CHAR_TEXTTEST:
 					m->str_flags |= STRING_TEXTTEST;
 					break;
+				case CHAR_PSTRING_1_LE:
+					if (m->type != FILE_PSTRING)
+						goto bad;
+					m->str_flags |= PSTRING_1_LE;
+					break;
+				case CHAR_PSTRING_2_BE:
+					if (m->type != FILE_PSTRING)
+						goto bad;
+					m->str_flags |= PSTRING_2_BE;
+					break;
+				case CHAR_PSTRING_2_LE:
+					if (m->type != FILE_PSTRING)
+						goto bad;
+					m->str_flags |= PSTRING_2_LE;
+					break;
+				case CHAR_PSTRING_4_BE:
+					if (m->type != FILE_PSTRING)
+						goto bad;
+					m->str_flags |= PSTRING_4_BE;
+					break;
+				case CHAR_PSTRING_4_LE:
+					if (m->type != FILE_PSTRING)
+						goto bad;
+					m->str_flags |= PSTRING_4_LE;
+					break;
+				bad:
 				default:
 					if (ms->flags & MAGIC_CHECK)
 						file_magwarn(ms,
@@ -2045,7 +2076,7 @@ out:
 	*p = '\0';
 	m->vallen = CAST(unsigned char, (p - origp));
 	if (m->type == FILE_PSTRING)
-		m->vallen++;
+		m->vallen += file_pstring_length_size(m);
 	return s;
 }
 
@@ -2432,5 +2463,42 @@ bs1(struct magic *m)
 	else {
 		m->value.q = swap8(m->value.q);
 		m->num_mask = swap8(m->num_mask);
+	}
+}
+
+protected size_t 
+file_pstring_length_size(const struct magic *m)
+{
+	switch (m->str_flags & PSTRING_LEN) {
+	case PSTRING_1_LE:
+		return 1;
+	case PSTRING_2_LE:
+	case PSTRING_2_BE:
+		return 2;
+	case PSTRING_4_LE:
+	case PSTRING_4_BE:
+		return 4;
+	default:
+		abort();	/* Impossible */
+		return 1;
+	}
+}
+protected size_t
+file_pstring_get_length(const struct magic *m, const char *s)
+{
+	switch (m->str_flags & PSTRING_LEN) {
+	case PSTRING_1_LE:
+		return *s;
+	case PSTRING_2_LE:
+		return (s[1] << 8) | s[0];
+	case PSTRING_2_BE:
+		return (s[0] << 8) | s[1];
+	case PSTRING_4_LE:
+		return (s[3] << 24) | (s[2] << 16) | (s[1] << 8) | s[0];
+	case PSTRING_4_BE:
+		return (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3];
+	default:
+		abort();	/* Impossible */
+		return 1;
 	}
 }
