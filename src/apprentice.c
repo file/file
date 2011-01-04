@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.163 2010/12/22 19:09:10 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.164 2011/01/04 19:29:32 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1419,27 +1419,32 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 				case CHAR_PSTRING_1_LE:
 					if (m->type != FILE_PSTRING)
 						goto bad;
-					m->str_flags |= PSTRING_1_LE;
+					m->str_flags = (m->str_flags & ~PSTRING_LEN) | PSTRING_1_LE;
 					break;
 				case CHAR_PSTRING_2_BE:
 					if (m->type != FILE_PSTRING)
 						goto bad;
-					m->str_flags |= PSTRING_2_BE;
+					m->str_flags = (m->str_flags & ~PSTRING_LEN) | PSTRING_2_BE;
 					break;
 				case CHAR_PSTRING_2_LE:
 					if (m->type != FILE_PSTRING)
 						goto bad;
-					m->str_flags |= PSTRING_2_LE;
+					m->str_flags = (m->str_flags & ~PSTRING_LEN) | PSTRING_2_LE;
 					break;
 				case CHAR_PSTRING_4_BE:
 					if (m->type != FILE_PSTRING)
 						goto bad;
-					m->str_flags |= PSTRING_4_BE;
+					m->str_flags = (m->str_flags & ~PSTRING_LEN) | PSTRING_4_BE;
 					break;
 				case CHAR_PSTRING_4_LE:
 					if (m->type != FILE_PSTRING)
 						goto bad;
-					m->str_flags |= PSTRING_4_LE;
+					m->str_flags = (m->str_flags & ~PSTRING_LEN) | PSTRING_4_LE;
+					break;
+				case CHAR_PSTRING_LENGTH_INCLUDES_ITSELF:
+					if (m->type != FILE_PSTRING)
+						goto bad;
+					m->str_flags |= PSTRING_LENGTH_INCLUDES_ITSELF;
 					break;
 				bad:
 				default:
@@ -2487,19 +2492,30 @@ file_pstring_length_size(const struct magic *m)
 protected size_t
 file_pstring_get_length(const struct magic *m, const char *s)
 {
+	size_t len = 0;
+
 	switch (m->str_flags & PSTRING_LEN) {
 	case PSTRING_1_LE:
-		return *s;
+		len = *s;
+		break;
 	case PSTRING_2_LE:
-		return (s[1] << 8) | s[0];
+		len = (s[1] << 8) | s[0];
+		break;
 	case PSTRING_2_BE:
-		return (s[0] << 8) | s[1];
+		len = (s[0] << 8) | s[1];
+		break;
 	case PSTRING_4_LE:
-		return (s[3] << 24) | (s[2] << 16) | (s[1] << 8) | s[0];
+		len = (s[3] << 24) | (s[2] << 16) | (s[1] << 8) | s[0];
+		break;
 	case PSTRING_4_BE:
-		return (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3];
+		len = (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3];
+		break;
 	default:
 		abort();	/* Impossible */
-		return 1;
 	}
+
+	if (m->str_flags & PSTRING_LENGTH_INCLUDES_ITSELF)
+		len -= file_pstring_length_size(m);
+
+	return len;
 }

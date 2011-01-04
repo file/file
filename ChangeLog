@@ -1,3 +1,13 @@
+2011-01-04  18:43  Reuben Thomas <rrt@sc3d.org>
+
+	* magic/Makefile.am: make it easier to recover from magic build failures.
+	* Fix pstring length specifier parsing to avoid generating invalid
+	  magic files.
+	* Add pstring length "J" (for "JPEG") to specify that the length
+	  include itself.
+	* Fix JPEG comment parsing at last using pstring/HJ!
+	* Ignore section 5 man pages in doc/.cvsignore.
+
 2010-12-22  13:12  Christos Zoulas <christos@zoulas.com>
 
 	* Add pstring/BHhLl to specify the type of the length of pascal

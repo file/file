@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.64 2010/12/22 18:14:05 christos Exp $
+.\" $File: magic.man,v 1.65 2011/01/04 19:29:32 rrt Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -86,8 +86,16 @@ A 2 byte big little length.
 A 4 byte big endian length.
 .It l
 A 4 byte big little length.
+.It J
+The length includes itself in its count.
 .El
 The string is not NUL terminated.
+.Dq J
+is used rather than the more
+valuable
+.Dq I
+because this type of length is a feature of the JPEG
+format.
 .It Dv date
 A four-byte value interpreted as a UNIX date.
 .It Dv qdate

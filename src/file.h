@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.129 2010/12/22 18:14:06 christos Exp $
+ * @(#)$File: file.h,v 1.130 2011/01/04 19:29:32 rrt Exp $
  */
 
 #ifndef __file_h__
@@ -302,6 +302,7 @@ struct magic {
 #define PSTRING_4_LE				BIT(11)
 #define PSTRING_LEN	\
     (PSTRING_1_BE|PSTRING_2_LE|PSTRING_2_BE|PSTRING_4_LE|PSTRING_4_BE)
+#define PSTRING_LENGTH_INCLUDES_ITSELF		BIT(12)
 #define CHAR_COMPACT_WHITESPACE			'W'
 #define CHAR_COMPACT_OPTIONAL_WHITESPACE	'w'
 #define CHAR_IGNORE_LOWERCASE			'c'
@@ -315,6 +316,7 @@ struct magic {
 #define CHAR_PSTRING_2_LE			'h'
 #define CHAR_PSTRING_4_BE			'L'
 #define CHAR_PSTRING_4_LE			'l'
+#define CHAR_PSTRING_LENGTH_INCLUDES_ITSELF     'J'
 #define STRING_IGNORE_CASE		(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 #define STRING_DEFAULT_RANGE		100
 
