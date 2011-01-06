@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.65 2011/01/04 19:29:32 rrt Exp $
+.\" $File: magic.man,v 1.66 2011/01/06 23:54:41 rrt Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -366,7 +366,7 @@ on the line indicates the level of the test; a line with no
 .Em \*[Gt]
 at the beginning is considered to be at level 0.
 Tests are arranged in a tree-like hierarchy:
-If a the test on a line at level
+if the test on a line at level
 .Em n
 succeeds, all following tests at level
 .Em n+1
