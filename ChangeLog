@@ -1,3 +1,8 @@
+2011-01-06  21:40  Reuben Thomas <rrt@sc3d.org>
+
+	* Fix Python bindings (including recent Python 3 compatibility
+	  update).
+
 2011-01-04  18:43  Reuben Thomas <rrt@sc3d.org>
 
 	* magic/Makefile.am: make it easier to recover from magic build failures.
