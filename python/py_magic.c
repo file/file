@@ -27,6 +27,10 @@
    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
    SUCH DAMAGE.
 */
+
+/* The initialisation code was rewritten for Python 2 & 3 compatibility, based on that at
+   http://wiki.python.org/moin/PortingExtensionModulesToPy3k */
+
 #include <Python.h>
 #include <magic.h>
 
@@ -107,8 +111,27 @@ static PyMethodDef magic_cookie_hnd_methods[] = {
 
 /* module level methods */
 
+struct module_state {
+	PyObject *error;
+};
+
+#if PY_MAJOR_VERSION >= 3
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+#else
+#define GETSTATE(m) (&_state)
+static struct module_state _state;
+#endif
+
+static PyObject *
+error_out(PyObject *m) {
+	struct module_state *st = GETSTATE(m);
+	PyErr_SetString(st->error, "something bad happened");
+	return NULL;
+}
+
 static PyMethodDef magic_methods[] = {
 	{ "open",     py_magic_open,     METH_VARARGS, _magic_open__doc__     },
+	{ "error_out", error_out, 	 METH_NOARGS,  NULL		      },
 	{ NULL,       NULL,              0,            NULL		      }
 };
 
@@ -392,51 +415,63 @@ const_init(PyObject *dict)
  * Module initialization
  */
 
-#ifndef PyMODINIT_FUNC
-#define PyMODINIT_FUNC void
-#endif
-
-PyMODINIT_FUNC
 #if PY_MAJOR_VERSION >= 3
+
+static int magic_traverse(PyObject *m, visitproc visit, void *arg) {
+	Py_VISIT(GETSTATE(m)->error);
+	return 0;
+}
+
+static int magic_clear(PyObject *m) {
+	Py_CLEAR(GETSTATE(m)->error);
+	return 0;
+}
+
+static struct PyModuleDef moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"magic",
+	NULL,
+	sizeof(struct module_state),
+	magic_methods,
+	NULL,
+	magic_traverse,
+	magic_clear,
+	NULL
+};
+
+#define INITERROR return NULL
+
+PyObject *
 PyInit_magic(void)
+
 #else
+#define INITERROR return
+
+void
 initmagic(void)
 #endif
 {
+	PyObject *dict;
 #if PY_MAJOR_VERSION >= 3
-	PyModuleDef modDef = {
-		PyModuleDef_HEAD_INIT,
-		"magic",                /* name */
-		"File magic module",    /* module doc */
-		-1,                     /* size of per-interpreter state of mod
-					 * or -1 if the module keeps stat in
-					 * global vars
-					 */
-		magic_methods
-	};
-
-	PyObject *module = PyModule_Create(&modDef);
-	if (module == NULL)
-	    Py_FatalError("module error");
-	PyObject *dict = PyModule_GetDict(module);
-	if (dict == NULL)
-	    Py_FatalError("dict error");
-
-	magic_error_obj = PyErr_NewException("magic.error", 0, 0);
-	PyDict_SetItemString(dict, "error", magic_error_obj);
-
-	/* Initialize constants */
-
-	const_init(dict);
-
-	if (PyErr_Occurred())
-		Py_FatalError("can't initialize module magic");
-
-	return module;
+	PyObject *module = PyModule_Create(&moduledef);
 #else
 	PyObject *module = Py_InitModule4("magic", magic_methods,
-	    "File magic module", (PyObject*)0, PYTHON_API_VERSION);
-	PyObject *dict = PyModule_GetDict(module);
+					  "File magic module", (PyObject*)0, PYTHON_API_VERSION);
+#endif
+
+	if (module == NULL)
+		INITERROR;
+	struct module_state *st = GETSTATE(module);
+
+	dict = PyModule_GetDict(module);
+	if (dict == NULL)
+		Py_FatalError("dict error");
+
+	st->error = PyErr_NewException("magic.Error", NULL, NULL);
+	if (st->error == NULL) {
+		Py_DECREF(module);
+		INITERROR;
+	}
 
 	magic_error_obj = PyErr_NewException("magic.error", 0, 0);
 	PyDict_SetItemString(dict, "error", magic_error_obj);
@@ -447,5 +482,8 @@ initmagic(void)
 
 	if (PyErr_Occurred())
 		Py_FatalError("can't initialize module magic");
+
+#if PY_MAJOR_VERSION >= 3
+	return module;
 #endif
 }
