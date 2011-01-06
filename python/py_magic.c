@@ -102,7 +102,7 @@ static PyMethodDef magic_cookie_hnd_methods[] = {
 	{ "compile",  py_magic_compile,  METH_VARARGS, _magic_compile__doc__  },
 	{ "load",     py_magic_load,     METH_VARARGS, _magic_load__doc__     },
 	{ "errno",    py_magic_errno,    METH_NOARGS,  _magic_errno__doc__    },
-	{ NULL,       NULL,              0,            NULL	              }
+	{ NULL,       NULL,              0,            NULL		      }
 };
 
 /* module level methods */
@@ -203,7 +203,7 @@ static PyTypeObject magic_cookie_type = {
 #endif
 };
 
-#if PY_VERSION_HEX < 0x02070000
+#if PY_VERSION_HEX < 0x02060000
 #define PyUnicode_FromString(m)	PyString_FromString(m)
 #endif
 
@@ -320,7 +320,7 @@ static PyObject *
 py_magic_check(PyObject *self, PyObject *args)
 {
 	magic_cookie_hnd *hnd = (magic_cookie_hnd *)self;
-	char *filename;
+	char *filename = NULL;
 
 	if (!PyArg_ParseTuple(args, "|s", &filename))
 		return NULL;
@@ -332,7 +332,7 @@ static PyObject *
 py_magic_compile(PyObject *self, PyObject *args)
 {
 	magic_cookie_hnd *hnd = (magic_cookie_hnd *)self;
-	char *filename;
+	char *filename = NULL;
 
 	if (!PyArg_ParseTuple(args, "|s", &filename))
 		return NULL;
@@ -344,7 +344,7 @@ static PyObject *
 py_magic_load(PyObject *self, PyObject *args)
 {
 	magic_cookie_hnd *hnd = (magic_cookie_hnd *)self;
-	char *filename;
+	char *filename = NULL;
 
 	if (!PyArg_ParseTuple(args, "|s", &filename))
 		return NULL;
