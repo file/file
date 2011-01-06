@@ -4,10 +4,10 @@ import magic
 
 ms = magic.open(magic.MAGIC_NONE)
 ms.load()
-tp =  ms.file("/bin/ls")
+tp = ms.file("/bin/ls")
 print (tp)
 
-f = open("/bin/ls", "r")
+f = open("/bin/ls", "rb")
 buffer = f.read(4096)
 f.close()
 
