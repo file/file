@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.60 2010/10/26 14:08:47 christos Exp $
+# $File: archive,v 1.61 2011/01/07 20:23:14 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -878,3 +878,8 @@
 0	string	PK\003\004
 >0x1E	string	mimetypeapplication/epub+zip	EPUB document
 !:mime application/epub+zip
+
+# From: "Michał Górny" <mgorny@gentoo.org>
+# ZPAQ: http://mattmahoney.net/dc/zpaq.html
+0	string	zPQ	ZPAQ stream
+>3	byte	x	\b, level %d
