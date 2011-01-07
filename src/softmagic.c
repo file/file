@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.142 2010/10/24 14:42:07 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.143 2010/12/22 18:14:06 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -144,7 +144,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		default:
 			if (m->type == FILE_INDIRECT)
 				returnval = 1;
-				
+
 			switch (magiccheck(ms, m)) {
 			case -1:
 				return -1;
@@ -790,12 +790,6 @@ mconvert(struct magic_set *ms, struct magic *m)
 	case FILE_LESTRING16: {
 		/* Null terminate and eat *trailing* return */
 		p->s[sizeof(p->s) - 1] = '\0';
-#if 0
-		/* Why? breaks magic numbers that end with \xa */
-		len = strlen(p->s);
-		if (len-- && p->s[len] == '\n')
-			p->s[len] = '\0';
-#endif
 		return 1;
 	}
 	case FILE_PSTRING: {
@@ -806,12 +800,6 @@ mconvert(struct magic_set *ms, struct magic *m)
 		while (len--)
 			*ptr1++ = *ptr2++;
 		*ptr1 = '\0';
-#if 0
-		/* Why? breaks magic numbers that end with \xa */
-		len = strlen(p->s);
-		if (len-- && p->s[len] == '\n')
-			p->s[len] = '\0';
-#endif
 		return 1;
 	}
 	case FILE_BESHORT:
