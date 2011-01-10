@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.70 2010/11/25 15:00:12 christos Exp $
+# $File: msdos,v 1.71 2011/01/10 14:01:10 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -343,6 +343,10 @@
 # start with assembler instructions mov eax,21cd4cffh
 0	uleshort&0xc0ff	0xc0b8		
 >1	lelong		0x21cd4cff	COM executable (32-bit COMBOOT)
+# syslinux:doc/comboot.txt
+# A COM32R program must start with the byte sequence B8 FE 4C CD 21 (mov
+# eax,21cd4cfeh) as a magic number.
+0       string	\xb8\xfe\x4c\xcd\x21	COM executable (COM32R)
 # start with assembler instructions mov eax,21cd4cfeh
 0	uleshort&0xc0ff	0xc0b8		
 >1	lelong		0x21cd4cfe	COM executable (32-bit COMBOOT, relocatable)
