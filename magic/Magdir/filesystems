@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.59 2010/09/20 19:19:17 rrt Exp $
+# $File: filesystems,v 1.60 2010/09/20 21:11:35 rrt Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1504,9 +1504,13 @@
 
 # From Eric Sandeen
 # GFS2
-0x10000         belong          0x01161970      GFS2 Filesystem
->0x10024        belong          x               (blocksize %d,
->0x10060        string          >\0             lockproto %s)
+0x10000         belong          0x01161970
+>0x10018        belong          0x0000051d      GFS1 Filesystem
+>>0x10024        belong          x               (blocksize %d,
+>>0x10060        string          >\0             lockproto %s)
+>0x10018        belong          0x00000709      GFS2 Filesystem
+>>0x10024        belong          x               (blocksize %d,
+>>0x10060        string          >\0             lockproto %s)
 
 # BTRFS
 0x10040         string          _BHRfS_M        BTRFS Filesystem
