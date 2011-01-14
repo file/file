@@ -8,10 +8,10 @@ tp = ms.file("/bin/ls")
 print (tp)
 
 f = open("/bin/ls", "rb")
-buffer = f.read(4096)
+buf = f.read(4096)
 f.close()
 
-tp = ms.buffer(buffer)
+tp = ms.buffer(buf)
 print (tp)
 
 ms.close()
