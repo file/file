@@ -2,7 +2,7 @@
 
 import magic
 
-ms = magic.open(magic.MAGIC_NONE)
+ms = magic.open(magic.NONE)
 ms.load()
 tp = ms.file("/bin/ls")
 print (tp)
