@@ -4,3 +4,4 @@ Makefile.in
 *.3
 *.4
 *.5
+.gitignore

@@ -11,3 +11,4 @@ stamp-h1
 Makefile.in
 file
 test
+.gitignore
