@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.164 2011/01/04 19:29:32 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.165 2011/01/16 19:30:36 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -569,9 +569,9 @@ apprentice_list(struct mlist *mlist, int mode)
 			struct magic *m = &ml->magic[magindex];
 			if ((m->flag & mode) != mode) {
 				/* Skip sub-tests */
-				while (ml->magic[magindex + 1].cont_level != 0
-				    && ++magindex < ml->nmagic)
-					continue;
+				while (magindex + 1 < ml->nmagic &&
+				       ml->magic[magindex + 1].cont_level != 0)
+					++magindex;
 				continue; /* Skip to next top-level test*/
 			}
 
@@ -579,10 +579,10 @@ apprentice_list(struct mlist *mlist, int mode)
 			 * Try to iterate over the tree until we find item with
 			 * description/mimetype.
 			 */
-			while (ml->magic[magindex + 1].cont_level != 0 &&
-			    *ml->magic[magindex].desc == '\0' &&
-			    *ml->magic[magindex].mimetype == '\0' &&
-			    magindex + 1 < ml->nmagic)
+			while (magindex + 1 < ml->nmagic &&
+			       ml->magic[magindex + 1].cont_level != 0 &&
+			       *ml->magic[magindex].desc == '\0' &&
+			       *ml->magic[magindex].mimetype == '\0')
 				magindex++;
 
 			printf("Strength = %3" SIZE_T_FORMAT "u : %s [%s]\n",
