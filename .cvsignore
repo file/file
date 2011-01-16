@@ -21,3 +21,5 @@ stamp-h1
 file-*.tar.gz
 .libs
 compile
+.git
+.gitignore
