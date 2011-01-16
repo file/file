@@ -1,3 +1,7 @@
+2011-01-16  19:31  Reuben Thomas <rrt@sc3d.org>
+
+	* Fix two potential buffer overruns in apprentice_list.
+
 2011-01-14  22:33  Reuben Thomas <rrt@sc3d.org>
 
 	* New Python binding in pure Python.
