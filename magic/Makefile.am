@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.60 2011/01/17 16:51:09 christos Exp $
+# $File: Makefile.am,v 1.61 2011/01/19 19:35:21 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -226,6 +226,7 @@ $(MAGIC_FRAGMENT_DIR)/weak \
 $(MAGIC_FRAGMENT_DIR)/windows \
 $(MAGIC_FRAGMENT_DIR)/wireless \
 $(MAGIC_FRAGMENT_DIR)/wordprocessors \
+$(MAGIC_FRAGMENT_DIR)/wsdl \
 $(MAGIC_FRAGMENT_DIR)/xdelta \
 $(MAGIC_FRAGMENT_DIR)/xenix \
 $(MAGIC_FRAGMENT_DIR)/xilinx \
