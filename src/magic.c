@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.68 2010/08/20 21:17:06 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.69 2010/09/20 14:14:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -113,13 +113,20 @@ get_default_magic(void)
 	char hmagicpath[MAXPATHLEN + 1] = { 0 };
 
 #ifndef WIN32
+	struct stat st;
+
 	if ((home = getenv("HOME")) == NULL)
 		return MAGIC;
 
-	(void)snprintf(hmagicpath, sizeof(hmagicpath), "%s%s", home, hmagic);
-
-	if (access(hmagicpath, R_OK) == -1)
+	(void)snprintf(hmagicpath, sizeof(hmagicpath), "%s/.magic", home);
+	if (stat(hmagicpath, &st) == -1)
 		return MAGIC;
+	if (S_ISDIR(st.st_mode)) {
+		(void)snprintf(hmagicpath, sizeof(hmagicpath), "%s/%s", home,
+		    hmagic);
+		if (access(hmagicpath, R_OK) == -1)
+			return MAGIC;
+	}
 
 	(void)snprintf(default_magic, sizeof(default_magic), "%s:%s",
 	    hmagicpath, MAGIC);
@@ -130,7 +137,7 @@ get_default_magic(void)
 	static const char pathsep[] = { PATHSEP, '\0' };
 
 #define APPENDPATH() \
-	if (access(tmppath, R_OK) != -1)
+	if (access(tmppath, R_OK) != -1) \
 		hmagicp += snprintf(hmagicp, hmagicend - hmagicp, \
 		    "%s%s", hmagicp == hmagicpath ? "" : pathsep, tmppath)
 	/* First, try to get user-specific magic file */
@@ -164,7 +171,7 @@ get_default_magic(void)
 		} else {
 			(void)snprintf(tmppath, sizeof(tmppath),
 			    "%s/share/misc/magic.mgc", dllpath);
-			APPENDPATH()
+			APPENDPATH();
 			else {
 				(void)snprintf(tmppath, sizeof(tmppath),
 				    "%s/magic.mgc", dllpath);
