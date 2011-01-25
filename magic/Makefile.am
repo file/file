@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.61 2011/01/19 19:35:21 christos Exp $
+# $File: Makefile.am,v 1.62 2011/01/25 18:36:19 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -135,6 +135,7 @@ $(MAGIC_FRAGMENT_DIR)/modem \
 $(MAGIC_FRAGMENT_DIR)/motorola \
 $(MAGIC_FRAGMENT_DIR)/mozilla \
 $(MAGIC_FRAGMENT_DIR)/msdos \
+$(MAGIC_FRAGMENT_DIR)/msooxml \
 $(MAGIC_FRAGMENT_DIR)/msvc \
 $(MAGIC_FRAGMENT_DIR)/mup \
 $(MAGIC_FRAGMENT_DIR)/natinst \
