@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.140 2010/11/30 14:58:53 rrt Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.141 2011/02/03 01:54:43 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -494,5 +494,6 @@ help(void)
 #include "file_opts.h"
 #undef OPT
 #undef OPT_LONGONLY
+	fprintf(stdout, "\nReport bugs to http://bugs.gw.com/\n");
 	exit(0);
 }
