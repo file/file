@@ -36,7 +36,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.76 2010/10/08 21:58:44 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.77 2010/11/30 14:58:53 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -154,7 +154,7 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 			goto done;
 		if ((rv = file_softmagic(ms, utf8_buf, (size_t)(utf8_end - utf8_buf),
 					 TEXTTEST)) != 0)
-			goto done;
+			goto subtype_identified;
 		else
 			rv = -1;
 	}
@@ -246,7 +246,7 @@ subtype_identified:
 		goto done;
 	}
 	if (mime) {
-		if ((mime & MAGIC_MIME_TYPE) != 0) {
+		if (!file_printedlen(ms) && (mime & MAGIC_MIME_TYPE) != 0) {
 			if (subtype_mime) {
 				if (file_printf(ms, "%s", subtype_mime) == -1)
 					goto done;
@@ -256,6 +256,19 @@ subtype_identified:
 			}
 		}
 	} else {
+		if (file_printedlen(ms)) {
+			switch (file_replace(ms, " text$", ", ")) {
+			case 0:
+				if (file_printf(ms, ", ") == -1)
+					goto done;
+				break;
+			case -1:
+				goto done;
+			default:
+				break;
+			}
+		}
+				
 		if (file_printf(ms, "%s", code) == -1)
 			goto done;
 

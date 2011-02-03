@@ -1,3 +1,12 @@
+2011-02-02  20:40  Christos Zoulas <christos@zoulas.com>
+
+	* When matching softmagic for ascii files, don't just print
+	  the softmagic classification, keep going and print the
+	  text classification too. This fixes broken troff files when
+	  we moved them from keyword recognition to softmagic
+	  (they stopped printing "with CRLF" etc.)
+	  Reported by Doug McIlroy.
+
 2011-01-16  19:31  Reuben Thomas <rrt@sc3d.org>
 
 	* Fix two potential buffer overruns in apprentice_list.
