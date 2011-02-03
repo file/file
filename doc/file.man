@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.86 2010/11/05 17:25:55 rrt Exp $
+.\" $File: file.man,v 1.87 2010/11/05 20:51:38 christos Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -563,6 +563,9 @@ This manual page, and particularly this section, is too long.
 .Sh RETURN CODE
 .Nm
 returns 0 on success, and non-zero on error.
+.Sh BUGS
+Please report bugs to
+.Dv http://\:bugs.gw.com/
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
