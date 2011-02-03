@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.55 2010/07/21 16:47:17 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.56 2011/02/03 01:43:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -424,4 +424,37 @@ file_check_mem(struct magic_set *ms, unsigned int level)
 	ms->c.li[level].last_cond = COND_NONE;
 #endif /* ENABLE_CONDITIONALS */
 	return 0;
+}
+
+protected size_t
+file_printedlen(const struct magic_set *ms)
+{
+	return ms->o.buf == NULL ? 0 : strlen(ms->o.buf);
+}
+
+protected int
+file_replace(struct magic_set *ms, const char *pat, const char *rep)
+{
+	regex_t rx;
+	int rc;
+
+	rc = regcomp(&rx, pat, REG_EXTENDED);
+	if (rc) {
+		char errmsg[512];
+		(void)regerror(rc, &rx, errmsg, sizeof(errmsg));
+		file_magerror(ms, "regex error %d, (%s)", rc, errmsg);
+		return -1;
+	} else {
+		regmatch_t rm;
+		int nm = 0;
+		while (regexec(&rx, ms->o.buf, 1, &rm, 0) == 0) {
+			ms->o.buf[rm.rm_so] = '\0';
+			if (file_printf(ms, "%s%s", rep,
+			    rm.rm_eo != 0 ? ms->o.buf + rm.rm_eo : "") == -1)
+				return -1;
+			nm++;
+		}
+		regfree(&rx);
+		return nm;
+	}
 }
