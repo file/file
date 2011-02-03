@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.38 2010/07/21 16:47:17 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.39 2010/07/22 21:59:42 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -747,6 +747,8 @@ cdf_read_property_info(const cdf_stream_t *sst, uint32_t offs,
 		goto out;
 	DPRINTF(("section len: %u properties %u\n", sh.sh_len,
 	    sh.sh_properties));
+	if (sh.sh_len == 0 || sh.sh_properties == 0)
+	    return 0;
 	if (*maxcount) {
 		if (*maxcount > CDF_PROP_LIMIT)
 			goto out;
