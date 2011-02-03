@@ -1,5 +1,7 @@
 2011-02-02  20:40  Christos Zoulas <christos@zoulas.com>
 
+	* help and version output to stdout.
+
 	* When matching softmagic for ascii files, don't just print
 	  the softmagic classification, keep going and print the
 	  text classification too. This fixes broken troff files when
