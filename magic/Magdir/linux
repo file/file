@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.37 2010/12/17 14:19:51 christos Exp $
+# $File: linux,v 1.38 2011/01/25 18:38:17 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -249,49 +249,49 @@
 # start in 0x200
 >&(&-12.l-0x21) byte    x
 # display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >0x2f          \b, UUID: %.6s
->>&0x6          string  >0x2f          \b-%.4s
->>&0xa          string  >0x2f          \b-%.4s
->>&0xe          string  >0x2f          \b-%.4s
->>&0x12         string  >0x2f          \b-%.4s
->>&0x16         string  >0x2f          \b-%.4s
->>&0x1a         string  >0x2f          \b-%.6s
+>>&0x0          string  >\x2f          \b, UUID: %.6s
+>>&0x6          string  >\x2f          \b-%.4s
+>>&0xa          string  >\x2f          \b-%.4s
+>>&0xe          string  >\x2f          \b-%.4s
+>>&0x12         string  >\x2f          \b-%.4s
+>>&0x16         string  >\x2f          \b-%.4s
+>>&0x1a         string  >\x2f          \b-%.6s
 >>&0x20         lequad  x              \b, size: %lld
 
 0x018           string  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
 >&(&-12.l-0x21) byte    x
 # display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >0x2f          \b, UUID: %.6s
->>&0x6          string  >0x2f          \b-%.4s
->>&0xa          string  >0x2f          \b-%.4s
->>&0xe          string  >0x2f          \b-%.4s
->>&0x12         string  >0x2f          \b-%.4s
->>&0x16         string  >0x2f          \b-%.4s
->>&0x1a         string  >0x2f          \b-%.6s
+>>&0x0          string  >\x2f          \b, UUID: %.6s
+>>&0x6          string  >\x2f          \b-%.4s
+>>&0xa          string  >\x2f          \b-%.4s
+>>&0xe          string  >\x2f          \b-%.4s
+>>&0x12         string  >\x2f          \b-%.4s
+>>&0x16         string  >\x2f          \b-%.4s
+>>&0x1a         string  >\x2f          \b-%.6s
 >>&0x20         lequad  x              \b, size: %lld
 
 0x418           string  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
 >&(&-12.l-0x21) byte    x
 # display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >0x2f          \b, UUID: %.6s
->>&0x6          string  >0x2f          \b-%.4s
->>&0xa          string  >0x2f          \b-%.4s
->>&0xe          string  >0x2f          \b-%.4s
->>&0x12         string  >0x2f          \b-%.4s
->>&0x16         string  >0x2f          \b-%.4s
->>&0x1a         string  >0x2f          \b-%.6s
+>>&0x0          string  >\x2f          \b, UUID: %.6s
+>>&0x6          string  >\x2f          \b-%.4s
+>>&0xa          string  >\x2f          \b-%.4s
+>>&0xe          string  >\x2f          \b-%.4s
+>>&0x12         string  >\x2f          \b-%.4s
+>>&0x16         string  >\x2f          \b-%.4s
+>>&0x1a         string  >\x2f          \b-%.6s
 >>&0x20         lequad  x              \b, size: %lld
 
 0x618           string  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
 >&(&-12.l-0x21) byte    x              
 # display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >0x2f          \b, UUID: %.6s
->>&0x6          string  >0x2f          \b-%.4s
->>&0xa          string  >0x2f          \b-%.4s
->>&0xe          string  >0x2f          \b-%.4s
->>&0x12         string  >0x2f          \b-%.4s
->>&0x16         string  >0x2f          \b-%.4s
->>&0x1a         string  >0x2f          \b-%.6s
+>>&0x0          string  >\x2f          \b, UUID: %.6s
+>>&0x6          string  >\x2f          \b-%.4s
+>>&0xa          string  >\x2f          \b-%.4s
+>>&0xe          string  >\x2f          \b-%.4s
+>>&0x12         string  >\x2f          \b-%.4s
+>>&0x16         string  >\x2f          \b-%.4s
+>>&0x1a         string  >\x2f          \b-%.6s
 >>&0x20         lequad  x              \b, size: %lld
 
 # LVM snapshot
