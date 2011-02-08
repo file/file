@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.16 2010/12/31 18:15:28 christos Exp $
+# $File: python,v 1.17 2011/02/08 13:45:15 christos Exp $
 # python:  file(1) magic for python
 #
 # From: David Necas <yeti@physics.muni.cz>
@@ -32,7 +32,7 @@
 
 
 # from module.submodule import func1, func2
-0	regex/b	\^from\\s+(\\w|\\.)+\\s+import.*$	Python script text executable
+0	regex	\^from\\s+(\\w|\\.)+\\s+import.*$	Python script text executable
 !:mime text/x-python
 
 # def __init__ (self, ...):
