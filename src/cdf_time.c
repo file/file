@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf_time.c,v 1.9 2010/10/02 15:36:15 christos Exp $")
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.10 2011/02/10 17:03:16 christos Exp $")
 #endif
 
 #include <time.h>
@@ -165,6 +165,18 @@ cdf_timespec_to_timestamp(cdf_timestamp_t *t, const struct timespec *ts)
 	return 0;
 }
 
+char *
+cdf_ctime(const time_t *sec)
+{
+	static char ctbuf[26];
+	char *ptr = ctime(sec);
+	if (ptr != NULL)
+		return ptr;
+	(void)snprintf(ctbuf, sizeof(ctbuf), "*Bad* 0x%16.16llx\n",
+	    (long long)*sec);
+	return ctbuf;
+}
+
 
 #ifdef TEST
 int
@@ -176,7 +188,7 @@ main(int argc, char *argv[])
 	char *p, *q;
 
 	cdf_timestamp_to_timespec(&ts, tst);
-	p = ctime(&ts.tv_sec);
+	p = cdf_ctime(&ts.tv_sec);
 	if ((q = strchr(p, '\n')) != NULL)
 		*q = '\0';
 	if (strcmp(ref, p) != 0)
