@@ -1,3 +1,8 @@
+2011-02-10  12:03  Christos Zoulas <christos@zoulas.com>
+
+	* add cdf_ctime() that prints a meaningful error when time cannot
+	  be converted.
+
 2011-02-02  20:40  Christos Zoulas <christos@zoulas.com>
 
 	* help and version output to stdout.

@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.39 2010/07/22 21:59:42 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.40 2011/02/03 01:43:07 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1108,9 +1108,9 @@ cdf_dump_dir(const cdf_info_t *info, const cdf_header_t *h,
 		(void)fprintf(stderr, "Right child: %d\n", d->d_right_child);
 		(void)fprintf(stderr, "Flags: 0x%x\n", d->d_flags);
 		cdf_timestamp_to_timespec(&ts, d->d_created);
-		(void)fprintf(stderr, "Created %s", ctime(&ts.tv_sec));
+		(void)fprintf(stderr, "Created %s", cdf_ctime(&ts.tv_sec));
 		cdf_timestamp_to_timespec(&ts, d->d_modified);
-		(void)fprintf(stderr, "Modified %s", ctime(&ts.tv_sec));
+		(void)fprintf(stderr, "Modified %s", cdf_ctime(&ts.tv_sec));
 		(void)fprintf(stderr, "Stream %d\n", d->d_stream_first_sector);
 		(void)fprintf(stderr, "Size %d\n", d->d_size);
 		switch (d->d_type) {
@@ -1182,7 +1182,7 @@ cdf_dump_property_info(const cdf_property_info_t *info, size_t count)
 			} else {
 				cdf_timestamp_to_timespec(&ts, tp);
 				(void)fprintf(stderr, "timestamp %s",
-				    ctime(&ts.tv_sec));
+				    cdf_ctime(&ts.tv_sec));
 			}
 			break;
 		case CDF_CLIPBOARD:

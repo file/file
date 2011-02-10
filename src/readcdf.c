@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.22 2010/01/20 01:36:55 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.23 2010/02/20 15:19:53 rrt Exp $")
 #endif
 
 #include <stdlib.h>
@@ -125,7 +125,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
                                 } else {
                                         char *c, *ec;
                                         cdf_timestamp_to_timespec(&ts, tp);
-                                        c = ctime(&ts.tv_sec);
+                                        c = cdf_ctime(&ts.tv_sec);
                                         if ((ec = strchr(c, '\n')) != NULL)
                                                 *ec = '\0';
 
