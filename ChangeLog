@@ -1,3 +1,7 @@
+2011-02-10  16:36  Christos Zoulas <christos@zoulas.com>
+
+	* fix CDF bounds checking (Guy Helmer)
+
 2011-02-10  12:03  Christos Zoulas <christos@zoulas.com>
 
 	* add cdf_ctime() that prints a meaningful error when time cannot

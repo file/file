@@ -291,13 +291,13 @@ int cdf_read_ssat(const cdf_info_t *, const cdf_header_t *, const cdf_sat_t *,
     cdf_sat_t *);
 int cdf_read_short_stream(const cdf_info_t *, const cdf_header_t *,
     const cdf_sat_t *, const cdf_dir_t *, cdf_stream_t *);
-int cdf_read_property_info(const cdf_stream_t *, uint32_t,
+int cdf_read_property_info(const cdf_stream_t *, const cdf_header_t *, uint32_t,
     cdf_property_info_t **, size_t *, size_t *);
 int cdf_read_summary_info(const cdf_info_t *, const cdf_header_t *,
     const cdf_sat_t *, const cdf_sat_t *, const cdf_stream_t *,
     const cdf_dir_t *, cdf_stream_t *);
-int cdf_unpack_summary_info(const cdf_stream_t *, cdf_summary_info_header_t *,
-    cdf_property_info_t **, size_t *);
+int cdf_unpack_summary_info(const cdf_stream_t *, const cdf_header_t *,
+    cdf_summary_info_header_t *, cdf_property_info_t **, size_t *);
 int cdf_print_classid(char *, size_t, const cdf_classid_t *);
 int cdf_print_property_name(char *, size_t, uint32_t);
 int cdf_print_elapsed_time(char *, size_t, cdf_timestamp_t);
