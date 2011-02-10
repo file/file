@@ -36,7 +36,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.78 2011/02/03 01:43:33 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.79 2011/02/10 02:22:58 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -125,7 +125,7 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 	int n_lf = 0;
 	int n_cr = 0;
 	int n_nel = 0;
-	int score, curtype;
+	int score, curtype, executable = 0;
 
 	size_t last_line_end = (size_t)-1;
 	int has_long_lines = 0;
@@ -259,8 +259,17 @@ subtype_identified:
 		if (file_printedlen(ms)) {
 			switch (file_replace(ms, " text$", ", ")) {
 			case 0:
-				if (file_printf(ms, ", ") == -1)
+				switch (file_replace(ms, " text executable$",
+				    ", ")) {
+				case 0:
+					if (file_printf(ms, ", ") == -1)
+						goto done;
+				case -1:
 					goto done;
+				default:
+					executable = 1;
+					break;
+				}
 				break;
 			case -1:
 				goto done;
@@ -279,6 +288,10 @@ subtype_identified:
 
 		if (file_printf(ms, " %s", type) == -1)
 			goto done;
+
+		if (executable)
+			if (file_printf(ms, " executable") == -1)
+				goto done;
 
 		if (has_long_lines)
 			if (file_printf(ms, ", with very long lines") == -1)
