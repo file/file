@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.24 2011/02/10 17:03:16 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.25 2011/02/10 21:35:05 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -149,14 +149,15 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 }
 
 private int
-cdf_file_summary_info(struct magic_set *ms, const cdf_stream_t *sst)
+cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
+    const cdf_stream_t *sst)
 {
         cdf_summary_info_header_t si;
         cdf_property_info_t *info;
         size_t count;
         int m;
 
-        if (cdf_unpack_summary_info(sst, &si, &info, &count) == -1)
+        if (cdf_unpack_summary_info(sst, h, &si, &info, &count) == -1)
                 return -1;
 
         if (NOTMIME(ms)) {
@@ -260,7 +261,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 #ifdef CDF_DEBUG
         cdf_dump_summary_info(&h, &scn);
 #endif
-        if ((i = cdf_file_summary_info(ms, &scn)) == -1)
+        if ((i = cdf_file_summary_info(ms, &h, &scn)) == -1)
                 expn = "Can't expand summary_info";
         free(scn.sst_tab);
 out4:
