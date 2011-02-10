@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.20 2010/09/20 18:55:20 rrt Exp $
+# $File: riff,v 1.21 2011/02/10 01:52:51 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -248,7 +248,7 @@
 # see EBU – TECH 3306 http://tech.ebu.ch/docs/tech/tech3306-2009.pdf
 0	string	RF64\xff\xff\xff\xffWAVEds64		MBWF/RF64 audio
 !:mime	audio/x-wav
->52	search/256	fmt\x20		\b
+>40	search/256	fmt\x20		\b
 >>&6	leshort		=1		\b, mono
 >>&6	leshort		=2		\b, stereo
 >>&6	leshort		>2		\b, %d channels
