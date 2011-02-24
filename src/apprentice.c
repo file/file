@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.164 2011/01/04 19:29:32 rrt Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.165 2011/01/16 19:30:36 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -70,10 +70,6 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.164 2011/01/04 19:29:32 rrt Exp $")
 
 #ifndef MAP_FILE
 #define MAP_FILE 0
-#endif
-
-#ifndef MAXPATHLEN
-#define MAXPATHLEN	1024
 #endif
 
 struct magic_entry {
@@ -756,7 +752,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	struct magic_entry *marray;
 	uint32_t marraycount, i, mentrycount = 0, starttest;
 	size_t slen, files = 0, maxfiles = 0;
-	char subfn[MAXPATHLEN], **filearr = NULL, *mfn;
+	char **filearr = NULL, *mfn;
 	struct stat st;
 	DIR *dir;
 	struct dirent *d;
@@ -783,14 +779,15 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 			goto out;
 		}
 		while ((d = readdir(dir)) != NULL) {
-			(void)snprintf(subfn, sizeof(subfn), "%s/%s",
-			    fn, d->d_name);
-			if (stat(subfn, &st) == -1 || !S_ISREG(st.st_mode))
-				continue;
-			if ((mfn = strdup(subfn)) == NULL) {
-				file_oomem(ms, strlen(subfn));
+			if (asprintf(&mfn, "%s/%s", fn, d->d_name) < 0) {
+				file_oomem(ms,
+				    strlen(fn) + strlen(d->d_name) + 2);
 				errs++;
 				goto out;
+			}
+			if (stat(mfn, &st) == -1 || !S_ISREG(st.st_mode)) {
+				free(mfn);
+				continue;
 			}
 			if (files >= maxfiles) {
 				size_t mlen;
@@ -799,6 +796,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 				if ((filearr = CAST(char **,
 				    realloc(filearr, mlen))) == NULL) {
 					file_oomem(ms, mlen);
+					free(mfn);
 					errs++;
 					goto out;
 				}
