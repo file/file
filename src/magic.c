@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.69 2010/09/20 14:14:49 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.70 2011/01/21 18:59:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -71,6 +71,10 @@ FILE_RCSID("@(#)$File: magic.c,v 1.69 2010/09/20 14:14:49 christos Exp $")
 #else
 #define PIPE_BUF 512
 #endif
+#endif
+
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 1024
 #endif
 
 private void free_mlist(struct mlist *);
