@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.16 2010/12/31 18:15:28 christos Exp $
+# $File: python,v 1.17 2011/02/08 13:45:15 christos Exp $
 # python:  file(1) magic for python
 #
 # From: David Necas <yeti@physics.muni.cz>
@@ -20,6 +20,7 @@
 0	belong		0x03f30d0a	python 2.7 byte-compiled
 0	belong		0x3b0c0d0a	python 3.0 byte-compiled
 0	belong		0x4f0c0d0a	python 3.1 byte-compiled
+0	belong		0x6c0c0d0a	python 3.2 byte-compiled
 
 0	search/1/w	#!\ /usr/bin/python	Python script text executable
 !:mime text/x-python
