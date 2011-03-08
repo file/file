@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.65 2010/07/21 16:47:17 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.66 2011/03/08 00:39:47 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -79,6 +79,7 @@ private const struct {
 	{ "BZh",      3, { "bzip2", "-cd", NULL }, 1 },		/* bzip2-ed */
 	{ "LZIP",     4, { "lzip", "-cdq", NULL }, 1 },
  	{ "\3757zXZ\0",6,{ "xz", "-cd", NULL }, 1 },		/* XZ Utils */
+ 	{ "LRZI",     4, { "lrzip", "-dqo-", NULL }, 1 },	/* LRZIP */
 };
 
 #define NODATA ((size_t)~0)
