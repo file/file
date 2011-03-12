@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.91 2011/03/12 18:18:39 rrt Exp $
+.\" $File: file.man,v 1.92 2011/03/12 18:53:07 rrt Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -536,6 +536,30 @@ Please report bugs and send patches to the bug tracker at
 .Pa http://bugs.gw.com/
 or the mailing list at
 .Aq file@mx.gw.com .
+.Sh TODO
+.Pp
+Fix output so that tests for MIME and APPLE flags are not needed all
+over the place, and actual output is only done in one place. This
+needs a design. Suggestion: push possible outputs on to a list, then
+pick the last-pushed (most specific, one hopes) value at the end, or
+use a default if the list is empty. This should not slow down evaluation.
+.Pp
+Continue to squash all magic bugs. See Debian BTS for a good source.
+.Pp
+Store arbitrarily long strings, for example for %s patterns, so that
+they can be printed out. Fixes Debian bug #271672. Would require more
+complex store/load code in apprentice.
+.Pp
+Add syntax for relative offsets after current level (Debian bug #466037).
+.Pp
+Make file -ki work, i.e. give multiple MIME types.
+.Pp
+Add a zip library so we can peek inside Office2007 documents to
+figure out what they are.
+.Pp
+Don't complain when ~/.magic is not compiled.
+.Pp
+Add an option to print URLs for the sources of the file descriptions.
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 from
