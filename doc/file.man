@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.89 2011/03/12 18:06:00 rrt Exp $
+.\" $File: file.man,v 1.90 2011/03/12 18:13:16 rrt Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -470,34 +470,44 @@ the external list of magic types.
 This slowed the program down slightly but made it a lot more flexible.
 .Pp
 This program, based on the System V version,
-was written by Ian Darwin <ian@darwinsys.com>
+was written by Ian Darwin
+.Aq ian@darwinsys.com
 without looking at anybody else's source code.
 .Pp
 John Gilmore revised the code extensively, making it better than
 the first version.
 Geoff Collyer found several inadequacies
 and provided some magic file entries.
-Contributions by the `&' operator by Rob McMahon, cudcv@warwick.ac.uk, 1989.
+Contributions by the `&' operator by Rob McMahon
+.Aq cudcv@warwick.ac.uk ,
+1989.
 .Pp
-Guy Harris, guy@netapp.com, made many changes from 1993 to the present.
+Guy Harris
+.Aq guy@netapp.com
+made many changes from 1993 to the present.
 .Pp
 Primary development and maintenance from 1990 to the present by
-Christos Zoulas (christos@astron.com).
+Christos Zoulas 
+.Aq christos@astron.com .
 .Pp
-Altered by Chris Lowth, chris@lowth.com, 2000:
-Handle the
+Altered by Chris Lowth
+.Aq chris@lowth.com ,
+2000: handle the
 .Fl i
 option to output mime type strings, using an alternative
 magic file and internal logic.
 .Pp
-Altered by Eric Fischer (enf@pobox.com), July, 2000,
-to identify character codes and attempt to identify the languages
+Altered by Eric Fischer
+.Aq enf@pobox.com
+July, 2000, to identify character codes and attempt to identify the languages
 of non-ASCII files.
 .Pp
-Altered by Reuben Thomas (rrt@sc3d.org), 2007-2009, to improve MIME
-support and merge MIME and non-MIME magic, support directories as well
-as files of magic, apply many bug fixes, update and fix a lot of magic,
-and improve the build system.
+Altered by Reuben Thomas
+.Aq rrt@sc3d.org ,
+2007-2011, to improve MIME support, merge MIME and non-MIME magic,
+support directories as well as files of magic, apply many bug fixes,
+update and fix a lot of magic, improve the build system, improve the
+documentation, and rewrite the Python bindings in pure Python.
 .Pp
 The list of contributors to the
 .Sq magic
