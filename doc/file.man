@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.88 2011/02/03 01:54:09 christos Exp $
+.\" $File: file.man,v 1.89 2011/03/12 18:06:00 rrt Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -517,6 +517,9 @@ and
 were written by John Gilmore from his public-domain
 .Xr tar 1
 program, and are not covered by the above license.
+.Sh RETURN CODE
+.Nm
+returns 0 on success, and non-zero on error.
 .Sh BUGS
 .Pp
 Please report bugs and send patches to the bug tracker at
@@ -560,12 +563,6 @@ Still, if the others don't pan out, it should be possible to use the
 first guess.
 .Pp
 This manual page, and particularly this section, is too long.
-.Sh RETURN CODE
-.Nm
-returns 0 on success, and non-zero on error.
-.Sh BUGS
-Please report bugs to
-.Dv http://\:bugs.gw.com/
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
