@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.90 2011/03/12 18:13:16 rrt Exp $
+.\" $File: file.man,v 1.91 2011/03/12 18:18:39 rrt Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -487,7 +487,7 @@ Guy Harris
 made many changes from 1993 to the present.
 .Pp
 Primary development and maintenance from 1990 to the present by
-Christos Zoulas 
+Christos Zoulas
 .Aq christos@astron.com .
 .Pp
 Altered by Chris Lowth
@@ -538,7 +538,7 @@ or the mailing list at
 .Aq file@mx.gw.com .
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
-on
+from
 .Dv ftp.astron.com
 in the directory
 .Dv /pub/file/file-X.YZ.tar.gz
