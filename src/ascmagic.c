@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 /*
- * ASCII magic -- file types that we know based on keywords
- * that can appear anywhere in the file.
+ * ASCII magic -- try to detect text encoding.
  *
  * Extensively modified by Eric Fischer <enf@pobox.com> in July, 2000,
  * to handle character codes other than ASCII on a unified basis.
@@ -36,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.79 2011/02/10 02:22:58 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.80 2011/03/12 18:13:54 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -277,7 +276,7 @@ subtype_identified:
 				break;
 			}
 		}
-				
+
 		if (file_printf(ms, "%s", code) == -1)
 			goto done;
 
