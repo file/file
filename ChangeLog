@@ -1,3 +1,7 @@
+2011-03-12  18:06  Reuben Thomas <rrt@sc3d.org>
+
+	* Remove duplicate BUGS section from man page.
+
 2011-03-07  19:38  Christos Zoulas <christos@zoulas.com>
 
 	* add lrzip support (from Ville Skytta)
