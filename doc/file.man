@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.89 2011/03/12 18:06:00 rrt Exp $
+.\" $File: file.man,v 1.90 2011/03/12 18:13:16 rrt Exp $
 .Dd July 23, 2010
 .Dt FILE __CSECTION__
 .Os
@@ -378,7 +378,7 @@ is that this version treats any white space
 as a delimiter, so that spaces in pattern strings must be escaped.
 For example,
 .Bd -literal -offset indent
->10	string	language impress\ 	(imPRESS data)
+>10	string	language impress\       (imPRESS data)
 .Ed
 .Pp
 in an existing magic file would have to be changed to
@@ -431,7 +431,7 @@ keep the old magic file around for comparison purposes
 $ file file.c file /dev/{wd0a,hda}
 file.c:   C program text
 file:     ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
-	  dynamically linked (uses shared libs), stripped
+          dynamically linked (uses shared libs), stripped
 /dev/wd0a: block special (0/0)
 /dev/hda: block special (3/0)
 
@@ -526,43 +526,6 @@ Please report bugs and send patches to the bug tracker at
 .Pa http://bugs.gw.com/
 or the mailing list at
 .Aq file@mx.gw.com .
-.Pp
-.Nm
-uses several algorithms that favor speed over accuracy,
-thus it can be misled about the contents of
-text
-files.
-.Pp
-The support for text files (primarily for programming languages)
-is simplistic, inefficient and requires recompilation to update.
-.Pp
-The list of keywords in
-.Dv ascmagic
-probably belongs in the Magic file.
-This could be done by using some keyword like
-.Sq *
-for the offset value.
-.Pp
-Complain about conflicts in the magic file entries.
-Make a rule that the magic entries sort based on file offset rather
-than position within the magic file?
-.Pp
-The program should provide a way to give an estimate
-of
-.Sq how good
-a guess is.
-We end up removing guesses (e.g.
-.Sq From\
-as first 5 chars of file) because
-they are not as good as other guesses (e.g.
-.Sq Newsgroups:
-versus
-.Sq Return-Path:
-).
-Still, if the others don't pan out, it should be possible to use the
-first guess.
-.Pp
-This manual page, and particularly this section, is too long.
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
