@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.166 2011/02/24 03:35:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.167 2011/03/15 22:15:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -624,6 +624,8 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
+		mstart->flag |= BINTEST;
+		break;
 	case FILE_STRING:
 	case FILE_PSTRING:
 	case FILE_BESTRING16:
