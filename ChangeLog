@@ -1,3 +1,8 @@
+2011-03-15  18:15  Christos Zoulas <christos@zoulas.com>
+
+	* binary tests on magic entries with masks could spuriously
+	  get converted to ascii.
+
 2011-03-12  18:06  Reuben Thomas <rrt@sc3d.org>
 
 	* Improve file.man (remove BUGS, present email addresses consistently).
