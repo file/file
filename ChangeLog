@@ -1,3 +1,8 @@
+2011-03-20  16:35  Christos Zoulas <christos@zoulas.com>
+
+	* Eliminate MAXPATHLEN and use dynamic allocation for
+	  path and file buffers.
+
 2011-03-15  18:15  Christos Zoulas <christos@zoulas.com>
 
 	* binary tests on magic entries with masks could spuriously

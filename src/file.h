@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.130 2011/01/04 19:29:32 rrt Exp $
+ * @(#)$File: file.h,v 1.131 2011/02/03 01:43:33 christos Exp $
  */
 
 #ifndef __file_h__
@@ -465,6 +465,10 @@ size_t strlcpy(char *dst, const char *src, size_t siz);
 #endif
 #ifndef HAVE_STRLCAT
 size_t strlcat(char *dst, const char *src, size_t siz);
+#endif
+#ifndef HAVE_GETLINE
+ssize_t getline(char **dst, size_t *len, FILE *fp);
+ssize_t getdelim(char **dst, size_t *len, int delimiter, FILE *fp);
 #endif
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)

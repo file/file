@@ -159,7 +159,7 @@ dnl Checks for functions
 AC_CHECK_FUNCS(mmap strerror strndup strtoul mbrtowc mkstemp utimes utime wcwidth strtof fork)
 
 dnl Provide implementation of some required functions if necessary
-AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat)
+AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline)
 
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)
