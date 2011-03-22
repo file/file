@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.38 2011/01/25 18:38:17 christos Exp $
+# $File: linux,v 1.39 2011/02/08 13:43:26 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -179,6 +179,22 @@
 0		belong		0xb8c0078e	Linux
 >0x1e6		belong		0x454c4b53	ELKS Kernel
 >0x1e6		belong		!0x454c4b53	style boot sector
+
+############################################################################
+# Linux S390 kernel image
+# Created by: Jan Kaluza <jkaluza@redhat.com>
+8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux S390
+>0x00010000 search/b/4096 \x00\x0a\x00\x00\x8b\xad\xcc\xcc
+# 64bit
+>>&0 string \xc1\x00\xef\xe3\xf0\x68\x00\x00 Z10 64bit kernel
+>>&0 string \xc1\x00\xef\xc3\x00\x00\x00\x00 Z9-109 64bit kernel
+>>&0 string \xc0\x00\x20\x00\x00\x00\x00\x00 Z990 64bit kernel
+>>&0 string \x00\x00\x00\x00\x00\x00\x00\x00 Z900 64bit kernel
+# 32bit
+>>&0 string \x81\x00\xc8\x80\x00\x00\x00\x00 Z10 32bit kernel
+>>&0 string \x81\x00\xc8\x80\x00\x00\x00\x00 Z9-109 32bit kernel
+>>&0 string \x80\x00\x20\x00\x00\x00\x00\x00 Z990 32bit kernel
+>>&0 string \x80\x00\x00\x00\x00\x00\x00\x00 Z900 32bit kernel
 
 ############################################################################
 # Linux 8086 executable
