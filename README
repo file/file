@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $File: README,v 1.43 2010/11/05 17:25:55 rrt Exp $
+@(#) $File: README,v 1.44 2011/03/24 13:03:39 rrt Exp $
 
 Mailing List: file@mx.gw.com
 Bug tracker: http://bugs.gw.com/
@@ -16,6 +16,10 @@ This version is the standard "file" command for Linux,
 You can download the latest version of file from:
 
 	ftp://ftp.astron.com/pub/file/
+
+A public read-only git repository is available at:
+
+	https://github.com/glensc/file
 
 The major changes for 5.x are CDF file parsing, indirect magic, and
 overhaul in mime and ascii encoding handling.
