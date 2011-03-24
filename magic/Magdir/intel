@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: intel,v 1.8 2009/09/19 16:28:10 christos Exp $
 # intel:  file(1) magic for x86 Unix
 #
 # Various flavors of x86 UNIX executable/object (other than Xenix, which
@@ -46,3 +46,8 @@
 >28      string          Adaptec      Adaptec
 >42      string          PROMISE      Promise
 >2       byte            x            (%d*512)
+
+# Flash descriptors for Intel SPI flash roms.
+# From Dr. Jesus <j@hug.gs>
+0	lelong		0x0ff0a55a	Intel serial flash descriptor for ICH/PCH ROM up to 5 and 3400 series chipsets A-stepping
+16	lelong		0x0ff0a55a	Intel serial flash descriptor for PCH ROM
