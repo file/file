@@ -1,3 +1,7 @@
+2011-03-30  15:45  Christos Zoulas <christos@zoulas.com>
+
+	* Fix cdf string buffer setting (Sven Anders)
+
 2011-03-20  16:35  Christos Zoulas <christos@zoulas.com>
 
 	* Eliminate MAXPATHLEN and use dynamic allocation for
