@@ -1,9 +1,10 @@
 
 #------------------------------------------------------------------------------
-# $File: rinex,v 1.1 2011/03/31 22:11:16 christos Exp $
+# $File: rinex,v 1.2 2011/04/01 17:17:12 christos Exp $
 # rinex:  file(1) magic for RINEX files
 # http://igscb.jpl.nasa.gov/igscb/data/format/rinex210.txt
 # ftp://cddis.gsfc.nasa.gov/pub/reports/formats/rinex300.pdf
+# data for testing: ftp://cddis.gsfc.nasa.gov/pub/gps/data
 60	string		RINEX
 >80	search/256	XXRINEXB	RINEX Data, GEO SBAS Broadcast
 >>&32	string		x		, date %15.15s
