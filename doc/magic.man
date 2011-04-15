@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.66 2011/01/06 23:54:41 rrt Exp $
+.\" $File: magic.man,v 1.67 2011/04/15 22:08:52 christos Exp $
 .Dd August 30, 2008
 .Dt MAGIC __FSECTION__
 .Os
@@ -51,9 +51,9 @@ A 64-bit double precision IEEE floating point number in this machine's native by
 .It Dv string
 A string of bytes.
 The string type specification can be optionally followed
-by /[Bbc]*.
+by /[WwcCtb]*.
 The
-.Dq B
+.Dq W
 flag compacts whitespace in the target, which must
 contain at least one whitespace character.
 If the magic has
@@ -62,14 +62,29 @@ consecutive blanks, the target needs at least
 .Dv n
 consecutive blanks to match.
 The
-.Dq b
+.Dq w
 flag treats every blank in the target as an optional blank.
-Finally the
+The
 .Dq c
-flag, specifies case insensitive matching: lowercase
+flag, specifies case insensitive matching: lower case
 characters in the magic match both lower and upper case characters in the
-target, whereas upper case characters in the magic only match uppercase
+target, whereas upper case characters in the magic only match upper case
 characters in the target.
+The
+.Dq C
+flag, specifies case insensitive matching: upper case
+characters in the magic match both lower and upper case characters in the
+target, whereas lower case characters in the magic only match upper case
+characters in the target.
+To do a complete case insensitive match, specify both
+.Dq c
+and
+.Dq C .
+The
+.Dq t
+flag, forces the test to be done for text files, while the
+.Dq b
+flag, forces the test to be done for binary files.
 .It Dv pstring
 A Pascal-style string where the first byte/short/int is interpreted as the an
 unsigned length.
