@@ -1,8 +1,8 @@
 #------------------------------------------------------------------------------
-# $File: sgml,v 1.24 2009/09/19 17:31:35 christos Exp $
+# $File: sgml,v 1.25 2010/11/25 15:00:12 christos Exp $
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
-0	string/t		\<?xml\ version="
+0	string		\<?xml\ version="
 >15	string		>\0
 >>19	search/4096	\<svg			SVG Scalable Vector Graphics image
 !:mime	image/svg+xml
