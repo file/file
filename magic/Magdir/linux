@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.40 2011/03/22 12:54:35 christos Exp $
+# $File: linux,v 1.41 2011/04/20 18:57:10 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -88,20 +88,6 @@
 # From Daniel Novotny <dnovotny@redhat.com>
 # swap file for PowerPC
 65526	string		SWAPSPACE2	Linux/ppc swap file
-# ECOFF magic for OSF/1 and Linux (only tested under Linux though)
-#
-#	from Erik Troan (ewt@redhat.com) examining od dumps, so this
-#		could be wrong
-#      updated by David Mosberger (davidm@azstarnet.com) based on
-#      GNU BFD and MIPS info found below.
-#
-0	leshort		0x0183		ECOFF alpha
->24	leshort		0407		executable
->24	leshort		0410		pure
->24	leshort		0413		demand paged
->8	long		>0		not stripped
->8	long		0		stripped
->23	leshort		>0		- version %ld.
 #
 # Linux kernel boot images, from Albert Cahalan <acahalan@cs.uml.edu>
 # and others such as Axel Kohlmeyer <akohlmey@rincewind.chemie.uni-ulm.de>
