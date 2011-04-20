@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.67 2011/04/15 22:08:52 christos Exp $
-.Dd August 30, 2008
+.\" $File: magic.man,v 1.68 2011/04/20 19:08:44 christos Exp $
+.Dd April 20, 2011
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
