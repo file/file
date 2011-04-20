@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.39 2010/11/25 15:00:12 christos Exp $
+# $File: commands,v 1.40 2011/04/20 19:00:07 christos Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
@@ -81,6 +81,11 @@
 0	search/1/w	#!\ /usr/local/bin/php	PHP script text executable
 !:mime	text/x-php
 0	search/1/w	#!\ /usr/bin/php	PHP script text executable
+!:mime	text/x-php
+# Smarty compiled template, http://www.smarty.net/
+# Elan Ruusamäe <glen@delfi.ee>
+0   string  <?php\ /*\ Smarty\ version	Smarty compiled template
+>24		regex       [0-9.]+              \b, version %s
 !:mime	text/x-php
 
 0	string		Zend\x00		PHP script Zend Optimizer data
