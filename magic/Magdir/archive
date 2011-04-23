@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.62 2011/01/07 20:24:25 christos Exp $
+# $File: archive,v 1.63 2011/04/23 15:02:48 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -653,6 +653,12 @@
 !:mime	application/vnd.oasis.opendocument.image
 >>>>78	string	-template		Template
 !:mime	application/vnd.oasis.opendocument.image-template
+
+# StarView Metafile
+# From Pierre Ducroquet <pinaraf@pinaraf.info>
+0	string	VCLMTF	StarView MetaFile
+>6	beshort	x	\b, version %d
+>8	belong	x	\b, size %d
 
 #  EPUB (OEBPS) books using OCF (OEBPS Container Format)
 #    From: Adam Buchbinder <adam.buchbinder@gmail.com>
