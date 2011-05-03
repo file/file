@@ -21,5 +21,5 @@
 # Uncomment the following only of your "file" program supports "search"
 #>0	search/1024	VMA\06	for kernel
 #>>&1	byte	x	%d.
-#>>&2	byte	x	%d.
-#>>&3	byte	x	%d
+#>>&2	byte	x	\b%d.
+#>>&3	byte	x	\b%d
