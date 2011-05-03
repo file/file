@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: digital,v 1.9 2011/04/20 18:55:31 christos Exp $
+# $File: digital,v 1.10 2011/05/03 01:44:17 christos Exp $
 #  Digital UNIX - Info
 #
 0	string	=!<arch>\n________64E	Alpha archive
@@ -15,13 +15,13 @@
 >>>16	lelong		!0		not stripped
 >>>16	lelong		0		stripped
 >>>27	byte		x		- version %d
->>>26	byte		x		.%d
->>>28	byte		x		-%d
+>>>26	byte		x		\b.%d
+>>>28	byte		x		\b-%d
 >>24	leshort		0407		COFF format alpha object
 >>>22	leshort&030000	020000		shared library
 >>>27	byte		x		- version %d
->>>26	byte		x		.%d
->>>28	byte		x		-%d
+>>>26	byte		x		\b.%d
+>>>28	byte		x		\b-%d
 
 # Basic recognition of Digital UNIX core dumps - Mike Bremford <mike@opac.bl.uk>
 #
