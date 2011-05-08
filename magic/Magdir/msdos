@@ -1,17 +1,17 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.71 2011/01/10 14:01:10 christos Exp $
+# $File: msdos,v 1.72 2011/05/08 01:21:41 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
 # .BAT files (Daniel Quinlan, quinlan@yggdrasil.com)
-# updated by Joerg Jenderek at Oct 2008
+# updated by Joerg Jenderek at Oct 2008,Apr 2011
 0	string/t	@			
 >1	string/cW	\ echo\ off	DOS batch file text
 !:mime	text/x-msdos-batch
 >1	string/cW	echo\ off	DOS batch file text
 !:mime	text/x-msdos-batch
->1	string/cW	rem\ 		DOS batch file text
+>1	string/cW	rem		DOS batch file text
 !:mime	text/x-msdos-batch
 >1	string/cW	set\ 		DOS batch file text
 !:mime	text/x-msdos-batch
@@ -291,6 +291,29 @@
 >>49824 leshort		=1			\b, 1 file
 >>49824 leshort		>1			\b, %u files
 
+# added by Joerg Jenderek of http://www.freedos.org/software/?prog=kc
+# and http://www.freedos.org/software/?prog=kpdos
+# for FreeDOS files like KEYBOARD.SYS, KEYBRD2.SYS, KEYBRD3.SYS, *.KBD
+0	string		KCF		FreeDOS KEYBoard Layout collection
+# only version=0x100 found
+>3	uleshort	x		\b, version 0x%x
+# length of string containing author,info and special characters
+>6	ubyte		>0		
+#>>6	pstring		x		\b, name=%s
+>>7	string		>\0		\b, author=%-.14s
+>>7	search/254	\xff		\b, info=
+#>>>&0	string		x		\b%-s
+>>>&0	string		x		\b%-.15s
+# for FreeDOS *.KL files 
+0	string		KLF		FreeDOS KEYBoard Layout file
+# only version=0x100 or 0x101 found
+>3	uleshort	x		\b, version 0x%x
+# stringlength
+>5	ubyte		>0		
+>>8	string		x		\b, name=%-.2s
+0	string	\xffKEYB\ \ \ \0\0\0\0	
+>12	string	\0\0\0\0`\360		MS-DOS KEYBoard Layout file
+
 # .COM formats (Daniel Quinlan, quinlan@yggdrasil.com)
 # Uncommenting only the first two lines will cover about 2/3 of COM files,
 # but it isn't feasible to match all COM files since there must be at least
@@ -299,27 +322,78 @@
 0	byte		0xe9		DOS executable (COM)
 >0x1FE leshort		0xAA55		\b, boot code
 >6	string		SFX\ of\ LHarc	(%s)
-0	belong	0xffffffff		DOS executable (device driver)
-#CMD640X2.SYS
->10	string	>\x23			
->>10	string	!\x2e			
->>>17	string	<\x5B			
->>>>10	string	x			\b, name: %.8s
-#UDMA.SYS KEYB.SYS CMD640X2.SYS
->10	string	<\x41			
->>12	string	>\x40			
->>>10	string	!$			
->>>>12	string	x			\b, name: %.8s
-#BTCDROM.SYS ASPICD.SYS
->22	string	>\x40			
->>22	string	<\x5B			
->>>23	string	<\x5B			
->>>>22	string	x			\b, name: %.8s
-#ATAPICD.SYS
->76	string	\0			
->>77	string	>\x40			
->>>77	string	<\x5B			
->>>>77	string	x			\b, name: %.8s
+
+# DOS device driver updated by Joerg Jenderek at May 2011
+# http://maben.homeip.net/static/S100/IBM/software/DOS/DOS%20techref/CHAPTER.009
+0	ulequad&0x07a0ffffffff		0xffffffff		DOS executable (
+>40	search/7			UPX!			\bUPX compressed 
+# DOS device driver attributes
+>4	uleshort&0x8000			0x0000			\bblock device driver
+# character device
+>4	uleshort&0x8000			0x8000			\b
+>>4	uleshort&0x0008			0x0008			\bclock 
+# fast video output by int 29h
+>>4	uleshort&0x0010			0x0010			\bfast 
+# standard input/output device
+>>4	uleshort&0x0003			>0			\bstandard 
+>>>4	uleshort&0x0001			0x0001			\binput
+>>>4	uleshort&0x0003			0x0003			\b/
+>>>4	uleshort&0x0002			0x0002			\boutput 
+>>4	uleshort&0x8000			0x8000			\bcharacter device driver
+>0	ubyte				x			
+# upx compressed device driver has garbage instead of real in name field of header
+>>40	search/7			UPX!			
+>>40	default				x			
+# leading/trailing nulls, zeros or non ASCII characters in 8-byte name field at offset 10 are skipped
+>>>12		ubyte			>0x27			\b 
+>>>>10		ubyte			>0x20			
+>>>>>10		ubyte			!0x2E			
+>>>>>>10	ubyte			!0x2A			\b%c
+>>>>11		ubyte			>0x20			
+>>>>>11		ubyte			!0x2E			\b%c
+>>>>12		ubyte			>0x20			
+>>>>>12		ubyte			!0x39			
+>>>>>>12	ubyte			!0x2E			\b%c
+>>>13		ubyte			>0x20			
+>>>>13		ubyte			!0x2E			\b%c
+>>>>14		ubyte			>0x20			
+>>>>>14		ubyte			!0x2E			\b%c
+>>>>15		ubyte			>0x20			
+>>>>>15		ubyte			!0x2E			\b%c
+>>>>16		ubyte			>0x20			
+>>>>>16		ubyte			!0x2E			
+>>>>>>16	ubyte			<0xCB			\b%c
+>>>>17		ubyte			>0x20			
+>>>>>17		ubyte			!0x2E			
+>>>>>>17	ubyte			<0x90			\b%c
+# some character device drivers like ASPICD.SYS, btcdrom.sys and Cr_atapi.sys contain only spaces or points in name field
+>>>4		uleshort&0x8000		0x8000			
+>>>>12		ubyte			<0x2F			
+# they have their real name at offset 22
+>>>>>22		string			>\0			\b%-.5s
+>4	uleshort&0x8000			0x0000			
+# 32 bit sector adressing ( > 32 MB) for block devices
+>>4	uleshort&0x0002			0x0002			\b,32-bit sector-
+# support by driver functions 13h, 17h, 18h
+>4	uleshort&0x0040			0x0040			\b,IOCTL-
+# open, close, removable media support by driver functions 0Dh, 0Eh, 0Fh
+>4	uleshort&0x0800			0x0800			\b,close media-
+# output until busy support by int 10h for character device driver
+>4	uleshort&0x8000			0x8000			
+>>4	uleshort&0x2000			0x2000			\b,until busy-
+# direct read/write support by driver functions 03h,0Ch
+>4	uleshort&0x4000			0x4000			\b,control strings-
+>4	uleshort&0x8000			0x8000			
+>>4	uleshort&0x6840			>0			\bsupport
+>4	uleshort&0x8000			0x0000			
+>>4	uleshort&0x4842			>0			\bsupport
+>0	ubyte				x			\b)
+# DOS driver cmd640x.sys has 0x12 instead of 0xffffffff for pointer field to next device header 
+0	ulequad&0x000007a0ffffffed	0x0000000000000000	DOS-executable (
+>4	uleshort&0x8000			0x8000			\bcharacter device driver
+>>10	string				x			%-.8s
+>4	uleshort&0x4000			0x4000			\b,control strings-support)
+
 # test too generic ?
 0	byte		0x8c		DOS executable (COM)
 # updated by Joerg Jenderek at Oct 2008
@@ -576,6 +650,39 @@
 >9	byte		>0x2F		\b.%c file
 0	lelong		0x4C
 >4	lelong		0x00021401	Windows shortcut file
+
+# .PIF files added by Joerg Jenderek from http://smsoft.ru/en/pifdoc.htm
+# only for windows versions equal or greater 3.0
+0x171	string	MICROSOFT\ PIFEX\0	Windows Program Information File
+!:mime	application/x-dosexec
+#>2	string	 	>\0		\b, Title:%.30s
+>0x24	string		>\0		\b for %.63s
+>0x65	string		>\0		\b, directory=%.64s
+>0xA5	string		>\0		\b, parameters=%.64s
+#>0x181	leshort	x	\b, offset %x
+#>0x183	leshort	x	\b, offsetdata %x
+#>0x185	leshort	x	\b, section length %x
+>0x187	search/0xB55	WINDOWS\ VMM\ 4.0\0	
+>>&0x5e		ubyte	>0			
+>>>&-1		string	<PIFMGR.DLL		\b, icon=%s
+#>>>&-1		string	PIFMGR.DLL		\b, icon=%s
+>>>&-1		string	>PIFMGR.DLL		\b, icon=%s
+>>&0xF0		ubyte	>0			
+>>>&-1		string	<Terminal		\b, font=%.32s
+#>>>&-1		string	=Terminal		\b, font=%.32s
+>>>&-1		string	>Terminal		\b, font=%.32s
+>>&0x110	ubyte	>0			
+>>>&-1		string	<Lucida\ Console	\b, TrueTypeFont=%.32s
+#>>>&-1		string	=Lucida\ Console	\b, TrueTypeFont=%.32s
+>>>&-1		string	>Lucida\ Console	\b, TrueTypeFont=%.32s
+#>0x187	search/0xB55	WINDOWS\ 286\ 3.0\0	\b, Windows 3.X standard mode-style
+#>0x187	search/0xB55	WINDOWS\ 386\ 3.0\0	\b, Windows 3.X enhanced mode-style
+>0x187	search/0xB55	WINDOWS\ NT\ \ 3.1\0	\b, Windows NT-style
+#>0x187	search/0xB55	WINDOWS\ NT\ \ 4.0\0	\b, Windows NT-style
+>0x187	search/0xB55	CONFIG\ \ SYS\ 4.0\0	\b +CONFIG.SYS
+#>>&06		string	x			\b:%s
+>0x187	search/0xB55	AUTOEXECBAT\ 4.0\0	\b +AUTOEXEC.BAT
+#>>&06		string	x			\b:%s
 
 # DOS EPS Binary File Header
 # From: Ed Sznyter <ews@Black.Market.NET>
