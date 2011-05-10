@@ -32,11 +32,10 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.168 2011/03/20 20:36:52 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.169 2011/05/10 17:08:13 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
-#include "patchlevel.h"
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -2259,8 +2258,8 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	else
 		version = ptr[1];
 	if (version != VERSIONNO) {
-		file_error(ms, 0, "File %d.%d supports only version %d magic "
-		    "files. `%s' is version %d", FILE_VERSION_MAJOR, patchlevel,
+		file_error(ms, 0, "File %s supports only version %d magic "
+		    "files. `%s' is version %d", VERSION,
 		    VERSIONNO, dbname, version);
 		goto error1;
 	}

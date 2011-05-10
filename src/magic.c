@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.72 2011/03/20 20:36:52 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.73 2011/05/10 17:08:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -61,8 +61,6 @@ FILE_RCSID("@(#)$File: magic.c,v 1.72 2011/03/20 20:36:52 christos Exp $")
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>	/* for read() */
 #endif
-
-#include "patchlevel.h"
 
 #ifndef PIPE_BUF
 /* Get the PIPE_BUF from pathconf */

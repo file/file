@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.143 2011/03/20 20:36:52 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.144 2011/05/10 17:08:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -69,8 +69,6 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 #else
 #include "mygetopt.h"
 #endif
-
-#include "patchlevel.h"
 
 #ifdef S_IFLNK
 #define FILE_FLAGS "-bchikLlNnprsvz0"
@@ -251,8 +249,7 @@ main(int argc, char *argv[])
 		case 'v':
 			if (magicfile == NULL)
 				magicfile = magic_getpath(magicfile, action);
-			(void)fprintf(stdout, "%s-%d.%.2d\n", progname,
-				       FILE_VERSION_MAJOR, patchlevel);
+			(void)fprintf(stdout, "%s-%s\n", progname, VERSION);
 			(void)fprintf(stdout, "magic file from %s\n",
 				       magicfile);
 			return 1;
