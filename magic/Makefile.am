@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.64 2011/03/31 22:11:16 christos Exp $
+# $File: Makefile.am,v 1.65 2011/04/06 12:37:44 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -15,7 +15,6 @@ $(MAGIC_FRAGMENT_DIR)/adi \
 $(MAGIC_FRAGMENT_DIR)/adventure \
 $(MAGIC_FRAGMENT_DIR)/allegro \
 $(MAGIC_FRAGMENT_DIR)/alliant \
-$(MAGIC_FRAGMENT_DIR)/alpha \
 $(MAGIC_FRAGMENT_DIR)/amanda \
 $(MAGIC_FRAGMENT_DIR)/amigaos \
 $(MAGIC_FRAGMENT_DIR)/animation \
