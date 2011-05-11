@@ -1,3 +1,9 @@
+2011-05-10  20:57  Christos Zoulas <christos@zoulas.com>
+
+	* remove patchlevel.h
+	* Fix read past allocated memory caused by double-incrementing
+	  a pointer in a loop (reported by Roberto Maar)
+
 2011-03-30  15:45  Christos Zoulas <christos@zoulas.com>
 
 	* Fix cdf string buffer setting (Sven Anders)
