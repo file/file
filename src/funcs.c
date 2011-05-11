@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.56 2011/02/03 01:43:33 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.57 2011/05/11 01:02:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -392,9 +392,9 @@ file_getbuffer(struct magic_set *ms)
 	}
 #endif
 
-	for (np = ms->o.pbuf, op = ms->o.buf; *op; op++) {
+	for (np = ms->o.pbuf, op = ms->o.buf; *op;) {
 		if (isprint((unsigned char)*op)) {
-			*np++ = *op;
+			*np++ = *op++;
 		} else {
 			OCTALIFY(np, op);
 		}
