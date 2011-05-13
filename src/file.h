@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.131 2011/02/03 01:43:33 christos Exp $
+ * @(#)$File: file.h,v 1.132 2011/03/20 20:36:52 christos Exp $
  */
 
 #ifndef __file_h__
@@ -333,8 +333,10 @@ struct mlist {
 
 #ifdef __cplusplus
 #define CAST(T, b)	static_cast<T>(b)
+#define RCAST(T, b)	reinterpret_cast<T>(b)
 #else
 #define CAST(T, b)	(T)(b)
+#define RCAST(T, b)	(T)(b)
 #endif
 
 struct level_info {
