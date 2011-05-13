@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.68 2011/04/20 19:08:44 christos Exp $
+.\" $File: magic.man,v 1.69 2011/05/13 22:11:44 christos Exp $
 .Dd April 20, 2011
 .Dt MAGIC __FSECTION__
 .Os
@@ -190,11 +190,12 @@ than UTC.
 Starting at the given offset, consult the magic database again.
 .It Dv regex
 A regular expression match in extended POSIX regular expression syntax
-(like egrep). Regular expressions can take exponential time to
-process, and their performance is hard to predict, so their use is
-discouraged. When used in production environments, their performance
-should be carefully checked. The type specification can be optionally
-followed by
+(like egrep).
+Regular expressions can take exponential time to process, and their
+performance is hard to predict, so their use is discouraged.
+When used in production environments, their performance
+should be carefully checked.
+The type specification can be optionally followed by
 .Dv /[c][s] .
 The
 .Dq c
@@ -213,15 +214,17 @@ and
 match the beginning and end of individual lines, respectively,
 not beginning and end of file.
 .It Dv search
-A literal string search starting at the given offset. The same
-modifier flags can be used as for string patterns. The modifier flags
-(if any) must be followed by
+A literal string search starting at the given offset.
+The same modifier flags can be used as for string patterns.
+The modifier flags (if any) must be followed by
 .Dv /number
 the range, that is, the number of positions at which the match will be
-attempted, starting from the start offset. This is suitable for
+attempted, starting from the start offset.
+This is suitable for
 searching larger binary expressions with variable offsets, using
 .Dv \e
-escapes for special characters. The offset works as for regex.
+escapes for special characters.
+The offset works as for regex.
 .It Dv default
 This is intended to be used with the test
 .Em x
@@ -230,14 +233,18 @@ no other matches.
 .El
 .Pp
 Each top-level magic pattern (see below for an explanation of levels)
-is classified as text or binary according to the types used. Types
+is classified as text or binary according to the types used.
+Types
 .Dq regex
 and
 .Dq search
 are classified as text tests, unless non-printable characters are used
-in the pattern. All other tests are classified as binary. A top-level
+in the pattern.
+All other tests are classified as binary.
+A top-level
 pattern is considered to be a test text when all its patterns are text
-patterns; otherwise, it is considered to be a binary pattern. When
+patterns; otherwise, it is considered to be a binary pattern.
+When
 matching a file, binary patterns are tried first; if no match is
 found, and the file looks like text, then its encoding is determined
 and the text patterns are tried.
