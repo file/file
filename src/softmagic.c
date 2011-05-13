@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.144 2011/01/07 23:22:28 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.145 2011/05/13 22:15:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -912,7 +912,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 	if (indir == 0) {
 		switch (type) {
 		case FILE_SEARCH:
-			ms->search.s = (const char *)s + offset;
+			ms->search.s = RCAST(const char *, s) + offset;
 			ms->search.s_len = nbytes - offset;
 			ms->search.offset = offset;
 			return 0;
@@ -930,8 +930,8 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 				ms->search.s = NULL;
 				return 0;
 			}
-			buf = (const char *)s + offset;
-			end = last = (const char *)s + nbytes;
+			buf = RCAST(const char *, s) + offset;
+			end = last = RCAST(const char *, s) + nbytes;
 			/* mget() guarantees buf <= last */
 			for (lines = linecnt, b = buf; lines && b < end &&
 			     ((b = CAST(const char *,
@@ -944,7 +944,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 					b++;
 			}
 			if (lines)
-				last = (const char *)s + nbytes;
+				last = RCAST(const char *, s) + nbytes;
 
 			ms->search.s = buf;
 			ms->search.s_len = last - buf;
