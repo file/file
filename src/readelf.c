@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.86 2010/07/21 16:47:18 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.87 2011/05/13 22:15:24 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -694,6 +694,7 @@ core:
 				unsigned char *cname, *cp;
 				size_t reloffset = prpsoffsets(i);
 				size_t noffset = doff + reloffset;
+				size_t k;
 				for (j = 0; j < 16; j++, noffset++,
 				    reloffset++) {
 					/*
@@ -744,12 +745,11 @@ core:
 				 * Try next offsets, in case this match is
 				 * in the middle of a string.
 				 */
-				size_t k;
 				for (k = i + 1 ; k < NOFFSETS ; k++) {
-					if (prpsoffsets(k) >= prpsoffsets(i))
-						continue;
 					size_t no;
 					int adjust = 1;
+					if (prpsoffsets(k) >= prpsoffsets(i))
+						continue;
 					for (no = doff + prpsoffsets(k);
 					     no < doff + prpsoffsets(i); no++)
 						adjust = adjust
