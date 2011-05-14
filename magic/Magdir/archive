@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.64 2011/05/14 02:29:14 christos Exp $
+# $File: archive,v 1.65 2011/05/14 15:04:15 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -654,7 +654,7 @@
 >>>>78	string	-template		Template
 !:mime	application/vnd.oasis.opendocument.image-template
 
->26	byte	x			Zip Archive data
+>26	byte	x			Zip archive data
 
 
 # StarView Metafile
