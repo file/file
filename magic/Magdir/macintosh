@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: macintosh,v 1.21 2010/09/20 19:19:17 rrt Exp $
+# $File: macintosh,v 1.22 2011/05/17 17:40:31 rrt Exp $
 # macintosh description
 #
 # BinHex is the Macintosh ASCII-encoded file format (see also "apple")
@@ -285,7 +285,7 @@
 >0x412	beshort			x		number of blocks: %d,
 >0x424	pstring			x		volume name: %s
 
-# "BD" is has many false positives
+# "BD" gives many false positives
 #0x400	beshort			0x4244		Macintosh HFS data
 #>0	beshort			0x4C4B		(bootable)
 #>0x40a	beshort			&0x8000		(locked)
