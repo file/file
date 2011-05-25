@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.65 2011/05/14 15:04:15 christos Exp $
+# $File: archive,v 1.66 2011/05/25 17:45:54 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -695,8 +695,9 @@
 >>4	byte		0x09		\b, at least v0.9 to extract
 >>4	byte		0x0a		\b, at least v1.0 to extract
 >>4	byte		0x0b		\b, at least v1.1 to extract
->>0x161	string		WINZIP		\b, WinZIP self-extracting
 >>4	byte		0x14		\b, at least v2.0 to extract
+>>4	byte		0x2d		\b, at least v3.0 to extract
+>>0x161	string		WINZIP		\b, WinZIP self-extracting
 
 # Zoo archiver
 20	lelong		0xfdc4a7dc	Zoo archive data
