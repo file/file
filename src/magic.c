@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.73 2011/05/10 17:08:14 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.74 2011/05/26 01:27:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -84,24 +84,6 @@ private const char *file_or_fd(struct magic_set *, const char *, int);
 #define	STDIN_FILENO	0
 #endif
 
-#ifdef WIN32
-BOOL WINAPI DllMain(HINSTANCE hinstDLL,
-    DWORD fdwReason __attribute__((__unused__)),
-    LPVOID lpvReserved __attribute__((__unused__)));
-
-CHAR dllpath[MAX_PATH + 1] = { 0 };
-
-BOOL WINAPI DllMain(HINSTANCE hinstDLL,
-    DWORD fdwReason __attribute__((__unused__)),
-    LPVOID lpvReserved __attribute__((__unused__)))
-{
-	if (dllpath[0] == 0 &&
-	    GetModuleFileNameA(hinstDLL, dllpath, MAX_PATH) != 0)
-		PathRemoveFileSpecA(dllpath);
-	return TRUE;
-}
-#endif
-
 private const char *
 get_default_magic(void)
 {
@@ -146,17 +128,18 @@ out:
 #define APPENDPATH() \
 	do { \
 		if (tmppath && access(tmppath, R_OK) != -1) { \
-			if (hmagicpath == NULL) { \
+			if (hmagicpath == NULL) \
 				hmagicpath = tmppath; \
-				tmppath = NULL; \
-			} else { \
-				free(tmppath); \
+			else { \
 				if (asprintf(&hmagicp, "%s%c%s", hmagicpath, \
 				    PATHSEP, tmppath) >= 0) { \
 					free(hmagicpath); \
 					hmagicpath = hmagicp; \
 				} \
+				free(tmppath); \
 			} \
+			tmppath = NULL; \
+		} \
 	} while (/*CONSTCOND*/0)
 				
 	if (default_magic) {
@@ -184,9 +167,11 @@ out:
 			APPENDPATH();
 	}
 
-
 	/* Third, try to get magic file relative to dll location */
-	if (dllpath[0] != 0) {
+	LPTSTR dllpath = malloc(sizeof(*dllpath) * (MAX_PATH + 1));
+	dllpath[MAX_PATH] = 0;	/* just in case long path gets truncated and not null terminated */
+	if (GetModuleFileNameA(NULL, dllpath, MAX_PATH)){
+		PathRemoveFileSpecA(dllpath);
 		if (strlen(dllpath) > 3 &&
 		    stricmp(&dllpath[strlen(dllpath) - 3], "bin") == 0) {
 			if (asprintf(&tmppath,
