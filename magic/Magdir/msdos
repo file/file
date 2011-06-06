@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.73 2011/05/18 18:11:23 christos Exp $
+# $File: msdos,v 1.74 2011/06/06 13:01:41 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -841,7 +841,12 @@
 # Dell's .hdr
 0	string $RBU
 >23	string Dell			%s system BIOS
->48	string x			version %.3s
+>5	byte   2
+>>48	byte   x			version %d.
+>>49	byte   x			\b%d.
+>>50	byte   x			\b%d
+>5	byte   <2
+>>48	string x			version %.3s
 
 # Type: Microsoft DirectDraw Surface
 # URL:	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/graphics/reference/DDSFileReference/ddsfileformat.asp
