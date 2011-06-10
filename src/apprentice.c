@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.169 2011/05/10 17:08:13 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.170 2011/06/10 09:23:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2466,8 +2466,6 @@ bs1(struct magic *m)
 	m->in_offset = swap4((uint32_t)m->in_offset);
 	m->lineno = swap4((uint32_t)m->lineno);
 	if (IS_STRING(m->type)) {
-		if (m->type == FILE_PSTRING)
-			printf("flags! %d\n", m->str_flags);
 		m->str_range = swap4(m->str_range);
 		m->str_flags = swap4(m->str_flags);
 	}
