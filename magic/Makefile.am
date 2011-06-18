@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.65 2011/04/06 12:37:44 christos Exp $
+# $File: Makefile.am,v 1.66 2011/05/10 17:01:57 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -242,7 +242,7 @@ MAGIC = magic.mgc
 CLEANFILES = ${MAGIC} $(MAGIC_FRAGMENT_DIR)/Localstuff
 
 # FIXME: Build file natively as well so that it can be used to compile
-# the target's magic file
+# the target's magic file; for now we bail if the local version does not match
 if IS_CROSS_COMPILE
 FILE_COMPILE = file
 FILE_COMPILE_DEP =
@@ -254,5 +254,14 @@ endif
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
 	@rm -fr magic
 	@mkdir magic && cp -p $(EXTRA_DIST) magic
+	@(if [ "${FILE_COMPILE}" = "file" ]; then \
+	    v=$$(file --version | sed -e s/file-// -e q); \
+	    if [ $$v != ${PACKAGE_VERSION} ]; then \
+		echo "Cannot use the installed version of file ($$v) to"; \
+		echo "cross-compile file ${PACKAGE_VERSION}"; \
+		echo "Please install file ${PACKAGE_VERSION} locally first"; \
+		exit 1; \
+	    fi; \
+	fi)
 	$(FILE_COMPILE) -C -m magic
 	@rm -fr magic
