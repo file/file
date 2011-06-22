@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.15 2011/05/13 12:05:56 christos Exp $
+# $File: sniffer,v 1.16 2011/06/22 15:40:47 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -248,6 +248,18 @@
 >20	lelong		13		(BSD/OS SLIP
 >20	lelong		14		(BSD/OS PPP
 >16	lelong		x		\b, capture length %d)
+
+#
+# "pcapng" capture files.
+# http://www.winpcap.org/ntar/draft/PCAP-DumpFileFormat.html
+#
+0	ubelong		0x0a0d0d0a
+>8	ubelong		0x1a2b3c4d	pcapng capture file (big-endian)
+>>12	beshort		x		- version %d
+>>14	beshort		x		\b.%d
+>8	ulelong		0x1a2b3c4d	pcapng capture file (little-endian)
+>>12	leshort		x		- version %d
+>>14	leshort		x		\b.%d
 
 #
 # AIX "iptrace" capture files.
