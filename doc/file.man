@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.94 2011/04/20 19:08:44 christos Exp $
+.\" $File: file.man,v 1.95 2011/05/13 22:11:44 christos Exp $
 .Dd April 20, 2011
 .Dt FILE __CSECTION__
 .Os
@@ -233,16 +233,6 @@ Thus it may say
 .Sq text/plain; charset=us-ascii
 rather than
 .Dq ASCII text .
-In order for this option to work,
-.Nm
-changes the way
-it handles files recognized by the command itself (such as many of the
-text file types, directories etc), and makes use of an alternative
-.Dq magic
-file.
-(See the
-.Sx FILES
-section, below).
 .It Fl Fl mime-type , Fl Fl mime-encoding
 Like
 .Fl i ,
@@ -565,8 +555,6 @@ Make file -ki work, i.e. give multiple MIME types.
 .Pp
 Add a zip library so we can peek inside Office2007 documents to
 figure out what they are.
-.Pp
-Don't complain when ~/.magic is not compiled.
 .Pp
 Add an option to print URLs for the sources of the file descriptions.
 .Sh AVAILABILITY
