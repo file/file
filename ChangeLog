@@ -1,3 +1,12 @@
+2011-07-12  12:32  Reuben Thomas <rrt@sc3d.org>
+
+	* Fix detection of Zip files (Mantis #128).
+	* Make some minor improvements to file(1).
+	* Rename MIME types for filesystem objects for consistency with
+	  xdg-utils. Typically this means that application/x-foo becomes
+	  inode/foo, but some names also change slightly, e.g.
+	  application/x-character-device becomes inode/chardevice.
+
 2011-05-10  20:57  Christos Zoulas <christos@zoulas.com>
 
 	* fix mingw compilation (Abradoks)
