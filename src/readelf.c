@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.86 2010/07/21 16:47:18 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.87 2011/05/13 22:15:24 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -283,10 +283,11 @@ private const char os_style_names[][8] = {
 	"NetBSD",
 };
 
-#define FLAGS_DID_CORE		1
-#define FLAGS_DID_NOTE		2
-#define FLAGS_DID_CORE_STYLE	4
-#define FLAGS_IS_CORE		8
+#define FLAGS_DID_CORE		0x01
+#define FLAGS_DID_NOTE		0x02
+#define FLAGS_DID_BUILD_ID	0x04
+#define FLAGS_DID_CORE_STYLE	0x08
+#define FLAGS_IS_CORE		0x10
 
 private int
 dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
@@ -420,7 +421,8 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 		return (offset >= size) ? offset : size;
 	}
 
-	if (*flags & FLAGS_DID_NOTE)
+	if ((*flags & (FLAGS_DID_NOTE|FLAGS_DID_BUILD_ID)) ==
+	    (FLAGS_DID_NOTE|FLAGS_DID_BUILD_ID))
 		goto core;
 
 	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
@@ -460,6 +462,19 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 			return size;
 		*flags |= FLAGS_DID_NOTE;
 		return size;
+	}
+
+	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
+	    xnh_type == NT_GNU_BUILD_ID && (descsz == 16 || descsz == 20)) {
+	    uint32_t desc[5], i;
+	    if (file_printf(ms, ", BuildID[%s]=0x", descsz == 16 ? "md5/uuid" :
+		"sha1") == -1)
+		    return size;
+	    (void)memcpy(desc, &nbuf[doff], descsz);
+	    for (i = 0; i < descsz >> 2; i++)
+		if (file_printf(ms, "%.8x", desc[i]) == -1)
+		    return size;
+	    *flags |= FLAGS_DID_BUILD_ID;
 	}
 
 	if (namesz == 7 && strcmp((char *)&nbuf[noff], "NetBSD") == 0 &&
