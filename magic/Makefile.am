@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.69 2011/08/03 16:28:23 christos Exp $
+# $File: Makefile.am,v 1.70 2011/08/03 16:55:40 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -254,8 +254,8 @@ endif
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
 	@rm -fr magic
 	@mkdir magic && cp -p $(EXTRA_DIST) magic
-	@(if expr "${FILE_COMPILE}" : '.*/.*' > /dev/null;  then \
-	    : \
+	@(if expr "${FILE_COMPILE}" : '.*/.*' > /dev/null; then \
+	    echo "Using ${FILE_COMPILE} to generate ${MAGIC}" > /dev/null; \
 	  else \
 	    v=$$(file --version | sed -e s/file-// -e q); \
 	    if [ "$$v" != "${PACKAGE_VERSION}" ]; then \
