@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.67 2011/06/18 22:36:22 christos Exp $
+# $File: Makefile.am,v 1.68 2011/08/03 16:26:52 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -254,7 +254,9 @@ endif
 ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
 	@rm -fr magic
 	@mkdir magic && cp -p $(EXTRA_DIST) magic
-	@(if [ "${FILE_COMPILE}" = "file" ]; then \
+	@(if expr "${FILE_COMPILE}" : '.*/.*' > /dev/null;  then \
+	    : \
+	  else \
 	    v=$$(file --version | sed -e s/file-// -e q); \
 	    if [ $$v != ${PACKAGE_VERSION} ]; then \
 		echo "Cannot use the installed version of file ($$v) to"; \
@@ -262,6 +264,6 @@ ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
 		echo "Please install file ${PACKAGE_VERSION} locally first"; \
 		exit 1; \
 	    fi; \
-	fi)
+	  fi)
 	$(FILE_COMPILE) -C -m magic
 	@rm -fr magic
