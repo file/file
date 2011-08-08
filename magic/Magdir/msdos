@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.74 2011/06/06 13:01:41 christos Exp $
+# $File: msdos,v 1.75 2011/08/08 08:56:17 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -638,12 +638,14 @@
 0	lelong		0x08084b50	TurboC Font file
 
 # WARNING: below line conflicts with Infocom game data Z-machine 3
-0	byte		0x03		DBase 3 data file
->0x04	lelong		0		(no records)
->0x04	lelong		>0		(%ld records)
-0	byte		0x83		DBase 3 data file with memo(s)
->0x04	lelong		0		(no records)
->0x04	lelong		>0		(%ld records)
+0	byte		0x03
+>0x02	byte		<0x13		DBase 3 data file
+>>0x04	lelong		0		(no records)
+>>0x04	lelong		>0		(%ld records)
+0	byte		0x83
+>0x02	byte		<0x13		DBase 3 data file with memo(s)
+>>0x04	lelong		0		(no records)
+>>0x04	lelong		>0		(%ld records)
 0	leshort		0x0006		DBase 3 index file
 0	string		PMCC		Windows 3.x .GRP file
 1	string		RDC-meg		MegaDots 
