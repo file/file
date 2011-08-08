@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.69 2011/08/03 16:28:23 christos Exp $
+# $File: Makefile.am,v 1.70 2011/08/03 16:55:40 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -76,6 +76,7 @@ $(MAGIC_FRAGMENT_DIR)/fortran \
 $(MAGIC_FRAGMENT_DIR)/frame \
 $(MAGIC_FRAGMENT_DIR)/freebsd \
 $(MAGIC_FRAGMENT_DIR)/fsav \
+$(MAGIC_FRAGMENT_DIR)/fusecompress \
 $(MAGIC_FRAGMENT_DIR)/games \
 $(MAGIC_FRAGMENT_DIR)/gcc \
 $(MAGIC_FRAGMENT_DIR)/geo \
