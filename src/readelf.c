@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.87 2011/05/13 22:15:24 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.88 2011/07/19 18:54:25 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -47,8 +47,8 @@ private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t,
 #endif
 private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t,
     off_t, int *, int);
-private int doshn(struct magic_set *, int, int, int, off_t, int, size_t, int *,
-    int);
+private int doshn(struct magic_set *, int, int, int, off_t, int, size_t,
+    off_t, int *, int);
 private size_t donote(struct magic_set *, void *, size_t, size_t, int,
     int, size_t, int *);
 
@@ -144,7 +144,7 @@ getu64(int swap, uint64_t value)
 #define xsh_size	(clazz == ELFCLASS32			\
 			 ? elf_getu32(swap, sh32.sh_size)	\
 			 : elf_getu64(swap, sh64.sh_size))
-#define xsh_offset	(clazz == ELFCLASS32			\
+#define xsh_offset	(off_t)(clazz == ELFCLASS32		\
 			 ? elf_getu32(swap, sh32.sh_offset)	\
 			 : elf_getu64(swap, sh64.sh_offset))
 #define xsh_type	(clazz == ELFCLASS32			\
@@ -298,13 +298,6 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	size_t offset;
 	unsigned char nbuf[BUFSIZ];
 	ssize_t bufsize;
-	off_t savedoffset;
- 	struct stat st;
-
-	if (fstat(fd, &st) < 0) {
-		file_badread(ms);
-		return -1;
-	}
 
 	if (size != xph_sizeof) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
@@ -316,7 +309,7 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	 * Loop through all the program headers.
 	 */
 	for ( ; num; num--) {
-		if ((savedoffset = lseek(fd, off, SEEK_SET)) == (off_t)-1) {
+		if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
 			file_badseek(ms);
 			return -1;
 		}
@@ -324,15 +317,13 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			file_badread(ms);
 			return -1;
 		}
+		off += size;
+
 		if (xph_offset > fsize) {
-			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
-				file_badseek(ms);
-				return -1;
-			}
+			/* Perhaps warn here */
 			continue;
 		}
 
-		off += size;
 		if (xph_type != PT_NOTE)
 			continue;
 
@@ -851,7 +842,7 @@ static const cap_desc_t cap_desc_386[] = {
 
 private int
 doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
-    size_t size, int *flags, int mach)
+    size_t size, off_t fsize, int *flags, int mach)
 {
 	Elf32_Shdr sh32;
 	Elf64_Shdr sh64;
@@ -867,16 +858,22 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		return 0;
 	}
 
-	if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
-		file_badseek(ms);
-		return -1;
-	}
-
 	for ( ; num; num--) {
+		if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
+			file_badseek(ms);
+			return -1;
+		}
 		if (read(fd, xsh_addr, xsh_sizeof) == -1) {
 			file_badread(ms);
 			return -1;
 		}
+		off += size;
+
+		if (xsh_offset > fsize) {
+			/* Perhaps warn here */
+			continue;
+		}
+
 		switch (xsh_type) {
 		case SHT_SYMTAB:
 #if 0
@@ -885,11 +882,6 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			stripped = 0;
 			break;
 		case SHT_NOTE:
-			if ((off = lseek(fd, (off_t)0, SEEK_CUR)) ==
-			    (off_t)-1) {
-				file_badread(ms);
-				return -1;
-			}
 			if ((nbuf = malloc((size_t)xsh_size)) == NULL) {
 				file_error(ms, errno, "Cannot allocate memory"
 				    " for note");
@@ -918,24 +910,14 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				if (noff == 0)
 					break;
 			}
-			if ((lseek(fd, off, SEEK_SET)) == (off_t)-1) {
-				free(nbuf);
-				file_badread(ms);
-				return -1;
-			}
 			free(nbuf);
 			break;
 		case SHT_SUNW_cap:
 		    {
 			off_t coff;
-			if ((off = lseek(fd, (off_t)0, SEEK_CUR)) ==
-			    (off_t)-1) {
-				file_badread(ms);
-				return -1;
-			}
 			if (lseek(fd, (off_t)xsh_offset, SEEK_SET) ==
 			    (off_t)-1) {
-				file_badread(ms);
+				file_badseek(ms);
 				return -1;
 			}
 			coff = 0;
@@ -971,10 +953,6 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 						return -1;
 					break;
 				}
-			}
-			if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
-				file_badread(ms);
-				return -1;
 			}
 			break;
 		    }
@@ -1059,13 +1037,6 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	unsigned char nbuf[BUFSIZ];
 	ssize_t bufsize;
 	size_t offset, align;
-	off_t savedoffset = (off_t)-1;
-	struct stat st;
-
-	if (fstat(fd, &st) < 0) {
-		file_badread(ms);
-		return -1;
-	}
 	
 	if (size != xph_sizeof) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
@@ -1073,34 +1044,20 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		return 0;
 	}
 
-	if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
-		file_badseek(ms);
-		return -1;
-	}
-
   	for ( ; num; num--) {
+		if (lseek(fd, off, SEEK_SET) == (off_t)-1) {
+			file_badseek(ms);
+			return -1;
+		}
+
   		if (read(fd, xph_addr, xph_sizeof) == -1) {
   			file_badread(ms);
 			return -1;
 		}
-		if (xph_offset > st.st_size && savedoffset != (off_t)-1) {
-			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
-				file_badseek(ms);
-				return -1;
-			}
-			continue;
-		}
 
-		if ((savedoffset = lseek(fd, (off_t)0, SEEK_CUR)) == (off_t)-1) {
-  			file_badseek(ms);
-			return -1;
-		}
-
+		off += size;
 		if (xph_offset > fsize) {
-			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
-				file_badseek(ms);
-				return -1;
-			}
+			/* Maybe warn here? */
 			continue;
 		}
 
@@ -1125,8 +1082,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			 * This is a PT_NOTE section; loop through all the notes
 			 * in the section.
 			 */
-			if (lseek(fd, xph_offset, SEEK_SET)
-			    == (off_t)-1) {
+			if (lseek(fd, xph_offset, SEEK_SET) == (off_t)-1) {
 				file_badseek(ms);
 				return -1;
 			}
@@ -1145,10 +1101,6 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				    flags);
 				if (offset == 0)
 					break;
-			}
-			if (lseek(fd, savedoffset, SEEK_SET) == (off_t)-1) {
-				file_badseek(ms);
-				return -1;
 			}
 			break;
 		default:
