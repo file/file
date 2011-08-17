@@ -1,3 +1,7 @@
+2011-08-17  14:32  Christos Zoulas <christos@zoulas.com>
+
+	* Fix ELF lseek(2) madness. Inspired by PR/134 by Jan Kaluza
+
 2011-07-12  12:32  Reuben Thomas <rrt@sc3d.org>
 
 	* Fix detection of Zip files (Mantis #128).
