@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.70 2011/08/03 16:55:40 christos Exp $
+# $File: Makefile.am,v 1.71 2011/08/08 09:05:38 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -192,6 +192,7 @@ $(MAGIC_FRAGMENT_DIR)/sinclair \
 $(MAGIC_FRAGMENT_DIR)/sisu \
 $(MAGIC_FRAGMENT_DIR)/sketch \
 $(MAGIC_FRAGMENT_DIR)/smalltalk \
+$(MAGIC_FRAGMENT_DIR)/smile \
 $(MAGIC_FRAGMENT_DIR)/sniffer \
 $(MAGIC_FRAGMENT_DIR)/softquad \
 $(MAGIC_FRAGMENT_DIR)/spec \
