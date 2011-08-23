@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.89 2011/08/17 11:34:39 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.90 2011/08/23 08:01:12 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -848,7 +848,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	Elf64_Shdr sh64;
 	int stripped = 1;
 	void *nbuf;
-	off_t noff;
+	off_t noff, coff;
 	uint64_t cap_hw1 = 0;	/* SunOS 5.x hardware capabilites */
 	uint64_t cap_sf1 = 0;	/* SunOS 5.x software capabilites */
 
@@ -869,11 +869,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		}
 		off += size;
 
-		if (xsh_offset > fsize) {
-			/* Perhaps warn here */
-			continue;
-		}
-
+		/* Things we can determine before we seek */
 		switch (xsh_type) {
 		case SHT_SYMTAB:
 #if 0
@@ -881,6 +877,16 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 #endif
 			stripped = 0;
 			break;
+		default:
+			if (xsh_offset > fsize) {
+				/* Perhaps warn here */
+				continue;
+			}
+			break;
+		}
+
+		/* Things we can determine when we seek */
+		switch (xsh_type) {
 		case SHT_NOTE:
 			if ((nbuf = malloc((size_t)xsh_size)) == NULL) {
 				file_error(ms, errno, "Cannot allocate memory"
@@ -913,8 +919,6 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			free(nbuf);
 			break;
 		case SHT_SUNW_cap:
-		    {
-			off_t coff;
 			if (lseek(fd, (off_t)xsh_offset, SEEK_SET) ==
 			    (off_t)-1) {
 				file_badseek(ms);
@@ -955,7 +959,9 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				}
 			}
 			break;
-		    }
+
+		default:
+			break;
 		}
 	}
 	if (file_printf(ms, ", %sstripped", stripped ? "" : "not ") == -1)
@@ -1056,11 +1062,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		}
 
 		off += size;
-		if (xph_offset > fsize) {
-			/* Maybe warn here? */
-			continue;
-		}
 
+		/* Things we can determine before we seek */
 		switch (xph_type) {
 		case PT_DYNAMIC:
 			linking_style = "dynamically";
@@ -1068,6 +1071,16 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		case PT_INTERP:
 			shared_libraries = " (uses shared libs)";
 			break;
+		default:
+			if (xph_offset > fsize) {
+				/* Maybe warn here? */
+				continue;
+			}
+			break;
+		}
+
+		/* Things we can determine when we seek */
+		switch (xph_type) {
 		case PT_NOTE:
 			if ((align = xph_align) & 0x80000000UL) {
 				if (file_printf(ms, 
