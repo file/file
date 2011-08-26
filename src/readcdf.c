@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.25 2011/02/10 21:35:05 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.26 2011/08/26 13:38:28 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -48,7 +48,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
         cdf_timestamp_t tp;
         struct timespec ts;
         char buf[64];
-        const char *str = "vnd.ms-office";
+        const char *str = NULL;
         const char *s;
         int len;
 
@@ -142,8 +142,8 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
                 }
         }
         if (!NOTMIME(ms)) {
-                if (file_printf(ms, "application/%s", str) == -1)
-                        return -1;
+		if (str == NULL)
+			return 0;
         }
         return 1;
 }
@@ -263,6 +263,24 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 #endif
         if ((i = cdf_file_summary_info(ms, &h, &scn)) == -1)
                 expn = "Can't expand summary_info";
+	if (i == 0) {
+		const char *str = "vnd.ms-office";
+		cdf_directory_t *d;
+		char name[__arraycount(d->d_name)];
+		size_t j, k;
+		for (j = 0; j < dir.dir_len; j++) {
+		    d = &dir.dir_tab[j];
+		    for (k = 0; k < sizeof(name); k++)
+			name[k] = (char)cdf_tole2(d->d_name[k]);
+		    if (strstr(name, "WordDocument") == 0) {
+			str = "msword";
+			break;
+		    }
+		}
+                if (file_printf(ms, "application/%s", str) == -1)
+                        return -1;
+		i = 1;
+	}
         free(scn.sst_tab);
 out4:
         free(sst.sst_tab);
