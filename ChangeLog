@@ -1,3 +1,8 @@
+2011-08-26  16:40  Christos Zoulas <christos@zoulas.com>
+
+	* If the application name is not set in a cdf file, try to see
+	  if it has a directory with the application name on it.
+
 2011-08-17  14:32  Christos Zoulas <christos@zoulas.com>
 
 	* Fix ELF lseek(2) madness. Inspired by PR/134 by Jan Kaluza
