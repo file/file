@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.42 2011/02/10 21:35:05 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.43 2011/03/30 19:48:13 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -74,28 +74,16 @@ static union {
 
 #define NEED_SWAP	(cdf_bo.u == (uint32_t)0x01020304)
 
-#define CDF_TOLE8(x)	((uint64_t)(NEED_SWAP ? cdf_tole8(x) : (uint64_t)(x)))
-#define CDF_TOLE4(x)	((uint32_t)(NEED_SWAP ? cdf_tole4(x) : (uint32_t)(x)))
-#define CDF_TOLE2(x)	((uint16_t)(NEED_SWAP ? cdf_tole2(x) : (uint16_t)(x)))
+#define CDF_TOLE8(x)	((uint64_t)(NEED_SWAP ? _cdf_tole8(x) : (uint64_t)(x)))
+#define CDF_TOLE4(x)	((uint32_t)(NEED_SWAP ? _cdf_tole4(x) : (uint32_t)(x)))
+#define CDF_TOLE2(x)	((uint16_t)(NEED_SWAP ? _cdf_tole2(x) : (uint16_t)(x)))
 #define CDF_GETUINT32(x, y)	cdf_getuint32(x, y)
-
-/*
- * grab a uint32_t from a possibly unaligned address, and return it in
- * the native host order.
- */
-static uint32_t
-cdf_getuint32(const uint8_t *p, size_t offs)
-{
-	uint32_t rv;
-	(void)memcpy(&rv, p + offs * sizeof(uint32_t), sizeof(rv));
-	return CDF_TOLE4(rv);
-}
 
 /*
  * swap a short
  */
-uint16_t
-cdf_tole2(uint16_t sv)
+static uint16_t
+_cdf_tole2(uint16_t sv)
 {
 	uint16_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv;
@@ -108,8 +96,8 @@ cdf_tole2(uint16_t sv)
 /*
  * swap an int
  */
-uint32_t
-cdf_tole4(uint32_t sv)
+static uint32_t
+_cdf_tole4(uint32_t sv)
 {
 	uint32_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv;
@@ -124,8 +112,8 @@ cdf_tole4(uint32_t sv)
 /*
  * swap a quad
  */
-uint64_t
-cdf_tole8(uint64_t sv)
+static uint64_t
+_cdf_tole8(uint64_t sv)
 {
 	uint64_t rv;
 	uint8_t *s = (uint8_t *)(void *)&sv;
@@ -141,10 +129,40 @@ cdf_tole8(uint64_t sv)
 	return rv;
 }
 
+/*
+ * grab a uint32_t from a possibly unaligned address, and return it in
+ * the native host order.
+ */
+static uint32_t
+cdf_getuint32(const uint8_t *p, size_t offs)
+{
+	uint32_t rv;
+	(void)memcpy(&rv, p + offs * sizeof(uint32_t), sizeof(rv));
+	return CDF_TOLE4(rv);
+}
+
 #define CDF_UNPACK(a)	\
     (void)memcpy(&(a), &buf[len], sizeof(a)), len += sizeof(a)
 #define CDF_UNPACKA(a)	\
     (void)memcpy((a), &buf[len], sizeof(a)), len += sizeof(a)
+
+uint16_t
+cdf_tole2(uint16_t sv)
+{
+	return CDF_TOLE2(sv);
+}
+
+uint32_t
+cdf_tole4(uint32_t sv)
+{
+	return CDF_TOLE4(sv);
+}
+
+uint64_t
+cdf_tole8(uint64_t sv)
+{
+	return CDF_TOLE8(sv);
+}
 
 void
 cdf_swap_header(cdf_header_t *h)
@@ -1204,7 +1222,7 @@ cdf_dump_summary_info(const cdf_header_t *h, const cdf_stream_t *sst)
 	size_t count;
 
 	(void)&h;
-	if (cdf_unpack_summary_info(sst, &ssi, &info, &count) == -1)
+	if (cdf_unpack_summary_info(sst, h, &ssi, &info, &count) == -1)
 		return;
 	(void)fprintf(stderr, "Endian: %x\n", ssi.si_byte_order);
 	(void)fprintf(stderr, "Os Version %d.%d\n", ssi.si_os_version & 0xff,
