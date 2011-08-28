@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.43 2011/03/30 19:48:13 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.44 2011/08/26 13:38:28 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -376,7 +376,8 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 			break;
 
 #define CDF_SEC_LIMIT (UINT32_MAX / (4 * ss))
-	if (h->h_num_sectors_in_master_sat > CDF_SEC_LIMIT / nsatpersec ||
+	if ((nsatpersec > 0 &&
+	    h->h_num_sectors_in_master_sat > CDF_SEC_LIMIT / nsatpersec) ||
 	    i > CDF_SEC_LIMIT) {
 		DPRINTF(("Number of sectors in master SAT too big %u %"
 		    SIZE_T_FORMAT "u\n", h->h_num_sectors_in_master_sat, i));
