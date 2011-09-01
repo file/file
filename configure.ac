@@ -100,7 +100,7 @@ AC_TYPE_MBSTATE_T
 
 AC_STRUCT_OPTION_GETOPT_H
 
-AC_CHECK_TYPES([uint8_t, uint16_t, uint32_t, int32_t, uint64_t, int64_t])
+AC_CHECK_TYPES([pid_t, uint8_t, uint16_t, uint32_t, int32_t, uint64_t, int64_t])
 AC_CHECK_SIZEOF(long long)
 AH_BOTTOM([
 #ifndef HAVE_UINT8_T
