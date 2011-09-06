@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: audio,v 1.62 2011/04/05 20:27:13 christos Exp $
+# $File: audio,v 1.63 2011/09/06 11:00:06 christos Exp $
 # audio:  file(1) magic for sound formats (see also "iff")
 #
 # Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
@@ -625,3 +625,13 @@
 # From: Mario Lang <mlang@debian.org>
 0	string	SCgf	SuperCollider3 Synth Definition file,
 >4	belong	x	version %d
+
+# Type: True Audio Lossless Audio
+# URL:  http://wiki.multimedia.cx/index.php?title=True_Audio
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	TTA1	True Audio Lossless Audio
+
+# Type: WavPack Lossless Audio
+# URL:  http://wiki.multimedia.cx/index.php?title=WavPack
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	wvpk	WavPack Lossless Audio

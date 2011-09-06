@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.21 2011/02/10 01:52:51 christos Exp $
+# $File: riff,v 1.22 2011/09/06 11:00:06 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -179,6 +179,8 @@
 # MPEG-1 wrapped in a RIFF, apparently
 >8      string          CDXA            \b, wrapped MPEG-1 (CDXA)
 >8	string		4XMV		\b, 4X Movie file 
+# AMV-type AVI file: http://wiki.multimedia.cx/index.php?title=AMV
+>8	string		AMV\040		\b, AMV 
 
 #
 # XXX - some of the below may only appear in little-endian form.

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.44 2010/11/25 15:00:12 christos Exp $
+# $File: animation,v 1.45 2011/09/06 11:00:06 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -835,3 +835,61 @@
 # URL:	http://wiki.multimedia.cx/index.php?title=NUT
 # From:	Adam Buchbinder <adam.buchbinder@gmail.com>
 0	string	nut/multimedia\ container\0	NUT multimedia container
+
+# Type: Nullsoft Video (NSV)
+# URL:  http://wiki.multimedia.cx/index.php?title=Nullsoft_Video
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	NSVf	Nullsoft Video
+
+# Type: REDCode Video
+# URL:  http://www.red.com/ ; http://wiki.multimedia.cx/index.php?title=REDCode
+# From: Mike Melanson <mike@multimedia.cx>
+4	string	RED1	REDCode Video
+
+# Type: MTV Multimedia File
+# URL:  http://wiki.multimedia.cx/index.php?title=MTV
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	AMVS	MTV Multimedia File
+
+# Type: ARMovie
+# URL:  http://wiki.multimedia.cx/index.php?title=ARMovie
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	ARMovie\012	ARMovie
+
+# Type: Interplay MVE Movie
+# URL:  http://wiki.multimedia.cx/index.php?title=Interplay_MVE
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	Interplay\040MVE\040File\032	Interplay MVE Movie
+
+# Type: Windows Television DVR File
+# URL:  http://wiki.multimedia.cx/index.php?title=WTV
+# From: Mike Melanson <mike@mutlimedia.cx>
+# This takes the form of a Windows-style GUID
+0	bequad	0xB7D800203749DA11
+>8	bequad	0xA64E0007E95EAD8D	Windows Television DVR Media
+
+# Type: Sega FILM/CPK Multimedia
+# URL:  http://wiki.multimedia.cx/index.php?title=Sega_FILM
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	FILM	Sega FILM/CPK Multimedia,
+>32	belong	x	%d x
+>28	belong	x	%d
+
+# Type: Nintendo THP Multimedia
+# URL:  http://wiki.multimedia.cx/index.php?title=THP
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	THP\0	Nintendo THP Multimedia
+
+# Type: BBC Dirac Video
+# URL:  http://wiki.multimedia.cx/index.php?title=Dirac
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	BBCD	BBC Dirac Video
+
+# Type: RAD Game Tools Smacker Multimedia
+# URL:  http://wiki.multimedia.cx/index.php?title=Smacker
+# From: Mike Melanson <mike@multimedia.cx>
+0	string	SMK	RAD Game Tools Smacker Multimedia
+>3	byte	x	version %c,
+>4	lelong	x	%d x
+>8	lelong	x	%d,
+>12	lelong	x	%d frames
