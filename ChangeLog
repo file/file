@@ -1,3 +1,7 @@
+2011-09-01  12:12  Christos Zoulas <christos@zoulas.com>
+
+	* Don't wait for any subprocess, just the one we forked.
+
 2011-08-26  16:40  Christos Zoulas <christos@zoulas.com>
 
 	* If the application name is not set in a cdf file, try to see
@@ -6,6 +10,10 @@
 2011-08-17  14:32  Christos Zoulas <christos@zoulas.com>
 
 	* Fix ELF lseek(2) madness. Inspired by PR/134 by Jan Kaluza
+
+2011-08-14  09:03  Christos Zoulas <christos@zoulas.com>
+
+	* Don't use variable string formats.
 
 2011-07-12  12:32  Reuben Thomas <rrt@sc3d.org>
 
