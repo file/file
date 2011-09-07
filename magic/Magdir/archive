@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.66 2011/05/25 17:45:54 christos Exp $
+# $File: archive,v 1.67 2011/07/12 11:31:09 rrt Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -890,3 +890,13 @@
 # ZPAQ: http://mattmahoney.net/dc/zpaq.html
 0	string	zPQ	ZPAQ stream
 >3	byte	x	\b, level %d
+
+# BBeB ebook, unencrypted (LRF format)
+# URL: http://www.sven.de/librie/Librie/LrfFormat
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+0	string	L\0R\0F\0\0\0	BBeB ebook data, unencrypted
+>8	beshort	x		\b, version %d
+>36	byte	1		\b, front-to-back
+>36	byte	16		\b, back-to-front
+>42	beshort	x		\b, (%dx,
+>44	beshort	x		%d)
