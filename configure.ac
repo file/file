@@ -142,7 +142,7 @@ else
    WARNINGS="-Wall -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith \
        -Wmissing-declarations -Wredundant-decls -Wnested-externs \
        -Wsign-compare -Wreturn-type -Wswitch -Wshadow \
-       -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter -Wformat=2"
+       -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter -Wformat=2"`
 fi], [
 if test "$GCC" = yes; then
    AC_MSG_RESULT(yes)
