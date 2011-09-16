@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.132 2011/03/20 20:36:52 christos Exp $
+ * @(#)$File: file.h,v 1.133 2011/05/13 22:15:40 christos Exp $
  */
 
 #ifndef __file_h__
@@ -85,6 +85,10 @@
 #define protected
 #endif
 #define public
+
+#ifndef __arraycount
+#define __arraycount(a) (sizeof(a) / sizeof(a[0]))
+#endif
 
 #ifndef __GNUC_PREREQ__
 #ifdef __GNUC__
