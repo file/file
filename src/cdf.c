@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.45 2011/08/28 08:38:48 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.46 2011/09/16 21:23:59 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -56,10 +56,6 @@ FILE_RCSID("@(#)$File: cdf.c,v 1.45 2011/08/28 08:38:48 christos Exp $")
 #endif
 
 #include "cdf.h"
-
-#ifndef __arraycount
-#define __arraycount(a) (sizeof(a) / sizeof(a[0]))
-#endif
 
 #ifdef CDF_DEBUG
 #define DPRINTF(a) printf a, fflush(stdout)
