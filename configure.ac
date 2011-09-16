@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(file, 5.08, christos@astron.com)
+AC_INIT(file, 5.09, christos@astron.com)
 AM_INIT_AUTOMAKE()
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -142,7 +142,7 @@ else
    WARNINGS="-Wall -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith \
        -Wmissing-declarations -Wredundant-decls -Wnested-externs \
        -Wsign-compare -Wreturn-type -Wswitch -Wshadow \
-       -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter -Wformat=2"`
+       -Wcast-qual -Wwrite-strings -Wextra -Wunused-parameter -Wformat=2"
 fi], [
 if test "$GCC" = yes; then
    AC_MSG_RESULT(yes)
