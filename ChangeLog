@@ -1,3 +1,9 @@
+2011-09-20  11:32  Christos Zoulas <christos@zoulas.com>
+
+	* If a string type magic entry is marked as text or binary
+	  only match text files against text entries and binary
+	  files against binary entries.
+
 2011-09-01  12:12  Christos Zoulas <christos@zoulas.com>
 
 	* Don't wait for any subprocess, just the one we forked.
