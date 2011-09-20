@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.81 2011/03/15 22:16:29 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.82 2011/09/20 15:30:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -70,7 +70,8 @@ trim_nuls(const unsigned char *buf, size_t nbytes)
 }
 
 protected int
-file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
+file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
+	int text)
 {
 	unichar *ubuf = NULL;
 	size_t ulen;
@@ -93,7 +94,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 	}
 
 	rv = file_ascmagic_with_encoding(ms, buf, nbytes, ubuf, ulen, code,
-	    type);
+	    type, text);
 
  done:
 	if (ubuf)
@@ -105,7 +106,7 @@ file_ascmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
 protected int
 file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
     size_t nbytes, unichar *ubuf, size_t ulen, const char *code,
-    const char *type)
+    const char *type, int text)
 {
 	unsigned char *utf8_buf = NULL, *utf8_end;
 	size_t mlen, i;
@@ -153,7 +154,7 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 		    == NULL)
 			goto done;
 		if ((rv = file_softmagic(ms, utf8_buf,
-		    (size_t)(utf8_end - utf8_buf), TEXTTEST)) != 0)
+		    (size_t)(utf8_end - utf8_buf), TEXTTEST, text)) != 0)
 			goto subtype_identified;
 		else
 			rv = -1;
