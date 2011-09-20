@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.56 2011/02/03 01:43:33 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.57 2011/05/11 01:02:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -228,7 +228,8 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 
 	/* try soft magic tests */
 	if ((ms->flags & MAGIC_NO_CHECK_SOFT) == 0)
-		if ((m = file_softmagic(ms, ubuf, nb, BINTEST)) != 0) {
+		if ((m = file_softmagic(ms, ubuf, nb, BINTEST,
+		    looks_text)) != 0) {
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void)fprintf(stderr, "softmagic %d\n", m);
 #ifdef BUILTIN_ELF
@@ -255,7 +256,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 	/* try text properties (and possibly text tokens) */
 	if ((ms->flags & MAGIC_NO_CHECK_TEXT) == 0) {
 
-		if ((m = file_ascmagic(ms, ubuf, nb)) != 0) {
+		if ((m = file_ascmagic(ms, ubuf, nb, looks_text)) != 0) {
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void)fprintf(stderr, "ascmagic %d\n", m);
 			goto done;
@@ -265,7 +266,8 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 		if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0) {
 			if (looks_text == 0)
 				if ((m = file_ascmagic_with_encoding( ms, ubuf,
-				    nb, u8buf, ulen, code, type)) != 0) {
+				    nb, u8buf, ulen, code, type, looks_text))
+				    != 0) {
 					if ((ms->flags & MAGIC_DEBUG) != 0)
 						(void)fprintf(stderr,
 						    "ascmagic/enc %d\n", m);
