@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.69 2010/10/20 20:22:58 christos Exp $
+# $File: images,v 1.70 2010/11/25 15:00:12 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -88,6 +88,11 @@
 0	string		MM\x00\x2a	TIFF image data, big-endian
 !:mime	image/tiff
 0	string		II\x2a\x00	TIFF image data, little-endian
+!:mime	image/tiff
+
+0	string		MM\x00\x2b	Big TIFF image data, big-endian
+!:mime	image/tiff
+0	string		II\x2b\x00	Big TIFF image data, little-endian
 !:mime	image/tiff
 
 # PNG [Portable Network Graphics, or "PNG's Not GIF"] images
