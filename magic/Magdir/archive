@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.68 2011/09/07 15:47:51 christos Exp $
+# $File: archive,v 1.69 2011/09/28 13:22:54 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -183,7 +183,7 @@
 # MAR
 2	string	=-ah MAR archive data
 # ACB
-0	belong&0x00f800ff	0x00800000 ACB archive data
+#0	belong&0x00f800ff	0x00800000 ACB archive data
 # CPZ
 # TODO, this is what idarc says: 0	string	\0\0\0 CPZ archive data
 # JRC
