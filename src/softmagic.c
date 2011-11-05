@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.145 2011/05/13 22:15:40 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.146 2011/09/20 15:30:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -117,7 +117,6 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	int firstline = 1; /* a flag to print X\n  X\n- X */
 	int printed_something = 0;
 	int print = (ms->flags & (MAGIC_MIME|MAGIC_APPLE)) == 0;
-	int wrong_type = 0;
 
 	if (file_check_mem(ms, cont_level) == -1)
 		return -1;
@@ -126,13 +125,10 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		int flush = 0;
 		struct magic *m = &magic[magindex];
 
-		if (IS_STRING(m->type)) {
-			if ((text && (m->str_flags & STRING_BINTEST)) ||
-			    (!text && m->str_flags & STRING_TEXTTEST))
-				wrong_type = 1;
-		}
-			
-		if (wrong_type || (m->flag & mode) != mode) {
+		if ((IS_STRING(m->type) &&
+		     ((text && (m->str_flags & (STRING_BINTEST | STRING_TEXTTEST)) == STRING_BINTEST) ||
+		      (!text && (m->str_flags & (STRING_TEXTTEST | STRING_BINTEST)) == STRING_TEXTTEST))) ||
+		    (m->flag & mode) != mode) {
 			/* Skip sub-tests */
 			while (magic[magindex + 1].cont_level != 0 &&
 			       ++magindex < nmagic)
