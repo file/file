@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.23 2011/01/14 21:59:17 rrt Exp $
+.\" $File: libmagic.man,v 1.24 2011/05/13 22:11:44 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003.
 .\" All Rights Reserved.
@@ -126,7 +126,7 @@ Don't get extra information on MS Composite Document Files.
 Don't look inside compressed files.
 .It Dv MAGIC_NO_CHECK_ELF
 Don't print ELF details.
-.It Dv NO_CHECK_ENCODING
+.It Dv MAGIC_NO_CHECK_ENCODING
 Don't check text encodings.
 .It Dv MAGIC_NO_CHECK_SOFT
 Don't consult magic files.
