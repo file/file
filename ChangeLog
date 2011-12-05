@@ -1,3 +1,9 @@
+2011-12-06  00:16  Reuben Thomas <rrt@sc3d.org>
+
+	* Tweak strength of generic hash-bang detectors to be less than
+	specific ones.
+	* Make an inconsistent description of Python scripts consistent.
+
 2011-12-05  23:58  Reuben Thomas <rrt@sc3d.org>
 
 	* Fix minor error in file(1).
