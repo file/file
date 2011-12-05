@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.68 2011/04/20 19:08:44 christos Exp $
+.\" $File: magic.man,v 1.69 2011/05/13 22:11:44 christos Exp $
 .Dd April 20, 2011
 .Dt MAGIC __FSECTION__
 .Os
@@ -63,7 +63,7 @@ consecutive blanks, the target needs at least
 consecutive blanks to match.
 The
 .Dq w
-flag treats every blank in the target as an optional blank.
+flag treats every blank in the magic as an optional blank.
 The
 .Dq c
 flag, specifies case insensitive matching: lower case
