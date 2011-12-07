@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.75 2011/08/08 08:56:17 christos Exp $
+# $File: msdos,v 1.76 2011/09/20 15:31:52 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -402,12 +402,12 @@
 # byte 0xeb conflicts with "sequent" magic leshort 0xn2eb
 0	ubeshort&0xeb8d	>0xeb00		
 # DR-DOS STACKER.COM SCREATE.SYS missed
->0	byte		0xeb		DOS executable (COM)
->>0x1FE leshort		0xAA55		\b, boot code
->>85	string		UPX		\b, UPX compressed
->>4	string		\ $ARX		\b, ARX self-extracting archive
->>4	string		\ $LHarc	\b, LHarc self-extracting archive
->>0x20e string		SFX\ by\ LARC	\b, LARC self-extracting archive
+>0	byte		0xeb
+>>0x1FE leshort		0xAA55		DOS executable (COM), boot code
+>>85	string		UPX		DOS executable (COM), UPX compressed
+>>4	string		\ $ARX		DOS executable (COM), ARX self-extracting archive
+>>4	string		\ $LHarc	DOS executable (COM), LHarc self-extracting archive
+>>0x20e string		SFX\ by\ LARC	DOS executable (COM), LARC self-extracting archive
 # updated by Joerg Jenderek at Oct 2008
 #0	byte		0xb8		COM executable
 0	uleshort&0x80ff	0x00b8		
