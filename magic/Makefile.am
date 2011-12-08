@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.75 2011/11/25 03:28:17 christos Exp $
+# $File: Makefile.am,v 1.76 2011/12/08 12:12:46 rrt Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -22,6 +22,7 @@ $(MAGIC_FRAGMENT_DIR)/apl \
 $(MAGIC_FRAGMENT_DIR)/apple \
 $(MAGIC_FRAGMENT_DIR)/applix \
 $(MAGIC_FRAGMENT_DIR)/archive \
+$(MAGIC_FRAGMENT_DIR)/assembler \
 $(MAGIC_FRAGMENT_DIR)/asterix \
 $(MAGIC_FRAGMENT_DIR)/att3b \
 $(MAGIC_FRAGMENT_DIR)/audio \
@@ -115,10 +116,12 @@ $(MAGIC_FRAGMENT_DIR)/lisp \
 $(MAGIC_FRAGMENT_DIR)/llvm \
 $(MAGIC_FRAGMENT_DIR)/lua \
 $(MAGIC_FRAGMENT_DIR)/luks \
+$(MAGIC_FRAGMENT_DIR)/m4 \
 $(MAGIC_FRAGMENT_DIR)/mach \
 $(MAGIC_FRAGMENT_DIR)/macintosh \
 $(MAGIC_FRAGMENT_DIR)/magic \
 $(MAGIC_FRAGMENT_DIR)/mail.news \
+$(MAGIC_FRAGMENT_DIR)/make \
 $(MAGIC_FRAGMENT_DIR)/maple \
 $(MAGIC_FRAGMENT_DIR)/marc21 \
 $(MAGIC_FRAGMENT_DIR)/mathcad \
@@ -161,6 +164,7 @@ $(MAGIC_FRAGMENT_DIR)/osf1 \
 $(MAGIC_FRAGMENT_DIR)/palm \
 $(MAGIC_FRAGMENT_DIR)/parix \
 $(MAGIC_FRAGMENT_DIR)/parrot \
+$(MAGIC_FRAGMENT_DIR)/pascal \
 $(MAGIC_FRAGMENT_DIR)/pbm \
 $(MAGIC_FRAGMENT_DIR)/pdf \
 $(MAGIC_FRAGMENT_DIR)/pdp \
