@@ -1,3 +1,7 @@
+2011-12-08  13:37  Reuben Thomas <rrt@sc3d.org>
+
+	* Simplify if (p) free(p) to free(p).
+
 2011-12-08  13:07  Reuben Thomas <rrt@sc3d.org>
 
 	* Remove hardwired token finding (names.h), turning it into soft

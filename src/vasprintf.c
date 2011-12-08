@@ -108,7 +108,7 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.6 2008/11/04 16:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.7 2009/02/03 20:27:52 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -608,8 +608,7 @@ static int core(xprintf_struct *s)
   return s->pseudo_len;
 
  free_EOF:
-  if (s->buffer_base != NULL)
-    free(s->buffer_base);
+  free(s->buffer_base);
   return EOF;
 }
 

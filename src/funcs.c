@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.58 2011/09/20 15:30:14 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.59 2011/12/08 12:12:46 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -290,8 +290,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 		if (file_printf(ms, "%s", code_mime) == -1)
 			rv = -1;
 	}
-	if (u8buf)
-		free(u8buf);
+	free(u8buf);
 	if (rv)
 		return rv;
 

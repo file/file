@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.171 2011/09/16 21:04:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.172 2011/11/16 19:24:22 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -736,8 +736,7 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 			break;
 		}
 	}
-	if (line)
-		free(line);
+	free(line);
 	(void)fclose(f);
 }
 
