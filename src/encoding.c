@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.5 2010/07/21 16:47:17 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.6 2011/12/08 12:38:24 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -133,8 +133,7 @@ file_encoding(struct magic_set *ms, const unsigned char *buf, size_t nbytes, uni
 	}
 
  done:
-	if (nbuf)
-		free(nbuf);
+	free(nbuf);
 
 	return rv;
 }
