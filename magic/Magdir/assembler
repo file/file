@@ -1,0 +1,14 @@
+#------------------------------------------------------------------------------
+# $File$
+# make:  file(1) magic for assembler source
+#
+0	regex	\^\.asciiz\?	assembler source text
+!:mime	text/x-asm
+0	regex	\^\.byte		assembler source text
+!:mime	text/x-asm
+0	regex	\^\.even		assembler source text
+!:mime	text/x-asm
+0	regex	\^\.globl		assembler source text
+!:mime	text/x-asm
+0	regex	\^\.text		assembler source text
+!:mime	text/x-asm

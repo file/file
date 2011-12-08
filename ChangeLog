@@ -1,3 +1,13 @@
+2011-12-08  13:07  Reuben Thomas <rrt@sc3d.org>
+
+	* Remove hardwired token finding (names.h), turning it into soft
+	magic. Patterns are either anchored regexs or search/8192. English
+	language detection and PL/1 detection have been removed as they
+	were too fragile. -e tokens is still accepted for backwards
+	compatibility.
+	* Move 3ds patterns (which are commented out anyway) into autodesk
+	(they were, oddly, in c-lang).
+
 2011-12-06  00:16  Reuben Thomas <rrt@sc3d.org>
 
 	* Tweak strength of generic hash-bang detectors to be less than

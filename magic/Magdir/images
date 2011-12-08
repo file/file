@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.70 2010/11/25 15:00:12 christos Exp $
+# $File: images,v 1.71 2011/09/22 19:30:43 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -233,8 +233,8 @@
 #0	string		BA		PC bitmap array data
 
 # XPM icons (Greg Roelofs, newt@uchicago.edu)
-# note possible collision with C/REXX entry in c-lang; currently commented out
 0	search/1	/*\ XPM\ */	X pixmap image text
+!:mime	image/x-xpmi
 
 # Utah Raster Toolkit RLE images (janl@ifi.uio.no)
 0	leshort		0xcc52		RLE image data,

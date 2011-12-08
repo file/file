@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.57 2011/05/11 01:02:41 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.58 2011/09/20 15:30:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -253,7 +253,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 			goto done;
 		}
 
-	/* try text properties (and possibly text tokens) */
+	/* try text properties */
 	if ((ms->flags & MAGIC_NO_CHECK_TEXT) == 0) {
 
 		if ((m = file_ascmagic(ms, ubuf, nb, looks_text)) != 0) {
