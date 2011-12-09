@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: c-lang,v 1.14 2009/09/19 16:28:08 christos Exp $
+# $File: c-lang,v 1.15 2011/12/08 12:12:46 rrt Exp $
 # c-lang:  file(1) magic for C and related languages programs
 #
 
@@ -28,21 +28,21 @@
 !:mime	text/x-c
 
 # C++
-# The strength of these rules is doubled so they beat the C rules above
+# The strength of these rules is increased so they beat the C rules above
 0	regex	\^template	C++ source text
-!:strength * 2
+!:strength + 10
 !:mime	text/x-c++
 0	regex	\^virtual		C++ source text
-!:strength * 2
+!:strength + 10
 !:mime	text/x-c++
 0	regex	\^class		C++ source text
-!:strength * 2
+!:strength + 10
 !:mime	text/x-c++
 0	regex	\^public:		C++ source text
-!:strength * 2
+!:strength + 10
 !:mime	text/x-c++
 0	regex	\^private:		C++ source text
-!:strength * 2
+!:strength + 10
 !:mime	text/x-c++
 
 # From: Mikhail Teterin <mi@aldan.algebra.com> 
