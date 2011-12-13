@@ -1,8 +1,9 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.18 2011/02/26 02:33:38 christos Exp $
+# $File: python,v 1.19 2011/12/05 23:16:41 rrt Exp $
 # python:  file(1) magic for python
 #
+# Outlook puts """ too for urgent messages
 # From: David Necas <yeti@physics.muni.cz>
 # often the module starts with a multiline string
 0	string/t	"""	Python script text executable
