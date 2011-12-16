@@ -1,6 +1,5 @@
-
 #------------------------------------------------------------------------------
-# $File: varied.script,v 1.7 2010/11/25 15:00:12 christos Exp $
+# $File: varied.script,v 1.8 2011/12/05 23:14:02 rrt Exp $
 # varied.script:  file(1) magic for various interpreter scripts
 
 0	string/t		#!\ /			a
@@ -19,10 +18,10 @@
 # using env
 0	string/t	#!/usr/bin/env		a
 >15	string/t	>\0			%s script text executable
-!:strength / 2
+!:strength / 10
 0	string/t	#!\ /usr/bin/env	a
 >16	string/t	>\0			%s script text executable
-!:strength / 2
+!:strength / 10
 
 # From: arno <arenevier@fdn.fr>
 # mozilla xpconnect typelib
