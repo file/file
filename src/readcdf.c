@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.26 2011/08/26 13:38:28 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.27 2011/09/28 13:30:10 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -70,6 +70,16 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
                 case CDF_UNSIGNED32:
                         if (NOTMIME(ms) && file_printf(ms, ", %s: %u", buf,
                             info[i].pi_u32) == -1)
+                                return -1;
+                        break;
+                case CDF_FLOAT:
+                        if (NOTMIME(ms) && file_printf(ms, ", %s: %g", buf,
+                            info[i].pi_f) == -1)
+                                return -1;
+                        break;
+                case CDF_DOUBLE:
+                        if (NOTMIME(ms) && file_printf(ms, ", %s: %g", buf,
+                            info[i].pi_d) == -1)
                                 return -1;
                         break;
                 case CDF_LENGTH32_STRING:
