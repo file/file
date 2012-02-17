@@ -76,9 +76,9 @@ typedef struct {
         cdf_secid_t	h_master_sat[436/4];
 } cdf_header_t;
 
-#define CDF_SEC_SIZE(h)	(1 << (h)->h_sec_size_p2)
+#define CDF_SEC_SIZE(h)	((size_t)(1 << (h)->h_sec_size_p2))
 #define CDF_SEC_POS(h, secid) (CDF_SEC_SIZE(h) + (secid) * CDF_SEC_SIZE(h))
-#define CDF_SHORT_SEC_SIZE(h)	(1 << (h)->h_short_sec_size_p2)
+#define CDF_SHORT_SEC_SIZE(h)	((size_t)(1 << (h)->h_short_sec_size_p2))
 #define CDF_SHORT_SEC_POS(h, secid) ((secid) * CDF_SHORT_SEC_SIZE(h))
 
 typedef int32_t	cdf_dirid_t;
@@ -170,6 +170,8 @@ typedef struct {
                 uint64_t	_pi_u64;
                 int64_t		_pi_s64;
                 cdf_timestamp_t	_pi_tp;
+		float		_pi_f;
+		double		_pi_d;
                 struct {
                         uint32_t s_len;
                         const char *s_buf;
@@ -181,6 +183,8 @@ typedef struct {
 #define pi_s32	pi_val._pi_s32
 #define pi_u16	pi_val._pi_u16
 #define pi_s16	pi_val._pi_s16
+#define pi_f	pi_val._pi_f
+#define pi_d	pi_val._pi_d
 #define pi_tp	pi_val._pi_tp
 #define pi_str	pi_val._pi_str
 } cdf_property_info_t;
