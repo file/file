@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.46 2011/09/16 21:23:59 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.47 2012/02/17 04:23:30 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -341,18 +341,25 @@ ssize_t
 cdf_read_sector(const cdf_info_t *info, void *buf, size_t offs, size_t len,
     const cdf_header_t *h, cdf_secid_t id)
 {
-	assert((size_t)CDF_SEC_SIZE(h) == len);
-	return cdf_read(info, (off_t)CDF_SEC_POS(h, id),
-	    ((char *)buf) + offs, len);
+	size_t ss = CDF_SEC_SIZE(h);
+	size_t pos = CDF_SEC_POS(h, id);
+	assert(ss == len);
+	return cdf_read(info, (off_t)pos, ((char *)buf) + offs, len);
 }
 
 ssize_t
 cdf_read_short_sector(const cdf_stream_t *sst, void *buf, size_t offs,
     size_t len, const cdf_header_t *h, cdf_secid_t id)
 {
-	assert((size_t)CDF_SHORT_SEC_SIZE(h) == len);
+	size_t ss = CDF_SHORT_SEC_SIZE(h);
+	size_t pos = CDF_SHORT_SEC_POS(h, id);
+	assert(ss == len);
+	if (sst->sst_len < (size_t)id) {
+		DPRINTF(("bad sector id %d > %d\n", id, sst->sst_len));
+		return -1;
+	}
 	(void)memcpy(((char *)buf) + offs,
-	    ((const char *)sst->sst_tab) + CDF_SHORT_SEC_POS(h, id), len);
+	    ((const char *)sst->sst_tab) + pos, len);
 	return len;
 }
 
@@ -868,6 +875,8 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 				    inp[i].pi_str.s_buf));
 				l = 4 + (uint32_t)CDF_ROUND(l, sizeof(l));
 				o += l >> 2;
+				if (q + o >= e)
+					goto out;
 				o4 = o * sizeof(uint32_t);
 			}
 			i--;
