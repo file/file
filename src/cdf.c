@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.48 2012/02/17 05:27:45 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.49 2012/02/20 20:04:37 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -807,7 +807,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		}
 		inp[i].pi_id = CDF_GETUINT32(p, i << 1);
 		inp[i].pi_type = CDF_GETUINT32(q, 0);
-		DPRINTF(("%" SIZE_T_FORMAT "u) id=%x type=%x offs=%tx,%d\n", i,
+		DPRINTF(("%" SIZE_T_FORMAT "u) id=%x type=%x offs=0x%tx,0x%x\n", i,
 		    inp[i].pi_id, inp[i].pi_type, q - p,
 		    CDF_GETUINT32(p, (i << 1) + 1)));
 		if (inp[i].pi_type & CDF_VECTOR) {
@@ -895,8 +895,9 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 				    "u, s = %s\n", l,
 				    CDF_ROUND(l, sizeof(l)),
 				    inp[i].pi_str.s_buf));
-				l = 4 + (uint32_t)CDF_ROUND(l, sizeof(l));
-				o += l >> 2;
+				if (l & 1)
+					l++;
+				o += l >> 1;
 				if (q + o >= e)
 					goto out;
 				o4 = o * sizeof(uint32_t);
