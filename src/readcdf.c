@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.28 2012/02/17 05:27:45 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.29 2012/02/20 20:04:58 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -285,7 +285,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 		    d = &dir.dir_tab[j];
 		    for (k = 0; k < sizeof(name); k++)
 			name[k] = (char)cdf_tole2(d->d_name[k]);
-		    if (strstr(name, "WordDocument") == 0) {
+		    if (strstr(name, "WordDocument") != 0) {
 			str = "msword";
 			break;
 		    }
