@@ -1,3 +1,8 @@
+2012-04-03  18:26  Christos Zoulas <christos@zoulas.com>
+
+	* Add windows date field types
+	* More info for windows shortcuts (incomplete)
+
 2012-02-20  17:33  Christos Zoulas <christos@zoulas.com>
 
 	* Fix CDF parsing issues found by CERT's fuzzing tool (Will Dormann)

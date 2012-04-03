@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.135 2011/09/20 15:30:14 christos Exp $
+ * @(#)$File: file.h,v 1.136 2012/04/03 22:25:07 christos Exp $
  */
 
 #ifndef __file_h__
@@ -207,7 +207,10 @@ struct magic {
 #define				FILE_BEID3	39
 #define				FILE_LEID3	40
 #define				FILE_INDIRECT	41
-#define				FILE_NAMES_SIZE	42/* size of array to contain all names */
+#define				FILE_QWDATE	42
+#define				FILE_LEQWDATE	43
+#define				FILE_BEQWDATE	44
+#define				FILE_NAMES_SIZE	45/* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
@@ -386,7 +389,9 @@ struct magic_set {
 typedef unsigned long unichar;
 
 struct stat;
-protected const char *file_fmttime(uint32_t, int);
+#define FILE_T_LOCAL	1
+#define FILE_T_WINDOWS	2
+protected const char *file_fmttime(uint64_t, int);
 protected int file_buffer(struct magic_set *, int, const char *, const void *,
     size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
