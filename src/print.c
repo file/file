@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.70 2011/08/14 09:03:12 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.71 2011/09/20 15:28:09 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -153,7 +153,7 @@ file_mdump(struct magic *m)
 		case FILE_BEDATE:
 		case FILE_MEDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.l, 1));
+			    file_fmttime(m->value.l, FILE_T_LOCAL));
 			break;
 		case FILE_LDATE:
 		case FILE_LELDATE:
@@ -161,18 +161,23 @@ file_mdump(struct magic *m)
 		case FILE_MELDATE:
 			(void)fprintf(stderr, "%s,",
 			    file_fmttime(m->value.l, 0));
-			break;
 		case FILE_QDATE:
 		case FILE_LEQDATE:
 		case FILE_BEQDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime((uint32_t)m->value.q, 1));
+			    file_fmttime(m->value.q, FILE_T_LOCAL));
 			break;
 		case FILE_QLDATE:
 		case FILE_LEQLDATE:
 		case FILE_BEQLDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime((uint32_t)m->value.q, 0));
+			    file_fmttime(m->value.q, 0));
+			break;
+		case FILE_QWDATE:
+		case FILE_LEQWDATE:
+		case FILE_BEQWDATE:
+			(void)fprintf(stderr, "%s,",
+			    file_fmttime(m->value.q, FILE_T_WINDOWS));
 			break;
 		case FILE_FLOAT:
 		case FILE_BEFLOAT:
@@ -216,13 +221,19 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 }
 
 protected const char *
-file_fmttime(uint32_t v, int local)
+file_fmttime(uint64_t v, int flags)
 {
 	char *pp;
 	time_t t = (time_t)v;
 	struct tm *tm;
 
-	if (local) {
+	if (flags & FILE_T_WINDOWS) {
+		struct timespec ts;
+		cdf_timestamp_to_timespec(&ts, t);
+		t = ts.tv_sec;
+	}
+
+	if (flags & FILE_T_LOCAL) {
 		pp = ctime(&t);
 	} else {
 #ifndef HAVE_DAYLIGHT

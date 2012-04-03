@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.172 2011/11/16 19:24:22 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.173 2011/12/08 12:38:24 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -213,6 +213,9 @@ static const struct type_tbl_s {
 	{ XX("leid3"),		FILE_LEID3,		FILE_FMT_NUM },
 	{ XX("beid3"),		FILE_BEID3,		FILE_FMT_NUM },
 	{ XX("indirect"),	FILE_INDIRECT,		FILE_FMT_NONE },
+	{ XX("qwdate"),		FILE_QWDATE,		FILE_FMT_STR },
+	{ XX("leqwdate"),	FILE_LEQWDATE,		FILE_FMT_STR },
+	{ XX("beqwdate"),	FILE_BEQWDATE,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 # undef XX
 # undef XX_NULL
@@ -465,6 +468,9 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_QLDATE:
 	case FILE_LEQLDATE:
 	case FILE_BEQLDATE:
+	case FILE_QWDATE:
+	case FILE_LEQWDATE:
+	case FILE_BEQWDATE:
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
@@ -617,6 +623,9 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_QLDATE:
 	case FILE_LEQLDATE:
 	case FILE_BEQLDATE:
+	case FILE_QWDATE:
+	case FILE_LEQWDATE:
+	case FILE_BEQWDATE:
 	case FILE_FLOAT:
 	case FILE_BEFLOAT:
 	case FILE_LEFLOAT:
@@ -953,10 +962,13 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_LEQUAD:
 		case FILE_QDATE:
 		case FILE_QLDATE:
+		case FILE_QWDATE:
 		case FILE_BEQDATE:
 		case FILE_BEQLDATE:
+		case FILE_BEQWDATE:
 		case FILE_LEQDATE:
 		case FILE_LEQLDATE:
+		case FILE_LEQWDATE:
 		case FILE_DOUBLE:
 		case FILE_BEDOUBLE:
 		case FILE_LEDOUBLE:

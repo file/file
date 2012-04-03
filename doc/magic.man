@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.70 2011/12/05 22:58:35 rrt Exp $
-.Dd April 20, 2011
+.\" $File: magic.man,v 1.71 2011/12/07 11:58:24 rrt Exp $
+.Dd April 3, 2012
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -121,6 +121,8 @@ local time rather than UTC.
 .It Dv qldate
 An eight-byte value interpreted as a UNIX-style date, but interpreted as
 local time rather than UTC.
+.It Dv qwdate
+An eight-byte value interpreted as a Windows-style date.
 .It Dv beid3
 A 32-bit ID3 length in big-endian byte order.
 .It Dv beshort
@@ -147,6 +149,9 @@ than UTC.
 An eight-byte value in big-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
+.It Dv beqwdate
+An eight-byte value in big-endian byte order,
+interpreted as a Windows-style date.
 .It Dv bestring16
 A two-byte unicode (UCS16) string in big-endian byte order.
 .It Dv leid3
@@ -175,6 +180,9 @@ than UTC.
 An eight-byte value in little-endian byte order,
 interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
+.It Dv leqwdate
+An eight-byte value in little-endian byte order,
+interpreted as a Windows-style date.
 .It Dv lestring16
 A two-byte unicode (UCS16) string in little-endian byte order.
 .It Dv melong
