@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.42 2012/02/07 21:35:03 christos Exp $
+# $File: linux,v 1.43 2012/04/06 14:35:31 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -35,6 +35,8 @@
 0	string		\01\03\020\20	Minix-386 impure executable
 >28	long		!0		not stripped
 0	string		\01\03\040\20	Minix-386 executable
+>28	long		!0		not stripped
+0	string		\01\03\04\20	Minix-386 NSYM/GNU executable
 >28	long		!0		not stripped
 # core dump file, from Bill Reynolds <bill@goshawk.lanl.gov>
 216	lelong		0421		Linux/i386 core file
