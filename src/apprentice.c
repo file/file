@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.174 2012/04/03 22:25:07 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.175 2012/04/06 21:14:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -212,7 +212,7 @@ static const struct type_tbl_s {
 	{ XX("ledouble"),	FILE_LEDOUBLE,		FILE_FMT_DOUBLE },
 	{ XX("leid3"),		FILE_LEID3,		FILE_FMT_NUM },
 	{ XX("beid3"),		FILE_BEID3,		FILE_FMT_NUM },
-	{ XX("indirect"),	FILE_INDIRECT,		FILE_FMT_NONE },
+	{ XX("indirect"),	FILE_INDIRECT,		FILE_FMT_NUM },
 	{ XX("qwdate"),		FILE_QWDATE,		FILE_FMT_STR },
 	{ XX("leqwdate"),	FILE_LEQWDATE,		FILE_FMT_STR },
 	{ XX("beqwdate"),	FILE_BEQWDATE,		FILE_FMT_STR },
@@ -475,6 +475,9 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
 		val += 8 * MULT;
+		break;
+
+	case FILE_INDIRECT:
 		break;
 
 	default:
