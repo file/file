@@ -1,3 +1,7 @@
+2012-04-06  17:18  Christos Zoulas <christos@zoulas.com>
+
+	* Fixes for indirect offsets to handle apple disk formats
+
 2012-04-03  18:26  Christos Zoulas <christos@zoulas.com>
 
 	* Add windows date field types
