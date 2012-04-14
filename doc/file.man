@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.97 2011/10/17 20:18:05 christos Exp $
+.\" $File: file.man,v 1.98 2011/12/08 12:12:46 rrt Exp $
 .Dd October 17, 2011
 .Dt FILE __CSECTION__
 .Os
@@ -570,6 +570,11 @@ Add a zip library so we can peek inside Office2007 documents to
 figure out what they are.
 .Pp
 Add an option to print URLs for the sources of the file descriptions.
+.Pp
+Combine script searches and add a way to map executable names to MIME
+types (e.g. have a magic value for !:mime which causes the resulting
+string to be looked up in a table). This would avoid adding the same
+magic repeatedly for each new hash-bang interpreter.
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
