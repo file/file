@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.72 2012/04/03 22:25:07 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.73 2012/05/07 18:23:11 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -44,6 +44,8 @@ FILE_RCSID("@(#)$File: print.c,v 1.72 2012/04/03 22:25:07 christos Exp $")
 #include <time.h>
 
 #define SZOF(a)	(sizeof(a) / sizeof(a[0]))
+
+#include "cdf.h"
 
 #ifndef COMPILE_ONLY
 protected void
