@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.136 2012/04/03 22:25:07 christos Exp $
+ * @(#)$File: file.h,v 1.137 2012/05/15 17:14:36 christos Exp $
  */
 
 #ifndef __file_h__
@@ -62,6 +62,7 @@
 #include <inttypes.h>
 #endif
 #include <regex.h>
+#include <time.h>
 #include <sys/types.h>
 #include <sys/param.h>
 /* Do this here and now, because struct stat gets re-defined on solaris */
@@ -391,7 +392,7 @@ typedef unsigned long unichar;
 struct stat;
 #define FILE_T_LOCAL	1
 #define FILE_T_WINDOWS	2
-protected const char *file_fmttime(uint64_t, int);
+protected const char *file_fmttime(uint64_t, int, char *);
 protected int file_buffer(struct magic_set *, int, const char *, const void *,
     size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
@@ -481,6 +482,12 @@ size_t strlcat(char *dst, const char *src, size_t siz);
 #ifndef HAVE_GETLINE
 ssize_t getline(char **dst, size_t *len, FILE *fp);
 ssize_t getdelim(char **dst, size_t *len, int delimiter, FILE *fp);
+#endif
+#ifndef HAVE_CTIME_R
+char   *ctime_r(const time_t *, char *);
+#endif
+#ifndef HAVE_ASCTIME_R
+char   *asctime_r(const struct tm *, char *);
 #endif
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)

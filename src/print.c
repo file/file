@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.73 2012/05/07 18:23:11 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.74 2012/05/15 17:14:36 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -51,7 +51,8 @@ FILE_RCSID("@(#)$File: print.c,v 1.73 2012/05/07 18:23:11 christos Exp $")
 protected void
 file_mdump(struct magic *m)
 {
-	private const char optyp[] = { FILE_OPS };
+	static const char optyp[] = { FILE_OPS };
+	char tbuf[26];
 
 	(void) fprintf(stderr, "%u: %.*s %u", m->lineno,
 	    (m->cont_level & 7) + 1, ">>>>>>>>", m->offset);
@@ -155,31 +156,31 @@ file_mdump(struct magic *m)
 		case FILE_BEDATE:
 		case FILE_MEDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.l, FILE_T_LOCAL));
+			    file_fmttime(m->value.l, FILE_T_LOCAL, tbuf));
 			break;
 		case FILE_LDATE:
 		case FILE_LELDATE:
 		case FILE_BELDATE:
 		case FILE_MELDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.l, 0));
+			    file_fmttime(m->value.l, 0, tbuf));
 		case FILE_QDATE:
 		case FILE_LEQDATE:
 		case FILE_BEQDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.q, FILE_T_LOCAL));
+			    file_fmttime(m->value.q, FILE_T_LOCAL, tbuf));
 			break;
 		case FILE_QLDATE:
 		case FILE_LEQLDATE:
 		case FILE_BEQLDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.q, 0));
+			    file_fmttime(m->value.q, 0, tbuf));
 			break;
 		case FILE_QWDATE:
 		case FILE_LEQWDATE:
 		case FILE_BEQWDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.q, FILE_T_WINDOWS));
+			    file_fmttime(m->value.q, FILE_T_WINDOWS, tbuf));
 			break;
 		case FILE_FLOAT:
 		case FILE_BEFLOAT:
@@ -223,7 +224,7 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 }
 
 protected const char *
-file_fmttime(uint64_t v, int flags)
+file_fmttime(uint64_t v, int flags, char *buf)
 {
 	char *pp;
 	time_t t = (time_t)v;
@@ -236,7 +237,7 @@ file_fmttime(uint64_t v, int flags)
 	}
 
 	if (flags & FILE_T_LOCAL) {
-		pp = ctime(&t);
+		pp = ctime_r(&t, buf);
 	} else {
 #ifndef HAVE_DAYLIGHT
 		private int daylight = 0;
@@ -258,7 +259,7 @@ file_fmttime(uint64_t v, int flags)
 		tm = gmtime(&t);
 		if (tm == NULL)
 			goto out;
-		pp = asctime(tm);
+		pp = asctime_r(tm, buf);
 	}
 
 	if (pp == NULL)
@@ -266,5 +267,5 @@ file_fmttime(uint64_t v, int flags)
 	pp[strcspn(pp, "\n")] = '\0';
 	return pp;
 out:
-	return "*Invalid time*";
+	return strcpy(buf, "*Invalid time*");
 }
