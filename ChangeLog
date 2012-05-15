@@ -1,3 +1,7 @@
+2012-05-15  13:12  Christos Zoulas <christos@zoulas.com>
+
+	* use ctime_r, asctime_r
+
 2012-04-06  17:18  Christos Zoulas <christos@zoulas.com>
 
 	* Fixes for indirect offsets to handle apple disk formats

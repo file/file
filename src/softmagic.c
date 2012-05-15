@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.148 2012/04/03 22:25:07 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.149 2012/04/06 21:15:54 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -363,7 +363,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	float vf;
 	double vd;
 	int64_t t = 0;
- 	char buf[128];
+ 	char buf[128], tbuf[26];
 	union VALUETYPE *p = &ms->ms_value;
 
   	switch (m->type) {
@@ -462,8 +462,8 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEDATE:
 	case FILE_LEDATE:
 	case FILE_MEDATE:
-		if (file_printf(ms, m->desc, file_fmttime(p->l,
-		    FILE_T_LOCAL)) == -1)
+		if (file_printf(ms, m->desc, file_fmttime(p->l, FILE_T_LOCAL,
+		    tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -472,7 +472,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BELDATE:
 	case FILE_LELDATE:
 	case FILE_MELDATE:
-		if (file_printf(ms, m->desc, file_fmttime(p->l, 0)) == -1)
+		if (file_printf(ms, m->desc, file_fmttime(p->l, 0, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -480,8 +480,8 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_QDATE:
 	case FILE_BEQDATE:
 	case FILE_LEQDATE:
-		if (file_printf(ms, m->desc, file_fmttime(p->q,
-		    FILE_T_LOCAL)) == -1)
+		if (file_printf(ms, m->desc, file_fmttime(p->q, FILE_T_LOCAL,
+		    tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -489,7 +489,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_QLDATE:
 	case FILE_BEQLDATE:
 	case FILE_LEQLDATE:
-		if (file_printf(ms, m->desc, file_fmttime(p->q, 0)) == -1)
+		if (file_printf(ms, m->desc, file_fmttime(p->q, 0, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -497,8 +497,8 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_QWDATE:
 	case FILE_BEQWDATE:
 	case FILE_LEQWDATE:
-		if (file_printf(ms, m->desc, file_fmttime(p->q,
-		    FILE_T_WINDOWS)) == -1)
+		if (file_printf(ms, m->desc, file_fmttime(p->q, FILE_T_WINDOWS,
+		    tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
