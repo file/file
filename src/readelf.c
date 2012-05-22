@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.90 2011/08/23 08:01:12 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.91 2012/05/22 01:55:12 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -416,6 +416,10 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	    (FLAGS_DID_NOTE|FLAGS_DID_BUILD_ID))
 		goto core;
 
+	if (namesz == 5 && strcmp((char *)&nbuf[noff], "SuSE") == 0 &&
+	    xnh_type == NT_GNU_VERSION && descsz == 2) {
+	    file_printf(ms, ", for SuSE %d.%d", nbuf[doff], nbuf[doff + 1]);
+	}
 	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
 	    xnh_type == NT_GNU_VERSION && descsz == 16) {
 		uint32_t desc[4];
