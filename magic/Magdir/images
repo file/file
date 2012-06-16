@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.71 2011/09/22 19:30:43 christos Exp $
+# $File: images,v 1.72 2011/12/08 12:12:46 rrt Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -401,16 +401,6 @@
 #>12	beshort	3		RP175
 #>12	beshort	4		YUV
 
-#------------------------------------------------------------------------------
-#
-# Marco Schmidt (marcoschmidt@users.sourceforge.net) -- an image  file format
-# for the EPOC operating system, which is used with PDAs like those from Psion
-#
-# see http://huizen.dds.nl/~frodol/psiconv/html/Index.html for a description
-# of various EPOC file formats
-
-0	string \x37\x00\x00\x10\x42\x00\x00\x10\x00\x00\x00\x00\x39\x64\x39\x47 EPOC MBM image file
-
 # PCX image files
 # From: Dan Fandrich <dan@coneharvesters.com>
 0	beshort		0x0a00	PCX ver. 2.5 image data
@@ -664,6 +654,11 @@
 # Wavelet Scalar Quantization format used in gray-scale fingerprint images
 # From Tano M Fotang <mfotang@quanteq.com>
 0	string	\xff\xa0\xff\xa8\x00	Wavelet Scalar Quantization image data
+
+# Polar Monitor Bitmap (.pmb) used as logo for Polar Electro watches
+# From: Markus Heidelberg <markus.heidelberg at web.de>
+0	string/t	[BitmapInfo2]	Polar Monitor Bitmap text
+!:mime	image/x-polar-monitor-bitmap
 
 # JPEG 2000 Code Stream Bitmap
 # From Petr Splichal <psplicha@redhat.com>
