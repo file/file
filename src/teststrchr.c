@@ -1,16 +1,20 @@
-#define NULL 0
-main()
+#ifdef TEST
+#include <stdio.h>
+#include <err.h>
+#include <string.h>
+int
+main(void)
 {
 	char	*strchr();
 
-	if (strchr("abc", 'c') == NULL)
-		printf("error 1\n");
+	if (strchr(1, "abc", 'c') == NULL)
+		errx(1, "error 1");
 	if (strchr("abc", 'd') != NULL)
-		printf("error 2\n");
+		errx(1, "error 2");
 	if (strchr("abc", 'a') == NULL)
-		printf("error 3\n");
+		errx(1, "error 3");
 	if (strchr("abc", 'c') == NULL)
-		printf("error 4\n");
+		errx(1, "error 4");
+	return 0;
 }
-
-
+#endif
