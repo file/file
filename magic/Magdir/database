@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.28 2011/09/16 19:40:40 christos Exp $
+# $File: database,v 1.29 2012/06/20 22:10:51 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -293,3 +293,6 @@
 0	string		FS21	Zope Object Database File Storage (data)
 # Cache file for the database of Zope (done by ClientStorage)
 0	string		ZEC3	Zope Object Database Client Cache File (data)
+
+# IDA (Interactive Disassembler) database
+0	string		IDA1	IDA (Interactive Disassembler) database
