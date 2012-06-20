@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.32 2012/06/20 21:39:56 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.33 2012/06/20 21:52:36 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -309,13 +309,19 @@ out1:
         free(sat.sat_tab);
 out0:
         if (i != 1) {
-		if (i == -1)
-		    if (file_printf(ms, "Composite Document File V2 Document")
-			== -1)
+		if (i == -1) {
+		    if (NOTMIME(ms)) {
+			if (file_printf(ms,
+			    "Composite Document File V2 Document") == -1)
 			    return -1;
-                if (*expn)
-                        if (file_printf(ms, ", %s%s", corrupt, expn) == -1)
-                                return -1;
+			if (*expn)
+			    if (file_printf(ms, ", %s%s", corrupt, expn) == -1)
+				return -1;
+		    } else {
+			if (file_printf(ms, "application/CDFV2-corrupt") == -1)
+			    return -1;
+		    }
+		}
                 i = 1;
         }
         return i;
