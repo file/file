@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: perl,v 1.17 2011/12/16 16:24:40 rrt Exp $
+# $File: perl,v 1.18 2012/06/16 15:45:08 christos Exp $
 # perl:  file(1) magic for Larry Wall's perl language.
 #
 # The `eval' lines recognizes an outrageously clever hack.
@@ -43,8 +43,8 @@
 0	search/1/W	\n\=head1\ 	Perl POD document text
 0	search/1/W	\=head2\ 	Perl POD document text
 0	search/1/W	\n\=head2\ 	Perl POD document text
-0	search/1/W	\=encoding\	Perl POD document text
-0	search/1/W	\n\=encoding\	Perl POD document text
+0	search/1/W	\=encoding\ 	Perl POD document text
+0	search/1/W	\n\=encoding\ 	Perl POD document text
 
 
 # Perl Storable data files.
