@@ -5,7 +5,7 @@ include_HEADERS = magic.h
 bin_PROGRAMS = file
 
 AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
-AM_CFLAGS = @WARNINGS@
+AM_CFLAGS = $(CFLAG_VISIBILITY) @WARNINGS@
 
 libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
 	encoding.c compress.c is_tar.c readelf.c print.c fsmagic.c \

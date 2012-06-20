@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.90 2011/08/23 08:01:12 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.91 2012/05/22 01:55:12 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -58,7 +58,9 @@ private size_t donote(struct magic_set *, void *, size_t, size_t, int,
 
 private uint16_t getu16(int, uint16_t);
 private uint32_t getu32(int, uint32_t);
+#ifndef USE_ARRAY_FOR_64BIT_TYPES
 private uint64_t getu64(int, uint64_t);
+#endif
 
 private uint16_t
 getu16(int swap, uint16_t value)
@@ -100,6 +102,7 @@ getu32(int swap, uint32_t value)
 		return value;
 }
 
+#ifndef USE_ARRAY_FOR_64BIT_TYPES
 private uint64_t
 getu64(int swap, uint64_t value)
 {
@@ -124,6 +127,7 @@ getu64(int swap, uint64_t value)
 	} else
 		return value;
 }
+#endif
 
 #define elf_getu16(swap, value) getu16(swap, value)
 #define elf_getu32(swap, value) getu32(swap, value)
