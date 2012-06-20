@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.137 2012/05/15 17:14:36 christos Exp $
+ * @(#)$File: file.h,v 1.138 2012/06/20 22:33:43 christos Exp $
  */
 
 #ifndef __file_h__
@@ -82,10 +82,18 @@
 #endif
 
 #define private static
+
+#if HAVE_VISIBILITY
+#define public  __attribute__ ((__visibility__("default")))
+#ifndef protected
+#define protected __attribute__ ((__visibility__("hidden")))
+#endif
+#else
+#define public
 #ifndef protected
 #define protected
 #endif
-#define public
+#endif
 
 #ifndef __arraycount
 #define __arraycount(a) (sizeof(a) / sizeof(a[0]))
