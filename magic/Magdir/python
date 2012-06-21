@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.20 2011/12/13 13:53:14 christos Exp $
+# $File: python,v 1.21 2012/06/21 01:12:51 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -58,4 +58,9 @@
 >&0	regex	\^\\s*except.*:	Python script text executable
 !:mime text/x-python
 >&0	search/4096	finally:	Python script text executable
+!:mime text/x-python
+
+# def name(args, args):
+0	regex	 \^(\ |\\t)*def\ +[a-zA-Z]+
+>&0	regex	\ *\\(([a-zA-Z]|,|\ )*\\):$ Python script text executable
 !:mime text/x-python
