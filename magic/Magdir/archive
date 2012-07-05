@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.70 2011/10/26 15:44:47 christos Exp $
+# $File: archive,v 1.71 2012/07/05 21:48:24 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -684,16 +684,21 @@
 >>>38		regex	[!-OQ-~]+		Zip data (MIME type "%s"?)
 !:mime	application/zip
 
+# Java Jar files
+>(26.s+30)	leshort	0xcafe		Java Jar file data (zip)
+!:mime	application/jar
+
 # Generic zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 #   Next line excludes specialized formats:
->26    string          !\x8\0\0\0mimetype	Zip archive data
+>(26.s+30)	leshort	!0xcafe
+>>26    string          !\x8\0\0\0mimetype	Zip archive data
 !:mime	application/zip
->>4	byte		0x09		\b, at least v0.9 to extract
->>4	byte		0x0a		\b, at least v1.0 to extract
->>4	byte		0x0b		\b, at least v1.1 to extract
->>4	byte		0x14		\b, at least v2.0 to extract
->>4	byte		0x2d		\b, at least v3.0 to extract
->>0x161	string		WINZIP		\b, WinZIP self-extracting
+>>>4	byte		0x09		\b, at least v0.9 to extract
+>>>4	byte		0x0a		\b, at least v1.0 to extract
+>>>4	byte		0x0b		\b, at least v1.1 to extract
+>>>4	byte		0x14		\b, at least v2.0 to extract
+>>>4	byte		0x2d		\b, at least v3.0 to extract
+>>>0x161	string		WINZIP		\b, WinZIP self-extracting
 
 # StarView Metafile
 # From Pierre Ducroquet <pinaraf@pinaraf.info>
