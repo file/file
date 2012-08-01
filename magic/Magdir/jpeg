@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.15 2009/09/19 16:28:10 christos Exp $
+# $File: jpeg,v 1.17 2012/08/01 12:11:01 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -153,7 +153,20 @@
 0	string		hsi1		JPEG image data, HSI proprietary
 
 # From: David Santinoli <david@santinoli.com>
-0	string		\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A	JPEG 2000 image data
+0	string		\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A	JPEG 2000
+# From: Johan van der Knijff <johan.vanderknijff@kb.nl>
+# Added sub-entries for JP2, JPX, JPM and MJ2 formats; added mimetypes
+# https://github.com/bitsgalore/jp2kMagic
+#
+# Now read value of 'Brand' field, which yields a few possibilities:
+>20	string		\x6a\x70\x32\x20	Part 1 (JP2)
+!:mime	image/jp2
+>20	string		\x6a\x70\x78\x20	Part 2 (JPX)
+!:mime	image/jpx
+>20	string		\x6a\x70\x6d\x20	Part 6 (JPM)
+!:mime	image/jpm
+>20	string		\x6d\x6a\x70\x32	Part 3 (MJ2)
+!:mime	video/mj2
 
 # Type: JPEG 2000 codesream
 # From: Mathieu Malaterre <mathieu.malaterre@gmail.com>
