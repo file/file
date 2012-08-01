@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.17 2012/08/01 12:11:01 christos Exp $
+# $File: jpeg,v 1.18 2012/08/01 12:12:36 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -156,6 +156,7 @@
 0	string		\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A	JPEG 2000
 # From: Johan van der Knijff <johan.vanderknijff@kb.nl>
 # Added sub-entries for JP2, JPX, JPM and MJ2 formats; added mimetypes
+# https://github.com/bitsgalore/jp2kMagic
 #
 # Now read value of 'Brand' field, which yields a few possibilities:
 >20	string		\x6a\x70\x32\x20	Part 1 (JP2)
