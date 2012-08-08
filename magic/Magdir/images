@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.72 2011/12/08 12:12:46 rrt Exp $
+# $File: images,v 1.73 2012/06/16 14:43:36 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -659,10 +659,6 @@
 # From: Markus Heidelberg <markus.heidelberg at web.de>
 0	string/t	[BitmapInfo2]	Polar Monitor Bitmap text
 !:mime	image/x-polar-monitor-bitmap
-
-# JPEG 2000 Code Stream Bitmap
-# From Petr Splichal <psplicha@redhat.com>
-0	string	\xFF\x4F\xFF\x51\x00	JPEG-2000 Code Stream Bitmap data
 
 # From: Rick Richardson <rick.richardson@comcast.net>
 0	string	GARMIN\ BITMAP\ 01	Garmin Bitmap file
