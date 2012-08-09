@@ -83,7 +83,7 @@ trying to do any interpretation
 flag:   none   +     -     #     (blank)
 width:  n    0n    *
 prec:   none   .0    .n     .*
-modifier:    F N L h l ll    ('F' and 'N' are ms-dos/16-bit specific)
+modifier:    F N L h l ll z t    ('F' and 'N' are ms-dos/16-bit specific)
 type:  d i o u x X f e g E G c s p n
 
 
@@ -108,7 +108,7 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.8 2011/12/08 12:38:24 rrt Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.9 2012/08/09 16:33:30 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -385,7 +385,12 @@ static int dispatch(xprintf_struct *s)
     prec = -1;                  /* no .prec specified */
 
   /* modifier */
-  if (*SRCTXT == 'L' || *SRCTXT == 'h' || *SRCTXT == 'l') {
+  switch (*SRCTXT) {
+  case 'L':
+  case 'h':
+  case 'l':
+  case 'z':
+  case 't':
     modifier = *SRCTXT;
     SRCTXT++;
     if (modifier=='l' && *SRCTXT=='l') {
@@ -477,6 +482,10 @@ static int dispatch(xprintf_struct *s)
       return print_it(s, (size_t)approx_width, format_string, va_arg(s->vargs, long int));
     case 'h':
       return print_it(s, (size_t)approx_width, format_string, va_arg(s->vargs, int));
+    case 'z':
+      return print_it(s, (size_t)approx_width, format_string, va_arg(s->vargs, size_t));
+    case 't':
+      return print_it(s, (size_t)approx_width, format_string, va_arg(s->vargs, ptrdiff_t));
       /* 'int' instead of 'short int' because default promotion is 'int' */
     default:
       INCOHERENT();
