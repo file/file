@@ -108,7 +108,7 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.9 2012/08/09 16:33:30 christos Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.10 2012/08/09 16:40:04 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -118,6 +118,9 @@ FILE_RCSID("@(#)$File: vasprintf.c,v 1.9 2012/08/09 16:33:30 christos Exp $")
 #include <ctype.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif
+#ifdef HAVE_STDDEF_H
+#include <stddef.h>
 #endif
 
 #define ALLOC_CHUNK 2048
@@ -398,8 +401,11 @@ static int dispatch(xprintf_struct *s)
       modifier = 'L';  /* 'll' == 'L'      long long == long double */
     } /* only for compatibility ; not portable */
     INCOHERENT_TEST();
-  } else
+    break;
+  default:
     modifier = -1;              /* no modifier specified */
+    break;
+  }
 
   /* type */
   type = *SRCTXT;
