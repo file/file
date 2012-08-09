@@ -81,7 +81,7 @@ AC_HEADER_STDC
 AC_HEADER_MAJOR
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(stdint.h fcntl.h locale.h stdint.h inttypes.h unistd.h)
-AC_CHECK_HEADERS(utime.h wchar.h wctype.h limits.h)
+AC_CHECK_HEADERS(stddef.h utime.h wchar.h wctype.h limits.h)
 AC_CHECK_HEADERS(getopt.h err.h)
 AC_CHECK_HEADERS(sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h)
 AC_CHECK_HEADERS(zlib.h)
