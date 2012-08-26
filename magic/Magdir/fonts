@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.23 2010/09/20 18:55:20 rrt Exp $
+# $File: fonts,v 1.24 2012/08/26 10:32:10 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -83,3 +83,11 @@
 # EOT
 34	string		LP		Embedded OpenType (EOT)
 !:mime application/vnd.ms-fontobject
+
+# Web Open Font Format (.woff)
+# http://www.w3.org/TR/WOFF/
+0	string		wOFF	Web Open Font Format
+>4	belong		x	\b, flavor %d
+>8	belong		x	\b, length %d
+>20	beshort		x	\b, version %hd
+>22	beshort		x	\b.%hd
