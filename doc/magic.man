@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.71 2011/12/07 11:58:24 rrt Exp $
+.\" $File: magic.man,v 1.72 2012/04/03 22:25:07 christos Exp $
 .Dd April 3, 2012
 .Dt MAGIC __FSECTION__
 .Os
@@ -86,7 +86,7 @@ flag forces the test to be done for text files, while the
 .Dq b
 flag forces the test to be done for binary files.
 .It Dv pstring
-A Pascal-style string where the first byte/short/int is interpreted as the an
+A Pascal-style string where the first byte/short/int is interpreted as the
 unsigned length.
 The length defaults to byte and can be specified as a modifier.
 The following modifiers are supported:
