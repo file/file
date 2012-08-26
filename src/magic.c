@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.73 2011/05/10 17:08:14 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.74 2011/05/26 01:27:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -101,16 +101,21 @@ get_default_magic(void)
 	if ((home = getenv("HOME")) == NULL)
 		return MAGIC;
 
-	if (asprintf(&hmagicpath, "%s/.magic", home) < 0)
+	if (asprintf(&hmagicpath, "%s/.magic.mgc", home) < 0)
 		return MAGIC;
-	if (stat(hmagicpath, &st) == -1)
-		goto out;
-	if (S_ISDIR(st.st_mode)) {
+	if (stat(hmagicpath, &st) == -1) {
 		free(hmagicpath);
-		if (asprintf(&hmagicpath, "%s/%s", home, hmagic) < 0)
+		if (asprintf(&hmagicpath, "%s/.magic", home) < 0)
 			return MAGIC;
-		if (access(hmagicpath, R_OK) == -1)
+		if (stat(hmagicpath, &st) == -1)
 			goto out;
+		if (S_ISDIR(st.st_mode)) {
+			free(hmagicpath);
+			if (asprintf(&hmagicpath, "%s/%s", home, hmagic) < 0)
+				return MAGIC;
+			if (access(hmagicpath, R_OK) == -1)
+				goto out;
+		}
 	}
 
 	if (asprintf(&default_magic, "%s:%s", hmagicpath, MAGIC) < 0)
