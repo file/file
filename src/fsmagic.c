@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.63 2011/07/12 11:31:59 rrt Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.64 2011/08/14 09:03:12 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -98,7 +98,7 @@ handle_mime(struct magic_set *ms, int mime, const char *str)
 protected int
 file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 {
-	int ret = 0;
+	int ret = 0, did = 0;
 	int mime = ms->flags & MAGIC_MIME;
 #ifdef	S_IFLNK
 	char buf[BUFSIZ+4];
@@ -111,6 +111,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	if (fn == NULL)
 		return 0;
 
+#define COMMA	(did++ ? ", " : "")
 	/*
 	 * Fstat is cheaper but fails for files you don't have read perms on.
 	 * On 4.2BSD and similar systems, use lstat() to identify symlinks.
@@ -136,18 +137,18 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 
 	if (!mime) {
 #ifdef S_ISUID
-		if (sb->st_mode & S_ISUID) 
-			if (file_printf(ms, "setuid ") == -1)
+		if (sb->st_mode & S_ISUID)
+			if (file_printf(ms, "%ssetuid", COMMA) == -1)
 				return -1;
 #endif
 #ifdef S_ISGID
 		if (sb->st_mode & S_ISGID) 
-			if (file_printf(ms, "setgid ") == -1)
+			if (file_printf(ms, "%ssetgid", COMMA) == -1)
 				return -1;
 #endif
 #ifdef S_ISVTX
 		if (sb->st_mode & S_ISVTX) 
-			if (file_printf(ms, "sticky ") == -1)
+			if (file_printf(ms, "%ssticky", COMMA) == -1)
 				return -1;
 #endif
 	}
@@ -157,7 +158,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		if (mime) {
 			if (handle_mime(ms, mime, "directory") == -1)
 				return -1;
-		} else if (file_printf(ms, "directory") == -1)
+		} else if (file_printf(ms, "%sdirectory", COMMA) == -1)
 			return -1;
 		return 1;
 #ifdef S_IFCHR
@@ -175,18 +176,18 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		} else {
 #ifdef HAVE_STAT_ST_RDEV
 # ifdef dv_unit
-			if (file_printf(ms, "character special (%d/%d/%d)",
-			    major(sb->st_rdev), dv_unit(sb->st_rdev),
+			if (file_printf(ms, "%scharacter special (%d/%d/%d)",
+			    COMMA, major(sb->st_rdev), dv_unit(sb->st_rdev),
 					dv_subunit(sb->st_rdev)) == -1)
 				return -1;
 # else
-			if (file_printf(ms, "character special (%ld/%ld)",
-			    (long)major(sb->st_rdev), (long)minor(sb->st_rdev))
-			    == -1)
+			if (file_printf(ms, "%scharacter special (%ld/%ld)",
+			    COMMA, (long)major(sb->st_rdev),
+			    (long)minor(sb->st_rdev)) == -1)
 				return -1;
 # endif
 #else
-			if (file_printf(ms, "character special") == -1)
+			if (file_printf(ms, "%scharacter special", COMMA) == -1)
 				return -1;
 #endif
 		}
@@ -207,17 +208,18 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		} else {
 #ifdef HAVE_STAT_ST_RDEV
 # ifdef dv_unit
-			if (file_printf(ms, "block special (%d/%d/%d)",
-					major(sb->st_rdev), dv_unit(sb->st_rdev),
-					dv_subunit(sb->st_rdev)) == -1)
+			if (file_printf(ms, "%sblock special (%d/%d/%d)",
+			    COMMA, major(sb->st_rdev), dv_unit(sb->st_rdev),
+			    dv_subunit(sb->st_rdev)) == -1)
 				return -1;
 # else
-			if (file_printf(ms, "block special (%ld/%ld)",
-					(long)major(sb->st_rdev), (long)minor(sb->st_rdev)) == -1)
+			if (file_printf(ms, "%sblock special (%ld/%ld)",
+			    COMMA, (long)major(sb->st_rdev),
+			    (long)minor(sb->st_rdev)) == -1)
 				return -1;
 # endif
 #else
-			if (file_printf(ms, "block special") == -1)
+			if (file_printf(ms, "%sblock special", COMMA) == -1)
 				return -1;
 #endif
 		}
@@ -231,7 +233,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		if (mime) {
 			if (handle_mime(ms, mime, "fifo") == -1)
 				return -1;
-		} else if (file_printf(ms, "fifo (named pipe)") == -1)
+		} else if (file_printf(ms, "%sfifo (named pipe)", COMMA) == -1)
 			return -1;
 		return 1;
 #endif
@@ -240,7 +242,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		if (mime) {
 			if (handle_mime(ms, mime, "door") == -1)
 				return -1;
-		} else if (file_printf(ms, "door") == -1)
+		} else if (file_printf(ms, "%sdoor", COMMA) == -1)
 			return -1;
 		return 1;
 #endif
@@ -256,7 +258,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				if (handle_mime(ms, mime, "symlink") == -1)
 					return -1;
 			} else if (file_printf(ms,
-			    "unreadable symlink `%s' (%s)", fn,
+			    "%sunreadable symlink `%s' (%s)", COMMA, fn,
 			    strerror(errno)) == -1)
 				return -1;
 			return 1;
@@ -285,7 +287,8 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 						    "x-path-too-long") == -1)
 							return -1;
 					} else if (file_printf(ms,
-					    "path too long: `%s'", fn) == -1)
+					    "%spath too long: `%s'", COMMA,
+					    fn) == -1)
 						return -1;
 					return 1;
 				}
@@ -311,8 +314,8 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			if (mime) {
 				if (handle_mime(ms, mime, "symlink") == -1)
 					return -1;
-			} else if (file_printf(ms, "symbolic link to `%s'",
-			    buf) == -1)
+			} else if (file_printf(ms, "%ssymbolic link to `%s'",
+			    COMMA, buf) == -1)
 				return -1;
 		}
 		return 1;
@@ -323,7 +326,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		if (mime) {
 			if (handle_mime(ms, mime, "socket") == -1)
 				return -1;
-		} else if (file_printf(ms, "socket") == -1)
+		} else if (file_printf(ms, "%ssocket", COMMA) == -1)
 			return -1;
 		return 1;
 #endif
@@ -352,7 +355,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		if (mime) {
 			if (handle_mime(ms, mime, "x-empty") == -1)
 				return -1;
-		} else if (file_printf(ms, "empty") == -1)
+		} else if (file_printf(ms, "%sempty", COMMA) == -1)
 			return -1;
 		return 1;
 	}
