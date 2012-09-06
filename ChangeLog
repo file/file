@@ -1,3 +1,14 @@
+2012-09-06  10:40  Christos Zoulas <christos@zoulas.com>
+
+	* make --version exit 0 (Matthew Schultz)
+	* add string/T (Jan Kaluza)
+
+2012-08-09  2:15  Christos Zoulas <christos@zoulas.com>
+
+	* add z and t modifiers for our own vasprintf
+	* search for $HOME/.magic.mgc if it is there first
+	* fix reads from a pipe, and preserve errno
+
 2012-05-15  13:12  Christos Zoulas <christos@zoulas.com>
 
 	* use ctime_r, asctime_r
