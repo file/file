@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.73 2012/08/26 10:08:29 christos Exp $
-.Dd April 3, 2012
+.\" $File: magic.man,v 1.74 2012/09/06 14:42:39 christos Exp $
+.Dd September 6, 2012
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -51,7 +51,7 @@ A 64-bit double precision IEEE floating point number in this machine's native by
 .It Dv string
 A string of bytes.
 The string type specification can be optionally followed
-by /[WwcCtb]*.
+by /[WwcCtbT]*.
 The
 .Dq W
 flag compacts whitespace in the target, which must
@@ -85,6 +85,10 @@ The
 flag forces the test to be done for text files, while the
 .Dq b
 flag forces the test to be done for binary files.
+The
+.Dq T
+flag causes the string to be trimmed, i.e. leading and trailing whitespace
+is deleted before the string is printed.
 .It Dv pstring
 A Pascal-style string where the first byte/short/int is interpreted as the
 unsigned length.
