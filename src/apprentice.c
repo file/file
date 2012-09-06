@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.174 2012/04/03 22:25:07 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.175 2012/04/06 21:14:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1436,6 +1436,9 @@ parse(struct magic_set *ms, struct magic_entry **mentryp, uint32_t *nmentryp,
 					break;
 				case CHAR_TEXTTEST:
 					m->str_flags |= STRING_TEXTTEST;
+					break;
+				case CHAR_TRIM:
+					m->str_flags |= STRING_TRIM;
 					break;
 				case CHAR_PSTRING_1_LE:
 					if (m->type != FILE_PSTRING)
