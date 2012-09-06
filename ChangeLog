@@ -1,3 +1,8 @@
+2012-09-06  10:40  Christos Zoulas <christos@zoulas.com>
+
+	* make --version exit 0 (Matthew Schultz)
+	* add string/T (Jan Kaluza)
+
 2012-05-15  13:12  Christos Zoulas <christos@zoulas.com>
 
 	* use ctime_r, asctime_r
