@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.145 2011/12/08 12:12:46 rrt Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.146 2012/09/06 14:18:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -252,7 +252,7 @@ main(int argc, char *argv[])
 			(void)fprintf(stdout, "%s-%s\n", progname, VERSION);
 			(void)fprintf(stdout, "magic file from %s\n",
 				       magicfile);
-			return 1;
+			return 0;
 		case 'z':
 			flags |= MAGIC_COMPRESS;
 			break;
