@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.79 2012/06/21 01:06:54 christos Exp $
+# $File: msdos,v 1.80 2012/06/21 01:10:53 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -891,3 +891,15 @@
 
 # Windows Imaging (WIM) Image
 0	string/b	MSWIM\000\000\000	Windows imaging (WIM) image
+
+# The second byte of these signatures is a file version; I don't know what, 
+# if anything, produced files with version numbers 0-2.
+# From: John Elliott <johne@seasip.demon.co.uk>
+0	string	\xfc\x03\x00	Mallard BASIC program data (v1.11)
+0	string	\xfc\x04\x00	Mallard BASIC program data (v1.29+)
+0	string	\xfc\x03\x01	Mallard BASIC protected program data (v1.11)
+0	string	\xfc\x04\x01	Mallard BASIC protected program data (v1.29+)
+
+0	string	MIOPEN		Mallard BASIC Jetsam data
+0	string	Jetsam0		Mallard BASIC Jetsam index data
+
