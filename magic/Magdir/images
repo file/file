@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.73 2012/06/16 14:43:36 christos Exp $
+# $File: images,v 1.74 2012/08/08 14:10:58 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -605,9 +605,61 @@
 >12	string	THUM		DjVu page thumbnails
 !:mime	image/vnd.djvu
 
+# Originally by Marc Espie
+# Modified by Robert Minsk <robertminsk at yahoo.com>
+# http://www.openexr.com/openexrfilelayout.pdf
+0	lelong		20000630	OpenEXR image data,
+!:mime image/x-exr
+>4	lelong&0x000000ff x		version %d,
+>4	lelong		^0x00000200	storage: scanline
+>4	lelong		&0x00000200	storage: tiled
+>8	search/0x1000	compression\0	\b, compression:
+>>&16	byte		0		none
+>>&16	byte		1		rle
+>>&16	byte		2		zips
+>>&16	byte		3		zip
+>>&16	byte		4		piz
+>>&16	byte		5		pxr24
+>>&16	byte		6		b44
+>>&16	byte		7		b44a
+>>&16	byte		>7		unknown
+>8	 search/0x1000	dataWindow\0	\b, dataWindow:
+>>&10	lelong		x		(%d
+>>&14	lelong		x		%d)-
+>>&18	lelong		x		\b(%d
+>>&22	lelong		x		%d)
+>8	search/0x1000	displayWindow\0	\b, displayWindow:
+>>&10	lelong		x		(%d
+>>&14	lelong		x		%d)-
+>>&18	lelong		x		\b(%d
+>>&22	lelong		x		%d)
+>8	search/0x1000	lineOrder\0	 \b, lineOrder:
+>>&14	byte		0		increasing y
+>>&14	byte		1		decreasing y
+>>&14	byte		2		random y
+>>&14	byte		>2		unknown
 
-# From Marc Espie
-0	lelong	20000630		OpenEXR image data
+# SMPTE Digital Picture Exchange Format, SMPTE DPX
+#
+# ANSI/SMPTE 268M-1994, SMPTE Standard for File Format for Digital
+# Moving-Picture Exchange (DPX), v1.0, 18 February 1994
+# Robert Minsk <robertminsk at yahoo.com>
+0	string		SDPX	DPX image data, big-endian,
+!:mime image/x-dpx
+>768	beshort		<=3
+>>772	belong		x	%dx
+>>776	belong		x	\b%d,
+>768	beshort		>3
+>>776	belong		x	%dx
+>>772	belong		x	\b%d,
+>768	beshort		0	left to right/top to bottom
+>768	beshort		1	right to left/top to bottom
+>768	beshort		2	left to right/bottom to top
+>768	beshort		3	right to left/bottom to top
+>768	beshort		4	top to bottom/left to right
+>768	beshort		5	top to bottom/right to left
+>768	leshort		6	bottom to top/left to right
+>768	leshort		7	bottom to top/right to left
 
 # From: Tom Hilinski <tom.hilinski@comcast.net>
 # http://www.unidata.ucar.edu/packages/netcdf/
