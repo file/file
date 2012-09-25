@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.75 2012/09/21 13:03:31 christos Exp $
+# $File: images,v 1.76 2012/09/25 00:55:20 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -646,7 +646,7 @@
 # Robert Minsk <robertminsk at yahoo.com>
 0	string		SDPX	DPX image data, big-endian,
 !:mime image/x-dpx
->768	beshort		<=3
+>768	beshort		<4
 >>772	belong		x	%dx
 >>776	belong		x	\b%d,
 >768	beshort		>3
