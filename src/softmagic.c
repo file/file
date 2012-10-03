@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.151 2012/09/06 14:42:39 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.152 2012/10/03 22:13:21 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -130,8 +130,9 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		      (!text && (m->str_flags & (STRING_TEXTTEST | STRING_BINTEST)) == STRING_TEXTTEST))) ||
 		    (m->flag & mode) != mode) {
 			/* Skip sub-tests */
-			while (magic[magindex + 1].cont_level != 0 &&
-			       ++magindex < nmagic)
+			while (magindex + 1 < nmagic &&
+                               magic[magindex + 1].cont_level != 0 &&
+			       ++magindex)
 				continue;
 			continue; /* Skip to next top-level test*/
 		}
