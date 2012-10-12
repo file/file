@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.61 2011/01/10 14:01:10 christos Exp $
+# $File: filesystems,v 1.62 2012/09/06 14:42:39 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -53,13 +53,21 @@
 >>>>11	ulelong	>0		\b, %d sectors/track
 >>>>15	ulelong	>0		\b, %d cylinders
 
-# updated by Joerg Jenderek at Sep 2007
+# x86 boot sector updated by Joerg Jenderek at Sep 2007,May 2011
+# for any allowed sector sizes
+30		search/481	\x55\xAA	
+# to display x86 boot sector (40) before old one (strength=50), SYSLINUX MBR (?) and DOS BPB information (71) like in previous file version
+!:strength +72
+# for sector sizes < 512 Bytes
+>11		uleshort	<512		
+>>(11.s-2)	uleshort	0xAA55		x86 boot sector
+# for sector sizes with 512 or more Bytes
+>0x1FE		leshort		0xAA55		x86 boot sector
+# keep old x86 boot sector as dummy for mbr and bootloader displaying
 # only for sector sizes with 512 or more Bytes
-0x1FE	leshort	0xAA55			x86 boot sector
-# to do also for sectors < than 512 Bytes and some other files, GRR
-#30	search/481	\x55\xAA	x86 boot sector
-# not for BeOS floppy 1440k, MBRs
-#(11.s-2) uleshort	0xAA55		x86 boot sector
+0x1FE	leshort	0xAA55			
+# to display information (51) before DOS BPB (strength=71) and after DOS floppy (120) like in old file version
+!:strength +21
 >2	string	OSBS			\b, OS/BS MBR
 # J\xf6rg Jenderek <joerg dot jenderek at web dot de>
 >0x8C	string	Invalid\ partition\ table	\b, MS-DOS MBR
@@ -762,6 +770,7 @@
 >>>>>492		string		RENF		\b, FAT (12 bit)
 >>>>>495		string		RENF		\b, FAT (16 bit)
 # x86 bootloader end
+
 # updated by Joerg Jenderek at Sep 2007
 >3	ubyte	0			
 #no active flag
@@ -776,111 +785,12 @@
 >>>>>>>466	ubyte	0x05			\b, extended partition table
 >>>>>>>466	ubyte	0x0F			\b, extended partition table (LBA)
 >>>>>>>466	ubyte	0x0			\b, extended partition table (last)	
-# JuMP short     bootcodeoffset NOP assembler instructions will usually be EB xx 90
-# http://mirror.href.com/thestarman/asm/2bytejumps.htmm#FWD
-# older drives may use Near JuMP instruction E9 xx xx
->0		lelong&0x009000EB	0x009000EB 
->0		lelong&0x000000E9	0x000000E9 
-# minimal short forward jump found 03cx??
-# maximal short forward jump is 07fx
->1		ubyte			<0xff	\b, code offset 0x%x
-# mtools-3.9.8/msdos.h
-# usual values are marked with comments to get only informations of strange FAT systems
-# valid sectorsize must be a power of 2 from 32 to 32768
->>11		uleshort&0x000f	x		
->>>11		uleshort	<32769		
->>>>11		uleshort	>31		
->>>>>21		ubyte&0xf0	0xF0		
->>>>>>3		string		>\0		\b, OEM-ID "%8.8s"
-#http://mirror.href.com/thestarman/asm/debug/debug2.htm#IHC
->>>>>>>8	string		IHC		\b cached by Windows 9M
->>>>>>11	uleshort	>512		\b, Bytes/sector %u
-#>>>>>>11	uleshort	=512		\b, Bytes/sector %u=512 (usual)
->>>>>>11	uleshort	<512		\b, Bytes/sector %u
->>>>>>13	ubyte		>1		\b, sectors/cluster %u
-#>>>>>>13	ubyte		=1		\b, sectors/cluster %u (usual on Floppies)
->>>>>>14	uleshort	>32		\b, reserved sectors %u
-#>>>>>>14	uleshort	=32		\b, reserved sectors %u (usual Fat32)
-#>>>>>>14	uleshort	>1		\b, reserved sectors %u
-#>>>>>>14	uleshort	=1		\b, reserved sectors %u (usual FAT12,FAT16)
->>>>>>14	uleshort	<1		\b, reserved sectors %u
->>>>>>16	ubyte		>2		\b, FATs %u
-#>>>>>>16	ubyte		=2		\b, FATs %u (usual)
->>>>>>16	ubyte		=1		\b, FAT  %u
->>>>>>16	ubyte		>0
->>>>>>17	uleshort	>0		\b, root entries %u
-#>>>>>>17	uleshort	=0		\b, root entries %u=0 (usual Fat32)
->>>>>>19	uleshort	>0		\b, sectors %u (volumes <=32 MB) 
-#>>>>>>19	uleshort	=0		\b, sectors %u=0 (usual Fat32)
->>>>>>21	ubyte		>0xF0		\b, Media descriptor 0x%x
-#>>>>>>21	ubyte		=0xF0		\b, Media descriptor 0x%x (usual floppy)
->>>>>>21	ubyte		<0xF0		\b, Media descriptor 0x%x
->>>>>>22	uleshort	>0		\b, sectors/FAT %u
-#>>>>>>22	uleshort	=0		\b, sectors/FAT %u=0 (usual Fat32)
->>>>>>26	ubyte		>2		\b, heads %u
-#>>>>>>26	ubyte		=2		\b, heads %u (usual floppy)
->>>>>>26	ubyte		=1		\b, heads %u
-#skip for Digital Research DOS (version 3.41) 1440 kB Bootdisk
->>>>>>38	ubyte		!0x70		
->>>>>>>28	ulelong		>0		\b, hidden sectors %u
-#>>>>>>>28	ulelong		=0		\b, hidden sectors %u (usual floppy)
->>>>>>>32	ulelong		>0		\b, sectors %u (volumes > 32 MB) 
-#>>>>>>>32	ulelong		=0		\b, sectors %u (volumes > 32 MB)
-# FAT<32 specific 
->>>>>>82	string		!FAT32
-#>>>>>>>36	ubyte		0x80		\b, physical drive 0x%x=0x80 (usual harddisk)
-#>>>>>>>36	ubyte		0		\b, physical drive 0x%x=0 (usual floppy)
->>>>>>>36	ubyte		!0x80		
->>>>>>>>36	ubyte		!0		\b, physical drive 0x%x
->>>>>>>37	ubyte		>0		\b, reserved 0x%x
-#>>>>>>>37	ubyte		=0		\b, reserved 0x%x
->>>>>>>38	ubyte		>0x29		\b, dos < 4.0 BootSector (0x%x)
->>>>>>>38	ubyte		<0x29		\b, dos < 4.0 BootSector (0x%x)
->>>>>>>38	ubyte		=0x29
->>>>>>>>39	ulelong		x		\b, serial number 0x%x
->>>>>>>>43	string		<NO\ NAME	\b, label: "%11.11s"
->>>>>>>>43	string		>NO\ NAME	\b, label: "%11.11s"
->>>>>>>>43	string		=NO\ NAME	\b, unlabeled
->>>>>>>54	string		FAT		\b, FAT
->>>>>>>>54	string		FAT12		\b (12 bit)
->>>>>>>>54	string		FAT16		\b (16 bit)
-# FAT32 specific
->>>>>>82	string		FAT32		\b, FAT (32 bit)
->>>>>>>36	ulelong		x		\b, sectors/FAT %u
->>>>>>>40	uleshort	>0		\b, extension flags %u
-#>>>>>>>40	uleshort	=0		\b, extension flags %u
->>>>>>>42	uleshort	>0		\b, fsVersion %u
-#>>>>>>>42	uleshort	=0		\b, fsVersion %u (usual)
->>>>>>>44	ulelong		>2		\b, rootdir cluster %u
-#>>>>>>>44	ulelong		=2		\b, rootdir cluster %u
-#>>>>>>>44	ulelong		=1		\b, rootdir cluster %u
->>>>>>>48	uleshort	>1		\b, infoSector %u
-#>>>>>>>48	uleshort	=1		\b, infoSector %u (usual)
->>>>>>>48	uleshort	<1		\b, infoSector %u
->>>>>>>50	uleshort	>6		\b, Backup boot sector %u
-#>>>>>>>50	uleshort	=6		\b, Backup boot sector %u (usual) 
->>>>>>>50	uleshort	<6		\b, Backup boot sector %u
->>>>>>>54	ulelong		>0		\b, reserved1 0x%x
->>>>>>>58	ulelong		>0		\b, reserved2 0x%x
->>>>>>>62	ulelong		>0		\b, reserved3 0x%x
-# same structure as FAT1X 
->>>>>>>64	ubyte		>0x80		\b, physical drive 0x%x
-#>>>>>>>64	ubyte		=0x80		\b, physical drive 0x%x=80 (usual harddisk)
->>>>>>>64	ubyte&0x7F	>0		\b, physical drive 0x%x
-#>>>>>>>64	ubyte		=0		\b, physical drive 0x%x=0 (usual floppy)
->>>>>>>65	ubyte		>0		\b, reserved 0x%x
->>>>>>>66	ubyte		>0x29		\b, dos < 4.0 BootSector (0x%x)
->>>>>>>66	ubyte		<0x29		\b, dos < 4.0 BootSector (0x%x)
->>>>>>>66	ubyte		=0x29
->>>>>>>>67	ulelong		x		\b, serial number 0x%x
->>>>>>>>71	string		<NO\ NAME	\b, label: "%11.11s"
->>>>>>>71	string		>NO\ NAME	\b, label: "%11.11s"
->>>>>>>71	string		=NO\ NAME	\b, unlabeled
-### FATs end
+
+# DOS x86 sector separated and moved from "x86 boot sector" by Joerg Jenderek at May 2011
+
 >0x200	lelong	0x82564557		\b, BSD disklabel
 # FATX 
 0		string		FATX		FATX filesystem data
-
 
 # Minix filesystems - Juan Cespedes <cespedes@debian.org>
 0x410	leshort		0x137f
@@ -994,6 +904,168 @@
 >>>>>>0x21b 	string		>\0		\b, configuration file %-s
 >>>>>0x217 	ulong		!0xffffffff	
 >>>>>>0x217 	string		>\0		\b, configuration file %-s
+
+# DOS x86 sector updated and separated from "x86 boot sector" by Joerg Jenderek at May 2011
+# JuMP short     bootcodeoffset NOP assembler instructions will usually be EB xx 90
+# over BIOS parameter block (BPB)
+# http://thestarman.pcministry.com/asm/2bytejumps.htm#FWD
+# older drives may use Near JuMP instruction E9 xx xx
+# minimal short forward jump found 0x29 for bootloaders or 0x0
+# maximal short forward jump is 0x7f
+# OEM-ID is empty or contain readable bytes
+0		ulelong&0x804000E9	0x000000E9	
+# mtools-3.9.8/msdos.h
+# usual values are marked with comments to get only informations of strange FAT systems
+# valid sectorsize must be a power of 2 from 32 to 32768
+>11		uleshort&0xf001f	0	
+>>11		uleshort	<32769		
+>>>11		uleshort	>31		
+>>>>21		ubyte&0xf0	0xF0		
+>>>>>0		ubyte		0xEB		
+>>>>>>1		ubyte		x		\b, code offset 0x%x+2
+>>>>>0		ubyte		0xE9		
+>>>>>>1		uleshort	x		\b, code offset 0x%x+2
+>>>>>3		string		>\0		\b, OEM-ID "%-.8s"
+#http://mirror.href.com/thestarman/asm/debug/debug2.htm#IHC
+>>>>>>8		string		IHC		\b cached by Windows 9M
+>>>>>11		uleshort	>512		\b, Bytes/sector %u
+#>>>>>11	uleshort	=512		\b, Bytes/sector %u=512 (usual)
+>>>>>11		uleshort	<512		\b, Bytes/sector %u
+>>>>>13		ubyte		>1		\b, sectors/cluster %u
+#>>>>>13	ubyte		=1		\b, sectors/cluster %u (usual on Floppies)
+>>>>>82		string		FAT32		
+>>>>>>14	uleshort	!32		\b, reserved sectors %u
+#>>>>>>14	uleshort	=32		\b, reserved sectors %u (usual Fat32)
+>>>>>82		string		!FAT32		
+>>>>>>14	uleshort	>1		\b, reserved sectors %u
+#>>>>>>14	uleshort	=1		\b, reserved sectors %u (usual FAT12,FAT16)
+#>>>>>>14	uleshort	0		\b, reserved sectors %u (usual NTFS)
+>>>>>16		ubyte		>2		\b, FATs %u
+#>>>>>16	ubyte		=2		\b, FATs %u (usual)
+>>>>>16		ubyte		=1		\b, FAT  %u
+>>>>>16		ubyte		>0
+>>>>>17		uleshort	>0		\b, root entries %u
+#>>>>>17	uleshort	=0		\b, root entries %u=0 (usual Fat32)
+>>>>>19		uleshort	>0		\b, sectors %u (volumes <=32 MB) 
+#>>>>>19	uleshort	=0		\b, sectors %u=0 (usual Fat32)
+>>>>>21		ubyte		>0xF0		\b, Media descriptor 0x%x
+#>>>>>21	ubyte		=0xF0		\b, Media descriptor 0x%x (usual floppy)
+>>>>>21		ubyte		<0xF0		\b, Media descriptor 0x%x
+>>>>>22		uleshort	>0		\b, sectors/FAT %u
+#>>>>>22	uleshort	=0		\b, sectors/FAT %u=0 (usual Fat32)
+>>>>>24		uleshort	x		\b, sectors/track %u
+>>>>>26		ubyte		>2		\b, heads %u
+#>>>>>26	ubyte		=2		\b, heads %u (usual floppy)
+>>>>>26		ubyte		=1		\b, heads %u
+# valid only for sector sizes with more then 32 Bytes
+>>>>>11		uleshort	>32		
+# skip for Digital Research DOS (version 3.41) 1440 kB Bootdisk
+>>>>>>38	ubyte		!0x70		
+>>>>>>>28	ulelong		>0		\b, hidden sectors %u
+#>>>>>>>28	ulelong		=0		\b, hidden sectors %u (usual floppy)
+>>>>>>>32	ulelong		>0		\b, sectors %u (volumes > 32 MB) 
+#>>>>>>>32	ulelong		=0		\b, sectors %u (volumes > 32 MB)
+# FAT<32 bit specific 
+>>>>>>>82	string		!FAT32
+#>>>>>>>>36	ubyte		0x80		\b, physical drive 0x%x=0x80 (usual harddisk)
+#>>>>>>>>36	ubyte		0		\b, physical drive 0x%x=0 (usual floppy)
+>>>>>>>>36	ubyte		!0x80		
+>>>>>>>>>36	ubyte		!0		\b, physical drive 0x%x
+>>>>>>>>37	ubyte		>0		\b, reserved 0x%x
+#>>>>>>>>37	ubyte		=0		\b, reserved 0x%x
+# value is 0x80 for NTFS
+>>>>>>>>38	ubyte		!0x29		\b, dos < 4.0 BootSector (0x%x)
+>>>>>>>>38	ubyte		=0x29
+>>>>>>>>>39	ulelong		x		\b, serial number 0x%x
+>>>>>>>>>43	string		<NO\ NAME	\b, label: "%11.11s"
+>>>>>>>>>43	string		>NO\ NAME	\b, label: "%11.11s"
+>>>>>>>>>43	string		=NO\ NAME	\b, unlabeled
+# there exist some old floppies without word FAT at offset 54
+# a word like "FATnm   " is only a hint for a FAT size on nm-bits
+# Normally the number of clusters is calculated by the values of BPP.
+# if it is small enough FAT is 12 bit, if it is too big enough FAT is 32 bit,
+# otherwise FAT is 16 bit.
+# http://homepage.ntlworld.com/jonathan.deboynepollard/FGA/determining-fat-widths.html
+>>>>>>54	string		FAT		\b, FAT
+>>>>>>>54	string		FAT12		\b (12 bit)
+>>>>>>>54	string		FAT16		\b (16 bit)
+# FAT32 bit specific
+>>>>>82		string		FAT32		\b, FAT (32 bit)
+>>>>>>36	ulelong		x		\b, sectors/FAT %u
+# http://technet.microsoft.com/en-us/library/cc977221.aspx
+>>>>>>40	uleshort	>0		\b, extension flags 0x%x
+#>>>>>>40	uleshort	=0		\b, extension flags %u
+>>>>>>42	uleshort	>0		\b, fsVersion %u
+#>>>>>>42	uleshort	=0		\b, fsVersion %u (usual)
+>>>>>>44	ulelong		>2		\b, rootdir cluster %u
+#>>>>>>44	ulelong		=2		\b, rootdir cluster %u
+#>>>>>>44	ulelong		=1		\b, rootdir cluster %u
+>>>>>>48	uleshort	>1		\b, infoSector %u
+#>>>>>>48	uleshort	=1		\b, infoSector %u (usual)
+>>>>>>48	uleshort	<1		\b, infoSector %u
+>>>>>>50	uleshort	>6		\b, Backup boot sector %u
+#>>>>>>50	uleshort	=6		\b, Backup boot sector %u (usual) 
+>>>>>>50	uleshort	<6		\b, Backup boot sector %u
+# corrected by Joerg Jenderek at Feb 2011 according to http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
+>>>>>>52	ulelong		>0		\b, reserved1 0x%x
+>>>>>>56	ulelong		>0		\b, reserved2 0x%x
+>>>>>>60	ulelong		>0		\b, reserved3 0x%x
+# same structure as FAT1X 
+#>>>>>>64	ubyte		=0x80		\b, physical drive 0x%x=80 (usual harddisk)
+#>>>>>>64	ubyte		=0		\b, physical drive 0x%x=0 (usual floppy)
+>>>>>>64	ubyte		!0x80		
+>>>>>>>64	ubyte		>0		\b, physical drive 0x%x
+# in Windows NT bit 0 is a dirty flag to request chkdsk at boot time. bit 1 requests surface scan too
+>>>>>>65	ubyte		>0		\b, reserved 0x%x
+>>>>>>66	ubyte		!0x29		\b, dos < 4.0 BootSector (0x%x)
+>>>>>>66	ubyte		=0x29
+>>>>>>>67	ulelong		x		\b, serial number 0x%x
+>>>>>>>71	string		<NO\ NAME	\b, label: "%11.11s"
+>>>>>>>71	string		>NO\ NAME	\b, label: "%11.11s"
+>>>>>>>71	string		=NO\ NAME	\b, unlabeled
+# additional tests for floppy image added by Joerg Jenderek
+# no fixed disk 
+>>>>>21		ubyte		!0xF8		
+# floppy media with 12 bit FAT
+>>>>>>54	string		!FAT16		
+# test for FAT after bootsector
+>>>>>>>(11.s)	ulelong&0x00ffffF0	0x00ffffF0	\b, followed by FAT
+# floppy image
+!:mime application/x-ima
+# NTFS specific added by Joerg Jenderek at Mar 2011 according to http://thestarman.pcministry.com/asm/mbr/NTFSBR.htm
+# and http://homepage.ntlworld.com/jonathan.deboynepollard/FGA/bios-parameter-block.html
+# 0 FATs
+>>>>>16	ubyte		=0		
+# 0 root entries
+>>>>>>17	uleshort	=0		
+# 0 DOS sectors
+>>>>>>>19	uleshort	=0		
+# 0 sectors/FAT
+# dos < 4.0 BootSector value found is 0x80
+#38	ubyte		=0x80			\b, dos < 4.0 BootSector (0x%x)
+>>>>>>>>22	uleshort	=0		\b; NTFS
+>>>>>>>>>24	uleshort	>0		\b, sectors/track %u
+>>>>>>>>>36	ulelong		!0x800080	\b, physical drive 0x%x
+>>>>>>>>>40	ulequad		>0		\b, sectors %lld
+>>>>>>>>>48	ulequad		>0		\b, $MFT start cluster %lld
+>>>>>>>>>56	ulequad		>0		\b, $MFTMirror start cluster %lld
+# Values 0 to 127 represent MFT record sizes of 0 to 127 clusters.
+# Values 128 to 255 represent MFT record sizes of 2^(256-N) bytes. 
+>>>>>>>>>64	lelong		<256		
+>>>>>>>>>>64	lelong		<128		\b, clusters/RecordSegment %d
+>>>>>>>>>>64	ubyte		>127		\b, bytes/RecordSegment 2^(-1*%hhi)
+# Values 0 to 127 represent index block sizes of 0 to 127 clusters.
+# Values 128 to 255 represent index block sizes of 2^(256-N) byte
+>>>>>>>>>68	ulelong		<256		
+>>>>>>>>>>68	ulelong		<128		\b, clusters/index block %d
+#>>>>>>>>>>68	ulelong		>127		\b, bytes/index block 2^(256-%d)
+>>>>>>>>>>68	ubyte		>127		\b, bytes/index block 2^(-1*%hhi)
+>>>>>>>>>72	ulequad		x		\b, serial number 0%llx
+>>>>>>>>>80	ulelong		>0		\b, checksum 0x%x
+#>>>>>>>>>80	ulelong		=0		\b, checksum 0x%x=0 (usual)
+>>>>>>>>>0x258	ulelong&0x00009090	=0x00009090	
+>>>>>>>>>>&-92		indirect	x	\b; contains 
+### DOS boot sector end
 
 9564	lelong		0x00011954	Unix Fast File system [v1] (little-endian),
 >8404	string		x		last mounted on %s,
