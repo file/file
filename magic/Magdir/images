@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.75 2012/09/21 13:03:31 christos Exp $
+# $File: images,v 1.76 2012/09/25 00:55:20 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -203,6 +203,32 @@
 # From: Herbert Rosmanith <herp@wildsau.idv.uni.linz.at>
 0	string		Sfff		structured fax file
 
+# From: Joerg Jenderek <joerg.jen.der.ek@gmx.net>
+# most files with the extension .EPA and some with .BMP
+0	string		\x11\x06	Award BIOS Logo, 136 x 84
+!:mime	image/x-award-bioslogo
+0	string		\x11\x09	Award BIOS Logo, 136 x 126
+!:mime	image/x-award-bioslogo
+#0	string		\x07\x1f	BIOS Logo corrupted?
+# http://www.blackfiveservices.co.uk/awbmtools.shtml
+# http://biosgfx.narod.ru/v3/
+# http://biosgfx.narod.ru/abr-2/
+0	string		AWBM		
+>4	leshort		<1981		Award BIOS bitmap
+!:mime	image/x-award-bmp
+# image width is a multiple of 4
+>>4	leshort&0x0003	0		
+>>>4		leshort	x		\b, %d
+>>>6		leshort	x		x %d
+>>4	leshort&0x0003	>0		\b,
+>>>4	leshort&0x0003	=1		
+>>>>4		leshort	x		%d+3
+>>>4	leshort&0x0003	=2		
+>>>>4		leshort	x		%d+2
+>>>4	leshort&0x0003	=3		
+>>>>4		leshort	x		%d+1
+>>>6		leshort	x		x %d
+# at offset 8 starts imagedata followed by "RGB " marker
 
 # PC bitmaps (OS/2, Windows BMP files)  (Greg Roelofs, newt@uchicago.edu)
 0	string		BM
