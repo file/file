@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.62 2012/09/06 14:42:39 christos Exp $
+# $File: filesystems,v 1.63 2012/10/12 16:10:39 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -139,8 +139,7 @@
 >>>>>>>420	ubyte&0x0F	0Xf			\b ask
 >>>>>420	ubyte		x			\b)
 #
->271	string	Operating\ system\ loading 		
->>296	string	error\r					\b, SYSLINUX MBR (2.10)
+# SYSLINUX MBR moved
 # http://www.acronis.de/
 >362	string	MBR\ Error\ \0\r			
 >>376	string	ress\ any\ key\ to\ 			
@@ -201,12 +200,7 @@
 >>>>321		string	Loading\ stage1.5	\b, GRUB version x.y
 >>>380		string	Geom\0Hard\ Disk\0Read\0\ Error\0
 >>>>374		string	GRUB\ \0		\b, GRUB version n.m
-# http://syslinux.zytor.com/
->478	string	Boot\ failed\r			
->>495	string	LDLINUX\ SYS			\b, SYSLINUX bootloader (1.62)
->480	string	Boot\ failed\r			
->>495	string	LDLINUX\ SYS			\b, SYSLINUX bootloader (2.06 or 2.11)
->484	string	Boot\ error\r			\b, SYSLINUX bootloader (3.11)
+# SYSLINUX bootloader moved
 >395	string	chksum\0\ ERROR!\0		\b, Gujin bootloader
 # http://www.bcdwb.de/bcdw/index_e.htm
 >3	string	BCDL				
@@ -843,12 +837,55 @@
 
 0x18b	string	OS/2	OS/2 Boot Manager
 
-# updated by Joerg Jenderek at Oct 2008!!
+# updated by Joerg Jenderek at Oct 2008 and Sep 2012
 # http://syslinux.zytor.com/iso.php
-0	ulelong	0x7c40eafa		isolinux Loader
+# tested with versions 1.47,1.48,1.49,1.50,1.62,1.76,2.00,2.10;3.00,3.11,3.31,;3.70,3.71,3.73,3.75,3.80,3.82,3.84,3.86,4.01,4.03 and 4.05
+# assembler instructions: cli;jmp 0:7Cyy (yy=0x40,0x5e,0x6c,0x6e,0x77);nop;nop
+0	ulequad&0x909000007cc0eafa	0x909000007c40eafa	
+>631	search/689	ISOLINUX\ 	isolinux Loader
+>>&0	string		x		(version %-4.4s)
 # http://syslinux.zytor.com/pxe.php
-0	ulelong	0x007c05ea		pxelinux Loader
-0	ulelong	0x60669c66		pxelinux Loader
+# assembler instructions: jmp 7C05
+0	ulelong	0x007c05ea		pxelinux loader (version 2.13 or older)
+# assembler instructions: pushfd;pushad
+0	ulelong	0x60669c66		pxelinux loader
+# assembler instructions: jmp 05
+0	ulelong	0xc00005ea		pxelinux loader (version 3.70 or newer)
+# http://syslinux.zytor.com/wiki/index.php/SYSLINUX
+0	string	LDLINUX\ SYS\ 		SYSLINUX loader
+>12	string	x			(older version %-4.4s)
+0	string	\r\nSYSLINUX\ 		SYSLINUX loader
+>11	string	x			(version %-4.4s)
+# syslinux updated and separated from "x86 boot sector" by Joerg Jenderek at Sep 2012
+# assembler instructions: jmp yy (yy=0x3c,0x58);nop;"SYSLINUX"
+0	ulelong&0x80909bEB	0x009018EB	
+# OEM-ID not always "SYSLINUX"
+>434	search/47	Boot\ failed		
+# followed by \r\n\0 or :\ 
+>>482	search/132	\0LDLINUX\ SYS		Syslinux bootloader (version 2.13 or older)
+>>1	ubyte		0x58			Syslinux bootloader (version 3.0-3.9)
+>459	search/30	Boot\ error\r\n\0	
+>>1	ubyte		0x58			Syslinux bootloader (version 3.10 or newer)
+# SYSLINUX MBR updated and separated from "x86 boot sector" by Joerg Jenderek at Sep 2012
+# assembler instructions: mov di,0600h;mov cx,0100h
+16	search/4	\xbf\x00\x06\xb9\x00\x01		
+>94	search/249	Missing\ operating\ system		
+# followed by \r for versions older 3.35 , .\r for versions newer 3.52 and point for other
+# skip Ranish MBR
+>>408	search/4	HD1/\0	 				
+>>408	default		x					
+>>>250	search/118	\0Operating\ system\ load		SYSLINUX MBR
+# followed by "ing " or space
+>>>>292	search/98	error   				
+>>>>>&0	string		\r		    			(version 3.35 or older)
+>>>>>&0	string		.\r					(version 3.52 or newer)
+>>>>>&0	default		x					(version 3.36-3.51 )
+>368	search/106	\0Disk\ error\ on\ boot\r\n		SYSLINUX GPT-MBR
+>>156	search/10	\0Boot\ partition\ not\ found\r\n	
+>>>270	search/10	\0OS\ not\ bootable\r\n			(version 3.86 or older)
+>>174	search/10	\0Missing\ OS\r\n			
+>>>189	search/10	\0Multiple\ active\ partitions\r\n	(version 4.00 or newer)
+# SYSLINUX END
 
 # added by Joerg Jenderek
 # In the second sector (+0x200) are variables according to grub-0.97/stage2/asm.S or
