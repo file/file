@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.99 2012/04/14 10:22:06 rrt Exp $
-.Dd October 17, 2011
+.\" $File: file.man,v 1.100 2012/10/25 15:34:02 christos Exp $
+.Dd October 25, 2012
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -259,8 +259,16 @@ prepended.
 (If you want a newline, see the
 .Fl r
 option.)
+The magic pattern with the highest strength (see the
+.Fl l
+option) comes first.
 .It Fl l , Fl Fl list
-Print information about the strength of each magic pattern.
+Shows a list of patterns and their strength sorted descending by
+.Xr magic 4
+strength
+which is used for the matching (see also the
+.Fl k
+option).
 .It Fl L , Fl Fl dereference
 option causes symlinks to be followed, as the like-named option in
 .Xr ls 1
@@ -268,8 +276,6 @@ option causes symlinks to be followed, as the like-named option in
 This is the default if the environment variable
 .Ev POSIXLY_CORRECT
 is defined.
-.It Fl l
-Shows sorted patterns list in the order which is used for the matching.
 .It Fl m , Fl Fl magic-file Ar magicfiles
 Specify an alternate list of files and directories containing magic.
 This can be a single item, or a colon-separated list.
