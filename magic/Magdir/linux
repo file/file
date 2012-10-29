@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.44 2012/06/21 01:48:51 christos Exp $
+# $File: linux,v 1.45 2012/10/29 17:36:49 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -216,9 +216,11 @@
 # 0	lelong&0xFF00FFFF 0x17000301	ld86 SPARC executable
 
 # SYSLINUX boot logo files (from 'ppmtolss16' sources)
-# http://syslinux.zytor.com/
-#
+# http://www.syslinux.org/wiki/index.php/SYSLINUX#Display_graphic_from_filename:
+# file extension .lss .16
 0	lelong	=0x1413f33d		SYSLINUX' LSS16 image data
+# syslinux-4.05/mime/image/x-lss16.xml
+!:mime image/x-lss16
 >4	leshort	x			\b, width %d
 >6	leshort	x			\b, height %d
 
