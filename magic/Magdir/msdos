@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.80 2012/06/21 01:10:53 christos Exp $
+# $File: msdos,v 1.81 2012/09/08 02:17:30 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -708,6 +708,15 @@
 # Microsoft Outlook's Transport Neutral Encapsulation Format (TNEF)
 0	leshort		0x223e9f78	TNEF
 !:mime	application/vnd.ms-tnef
+
+# 4DOS help (.HLP) files added by Joerg Jenderek from source TPHELP.PAS 
+# of http://www.4dos.info/
+# pointer,HelpID[8]=4DHnnnmm
+0	ulelong	0x48443408		4DOS help file
+>4	string	x			\b, version %-4.4s
+
+# old binary Microsoft (.HLP) files added by Joerg Jenderek from http://file-extension.net/seeker/file_extension_hlp
+0	ulequad	0x3a000000024e4c	MS Advisor help file
 
 # HtmlHelp files (.chm)
 0	string/b	ITSF\003\000\000\000\x60\000\000\000\001\000\000\000	MS Windows HtmlHelp Data
