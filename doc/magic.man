@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.73 2012/08/26 10:08:29 christos Exp $
-.Dd September 6, 2012
+.\" $File: magic.man,v 1.74 2012/09/06 14:42:39 christos Exp $
+.Dd October 30, 2012
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -200,6 +200,18 @@ interpreted as a UNIX-style date, but interpreted as local time rather
 than UTC.
 .It Dv indirect
 Starting at the given offset, consult the magic database again.
+.It Dv name
+Define a
+.Dq named
+magic instance that can be called from another
+.Dv use
+magic entry, like a subroutine call.
+Named instance direct magic offsets are relative to the offset of the
+previous matched entry, but indirect offsets are relative to the beginning
+of the file as usual.
+Named magic entries always match.
+.It Dv use
+Recursively call the named magic starting from the current offset.
 .It Dv regex
 A regular expression match in extended POSIX regular expression syntax
 (like egrep).
