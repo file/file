@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.60 2011/12/08 12:38:24 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.61 2012/10/30 23:11:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -301,7 +301,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 protected int
 file_reset(struct magic_set *ms)
 {
-	if (ms->mlist == NULL) {
+	if (ms->mlist[0] == NULL) {
 		file_error(ms, 0, "no magic files loaded");
 		return -1;
 	}
