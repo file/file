@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: cafebabe,v 1.8 2009/09/19 16:28:08 christos Exp $
 # Cafe Babes unite!
 #
 # Since Java bytecode and Mach-O fat-files have the same magic number, the test
@@ -14,6 +14,7 @@
 # (and use as a hack). Let's not use 18, because the Mach-O people
 # might add another one or two as time goes by...
 #
+### JAVA START ###
 0	belong		0xcafebabe
 !:mime	application/x-java-applet
 >4	belong		>30		compiled Java class data,
@@ -28,13 +29,123 @@
 >>4	belong		0x0031		(Java 1.5)
 >>4	belong		0x0032		(Java 1.6)
 
+0	belong		0xcafed00d	JAR compressed with pack200,
+>>5	byte		x		version %d.
+>>4	byte		x		\b%d
+!:mime	application/x-java-pack200
 
-0	belong		0xcafebabe
->4	belong		1		Mach-O fat file with 1 architecture
->4	belong		>1
->>4	belong		<20		Mach-O fat file with %ld architectures
 
 0	belong		0xcafed00d	JAR compressed with pack200,
 >>5	byte		x		version %d.
 >>4	byte		x		\b%d
 !:mime	application/x-java-pack200
+
+### JAVA END ###
+### MACH-O START ###
+
+# 16777216 = 0x01000000
+0	name		mach-o		\b 
+>0	belong		0xffffffff	Any
+>0	belong		1		Vax
+>0	belong		6		MC680x0
+>0	belong		7		I386
+>0	belong		8		MIPS
+>0	belong		10		MC98000
+>0	belong		11		HPPA
+>0	belong		12		ARM
+>0	belong		13		MC88000
+>0	belong		14		SPARC
+>0	belong		15		I860
+>0	belong		16		ALPHA
+>0	belong		17		POWERPC
+>0	belong		16777223	X86_64
+>0	belong		16777233	POWERPC64
+>&(8.L)	indirect			: 
+
+# Mach object (BE)
+0	belong		0xfeedface	[contains: 
+>4	belong		6
+>>8	belong		1		mc68030
+>>8	belong		2		mc68040
+>>8	belong		3		mc68030_only
+>>8	belong		3		x86_64
+>>8	belong		4		x86_64_arch1
+>>12	belong		1		object
+>>12	belong		2		executable
+>>12	belong		3		fvmlib
+>>12	belong		4		core
+>>12	belong		5		preload
+>>12	belong		6		dylib
+>>12	belong		7		dylinker
+>>12	belong		8		bundle
+>0	belong		x		\b]
+
+# Mach object (LE32)
+0	lelong		0xfeedface	[contains: 
+>0	use		macho-le
+
+# Mach object (LE64)
+0	lelong		0xfeedfacf	[contains:
+>0	use		macho-le
+
+0	name		macho-le
+>4	lelong		1
+>>8	lelong		0		vax
+>>8	lelong		1		vax11/780
+>>8	lelong		2		vax11/785
+>>8	lelong		3		vax11/750
+>>8	lelong		4		vax11/730
+>>8	lelong		5		uvaxI
+>>8	lelong		6		uvaxII
+>>8	lelong		7		vax8200
+>>8	lelong		8		vax8500
+>>8	lelong		9		vax8600
+>>8	lelong		10		vax8650
+>>8	lelong		11		vax8800
+>>8	lelong		12		uvaxIII
+>4	lelong		7
+>>8	lelong		3		i386
+>>8	lelong		4		i486
+>>8	lelong		132		i486sx
+>>8	lelong		5		i586
+>>8	lelong		8		pentium_3
+>>8	lelong		9		pentiumM
+>>8	lelong		10		pentiumIV
+>>8	lelong		11		itanium
+>>8	lelong		12		xeon
+>>8	lelong		14		pentiumIV_M
+>>8	lelong		15		itanium2
+>>8	lelong		21		pentiumpro
+>>8	lelong		23		pentiumIII
+>>8	lelong		24		pentium_3_M
+>>8	lelong		25		pentiumV
+>>8	lelong		26		xeon_mp
+>>8	lelong		40		pentium_3_xeon
+>>8	lelong		113		celeron
+>>8	lelong		119		celeron_mobile
+>4	lelong		16777223
+>>8	lelong		3		\b x86_64
+>>8	lelong		4		\b x86_64_arch1
+>12	lelong		1		\b object
+>12	lelong		2		\b executable
+>12	lelong		3		\b fvmlib
+>12	lelong		4		\b core
+>12	lelong		5		\b preload
+>12	lelong		6		\b dylib
+>12	lelong		7		\b dylinker
+>12	lelong		8		\b bundle
+>0	belong		x		\b]
+
+0	belong		0xcafebabe
+>4	belong		1		Mach-O fat file with 1 architecture:
+>>8	use		mach-o
+>4	belong		>1
+>>4	belong		<20		Mach-O fat file with %ld architectures:
+>>>8	use		mach-o
+>>>28	use		mach-o
+>>>4	belong		>2
+>>>>48	use		mach-o
+>>>>>4	belong		>3
+>>>>>68	use		mach-o
+
+### MACH-O END ###
