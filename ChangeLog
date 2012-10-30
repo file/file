@@ -1,3 +1,8 @@
+2012-10-30  19:14  Christos Zoulas <christos@zoulas.com>
+
+	* Add "name" and "use" file types in order to look
+	  inside mach-o files.
+
 2012-09-06  10:40  Christos Zoulas <christos@zoulas.com>
 
 	* make --version exit 0 (Matthew Schultz)
