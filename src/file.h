@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.138 2012/06/20 22:33:43 christos Exp $
+ * @(#)$File: file.h,v 1.139 2012/09/06 14:42:39 christos Exp $
  */
 
 #ifndef __file_h__
@@ -132,7 +132,7 @@
 #define MAXstring 64		/* max leng of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	8
+#define VERSIONNO	9
 #define FILE_MAGICSIZE	232
 
 #define	FILE_LOAD	0
@@ -219,7 +219,9 @@ struct magic {
 #define				FILE_QWDATE	42
 #define				FILE_LEQWDATE	43
 #define				FILE_BEQWDATE	44
-#define				FILE_NAMES_SIZE	45/* size of array to contain all names */
+#define				FILE_NAME	45
+#define				FILE_USE	46
+#define				FILE_NAMES_SIZE	47 /* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
@@ -228,6 +230,8 @@ struct magic {
 	 (t) == FILE_LESTRING16 || \
 	 (t) == FILE_REGEX || \
 	 (t) == FILE_SEARCH || \
+	 (t) == FILE_NAME || \
+	 (t) == FILE_USE || \
 	 (t) == FILE_DEFAULT)
 
 #define FILE_FMT_NONE 0
@@ -365,8 +369,11 @@ struct level_info {
 	int last_cond;	/* used for error checking by parse() */
 #endif
 };
+
+#define MAGIC_SETS	2
+
 struct magic_set {
-	struct mlist *mlist;
+	struct mlist *mlist[MAGIC_SETS];	/* list of regular entries */
 	struct cont {
 		size_t len;
 		struct level_info *li;
@@ -403,6 +410,8 @@ struct stat;
 #define FILE_T_LOCAL	1
 #define FILE_T_WINDOWS	2
 protected const char *file_fmttime(uint64_t, int, char *);
+protected struct magic_set *file_ms_alloc(int);
+protected void file_ms_free(struct magic_set *);
 protected int file_buffer(struct magic_set *, int, const char *, const void *,
     size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
@@ -431,7 +440,8 @@ protected int file_encoding(struct magic_set *, const unsigned char *, size_t,
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t,
     int, int);
-protected struct mlist *file_apprentice(struct magic_set *, const char *, int);
+protected int file_apprentice(struct magic_set *, const char *, int);
+protected int file_magicfind(struct magic_set *, const char *, struct mlist *);
 protected uint64_t file_signextend(struct magic_set *, struct magic *,
     uint64_t);
 protected void file_delmagic(struct magic *, int type, size_t entries);

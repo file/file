@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.74 2011/05/26 01:27:59 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.75 2012/08/26 11:00:58 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -71,7 +71,6 @@ FILE_RCSID("@(#)$File: magic.c,v 1.74 2011/05/26 01:27:59 christos Exp $")
 #endif
 #endif
 
-private void free_mlist(struct mlist *);
 private void close_and_restore(const struct magic_set *, const char *, int,
     const struct stat *);
 private int unreadable_info(struct magic_set *, mode_t, const char *);
@@ -215,51 +214,7 @@ magic_getpath(const char *magicfile, int action)
 public struct magic_set *
 magic_open(int flags)
 {
-	struct magic_set *ms;
-	size_t len;
-
-	if ((ms = CAST(struct magic_set *, calloc((size_t)1,
-	    sizeof(struct magic_set)))) == NULL)
-		return NULL;
-
-	if (magic_setflags(ms, flags) == -1) {
-		errno = EINVAL;
-		goto free;
-	}
-
-	ms->o.buf = ms->o.pbuf = NULL;
-	len = (ms->c.len = 10) * sizeof(*ms->c.li);
-
-	if ((ms->c.li = CAST(struct level_info *, malloc(len))) == NULL)
-		goto free;
-
-	ms->event_flags = 0;
-	ms->error = -1;
-	ms->mlist = NULL;
-	ms->file = "unknown";
-	ms->line = 0;
-	return ms;
-free:
-	free(ms);
-	return NULL;
-}
-
-private void
-free_mlist(struct mlist *mlist)
-{
-	struct mlist *ml;
-
-	if (mlist == NULL)
-		return;
-
-	for (ml = mlist->next; ml != mlist;) {
-		struct mlist *next = ml->next;
-		struct magic *mg = ml->magic;
-		file_delmagic(mg, ml->mapped, ml->nmagic);
-		free(ml);
-		ml = next;
-	}
-	free(ml);
+	return file_ms_alloc(flags);
 }
 
 private int
@@ -283,11 +238,7 @@ unreadable_info(struct magic_set *ms, mode_t md, const char *file)
 public void
 magic_close(struct magic_set *ms)
 {
-	free_mlist(ms->mlist);
-	free(ms->o.pbuf);
-	free(ms->o.buf);
-	free(ms->c.li);
-	free(ms);
+	file_ms_free(ms);
 }
 
 /*
@@ -296,37 +247,25 @@ magic_close(struct magic_set *ms)
 public int
 magic_load(struct magic_set *ms, const char *magicfile)
 {
-	struct mlist *ml = file_apprentice(ms, magicfile, FILE_LOAD);
-	if (ml) {
-		free_mlist(ms->mlist);
-		ms->mlist = ml;
-		return 0;
-	}
-	return -1;
+	return file_apprentice(ms, magicfile, FILE_LOAD);
 }
 
 public int
 magic_compile(struct magic_set *ms, const char *magicfile)
 {
-	struct mlist *ml = file_apprentice(ms, magicfile, FILE_COMPILE);
-	free_mlist(ml);
-	return ml ? 0 : -1;
+	return file_apprentice(ms, magicfile, FILE_COMPILE);
 }
 
 public int
 magic_check(struct magic_set *ms, const char *magicfile)
 {
-	struct mlist *ml = file_apprentice(ms, magicfile, FILE_CHECK);
-	free_mlist(ml);
-	return ml ? 0 : -1;
+	return file_apprentice(ms, magicfile, FILE_CHECK);
 }
 
 public int
 magic_list(struct magic_set *ms, const char *magicfile)
 {
-	struct mlist *ml = file_apprentice(ms, magicfile, FILE_LIST);
-	free_mlist(ml);
-	return ml ? 0 : -1;
+	return file_apprentice(ms, magicfile, FILE_LIST);
 }
 
 private void

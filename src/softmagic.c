@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.151 2012/09/06 14:42:39 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.152 2012/10/03 22:13:21 rrt Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,9 +43,9 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.151 2012/09/06 14:42:39 christos Exp $")
 
 
 private int match(struct magic_set *, struct magic *, uint32_t,
-    const unsigned char *, size_t, int, int);
+    const unsigned char *, size_t, size_t, int, int);
 private int mget(struct magic_set *, const unsigned char *,
-    struct magic *, size_t, unsigned int, int);
+    struct magic *, size_t, size_t, unsigned int, int, int);
 private int magiccheck(struct magic_set *, struct magic *);
 private int32_t mprint(struct magic_set *, struct magic *);
 private int32_t moffset(struct magic_set *, struct magic *);
@@ -71,8 +71,8 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
 {
 	struct mlist *ml;
 	int rv;
-	for (ml = ms->mlist->next; ml != ms->mlist; ml = ml->next)
-		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, mode,
+	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
+		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, 0, mode,
 		    text)) != 0)
 			return rv;
 
@@ -108,7 +108,7 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
  */
 private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
-    const unsigned char *s, size_t nbytes, int mode, int text)
+    const unsigned char *s, size_t nbytes, size_t offset, int mode, int text)
 {
 	uint32_t magindex = 0;
 	unsigned int cont_level = 0;
@@ -125,6 +125,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		int flush = 0;
 		struct magic *m = &magic[magindex];
 
+		if (m->type != FILE_NAME)
 		if ((IS_STRING(m->type) &&
 		     ((text && (m->str_flags & (STRING_BINTEST | STRING_TEXTTEST)) == STRING_BINTEST) ||
 		      (!text && (m->str_flags & (STRING_TEXTTEST | STRING_BINTEST)) == STRING_TEXTTEST))) ||
@@ -140,9 +141,11 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		ms->offset = m->offset;
 		ms->line = m->lineno;
 
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		/* if main entry matches, print it... */
-		switch (mget(ms, s, m, nbytes, cont_level, text)) {
+		switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text)) {
 		case -1:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 			return -1;
 		case 0:
 			flush = m->reln != '!';
@@ -153,17 +156,21 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 
 			switch (magiccheck(ms, m)) {
 			case -1:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				return -1;
 			case 0:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				flush++;
 				break;
 			default:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				flush = 0;
 				break;
 			}
 			break;
 		}
 		if (flush) {
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 			/*
 			 * main entry didn't match,
 			 * flush its continuations
@@ -174,8 +181,10 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			continue;
 		}
 
-		if ((e = handle_annotation(ms, m)) != 0)
+		if ((e = handle_annotation(ms, m)) != 0) {
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 			return e;
+		}
 		/*
 		 * If we are going to print something, we'll need to print
 		 * a blank before we print something else.
@@ -191,12 +200,14 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		if (print && mprint(ms, m) == -1)
 			return -1;
 
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		ms->c.li[cont_level].off = moffset(ms, m);
 
 		/* and any continuations that match */
 		if (file_check_mem(ms, ++cont_level) == -1)
 			return -1;
 
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		while (magic[magindex+1].cont_level != 0 &&
 		    ++magindex < nmagic) {
 			m = &magic[magindex];
@@ -224,15 +235,18 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 					continue;
 			}
 #endif
-			switch (mget(ms, s, m, nbytes, cont_level, text)) {
+			switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text)) {
 			case -1:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				return -1;
 			case 0:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				if (m->reln != '!')
 					continue;
 				flush = 1;
 				break;
 			default:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				if (m->type == FILE_INDIRECT)
 					returnval = 1;
 				flush = 0;
@@ -241,13 +255,16 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 
 			switch (flush ? 1 : magiccheck(ms, m)) {
 			case -1:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				return -1;
 			case 0:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 #ifdef ENABLE_CONDITIONALS
 				ms->c.li[cont_level].last_match = 0;
 #endif
 				break;
 			default:
+fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 #ifdef ENABLE_CONDITIONALS
 				ms->c.li[cont_level].last_match = 1;
 #endif
@@ -601,6 +618,8 @@ mprint(struct magic_set *ms, struct magic *m)
 		break;
 
 	case FILE_INDIRECT:
+	case FILE_USE:
+	case FILE_NAME:
 		t = ms->offset;
 		break;
 
@@ -921,6 +940,8 @@ mconvert(struct magic_set *ms, struct magic *m)
 	case FILE_REGEX:
 	case FILE_SEARCH:
 	case FILE_DEFAULT:
+	case FILE_NAME:
+	case FILE_USE:
 		return 1;
 	default:
 		file_magerror(ms, "invalid type %d in mconvert()", m->type);
@@ -1049,16 +1070,17 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 }
 
 private int
-mget(struct magic_set *ms, const unsigned char *s,
-    struct magic *m, size_t nbytes, unsigned int cont_level, int text)
+mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
+    size_t nbytes, size_t o, unsigned int cont_level, int mode, int text)
 {
 	uint32_t offset = ms->offset;
 	uint32_t count = m->str_range;
 	int rv;
 	char *sbuf, *rbuf;
 	union VALUETYPE *p = &ms->ms_value;
+	struct mlist ml;
 
-	if (mcopy(ms, p, m->type, m->flag & INDIR, s, offset, nbytes, count) == -1)
+	if (mcopy(ms, p, m->type, m->flag & INDIR, s, offset + o, nbytes - o, count) == -1)
 		return -1;
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
@@ -1619,6 +1641,7 @@ mget(struct magic_set *ms, const unsigned char *s,
 			return 0;
 		sbuf = ms->o.buf;
 		ms->o.buf = NULL;
+		ms->offset = 0;
 		rv = file_softmagic(ms, s + offset, nbytes - offset,
 		    BINTEST, text);
 		if ((ms->flags & MAGIC_DEBUG) != 0)
@@ -1636,6 +1659,20 @@ mget(struct magic_set *ms, const unsigned char *s,
 			ms->o.buf = sbuf;
 		return rv;
 
+	case FILE_USE:
+		if (nbytes < offset)
+			return 0;
+		if (file_magicfind(ms, m->value.s, &ml) == -1) {
+			file_magerror(ms, "cannot find entry `%s'", m->value.s);
+			return -1;
+		}
+		return match(ms, ml.magic, ml.nmagic, s, nbytes, offset,
+		    mode, text);
+
+	case FILE_NAME:
+		if (file_printf(ms, m->desc) == -1)
+			return -1;
+		return 1;
 	case FILE_DEFAULT:	/* nothing to check */
 	default:
 		break;
@@ -1939,6 +1976,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		break;
 	}
 	case FILE_INDIRECT:
+	case FILE_USE:
+	case FILE_NAME:
 		return 1;
 	default:
 		file_magerror(ms, "invalid type %d in magiccheck()", m->type);
