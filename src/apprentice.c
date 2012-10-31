@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.176 2012/09/06 14:42:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.177 2012/10/30 23:11:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1079,7 +1079,6 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		goto out;
 
 	for (j = 0; j < MAGIC_SETS; j++) {
-fprintf(stderr, "set %u %p %u\n", j, mentry[j], mentrycount[j]);
 		/* Set types of tests */
 		for (i = 0; i < mentrycount[j]; ) {
 			if (mentry[j][i].mp->cont_level != 0) {
@@ -2772,7 +2771,6 @@ file_magicfind(struct magic_set *ms, const char *name, struct mlist *v)
 		for (i = 0; i < nma; i++) {
 			if (ma[i].type != FILE_NAME)
 				continue;
-			fprintf(stderr, "i = %u %s\n", i, ma[i].value.s);
 			if (strcmp(ma[i].value.s, name) == 0) {
 				v->magic = &ma[i];
 				for (j = i + 1; j < nma; j++)

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.152 2012/10/03 22:13:21 rrt Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.153 2012/10/30 23:11:52 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -141,11 +141,9 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		ms->offset = m->offset;
 		ms->line = m->lineno;
 
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		/* if main entry matches, print it... */
 		switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text)) {
 		case -1:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 			return -1;
 		case 0:
 			flush = m->reln != '!';
@@ -156,21 +154,17 @@ fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 
 			switch (magiccheck(ms, m)) {
 			case -1:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				return -1;
 			case 0:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				flush++;
 				break;
 			default:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				flush = 0;
 				break;
 			}
 			break;
 		}
 		if (flush) {
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 			/*
 			 * main entry didn't match,
 			 * flush its continuations
@@ -182,7 +176,6 @@ fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		}
 
 		if ((e = handle_annotation(ms, m)) != 0) {
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 			return e;
 		}
 		/*
@@ -200,14 +193,12 @@ fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		if (print && mprint(ms, m) == -1)
 			return -1;
 
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		ms->c.li[cont_level].off = moffset(ms, m);
 
 		/* and any continuations that match */
 		if (file_check_mem(ms, ++cont_level) == -1)
 			return -1;
 
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 		while (magic[magindex+1].cont_level != 0 &&
 		    ++magindex < nmagic) {
 			m = &magic[magindex];
@@ -237,16 +228,13 @@ fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 #endif
 			switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text)) {
 			case -1:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				return -1;
 			case 0:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				if (m->reln != '!')
 					continue;
 				flush = 1;
 				break;
 			default:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				if (m->type == FILE_INDIRECT)
 					returnval = 1;
 				flush = 0;
@@ -255,16 +243,13 @@ fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 
 			switch (flush ? 1 : magiccheck(ms, m)) {
 			case -1:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 				return -1;
 			case 0:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 #ifdef ENABLE_CONDITIONALS
 				ms->c.li[cont_level].last_match = 0;
 #endif
 				break;
 			default:
-fprintf(stderr, "%s, %d: %d, %s\n", __FILE__, __LINE__, m->type, m->desc);
 #ifdef ENABLE_CONDITIONALS
 				ms->c.li[cont_level].last_match = 1;
 #endif
