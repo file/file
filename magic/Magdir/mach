@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File$
+# $File: mach,v 1.9 2009/09/19 16:28:10 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -8,26 +8,47 @@
 #------------------------------------------------------------
 0	lelong&0xfffffffe	0xfeedface	Mach-O
 >0	byte		0xcf		64-bit
->12	lelong		1		object
->12	lelong		2		executable
->12	lelong		3		fixed virtual memory shared library
->12	lelong		4		core
->12	lelong		5		preload executable
->12	lelong		6		dynamically linked shared library
->12	lelong		7		dynamic linker
->12	lelong		8		bundle
->12	lelong		9		dynamically linked shared library stub
->12	lelong		>9
->>12	lelong		x		filetype=%ld
 >4	lelong		<0
 >>4	lelong		x		architecture=%ld
->4	lelong		1		vax
+>4	lelong		1
+>>8	lelong		0		vax
+>>8	lelong		1		vax11/780
+>>8	lelong		2		vax11/785
+>>8	lelong		3		vax11/750
+>>8	lelong		4		vax11/730
+>>8	lelong		5		uvaxI
+>>8	lelong		6		uvaxII
+>>8	lelong		7		vax8200
+>>8	lelong		8		vax8500
+>>8	lelong		9		vax8600
+>>8	lelong		10		vax8650
+>>8	lelong		11		vax8800
+>>8	lelong		12		uvaxIII
 >4	lelong		2		romp
 >4	lelong		3		architecture=3
 >4	lelong		4		ns32032
 >4	lelong		5		ns32332
 >4	lelong		6		m68k
->4	lelong		7		i386
+>4	lelong		7
+>>8	lelong		3		i386
+>>8	lelong		4		i486
+>>8	lelong		132		i486sx
+>>8	lelong		5		i586
+>>8	lelong		8		pentium_3
+>>8	lelong		9		pentiumM
+>>8	lelong		10		pentiumIV
+>>8	lelong		11		itanium
+>>8	lelong		12		xeon
+>>8	lelong		14		pentiumIV_M
+>>8	lelong		15		itanium2
+>>8	lelong		21		pentiumpro
+>>8	lelong		23		pentiumIII
+>>8	lelong		24		pentium_3_M
+>>8	lelong		25		pentiumV
+>>8	lelong		26		xeon_mp
+>>8	lelong		40		pentium_3_xeon
+>>8	lelong		113		celeron
+>>8	lelong		119		celeron_mobile
 >4	lelong		8		mips
 >4	lelong		9		ns32532
 >4	lelong		10		architecture=10
@@ -39,26 +60,42 @@
 >4	lelong		16		i860
 >4	lelong		17		rs6000
 >4	lelong		18		ppc
+>4	lelong		16777223
+>>8	lelong		3		x86_64
+>>8	lelong		4		x86_64_arch1
 >4	lelong		16777234	ppc64
 >4	lelong		>16777234
 >>4	lelong		x		architecture=%ld
+>12	lelong		1		object
+>12	lelong		2		executable
+>12	lelong		3		fixed virtual memory shared library
+>12	lelong		4		core
+>12	lelong		5		preload executable
+>12	lelong		6		dynamically linked shared library
+>12	lelong		7		dynamic linker
+>12	lelong		8		bundle
+>12	lelong		9		dynamically linked shared library stub
+>12	lelong		>9
+>>12	lelong		x		filetype=%ld
 #
 0	belong&0xfffffffe	0xfeedface	Mach-O
 >3	byte		0xcf		64-bit
->12	belong		1		object
->12	belong		2		executable
->12	belong		3		fixed virtual memory shared library
->12	belong		4		core
->12	belong		5		preload executable
->12	belong		6               dynamically linked shared library
->12	belong		7               dynamic linker
->12	belong		8		bundle
->12	belong		9		dynamically linked shared library stub
->12	belong		>9
->>12	belong		x		filetype=%ld
 >4	belong		<0
 >>4	belong		x		architecture=%ld
->4	belong		1		vax
+>4	belong		1
+>>8	belong		0		vax
+>>8	belong		1		vax11/780
+>>8	belong		2		vax11/785
+>>8	belong		3		vax11/750
+>>8	belong		4		vax11/730
+>>8	belong		5		uvaxI
+>>8	belong		6		uvaxII
+>>8	belong		7		vax8200
+>>8	belong		8		vax8500
+>>8	belong		9		vax8600
+>>8	belong		10		vax8650
+>>8	belong		11		vax8800
+>>8	belong		12		uvaxIII
 >4	belong		2		romp
 >4	belong		3		architecture=3
 >4	belong		4		ns32032
@@ -70,6 +107,25 @@
 >>8	belong		2		(mc68040)
 >>8	belong		3		(mc68030 only)
 >4	belong		7		i386
+>>8	belong		3		i386
+>>8	belong		4		i486
+>>8	belong		132		i486sx
+>>8	belong		5		i586
+>>8	belong		8		pentium_3
+>>8	belong		9		pentiumM
+>>8	belong		10		pentiumIV
+>>8	belong		11		itanium
+>>8	belong		12		xeon
+>>8	belong		14		pentiumIV_M
+>>8	belong		15		itanium2
+>>8	belong		21		pentiumpro
+>>8	belong		23		pentiumIII
+>>8	belong		24		pentium_3_M
+>>8	belong		25		pentiumV
+>>8	belong		26		xeon_mp
+>>8	belong		40		pentium_3_xeon
+>>8	belong		113		celeron
+>>8	belong		119		celeron_mobile
 >4	belong		8		mips
 >4	belong		9		ns32532
 >4	belong		10		architecture=10
@@ -81,6 +137,20 @@
 >4	belong		16		i860
 >4	belong		17		rs6000
 >4	belong		18		ppc
+>4	belong		16777223
+>>8	belong		3		x86_64
+>>8	belong		4		x86_64_arch1
 >4	belong		16777234	ppc64
 >4	belong		>16777234
 >>4	belong		x		architecture=%ld
+>12	belong		1		object
+>12	belong		2		executable
+>12	belong		3		fixed virtual memory shared library
+>12	belong		4		core
+>12	belong		5		preload executable
+>12	belong		6               dynamically linked shared library
+>12	belong		7               dynamic linker
+>12	belong		8		bundle
+>12	belong		9		dynamically linked shared library stub
+>12	belong		>9
+>>12	belong		x		filetype=%ld
