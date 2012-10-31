@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.146 2012/09/06 14:18:50 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.147 2012/10/31 14:01:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -123,7 +123,6 @@ private char *progname;		/* used throughout 		*/
 
 private void usage(void);
 private void help(void);
-int main(int, char *[]);
 
 private int unwrap(struct magic_set *, const char *);
 private int process(struct magic_set *ms, const char *, int);
@@ -437,7 +436,7 @@ process(struct magic_set *ms, const char *inname, int wid)
 	}
 }
 
-size_t
+protected size_t
 file_mbswidth(const char *s)
 {
 #if defined(HAVE_WCHAR_H) && defined(HAVE_MBRTOWC) && defined(HAVE_WCWIDTH)
