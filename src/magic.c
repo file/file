@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.75 2012/08/26 11:00:58 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.76 2012/10/30 23:11:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -238,6 +238,8 @@ unreadable_info(struct magic_set *ms, mode_t md, const char *file)
 public void
 magic_close(struct magic_set *ms)
 {
+	if (ms == NULL)
+		return;
 	file_ms_free(ms);
 }
 
@@ -247,24 +249,32 @@ magic_close(struct magic_set *ms)
 public int
 magic_load(struct magic_set *ms, const char *magicfile)
 {
+	if (ms == NULL)
+		return -1;
 	return file_apprentice(ms, magicfile, FILE_LOAD);
 }
 
 public int
 magic_compile(struct magic_set *ms, const char *magicfile)
 {
+	if (ms == NULL)
+		return -1;
 	return file_apprentice(ms, magicfile, FILE_COMPILE);
 }
 
 public int
 magic_check(struct magic_set *ms, const char *magicfile)
 {
+	if (ms == NULL)
+		return -1;
 	return file_apprentice(ms, magicfile, FILE_CHECK);
 }
 
 public int
 magic_list(struct magic_set *ms, const char *magicfile)
 {
+	if (ms == NULL)
+		return -1;
 	return file_apprentice(ms, magicfile, FILE_LIST);
 }
 
@@ -309,6 +319,8 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 public const char *
 magic_descriptor(struct magic_set *ms, int fd)
 {
+	if (ms == NULL)
+		return NULL;
 	return file_or_fd(ms, NULL, fd);
 }
 
@@ -318,6 +330,8 @@ magic_descriptor(struct magic_set *ms, int fd)
 public const char *
 magic_file(struct magic_set *ms, const char *inname)
 {
+	if (ms == NULL)
+		return NULL;
 	return file_or_fd(ms, inname, STDIN_FILENO);
 }
 
@@ -420,6 +434,8 @@ done:
 public const char *
 magic_buffer(struct magic_set *ms, const void *buf, size_t nb)
 {
+	if (ms == NULL)
+		return NULL;
 	if (file_reset(ms) == -1)
 		return NULL;
 	/*
@@ -436,18 +452,24 @@ magic_buffer(struct magic_set *ms, const void *buf, size_t nb)
 public const char *
 magic_error(struct magic_set *ms)
 {
+	if (ms == NULL)
+		return "Magic database is not open";
 	return (ms->event_flags & EVENT_HAD_ERR) ? ms->o.buf : NULL;
 }
 
 public int
 magic_errno(struct magic_set *ms)
 {
+	if (ms == NULL)
+		return EINVAL;
 	return (ms->event_flags & EVENT_HAD_ERR) ? ms->error : 0;
 }
 
 public int
 magic_setflags(struct magic_set *ms, int flags)
 {
+	if (ms == NULL)
+		return -1;
 #if !defined(HAVE_UTIME) && !defined(HAVE_UTIMES)
 	if (flags & MAGIC_PRESERVE_ATIME)
 		return -1;
