@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.70 2011/10/26 15:44:47 christos Exp $
+# $File: archive,v 1.71 2012/07/05 21:48:24 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -571,6 +571,7 @@
 !:mime	application/zip
 
 # Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
+0	string		PK\005\006	Zip archive data (empty)
 0	string		PK\003\004
 
 # Specialised zip formats which start with a member named 'mimetype'
