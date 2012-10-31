@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.91 2012/05/22 01:55:12 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.92 2012/06/20 22:33:43 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -465,13 +465,14 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
 	    xnh_type == NT_GNU_BUILD_ID && (descsz == 16 || descsz == 20)) {
-	    uint32_t desc[5], i;
-	    if (file_printf(ms, ", BuildID[%s]=0x", descsz == 16 ? "md5/uuid" :
+	    uint8_t desc[20];
+	    uint32_t i;
+	    if (file_printf(ms, ", BuildID[%s]=", descsz == 16 ? "md5/uuid" :
 		"sha1") == -1)
 		    return size;
 	    (void)memcpy(desc, &nbuf[doff], descsz);
-	    for (i = 0; i < descsz >> 2; i++)
-		if (file_printf(ms, "%.8x", desc[i]) == -1)
+	    for (i = 0; i < descsz; i++)
+		if (file_printf(ms, "%02x", desc[i]) == -1)
 		    return size;
 	    *flags |= FLAGS_DID_BUILD_ID;
 	}
