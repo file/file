@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.178 2012/10/31 00:48:40 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.179 2012/10/31 17:19:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -290,6 +290,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	struct mlist *ml;
 	int rv = -1;
 	int mapped;
+	size_t i;
 
 	if (magicsize != FILE_MAGICSIZE) {
 		file_error(ms, 0, "magic element size %lu != %lu",
@@ -319,7 +320,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 
 	mapped = rv;
 	     
-	for (size_t i = 0; i < MAGIC_SETS; i++) {
+	for (i = 0; i < MAGIC_SETS; i++) {
 		if (magic[i] == NULL)
 			continue;
 		if (add_mlist(ms->mlist[i], magic[i], nmagic[i], mapped) == -1)
@@ -332,7 +333,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	}
 
 	if (action == FILE_LIST) {
-		for (size_t i = 0; i < MAGIC_SETS; i++) {
+		for (i = 0; i < MAGIC_SETS; i++) {
 			printf("Set %zu:\nBinary patterns:\n", i);
 			apprentice_list(ms->mlist[i], BINTEST);
 			printf("Text patterns:\n");
@@ -347,9 +348,10 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 protected void
 file_ms_free(struct magic_set *ms)
 {
+	size_t i;
 	if (ms == NULL)
 		return;
-	for (size_t i = 0; i < MAGIC_SETS; i++)
+	for (i = 0; i < MAGIC_SETS; i++)
 		mlist_free(ms->mlist[i]);
 	free(ms->o.pbuf);
 	free(ms->o.buf);
@@ -358,9 +360,10 @@ file_ms_free(struct magic_set *ms)
 }
 
 protected struct magic_set *
-file_ms_alloc(int flags) {
+file_ms_alloc(int flags)
+{
 	struct magic_set *ms;
-	size_t len;
+	size_t i, len;
 
 	if ((ms = CAST(struct magic_set *, calloc((size_t)1,
 	    sizeof(struct magic_set)))) == NULL)
@@ -379,7 +382,7 @@ file_ms_alloc(int flags) {
 
 	ms->event_flags = 0;
 	ms->error = -1;
-	for (size_t i = 0; i < MAGIC_SETS; i++)
+	for (i = 0; i < MAGIC_SETS; i++)
 		ms->mlist[i] = NULL;
 	ms->file = "unknown";
 	ms->line = 0;
@@ -451,6 +454,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
 	char *p, *mfn;
 	int file_err, errs = -1;
+	size_t i;
 
 	if ((fn = magic_getpath(fn, action)) == NULL)
 		return -1;
@@ -462,7 +466,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		return -1;
 	}
 
-	for (size_t i = 0; i < MAGIC_SETS; i++) {
+	for (i = 0; i < MAGIC_SETS; i++) {
 		mlist_free(ms->mlist[i]);
 		if ((ms->mlist[i] = mlist_alloc()) == NULL) {
 			file_oomem(ms, sizeof(*ms->mlist[i]));
@@ -492,7 +496,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	free(mfn);
 
 	if (errs == -1) {
-		for (size_t i = 0; i < MAGIC_SETS; i++) {
+		for (i = 0; i < MAGIC_SETS; i++) {
 			mlist_free(ms->mlist[i]);
 			ms->mlist[i] = NULL;
 		}
@@ -503,7 +507,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	if (action == FILE_LOAD)
 		return 0;
 
-	for (size_t i = 0; i < MAGIC_SETS; i++) {
+	for (i = 0; i < MAGIC_SETS; i++) {
 		mlist_free(ms->mlist[i]);
 		ms->mlist[i] = NULL;
 	}
@@ -2404,6 +2408,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	int needsbyteswap;
 	char *dbname = NULL;
 	void *mm = NULL;
+	size_t i;
 
 	ret = -1;
 	dbname = mkdbname(ms, fn, 0);
@@ -2471,7 +2476,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 	}
 	magicp[0] = CAST(struct magic *, mm) + 1;
 	nentries = 0;
-	for (size_t i = 0; i < MAGIC_SETS; i++) {
+	for (i = 0; i < MAGIC_SETS; i++) {
 		if (needsbyteswap)
 			nmagicp[i] = swap4(ptr[i + 2]);
 		else
@@ -2486,7 +2491,7 @@ apprentice_map(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		goto error1;
 	}
 	if (needsbyteswap)
-		for (size_t i = 0; i < MAGIC_SETS; i++)
+		for (i = 0; i < MAGIC_SETS; i++)
 			byteswap(magicp[i], nmagicp[i]);
 	free(dbname);
 	return RET;
@@ -2501,7 +2506,7 @@ error1:
 		free(mm);
 #endif
 	} else {
-		for (size_t i = 0; i < MAGIC_SETS; i++) {
+		for (i = 0; i < MAGIC_SETS; i++) {
 			magicp[i] = NULL;
 			nmagicp[i] = 0;
 		}
