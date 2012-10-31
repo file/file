@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: mach,v 1.9 2009/09/19 16:28:10 christos Exp $
+# $File: mach,v 1.10 2012/10/31 16:32:01 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -50,20 +50,66 @@
 >>8	lelong		113		celeron
 >>8	lelong		119		celeron_mobile
 >4	lelong		8		mips
+>>8	lelong		1		R2300
+>>8	lelong		2		R2600
+>>8	lelong		3		R2800
+>>8	lelong		4		R2000a
+>>8	lelong		5		R2000
+>>8	lelong		6		R3000a
+>>8	lelong		7		R3000
 >4	lelong		9		ns32532
->4	lelong		10		architecture=10
+>4	lelong		10		mc98000
 >4	lelong		11		hppa
->4	lelong		12		acorn
->4	lelong		13		m88k
+>>8	lelong		0		7100
+>>8	lelong		1		7100LC
+>4	lelong		12
+>>8	lelong		0		arm
+>>8	lelong		1		arm_v4t
+>>8	lelong		2		arm_v6
+>>8	lelong		3		arm_v5tej
+>>8	lelong		4		arm_xscale
+>>8	lelong		5		arm_v7
+>>8	lelong		6		arm_v7f
+>>8	lelong		7		arm_v7k
+>4	lelong		13
+>>8	lelong		0		mc88000
+>>8	lelong		1		mc88100
+>>8	lelong		2		mc88110
 >4	lelong		14		sparc
->4	lelong		15		i860-big
->4	lelong		16		i860
+>4	lelong		15		i860g
+>4	lelong		16		alpha
 >4	lelong		17		rs6000
->4	lelong		18		ppc
+>4	lelong		18
+>>8	lelong		0		ppc
+>>8	lelong		1		ppc_601
+>>8	lelong		2		ppc_602
+>>8	lelong		3		ppc_603
+>>8	lelong		4		ppc_603e
+>>8	lelong		5		ppc_603ev
+>>8	lelong		6		ppc_604
+>>8	lelong		7		ppc_604e
+>>8	lelong		8		ppc_620
+>>8	lelong		9		ppc_650
+>>8	lelong		10		ppc_7400
+>>8	lelong		11		ppc_7450
+>>8	lelong		100		ppc_970
 >4	lelong		16777223
 >>8	lelong		3		x86_64
 >>8	lelong		4		x86_64_arch1
->4	lelong		16777234	ppc64
+>4	lelong		16777234
+>>8	lelong		0		ppc64
+>>8	lelong		1		ppc64_601
+>>8	lelong		2		ppc64_602
+>>8	lelong		3		ppc64_603
+>>8	lelong		4		ppc64_603e
+>>8	lelong		5		ppc64_603ev
+>>8	lelong		6		ppc64_604
+>>8	lelong		7		ppc64_604e
+>>8	lelong		8		ppc64_620
+>>8	lelong		9		ppc64_650
+>>8	lelong		10		ppc64_7400
+>>8	lelong		11		ppc64_7450
+>>8	lelong		100		ppc64_970
 >4	lelong		>16777234
 >>4	lelong		x		architecture=%ld
 >12	lelong		1		object
@@ -127,20 +173,66 @@
 >>8	belong		113		celeron
 >>8	belong		119		celeron_mobile
 >4	belong		8		mips
+>>8	belong		1		R2300
+>>8	belong		2		R2600
+>>8	belong		3		R2800
+>>8	belong		4		R2000a
+>>8	belong		5		R2000
+>>8	belong		6		R3000a
+>>8	belong		7		R3000
 >4	belong		9		ns32532
->4	belong		10		architecture=10
+>4	belong		10		mc98000
 >4	belong		11		hppa
->4	belong		12		acorn
->4	belong		13		m88k
+>>8	belong		0		7100
+>>8	belong		1		7100LC
+>4	belong		12
+>>8	belong		0		arm
+>>8	belong		1		arm_v4t
+>>8	belong		2		arm_v6
+>>8	belong		3		arm_v5tej
+>>8	belong		4		arm_xscale
+>>8	belong		5		arm_v7
+>>8	belong		6		arm_v7f
+>>8	belong		7		arm_v7k
+>4	belong		13
+>>8	belong		0		mc88000
+>>8	belong		1		mc88100
+>>8	belong		2		mc88110
 >4	belong		14		sparc
->4	belong		15		i860-big
->4	belong		16		i860
+>4	belong		15		i860
+>4	belong		16		alpha
 >4	belong		17		rs6000
->4	belong		18		ppc
+>4	belong		18
+>>8	belong		0		ppc
+>>8	belong		1		ppc_601
+>>8	belong		2		ppc_602
+>>8	belong		3		ppc_603
+>>8	belong		4		ppc_603e
+>>8	belong		5		ppc_603ev
+>>8	belong		6		ppc_604
+>>8	belong		7		ppc_604e
+>>8	belong		8		ppc_620
+>>8	belong		9		ppc_650
+>>8	belong		10		ppc_7400
+>>8	belong		11		ppc_7450
+>>8	belong		100		ppc_970
 >4	belong		16777223
 >>8	belong		3		x86_64
 >>8	belong		4		x86_64_arch1
->4	belong		16777234	ppc64
+>4	belong		16777234
+>>8	belong		0		ppc64
+>>8	belong		1		ppc64_601
+>>8	belong		2		ppc64_602
+>>8	belong		3		ppc64_603
+>>8	belong		4		ppc64_603e
+>>8	belong		5		ppc64_603ev
+>>8	belong		6		ppc64_604
+>>8	belong		7		ppc64_604e
+>>8	belong		8		ppc64_620
+>>8	belong		9		ppc64_650
+>>8	belong		10		ppc64_7400
+>>8	belong		11		ppc64_7450
+>>8	belong		100		ppc64_970
 >4	belong		>16777234
 >>4	belong		x		architecture=%ld
 >12	belong		1		object
