@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.153 2012/10/30 23:11:52 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.154 2012/10/31 00:48:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,16 +43,16 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.153 2012/10/30 23:11:52 christos Exp $")
 
 
 private int match(struct magic_set *, struct magic *, uint32_t,
-    const unsigned char *, size_t, size_t, int, int);
+    const unsigned char *, size_t, size_t, int, int, int);
 private int mget(struct magic_set *, const unsigned char *,
-    struct magic *, size_t, size_t, unsigned int, int, int);
+    struct magic *, size_t, size_t, unsigned int, int, int, int);
 private int magiccheck(struct magic_set *, struct magic *);
 private int32_t mprint(struct magic_set *, struct magic *);
 private int32_t moffset(struct magic_set *, struct magic *);
 private void mdebug(uint32_t, const char *, size_t);
 private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, size_t);
-private int mconvert(struct magic_set *, struct magic *);
+private int mconvert(struct magic_set *, struct magic *, int);
 private int print_sep(struct magic_set *, int);
 private int handle_annotation(struct magic_set *, struct magic *);
 private void cvt_8(union VALUETYPE *, const struct magic *);
@@ -73,7 +73,7 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
 	int rv;
 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
 		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, 0, mode,
-		    text)) != 0)
+		    text, 0)) != 0)
 			return rv;
 
 	return 0;
@@ -108,7 +108,8 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
  */
 private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
-    const unsigned char *s, size_t nbytes, size_t offset, int mode, int text)
+    const unsigned char *s, size_t nbytes, size_t offset, int mode, int text,
+    int flip)
 {
 	uint32_t magindex = 0;
 	unsigned int cont_level = 0;
@@ -142,7 +143,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		ms->line = m->lineno;
 
 		/* if main entry matches, print it... */
-		switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text)) {
+		switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text,
+		    flip)) {
 		case -1:
 			return -1;
 		case 0:
@@ -226,7 +228,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 					continue;
 			}
 #endif
-			switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text)) {
+			switch (mget(ms, s, m, nbytes, offset, cont_level, mode,
+			    text, flip)) {
 			case -1:
 				return -1;
 			case 0:
@@ -712,6 +715,56 @@ moffset(struct magic_set *ms, struct magic *m)
 	}
 }
 
+private int
+cvt_flip(int type, int flip)
+{
+	if (flip == 0)
+		return type;
+	switch (type) {
+	case FILE_BESHORT:
+		return FILE_LESHORT;
+	case FILE_BELONG:
+		return FILE_LELONG;
+	case FILE_BEDATE:
+		return FILE_LEDATE;
+	case FILE_BELDATE:
+		return FILE_LELDATE;
+	case FILE_BEQUAD:
+		return FILE_LEQUAD;
+	case FILE_BEQDATE:
+		return FILE_LEQDATE;
+	case FILE_BEQLDATE:
+		return FILE_LEQLDATE;
+	case FILE_BEQWDATE:
+		return FILE_LEQWDATE;
+	case FILE_LESHORT:
+		return FILE_BESHORT;
+	case FILE_LELONG:
+		return FILE_BELONG;
+	case FILE_LEDATE:
+		return FILE_BEDATE;
+	case FILE_LELDATE:
+		return FILE_BELDATE;
+	case FILE_LEQUAD:
+		return FILE_BEQUAD;
+	case FILE_LEQDATE:
+		return FILE_BEQDATE;
+	case FILE_LEQLDATE:
+		return FILE_BEQLDATE;
+	case FILE_LEQWDATE:
+		return FILE_BEQWDATE;
+	case FILE_BEFLOAT:
+		return FILE_LEFLOAT;
+	case FILE_LEFLOAT:
+		return FILE_BEFLOAT;
+	case FILE_BEDOUBLE:
+		return FILE_LEDOUBLE;
+	case FILE_LEDOUBLE:
+		return FILE_BEDOUBLE;
+	default:
+		return type;
+	}
+}
 #define DO_CVT(fld, cast) \
 	if (m->num_mask) \
 		switch (m->mask_op & FILE_OPS_MASK) { \
@@ -802,11 +855,11 @@ cvt_double(union VALUETYPE *p, const struct magic *m)
  * (unless you have a better idea)
  */
 private int
-mconvert(struct magic_set *ms, struct magic *m)
+mconvert(struct magic_set *ms, struct magic *m, int flip)
 {
 	union VALUETYPE *p = &ms->ms_value;
 
-	switch (m->type) {
+	switch (cvt_flip(m->type, flip)) {
 	case FILE_BYTE:
 		cvt_8(p, m);
 		return 1;
@@ -1056,7 +1109,8 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 
 private int
 mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
-    size_t nbytes, size_t o, unsigned int cont_level, int mode, int text)
+    size_t nbytes, size_t o, unsigned int cont_level, int mode, int text,
+    int flip)
 {
 	uint32_t offset = ms->offset;
 	uint32_t count = m->str_range;
@@ -1080,7 +1134,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		if (m->in_op & FILE_OPINDIRECT) {
 			const union VALUETYPE *q = CAST(const union VALUETYPE *,
 			    ((const void *)(s + offset + off)));
-			switch (m->in_type) {
+			switch (cvt_flip(m->in_type, flip)) {
 			case FILE_BYTE:
 				off = q->b;
 				break;
@@ -1114,7 +1168,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				fprintf(stderr, "indirect offs=%u\n", off);
 		}
-		switch (m->in_type) {
+		switch (cvt_flip(m->in_type, flip)) {
 		case FILE_BYTE:
 			if (nbytes < (offset + 1))
 				return 0;
@@ -1539,7 +1593,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			break;
 		}
 
-		switch (m->in_type) {
+		switch (cvt_flip(m->in_type, flip)) {
 		case FILE_LEID3:
 		case FILE_BEID3:
 			offset = ((((offset >>  0) & 0x7f) <<  0) |
@@ -1647,12 +1701,18 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	case FILE_USE:
 		if (nbytes < offset)
 			return 0;
-		if (file_magicfind(ms, m->value.s, &ml) == -1) {
-			file_magerror(ms, "cannot find entry `%s'", m->value.s);
+		sbuf = m->value.s;
+		if (*sbuf == '^') {
+			sbuf++;
+			flip = 1;
+		} else
+			flip = 0;
+		if (file_magicfind(ms, sbuf, &ml) == -1) {
+			file_error(ms, 0, "cannot find entry `%s'", sbuf);
 			return -1;
 		}
 		return match(ms, ml.magic, ml.nmagic, s, nbytes, offset,
-		    mode, text);
+		    mode, text, flip);
 
 	case FILE_NAME:
 		if (file_printf(ms, m->desc) == -1)
@@ -1662,7 +1722,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	default:
 		break;
 	}
-	if (!mconvert(ms, m))
+	if (!mconvert(ms, m, flip))
 		return 0;
 	return 1;
 }
