@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.100 2012/10/25 15:34:02 christos Exp $
+.\" $File: file.man,v 1.101 2012/11/01 04:31:53 christos Exp $
 .Dd October 25, 2012
 .Dt FILE __CSECTION__
 .Os
@@ -581,6 +581,24 @@ Combine script searches and add a way to map executable names to MIME
 types (e.g. have a magic value for !:mime which causes the resulting
 string to be looked up in a table). This would avoid adding the same
 magic repeatedly for each new hash-bang interpreter.
+.Pp
+Fix
+.Dq name
+and
+.Dq use
+to check for consistency at compile time (duplicate 
+.Dq name ,
+.Dq use
+pointing to undefined
+.Dq name
+).
+Make 
+.Dq name
+/
+.Dq use 
+more efficient by keeping a sorted list of names.
+Special-case ^ to flip endianness in the parser so that it does not
+have to be escaped, and document it.
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
