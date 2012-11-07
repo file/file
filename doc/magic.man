@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.74 2012/09/06 14:42:39 christos Exp $
-.Dd October 30, 2012
+.\" $File: magic.man,v 1.75 2012/10/30 23:22:57 christos Exp $
+.Dd November 7, 2012
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -212,6 +212,15 @@ of the file as usual.
 Named magic entries always match.
 .It Dv use
 Recursively call the named magic starting from the current offset.
+If the name of the referenced begins with a
+.Dv ^
+then the endianness of the magic is switched; if the magic mentioned
+.Dv leshort
+for example,
+it is treated as
+.Dv beshort
+and vice versa.
+This is useful to avoid duplicating the rules for different endianness.
 .It Dv regex
 A regular expression match in extended POSIX regular expression syntax
 (like egrep).
