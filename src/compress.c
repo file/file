@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.69 2012/08/26 10:21:37 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.70 2012/11/07 17:54:48 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -397,16 +397,19 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 	case 0:	/* child */
 		(void) close(0);
 		if (fd != -1) {
-		    (void) dup(fd);
+		    if (dup(fd) == -1)
+			_exit(1);
 		    (void) lseek(0, (off_t)0, SEEK_SET);
 		} else {
-		    (void) dup(fdin[0]);
+		    if (dup(fdin[0]) == -1)
+			_exit(1);
 		    (void) close(fdin[0]);
 		    (void) close(fdin[1]);
 		}
 
 		(void) close(1);
-		(void) dup(fdout[1]);
+		if (dup(fdout[1]) == -1)
+			_exit(1);
 		(void) close(fdout[0]);
 		(void) close(fdout[1]);
 #ifndef DEBUG
