@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.64 2012/10/25 00:11:49 christos Exp $
+# $File: filesystems,v 1.65 2012/11/08 21:42:46 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -27,7 +27,8 @@
 >>0770	long		x		%ld blocks
 # Is there a boot block written 1 sector in?
 >512    belong&077777777	0600407	\b, boot block present
-# Joerg Jenderek: Smart Boot Manager backup file is 41 byte header + first sectors of disc
+
+# Joerg Jenderek: Smart Boot Manager backup file is 25 (MSDOS) or 41 (LINUX) byte header + first sectors of disk
 # (http://btmgr.sourceforge.net/docs/user-guide-3.html)
 0		string	SBMBAKUP_	Smart Boot Manager backup file
 >9		string	x		\b, version %-5.5s
@@ -41,8 +42,10 @@
 >>>>21		ubyte	x		\b, from drive 0x%x
 >>>22		ubyte	>0		
 >>>>21		string	x		\b, from drive %s
+>>>535		search/17	\x55\xAA	
+>>>>&-512	indirect	x	\b; contains 
 
-# Joerg Jenderek
+# updated by Joerg Jenderek at Nov 2012
 # DOS Emulator image is 128 byte, null right padded header + harddisc image
 0	string	DOSEMU\0			
 >0x27E	leshort	0xAA55			
@@ -52,6 +55,7 @@
 >>>>7	ulelong	>0		\b, %u heads
 >>>>11	ulelong	>0		\b, %d sectors/track
 >>>>15	ulelong	>0		\b, %d cylinders
+>>>>128	indirect	x	\b; contains 
 
 # x86 boot sector updated by Joerg Jenderek at Sep 2007,May 2011
 # for any allowed sector sizes
@@ -265,11 +269,14 @@
 #OEM-ID=BOOTWIZ0
 >442	string	Non-system\ disk,\ 	
 >>459	string	press\ any\ key...\x7\0		\b, Acronis Startup Recovery Loader
-# DOS names like F11.SYS are 8 right space padded bytes+3 bytes
+# updated by Joerg Jenderek at Nov 2012
+# DOS names like F11.SYS or BOOTWIZ.SYS are 8 right space padded bytes+3 bytes
 >>>477		ubyte&0xDF	>0		
 >>>>477		string		x 		\b %-.3s
 >>>>>480	ubyte&0xDF	>0		
->>>>>>480	string		x 		\b%-.5s
+>>>>>>480	string		x 		\b%-.4s
+>>>>>>>484	ubyte&0xDF	>0		
+>>>>>>>>484	string		x 		\b%-.1s
 >>>>485		ubyte&0xDF	>0		
 >>>>>485	string		x 		\b.%-.3s
 #
@@ -281,24 +288,39 @@
 >>>>>291 string and\ press\ any\ key.\n\r		\b, FDBOOT harddisk Bootloader
 >>>>>>200 string	>\0                             \b, version %-3s
 >242	string	Bootsector\ from\ C.H.\ Hochst\204	
->>278	string	No\ Systemdisk.\ 			
->>>293	string	Booting\ from\ harddisk.\n\r		
->>>441	string	Cannot\ load\ from\ harddisk.\n\r	
->>>>469 string	Insert\ Systemdisk\ 			
->>>>>487 string and\ press\ any\ key.\n\r		\b, WinImage harddisk Bootloader
->>>>>>209 string	>\0                             \b, version %-4.4s
+# http://freecode.com/projects/dosfstools	dosfstools-n.m/src/mkdosfs.c
+# updated by Joerg Jenderek at Nov 2012. Use search directive with offset instead of string
+# skip name "C.H. Hochstätter" partly because it is sometimes written without umlaut
+>242	search/127	Bootsector\ from\ C.H.\ Hochst			
+>>278	search/127	No\ Systemdisk.\ Booting\ from\ harddisk	
+# followed by variants with point,CR-NL or NL-CR
+>>>208	search/261	Cannot\ load\ from\ harddisk.			
+# followed by variants CR-NL or NL-CR
+>>>>236	search/235	Insert\ Systemdisk\ and\ press\ any\ key.	
+# followed by variants with point,CR-NL or NL-CR
+>>>>>180	search/96	Disk\ formatted\ with\ WinImage\ 	\b, WinImage harddisk Bootloader
+# followed by string like "6.50 (c) 1993-2004 Gilles Vollant"
+>>>>>>&0	string		x 					\b, version %-4.4s
 >(1.b+2)	ubyte		0xe			
 >>(1.b+3)	ubyte		0x1f			
 >>>(1.b+4)	ubyte		0xbe			
->>>>(1.b+5)	ubyte		0x77			
->>>>(1.b+6)	ubyte		0x7c			
->>>>>(1.b+7)	ubyte		0xac			
->>>>>>(1.b+8)	ubyte		0x22			
->>>>>>>(1.b+9)	ubyte		0xc0			
->>>>>>>>(1.b+10)	ubyte	0x74			
->>>>>>>>>(1.b+11)	ubyte	0xb			
->>>>>>>>>>(1.b+12)	ubyte	0x56			
->>>>>>>>>>(1.b+13)	ubyte	0xb4			\b, mkdosfs boot message display
+# message offset found at (1.b+5) is 0x77 for FAT32 or 0x5b for others
+>>>>(1.b+5)	ubyte&0xd3	0x53			
+>>>>>(1.b+6)	ubyte		0x7c			
+# assembler instructions: lodsb;and al,al;jz 0xb;push si;mov ah,
+>>>>>>(1.b+7)	ubyte		0xac			
+>>>>>>>(1.b+8)	ubyte		0x22			
+>>>>>>>>(1.b+9)	ubyte		0xc0			
+>>>>>>>>>(1.b+10)	ubyte	0x74			
+>>>>>>>>>>(1.b+11)	ubyte	0x0b			
+>>>>>>>>>>>(1.b+12)	ubyte	0x56			
+>>>>>>>>>>>>(1.b+13)	ubyte	0xb4			\b, mkdosfs boot message display
+# FAT1X version
+>>>>>>>>>>>>>(1.b+5)	ubyte	0x5b			
+>>>>>>>>>>>>>>0x5b	string	>\0			"%-s"
+# FAT32 version
+>>>>>>>>>>>>>(1.b+5)	ubyte	0x77			
+>>>>>>>>>>>>>>0x77	string	>\0			"%-s"
 >214	string	Please\ try\ to\ install\ FreeDOS\ 	\b, DOS Emulator boot message display
 #>>244	string	from\ dosemu-freedos-*-bin.tgz\r	
 #>>>170	string	Sorry,\ could\ not\ load\ an\ 		
@@ -764,6 +786,17 @@
 >>>>>492		string		RENF		\b, FAT (12 bit)
 >>>>>495		string		RENF		\b, FAT (16 bit)
 # x86 bootloader end
+
+# added by Joerg Jenderek at Nov 2012
+# http://www.thenakedpc.com/articles/v04/08/0408-05.html
+# Symantec (Peter Norton) Image.dat file consists of variable header, bootrecord, part of FAT and root directory data
+0	string	PNCIHISK\0		Norton Utilities disc image data
+# real x86 boot sector with jump instruction
+>509	search/1026	\x55\xAA\xeb	
+>>&-1	indirect	x		\b; contains 
+# http://file-extension.net/seeker/file_extension_dat
+0	string	PNCIUNDO		Norton Disk Doctor UnDo file
+#
 
 # updated by Joerg Jenderek at Sep 2007
 >3	ubyte	0			
