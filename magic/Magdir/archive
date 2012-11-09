@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.71 2012/07/05 21:48:24 christos Exp $
+# $File: archive,v 1.72 2012/10/31 16:55:49 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -52,6 +52,11 @@
 #>81	string		bz2		\b, uses bzip2 compression
 #>84	string		gz		\b, uses gzip compression
 #>136	ledate		x		created: %s
+
+0	string		=!<thin>\n	thin archive with
+>68	belong		0		no symbol entries
+>68	belong		1		%d symbol entry
+>68	belong		>1		%d symbol entries
 
 # other archives
 0	long		0177555		very old archive
