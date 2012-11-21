@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.178 2012/10/31 00:48:40 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.179 2012/10/31 17:19:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -982,7 +982,7 @@ private int
 coalesce_entries(struct magic_set *ms, struct magic_entry *me, uint32_t nme,
     struct magic **ma, uint32_t *nma)
 {
-	uint32_t i, mentrycount;
+	uint32_t i, mentrycount = 0;
 	size_t slen;
 
 	for (i = 0; i < nme; i++)
@@ -1100,7 +1100,7 @@ apprentice_load(struct magic_set *ms, struct magic **magicp, uint32_t *nmagicp,
 		 */
 		set_last_default(ms, mentry[j], mentrycount[j]);
 
-		/* coallesce per file arrays into a single one */
+		/* coalesce per file arrays into a single one */
 		if (coalesce_entries(ms, mentry[j], mentrycount[j],
 		    &magicp[j], &nmagicp[j]) == -1) {
 			errs++;
