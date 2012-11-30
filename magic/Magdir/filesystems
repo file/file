@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.65 2012/11/08 21:42:46 christos Exp $
+# $File: filesystems,v 1.66 2012/11/30 18:11:54 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -819,43 +819,6 @@
 # FATX 
 0		string		FATX		FATX filesystem data
 
-# Minix filesystems - Juan Cespedes <cespedes@debian.org>
-0x410	leshort		0x137f
-!:strength / 2
->0x402	beshort		< 100		Minix filesystem, V1, %d zones
->0x1e	string		minix		\b, bootable
-0x410	beshort		0x137f
-!:strength / 2
->0x402	beshort		< 100		Minix filesystem, V1 (big endian), %d zones
->0x1e	string		minix		\b, bootable
-0x410	leshort		0x138f
-!:strength / 2
->0x402	beshort		< 100		Minix filesystem, V1, 30 char names, %d zones
->0x1e	string		minix		\b, bootable
-0x410	beshort		0x138f
-!:strength / 2
->0x402	beshort		< 100		Minix filesystem, V1, 30 char names (big endian), %d zones
->0x1e	string		minix		\b, bootable
-0x410	leshort		0x2468
->0x402	beshort		< 100		Minix filesystem, V2, %d zones
->0x1e	string		minix		\b, bootable
-0x410	beshort		0x2468
->0x402	beshort		< 100		Minix filesystem, V2 (big endian), %d zones
->0x1e	string		minix		\b, bootable
-
-0x410	leshort		0x2478
->0x402	beshort		< 100		Minix filesystem, V2, 30 char names, %d zones
->0x1e	string		minix		\b, bootable
-0x410	leshort		0x2478
->0x402	beshort		< 100		Minix filesystem, V2, 30 char names, %d zones
->0x1e	string		minix		\b, bootable
-0x410	beshort		0x2478
->0x402	beshort		!0		Minix filesystem, V2, 30 char names (big endian), %d zones
->0x1e	string		minix		\b, bootable
-0x410	leshort		0x4d5a
->0x402	beshort		!0		Minix filesystem, V3, %d zones
->0x1e	string		minix		\b, bootable
-
 # romfs filesystems - Juan Cespedes <cespedes@debian.org>
 0	string		-rom1fs-	romfs filesystem, version 1
 >8	belong	x			%d bytes,
@@ -1298,6 +1261,43 @@
 #>0x464	lelong          &0x0000010      (gdt checksum)
 #>0x464	lelong          &0x0000020      (many subdirs)
 #>0x463	lelong          &0x0000040      (extra isize)
+
+# Minix filesystems - Juan Cespedes <cespedes@debian.org>
+0x410	leshort		0x137f
+!:strength / 2
+>0x402	beshort		< 100		Minix filesystem, V1, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	beshort		0x137f
+!:strength / 2
+>0x402	beshort		< 100		Minix filesystem, V1 (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x138f
+!:strength / 2
+>0x402	beshort		< 100		Minix filesystem, V1, 30 char names, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	beshort		0x138f
+!:strength / 2
+>0x402	beshort		< 100		Minix filesystem, V1, 30 char names (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x2468
+>0x402	beshort		< 100		Minix filesystem, V2, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	beshort		0x2468
+>0x402	beshort		< 100		Minix filesystem, V2 (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+
+0x410	leshort		0x2478
+>0x402	beshort		< 100		Minix filesystem, V2, 30 char names, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x2478
+>0x402	beshort		< 100		Minix filesystem, V2, 30 char names, %d zones
+>0x1e	string		minix		\b, bootable
+0x410	beshort		0x2478
+>0x402	beshort		!0		Minix filesystem, V2, 30 char names (big endian), %d zones
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x4d5a
+>0x402	beshort		!0		Minix filesystem, V3, %d zones
+>0x1e	string		minix		\b, bootable
 
 # SGI disk labels - Nathan Scott <nathans@debian.org>
 0	belong		0x0BE5A941	SGI disk label (volume header)
