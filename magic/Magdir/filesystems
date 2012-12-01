@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.66 2012/11/30 18:11:54 christos Exp $
+# $File: filesystems,v 1.67 2012/12/01 19:14:28 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1711,3 +1711,26 @@
 >>&8	lelong	x	\b, blocksize %d
 >>&32	lelong&0x00000006	>0	(dirty)
 >>&36	lelong	>0	(compressed)
+
+# LFS
+0	lelong	0x070162	LFS filesystem image
+>4	lelong	1		version 1,
+>>8	lelong	x		\b blocks %u,
+>>12	lelong	x		\b blocks per segment %u,
+>4	lelong	2		version 2,
+>>8	lelong	x		\b fragments %u,
+>>12	lelong	x		\b bytes per segment %u,
+>16	lelong	x		\b disk blocks %u,
+>20	lelong	x		\b block size %u,
+>24	lelong	x		\b fragment size %u,
+>28	lelong	x		\b fragments per block %u,
+>32	lelong	x		\b start for free list %u,
+>36	lelong	x		\b number of free blocks %d,
+>40	lelong	x		\b number of files %u,
+>44	lelong	x		\b blocks available for writing %d,
+>48	lelong	x		\b inodes in cache %d,
+>52	lelong	x		\b inode file disk address 0x%x,
+>56	lelong	x		\b inode file inode number %u,
+>60	lelong	x		\b address of last segment written 0x%x,
+>64	lelong	x		\b address of next segment to write 0x%x,
+>68	lelong	x		\b address of current segment written 0x%x
