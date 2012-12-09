@@ -5,18 +5,30 @@
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
 # Recognize some MySQL files.
+# Elan Ruusamäe <glen@delfi.ee>, added MariaDB signatures
+# from https://bazaar.launchpad.net/~maria-captains/maria/5.5/view/head:/support-files/magic
 #
 0	beshort			0xfe01		MySQL table definition file
 >2	byte			x		Version %d
-0	belong&0xffffff00	0xfefe0300	MySQL MyISAM index file
+0	belong&0xffffff00	0xfefe0700	MySQL MyISAM index file
 >3	byte			x		Version %d
-0	belong&0xffffff00	0xfefe0700	MySQL MyISAM compressed data file
+0	belong&0xffffff00	0xfefe0800	MySQL MyISAM compressed data file
+>3	byte			x		Version %d
+0	belong&0xffffff00	0xfefe0900	MySQL Maria index file
+>3	byte			x		Version %d
+0	belong&0xffffff00	0xfefe0A00	MySQL Maria compressed data file
 >3	byte			x		Version %d
 0	belong&0xffffff00	0xfefe0500	MySQL ISAM index file
 >3	byte			x		Version %d
 0	belong&0xffffff00	0xfefe0600	MySQL ISAM compressed data file
 >3	byte			x		Version %d
-0	string		 	\376bin		MySQL replication log
+0	string			\376bin		MySQL replication log
+0	belong&0xffffff00	0xfefe0b00
+>4	string			MARIALOG	MySQL Maria transaction log file
+>>3	byte			x		Version %d
+0	belong&0xffffff00	0xfefe0c00
+>4	string			MACF		MySQL Maria control file
+>>3	byte			x		Version %d
 
 #------------------------------------------------------------------------------
 # iRiver H Series database file 
