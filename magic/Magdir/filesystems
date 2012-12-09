@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.66 2012/11/30 18:11:54 christos Exp $
+# $File: filesystems,v 1.67 2012/12/01 19:14:28 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -882,6 +882,92 @@
 >>174	search/10	\0Missing\ OS\r\n			
 >>>189	search/10	\0Multiple\ active\ partitions\r\n	(version 4.00 or newer)
 # SYSLINUX END
+
+# NetBSD mbr variants (master-boot-code version 1.22) added by Joerg Jenderek at Nov 2012
+# assembler instructions: xor ax,ax;mov	ax,ss;mov sp,0x7c00;mov	ax,
+0	ubequad		0x31c08ed0bc007c8e			
+# mbr_bootsel magic before partition table not reliable with small ipl fragments
+#>444	uleshort	0xb5e1					
+>0004	uleshort	x					
+# ERRorTeXT
+>>181	search/166		Error\ \0\r\n				NetBSD mbr
+# NT Drive Serial Number http://thestarman.pcministry.com/asm/mbr/Win2kmbr.htm#DS
+>>>0x1B8	ubelong		>0					\b,Serial 0x%-.8x
+# BOOTSEL definitions contains assembler instructions: int 0x13;pop dx;push dx;push dx
+>>>0xbb		search/71	\xcd\x13\x5a\x52\x52			\b,bootselector
+# BOOT_EXTENDED definitions contains assembler instructions: 
+# xchg ecx,edx;addl ecx,edx;movw lba_info,si;movb 0x42,ah;pop dx;push dx;int 0x13
+>>>0x96	search/1	\x66\x87\xca\x66\x01\xca\x66\x89\x16\x3a\x07\xbe\x32\x07\xb4\x42\x5a\x52\xcd\x13	\b,boot extended
+# COM_PORT_VAL definitions contains assembler instructions: outb al,dx;add 5,dl;inb %dx;test 0x40,al
+>>>0x130	search/55	\xee\x80\xc2\x05\xec\xa8\x40		\b,serial IO
+# not TERSE_ERROR
+>>>196		search/106	No\ active\ partition\0			
+>>>>&0		string		Disk\ read\ error\0			
+>>>>>&0		string		No\ operating\ system\0			\b,verbose
+# not NO_CHS definitions contains assembler instructions: pop dx;push dx;movb $8,ah;int0x13
+>>>0x7d		search/7	\x5a\x52\xb4\x08\xcd\x13		\b,CHS
+# not NO_LBA_CHECK definitions contains assembler instructions: movw 0x55aa,bx;movb 0x41,ah;pop	dx;push	dx;int 0x13
+>>>0xa4		search/84	\xbb\xaa\x55\xb4\x41\x5a\x52\xcd\x13	\b,LBA-check
+# assembler instructions: movw nametab,bx
+>>>0x26	    search/21	\xBB\x94\x07					
+# not NO_BANNER definitions contains assembler instructions: mov banner,si;call message_crlf
+>>>>&-9	ubequad&0xBE00f0E800febb94	0xBE0000E80000bb94		
+>>>>>181	search/166		Error\ \0			
+# "a: disk" , "Fn: diskn" or "NetBSD MBR boot"
+>>>>>>&3	string			x				\b,"%s"
+# Andrea Mazzoleni AdvanceCD mbr loader of http://advancemame.sourceforge.net/boot-readme.html
+# added by Joerg Jenderek at Nov 2012 for versions 1.3 - 1.4
+# assembler instructions: jmp short 0x58;nop;ASCII
+0	ubequad&0xeb58908000000000	0xeb58900000000000	
+# assembler instructions: cli;xor ax,ax;mov ds,ax;mov es,ax;mov ss,
+>(1.b+2)	ubequad			0xfa31c08ed88ec08e	
+# Error messages at end of code
+>>376		string	No\ operating\ system\r\n\0		
+>>>398		string	Disk\ error\r\n\0FDD\0HDD\0		
+>>>>419		string	\ EBIOS\r\n\0				AdvanceMAME mbr
+
+# Neil Turton mbr loader variant of http://www.chiark.greenend.org.uk/~neilt/mbr/ 
+# added by Joerg Jenderek at Mar 2011 for versions 1.0.0 - 1.1.11
+# for 1st version assembler instructions:	cld;xor ax,ax;mov DS,ax;MOV ES,AX;mov SI,
+# or  	  	  	    			cld;xor ax,ax;mov SS,ax;XOR SP,SP;mov DS,
+0	ulequad&0xcE1b40D48EC031FC	0x8E0000D08EC031FC	
+# pointer to the data starting with Neil Turton signature string
+>(0x1BC.s)		string		NDTmbr			
+>>&-14			string		1234F\0			Turton mbr (
+# parameters also viewed by install-mbr --list
+>>>(0x1BC.s+7)		ubyte		x			\b%u<=
+>>>(0x1BC.s+9)		ubyte		x			\bVersion<=%u
+#>>>(0x1BC.s+8)		ubyte		x			asm_flag_%x
+>>>(0x1BC.s+8)		ubyte&1		1			\b,Y2K-Fix
+# variant used by testdisk of http://www.cgsecurity.org/wiki/Menu_MBRCode
+>>>(0x1BC.s+8)		ubyte&2		2			\b,TestDisk
+#0x1~1,..,0x8~4,0x10~F,0x80~A enabled
+#>>>(0x1BC.s+10)		ubyte		x			\b,flags 0x%x
+#0x0~1,0x1~2,...,0x3~4,0x4~F,0x7~D default boot
+#>>>(0x1BC.s+11)		ubyte		x			\b,cfg_def 0x%x
+# for older versions
+>>>(0x1BC.s+9)		ubyte		<2			
+#>>>>(0x1BC.s+12)	ubyte		18			\b,%u/18 seconds
+>>>>(0x1BC.s+12)	ubyte		!18			\b,%u/18 seconds
+# floppy A: or B:
+>>>>(0x1BC.s+13)	ubyte		<2			\b,floppy 0x%x
+>>>>(0x1BC.s+13)	ubyte		>1			
+# 1st hard disc
+#>>>>>(0x1BC.s+13)	ubyte		0x80			\b,drive 0x%x
+# not 1st hard disc
+>>>>>(0x1BC.s+13)	ubyte		!0x80			\b,drive 0x%x
+# for version >= 2 maximal timeout can be 65534
+>>>(0x1BC.s+9)		ubyte		>1			
+#>>>>(0x1BC.s+12)	uleshort	18			\b,%u/18 seconds
+>>>>(0x1BC.s+12)	uleshort	!18			\b,%u/18 seconds
+# floppy A: or B:
+>>>>(0x1BC.s+14)	ubyte		<2			\b,floppy 0x%x
+>>>>(0x1BC.s+14)	ubyte		>1			
+# 1st hard disc
+#>>>>>(0x1BC.s+14)	ubyte		0x80			\b,drive 0x%x
+# not 1st hard disc
+>>>>>(0x1BC.s+14)	ubyte		!0x80			\b,drive 0x%x
+>>>0	ubyte		x					\b)
 
 # added by Joerg Jenderek
 # In the second sector (+0x200) are variables according to grub-0.97/stage2/asm.S or
