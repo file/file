@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.92 2012/06/20 22:33:43 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.93 2012/10/31 17:03:41 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -928,6 +928,17 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			free(nbuf);
 			break;
 		case SHT_SUNW_cap:
+			switch (mach) {
+			case EM_SPARC:
+			case EM_SPARCV9:
+			case EM_IA_64:
+			case EM_386:
+			case EM_AMD64:
+				break;
+			default:
+				goto skip;
+			}
+
 			if (lseek(fd, (off_t)xsh_offset, SEEK_SET) ==
 			    (off_t)-1) {
 				file_badseek(ms);
@@ -967,12 +978,13 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 					break;
 				}
 			}
-			break;
-
+			/*FALLTHROUGH*/
+		skip:
 		default:
 			break;
 		}
 	}
+
 	if (file_printf(ms, ", %sstripped", stripped ? "" : "not ") == -1)
 		return -1;
 	if (cap_hw1) {

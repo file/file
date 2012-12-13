@@ -1,3 +1,7 @@
+2012-12-19   8:47  Christos Zoulas <christos@zoulas.com>
+
+	* Only print elf capabilities for archs we know (Jan Kaluza)
+
 2012-10-30  19:14  Christos Zoulas <christos@zoulas.com>
 
 	* Add "name" and "use" file types in order to look
