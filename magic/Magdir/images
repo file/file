@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.76 2012/09/25 00:55:20 christos Exp $
+# $File: images,v 1.77 2012/10/14 22:53:42 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -34,7 +34,7 @@
 # The next byte following the magic is always whitespace.
 0	search/1	P1		Netpbm PBM image text
 !:mime	image/x-portable-bitmap
-0	search/1b	P2		Netpbm PGM image text
+0	search/1	P2		Netpbm PGM image text
 !:mime	image/x-portable-greymap
 0	search/1	P3		Netpbm PPM image text
 !:mime	image/x-portable-pixmap
