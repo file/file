@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.67 2012/12/01 19:14:28 christos Exp $
+# $File: filesystems,v 1.68 2012/12/09 17:49:00 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -61,7 +61,7 @@
 # for any allowed sector sizes
 30		search/481	\x55\xAA	
 # to display x86 boot sector (40) before old one (strength=50), SYSLINUX MBR (?) and DOS BPB information (71) like in previous file version
-!:strength +72
+!:strength +40
 # for sector sizes < 512 Bytes
 >11		uleshort	<512		
 >>(11.s-2)	uleshort	0xAA55		x86 boot sector
