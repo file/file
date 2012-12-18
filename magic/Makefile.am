@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.80 2012/06/16 13:30:36 christos Exp $
+# $File: Makefile.am,v 1.81 2012/10/25 00:12:44 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -225,6 +225,7 @@ $(MAGIC_FRAGMENT_DIR)/tuxedo \
 $(MAGIC_FRAGMENT_DIR)/typeset \
 $(MAGIC_FRAGMENT_DIR)/unicode \
 $(MAGIC_FRAGMENT_DIR)/unknown \
+$(MAGIC_FRAGMENT_DIR)/uterus \
 $(MAGIC_FRAGMENT_DIR)/uuencode \
 $(MAGIC_FRAGMENT_DIR)/varied.out \
 $(MAGIC_FRAGMENT_DIR)/varied.script \
