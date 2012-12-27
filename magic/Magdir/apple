@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.25 2012/04/06 21:18:09 christos Exp $
+# $File: apple,v 1.26 2012/12/27 15:43:23 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1/t	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -291,3 +291,7 @@
 >92	belong	& 512			\b, chain driver
 >92	belong	& 1024			\b, mount at startup
 >92	belong	& 2048			\b, is the startup partition
+
+#http://wiki.mozilla.org/DS_Store_File_Format`
+#http://en.wikipedia.org/wiki/.DS_Store
+0	string	\0\0\0\1Bud1\0		Apple Desktop Services Store
