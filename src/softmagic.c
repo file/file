@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.155 2012/11/01 04:21:27 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.156 2013/01/03 23:11:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -655,7 +655,7 @@ moffset(struct magic_set *ms, struct magic *m)
 				p->s[strcspn(p->s, "\n")] = '\0';
 			t = CAST(uint32_t, (ms->offset + strlen(p->s)));
 			if (m->type == FILE_PSTRING)
-				t += file_pstring_length_size(m);
+				t += (uint32_t)file_pstring_length_size(m);
 			return t;
 		}
 
@@ -1119,7 +1119,8 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml;
 
-	if (mcopy(ms, p, m->type, m->flag & INDIR, s, offset + o, nbytes - o, count) == -1)
+	if (mcopy(ms, p, m->type, m->flag & INDIR, s, (uint32_t)(offset + o),
+	    (uint32_t)(nbytes - o), count) == -1)
 		return -1;
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
@@ -1715,7 +1716,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		    mode, text, flip);
 
 	case FILE_NAME:
-		if (file_printf(ms, m->desc) == -1)
+		if (file_printf(ms, "%s", m->desc) == -1)
 			return -1;
 		return 1;
 	case FILE_DEFAULT:	/* nothing to check */

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.180 2012/11/21 16:27:07 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.181 2013/01/03 23:11:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1404,9 +1404,9 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 		(void)memset(m, 0, sizeof(*m));
 		m->cont_level = cont_level;
 	} else {
+		static const size_t len = sizeof(*m) * ALLOC_CHUNK;
 		if (me->mp != NULL)
 			return 1;
-		size_t len = sizeof(*m) * ALLOC_CHUNK;
 		if ((m = CAST(struct magic *, malloc(len))) == NULL) {
 			file_oomem(ms, len);
 			return -1;
