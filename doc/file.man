@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.101 2012/11/01 04:31:53 christos Exp $
+.\" $File: file.man,v 1.102 2013/01/04 15:39:22 christos Exp $
 .Dd October 25, 2012
 .Dt FILE __CSECTION__
 .Os
@@ -557,16 +557,20 @@ or the mailing list at
 .Sh TODO
 .Pp
 Fix output so that tests for MIME and APPLE flags are not needed all
-over the place, and actual output is only done in one place. This
-needs a design. Suggestion: push possible outputs on to a list, then
-pick the last-pushed (most specific, one hopes) value at the end, or
-use a default if the list is empty. This should not slow down evaluation.
+over the place, and actual output is only done in one place.
+This needs a design.
+Suggestion: push possible outputs on to a list, then pick the
+last-pushed (most specific, one hopes) value at the end, or
+use a default if the list is empty.
+This should not slow down evaluation.
 .Pp
-Continue to squash all magic bugs. See Debian BTS for a good source.
+Continue to squash all magic bugs.
+See Debian BTS for a good source.
 .Pp
 Store arbitrarily long strings, for example for %s patterns, so that
-they can be printed out. Fixes Debian bug #271672. Would require more
-complex store/load code in apprentice.
+they can be printed out.
+Fixes Debian bug #271672.
+Would require more complex store/load code in apprentice.
 .Pp
 Add syntax for relative offsets after current level (Debian bug #466037).
 .Pp
@@ -579,8 +583,9 @@ Add an option to print URLs for the sources of the file descriptions.
 .Pp
 Combine script searches and add a way to map executable names to MIME
 types (e.g. have a magic value for !:mime which causes the resulting
-string to be looked up in a table). This would avoid adding the same
-magic repeatedly for each new hash-bang interpreter.
+string to be looked up in a table).
+This would avoid adding the same magic repeatedly for each new
+hash-bang interpreter.
 .Pp
 Fix
 .Dq name
