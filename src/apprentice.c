@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.181 2013/01/03 23:11:38 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.182 2013/01/06 20:36:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1386,7 +1386,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 #endif
 	if (cont_level != 0) {
 		if (me->mp == NULL) {
-			file_error(ms, 0, "No current entry for continuation");
+			file_magerror(ms, "No current entry for continuation");
 			return -1;
 		}
 		if (me->cont_count == me->max_count) {
