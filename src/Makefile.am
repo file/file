@@ -21,3 +21,7 @@ libmagic_la_LIBADD = $(LTLIBOBJS) $(MINGWLIBS)
 
 file_SOURCES = file.c
 file_LDADD = libmagic.la
+CLEANFILES = magic.h
+
+magic.h:	$(top_srcdir)/src/magic.h.in
+	sed -e "s/X.YY/$$(echo @VERSION@ | tr -d .)/" < $> > $@
