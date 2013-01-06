@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sun,v 1.21 2010/05/05 17:38:18 christos Exp $
+# $File: sun,v 1.22 2011/02/10 01:52:51 christos Exp $
 # sun:  file(1) magic for Sun machines
 #
 # Values for big-endian Sun (MC680x0, SPARC) binaries on pre-5.x
@@ -96,7 +96,10 @@
 # Sun SunPC
 0	long		0xfa33c08e	SunPC 4.0 Hard Disk
 0	string		#SUNPC_CONFIG	SunPC 4.0 Properties Values
-# Sun snoop (see RFC 1761, which describes the capture file format).
+# Sun snoop (see RFC 1761, which describes the capture file format,
+# RFC 3827, which describes some additional datalink types, and
+# http://www.iana.org/assignments/snoop-datalink-types/snoop-datalink-types.xml,
+# which is the IANA registry of Snoop datalink types)
 #
 0	string		snoop		Snoop capture file
 >8	belong		>0		- version %ld
@@ -109,7 +112,25 @@
 >12	belong		6		(Character synchronous)
 >12	belong		7		(IBM channel-to-channel adapter)
 >12	belong		8		(FDDI)
->12	belong		9		(Unknown)
+>12	belong		9		(Other)
+>12	belong		10		(type %ld)
+>12	belong		11		(type %ld)
+>12	belong		12		(type %ld)
+>12	belong		13		(type %ld)
+>12	belong		14		(type %ld)
+>12	belong		15		(type %ld)
+>12	belong		16		(Fibre Channel)
+>12	belong		17		(ATM)
+>12	belong		18		(ATM Classical IP)
+>12	belong		19		(type %ld)
+>12	belong		20		(type %ld)
+>12	belong		21		(type %ld)
+>12	belong		22		(type %ld)
+>12	belong		23		(type %ld)
+>12	belong		24		(type %ld)
+>12	belong		25		(type %ld)
+>12	belong		26		(IP over Infiniband)
+>12	belong		>26		(type %ld)
 
 # Microsoft ICM color profile
 36	string		acspMSFT	Microsoft ICM Color Profile
