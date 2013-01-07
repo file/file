@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.140 2012/10/30 23:11:51 christos Exp $
+ * @(#)$File: file.h,v 1.141 2013/01/07 02:11:22 christos Exp $
  */
 
 #ifndef __file_h__
@@ -346,10 +346,11 @@ struct magic {
 /* list of magic entries */
 struct mlist {
 	struct magic *magic;		/* array of magic entries */
-	uint32_t nmagic;			/* number of entries in array */
+	uint32_t nmagic;		/* number of entries in array */
 	int mapped;  /* allocation type: 0 => apprentice_file
 		      *                  1 => apprentice_map + malloc
 		      *                  2 => apprentice_map + mmap */
+	size_t idx;			/* index in the mapping array */
 	struct mlist *next, *prev;
 };
 
@@ -444,7 +445,6 @@ protected int file_apprentice(struct magic_set *, const char *, int);
 protected int file_magicfind(struct magic_set *, const char *, struct mlist *);
 protected uint64_t file_signextend(struct magic_set *, struct magic *,
     uint64_t);
-protected void file_delmagic(struct magic *, int type, size_t entries);
 protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);
 protected void file_oomem(struct magic_set *, size_t);

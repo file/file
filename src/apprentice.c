@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.182 2013/01/06 20:36:18 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.183 2013/01/07 02:11:22 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -106,6 +106,7 @@ private uint16_t swap2(uint16_t);
 private uint32_t swap4(uint32_t);
 private uint64_t swap8(uint64_t);
 private char *mkdbname(struct magic_set *, const char *, int);
+private void delmagic(struct magic *, int, size_t, size_t);
 private int apprentice_map(struct magic_set *, struct magic **, uint32_t *,
     const char *);
 private int apprentice_compile(struct magic_set *, struct magic **, uint32_t *,
@@ -261,7 +262,8 @@ init_file_tables(void)
 }
 
 private int
-add_mlist(struct mlist *mlp, struct magic *magic, uint32_t nmagic, int mapped)
+add_mlist(struct mlist *mlp, struct magic *magic, uint32_t nmagic, int mapped,
+    size_t idx)
 {
 	struct mlist *ml;
 
@@ -271,6 +273,7 @@ add_mlist(struct mlist *mlp, struct magic *magic, uint32_t nmagic, int mapped)
 	ml->magic = magic;
 	ml->nmagic = nmagic;
 	ml->mapped = mapped;
+	ml->idx = idx;
 
 	mlp->prev->next = ml;
 	ml->prev = mlp->prev;
@@ -323,10 +326,9 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	for (i = 0; i < MAGIC_SETS; i++) {
 		if (magic[i] == NULL)
 			continue;
-		if (add_mlist(ms->mlist[i], magic[i], nmagic[i], mapped) == -1)
-		{
+		if (add_mlist(ms->mlist[i], magic[i], nmagic[i], mapped, i) == -1) {
 			i = i == 1 ? 0 : 1;
-			file_delmagic(magic[i], mapped, nmagic[i]);
+			delmagic(magic[i], mapped, nmagic[i], i);
 			file_oomem(ms, sizeof(*ml));
 			return -1;
 		}
@@ -392,16 +394,22 @@ free:
 	return NULL;
 }
 
-protected void
-file_delmagic(struct magic *p, int type, size_t entries)
+private void
+delmagic(struct magic *p, int type, size_t entries, size_t idx)
 {
 	if (p == NULL)
 		return;
 	switch (type) {
 	case 2:
 #ifdef QUICK
-		p--;
-		(void)munmap((void *)p, sizeof(*p) * (entries + 1));
+		/*
+		 * if we are mmapped, for the first chunk is one after the header
+		 * so we subtract one to get to the header and add one to the
+		 * entries to compensate.
+		 */
+		if (idx == 0)
+			p--;
+		(void)munmap((void *)p, sizeof(*p) * (entries + (idx == 0)));
 		break;
 #else
 		(void)&entries;
@@ -409,10 +417,15 @@ file_delmagic(struct magic *p, int type, size_t entries)
 		/*NOTREACHED*/
 #endif
 	case 1:
-		p--;
-		/*FALLTHROUGH*/
+		/*
+		 * If we are allocated only the first block is allocated, the
+		 * rest are offsets in the first allocation block. Again, we
+		 * compensate for the header.
+		 */
+		if (idx == 0)
+			free(--p);
+		break;
 	case 0:
-		free(p);
 		break;
 	default:
 		abort();
@@ -423,7 +436,7 @@ private struct mlist *
 mlist_alloc(void)
 {
 	struct mlist *mlist;
-	if ((mlist = CAST(struct mlist *, malloc(sizeof(*mlist)))) == NULL) {
+	if ((mlist = CAST(struct mlist *, calloc(1, sizeof(*mlist)))) == NULL) {
 		return NULL;
 	}
 	mlist->next = mlist->prev = mlist;
@@ -441,7 +454,7 @@ mlist_free(struct mlist *mlist)
 	for (ml = mlist->next; ml != mlist;) {
 		struct mlist *next = ml->next;
 		struct magic *mg = ml->magic;
-		file_delmagic(mg, ml->mapped, ml->nmagic);
+		delmagic(mg, ml->mapped, ml->nmagic, ml->idx);
 		free(ml);
 		ml = next;
 	}
@@ -2607,14 +2620,16 @@ mkdbname(struct magic_set *ms, const char *fn, int strip)
 	q++;
 	/* Compatibility with old code that looked in .mime */
 	if (ms->flags & MAGIC_MIME) {
-		asprintf(&buf, "%.*s.mime%s", (int)(q - fn), fn, ext);
+		if (asprintf(&buf, "%.*s.mime%s", (int)(q - fn), fn, ext) < 0)
+			return NULL;
 		if (access(buf, R_OK) != -1) {
 			ms->flags &= MAGIC_MIME_TYPE;
 			return buf;
 		}
 		free(buf);
 	}
-	asprintf(&buf, "%.*s%s", (int)(q - fn), fn, ext);
+	if (asprintf(&buf, "%.*s%s", (int)(q - fn), fn, ext) < 0)
+		return NULL;
 
 	/* Compatibility with old code that looked in .mime */
 	if (strstr(p, ".mime") != NULL)
