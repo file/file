@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.147 2012/10/31 14:01:28 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.148 2012/11/21 16:27:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -275,6 +275,11 @@ main(int argc, char *argv[])
 	}
 	if (e)
 		return e;
+
+	if (MAGIC_VERSION != magic_version())
+		(void)fprintf(stderr, "%s: compiled magic version [%d] "
+		    "does not match with shared library magic version [%d]\n",
+		    progname, MAGIC_VERSION, magic_version());
 
 	switch(action) {
 	case FILE_CHECK:

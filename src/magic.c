@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.76 2012/10/30 23:11:51 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.77 2012/10/31 17:20:06 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -476,4 +476,10 @@ magic_setflags(struct magic_set *ms, int flags)
 #endif
 	ms->flags = flags;
 	return 0;
+}
+
+public int
+magic_version(void)
+{
+	return MAGIC_VERSION;
 }
