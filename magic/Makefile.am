@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.85 2013/01/03 16:00:42 christos Exp $
+# $File: Makefile.am,v 1.86 2013/01/08 01:43:18 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -97,6 +97,7 @@ $(MAGIC_FRAGMENT_DIR)/hp \
 $(MAGIC_FRAGMENT_DIR)/human68k \
 $(MAGIC_FRAGMENT_DIR)/ibm370 \
 $(MAGIC_FRAGMENT_DIR)/ibm6000 \
+$(MAGIC_FRAGMENT_DIR)/icc \
 $(MAGIC_FRAGMENT_DIR)/iff \
 $(MAGIC_FRAGMENT_DIR)/images \
 $(MAGIC_FRAGMENT_DIR)/inform \

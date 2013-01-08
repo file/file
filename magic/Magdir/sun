@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sun,v 1.23 2013/01/06 01:09:42 christos Exp $
+# $File: sun,v 1.24 2013/01/08 01:43:18 christos Exp $
 # sun:  file(1) magic for Sun machines
 #
 # Values for big-endian Sun (MC680x0, SPARC) binaries on pre-5.x
@@ -131,13 +131,6 @@
 >12	belong		25		(type %ld)
 >12	belong		26		(IP over Infiniband)
 >12	belong		>26		(type %ld)
-
-# Microsoft ICM color profile
-36	string		acspMSFT	Microsoft ICM Color Profile
-!:mime	application/vnd.iccprofile
-# Sun KCMS
-36	string		acsp		Kodak Color Management System, ICC Profile
-!:mime	application/vnd.iccprofile
 
 #---------------------------------------------------------------------------
 # The following entries have been tested by Duncan Laurie <duncan@sun.com> (a
