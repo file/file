@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.73 2012/11/09 22:59:30 christos Exp $
+# $File: archive,v 1.74 2013/01/08 17:02:50 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -666,11 +666,10 @@
 !:mime	application/vnd.oasis.opendocument.image-template
 
 #  EPUB (OEBPS) books using OCF (OEBPS Container Format)
-#    From: Adam Buchbinder <adam.buchbinder@gmail.com>
 #    http://www.idpf.org/ocf/ocf1.0/download/ocf10.htm, section 4.
-#    (mimetype contains "application/epub+zip")
->>50	string	epub+zip		EPUB ebook data
-!:mime	application/epub+zip
+#    From: Ralf Brown <ralf.brown@gmail.com>
+>0x1E	string	mimetypeapplication/epub+zip	EPUB document
+!:mime application/epub+zip
 
 #  Catch other ZIP-with-mimetype formats
 #	In a ZIP file, the bytes immediately after a member's contents are
@@ -895,12 +894,6 @@
 #   archive must be an uncompressed file called 'mimetype' with contents
 #   'application/epub+zip'
 
-# start by checking that this is a ZIP archive, then check for the
-#   proper mimetype file
-# From: Ralf Brown <ralf.brown@gmail.com>
-0	string	PK\003\004
->0x1E	string	mimetypeapplication/epub+zip	EPUB document
-!:mime application/epub+zip
 
 # From: "Michał Górny" <mgorny@gentoo.org>
 # ZPAQ: http://mattmahoney.net/dc/zpaq.html
