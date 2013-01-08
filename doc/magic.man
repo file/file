@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.75 2012/10/30 23:22:57 christos Exp $
-.Dd November 7, 2012
+.\" $File: magic.man,v 1.76 2012/11/07 20:29:27 christos Exp $
+.Dd January 7, 2013
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -264,6 +264,59 @@ This is intended to be used with the test
 (which is always true) and a message that is to be used if there are
 no other matches.
 .El
+.Pp
+For compatibility with the Single
+.Ux
+Standard, the type specifiers
+.Dv dC
+and
+.Dv d1
+are equivalent to
+.Dv byte ,
+the type specifiers
+.Dv uC
+and
+.Dv u1
+are equivalent to
+.Dv ubyte ,
+the type specifiers
+.Dv dS
+and
+.Dv d2
+are equivalent to
+.Dv short ,
+the type specifiers
+.Dv uS
+and
+.Dv u2
+are equivalent to
+.Dv ushort ,
+the type specifiers
+.Dv dI ,
+.Dv dL ,
+and
+.Dv d4
+are equivalent to
+.Dv long ,
+the type specifiers
+.Dv uI ,
+.Dv uL ,
+and
+.Dv u4
+are equivalent to
+.Dv ulong ,
+the type specifier
+.Dv d8
+is equivalent to
+.Dv quad ,
+the type specifier
+.Dv u8
+is equivalent to
+.Dv uquad ,
+and the type specifier
+.Dv s
+is equivalent to
+.Dv string .
 .Pp
 Each top-level magic pattern (see below for an explanation of levels)
 is classified as text or binary according to the types used.
@@ -570,19 +623,41 @@ The formats
 .Dv melong ,
 .Dv short ,
 .Dv beshort ,
-.Dv leshort ,
-.Dv date ,
-.Dv bedate ,
-.Dv medate ,
-.Dv ledate ,
-.Dv beldate ,
-.Dv leldate ,
 and
-.Dv meldate
-are system-dependent; perhaps they should be specified as a number
-of bytes (2B, 4B, etc),
-since the files being recognized typically come from
-a system on which the lengths are invariant.
+.Dv leshort
+do not depend on the length of the C data types
+.Dv short
+and
+.Dv long
+on the platform, even though the Single
+.Ux
+Specification implies that they do.  However, as OS X Mountain Lion has
+passed the Single
+.Ux
+Specification validation suite, and supplies a version of
+.Xr file __CSECTION__
+in which they do not depend on the sizes of the C data types and that is
+built for a 64-bit environment in which
+.Dv long
+is 8 bytes rather than 4 bytes, presumably the validation suite does not
+test whether, for example
+.Dv long
+refers to an item with the same size as the C data type
+.Dv long .
+There should probably be
+.Dv type
+names
+.Dv int8 ,
+.Dv uint8 ,
+.Dv int16 ,
+.Dv uint16 ,
+.Dv int32 ,
+.Dv uint32 ,
+.Dv int64 ,
+and
+.Dv uint64 ,
+and specified-byte-order variants of them,
+to make it clearer that those types have specified widths.
 .\"
 .\" From: guy@sun.uucp (Guy Harris)
 .\" Newsgroups: net.bugs.usg

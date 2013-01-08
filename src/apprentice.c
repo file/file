@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.184 2013/01/07 18:06:40 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.185 2013/01/07 18:15:15 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -176,6 +176,13 @@ main(int argc, char *argv[])
 }
 #endif /* COMPILE_ONLY */
 
+/*
+ * XXX - the actual Single UNIX Specification says that "long" means "long",
+ * as in the C data type, but we treat it as meaning "4-byte integer".
+ * Given that the OS X version of file 5.04 did the same, I guess that passes
+ * the actual test; having "long" be dependent on how big a "long" is on
+ * the machine running "file" is silly.
+ */
 static const struct type_tbl_s {
 	const char name[16];
 	const size_t len;
@@ -228,19 +235,27 @@ static const struct type_tbl_s {
 	{ XX("qwdate"),		FILE_QWDATE,		FILE_FMT_STR },
 	{ XX("leqwdate"),	FILE_LEQWDATE,		FILE_FMT_STR },
 	{ XX("beqwdate"),	FILE_BEQWDATE,		FILE_FMT_STR },
+	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
+};
+
+/*
+ * These are not types, and cannot be preceded by "u" to make them
+ * unsigned.
+ */
+static const struct type_tbl_s special_tbl[] = {
 	{ XX("name"),		FILE_NAME,		FILE_FMT_STR },
 	{ XX("use"),		FILE_USE,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
+};
 # undef XX
 # undef XX_NULL
-};
 
 private int
-get_type(const char *l, const char **t)
+get_type(const struct type_tbl_s *tbl, const char *l, const char **t)
 {
 	const struct type_tbl_s *p;
 
-	for (p = type_tbl; p->len; p++) {
+	for (p = tbl; p->len; p++) {
 		if (strncmp(l, p->name, p->len) == 0) {
 			if (t)
 				*t = l + p->len;
@@ -248,6 +263,86 @@ get_type(const char *l, const char **t)
 		}
 	}
 	return p->type;
+}
+
+private int
+get_standard_integer_type(const char *l, const char **t)
+{
+	int type;
+	unsigned long length;
+	char *end;
+
+	if (isalpha((unsigned char)l[1])) {
+		switch (l[1]) {
+		case 'C':
+			/* "dC" and "uC" */
+			type = FILE_BYTE;
+			l += 2;
+			break;
+		case 'S':
+			/* "dS" and "uS" */
+			type = FILE_SHORT;
+			l += 2;
+			break;
+		case 'I':
+		case 'L':
+			/*
+			 * "dI", "dL", "uI", and "uL".
+			 *
+			 * XXX - the actual Single UNIX Specification says
+			 * that "L" means "long", as in the C data type,
+			 * but we treat it as meaning "4-byte integer".
+			 * Given that the OS X version of file 5.04 did
+			 * the same, I guess that passes the actual SUS
+			 * validation suite; having "dL" be dependent on
+			 * how big a "long" is on the machine running
+			 * "file" is silly.
+			 */
+			type = FILE_LONG;
+			l += 2;
+			break;
+		case 'Q':
+			/* "dQ" and "uQ" */
+			type = FILE_QUAD;
+			l += 2;
+			break;
+		default:
+			/* "d{anything else}", "u{anything else}" */
+			return FILE_INVALID;
+		}
+	} else if (isdigit((unsigned char)l[1])) {
+		/* "d{num}" and "u{num}" */
+		length = strtoul(l + 1, &end, 10);
+		if (end != l + 2 || (*end && !isspace((unsigned char)*end)))
+			return FILE_INVALID;
+		l += 2;
+		switch (length) {
+		case 1:
+			type = FILE_BYTE;
+			break;
+		case 2:
+			type = FILE_SHORT;
+			break;
+		case 4:
+			type = FILE_LONG;
+			break;
+		case 8:
+			type = FILE_QUAD;
+			break;
+		default:
+			/* XXX - what about 3, 5, 6, or 7? */
+			return FILE_INVALID;
+		}
+	} else {
+		/*
+		 * "d" or "u" by itself.
+		 */
+		type = FILE_LONG;
+		++l;
+	}
+	if (t)
+		*t = l;
+	return type;
 }
 
 private void
@@ -485,7 +580,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 			mlist_free(ms->mlist[i]);
 			ms->mlist[i] = NULL;
 		}
-		file_error(ms, 0, "could not find any magic files!");
+		file_error(ms, 0, "could not find any valid magic files!");
 		return -1;
 	}
 
@@ -1362,6 +1457,9 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 
 	cont_level = 0;
 
+	/*
+	 * Parse the offset.
+	 */
 	while (*l == '>') {
 		++l;		/* step over */
 		cont_level++; 
@@ -1530,12 +1628,52 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 	EATAB;
 #endif
 
-	if (*l == 'u' && (l[1] != 's' || l[2] != 'e')) {
-		++l;
+	/*
+	 * Parse the type.
+	 */
+	if (*l == 'u') {
+		/*
+		 * Try it as a keyword type prefixed by "u"; match what
+		 * follows the "u".  If that fails, try it as an SUS
+		 * integer type.  In either case, it's unsigned.
+		 */
 		m->flag |= UNSIGNED;
+		m->type = get_type(type_tbl, l + 1, &l);
+		if (m->type == FILE_INVALID) {
+			/*
+			 * Not a keyword type; parse it as an SUS type,
+			 * 'u' possibly followed by a number or C/S/L.
+			 */
+			m->type = get_standard_integer_type(l, &l);
+		}
+	} else {
+		/*
+		 * Try it as a keyword type.  If that fails, try it as
+		 * an SUS integer type if it begins with "d" or as an
+		 * SUS string type if it begins with "s".  In any case,
+		 * it's not unsigned.
+		 */
+		m->type = get_type(type_tbl, l, &l);
+		if (m->type == FILE_INVALID) {
+			/*
+			 * Not a keyword type; parse it as an SUS type,
+			 * either 'd' possibly followed by a number or
+			 * C/S/L, or just 's'.
+			 */
+			if (*l == 'd')
+				m->type = get_standard_integer_type(l, &l);
+			else if (*l == 's' && !isalpha((unsigned char)l[1])) {
+				m->type = FILE_STRING;
+				++l;
+			}
+		}
 	}
 
-	m->type = get_type(l, &l);
+	if (m->type == FILE_INVALID) {
+		/* Not found - try it as a special keyword. */
+		m->type = get_type(special_tbl, l, &l);
+	}
+			
 	if (m->type == FILE_INVALID) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "type `%s' invalid", l);
