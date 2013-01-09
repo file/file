@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.76 2012/11/07 20:29:27 christos Exp $
+.\" $File: magic.man,v 1.77 2013/01/08 01:37:01 christos Exp $
 .Dd January 7, 2013
 .Dt MAGIC __FSECTION__
 .Os
@@ -317,6 +317,14 @@ and the type specifier
 .Dv s
 is equivalent to
 .Dv string .
+In addition, the type specifier
+.Dv dQ
+is equivalent to
+.Dv quad
+and the type specifier
+.Dv uQ
+is equivalent to
+.Dv uquad .
 .Pp
 Each top-level magic pattern (see below for an explanation of levels)
 is classified as text or binary according to the types used.
