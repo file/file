@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mips,v 1.6 2010/08/13 16:12:30 christos Exp $
+# $File: mips,v 1.7 2011/05/03 01:44:17 christos Exp $
 # mips:  file(1) magic for Silicon Graphics (MIPS, IRIS, IRIX, etc.)
 #                         Dec Ultrix (MIPS)
 # all of SGI's *current* machines and OSes run in big-endian mode on the
@@ -142,41 +142,3 @@
 #
 0	beshort	0x180		MIPSEB Ucode
 0	beshort	0x182		MIPSEL-BE Ucode
-# 32bit core file
-0	belong	0xdeadadb0	IRIX core dump
->4	belong	1		of
->16	string	>\0		'%s'
-# 64bit core file
-0	belong	0xdeadad40	IRIX 64-bit core dump
->4	belong	1		of
->16	string	>\0		'%s'
-# N32bit core file
-0       belong	0xbabec0bb	IRIX N32 core dump
->4      belong	1               of
->16     string	>\0             '%s'
-# New style crash dump file
-0	string	\x43\x72\x73\x68\x44\x75\x6d\x70	IRIX vmcore dump of
->36	string	>\0					'%s'
-# Trusted IRIX info
-0	string	SGIAUDIT	SGI Audit file
->8	byte	x		- version %d
->9	byte	x		\b.%ld
-#
-0	string	WNGZWZSC	Wingz compiled script
-0	string	WNGZWZSS	Wingz spreadsheet
-0	string	WNGZWZHP	Wingz help file
-#
-0	string	#Inventor V	IRIS Inventor 1.0 file
-0	string	#Inventor V2	Open Inventor 2.0 file
-# GLF is OpenGL stream encoding
-0	string	glfHeadMagic();		GLF_TEXT
-4	belong	0x7d000000		GLF_BINARY_LSB_FIRST
-!:strength -30
-4	belong	0x0000007d		GLF_BINARY_MSB_FIRST
-!:strength -30
-# GLS is OpenGL stream encoding; GLS is the successor of GLF
-0	string	glsBeginGLS(		GLS_TEXT
-4	belong	0x10000000		GLS_BINARY_LSB_FIRST
-!:strength -30
-4	belong	0x00000010		GLS_BINARY_MSB_FIRST
-!:strength -30

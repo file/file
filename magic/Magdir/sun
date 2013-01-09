@@ -1,12 +1,15 @@
 
 #------------------------------------------------------------------------------
-# $File: sun,v 1.23 2013/01/06 01:09:42 christos Exp $
+# $File: sun,v 1.24 2013/01/08 01:43:18 christos Exp $
 # sun:  file(1) magic for Sun machines
 #
 # Values for big-endian Sun (MC680x0, SPARC) binaries on pre-5.x
-# releases.  (5.x uses ELF.)
+# releases.  (5.x uses ELF.)  Entries for executables without an
+# architecture type, used before the 68020-based Sun-3's came out,
+# are in aout, as they're indistinguishable from other big-endian
+# 32-bit a.out files.
 #
-0	belong&077777777	0600413		sparc demand paged
+0	belong&077777777	0600413		a.out SunOS sparc demand paged
 >0	byte		&0x80
 >>20	belong		<4096		shared library
 >>20	belong		=4096		dynamically linked executable
@@ -14,17 +17,17 @@
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0600410		sparc pure
+0	belong&077777777	0600410		a.out SunOS sparc pure
 >0	byte		&0x80		dynamically linked executable
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0600407		sparc
+0	belong&077777777	0600407		a.out SunOS sparc
 >0	byte		&0x80		dynamically linked executable
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0400413		mc68020 demand paged
+0	belong&077777777	0400413		a.out SunOS mc68020 demand paged
 >0	byte		&0x80
 >>20	belong		<4096		shared library
 >>20	belong		=4096		dynamically linked executable
@@ -32,17 +35,17 @@
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0400410		mc68020 pure
+0	belong&077777777	0400410		a.out SunOS mc68020 pure
 >0	byte		&0x80		dynamically linked executable
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0400407		mc68020
+0	belong&077777777	0400407		a.out SunOS mc68020
 >0	byte		&0x80		dynamically linked executable
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0200413		mc68010 demand paged
+0	belong&077777777	0200413		a.out SunOS mc68010 demand paged
 >0	byte		&0x80
 >>20	belong		<4096		shared library
 >>20	belong		=4096		dynamically linked executable
@@ -50,22 +53,14 @@
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0200410		mc68010 pure
+0	belong&077777777	0200410		a.out SunOS mc68010 pure
 >0	byte		&0x80		dynamically linked executable
 >0	byte		^0x80		executable
 >16	belong		>0		not stripped
 
-0	belong&077777777	0200407		mc68010
+0	belong&077777777	0200407		a.out SunOS mc68010
 >0	byte		&0x80		dynamically linked executable
 >0	byte		^0x80		executable
->16	belong		>0		not stripped
-
-# reworked these to avoid anything beginning with zero becoming "old sun-2"
-0	belong		0407		old sun-2 executable
->16	belong		>0		not stripped
-0	belong		0410		old sun-2 pure executable
->16	belong		>0		not stripped
-0	belong		0413		old sun-2 demand paged executable
 >16	belong		>0		not stripped
 
 #
@@ -144,5 +139,3 @@
 # New format for Sun/Cobalt boot ROMs is annoying, it stores the version code
 # at the very end where file(1) can't get it.
 0       string CRfs     COBALT boot rom data (Flat boot rom or file system)
-
-

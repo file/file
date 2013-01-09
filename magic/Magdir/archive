@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.73 2012/11/09 22:59:30 christos Exp $
+# $File: archive,v 1.74 2013/01/08 17:02:50 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -36,7 +36,60 @@
 0	string		070701		ASCII cpio archive (SVR4 with no CRC)
 0	string		070702		ASCII cpio archive (SVR4 with CRC)
 
-# Debian package (needs to go before regular portable archives)
+#
+# Various archive formats used by various versions of the "ar"
+# command.
+#
+
+#
+# Original UNIX archive formats.
+# They were written with binary values in host byte order, and
+# the magic number was a host "int", which might have been 16 bits
+# or 32 bits.  We don't say "PDP-11" or "VAX", as there might have
+# been ports to little-endian 16-bit-int or 32-bit-int platforms
+# (x86?) using some of those formats; if none existed, feel free
+# to use "PDP-11" for little-endian 16-bit and "VAX" for little-endian
+# 32-bit.  There might have been big-endian ports of that sort as
+# well.
+#
+0	leshort		0177555		very old 16-bit-int little-endian archive
+0	beshort		0177555		very old 16-bit-int big-endian archive
+0	lelong		0177555		very old 32-bit-int little-endian archive
+0	belong		0177555		very old 32-bit-int big-endian archive
+
+0	leshort		0177545		old 16-bit-int little-endian archive
+>2	string		__.SYMDEF	random library
+0	beshort		0177545		old 16-bit-int big-endian archive
+>2	string		__.SYMDEF	random library
+0	lelong		0177545		old 32-bit-int little-endian archive
+>4	string		__.SYMDEF	random library
+0	belong		0177545		old 32-bit-int big-endian archive
+>4	string		__.SYMDEF	random library
+
+#
+# From "pdp" (but why a 4-byte quantity?)
+#
+0	lelong		0x39bed		PDP-11 old archive
+0	lelong		0x39bee		PDP-11 4.0 archive
+
+#
+# XXX - what flavor of APL used this, and was it a variant of
+# some ar archive format?  It's similar to, but not the same
+# as, the APL workspace magic numbers in pdp.
+#
+0	long		0100554		apl workspace
+
+#
+# System V Release 1 portable(?) archive format.
+#
+0	string		=<ar>		System V Release 1 ar archive
+!:mime	application/x-archive
+
+#
+# Debian package; it's in the portable archive format, and needs to go
+# before the entry for regular portable archives, as it's recognized as
+# a portable archive whose first member has a name beginning with
+# "debian".
 #
 0	string		=!<arch>\ndebian
 !:mime	application/x-debian-package
@@ -53,23 +106,14 @@
 #>84	string		gz		\b, uses gzip compression
 #>136	ledate		x		created: %s
 
-0	string		=!<thin>\n	thin archive with
->68	belong		0		no symbol entries
->68	belong		1		%d symbol entry
->68	belong		>1		%d symbol entries
-
-# other archives
-0	long		0177555		very old archive
-0	short		0177555		very old PDP-11 archive
-0	long		0177545		old archive
-0	short		0177545		old PDP-11 archive
-0	long		0100554		apl workspace
-0	string		=<ar>		archive
-!:mime	application/x-archive
-
-# MIPS archive (needs to go before regular portable archives)
+#
+# MIPS archive; they're in the portable archive format, and need to go
+# before the entry for regular portable archives, as it's recognized as
+# a portable archive whose first member has a name beginning with
+# "__________E".
 #
 0	string	=!<arch>\n__________E	MIPS archive
+!:mime	application/x-archive
 >20	string	U			with MIPS Ucode members
 >21	string	L			with MIPSEL members
 >21	string	B			with MIPSEB members
@@ -80,56 +124,26 @@
 0	search/1	-h-		Software Tools format archive text
 
 #
-# XXX - why are there multiple <ar> thingies?  Note that 0x213c6172 is
-# "!<ar", so, for new-style (4.xBSD/SVR2andup) archives, we have:
-#
-# 0	string		=!<arch>		current ar archive
-# 0	long		0x213c6172	archive file
-#
-# and for SVR1 archives, we have:
-#
-# 0	string		\<ar>		System V Release 1 ar archive
-# 0	string		=<ar>		archive
-#
-# XXX - did Aegis really store shared libraries, breakpointed modules,
-# and absolute code program modules in the same format as new-style
-# "ar" archives?
+# BSD/SVR2-and-later portable archive formats.
 #
 0	string		=!<arch>		current ar archive
 !:mime	application/x-archive
 >8	string		__.SYMDEF	random library
+>68	string		__.SYMDEF\ SORTED	random library
 >0	belong		=65538		- pre SR9.5
 >0	belong		=65539		- post SR9.5
 >0	beshort		2		- object archive
 >0	beshort		3		- shared library module
 >0	beshort		4		- debug break-pointed module
 >0	beshort		5		- absolute code program module
-0	string		\<ar>		System V Release 1 ar archive
-0	string		=<ar>		archive
+
 #
-# XXX - from "vax", which appears to collect a bunch of byte-swapped
-# thingies, to help you recognize VAX files on big-endian machines;
-# with "leshort", "lelong", and "string", that's no longer necessary....
+# "Thin" archive, as can be produced by GNU ar.
 #
-0	belong		0x65ff0000	VAX 3.0 archive
-0	belong		0x3c61723e	VAX 5.0 archive
-#
-0	long		0x213c6172	archive file
-0	lelong		0177555		very old VAX archive
-0	leshort		0177555		very old PDP-11 archive
-#
-# XXX - "pdp" claims that 0177545 can have an __.SYMDEF member and thus
-# be a random library (it said 0xff65 rather than 0177545).
-#
-0	lelong		0177545		old VAX archive
->8	string		__.SYMDEF	random library
-0	leshort		0177545		old PDP-11 archive
->8	string		__.SYMDEF	random library
-#
-# From "pdp" (but why a 4-byte quantity?)
-#
-0	lelong		0x39bed		PDP-11 old archive
-0	lelong		0x39bee		PDP-11 4.0 archive
+0	string		=!<thin>\n	thin archive with
+>68	belong		0		no symbol entries
+>68	belong		1		%d symbol entry
+>68	belong		>1		%d symbol entries
 
 # ARC archiver, from Daniel Quinlan (quinlan@yggdrasil.com)
 #
