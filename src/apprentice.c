@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.186 2013/01/08 01:37:01 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.187 2013/01/09 13:03:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -277,12 +277,10 @@ get_standard_integer_type(const char *l, const char **t)
 		case 'C':
 			/* "dC" and "uC" */
 			type = FILE_BYTE;
-			l += 2;
 			break;
 		case 'S':
 			/* "dS" and "uS" */
 			type = FILE_SHORT;
-			l += 2;
 			break;
 		case 'I':
 		case 'L':
@@ -299,17 +297,16 @@ get_standard_integer_type(const char *l, const char **t)
 			 * "file" is silly.
 			 */
 			type = FILE_LONG;
-			l += 2;
 			break;
 		case 'Q':
 			/* "dQ" and "uQ" */
 			type = FILE_QUAD;
-			l += 2;
 			break;
 		default:
 			/* "d{anything else}", "u{anything else}" */
 			return FILE_INVALID;
 		}
+		l += 2;
 	} else if (isdigit((unsigned char)l[1])) {
 		/*
 		 * "d{num}" and "u{num}"; we only support {num} values
