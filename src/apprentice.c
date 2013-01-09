@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.186 2013/01/08 01:37:01 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.187 2013/01/09 13:03:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -176,6 +176,13 @@ main(int argc, char *argv[])
 }
 #endif /* COMPILE_ONLY */
 
+struct type_tbl_s {
+	const char name[16];
+	const size_t len;
+	const int type;
+	const int format;
+};
+
 /*
  * XXX - the actual Single UNIX Specification says that "long" means "long",
  * as in the C data type, but we treat it as meaning "4-byte integer".
@@ -183,12 +190,7 @@ main(int argc, char *argv[])
  * the actual test; having "long" be dependent on how big a "long" is on
  * the machine running "file" is silly.
  */
-static const struct type_tbl_s {
-	const char name[16];
-	const size_t len;
-	const int type;
-	const int format;
-} type_tbl[] = {
+static const struct type_tbl_s type_tbl[] = {
 # define XX(s)		s, (sizeof(s) - 1)
 # define XX_NULL	"", 0
 	{ XX("byte"),		FILE_BYTE,		FILE_FMT_NUM },
@@ -269,8 +271,6 @@ private int
 get_standard_integer_type(const char *l, const char **t)
 {
 	int type;
-	unsigned long length;
-	char *end;
 
 	if (isalpha((unsigned char)l[1])) {
 		switch (l[1]) {
@@ -311,28 +311,38 @@ get_standard_integer_type(const char *l, const char **t)
 			return FILE_INVALID;
 		}
 	} else if (isdigit((unsigned char)l[1])) {
-		/* "d{num}" and "u{num}" */
-		length = strtoul(l + 1, &end, 10);
-		if (end != l + 2 || (*end && !isspace((unsigned char)*end)))
+		/*
+		 * "d{num}" and "u{num}"; we only support {num} values
+		 * of 1, 2, 4, and 8 - the Single UNIX Specification
+		 * doesn't say anything about whether arbitrary
+		 * values should be supported, but both the Solaris 10
+		 * and OS X Mountain Lion versions of file passed the
+		 * Single UNIX Specification validation suite, and
+		 * neither of them support values bigger than 8 or
+		 * non-power-of-2 values.
+		 */
+		if (isdigit((unsigned char)l[2])) {
+			/* Multi-digit, so > 9 */
 			return FILE_INVALID;
-		l += 2;
-		switch (length) {
-		case 1:
+		}
+		switch (l[1]) {
+		case '1':
 			type = FILE_BYTE;
 			break;
-		case 2:
+		case '2':
 			type = FILE_SHORT;
 			break;
-		case 4:
+		case '4':
 			type = FILE_LONG;
 			break;
-		case 8:
+		case '8':
 			type = FILE_QUAD;
 			break;
 		default:
 			/* XXX - what about 3, 5, 6, or 7? */
 			return FILE_INVALID;
 		}
+		l += 2;
 	} else {
 		/*
 		 * "d" or "u" by itself.
