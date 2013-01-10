@@ -1,3 +1,9 @@
+2013-01-10  11:20  Christos Zoulas <christos@zoulas.com>
+
+	* Make getline public so that file can link against it.
+	  Perhaps it is better to rename it, or hide it differently.
+	  Fixes builds on platforms that do not provide it.
+	  
 2013-01-07  11:20  Christos Zoulas <christos@zoulas.com>
 
 	* Add SuS d{,1,2,4,8}, u{,1,2,4,8} and document
@@ -6,6 +12,10 @@
 2013-01-06  11:20  Christos Zoulas <christos@zoulas.com>
 
 	* add magic_version function and constant
+	* Redo memory allocation and de-allocation.
+	  (prevents double frees on non mmap platforms)
+	* Fix bug with name/use having to do with passing
+	  found state from the parent to the child and back.
 
 2012-12-19   8:47  Christos Zoulas <christos@zoulas.com>
 
