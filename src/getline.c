@@ -37,7 +37,7 @@
 #include <errno.h>
 #include <string.h>
 
-ssize_t
+public ssize_t
 getdelim(char **buf, size_t *bufsiz, int delimiter, FILE *fp)
 {
 	char *ptr, *eptr;
