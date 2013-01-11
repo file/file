@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.187 2013/01/09 13:03:41 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.188 2013/01/09 15:36:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1461,6 +1461,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 	char *t;
 	int op;
 	uint32_t cont_level;
+	int32_t diff;
 
 	cont_level = 0;
 
@@ -1482,6 +1483,16 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 			file_magerror(ms, "No current entry for continuation");
 			return -1;
 		}
+		if (me->cont_count == 0) {
+			file_magerror(ms, "Continuations present with 0 count");
+			return -1;
+		}
+		m = &me->mp[me->cont_count - 1];
+		diff = (int32_t)cont_level - (int32_t)m->cont_level;
+		if (diff > 1)
+			file_magwarn(ms, "New continuation level %u is more "
+			    "than one larger than current level %u", cont_level,
+			    m->cont_level);
 		if (me->cont_count == me->max_count) {
 			struct magic *nm;
 			size_t cnt = me->max_count + ALLOC_CHUNK;
