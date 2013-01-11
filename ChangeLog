@@ -1,10 +1,14 @@
-2013-01-10  11:20  Christos Zoulas <christos@zoulas.com>
+2013-01-10  11:40  Christos Zoulas <christos@zoulas.com>
+
+	* Warn about inconsistent continuation levels.
+
+2013-01-10  21:00  Christos Zoulas <christos@zoulas.com>
 
 	* Make getline public so that file can link against it.
 	  Perhaps it is better to rename it, or hide it differently.
 	  Fixes builds on platforms that do not provide it.
 	  
-2013-01-07  11:20  Christos Zoulas <christos@zoulas.com>
+2013-01-07  16:30  Christos Zoulas <christos@zoulas.com>
 
 	* Add SuS d{,1,2,4,8}, u{,1,2,4,8} and document
 	  what long, int, short, etc is (Guy Harris)

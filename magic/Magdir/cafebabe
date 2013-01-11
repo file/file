@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cafebabe,v 1.11 2013/01/04 23:27:55 christos Exp $
+# $File: cafebabe,v 1.12 2013/01/11 16:45:23 christos Exp $
 # Cafe Babes unite!
 #
 # Since Java bytecode and Mach-O universal binaries have the same magic number,
@@ -30,14 +30,14 @@
 >>4	belong		0x0032		(Java 1.6)
 
 0	belong		0xcafed00d	JAR compressed with pack200,
->>5	byte		x		version %d.
->>4	byte		x		\b%d
+>5	byte		x		version %d.
+>4	byte		x		\b%d
 !:mime	application/x-java-pack200
 
 
 0	belong		0xcafed00d	JAR compressed with pack200,
->>5	byte		x		version %d.
->>4	byte		x		\b%d
+>5	byte		x		version %d.
+>4	byte		x		\b%d
 !:mime	application/x-java-pack200
 
 ### JAVA END ###
