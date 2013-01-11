@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.64 2011/08/14 09:03:12 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.65 2012/08/26 09:56:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -98,7 +98,7 @@ handle_mime(struct magic_set *ms, int mime, const char *str)
 protected int
 file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 {
-	int ret = 0, did = 0;
+	int ret, did = 0;
 	int mime = ms->flags & MAGIC_MIME;
 #ifdef	S_IFLNK
 	char buf[BUFSIZ+4];
@@ -135,6 +135,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		return -1;
 	}
 
+	ret = 1;
 	if (!mime) {
 #ifdef S_ISUID
 		if (sb->st_mode & S_ISUID)
@@ -160,7 +161,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 		} else if (file_printf(ms, "%sdirectory", COMMA) == -1)
 			return -1;
-		return 1;
+		break;
 #ifdef S_IFCHR
 	case S_IFCHR:
 		/* 
@@ -191,7 +192,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 #endif
 		}
-		return 1;
+		break;
 #endif
 #ifdef S_IFBLK
 	case S_IFBLK:
@@ -223,7 +224,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 #endif
 		}
-		return 1;
+		break;
 #endif
 	/* TODO add code to handle V7 MUX and Blit MUX files */
 #ifdef	S_IFIFO
@@ -235,7 +236,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 		} else if (file_printf(ms, "%sfifo (named pipe)", COMMA) == -1)
 			return -1;
-		return 1;
+		break;
 #endif
 #ifdef	S_IFDOOR
 	case S_IFDOOR:
@@ -244,7 +245,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 		} else if (file_printf(ms, "%sdoor", COMMA) == -1)
 			return -1;
-		return 1;
+		break;
 #endif
 #ifdef	S_IFLNK
 	case S_IFLNK:
@@ -261,7 +262,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			    "%sunreadable symlink `%s' (%s)", COMMA, fn,
 			    strerror(errno)) == -1)
 				return -1;
-			return 1;
+			break;
 		}
 		buf[nch] = '\0';	/* readlink(2) does not do this */
 
@@ -290,7 +291,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 					    "%spath too long: `%s'", COMMA,
 					    fn) == -1)
 						return -1;
-					return 1;
+					break;
 				}
 				/* take dir part */
 				(void)strlcpy(buf2, fn, sizeof buf2);
@@ -309,7 +310,8 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			ms->flags &= MAGIC_SYMLINK;
 			p = magic_file(ms, buf);
 			ms->flags |= MAGIC_SYMLINK;
-			return p != NULL ? 1 : -1;
+			if (p == NULL)
+				return -1;
 		} else { /* just print what it points to */
 			if (mime) {
 				if (handle_mime(ms, mime, "symlink") == -1)
@@ -318,7 +320,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			    COMMA, buf) == -1)
 				return -1;
 		}
-		return 1;
+		break;
 #endif
 #ifdef	S_IFSOCK
 #ifndef __COHERENT__
@@ -328,36 +330,42 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 		} else if (file_printf(ms, "%ssocket", COMMA) == -1)
 			return -1;
-		return 1;
+		break;
 #endif
 #endif
 	case S_IFREG:
+		/*
+		 * regular file, check next possibility
+		 *
+		 * If stat() tells us the file has zero length, report here that
+		 * the file is empty, so we can skip all the work of opening and
+		 * reading the file.
+		 * But if the -s option has been given, we skip this
+		 * optimization, since on some systems, stat() reports zero
+		 * size for raw disk partitions. (If the block special device
+		 * really has zero length, the fact that it is empty will be
+		 * detected and reported correctly when we read the file.)
+		 */
+		if ((ms->flags & MAGIC_DEVICES) == 0 && sb->st_size == 0) {
+			if (mime) {
+				if (handle_mime(ms, mime, "x-empty") == -1)
+					return -1;
+			} else if (file_printf(ms, "%sempty", COMMA) == -1)
+				return -1;
+			break;
+		}
+		ret = 0;
 		break;
+
 	default:
 		file_error(ms, 0, "invalid mode 0%o", sb->st_mode);
 		return -1;
 		/*NOTREACHED*/
 	}
 
-	/*
-	 * regular file, check next possibility
-	 *
-	 * If stat() tells us the file has zero length, report here that
-	 * the file is empty, so we can skip all the work of opening and 
-	 * reading the file.
-	 * But if the -s option has been given, we skip this optimization,
-	 * since on some systems, stat() reports zero size for raw disk
-	 * partitions.  (If the block special device really has zero length,
-	 * the fact that it is empty will be detected and reported correctly
-	 * when we read the file.)
-	 */
-	if ((ms->flags & MAGIC_DEVICES) == 0 && sb->st_size == 0) {
-		if (mime) {
-			if (handle_mime(ms, mime, "x-empty") == -1)
-				return -1;
-		} else if (file_printf(ms, "%sempty", COMMA) == -1)
-			return -1;
-		return 1;
+	if (!mime && did) {
+	    if (file_printf(ms, " ") == -1)
+		    return -1;
 	}
-	return 0;
+	return ret;
 }
