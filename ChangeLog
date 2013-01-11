@@ -1,6 +1,7 @@
-2013-01-10  11:40  Christos Zoulas <christos@zoulas.com>
+2013-01-11  14:50  Christos Zoulas <christos@zoulas.com>
 
 	* Warn about inconsistent continuation levels.
+	* Change fsmagic to add a space after it prints.
 
 2013-01-10  21:00  Christos Zoulas <christos@zoulas.com>
 
