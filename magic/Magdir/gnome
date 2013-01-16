@@ -1,7 +1,8 @@
 
 #------------------------------------------------------------------------------
-# $File: gnome-keyring,v 1.2 2009/09/19 16:28:09 christos Exp $
-# GNOME keyring
+# $File: gnome,v 1.3 2012/06/21 01:19:51 christos Exp $
+# GNOME related files
+
 # Contributed by Josh Triplett
 # FIXME: Could be simplified if pstring supported two-byte counts
 0         string   GnomeKeyring\n\r\0\n GNOME keyring
@@ -24,3 +25,35 @@
 >>>>>>&24 ubelong  x                    \b, hash iterations %u
 >>>>>>&28 ubequad  x                    \b, salt %llu
 >>>>>>&52 ubelong  x                    \b, %u item(s)
+
+# From: Alex Beregszaszi <alex@fsn.hu>
+4	string	gtktalog		GNOME Catalogue (gtktalog)
+>13	string	>\0			version %s
+
+# Summary: GStreamer binary registry
+# Extension: .bin
+# Submitted by: Josh Triplett <josh@joshtriplett.org>
+0	belong	0xc0def00d		GStreamer binary registry
+>4	string	x			\b, version %s
+
+# GVariant Database file
+# By Elan Ruusam=E4e <glen@delfi.ee>
+# https://github.com/GNOME/gvdb/blob/master/gvdb-format.h
+# It's always "GVariant", it's byte swapped on incompatible archs
+# See https://github.com/GNOME/gvdb/blob/master/gvdb-builder.c
+file_builder_serialise()
+# http://developer.gnome.org/glib/2.34/glib-GVariant.html#GVariant
+0	string	GVariant	GVariant Database file,
+# version is never filled. probably future extension
+>8	lelong	x		version %d
+# not sure are these usable, so commented out
+#>>16	lelong	x		start %d,
+#>>>20	lelong	x		end %d
+
+# G-IR database made by gobject-introspect toolset,
+# http://live.gnome.org/GObjectIntrospection
+0	string		GOBJ\nMETADATA\r\n\032	G-IR binary database
+>16	byte		x			\b, v%d
+>17	byte		x			\b.%d
+>20	leshort		x			\b, %d entries
+>22	leshort		x			\b/%d local

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.29 2012/06/20 22:10:51 christos Exp $
+# $File: database,v 1.30 2012/08/26 10:23:30 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -270,14 +270,6 @@
 >40	lequad		x			\b, bnum=%lld
 >48	lequad		x			\b, rnum=%lld
 >56	lequad		x			\b, fsiz=%lld
-
-# G-IR database made by gobject-introspect toolset,
-# http://live.gnome.org/GObjectIntrospection
-0	string		GOBJ\nMETADATA\r\n\032	G-IR binary database
->16	byte		x			\b, v%d
->17	byte		x			\b.%d
->20	leshort		x			\b, %d entries
->22	leshort		x			\b/%d local
 
 # Type:	QDBM Quick Database Manager
 # From:	Benoit Sibaud <bsibaud@april.org>
