@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.74 2013/01/08 17:02:50 christos Exp $
+# $File: archive,v 1.75 2013/01/09 22:37:24 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -203,7 +203,10 @@
 # SAR
 3	string	LH5 SAR archive data
 # BSArc/BS2
-0	string	\212\3SB \0 BSArc/BS2 archive data
+0	string	\212\3SB\020\0	BSArc/BS2 archive data
+# Bethesda Softworks Archive (Oblivion)
+0	string	BSA\0 		BSArc archive data
+>	lelong	x		version %d
 # MAR
 2	string	=-ah MAR archive data
 # ACB
