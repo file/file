@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: gnome,v 1.3 2012/06/21 01:19:51 christos Exp $
+# $File: gnome,v 1.1 2013/01/16 13:53:10 christos Exp $
 # GNOME related files
 
 # Contributed by Josh Triplett
@@ -41,7 +41,7 @@
 # https://github.com/GNOME/gvdb/blob/master/gvdb-format.h
 # It's always "GVariant", it's byte swapped on incompatible archs
 # See https://github.com/GNOME/gvdb/blob/master/gvdb-builder.c
-file_builder_serialise()
+# file_builder_serialise()
 # http://developer.gnome.org/glib/2.34/glib-GVariant.html#GVariant
 0	string	GVariant	GVariant Database file,
 # version is never filled. probably future extension
