@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.71 2013/01/23 19:03:41 christos Exp $
+# $File: filesystems,v 1.72 2013/01/26 18:17:28 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1650,8 +1650,6 @@
 >28 leshort >3
 >>8	ledate	x	created: %s
 
-0	string		td\000		floppy image data (TeleDisk)
-
 # AFS Dump Magic
 # From: Ty Sarna <tsarna@sarna.org> 
 0       string                  \x01\xb3\xa1\x13\x22    AFS Dump
@@ -1828,3 +1826,22 @@
 >60	lelong	x		\b address of last segment written 0x%x,
 >64	lelong	x		\b address of next segment to write 0x%x,
 >68	lelong	x		\b address of current segment written 0x%x
+
+0	string	td\000		floppy image data (TeleDisk, compressed)
+0	string	TD\000		floppy image data (TeleDisk)
+
+0	string	CQ\024		floppy image data (CopyQM, 
+>16	leshort	x		%d sectors, 
+>18	leshort	x		%d heads.)
+
+0	string	ACT\020Apricot\020disk\020image\032\004	floppy image data (ApriD
+isk)
+
+0	beshort	0xAA58		floppy image data (IBM SaveDskF, old)
+0	beshort	0xAA59		floppy image data (IBM SaveDskF)
+0	beshort	0xAA5A		floppy image data (IBM SaveDskF, compres
+sed)
+
+0	string	\074CPM_Disk\076	disk image data (YAZE)
+
+
