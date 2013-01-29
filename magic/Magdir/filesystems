@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.72 2013/01/26 18:17:28 christos Exp $
+# $File: filesystems,v 1.73 2013/01/29 19:31:33 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1184,7 +1184,17 @@
 #>>>>>>>>>80	ulelong		=0		\b, checksum 0x%x=0 (usual)
 >>>>>>>>>0x258	ulelong&0x00009090	=0x00009090	
 >>>>>>>>>>&-92		indirect	x	\b; contains 
-### DOS boot sector end
+# For 2nd NTFS sector added by Joerg Jenderek at Jan 2013
+# http://thestarman.pcministry.com/asm/mbr/NTFSbrHexEd.htm
+# unused assembler instructions JMP y2;NOP;NOP
+0x056		ulelong&0xFFFF0FFF	0x909002EB	
+# unicode loadername terminated by CTRL-D
+>(0.s*2)	ulelong&0xFFFFFF00	0x00040000		
+# loadernames are NTLDR,CMLDR,PELDR,$LDR$ or BOOTMGR
+>>0x002		lestring16	x	Microsoft Windows XP/VISTA bootloader %-5.5s
+>>0x12		string		$	
+>>>0x0c		lestring16	x	\b%-2.2s
+### DOS,NTFS boot sectors end
 
 9564	lelong		0x00011954	Unix Fast File system [v1] (little-endian),
 >8404	string		x		last mounted on %s,
