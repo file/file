@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.18 2012/08/01 12:12:36 christos Exp $
+# $File: jpeg,v 1.19 2013/02/04 15:50:03 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -12,7 +12,7 @@
 0	beshort		0xffd8		JPEG image data
 !:mime	image/jpeg
 !:apple	8BIMJPEG
-!:strength +1
+!:strength +2
 >6	string		JFIF		\b, JFIF standard
 # The following added by Erik Rossen <rossen@freesurf.ch> 1999-09-06
 # in a vain attempt to add image size reporting for JFIF.  Note that these
