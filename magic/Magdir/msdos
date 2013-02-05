@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.82 2012/10/29 17:36:49 christos Exp $
+# $File: msdos,v 1.83 2012/11/13 14:55:44 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -313,7 +313,7 @@
 >5	ubyte		>0		
 >>8	string		x		\b, name=%-.2s
 0	string	\xffKEYB\ \ \ \0\0\0\0	
->12	string	\0\0\0\0`\360		MS-DOS KEYBoard Layout file
+>12	string	\0\0\0\0`\004\360	MS-DOS KEYBoard Layout file
 
 # .COM formats (Daniel Quinlan, quinlan@yggdrasil.com)
 # Uncommenting only the first two lines will cover about 2/3 of COM files,
