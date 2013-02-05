@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: gnome,v 1.1 2013/01/16 13:53:10 christos Exp $
+# $File: gnome,v 1.2 2013/01/23 17:47:17 christos Exp $
 # GNOME related files
 
 # Contributed by Josh Triplett
@@ -37,7 +37,7 @@
 >4	string	x			\b, version %s
 
 # GVariant Database file
-# By Elan Ruusam=E4e <glen@delfi.ee>
+# By Elan Ruusamae <glen@delfi.ee>
 # https://github.com/GNOME/gvdb/blob/master/gvdb-format.h
 # It's always "GVariant", it's byte swapped on incompatible archs
 # See https://github.com/GNOME/gvdb/blob/master/gvdb-builder.c

@@ -1,11 +1,11 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.6 2009/09/19 16:28:12 christos Exp $
+# $File: sql,v 1.8 2012/12/09 17:11:08 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
 # Recognize some MySQL files.
-# Elan Ruusam√§e <glen@delfi.ee>, added MariaDB signatures
+# Elan Ruusama§e <glen@delfi.ee>, added MariaDB signatures
 # from https://bazaar.launchpad.net/~maria-captains/maria/5.5/view/head:/support-files/magic
 #
 0	beshort			0xfe01		MySQL table definition file
