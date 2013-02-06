@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.45 2011/09/06 11:00:06 christos Exp $
+# $File: animation,v 1.46 2012/08/26 10:43:05 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -751,7 +751,7 @@
 >0	byte		x		GameCube movie,
 >0x34	ubeshort	x		%d x
 >0x36	ubeshort	x		%d,
->0x26	ubeshort	x		%dµs,
+>0x26	ubeshort	x		%dus,
 >0x42	ubeshort	0		no audio
 >0x42	ubeshort	>0		%dHz audio
 
