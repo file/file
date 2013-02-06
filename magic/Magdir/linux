@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.46 2013/01/06 21:26:48 christos Exp $
+# $File: linux,v 1.47 2013/02/06 14:18:52 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -94,7 +94,7 @@
 #
 # Linux kernel boot images, from Albert Cahalan <acahalan@cs.uml.edu>
 # and others such as Axel Kohlmeyer <akohlmey@rincewind.chemie.uni-ulm.de>
-# and Nicolás Lichtmaier <nick@debian.org>
+# and Nicolas Lichtmaier <nick@debian.org>
 # All known start with: b8 c0 07 8e d8 b8 00 90 8e c0 b9 00 01 29 f6 29
 # Linux kernel boot images (i386 arch) (Wolfram Kleff)
 514	string		HdrS		Linux kernel
@@ -118,10 +118,10 @@
 >0x1e3		string	Loading		version 1.3.79 or older
 >0x1e9		string	Loading		from prehistoric times
 
-# System.map files - Nicolás Lichtmaier <nick@debian.org>
+# System.map files - Nicolas Lichtmaier <nick@debian.org>
 8	search/1	\ A\ _text	Linux kernel symbol map text
 
-# LSM entries - Nicolás Lichtmaier <nick@debian.org>
+# LSM entries - Nicolas Lichtmaier <nick@debian.org>
 0	search/1	Begin3	Linux Software Map entry text
 0	search/1	Begin4	Linux Software Map entry text (new format)
 

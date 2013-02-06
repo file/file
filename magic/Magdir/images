@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.79 2012/12/18 17:28:44 christos Exp $
+# $File: images,v 1.80 2013/02/06 14:18:52 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -427,7 +427,7 @@
 >5	byte	0x00		(white background)
 >5	byte	0xFF		(black background)
 
-# Gürkan Sengün <gurkan@linuks.mine.nu>, www.linuks.mine.nu
+# Gurkan Sengun <gurkan@linuks.mine.nu>, www.linuks.mine.nu
 # http://www.atarimax.com/jindroush.atari.org/afmtatr.html
 0	leshort	0x0296		Atari ATR image
 

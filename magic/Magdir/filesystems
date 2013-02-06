@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.73 2013/01/29 19:31:33 christos Exp $
+# $File: filesystems,v 1.74 2013/02/06 14:18:52 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -290,7 +290,7 @@
 >242	string	Bootsector\ from\ C.H.\ Hochst\204	
 # http://freecode.com/projects/dosfstools	dosfstools-n.m/src/mkdosfs.c
 # updated by Joerg Jenderek at Nov 2012. Use search directive with offset instead of string
-# skip name "C.H. Hochstätter" partly because it is sometimes written without umlaut
+# skip name "C.H. Hochstaetter" partly because it is sometimes written without umlaut
 >242	search/127	Bootsector\ from\ C.H.\ Hochst			
 >>278	search/127	No\ Systemdisk.\ Booting\ from\ harddisk	
 # followed by variants with point,CR-NL or NL-CR
@@ -1472,8 +1472,8 @@
 #        10	SS, 8 SPT
 #        11	DS, 8 SPT
 #
-#  11111001	Double density 3½ floppy disk, high density 5¼
-#  11110000	High density 3½ floppy disk
+#  11111001	Double density 3 1/2 floppy disk, high density 5 1/4
+#  11110000	High density 3 1/2 floppy disk
 #  11111000	Hard disk any format
 #
 

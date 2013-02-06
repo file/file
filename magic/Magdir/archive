@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.77 2013/01/23 17:45:51 christos Exp $
+# $File: archive,v 1.78 2013/02/06 14:18:52 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -231,7 +231,7 @@
 # AMGC
 0	string	\xad6" AMGC archive data
 # NuLIB
-0	string	NõFélå NuLIB archive data
+0	string	N\xc3\xb5F\xc3\xa9lx\xc3\xa5 NuLIB archive data
 # PakLeo
 0	string	LEOLZW PAKLeo archive data
 # ChArc
@@ -243,7 +243,7 @@
 # Freeze
 0	string	\x1f\x9f\x4a\x10\x0a Freeze archive data
 # KBoom
-0	string	¨MP¨ KBoom archive data
+0	string	\xc2\xa8MP\xc2\xa8 KBoom archive data
 # NSQ, must go after CDC Codec
 0	string	\x76\xff NSQ archive data
 # DPA
@@ -281,7 +281,7 @@
 # MP3 (archiver, not lossy audio compression)
 0	string	MP3\x1a MP3-Archiver archive data
 # ZET
-0	string	OZÝ ZET archive data
+0	string	OZ\xc3\x9d ZET archive data
 # TSComp
 0	string	\x65\x5d\x13\x8c\x08\x01\x03\x00 TSComp archive data
 # ARQ
@@ -312,7 +312,7 @@
 # Xtreme
 0	string	ULEB\0 Xtreme archive data
 # Pack Magic
-0	string	@â\1\0 Pack Magic archive data
+0	string	@\xc3\xa2\1\0 Pack Magic archive data
 # BTS
 0	belong&0xfeffffff	0x1a034465 BTS archive data
 # ELI 5750
@@ -448,7 +448,7 @@
 # XPack Data
 0	string	xpa XPack archive data
 # XPack Single Data
-0	string	Í\ jm XPack single archive data
+0	string	\xc3\x8d\ jm XPack single archive data
 
 # TODO: missing due to unknown magic/magic at end of file:
 #DWC
@@ -912,7 +912,7 @@
 #   'application/epub+zip'
 
 
-# From: "Michał Górny" <mgorny@gentoo.org>
+# From: "Michael Gorny" <mgorny@gentoo.org>
 # ZPAQ: http://mattmahoney.net/dc/zpaq.html
 0	string	zPQ	ZPAQ stream
 >3	byte	x	\b, level %d
