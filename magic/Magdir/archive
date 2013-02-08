@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.78 2013/02/06 14:18:52 christos Exp $
+# $File: archive,v 1.79 2013/02/08 17:24:06 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -130,12 +130,6 @@
 !:mime	application/x-archive
 >8	string		__.SYMDEF	random library
 >68	string		__.SYMDEF\ SORTED	random library
->0	belong		=65538		- pre SR9.5
->0	belong		=65539		- post SR9.5
->0	beshort		2		- object archive
->0	beshort		3		- shared library module
->0	beshort		4		- debug break-pointed module
->0	beshort		5		- absolute code program module
 
 #
 # "Thin" archive, as can be produced by GNU ar.
