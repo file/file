@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.73 2013/01/29 19:31:33 christos Exp $
+# $File: filesystems,v 1.74 2013/02/06 14:18:52 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -1844,14 +1844,10 @@
 >16	leshort	x		%d sectors, 
 >18	leshort	x		%d heads.)
 
-0	string	ACT\020Apricot\020disk\020image\032\004	floppy image data (ApriD
-isk)
+0	string	ACT\020Apricot\020disk\020image\032\004	floppy image data (ApriDisk)
 
 0	beshort	0xAA58		floppy image data (IBM SaveDskF, old)
 0	beshort	0xAA59		floppy image data (IBM SaveDskF)
-0	beshort	0xAA5A		floppy image data (IBM SaveDskF, compres
-sed)
+0	beshort	0xAA5A		floppy image data (IBM SaveDskF, compressed)
 
 0	string	\074CPM_Disk\076	disk image data (YAZE)
-
-
