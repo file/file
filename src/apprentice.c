@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.189 2013/01/11 16:45:23 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.190 2013/02/17 22:29:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -193,6 +193,7 @@ struct type_tbl_s {
 static const struct type_tbl_s type_tbl[] = {
 # define XX(s)		s, (sizeof(s) - 1)
 # define XX_NULL	"", 0
+	{ XX("invalid"),	FILE_INVALID,		FILE_FMT_NONE },
 	{ XX("byte"),		FILE_BYTE,		FILE_FMT_NUM },
 	{ XX("short"),		FILE_SHORT,		FILE_FMT_NUM },
 	{ XX("default"),	FILE_DEFAULT,		FILE_FMT_STR },
@@ -237,6 +238,8 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("qwdate"),		FILE_QWDATE,		FILE_FMT_STR },
 	{ XX("leqwdate"),	FILE_LEQWDATE,		FILE_FMT_STR },
 	{ XX("beqwdate"),	FILE_BEQWDATE,		FILE_FMT_STR },
+	{ XX("name"),		FILE_NAME,		FILE_FMT_NONE },
+	{ XX("use"),		FILE_USE,		FILE_FMT_NONE },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -367,6 +370,7 @@ init_file_tables(void)
 		file_names[p->type] = p->name;
 		file_formats[p->type] = p->format;
 	}
+	assert(p - type_tbl == FILE_NAMES_SIZE);
 }
 
 private int
@@ -1653,9 +1657,8 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 		/*
 		 * Try it as a keyword type prefixed by "u"; match what
 		 * follows the "u".  If that fails, try it as an SUS
-		 * integer type.  In either case, it's unsigned.
+		 * integer type. 
 		 */
-		m->flag |= UNSIGNED;
 		m->type = get_type(type_tbl, l + 1, &l);
 		if (m->type == FILE_INVALID) {
 			/*
@@ -1664,6 +1667,9 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 			 */
 			m->type = get_standard_integer_type(l, &l);
 		}
+		// It's unsigned.
+		if (m->type != FILE_INVALID)
+			m->flag |= UNSIGNED;
 	} else {
 		/*
 		 * Try it as a keyword type.  If that fails, try it as
