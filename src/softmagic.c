@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.157 2013/01/04 16:37:54 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.158 2013/01/06 20:22:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -997,7 +997,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 private void
 mdebug(uint32_t offset, const char *str, size_t len)
 {
-	(void) fprintf(stderr, "mget @%d: ", offset);
+	(void) fprintf(stderr, "mget/%zu @%d: ", len, offset);
 	file_showstr(stderr, str, len);
 	(void) fputc('\n', stderr);
 	(void) fputc('\n', stderr);
@@ -1126,10 +1126,13 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	struct mlist ml;
 
 	if (mcopy(ms, p, m->type, m->flag & INDIR, s, (uint32_t)(offset + o),
-	    (uint32_t)(nbytes - o), count) == -1)
+	    (uint32_t)nbytes, count) == -1)
 		return -1;
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
+		fprintf(stderr, "mget(type=%d, flag=%x, offset=%u, o=%zu, "
+		    "nbytes=%zu, count=%u)\n", m->type, m->flag, offset, o,
+		    nbytes, count);
 		mdebug(offset, (char *)(void *)p, sizeof(union VALUETYPE));
 #ifndef COMPILE_ONLY
 		file_mdump(m);
