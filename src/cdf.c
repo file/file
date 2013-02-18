@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.50 2012/02/20 22:35:29 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.51 2012/03/20 18:28:02 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -296,10 +296,9 @@ cdf_read(const cdf_info_t *info, off_t off, void *buf, size_t len)
 	if (info->i_fd == -1)
 		return -1;
 
-	if (lseek(info->i_fd, off, SEEK_SET) == (off_t)-1)
 		return -1;
 
-	if (read(info->i_fd, buf, len) != (ssize_t)len)
+	if (pread(info->i_fd, buf, len, off) != (ssize_t)len)
 		return -1;
 
 	return (ssize_t)len;

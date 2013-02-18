@@ -1,3 +1,9 @@
+2013-02-18  10:39  Christos Zoulas <christos@zoulas.com>
+
+	* add elf reading of debug info to determine if file is stripped
+	  (Jan Kaluza)
+	* use pread()
+
 2013-01-25  18:05  Christos Zoulas <christos@zoulas.com>
 
 	* change mime description size from 64 to 80 to accommodate OOXML.
