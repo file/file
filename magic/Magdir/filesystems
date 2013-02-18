@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.74 2013/02/06 14:18:52 christos Exp $
+# $File: filesystems,v 1.75 2013/02/17 21:37:30 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -73,8 +73,155 @@
 # to display information (51) before DOS BPB (strength=71) and after DOS floppy (120) like in old file version
 !:strength +21
 >2	string	OSBS			\b, OS/BS MBR
-# J\xf6rg Jenderek <joerg dot jenderek at web dot de>
->0x8C	string	Invalid\ partition\ table	\b, MS-DOS MBR
+# added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/
+# and http://en.wikipedia.org/wiki/Master_Boot_Record
+# test for nearly all MS-DOS Master Boot Record initial program loader (IPL) is now done by 
+# characteristic assembler instructions: xor ax,ax;mov ss,ax;mov sp,7c00
+>0	search/2	\x33\xc0\x8e\xd0\xbc\x00\x7c	MS-MBR
+# Microsoft Windows 95A and early ( http://thestarman.pcministry.com/asm/mbr/STDMBR.htm )
+# assembler instructions: mov si,sp;push ax;pop es;push ax;pop ds;sti;cld
+>>8	ubequad		0x8bf45007501ffbfc		
+# http://thestarman.pcministry.com/asm/mbr/200MBR.htm
+>>>0x16	ubyte		0xF3				\b,DOS 2
+>>>>219	regex		Author\ -\ 			Author:
+# found "David Litton" , "A Pehrsson  "
+>>>>>&0	string		x				"%s"
+>>>0x16	ubyte		0xF2				
+# NEC MS-DOS 3.30 Rev. 3 . See http://thestarman.pcministry.com/asm/mbr/DOS33MBR.htm
+# assembler instructions: mov di,077c;cmp word ptrl[di],a55a;jnz
+>>>>0x22	ubequad	0xbf7c07813d5aa575		\b,NEC 3.3
+# version MS-DOS 3.30 til MS-Windows 95A (WinVer=4.00.1111)
+>>>>0x22	default	x				\b,D0S version 3.3-7.0
+# error messages are printed by assembler instructions: mov si,06nn;...;int 10 (0xBEnn06;...)
+# where nn is string offset varying for different languages
+# "Invalid partition table"				nn=0x8b for english version
+>>>>>(0x49.b)	string		Invalid\ partition\ table		english
+>>>>>(0x49.b)	string		Ung\201ltige\ Partitionstabelle		german
+>>>>>(0x49.b)	string		Table\ de\ partition\ invalide		french
+>>>>>(0x49.b)	string		Tabela\ de\ parti\207ao\ inv\240lida	portuguese
+>>>>>(0x49.b)	string		Tabla\ de\ partici\242n\ no\ v\240lida	spanish
+>>>>>(0x49.b)	string		Tavola\ delle\ partizioni\ non\ valida	italian
+>>>>>0x49	ubyte		>0			at offset 0x%x
+>>>>>>(0x49.b)	string		>\0			"%s"
+# "Error loading operating system"			nn=0xa3 for english version
+# "Fehler beim Laden des Betriebssystems"		nn=0xa7 for german version
+# "Erreur en chargeant syst\212me d'exploitation"	nn=0xa7 for french version
+# "Erro na inicializa\207ao do sistema operacional"	nn=0xa7 for portuguese Brazilian version
+# "Error al cargar sistema operativo"			nn=0xa8 for spanish version
+# "Errore durante il caricamento del sistema operativo"	nn=0xae for italian version
+>>>>>0x74	ubyte		>0			at offset 0x%x
+>>>>>>(0x74.b)	string		>\0			"%s"
+# "Missing operating system"				nn=0xc2 for english version
+# "Betriebssystem fehlt"				nn=0xcd for german version
+# "Syst\212me d'exploitation absent"			nn=0xd2 for french version
+# "Sistema operacional nao encontrado"			nn=0xd4 for portuguese Brazilian version
+# "Falta sistema operativo"				nn=0xca for spanish version
+# "Sistema operativo mancante"				nn=0xe2 for italian version
+>>>>>0x79	ubyte		>0			at offset 0x%x
+>>>>>>(0x79.b)	string		>\0			"%s"
+# Microsoft Windows 95B to XP (http://thestarman.pcministry.com/asm/mbr/95BMEMBR.htm)
+# assembler instructions: push ax;pop es;push  ax;pop ds;cld;mov si,7c1b
+>>8	ubequad		0x5007501ffcbe1b7c		
+# assembler instructions: rep;movsb;retf;mov si,07be;mov cl,04
+>>>24		ubequad	0xf3a4cbbebe07b104		9M
+# "Invalid partition table"				nn=0x10F for english version
+# "Ungültige Partitionstabelle"				nn=0x10F for german version
+# "Table de partition erronée"				nn=0x10F for french version
+# "\216\257\245\340\240\346\250\256\255\255\240\357 \341\250\341\342\245\254\240 \255\245 \255\240\251\244\245\255\240"	nn=0x10F for russian version
+>>>>(0x3C.b+0x0FF)	string	Invalid\ partition\ table		english
+>>>>(0x3C.b+0x0FF)	string	Ung\201ltige\ Partitionstabelle		german
+>>>>(0x3C.b+0x0FF)	string	Table\ de\ partition\ erron\202e	french
+>>>>(0x3C.b+0x0FF)	string	\215\245\257\340\240\242\250\253\354\255\240\357\ \342\240\241\253\250\346\240	russian
+>>>>0x3C		ubyte	x			at offset 0x%x+0xFF
+>>>>(0x3C.b+0x0FF)	string	>\0			"%s"
+# "Error loading operating system"			nn=0x127 for english version
+# "Fehler beim Laden des Betriebssystems"		nn=0x12b for german version
+# "Erreur lors du chargement du système d'exploitation"	nn=0x12a for french version
+# "\216\350\250\241\252\240 \257\340\250 \247\240\243\340\343\247\252\245 \256\257\245\340\240\346\250\256\255\255\256\251 \341\250\341\342\245\254\353"	nn=0x12d for russian version
+>>>>0xBD		ubyte	x			at offset 0x1%x
+>>>>(0xBD.b+0x100)	string	>\0			"%s"
+# "Missing operating system"				nn=0x146 for english version
+# "Betriebssystem fehlt"				nn=0x151 for german version
+# "Système d'exploitation manquant"			nn=0x15e for french version
+# "\216\257\245\340\240\346\250\256\255\255\240\357 \341\250\341\342\245\254\240 \255\245 \255\240\251\244\245\255\240"	nn=0x156 for russian version
+>>>>0xA9		ubyte	x			at offset 0x1%x
+>>>>(0xA9.b+0x100)	string	>\0			"%s"
+# http://thestarman.pcministry.com/asm/mbr/Win2kmbr.htm
+# assembler instructions: rep;movsb;retf;mov BP,07be;mov cl,04
+>>>24		ubequad	0xf3a4cbbdbe07b104		XP
+# where xxyyzz are lower bits from offsets of error messages varying for different languages
+>>>>0x1B4	ubelong&0x00FFFFFF	0x002c4463	english
+>>>>0x1B4	ubelong&0x00FFFFFF	0x002c486e	german
+# "Invalid partition table"				xx=0x12C for english version
+# "Ungültige Partitionstabelle"				xx=0x12C for german version
+>>>>0x1b5	ubyte		>0			at offset 0x1%x
+>>>>(0x1b5.b+0x100)	string	>\0			"%s"
+# "Error loading operating system"			yy=0x144 for english version
+# "Fehler beim Laden des Betriebssystems"		yy=0x148 for german version
+>>>>0x1b6	ubyte		>0			at offset 0x1%x
+>>>>(0x1b6.b+0x100)	string	>\0			"%s"
+# "Missing operating system"				zz=0x163 for english version
+# "Betriebssystem nicht vorhanden"			zz=0x16e for german version
+>>>>0x1b7	ubyte		>0			at offset 0x1%x
+>>>>(0x1b7.b+0x100)	string	>\0			"%s"
+# Microsoft Windows Vista or 7
+# assembler instructions: ..;mov ds,ax;mov si,7c00;mov di,..00
+>>8	ubequad		0xc08ed8be007cbf00		
+# Microsoft Windows Vista (http://thestarman.pcministry.com/asm/mbr/VistaMBR.htm)
+# assembler instructions: jnz 0729;cmp ebx,"TCPA"
+>>>0xEC		ubequad	0x753b6681fb544350		Vista
+# where xxyyzz are lower bits from offsets of error messages varying for different languages
+>>>>0x1B4	ubelong&0x00FFFFFF	0x00627a99	english
+#>>>>0x1B4	ubelong&0x00FFFFFF	?		german
+# "Invalid partition table"				xx=0x162 for english version
+# "Ungültige Partitionstabelle"				xx=0x1?? for german version
+>>>>0x1b5	ubyte		>0			at offset 0x1%x
+>>>>(0x1b5.b+0x100)	string	>\0			"%s"
+# "Error loading operating system"			yy=0x17a for english version
+# "Fehler beim Laden des Betriebssystems"		yy= 0x1?? for german version
+>>>>0x1b6	ubyte		>0			at offset 0x1%x
+>>>>(0x1b6.b+0x100)	string	>\0			"%s"
+# "Missing operating system"				zz=0x199 for english version
+# "Betriebssystem nicht vorhanden"			zz=0x1?? for german version
+>>>>0x1b7	ubyte		>0			at offset 0x1%x
+>>>>(0x1b7.b+0x100)	string	>\0			"%s"
+# Microsoft Windows 7 (http://thestarman.pcministry.com/asm/mbr/W7MBR.htm)
+# assembler instructions: cmp ebx,"TCPA";cmp
+>>>0xEC		ubequad	0x6681fb5443504175		Windows 7
+# where xxyyzz are lower bits from offsets of error messages varying for different languages
+>>>>0x1B4	ubelong&0x00FFFFFF	0x00637b9a	english
+#>>>>0x1B4	ubelong&0x00FFFFFF	?		german
+# "Invalid partition table"				xx=0x163 for english version
+# "Ungültige Partitionstabelle"				xx=0x1?? for german version
+>>>>0x1b5	ubyte		>0			at offset 0x1%x
+>>>>(0x1b5.b+0x100)	string	>\0			"%s"
+# "Error loading operating system"			yy=0x17b for english version
+# "Fehler beim Laden des Betriebssystems"		yy=0x1?? for german version
+>>>>0x1b6	ubyte		>0			at offset 0x1%x
+>>>>(0x1b6.b+0x100)	string	>\0			"%s"
+# "Missing operating system"				zz=0x19a for english version
+# "Betriebssystem nicht vorhanden"			zz=0x1?? for german version
+>>>>0x1b7	ubyte		>0			at offset 0x1%x
+>>>>(0x1b7.b+0x100)	string	>\0			"%s"
+# http://thestarman.pcministry.com/asm/mbr/Win2kmbr.htm#DiskSigs
+# http://en.wikipedia.org/wiki/MBR_disk_signature#ID
+>>0x1b8	ulelong		>0				\b, disk signature 0x%-.4x
+# driveID/timestamp for Win 95B,98,98SE and ME. See http://thestarman.pcministry.com/asm/mbr/mystery.htm
+>>0xDA	uleshort		0			
+>>>0xDC 	ulelong		>0			\b, created
+# physical drive number (0x80-0xFF) when the Windows wrote that byte to the drive
+>>>>0xDC	ubyte		x			with driveID 0x%x
+# hours, minutes and seconds 
+>>>>0xDf	ubyte		x			at %x
+>>>>0xDe	ubyte		x			\b:%x
+>>>>0xDd	ubyte		x			\b:%x
+# special case for Microsoft MS-DOS 3.21 spanish
+# assembler instructions: cli;mov $0x30,%ax;mov %ax,%ss;mov 
+>0	ubequad		0xfab830008ed0bc00		
+# assembler instructions: $0x1f00,%sp;mov $0x80cb,%di;add %cl,(%bx,%si);in (%dx),%ax;mov 
+>>8	ubequad		0x1fbfcb800008ed8		MS-MBR,D0S version 3.21 spanish
+# Microsoft MBR IPL end
+
 # dr-dos with some upper-, lowercase variants
 >0x9D	string	Invalid\ partition\ table$	
 >>181	string	No\ Operating\ System$		
@@ -93,30 +240,9 @@
 >>>>>>358	string	Press\ any\ key\ to\ continue.\n\r$	
 >>>>>>>387	string	Copyright\ (c)\ 1984,1998	
 >>>>>>>>411	string	Caldera\ Inc.\0		\b, DR-DOS MBR (IBMBIO.LDR)
->0x10F	string	Ung\201ltige\ Partitionstabelle	\b, MS-DOS MBR, german version 4.10.1998, 4.10.2222
->>0x1B8	ubelong	>0				\b, Serial 0x%-.4x
->0x8B	string	Ung\201ltige\ Partitionstabelle	\b, MS-DOS MBR, german version 5.00 to 4.00.950
->271	string	Invalid\ partition\ table\0		
->>295	string	Error\ loading\ operating\ system\0	
->>>326	string	Missing\ operating\ system\0		\b, mbr
 #
->139	string	Invalid\ partition\ table\0		
->>163	string	Error\ loading\ operating\ system\0	
->>>194	string	Missing\ operating\ system\0		\b, Microsoft Windows XP mbr
-# http://www.heise.de/ct/05/09/006/ page 184
-#HKEY_LOCAL_MACHINE\SYSTEM\MountedDevices\DosDevices\?:=Serial4Bytes+8Bytes
->>>>0x1B8	ulelong	>0				\b,Serial 0x%-.4x
->300	string	Invalid\ partition\ table\0	
->>324	string	Error\ loading\ operating\ system\0
->>>355	string	Missing\ operating\ system\0		\b, Microsoft Windows XP MBR
-#??>>>389	string	Invalid\ system\ disk		
->>>>0x1B8	ulelong	>0				\b, Serial 0x%-.4x
->300	string	Ung\201ltige\ Partitionstabelle
-#split string to avoid error: String too long
->>328	string	Fehler\ beim\ Laden\ 	
->>>346	string	des\ Betriebssystems	
->>>>366	string	Betriebssystem\ nicht\ vorhanden	\b, Microsoft Windows XP MBR (german)
->>>>>0x1B8	ulelong	>0				\b, Serial 0x%-.4x
+# tests for different MS-DOS Master Boot Records (MBR) moved and merged
+#
 #>0x145	string	Default:\ F				\b, FREE-DOS MBR
 #>0x14B	string	Default:\ F				\b, FREE-DOS 1.0 MBR
 >0x145	search/7	Default:\ F			\b, FREE-DOS MBR
