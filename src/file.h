@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.143 2013/01/25 23:07:19 christos Exp $
+ * @(#)$File: file.h,v 1.144 2013/02/18 15:40:59 christos Exp $
  */
 
 #ifndef __file_h__
@@ -484,6 +484,9 @@ extern char *sys_errlist[];
 #define strtoul(a, b, c)	strtol(a, b, c)
 #endif
 
+#ifndef HAVE_PREAD
+ssize_t pread(int, void *, size_t, off_t);
+#endif
 #ifndef HAVE_VASPRINTF
 int vasprintf(char **, const char *, va_list);
 #endif
