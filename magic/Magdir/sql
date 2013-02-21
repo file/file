@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.10 2013/02/06 14:18:52 christos Exp $
+# $File: sql,v 1.11 2013/02/21 15:27:01 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -56,3 +56,10 @@
 >60 string  _MTN               Monotone source repository
 >60 belong  !0                 SQLite 3.x database, user version %u
 >60 belong  0                  SQLite 3.x database
+
+# Panasonic channel list database svl.bin or svl.db added by Joerg Jenderek
+# http://www.ullrich.es/job/service-menue/panasonic/panasonic-sendersortierung-sat-am-pc/
+# pceditor_V2003.jar
+0	string		PSDB\0			Panasonic channel list database
+>126	string		SQLite\ format\ 3	
+>>&-15	indirect	x			\b; contains 
