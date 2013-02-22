@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.94 2012/12/13 13:48:31 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.95 2013/02/18 15:40:59 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -864,18 +864,23 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		return 0;
 	}
 
-	/* Save offset of name section to be able to read section names later */
-	name_off = off * size * strtab;
-	/* Read the name of this section. */
-	if (pread(fd, name, sizeof(name), name_off + xsh_name) == -1) {
+	/* Read offset of name section to be able to read section names later */
+	if (pread(fd, xsh_addr, xsh_sizeof, off + size * strtab) == -1) {
 		file_badread(ms);
 		return -1;
 	}
-	name[sizeof(name) - 1] = '\0';
-	if (strcmp(name, ".debug_info") == 0)
-		stripped = 0;
+	name_off = xsh_offset;
 
 	for ( ; num; num--) {
+		/* Read the name of this section. */
+		if (pread(fd, name, sizeof(name), name_off + xsh_name) == -1) {
+			file_badread(ms);
+			return -1;
+		}
+		name[sizeof(name) - 1] = '\0';
+		if (strcmp(name, ".debug_info") == 0)
+			stripped = 0;
+
 		if (pread(fd, xsh_addr, xsh_sizeof, off) == -1) {
 			file_badread(ms);
 			return -1;
