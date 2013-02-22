@@ -22,6 +22,7 @@ libmagic_la_LIBADD = $(LTLIBOBJS) $(MINGWLIBS)
 file_SOURCES = file.c
 file_LDADD = libmagic.la
 CLEANFILES = magic.h
+EXTRA_DIST = magic.h.in
 HDR= $(top_srcdir)/src/magic.h.in
 BUILT_SOURCES = magic.h
 
