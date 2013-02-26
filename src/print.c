@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.74 2012/05/15 17:14:36 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.75 2012/10/30 23:11:51 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -59,20 +59,19 @@ file_mdump(struct magic *m)
 
 	if (m->flag & INDIR) {
 		(void) fprintf(stderr, "(%s,",
-			       /* Note: type is unsigned */
-			       (m->in_type < file_nnames) ? 
-					file_names[m->in_type] : "*bad*");
+		    /* Note: type is unsigned */
+		    (m->in_type < file_nnames) ? file_names[m->in_type] :
+		    "*bad in_type*");
 		if (m->in_op & FILE_OPINVERSE)
 			(void) fputc('~', stderr);
 		(void) fprintf(stderr, "%c%u),",
-			       ((size_t)(m->in_op & FILE_OPS_MASK) <
-			       SZOF(optyp)) ? 
-					optyp[m->in_op & FILE_OPS_MASK] : '?',
-				m->in_offset);
+		    ((size_t)(m->in_op & FILE_OPS_MASK) <
+		    SZOF(optyp)) ? optyp[m->in_op & FILE_OPS_MASK] : '?',
+		    m->in_offset);
 	}
 	(void) fprintf(stderr, " %s%s", (m->flag & UNSIGNED) ? "u" : "",
-		       /* Note: type is unsigned */
-		       (m->type < file_nnames) ? file_names[m->type] : "*bad*");
+	    /* Note: type is unsigned */
+	    (m->type < file_nnames) ? file_names[m->type] : "*bad type");
 	if (m->mask_op & FILE_OPINVERSE)
 		(void) fputc('~', stderr);
 
@@ -135,6 +134,7 @@ file_mdump(struct magic *m)
 		case FILE_MELONG:
 		case FILE_BESHORT:
 		case FILE_BELONG:
+		case FILE_INDIRECT:
 			(void) fprintf(stderr, "%d", m->value.l);
 			break;
 		case FILE_BEQUAD:
@@ -200,7 +200,7 @@ file_mdump(struct magic *m)
 			(void) fprintf(stderr, "'%s'", m->value.s);
 			break;
 		default:
-			(void) fputs("*bad*", stderr);
+			(void) fprintf(stderr, "*bad type %d*", m->type);
 			break;
 		}
 	}
