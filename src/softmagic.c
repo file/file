@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.162 2013/02/27 00:27:15 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.163 2013/02/27 16:58:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1113,12 +1113,19 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 	return 0;
 }
 
+static void
+trim(char *s) {
+	size_t l = strlen(s);
+	if (l > 0 && s[l - 1] == ' ')
+		s[l - 1] = '\0';
+}
+
 private int
 mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
     size_t nbytes, size_t o, unsigned int cont_level, int mode, int text,
     int flip, int recursion_level, int *returnval)
 {
-	uint32_t offset = ms->offset;
+	uint32_t soffset, offset = ms->offset;
 	uint32_t count = m->str_range;
 	int rv;
 	char *sbuf, *rbuf;
@@ -1700,23 +1707,26 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		if (nbytes < offset)
 			return 0;
 		sbuf = ms->o.buf;
+		soffset = ms->offset;
 		ms->o.buf = NULL;
 		ms->offset = 0;
 		rv = file_softmagic(ms, s + offset, nbytes - offset,
 		    BINTEST, text);
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			fprintf(stderr, "indirect @offs=%u[%d]\n", offset, rv);
+		rbuf = ms->o.buf;
+		ms->o.buf = sbuf;
+		ms->offset = offset;
 		if (rv == 1) {
-			rbuf = ms->o.buf;
-			ms->o.buf = sbuf;
+			if (m->flag & NOSPACE)
+				trim(rbuf);
 			if ((ms->flags & (MAGIC_MIME|MAGIC_APPLE)) == 0 &&
 			    file_printf(ms, m->desc, offset) == -1)
 				return -1;
 			if (file_printf(ms, "%s", rbuf) == -1)
 				return -1;
 			free(rbuf);
-		} else
-			ms->o.buf = sbuf;
+		}
 		return rv;
 
 	case FILE_USE:
@@ -1732,8 +1742,14 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			file_error(ms, 0, "cannot find entry `%s'", sbuf);
 			return -1;
 		}
-		return match(ms, ml.magic, ml.nmagic, s, nbytes, offset + o,
+		rv = match(ms, ml.magic, ml.nmagic, s, nbytes, offset + o,
 		    mode, text, flip, recursion_level, returnval);
+		if (m->flag & NOSPACE)
+			trim(ms->o.buf);
+		if (rv == 1 && (m->flag & NOSPACE) == 0 &&
+		    file_printf(ms, " ") == -1)
+			return -1;
+		return rv;
 
 	case FILE_NAME:
 		if (file_printf(ms, "%s", m->desc) == -1)
