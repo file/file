@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.161 2013/02/26 21:03:14 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.162 2013/02/27 00:27:15 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,9 +43,9 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.161 2013/02/26 21:03:14 christos Exp $")
 
 
 private int match(struct magic_set *, struct magic *, uint32_t,
-    const unsigned char *, size_t, size_t, int, int, int, int *);
+    const unsigned char *, size_t, size_t, int, int, int, int, int *);
 private int mget(struct magic_set *, const unsigned char *,
-    struct magic *, size_t, size_t, unsigned int, int, int, int, int *);
+    struct magic *, size_t, size_t, unsigned int, int, int, int, int, int *);
 private int magiccheck(struct magic_set *, struct magic *);
 private int32_t mprint(struct magic_set *, struct magic *);
 private int32_t moffset(struct magic_set *, struct magic *);
@@ -73,7 +73,7 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
 	int rv;
 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
 		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, 0, mode,
-		    text, 0, NULL)) != 0)
+		    text, 0, 0, NULL)) != 0)
 			return rv;
 
 	return 0;
@@ -109,7 +109,7 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
 private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
     const unsigned char *s, size_t nbytes, size_t offset, int mode, int text,
-    int flip, int *returnval)
+    int flip, int recursion_level, int *returnval)
 {
 	uint32_t magindex = 0;
 	unsigned int cont_level = 0;
@@ -147,7 +147,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 
 		/* if main entry matches, print it... */
 		switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text,
-		    flip, returnval)) {
+		    flip, recursion_level + 1, returnval)) {
 		case -1:
 			return -1;
 		case 0:
@@ -233,7 +233,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			}
 #endif
 			switch (mget(ms, s, m, nbytes, offset, cont_level, mode,
-			    text, flip, returnval)) {
+			    text, flip, recursion_level + 1, returnval)) {
 			case -1:
 				return -1;
 			case 0:
@@ -1116,7 +1116,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 private int
 mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
     size_t nbytes, size_t o, unsigned int cont_level, int mode, int text,
-    int flip, int *returnval)
+    int flip, int recursion_level, int *returnval)
 {
 	uint32_t offset = ms->offset;
 	uint32_t count = m->str_range;
@@ -1124,6 +1124,11 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	char *sbuf, *rbuf;
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml;
+
+	if (recursion_level >= 20) {
+		file_error(ms, 0, "recursion nesting exceeded");
+		return -1;
+	}
 
 	if (mcopy(ms, p, m->type, m->flag & INDIR, s, (uint32_t)(offset + o),
 	    (uint32_t)nbytes, count) == -1)
@@ -1728,7 +1733,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			return -1;
 		}
 		return match(ms, ml.magic, ml.nmagic, s, nbytes, offset + o,
-		    mode, text, flip, returnval);
+		    mode, text, flip, recursion_level, returnval);
 
 	case FILE_NAME:
 		if (file_printf(ms, "%s", m->desc) == -1)
