@@ -12,3 +12,4 @@ Makefile.in
 file
 test
 .gitignore
+magic.h
