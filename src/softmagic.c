@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.162 2013/02/27 00:27:15 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.163 2013/02/27 16:58:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1735,9 +1735,8 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		sbuf = m->value.s;
 		if (*sbuf == '^') {
 			sbuf++;
-			flip = 1;
-		} else
-			flip = 0;
+			flip = !flip;
+		}
 		if (file_magicfind(ms, sbuf, &ml) == -1) {
 			file_error(ms, 0, "cannot find entry `%s'", sbuf);
 			return -1;
