@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.95 2013/02/18 15:40:59 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.96 2013/02/22 01:35:49 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -58,9 +58,7 @@ private size_t donote(struct magic_set *, void *, size_t, size_t, int,
 
 private uint16_t getu16(int, uint16_t);
 private uint32_t getu32(int, uint32_t);
-#ifndef USE_ARRAY_FOR_64BIT_TYPES
 private uint64_t getu64(int, uint64_t);
-#endif
 
 private uint16_t
 getu16(int swap, uint16_t value)
@@ -102,7 +100,6 @@ getu32(int swap, uint32_t value)
 		return value;
 }
 
-#ifndef USE_ARRAY_FOR_64BIT_TYPES
 private uint64_t
 getu64(int swap, uint64_t value)
 {
@@ -127,19 +124,10 @@ getu64(int swap, uint64_t value)
 	} else
 		return value;
 }
-#endif
 
 #define elf_getu16(swap, value) getu16(swap, value)
 #define elf_getu32(swap, value) getu32(swap, value)
-#ifdef USE_ARRAY_FOR_64BIT_TYPES
-# define elf_getu64(swap, array) \
-    ((swap ? ((uint64_t)elf_getu32(swap, array[0])) << 32 \
-     : elf_getu32(swap, array[0])) + \
-     (swap ? elf_getu32(swap, array[1]) : \
-     ((uint64_t)elf_getu32(swap, array[1]) << 32)))
-#else
-# define elf_getu64(swap, value) getu64(swap, value)
-#endif
+#define elf_getu64(swap, value) getu64(swap, value)
 
 #define xsh_addr	(clazz == ELFCLASS32			\
 			 ? (void *)&sh32			\
