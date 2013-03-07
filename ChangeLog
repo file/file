@@ -1,3 +1,7 @@
+2013-03-06  21:24  Christos Zoulas <christos@zoulas.com>
+
+	* fix recursive magic separator printing
+
 2013-02-26  19:28  Christos Zoulas <christos@zoulas.com>
 
 	* limit recursion level for mget
