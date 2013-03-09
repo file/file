@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.80 2013/02/06 14:18:52 christos Exp $
+# $File: images,v 1.81 2013/03/09 22:36:00 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -454,26 +454,37 @@
 
 # PCX image files
 # From: Dan Fandrich <dan@coneharvesters.com>
-0	beshort		0x0a00	PCX ver. 2.5 image data
-0	beshort		0x0a02	PCX ver. 2.8 image data, with palette
-0	beshort		0x0a03	PCX ver. 2.8 image data, without palette
-0	beshort		0x0a04	PCX for Windows image data
-0	beshort		0x0a05	PCX ver. 3.0 image data
->4	leshort		x      bounding box [%hd,
->6	leshort		x      %hd] -
->8	leshort		x      [%hd,
->10	leshort		x      %hd],
->65	byte		>1	%d planes each of
->3	byte		x	%hhd-bit
->68	byte		0	image,
->68	byte		1	colour,
->68	byte		2	grayscale,
->68	byte		>2	image,
->68	byte		<0	image,
->12	leshort		>0	%hd x
->>14	leshort		x      %hd dpi,
->2	byte		0	uncompressed
->2	byte		1	RLE compressed
+# updated by Joerg Jenderek at Feb 2013 by http://de.wikipedia.org/wiki/PCX
+# http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
+# GRR: original test was still too general as it catches xbase examples T5.DBT,T6.DBT with 0xa000000
+# test for bytes 0x0a,version byte (0,2,3,4,5),compression byte flag(0,1), bit depth (>0) of PCX or T5.DBT,T6.DBT
+0	ubelong&0xffF8fe00	0x0a000000	
+# for PCX bit depth > 0 
+>3	ubyte		>0	
+# test for valid versions
+>>1	ubyte		<6	
+>>>1	ubyte		!1	PCX
+!:mime	image/x-pcx
+#!:mime	image/pcx
+>>>>1	ubyte		0	ver. 2.5 image data
+>>>>1	ubyte		2	ver. 2.8 image data, with palette
+>>>>1	ubyte		3	ver. 2.8 image data, without palette
+>>>>1	ubyte		4	for Windows image data
+>>>>1	ubyte		5	ver. 3.0 image data
+>>>>4	uleshort	x	bounding box [%hd,
+>>>>6	uleshort	x	%d] -
+>>>>8	uleshort	x	[%d,
+>>>>10	uleshort	x	%d],
+>>>>65	ubyte		>1	%d planes each of
+>>>>3	ubyte		x	%d-bit
+>>>>68	byte		1	colour,
+>>>>68	byte		2	grayscale,
+# this should not happen
+>>>>68	default		x	image,
+>>>>12	leshort		>0	%d x
+>>>>>14	uleshort	x	%d dpi,
+>>>>2	byte		0	uncompressed
+>>>>2	byte		1	RLE compressed
 
 # Adobe Photoshop
 # From: Asbjoern Sloth Toennesen <asbjorn@lila.io>
