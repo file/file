@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.76 2013/02/18 18:45:41 christos Exp $
+# $File: filesystems,v 1.77 2013/03/14 01:38:30 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
@@ -60,8 +60,9 @@
 # x86 boot sector updated by Joerg Jenderek at Sep 2007,May 2011
 # for any allowed sector sizes
 30		search/481	\x55\xAA	
-# to display x86 boot sector (40) before old one (strength=50), SYSLINUX MBR (?) and DOS BPB information (71) like in previous file version
-!:strength +30
+# to display x86 boot sector (40) before old one (strength=50+21),Syslinux bootloader (71),SYSLINUX MBR (37+36),NetBSD mbr (110),AdvanceMAME mbr (111)
+# DOS BPB information (70) and after DOS floppy (120) like in previous file version
+!:strength +72
 # for sector sizes < 512 Bytes
 >11		uleshort	<512		
 >>(11.s-2)	uleshort	0xAA55		x86 boot sector
@@ -70,7 +71,7 @@
 # keep old x86 boot sector as dummy for mbr and bootloader displaying
 # only for sector sizes with 512 or more Bytes
 0x1FE	leshort	0xAA55			
-# to display information (51) before DOS BPB (strength=71) and after DOS floppy (120) like in old file version
+# to display information (50) before DOS BPB (strength=70) and after DOS floppy (120) like in old file version
 !:strength +21
 >2	string	OSBS			\b, OS/BS MBR
 # added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/
@@ -913,6 +914,14 @@
 >>>>>495		string		RENF		\b, FAT (16 bit)
 # x86 bootloader end
 
+# added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
+# and http://en.wikipedia.org/wiki/File_Allocation_Table#FS_Information_Sector
+>0		string		RRaA		
+>>0x1E4		string		rrAa		\b, FSInfosector
+#>>0x1FC	uleshort	=0		SHOULD BE ZERO
+>>>0x1E8	ulelong		<0xffffffff	\b, %u free clusters
+>>>0x1EC	ulelong		<0xffffffff	\b, last allocated cluster %u
+
 # added by Joerg Jenderek at Nov 2012
 # http://www.thenakedpc.com/articles/v04/08/0408-05.html
 # Symantec (Peter Norton) Image.dat file consists of variable header, bootrecord, part of FAT and root directory data
@@ -991,6 +1000,8 @@
 # SYSLINUX MBR updated and separated from "x86 boot sector" by Joerg Jenderek at Sep 2012
 # assembler instructions: mov di,0600h;mov cx,0100h
 16	search/4	\xbf\x00\x06\xb9\x00\x01		
+# to display SYSLINUX MBR (36) before old x86 boot sector one with partition table (strength=50+21)
+!:strength +36
 >94	search/249	Missing\ operating\ system		
 # followed by \r for versions older 3.35 , .\r for versions newer 3.52 and point for other
 # skip Ranish MBR
