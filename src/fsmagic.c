@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.65 2012/08/26 09:56:26 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.66 2013/01/11 19:46:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -169,8 +169,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		 * like ordinary files.  Otherwise, just report that they
 		 * are block special files and go on to the next file.
 		 */
-		if ((ms->flags & MAGIC_DEVICES) != 0)
+		if ((ms->flags & MAGIC_DEVICES) != 0) {
+			ret = 0;
 			break;
+		}
 		if (mime) {
 			if (handle_mime(ms, mime, "chardevice") == -1)
 				return -1;
@@ -201,8 +203,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		 * like ordinary files.  Otherwise, just report that they
 		 * are block special files and go on to the next file.
 		 */
-		if ((ms->flags & MAGIC_DEVICES) != 0)
+		if ((ms->flags & MAGIC_DEVICES) != 0) {
+			ret = 0;
 			break;
+		}
 		if (mime) {
 			if (handle_mime(ms, mime, "blockdevice") == -1)
 				return -1;
