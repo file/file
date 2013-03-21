@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.58 2012/11/06 20:43:52 christos Exp $
+# $File: elf,v 1.59 2013/03/21 17:50:02 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -17,7 +17,6 @@
 
 0	name		elf-le
 >16	leshort		0		no file type,
-!:strength *2
 !:mime	application/octet-stream
 >16	leshort		1		relocatable,
 !:mime	application/x-object
@@ -185,6 +184,7 @@
 >20	lelong		1		version 1
 
 0	string		\177ELF		ELF
+!:strength *2
 >4	byte		0		invalid class
 >4	byte		1		32-bit
 >4	byte		2		64-bit
