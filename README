@@ -1,7 +1,8 @@
 ** README for file(1) Command **
-@(#) $File: README,v 1.44 2011/03/24 13:03:39 rrt Exp $
+@(#) $File: README,v 1.45 2013/01/11 16:51:01 christos Exp $
 
 Mailing List: file@mx.gw.com
+Mailing List archives: http://mx.gw.com/pipermail/file/
 Bug tracker: http://bugs.gw.com/
 E-mail: christos@astron.com
 
@@ -28,7 +29,7 @@ The major feature of 4.x is the refactoring of the code into a library,
 and the re-write of the file command in terms of that library. The library
 itself, libmagic can be used by 3rd party programs that wish to identify
 file types without having to fork() and exec() file. The prime contributor
-for 4.0 was M\xe5ns Rullg\xe5rd.
+for 4.0 was Mans Rullgard.
 
 UNIX is a trademark of UNIX System Laboratories.
 
