@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.191 2013/02/26 21:02:48 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.192 2013/03/25 17:20:43 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1934,6 +1934,11 @@ parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line)
 		file_magwarn(ms,
 		    "Current entry already has a strength type: %c %d",
 		    m->factor_op, m->factor);
+		return -1;
+	}
+	if (m->type == FILE_NAME) {
+		file_magwarn(ms, "%s: Strength setting is not supported in "
+		    "\"name\" magic entries", m->value.s);
 		return -1;
 	}
 	EATAB;

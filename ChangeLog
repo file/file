@@ -1,3 +1,7 @@
+2013-03-25  13:20  Christos Zoulas <christos@zoulas.com>
+
+	* disallow strength setting in "name" entries
+
 2013-03-06  21:24  Christos Zoulas <christos@zoulas.com>
 
 	* fix recursive magic separator printing
