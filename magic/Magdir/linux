@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.46 2013/01/06 21:26:48 christos Exp $
+# $File: linux,v 1.47 2013/02/06 14:18:52 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -98,7 +98,7 @@
 # All known start with: b8 c0 07 8e d8 b8 00 90 8e c0 b9 00 01 29 f6 29
 # Linux kernel boot images (i386 arch) (Wolfram Kleff)
 514	string		HdrS		Linux kernel
-!:strength + 5
+!:strength + 55
 >510	leshort		0xAA55		x86 boot executable
 >>518	leshort		>0x1ff
 >>>529	byte		0		zImage,
