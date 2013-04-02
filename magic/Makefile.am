@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.88 2013/01/16 13:53:10 christos Exp $
+# $File: Makefile.am,v 1.89 2013/02/18 18:31:09 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -264,10 +264,10 @@ CLEANFILES = ${MAGIC} $(MAGIC_FRAGMENT_DIR)/Localstuff
 # FIXME: Build file natively as well so that it can be used to compile
 # the target's magic file; for now we bail if the local version does not match
 if IS_CROSS_COMPILE
-FILE_COMPILE = file
+FILE_COMPILE = file${EXEEXT}
 FILE_COMPILE_DEP =
 else
-FILE_COMPILE = $(top_builddir)/src/file
+FILE_COMPILE = $(top_builddir)/src/file${EXEEXT}
 FILE_COMPILE_DEP = $(FILE_COMPILE)
 endif
 
