@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.164 2013/03/06 02:57:02 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.165 2013/03/07 02:22:24 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1126,7 +1126,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 {
 	uint32_t soffset, offset = ms->offset;
 	uint32_t count = m->str_range;
-	int rv, oneed_separator;
+	int rv, oneed_separator, in_type;
 	char *sbuf, *rbuf;
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml;
@@ -1189,9 +1189,9 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				fprintf(stderr, "indirect offs=%u\n", off);
 		}
-		switch (cvt_flip(m->in_type, flip)) {
+		switch (in_type = cvt_flip(m->in_type, flip)) {
 		case FILE_BYTE:
-			if (nbytes < (offset + 1))
+			if (nbytes < offset || nbytes < (offset + 1))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1226,7 +1226,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 				offset = ~offset;
 			break;
 		case FILE_BESHORT:
-			if (nbytes < (offset + 2))
+			if (nbytes < offset || nbytes < (offset + 2))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1278,7 +1278,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 				offset = ~offset;
 			break;
 		case FILE_LESHORT:
-			if (nbytes < (offset + 2))
+			if (nbytes < offset || nbytes < (offset + 2))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1330,7 +1330,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 				offset = ~offset;
 			break;
 		case FILE_SHORT:
-			if (nbytes < (offset + 2))
+			if (nbytes < offset || nbytes < (offset + 2))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1367,7 +1367,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			break;
 		case FILE_BELONG:
 		case FILE_BEID3:
-			if (nbytes < (offset + 4))
+			if (nbytes < offset || nbytes < (offset + 4))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1438,7 +1438,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			break;
 		case FILE_LELONG:
 		case FILE_LEID3:
-			if (nbytes < (offset + 4))
+			if (nbytes < offset || nbytes < (offset + 4))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1508,7 +1508,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 				offset = ~offset;
 			break;
 		case FILE_MELONG:
-			if (nbytes < (offset + 4))
+			if (nbytes < offset || nbytes < (offset + 4))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1578,7 +1578,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 				offset = ~offset;
 			break;
 		case FILE_LONG:
-			if (nbytes < (offset + 4))
+			if (nbytes < offset || nbytes < (offset + 4))
 				return 0;
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
@@ -1612,9 +1612,11 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			if (m->in_op & FILE_OPINVERSE)
 				offset = ~offset;
 			break;
+		default:
+			break;
 		}
 
-		switch (cvt_flip(m->in_type, flip)) {
+		switch (in_type) {
 		case FILE_LEID3:
 		case FILE_BEID3:
 			offset = ((((offset >>  0) & 0x7f) <<  0) |
