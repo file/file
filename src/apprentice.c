@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.192 2013/03/25 17:20:43 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.193 2013/04/22 15:30:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -196,7 +196,7 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("invalid"),	FILE_INVALID,		FILE_FMT_NONE },
 	{ XX("byte"),		FILE_BYTE,		FILE_FMT_NUM },
 	{ XX("short"),		FILE_SHORT,		FILE_FMT_NUM },
-	{ XX("default"),	FILE_DEFAULT,		FILE_FMT_STR },
+	{ XX("default"),	FILE_DEFAULT,		FILE_FMT_NONE },
 	{ XX("long"),		FILE_LONG,		FILE_FMT_NUM },
 	{ XX("string"),		FILE_STRING,		FILE_FMT_STR },
 	{ XX("date"),		FILE_DATE,		FILE_FMT_STR },
@@ -240,6 +240,7 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("beqwdate"),	FILE_BEQWDATE,		FILE_FMT_STR },
 	{ XX("name"),		FILE_NAME,		FILE_FMT_NONE },
 	{ XX("use"),		FILE_USE,		FILE_FMT_NONE },
+	{ XX("clear"),		FILE_CLEAR,		FILE_FMT_NONE },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -1284,6 +1285,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_INDIRECT:
 		case FILE_NAME:
 		case FILE_USE:
+		case FILE_CLEAR:
 			break;
 		default:
 			if (ms->flags & MAGIC_CHECK)

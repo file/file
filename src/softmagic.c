@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.166 2013/04/03 14:38:29 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.167 2013/04/22 15:30:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -265,12 +265,13 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 #ifdef ENABLE_CONDITIONALS
 				ms->c.li[cont_level].last_match = 1;
 #endif
-				if (m->type != FILE_DEFAULT)
-					ms->c.li[cont_level].got_match = 1;
-				else if (ms->c.li[cont_level].got_match) {
+				if (m->type == FILE_CLEAR)
 					ms->c.li[cont_level].got_match = 0;
-					break;
-				}
+				else if (ms->c.li[cont_level].got_match) {
+					if (m->type == FILE_DEFAULT)
+						break;
+				} else
+					ms->c.li[cont_level].got_match = 1;
 				if ((e = handle_annotation(ms, m)) != 0) {
 					*returnval = 1;
 					return e;
@@ -611,7 +612,8 @@ mprint(struct magic_set *ms, struct magic *m)
 		break;
 
 	case FILE_DEFAULT:
-	  	if (file_printf(ms, m->desc, m->value.s) == -1)
+	case FILE_CLEAR:
+	  	if (file_printf(ms, "%s", m->desc) == -1)
 			return -1;
 		t = ms->offset;
 		break;
@@ -715,9 +717,8 @@ moffset(struct magic_set *ms, struct magic *m)
 		else
 			return CAST(int32_t, (ms->search.offset + m->vallen));
 
+	case FILE_CLEAR:
 	case FILE_DEFAULT:
-		return ms->offset;
-
 	case FILE_INDIRECT:
 		return ms->offset;
 
@@ -989,6 +990,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_REGEX:
 	case FILE_SEARCH:
 	case FILE_DEFAULT:
+	case FILE_CLEAR:
 	case FILE_NAME:
 	case FILE_USE:
 		return 1;
@@ -1756,6 +1758,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			return -1;
 		return 1;
 	case FILE_DEFAULT:	/* nothing to check */
+	case FILE_CLEAR:
 	default:
 		break;
 	}
@@ -1958,6 +1961,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		return matched;
 
 	case FILE_DEFAULT:
+	case FILE_CLEAR:
 		l = 0;
 		v = 0;
 		break;
