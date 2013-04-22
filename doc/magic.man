@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.77 2013/01/08 01:37:01 christos Exp $
-.Dd January 7, 2013
+.\" $File: magic.man,v 1.78 2013/01/09 13:04:30 christos Exp $
+.Dd April 22, 2013
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -261,8 +261,16 @@ The offset works as for regex.
 .It Dv default
 This is intended to be used with the test
 .Em x
-(which is always true) and a message that is to be used if there are
-no other matches.
+(which is always true) and it has no type.
+It matches when no other test at that continuation level has matched before.
+Clearing that matched tests for a continuation level, can be done using the
+.Dv clear
+test.
+.It Dv clear
+This test is always true and clears the match flag for that continuation level.
+It is intended to be used with the
+.Dv default
+test.
 .El
 .Pp
 For compatibility with the Single
@@ -605,7 +613,7 @@ Or even both!
 \*[Gt]\*[Gt]\*[Gt]\*[Am](\*[Am]0x54.l-3)  string  UNACE  \eb, ACE self-extracting archive
 .Ed
 .Pp
-Finally, if you have to deal with offset/length pairs in your file, even the
+If you have to deal with offset/length pairs in your file, even the
 second value in a parenthesized expression can be taken from the file itself,
 using another set of parentheses.
 Note that this additional indirect offset is always relative to the
@@ -619,6 +627,18 @@ start of the main indirect offset.
 # ...and go to the end of it, calculated from start+length;
 # these are located 14 and 10 bytes after the section name
 \*[Gt]\*[Gt]\*[Gt]\*[Gt](\*[Am]0xe.l+(-4)) string       PK\e3\e4 \eb, ZIP self-extracting archive
+.Ed
+.Pp
+If you have a list of known avalues at a particular continuation level,
+and you want to provide a switch-like default case:
+.Bd -literal -offset indent
+# clear that continuation level match
+\*[Gt]18	clear
+\*[Gt]18	lelong	1	one
+\*[Gt]18	lelong	2	two
+\*[Gt]18	default	x
+# print default match
+\*[Gt]\*[Gt]18	lelong	x	unmatched 0x%x
 .Ed
 .Sh SEE ALSO
 .Xr file __CSECTION__

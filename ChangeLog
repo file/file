@@ -1,3 +1,18 @@
+2013-04-22  11:20  Christos Zoulas <christos@zoulas.com>
+
+	* The way "default" was implemented was not very useful
+	  because the "if something was printed at that level"
+	  was not easily controlled by the user, and the format
+	  was bound to a string which is too restrictive. Add
+	  a "clear" for that level keyword and make "default"
+	  void. This way one can do:
+
+		>>13	clear	x
+		>>13	lelong	1	foo
+		>>13	lelong	2	bar
+		>>13	default	x
+		>>>13	lelong	x	unknown %x
+
 2013-03-25  13:20  Christos Zoulas <christos@zoulas.com>
 
 	* disallow strength setting in "name" entries

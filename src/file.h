@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.143 2013/01/25 23:07:19 christos Exp $
+ * @(#)$File: file.h,v 1.144 2013/02/18 15:40:59 christos Exp $
  */
 
 #ifndef __file_h__
@@ -133,7 +133,7 @@
 #define MAXstring 64		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	10
+#define VERSIONNO	11
 #define FILE_MAGICSIZE	248
 
 #define	FILE_LOAD	0
@@ -222,7 +222,8 @@ struct magic {
 #define				FILE_BEQWDATE	44
 #define				FILE_NAME	45
 #define				FILE_USE	46
-#define				FILE_NAMES_SIZE	47 /* size of array to contain all names */
+#define				FILE_CLEAR	47
+#define				FILE_NAMES_SIZE	48 /* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
@@ -232,8 +233,7 @@ struct magic {
 	 (t) == FILE_REGEX || \
 	 (t) == FILE_SEARCH || \
 	 (t) == FILE_NAME || \
-	 (t) == FILE_USE || \
-	 (t) == FILE_DEFAULT)
+	 (t) == FILE_USE)
 
 #define FILE_FMT_NONE 0
 #define FILE_FMT_NUM  1 /* "cduxXi" */
