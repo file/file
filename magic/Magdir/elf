@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.59 2013/03/21 17:50:02 christos Exp $
+# $File: elf,v 1.60 2013/04/22 15:19:12 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -30,6 +30,7 @@
 #>>>(0x38+0xcc) string	>\0		of '%s'
 #>>>(0x38+0x10) lelong	>0		(signal %d),
 >16	leshort		&0xff00		processor-specific,
+>18	clear		x
 >18	leshort		0		no machine,
 >18	leshort		1		AT&T WE32100
 >18	leshort		2		SPARC
@@ -180,6 +181,8 @@
 >18	leshort		0x3426		OpenRISC (obsolete),
 >18	leshort		0x8472		OpenRISC (obsolete),
 >18	leshort		0x9026		Alpha (unofficial),
+>18	default		x
+>>18	leshort		x		*unknown arch 0x%x*
 >20	lelong		0		invalid version
 >20	lelong		1		version 1
 
