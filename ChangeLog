@@ -1,3 +1,7 @@
+2013-05-02  18:00  Christos Zoulas <christos@zoulas.com>
+
+	* Fix segmentation fault with multiple magic_load commands.
+
 2013-04-22  11:20  Christos Zoulas <christos@zoulas.com>
 
 	* The way "default" was implemented was not very useful
