@@ -1,8 +1,189 @@
-
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.76 2013/02/18 18:45:41 christos Exp $
+# $File: filesystems,v 1.77 2013/03/14 01:38:30 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
+0	name	partid  
+>0	ubyte	0x00	Unused
+>0	ubyte	0x01	12-bit FAT
+>0	ubyte	0x02	XENIX /
+>0	ubyte	0x03	XENIX /usr
+>0	ubyte	0x04	16-bit FAT, less than 32M
+>0	ubyte	0x05	extended partition
+>0	ubyte	0x06	16-bit FAT, more than 32M
+>0	ubyte	0x07	OS/2 HPFS, NTFS, QNX2, Adv. UNIX
+>0	ubyte	0x08	AIX or os, or etc.
+>0	ubyte	0x09	AIX boot partition or Coherent
+>0	ubyte	0x0a	O/2 boot manager or Coherent swap
+>0	ubyte	0x0b	32-bit FAT
+>0	ubyte	0x0c	32-bit FAT, LBA-mapped
+>0	ubyte	0x0d	7XXX, LBA-mapped
+>0	ubyte	0x0e	16-bit FAT, LBA-mapped
+>0	ubyte	0x0f	extended partition, LBA-mapped
+>0	ubyte	0x10	OPUS
+>0	ubyte	0x11 	OS/2 DOS 12-bit FAT
+>0	ubyte	0x12 	Compaq diagnostics
+>0	ubyte	0x14 	OS/2 DOS 16-bit FAT <32M
+>0	ubyte	0x16 	OS/2 DOS 16-bit FAT >=32M
+>0	ubyte	0x17 	OS/2 hidden IFS
+>0	ubyte	0x18 	AST Windows swapfile
+>0	ubyte	0x19 	Willowtech Photon coS
+>0	ubyte	0x1b 	hidden win95 fat 32
+>0	ubyte	0x1c 	hidden win95 fat 32 lba
+>0	ubyte	0x1d	hidden win95 fat 16 lba
+>0	ubyte	0x20 	Willowsoft OFS1
+>0	ubyte	0x21 	reserved
+>0	ubyte	0x23 	reserved
+>0	ubyte	0x24	NEC DOS
+>0	ubyte	0x26 	reserved
+>0	ubyte	0x31 	reserved
+>0	ubyte	0x32	Alien Internet Services NOS
+>0	ubyte	0x33 	reserved
+>0	ubyte	0x34 	reserved
+>0	ubyte	0x35 	JFS on OS2
+>0	ubyte	0x36 	reserved
+>0	ubyte	0x38 	Theos
+>0	ubyte	0x39 	Plan 9, or Theos spanned
+>0	ubyte	0x3a 	Theos ver 4 4gb partition
+>0	ubyte	0x3b 	Theos ve 4 extended partition
+>0	ubyte	0x3c 	PartitionMagic recovery
+>0	ubyte	0x3d 	Hidden Netware
+>0	ubyte	0x40 	VENIX 286 or LynxOS
+>0	ubyte	0x41	PReP
+>0	ubyte	0x42	linux swap sharing DRDOS disk
+>0	ubyte	0x43	linux sharing DRDOS disk
+>0	ubyte	0x44	GoBack change utility
+>0	ubyte	0x45	Boot US Boot manager
+>0	ubyte	0x46	EUMEL/Elan or Ergos 3
+>0	ubyte	0x47	EUMEL/Elan or Ergos 3
+>0	ubyte	0x48	EUMEL/Elan or Ergos 3
+>0	ubyte	0x4a	ALFX/THIN filesystem for DOS
+>0	ubyte	0x4c	Oberon partition
+>0	ubyte	0x4d 	QNX4.x
+>0	ubyte	0x4e 	QNX4.x 2nd part
+>0	ubyte	0x4f 	QNX4.x 3rd part
+>0	ubyte	0x50 	DM (disk manager)
+>0	ubyte	0x51 	DM6 Aux1 (or Novell)
+>0	ubyte	0x52 	CP/M or Microport SysV/AT
+>0	ubyte	0x53 	DM6 Aux3
+>0	ubyte	0x54	DM6 DDO
+>0	ubyte	0x55	EZ-Drive (disk manager)
+>0	ubyte	0x56	Golden Bow (disk manager)
+>0	ubyte	0x57	Drive PRO
+>0	ubyte	0x5c	Priam Edisk (disk manager)
+>0	ubyte	0x61	SpeedStor
+>0	ubyte	0x63	GNU HURD or Mach or Sys V/386
+>0	ubyte	0x64	Novell Netware 2.xx or Speedstore
+>0	ubyte	0x65	Novell Netware 3.xx
+>0	ubyte	0x66	Novell 386 Netware
+>0	ubyte	0x67	Novell
+>0	ubyte	0x68	Novell
+>0	ubyte	0x69	Novell
+>0	ubyte	0x70	DiskSecure Multi-Boot
+>0	ubyte	0x71	reserved
+>0	ubyte	0x73	reserved
+>0	ubyte	0x74	reserved
+>0	ubyte	0x75	PC/IX
+>0	ubyte	0x76	reserved
+>0	ubyte	0x77	M2FS/M2CS partition
+>0	ubyte	0x78	XOSL boot loader filesystem
+>0	ubyte	0x80	MINIX until 1.4a
+>0	ubyte	0x81	MINIX since 1.4b
+>0	ubyte	0x82	Linux swap or Solaris
+>0	ubyte	0x83	Linux native
+>0	ubyte	0x84	OS/2 hidden C: drive
+>0	ubyte	0x85	Linux extended partition
+>0	ubyte	0x86	NT FAT volume set
+>0	ubyte	0x87	NTFS volume set or HPFS mirrored
+>0	ubyte	0x8a	Linux Kernel AiR-BOOT partition
+>0	ubyte	0x8b	Legacy Fault tolerant FAT32
+>0	ubyte	0x8c	Legacy Fault tolerant FAT32 ext
+>0	ubyte	0x8d	Hidden free FDISK FAT12
+>0	ubyte	0x8e	Linux Logical Volume Manager
+>0	ubyte	0x90	Hidden free FDISK FAT16
+>0	ubyte	0x91	Hidden free FDISK DOS EXT
+>0	ubyte	0x92	Hidden free FDISK FAT16 Big
+>0	ubyte	0x93	Amoeba filesystem
+>0	ubyte	0x94	Amoeba bad block table
+>0	ubyte	0x95	MIT EXOPC native partitions
+>0	ubyte	0x97	Hidden free FDISK FAT32
+>0	ubyte	0x98	Datalight ROM-DOS Super-Boot
+>0	ubyte	0x99	Mylex EISA SCSI
+>0	ubyte	0x9a	Hidden free FDISK FAT16 LBA
+>0	ubyte	0x9b	Hidden free FDISK EXT LBA
+>0	ubyte	0x9f	BSDI?
+>0	ubyte	0xa0	IBM Thinkpad hibernation
+>0	ubyte	0xa1	HP Volume expansion (SpeedStor)
+>0	ubyte	0xa3	HP Volume expansion (SpeedStor)
+>0	ubyte	0xa4	HP Volume expansion (SpeedStor)
+>0	ubyte	0xa5	386BSD partition type
+>0	ubyte	0xa6	OpenBSD partition type
+>0	ubyte	0xa7	NeXTSTEP 486
+>0	ubyte	0xa8	Apple UFS
+>0	ubyte	0xa9	NetBSD partition type
+>0	ubyte	0xaa	Olivetty Fat12 1.44MB Service part
+>0	ubyte	0xab	Apple Boot
+>0	ubyte	0xae	SHAG OS filesystem
+>0	ubyte	0xaf	Apple HFS
+>0	ubyte	0xb0	BootStar Dummy
+>0	ubyte	0xb1	reserved
+>0	ubyte	0xb3	reserved
+>0	ubyte	0xb4	reserved
+>0	ubyte	0xb6	reserved
+>0	ubyte	0xb7	BSDI BSD/386 filesystem
+>0	ubyte	0xb8	BSDI BSD/386 swap
+>0	ubyte	0xbb	Boot Wizard Hidden
+>0	ubyte	0xbe	Solaris 8 partition type
+>0	ubyte	0xbf	Solaris partition type
+>0	ubyte	0xc0 	CTOS
+>0	ubyte	0xc1 	DRDOS/sec (FAT-12)
+>0	ubyte	0xc2 	Hidden Linux
+>0	ubyte	0xc3 	Hidden Linux swap
+>0	ubyte	0xc4 	DRDOS/sec (FAT-16, < 32M)
+>0	ubyte	0xc5 	DRDOS/sec (EXT)
+>0	ubyte	0xc6 	DRDOS/sec (FAT-16, >= 32M)
+>0	ubyte	0xc7 	Syrinx (Cyrnix?) or HPFS disabled
+>0	ubyte	0xc8 	Reserved for DR-DOS 8.0+
+>0	ubyte	0xc9 	Reserved for DR-DOS 8.0+
+>0	ubyte	0xca 	Reserved for DR-DOS 8.0+
+>0	ubyte	0xcb 	DR-DOS 7.04+ Secured FAT32 CHS
+>0	ubyte	0xcc 	DR-DOS 7.04+ Secured FAT32 LBA
+>0	ubyte	0xcd	CTOS Memdump
+>0	ubyte	0xce 	DR-DOS 7.04+ FAT16X LBA
+>0	ubyte	0xcf 	DR-DOS 7.04+ EXT LBA
+>0	ubyte	0xd0 	REAL/32 secure big partition
+>0	ubyte	0xd1 	Old Multiuser DOS FAT12
+>0	ubyte	0xd4 	Old Multiuser DOS FAT16 Small
+>0	ubyte	0xd5 	Old Multiuser DOS Extended
+>0	ubyte	0xd6 	Old Multiuser DOS FAT16 Big
+>0	ubyte	0xd8 	CP/M 86
+>0	ubyte	0xdb 	CP/M or Concurrent CP/M
+>0	ubyte	0xdd 	Hidden CTOS Memdump
+>0	ubyte	0xde 	Dell PowerEdge Server utilities
+>0	ubyte	0xdf 	DG/UX virtual disk manager
+>0	ubyte	0xe0 	STMicroelectronics ST AVFS
+>0	ubyte	0xe1 	DOS access or SpeedStor 12-bit
+>0	ubyte	0xe3 	DOS R/O or Storage Dimensions
+>0	ubyte	0xe4 	SpeedStor 16-bit FAT < 1024 cyl.
+>0	ubyte	0xe5	reserved
+>0	ubyte	0xe6	reserved
+>0	ubyte	0xeb 	BeOS
+>0	ubyte	0xee	GPT Protective MBR
+>0	ubyte	0xef	EFI system partition
+>0	ubyte	0xf0 	Linux PA-RISC boot loader
+>0	ubyte	0xf1 	SpeedStor or Storage Dimensions
+>0	ubyte	0xf2 	DOS 3.3+ Secondary
+>0	ubyte	0xf3	reserved
+>0	ubyte	0xf4	SpeedStor large partition
+>0	ubyte	0xf5	Prologue multi-volumen partition
+>0	ubyte	0xf6 	reserved
+>0	ubyte	0xf9 	pCache: ext2/ext3 persistent cache
+>0	ubyte	0xfa 	Bochs x86 emulator
+>0	ubyte	0xfb 	VMware File System
+>0	ubyte	0xfc 	VMware Swap
+>0	ubyte	0xfd 	Linux RAID partition persistent sb
+>0	ubyte	0xfe	LANstep or IBM PS/2 IML
+>0	ubyte	0xff 	Xenix Bad Block Table
+
 0	string	\366\366\366\366	PC formatted floppy with no filesystem
 # Sun disk labels
 # From /usr/include/sun/dklabel.h:
@@ -70,9 +251,10 @@
 >0x1FE		leshort		0xAA55		x86 boot sector
 # keep old x86 boot sector as dummy for mbr and bootloader displaying
 # only for sector sizes with 512 or more Bytes
-0x1FE	leshort	0xAA55			
+0x1FE		leshort		0xAA55		x86 boot sector
+!:strength +72
 # to display information (50) before DOS BPB (strength=70) and after DOS floppy (120) like in old file version
-!:strength +21
+#!:strength +21
 >2	string	OSBS			\b, OS/BS MBR
 # added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/
 # and http://en.wikipedia.org/wiki/Master_Boot_Record
@@ -352,7 +534,8 @@
 # active flag 0 or 0x80 and type > 0
 >>>>>>>>>446		ubyte		<0x81	
 >>>>>>>>>>446		ubyte&0x7F	0	
->>>>>>>>>>>450		ubyte		>0	\b; partition 1: ID=0x%x
+>>>>>>>>>>>450		ubyte		>0	\b; partition 1: (ID=0x%x)
+>>>>>>>>>>>>450		use		partid
 >>>>>>>>>>>>446		ubyte		0x80	\b, active
 >>>>>>>>>>>>447		ubyte		x	\b, starthead %u
 #>>>>>>>>>>>>448		ubyte		x	\b, start C_S: 0x%x
@@ -362,7 +545,8 @@
 #
 >>>>>>>>>462		ubyte		<0x81	
 >>>>>>>>>>462		ubyte&0x7F	0		
->>>>>>>>>>>466		ubyte		>0	\b; partition 2: ID=0x%x
+>>>>>>>>>>>466		ubyte		>0	\b; partition 2: (ID=0x%x)
+>>>>>>>>>>>>466		use		partid
 >>>>>>>>>>>>462		ubyte		0x80	\b, active
 >>>>>>>>>>>>463		ubyte		x	\b, starthead %u
 #>>>>>>>>>>>>464		ubyte		x	\b, start C_S: 0x%x
@@ -372,7 +556,8 @@
 #
 >>>>>>>>>478		ubyte		<0x81		
 >>>>>>>>>>478		ubyte&0x7F	0		
->>>>>>>>>>>482		ubyte		>0	\b; partition 3: ID=0x%x
+>>>>>>>>>>>482		ubyte		>0	\b; partition 3: (ID=0x%x)
+>>>>>>>>>>>>482		use		partid
 >>>>>>>>>>>>478		ubyte		0x80	\b, active
 >>>>>>>>>>>>479		ubyte		x	\b, starthead %u
 #>>>>>>>>>>>>480		ubyte		x	\b, start C_S: 0x%x
@@ -383,7 +568,8 @@
 #
 >>>>>>>>>494		ubyte		<0x81	
 >>>>>>>>>>494		ubyte&0x7F	0		
->>>>>>>>>>>498		ubyte		>0	\b; partition 4: ID=0x%x
+>>>>>>>>>>>498		ubyte		>0	\b; partition 4: (ID=0x%x)
+>>>>>>>>>>>>498		use		partid
 >>>>>>>>>>>>494		ubyte		0x80	\b, active
 >>>>>>>>>>>>495		ubyte		x	\b, starthead %u
 #>>>>>>>>>>>>496		ubyte		x	\b, start C_S: 0x%x
