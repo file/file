@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.60 2013/04/22 15:19:12 christos Exp $
+# $File: elf,v 1.61 2013/05/28 17:27:13 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -173,6 +173,7 @@
 >18	leshort		97		NatSemi 32k,
 >18	leshort		106		Analog Devices Blackfin,
 >18	leshort		113		Altera Nios II,
+>18	beshort		138		LatticeMico32,
 >18	leshort		174		META,
 >18	leshort		183		ARM aarch64,
 >18	leshort		187		Tilera TILE64,
