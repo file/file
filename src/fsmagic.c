@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.67 2013/03/17 15:43:20 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.68 2013/05/28 21:24:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -367,7 +367,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		/*NOTREACHED*/
 	}
 
-	if (!mime && did) {
+	if (!mime && did && ret == 0) {
 	    if (file_printf(ms, " ") == -1)
 		    return -1;
 	}
