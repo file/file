@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.59 2013/03/21 17:50:02 christos Exp $
+# $File: elf,v 1.61 2013/05/28 17:27:13 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -173,6 +173,7 @@
 >18	leshort		97		NatSemi 32k,
 >18	leshort		106		Analog Devices Blackfin,
 >18	leshort		113		Altera Nios II,
+>18	beshort		138		LatticeMico32,
 >18	leshort		174		META,
 >18	leshort		183		ARM aarch64,
 >18	leshort		187		Tilera TILE64,
@@ -192,9 +193,9 @@
 >4	byte		1		32-bit
 >4	byte		2		64-bit
 >5	byte		0		invalid byte order
->5	byte		1		LSB 
+>5	byte		1		LSB
 >>0	use		elf-le
->5	byte		2		MSB 
+>5	byte		2		MSB
 >>0	use		\^elf-le
 # Up to now only 0, 1 and 2 are defined; I've seen a file with 0x83, it seemed
 # like proper ELF, but extracting the string had bad results.
