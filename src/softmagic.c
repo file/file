@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.166 2013/04/03 14:38:29 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.167 2013/04/22 15:30:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1072,11 +1072,8 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 				src++;
 
 			/* check that offset is within range */
-			if (offset >= nbytes) {
-				file_magerror(ms, "invalid offset %u in mcopy()",
-				    offset);
-				return -1;
-			}
+			if (offset >= nbytes)
+				break;
 			for (/*EMPTY*/; src < esrc; src += 2, dst++) {
 				if (dst < edst)
 					*dst = *src;
