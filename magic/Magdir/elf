@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.62 2013/05/28 21:25:25 christos Exp $
+# $File: elf,v 1.63 2013/06/03 18:56:50 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -37,10 +37,10 @@
 >18	leshort		3		Intel 80386,
 >18	leshort		4		Motorola
 >>4	byte		1
->>>36	lelong		&0x01000000	68000 - invalid byte order,
->>>36	lelong		&0x00810000	CPU32 - invalid byte order,
->>>36	lelong		0		68020 - invalid byte order,
->18	leshort		5		Motorola 88000 - invalid byte order,
+>>>36	lelong		&0x01000000	68000,
+>>>36	lelong		&0x00810000	CPU32,
+>>>36	lelong		0		68020,
+>18	leshort		5		Motorola 88000,
 >18	leshort		6		Intel 80486,
 >18	leshort		7		Intel 80860,
 # The official e_machine number for MIPS is now #8, regardless of endianness.
@@ -75,10 +75,10 @@
 >>>48  lelong&0xf0000000	0x60000000	MIPS64
 >>>48  lelong&0xf0000000	0x70000000	MIPS32 rel2
 >>>48  lelong&0xf0000000	0x80000000	MIPS64 rel2
->18	leshort		9		Amdahl - invalid byte order,
+>18	leshort		9		Amdahl,
 >18	leshort		10		MIPS (deprecated),
->18	leshort		11		RS6000 - invalid byte order,
->18	leshort		15		PA-RISC - invalid byte order,
+>18	leshort		11		RS6000,
+>18	leshort		15		PA-RISC,
 # only for 32-bit
 >>4	byte		1
 >>>38	leshort		0x0214		2.0
