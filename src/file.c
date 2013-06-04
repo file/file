@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.148 2012/11/21 16:27:39 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.149 2013/01/07 18:20:19 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -465,8 +465,11 @@ file_mbswidth(const char *s)
 			 * is always right
 			 */
 			width++;
-		} else
-			width += wcwidth(nextchar);
+		} else {
+			w = wcwidth(nextchar);
+			if (w > 0)
+				width += w;
+		}
 
 		s += bytesconsumed, n -= bytesconsumed;
 	}
