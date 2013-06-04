@@ -1,5 +1,5 @@
 ** README for file(1) Command **
-@(#) $File: README,v 1.45 2013/01/11 16:51:01 christos Exp $
+@(#) $File: README,v 1.46 2013/03/25 14:33:10 christos Exp $
 
 Mailing List: file@mx.gw.com
 Mailing List archives: http://mx.gw.com/pipermail/file/
@@ -14,11 +14,11 @@ It knows the 'magic number' of several thousands of file types.
 This version is the standard "file" command for Linux,
 *BSD, and other systems. (See "patchlevel.h" for the exact release number).
 
-You can download the latest version of file from:
+You can download the latest version of the original sources for file from:
 
 	ftp://ftp.astron.com/pub/file/
 
-A public read-only git repository is available at:
+A public read-only git repository of the same sources is available at:
 
 	https://github.com/glensc/file
 
