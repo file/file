@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.149 2013/01/07 18:20:19 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.150 2013/06/04 21:51:00 ian Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -446,7 +446,7 @@ protected size_t
 file_mbswidth(const char *s)
 {
 #if defined(HAVE_WCHAR_H) && defined(HAVE_MBRTOWC) && defined(HAVE_WCWIDTH)
-	size_t bytesconsumed, old_n, n, width = 0;
+	size_t bytesconsumed, old_n, n, w = 0;
 	mbstate_t state;
 	wchar_t nextchar;
 	(void)memset(&state, 0, sizeof(mbstate_t));
