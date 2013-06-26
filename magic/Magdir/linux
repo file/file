@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.47 2013/02/06 14:18:52 christos Exp $
+# $File: linux,v 1.49 2013/06/26 14:46:46 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -344,3 +344,27 @@
 #>2	regex		\(name\ [^)]*\)		%s
 >20	search/256	(name			(name
 >>&1	string		x			%s...)
+
+# Systemd journald files
+# See http://www.freedesktop.org/wiki/Software/systemd/journal-files/.
+# From: Zbigniew Jedrzejewski-Szmek <zbyszek@in.waw.pl>
+
+# check magic
+0	string	LPKSHHRH
+# check that state is one of known values
+>16		ubyte&252	0
+# check that each half of three unique id128s is non-zero
+>>24		ubequad		>0
+>>>32		ubequad		>0
+>>>>40		ubequad		>0
+>>>>>48		ubequad		>0
+>>>>>>56	ubequad		>0
+>>>>>>>64	ubequad		>0	Journal file
+!:mime application/octet-stream
+# provide more info
+>>>>>>>>184	leqdate		0	empty
+>>>>>>>>16	ubyte		0	\b, offline
+>>>>>>>>16	ubyte		1	\b, online
+>>>>>>>>16	ubyte		2	\b, archived
+>>>>>>>>8	ulelong&1	1	\b, sealed
+>>>>>>>>12	ulelong&1	1	\b, compressed
