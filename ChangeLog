@@ -1,3 +1,6 @@
+2013-05-30  17:25  Christos Zoulas <christos@zoulas.com>
+
+	* Don't treat magic as an error if offset was past EOF (Christoph Biedl)
 
 2013-05-28  17:25  Christos Zoulas <christos@zoulas.com>
 	
