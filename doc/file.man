@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.102 2013/01/04 15:39:22 christos Exp $
+.\" $File: file.man,v 1.103 2013/07/21 19:52:55 rrt Exp $
 .Dd October 25, 2012
 .Dt FILE __CSECTION__
 .Os
@@ -331,7 +331,7 @@ after the end of the filename.
 Nice to
 .Xr cut 1
 the output.
-This does not affect the separator which is still printed.
+This does not affect the separator, which is still printed.
 .It Fl -help
 Print a help message and exit.
 .El
