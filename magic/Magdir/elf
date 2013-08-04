@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.62 2013/05/28 21:25:25 christos Exp $
+# $File: elf,v 1.63 2013/06/03 18:56:50 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -110,6 +110,8 @@
 >>4	byte		1
 >>>36	lelong&0xff000000	0x04000000	EABI4
 >>>36	lelong&0xff000000	0x05000000	EABI5
+>>>36	lelong		&0x00800000	BE8
+>>>36	lelong		&0x00400000	LE8
 >18	leshort		41		Alpha,
 >18	leshort		0xa390		IBM S/390 (obsolete),
 >18	leshort		42		Renesas SH,
