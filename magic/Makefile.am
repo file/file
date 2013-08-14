@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.90 2013/04/02 16:25:04 christos Exp $
+# $File: Makefile.am,v 1.91 2013/08/14 09:01:45 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -150,6 +150,7 @@ $(MAGIC_FRAGMENT_DIR)/motorola \
 $(MAGIC_FRAGMENT_DIR)/mozilla \
 $(MAGIC_FRAGMENT_DIR)/msdos \
 $(MAGIC_FRAGMENT_DIR)/msooxml \
+$(MAGIC_FRAGMENT_DIR)/msx \
 $(MAGIC_FRAGMENT_DIR)/msvc \
 $(MAGIC_FRAGMENT_DIR)/mup \
 $(MAGIC_FRAGMENT_DIR)/music \
@@ -217,6 +218,7 @@ $(MAGIC_FRAGMENT_DIR)/sql \
 $(MAGIC_FRAGMENT_DIR)/ssh \
 $(MAGIC_FRAGMENT_DIR)/ssl \
 $(MAGIC_FRAGMENT_DIR)/sun \
+$(MAGIC_FRAGMENT_DIR)/symbos \
 $(MAGIC_FRAGMENT_DIR)/sysex \
 $(MAGIC_FRAGMENT_DIR)/tcl \
 $(MAGIC_FRAGMENT_DIR)/teapot \
