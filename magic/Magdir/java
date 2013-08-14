@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: java,v 1.13 2011/12/08 12:12:46 rrt Exp $
+# $File: java,v 1.14 2013/02/08 16:54:45 christos Exp $
 # Java ByteCode and Mach-O binaries (e.g., Mac OS X) use the
 # same magic number, 0xcafebabe, so they are both handled
 # in the entry called "cafebabe".
@@ -17,11 +17,13 @@
 
 # Dalvik .dex format. http://retrodev.com/android/dexformat.html
 # From <mkf@google.com> "Mike Fleming"
+# Fixed to avoid regexec 17 errors on some dex files
+# From <diff@lookout.com> "Tim Strazzere"
 0	string	dex\n
->0	regex	dex\n[0-9][0-9][0-9]\0	Dalvik dex file
+>0	regex	dex\n[0-9]{2}\0	Dalvik dex file
 >4	string	>000			version %s
 0	string	dey\n
->0	regex	dey\n[0-9][0-9][0-9]\0	Dalvik dex file (optimized for host)
+>0	regex	dey\n[0-9]{2}\0	Dalvik dex file (optimized for host)
 >4	string	>000			version %s
 
 # Java source
