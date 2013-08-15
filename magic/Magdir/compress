@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.48 2011/12/07 18:39:43 christos Exp $
+# $File: compress,v 1.49 2011/12/07 22:04:27 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -229,3 +229,9 @@
 >6	byte	>-1		%i)
 >7	long	>0		, original size: %i bytes
 >15	long	>30		, block size: %i bytes
+
+# Valve Pack (VPK) files
+0	lelong	0x55aa1234	Valve Pak file
+>0x4	lelong	x		\b, version %u
+>0x8	lelong	x		\b, %u entries
+
