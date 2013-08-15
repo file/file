@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.80 2013/02/06 14:18:52 christos Exp $
+# $File: images,v 1.81 2013/03/09 22:36:00 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -838,3 +838,8 @@
 # Not really an image.
 # From: "Tano M. Fotang" <mfotang@quanteq.com>
 0	string	\x46\x4d\x52\x00	ISO/IEC 19794-2 Format Minutiae Record (FMR)
+
+# WEBP https://developers.google.com/speed/webp/docs/riff_container
+0	string	RIFF
+>8	string	WEBP	Web/P image data
+>>4	lelong	x	\b, %d bytes
