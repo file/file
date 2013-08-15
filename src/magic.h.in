@@ -65,6 +65,7 @@
 	MAGIC_NO_CHECK_CDF	| \
 	MAGIC_NO_CHECK_TOKENS	| \
 	MAGIC_NO_CHECK_ENCODING	| \
+	0			  \
 )
 
 /* Defined for backwards compatibility (renamed) */
