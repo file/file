@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.11 2013/02/21 15:27:01 christos Exp $
+# $File: sql,v 1.12 2013/08/26 15:45:29 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -56,6 +56,15 @@
 >60 string  _MTN               Monotone source repository
 >60 belong  !0                 SQLite 3.x database, user version %u
 >60 belong  0                  SQLite 3.x database
+
+# SQLite Write-Ahead Log from SQLite version >= 3.7.0
+# http://www.sqlite.org/fileformat.html#walformat
+0	belong&0xfffffffe	0x377f0682	SQLite Write-Ahead Log,
+>4	belong	x	version %ld
+
+# SQLite Rollback Journal
+# http://www.sqlite.org/fileformat.html#rollbackjournal
+0	string	\xd9\xd5\x05\xf9\x20\xa1\x63\xd7	SQLite Rollback Journal
 
 # Panasonic channel list database svl.bin or svl.db added by Joerg Jenderek
 # http://www.ullrich.es/job/service-menue/panasonic/panasonic-sendersortierung-sat-am-pc/
