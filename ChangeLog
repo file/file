@@ -1,3 +1,9 @@
+2013-09-03  11:56  Christos Zoulas <christos@zoulas.com>
+
+	* Don't mix errors and regular output if there was an error
+	* in magic_descriptor() don't close the file and try to restore
+	  its position
+
 2013-05-30  17:25  Christos Zoulas <christos@zoulas.com>
 
 	* Don't treat magic as an error if offset was past EOF (Christoph Biedl)
