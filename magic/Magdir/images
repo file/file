@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.82 2013/08/15 13:11:44 christos Exp $
+# $File: images,v 1.83 2013/09/03 10:12:48 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -768,6 +768,34 @@
 # Wavelet Scalar Quantization format used in gray-scale fingerprint images
 # From Tano M Fotang <mfotang@quanteq.com>
 0	string	\xff\xa0\xff\xa8\x00	Wavelet Scalar Quantization image data
+
+# Type:		PCO B16 image files
+# URL:		http://www.pco.de/fileadmin/user_upload/db/download/MA_CWDCOPIE_0412b.pdf
+# From:		Florian Philipp <florian.philipp@binarywings.net>
+# Extension:	.b16
+# Description:	Pixel image format produced by PCO Camware, typically used
+#		together with PCO cameras.
+# Note:		Different versions exist for e.g. 8 bit and 16 bit images.
+#		Documentation is incomplete.
+0	string/b	PCO-	PCO B16 image data
+>12	lelong		x	\b, %dx
+>16	lelong		x	\b%d
+>20	lelong		0	\b, short header
+>20	lelong		-1	\b, extended header
+>>24	lelong		0	\b, grayscale
+>>>36	lelong		0	linear LUT
+>>>36	lelong		1	logarithmic LUT
+>>>28	lelong		x	[%d
+>>>32	lelong		x	\b,%d]
+>>24	lelong		1	\b, color
+>>>64	lelong		0	linear LUT
+>>>64	lelong		1	logarithmic LUT
+>>>40	lelong		x	r[%d
+>>>44	lelong		x	\b,%d]
+>>>48	lelong		x	g[%d
+>>>52	lelong		x	\b,%d]
+>>>56	lelong		x	b[%d
+>>>60	lelong		x	\b,%d]
 
 # Polar Monitor Bitmap (.pmb) used as logo for Polar Electro watches
 # From: Markus Heidelberg <markus.heidelberg at web.de>
