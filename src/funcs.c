@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.62 2013/07/21 21:06:41 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.63 2013/09/03 08:31:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -58,6 +58,8 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 	int len;
 	char *buf, *newstr;
 
+	if (ms->event_flags & EVENT_HAD_ERR)
+		return 0;
 	len = vasprintf(&buf, fmt, ap);
 	if (len < 0)
 		goto out;
