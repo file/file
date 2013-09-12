@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.80 2013/06/17 19:23:58 christos Exp $
+# $File: filesystems,v 1.81 2013/09/12 16:21:52 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -238,20 +238,20 @@
 >>>>15	ulelong	>0		\b, %d cylinders
 >>>>128	indirect	x	\b; contains 
 
-# x86 boot sector updated by Joerg Jenderek at Sep 2007,May 2011
+# DOS/MBR boot sector updated by Joerg Jenderek at Sep 2007,May 2011
 # for any allowed sector sizes
 30		search/481	\x55\xAA	
-# to display x86 boot sector (40) before old one (strength=50+21),Syslinux bootloader (71),SYSLINUX MBR (37+36),NetBSD mbr (110),AdvanceMAME mbr (111)
+# to display DOS/MBR boot sector (40) before old one (strength=50+21),Syslinux bootloader (71),SYSLINUX MBR (37+36),NetBSD mbr (110),AdvanceMAME mbr (111)
 # DOS BPB information (70) and after DOS floppy (120) like in previous file version
 !:strength +72
 # for sector sizes < 512 Bytes
 >11		uleshort	<512		
->>(11.s-2)	uleshort	0xAA55		x86 boot sector
+>>(11.s-2)	uleshort	0xAA55		DOS/MBR boot sector
 # for sector sizes with 512 or more Bytes
->0x1FE		leshort		0xAA55		x86 boot sector
-# keep old x86 boot sector as dummy for mbr and bootloader displaying
+>0x1FE		leshort		0xAA55		DOS/MBR boot sector
+# keep old DOS/MBR boot sector as dummy for mbr and bootloader displaying
 # only for sector sizes with 512 or more Bytes
-0x1FE		leshort		0xAA55		x86 boot sector
+0x1FE		leshort		0xAA55		DOS/MBR boot sector
 !:strength +72
 # to display information (50) before DOS BPB (strength=70) and after DOS floppy (120) like in old file version
 #!:strength +21
@@ -1149,7 +1149,7 @@
 # http://www.thenakedpc.com/articles/v04/08/0408-05.html
 # Symantec (Peter Norton) Image.dat file consists of variable header, bootrecord, part of FAT and root directory data
 0	string	PNCIHISK\0		Norton Utilities disc image data
-# real x86 boot sector with jump instruction
+# real DOS/MBR boot sector with jump instruction
 >509	search/1026	\x55\xAA\xeb	
 >>&-1	indirect	x		\b; contains 
 # http://file-extension.net/seeker/file_extension_dat
@@ -1171,7 +1171,7 @@
 >>>>>>>466	ubyte	0x0F			\b, extended partition table (LBA)
 >>>>>>>466	ubyte	0x0			\b, extended partition table (last)	
 
-# DOS x86 sector separated and moved from "x86 boot sector" by Joerg Jenderek at May 2011
+# DOS x86 sector separated and moved from "DOS/MBR boot sector" by Joerg Jenderek at May 2011
 
 >0x200	lelong	0x82564557		\b, BSD disklabel
 # FATX 
@@ -1210,7 +1210,7 @@
 >12	string	x			(older version %-4.4s)
 0	string	\r\nSYSLINUX\ 		SYSLINUX loader
 >11	string	x			(version %-4.4s)
-# syslinux updated and separated from "x86 boot sector" by Joerg Jenderek at Sep 2012
+# syslinux updated and separated from "DOS/MBR boot sector" by Joerg Jenderek at Sep 2012
 # assembler instructions: jmp yy (yy=0x3c,0x58);nop;"SYSLINUX"
 0	ulelong&0x80909bEB	0x009018EB	
 # OEM-ID not always "SYSLINUX"
@@ -1220,10 +1220,10 @@
 >>1	ubyte		0x58			Syslinux bootloader (version 3.0-3.9)
 >459	search/30	Boot\ error\r\n\0	
 >>1	ubyte		0x58			Syslinux bootloader (version 3.10 or newer)
-# SYSLINUX MBR updated and separated from "x86 boot sector" by Joerg Jenderek at Sep 2012
+# SYSLINUX MBR updated and separated from "DOS/MBR boot sector" by Joerg Jenderek at Sep 2012
 # assembler instructions: mov di,0600h;mov cx,0100h
 16	search/4	\xbf\x00\x06\xb9\x00\x01		
-# to display SYSLINUX MBR (36) before old x86 boot sector one with partition table (strength=50+21)
+# to display SYSLINUX MBR (36) before old DOS/MBR boot sector one with partition table (strength=50+21)
 !:strength +36
 >94	search/249	Missing\ operating\ system		
 # followed by \r for versions older 3.35 , .\r for versions newer 3.52 and point for other
@@ -1384,7 +1384,7 @@
 >>>>>0x217 	ulong		!0xffffffff	
 >>>>>>0x217 	string		>\0		\b, configuration file %-s
 
-# DOS x86 sector updated and separated from "x86 boot sector" by Joerg Jenderek at May 2011
+# DOS x86 sector updated and separated from "DOS/MBR boot sector" by Joerg Jenderek at May 2011
 # JuMP short     bootcodeoffset NOP assembler instructions will usually be EB xx 90
 # over BIOS parameter block (BPB)
 # http://thestarman.pcministry.com/asm/2bytejumps.htm#FWD
@@ -1784,16 +1784,16 @@
 ############################################################################
 # Hmmm, is this a better way of detecting _standard_ floppy images ?
 19	string		\320\002\360\003\0\011\0\1\0	DOS floppy 360k
->0x1FE	leshort		0xAA55		\b, x86 hard disk boot sector
+>0x1FE	leshort		0xAA55		\b, DOS/MBR hard disk boot sector
 19	string		\240\005\371\003\0\011\0\2\0	DOS floppy 720k
->0x1FE	leshort		0xAA55		\b, x86 hard disk boot sector
+>0x1FE	leshort		0xAA55		\b, DOS/MBR hard disk boot sector
 19	string		\100\013\360\011\0\022\0\2\0	DOS floppy 1440k
->0x1FE	leshort		0xAA55		\b, x86 hard disk boot sector
+>0x1FE	leshort		0xAA55		\b, DOS/MBR hard disk boot sector
 
 19	string		\240\005\371\005\0\011\0\2\0	DOS floppy 720k, IBM
->0x1FE	leshort		0xAA55		\b, x86 hard disk boot sector
+>0x1FE	leshort		0xAA55		\b, DOS/MBR hard disk boot sector
 19	string		\100\013\371\005\0\011\0\2\0	DOS floppy 1440k, mkdosfs
->0x1FE	leshort		0xAA55		\b, x86 hard disk boot sector
+>0x1FE	leshort		0xAA55		\b, DOS/MBR hard disk boot sector
 
 19	string		\320\002\370\005\0\011\0\1\0	Atari-ST floppy 360k
 19	string		\240\005\371\005\0\011\0\2\0	Atari-ST floppy 720k
