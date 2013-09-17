@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: tex,v 1.17 2010/09/20 19:19:17 rrt Exp $
+# $File: tex,v 1.18 2011/02/08 13:45:15 christos Exp $
 # tex:  file(1) magic for TeX files
 #
 # XXX - needs byte-endian stuff (big-endian and little-endian DVI?)
@@ -38,6 +38,9 @@
 
 # TeX documents, from Daniel Quinlan (quinlan@yggdrasil.com)
 0	search/4096	\\input		TeX document text
+!:mime	text/x-tex
+!:strength + 15
+0	search/4096	\\begin		LaTeX document text
 !:mime	text/x-tex
 !:strength + 15
 0	search/4096	\\section	LaTeX document text
