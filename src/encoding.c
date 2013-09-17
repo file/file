@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.6 2011/12/08 12:38:24 rrt Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.7 2012/01/24 19:02:02 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -72,13 +72,16 @@ file_encoding(struct magic_set *ms, const unsigned char *buf, size_t nbytes, uni
 	unsigned char *nbuf = NULL;
 
 	*type = "text";
-	mlen = (nbytes + 1) * sizeof(nbuf[0]);
-	if ((nbuf = CAST(unsigned char *, calloc((size_t)1, mlen))) == NULL) {
+	*ulen = 0;
+	*code = *code_mime = "unknown";
+
+	mlen = (nbytes + 1) * sizeof((*ubuf)[0]);
+	if ((*ubuf = CAST(unichar *, calloc((size_t)1, mlen))) == NULL) {
 		file_oomem(ms, mlen);
 		goto done;
 	}
-	mlen = (nbytes + 1) * sizeof((*ubuf)[0]);
-	if ((*ubuf = CAST(unichar *, calloc((size_t)1, mlen))) == NULL) {
+	mlen = (nbytes + 1) * sizeof(nbuf[0]);
+	if ((nbuf = CAST(unsigned char *, calloc((size_t)1, mlen))) == NULL) {
 		file_oomem(ms, mlen);
 		goto done;
 	}
