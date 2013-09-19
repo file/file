@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.81 2013/09/12 16:21:52 christos Exp $
+# $File: filesystems,v 1.82 2013/09/19 19:47:12 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -237,6 +237,17 @@
 >>>>11	ulelong	>0		\b, %d sectors/track
 >>>>15	ulelong	>0		\b, %d cylinders
 >>>>128	indirect	x	\b; contains 
+
+# added by Joerg Jenderek at Nov 2012
+# http://www.thenakedpc.com/articles/v04/08/0408-05.html
+# Symantec (Peter Norton) Image.dat file consists of variable header, bootrecord, part of FAT and root directory data
+0	string	PNCIHISK\0		Norton Utilities disc image data
+# real x86 boot sector with jump instruction
+>509	search/1026	\x55\xAA\xeb	
+>>&-1	indirect	x		\b; contains 
+# http://file-extension.net/seeker/file_extension_dat
+0	string	PNCIUNDO		Norton Disk Doctor UnDo file
+#
 
 # DOS/MBR boot sector updated by Joerg Jenderek at Sep 2007,May 2011
 # for any allowed sector sizes
@@ -1144,17 +1155,6 @@
 #>>0x1FC	uleshort	=0		SHOULD BE ZERO
 >>>0x1E8	ulelong		<0xffffffff	\b, %u free clusters
 >>>0x1EC	ulelong		<0xffffffff	\b, last allocated cluster %u
-
-# added by Joerg Jenderek at Nov 2012
-# http://www.thenakedpc.com/articles/v04/08/0408-05.html
-# Symantec (Peter Norton) Image.dat file consists of variable header, bootrecord, part of FAT and root directory data
-0	string	PNCIHISK\0		Norton Utilities disc image data
-# real DOS/MBR boot sector with jump instruction
->509	search/1026	\x55\xAA\xeb	
->>&-1	indirect	x		\b; contains 
-# http://file-extension.net/seeker/file_extension_dat
-0	string	PNCIUNDO		Norton Disk Doctor UnDo file
-#
 
 # updated by Joerg Jenderek at Sep 2007
 >3	ubyte	0			
