@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.96 2013/02/22 01:35:49 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.97 2013/03/06 03:35:30 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -461,6 +461,36 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	    *flags |= FLAGS_DID_BUILD_ID;
 	}
 
+	if (namesz == 4 && strcmp((char *)&nbuf[noff], "PaX") == 0 &&
+	    xnh_type == NT_NETBSD_PAX && descsz == 4) {
+		static const char *pax[] = {
+		    "+mprotect",
+		    "-mprotect",
+		    "+segvguard",
+		    "-segvguard",
+		    "+ASLR",
+		    "-ASLR",
+		};
+		uint32_t desc;
+		size_t i;
+		int did = 0;
+
+		(void)memcpy(&desc, &nbuf[doff], sizeof(desc));
+		desc = elf_getu32(swap, desc);
+
+		if (desc && file_printf(ms, ", PaX: ") == -1)
+			return size;
+
+		for (i = 0; i < __arraycount(pax); i++) {
+			if (((1 << i) & desc) == 0)
+				continue;
+			if (file_printf(ms, "%s%s", did++ ? "," : "",
+			    pax[i]) == -1)
+				return size;
+		}
+		*flags |= FLAGS_DID_BUILD_ID;
+	}
+
 	if (namesz == 7 && strcmp((char *)&nbuf[noff], "NetBSD") == 0 &&
 	    xnh_type == NT_NETBSD_VERSION && descsz == 4) {
 		uint32_t desc;
@@ -677,6 +707,7 @@ core:
 
 	default:
 		if (xnh_type == NT_PRPSINFO && *flags & FLAGS_IS_CORE) {
+/*###709 [cc] warning: declaration of 'i' shadows previous non-variable%%%*/
 			size_t i, j;
 			unsigned char c;
 			/*
