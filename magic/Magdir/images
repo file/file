@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.82 2013/08/15 13:11:44 christos Exp $
+# $File: images,v 1.83 2013/09/03 10:12:48 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -734,6 +734,15 @@
 !:mime	application/x-hdf
 0	string	\211HDF\r\n\032\n	Hierarchical Data Format (version 5) data
 !:mime	application/x-hdf
+512	string	\211HDF\r\n\032\n	Hierarchical Data Format (version 5) with 512 bytes user block
+!:mime	application/x-hdf
+1024	string	\211HDF\r\n\032\n	Hierarchical Data Format (version 5) with 1k user block
+!:mime	application/x-hdf
+2048	string	\211HDF\r\n\032\n	Hierarchical Data Format (version 5) with 2k user block
+!:mime	application/x-hdf
+4096	string	\211HDF\r\n\032\n	Hierarchical Data Format (version 5) with 4k user block
+!:mime	application/x-hdf
+
 
 # From: Tobias Burnus <burnus@net-b.de>
 # Xara (for a while: Corel Xara) is a graphic package, see
