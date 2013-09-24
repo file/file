@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.81 2013/09/12 16:21:52 christos Exp $
+# $File: filesystems,v 1.82 2013/09/19 19:47:12 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -529,64 +529,37 @@
 # http://www.bcdwb.de/bcdw/index_e.htm
 >3	string	BCDL				
 >>498	string	BCDL\ \ \ \ BIN			\b, Bootable CD Loader (1.50Z)
-# mbr partition table entries
-# OEM-ID does not contain MicroSoft,NEWLDR,DOS,SYSLINUX,or MTOOLs
->3			string		!MS
->>3			string		!SYSLINUX
->>>3			string		!MTOOL
->>>>3			string		!NEWLDR
->>>>>5			string		!DOS
-# not FAT (32 bit)
->>>>>>82		string		!FAT32
-#not Linux kernel
->>>>>>>514		string		!HdrS
-#not BeOS
->>>>>>>>422		string		!Be\ Boot\ Loader
-# active flag 0 or 0x80 and type > 0
->>>>>>>>>446		ubyte		<0x81	
->>>>>>>>>>446		ubyte&0x7F	0	
->>>>>>>>>>>450		ubyte		>0	\b; partition 1: (ID=0x%x)
->>>>>>>>>>>>450		use		partid
->>>>>>>>>>>>446		ubyte		0x80	\b, active
->>>>>>>>>>>>447		ubyte		x	\b, starthead %u
-#>>>>>>>>>>>>448		ubyte		x	\b, start C_S: 0x%x
-#>>>>>>>>>>>>448		ubeshort&1023	x	\b, startcylinder? %d
->>>>>>>>>>>>454		ulelong		x	\b, startsector %u
->>>>>>>>>>>>458		ulelong		x	\b, %u sectors
-#
->>>>>>>>>462		ubyte		<0x81	
->>>>>>>>>>462		ubyte&0x7F	0		
->>>>>>>>>>>466		ubyte		>0	\b; partition 2: (ID=0x%x)
->>>>>>>>>>>>466		use		partid
->>>>>>>>>>>>462		ubyte		0x80	\b, active
->>>>>>>>>>>>463		ubyte		x	\b, starthead %u
-#>>>>>>>>>>>>464		ubyte		x	\b, start C_S: 0x%x
-#>>>>>>>>>>>>464		ubeshort&1023	x	\b, startcylinder? %d
->>>>>>>>>>>>470		ulelong		x	\b, startsector %u
->>>>>>>>>>>>474		ulelong		x	\b, %u sectors
-#
->>>>>>>>>478		ubyte		<0x81		
->>>>>>>>>>478		ubyte&0x7F	0		
->>>>>>>>>>>482		ubyte		>0	\b; partition 3: (ID=0x%x)
->>>>>>>>>>>>482		use		partid
->>>>>>>>>>>>478		ubyte		0x80	\b, active
->>>>>>>>>>>>479		ubyte		x	\b, starthead %u
-#>>>>>>>>>>>>480		ubyte		x	\b, start C_S: 0x%x
-#>>>>>>>>>>>>481		ubyte		x	\b, start C2S: 0x%x
-#>>>>>>>>>>>>480		ubeshort&1023	x	\b, startcylinder? %d
->>>>>>>>>>>>486		ulelong		x	\b, startsector %u
->>>>>>>>>>>>490		ulelong		x	\b, %u sectors
-#
->>>>>>>>>494		ubyte		<0x81	
->>>>>>>>>>494		ubyte&0x7F	0		
->>>>>>>>>>>498		ubyte		>0	\b; partition 4: (ID=0x%x)
->>>>>>>>>>>>498		use		partid
->>>>>>>>>>>>494		ubyte		0x80	\b, active
->>>>>>>>>>>>495		ubyte		x	\b, starthead %u
-#>>>>>>>>>>>>496		ubyte		x	\b, start C_S: 0x%x
-#>>>>>>>>>>>>496		ubeshort&1023	x	\b, startcylinder? %d
->>>>>>>>>>>>502		ulelong		x	\b, startsector %u
->>>>>>>>>>>>506		ulelong		x	\b, %u sectors
+# mbr partition table entries updated by Joerg Jenderek at Sep 2013
+# skip Norton Utilities disc image data
+>3		string		!IHISK		
+# skip Linux style boot sector starting with assember instructions mov 0x7c0,ax;
+>>0		belong		!0xb8c0078e		
+# not Linux kernel 
+>>>514		string		!HdrS			
+# not BeOS
+>>>>422		string		!Be\ Boot\ Loader	
+# jump over BPB instruction implies DOS bootsector or AdvanceMAME mbr 
+>>>>>0		ubelong&0xFD000000	=0xE9000000	
+# AdvanceMAME mbr
+>>>>>>(1.b+2)	ubequad		0xfa31c08ed88ec08e	
+>>>>>>>446	use		partition-table
+# mbr, Norton Utilities disc image data, or 2nd,etc. sector of x86 bootloader
+>>>>>0		ubelong&0xFD000000	!0xE9000000	
+# skip FSInfosector
+>>>>>>0		string		!RRaA		
+# skip 3rd sector of MS x86 bootloader with assember instructions cli;MOVZX EAX,BYTE PTR [BP+10];MOV ECX,
+# http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm
+>>>>>>>0	ubequad		!0xfa660fb64610668b	
+# skip 13rd sector of MS x86 bootloader
+>>>>>>>>0	ubequad		!0x660fb64610668b4e	
+# skip sector starting with DOS new line
+>>>>>>>>>0	string		!\r\n			
+# allowed active flag 0,80h-FFh
+>>>>>>>>>>446	ubyte		0			
+>>>>>>>>>>>446	use		partition-table
+>>>>>>>>>>446	ubyte		>0x7F			
+>>>>>>>>>>>446	use		partition-table
+# TODO: test for extended bootrecord (ebr) moved and merged with mbr partition table entries
 # mbr partition table entries end
 # http://www.acronis.de/
 #FAT label=ACRONIS\ SZ
@@ -1174,6 +1147,56 @@
 # DOS x86 sector separated and moved from "DOS/MBR boot sector" by Joerg Jenderek at May 2011
 
 >0x200	lelong	0x82564557		\b, BSD disklabel
+
+# http://en.wikipedia.org/wiki/Master_boot_record#PTE
+# display standard partition table
+0	name				partition-table
+#>0		ubyte		x	PARTITION-TABLE
+# test and display 1st til 4th partition table entry
+>0		use			partition-entry-test
+>16		use			partition-entry-test
+>32		use			partition-entry-test
+>48		use			partition-entry-test
+#		test for entry of partition table
+0	name				partition-entry-test
+# partition type ID > 0
+>4		ubyte		>0
+# active flag 0
+>>0		ubyte		0	
+>>>0		use		partition-entry
+# active flag 0x80, 0x81, ... 
+>>0		ubyte		>0x7F	
+>>>0		use		partition-entry
+#		Print entry of partition table
+0	name				partition-entry
+# partition type ID > 0
+>4		ubyte		>0	\b; partition
+>>64		leshort		0xAA55	1
+>>48		leshort		0xAA55	2
+>>32		leshort		0xAA55	3
+>>16		leshort		0xAA55	4
+>>4		ubyte		x	: ID=0x%x
+>>0		ubyte&0x80	0x80	\b, active
+>>0		ubyte		>0x80	0x%x
+>>1		ubyte		x	\b, start-CHS (
+>>1		use		partition-chs
+>>5		ubyte		x	\b), end-CHS (
+>>5		use		partition-chs
+>>8		ulelong		x	\b), startsector %u
+>>12		ulelong		x	\b, %u sectors
+#		Print cylinder,head,sector (CHS) of partition entry
+0	name				partition-chs
+# cylinder
+>1		ubyte		x	\b0x
+>1		ubyte&0xC0	0x40	\b1
+>1		ubyte&0xC0	0x80	\b2
+>1		ubyte&0xC0	0xC0	\b3
+>2		ubyte		x	\b%x
+# head
+>0		ubyte		x	\b,%u
+# sector
+>1		ubyte&0x3F	x	\b,%u
+
 # FATX 
 0		string		FATX		FATX filesystem data
 
