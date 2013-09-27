@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.84 2013/09/23 14:33:58 christos Exp $
+# $File: images,v 1.85 2013/09/27 23:30:39 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -45,7 +45,7 @@
 >>3	regex		=\ [0-9]+	\b%s
 !:strength + 45
 !:mime	image/x-portable-greymap
-0	search/1	P3		Netpbm PPM image text
+0	search/1	P3
 >3	regex		=[0-9]*\ [0-9]*		Netpbm PPM image text
 >3	regex		=[0-9]+\ 		\b, size = %sx
 >>3	regex		=\ [0-9]+	\b%s
