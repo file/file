@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.50 2013/06/26 14:48:31 christos Exp $
+# $File: linux,v 1.51 2013/10/20 17:41:05 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -368,3 +368,26 @@
 >>>>>>>>16	ubyte		2	\b, archived
 >>>>>>>>8	ulelong&1	1	\b, sealed
 >>>>>>>>12	ulelong&1	1	\b, compressed
+
+# BCache backing and cache devices
+# From: Gabriel de Perthuis <g2p.code@gmail.com>
+0x1008		lequad		8
+>0x1018		string		\xc6\x85\x73\xf6\x4e\x1a\x45\xca\x82\x65\xf5\x7f\x48\xba\x6d\x81	BCache
+>>0x1010	ulequad		0	cache device
+>>0x1010	ulequad		1	backing device
+>>0x1010	ulequad		3	cache device
+>>0x1010	ulequad		4	backing device
+>>0x1048	string		>0	\b, label "%.32s"
+>>0x1028	ubelong		x	\b, uuid %08x
+>>0x102c	ubeshort	x	\b-%04x
+>>0x102e	ubeshort	x	\b-%04x
+>>0x1030	ubeshort	x	\b-%04x
+>>0x1032	ubelong		x	\b-%08x
+>>0x1036	ubeshort	x	\b%04x
+>>0x1038	ubelong		x	\b, set uuid %08x
+>>0x103c	ubeshort	x	\b-%04x
+>>0x103e	ubeshort	x	\b-%04x
+>>0x1040	ubeshort	x	\b-%04x
+>>0x1042	ubelong		x	\b-%08x
+>>0x1046	ubeshort	x	\b%04x
+
