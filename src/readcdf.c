@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.34 2013/10/29 18:22:45 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.35 2013/10/29 18:30:45 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -48,16 +48,16 @@ static const struct nv {
 	{ "Excel",			"vnd.ms-excel",		},
 	{ "Powerpoint",			"vnd.ms-powerpoint",	},
 	{ "Crystal Reports",		"x-rpt",		},
-	{ "Advanced Installer",		"x-msi",		},
-	{ "InstallShield",		"x-msi",		},
-	{ "Microsoft Patch Compiler",	"x-msi",		},
-	{ "NAnt",			"x-msi",		},
-	{ "Windows Installer",		"x-msi",		},
+	{ "Advanced Installer",		"vnd.ms-msi",		},
+	{ "InstallShield",		"vnd.ms-msi",		},
+	{ "Microsoft Patch Compiler",	"vnd.ms-msi",		},
+	{ "NAnt",			"vnd.ms-msi",		},
+	{ "Windows Installer",		"vnd.ms-msi",		},
 	{ NULL,				NULL,			},
 }, name2mime[] = {
 	{ "WordDocument",		"msword",		},
 	{ "PowerPoint",			"vnd.ms-powerpoint",	},
-	{ "DigitalSignature",		"x-msi",		},
+	{ "DigitalSignature",		"vnd.ms-msi",		},
 	{ NULL,				NULL,			},
 }, name2desc[] = {
 	{ "WordDocument",		"Microsoft Office Word",},
