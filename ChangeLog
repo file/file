@@ -1,3 +1,7 @@
+2013-10-29  14:25  Christos Zoulas <christos@zoulas.com>
+
+	* add CDF MSI file detection (Guy Helmer)
+
 2013-09-03  11:56  Christos Zoulas <christos@zoulas.com>
 
 	* Don't mix errors and regular output if there was an error
