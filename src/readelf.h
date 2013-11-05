@@ -272,6 +272,29 @@ typedef struct {
 #define NT_NETBSD_PAX_ASLR		0x10	/* Force enable ASLR */
 #define NT_NETBSD_PAX_NOASLR		0x20	/* Force disable ASLR */
 
+/*
+ * NetBSD-specific note type: MACHINE_ARCH.
+ * There should be 1 NOTE per executable.
+ * name:	NetBSD\0
+ * namesz:	7
+ * desc:	string
+ * descsz:	variable
+ */
+#define NT_NETBSD_MARCH		5
+
+/*
+ * NetBSD-specific note type: COMPILER MODEL.
+ * There should be 1 NOTE per executable.
+ * name:	NetBSD\0
+ * namesz:	7
+ * desc:	string
+ * descsz:	variable
+ */
+#define NT_NETBSD_CMODEL	6
+
+#if !defined(ELFSIZE) && defined(ARCH_ELFSIZE)
+#define ELFSIZE ARCH_ELFSIZE
+#endif
 /* SunOS 5.x hardware/software capabilities */
 typedef struct {
 	Elf32_Word	c_tag;
