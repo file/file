@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: java,v 1.14 2013/02/08 16:54:45 christos Exp $
+# $File: android,v 1.1 2013/09/24 20:22:03 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -72,3 +72,28 @@
 >36		lelong	>0			\b, page size: %d
 >38		string	>0			\b, name: %s
 >64		string	>0		 	\b, cmdline (%s)
+
+# Android Backup archive
+# From: Ariel Shkedi
+# File extension: .ab
+# No mime-type defined
+# URL: https://github.com/android/platform_frameworks_base/blob/\
+# 0bacfd2ba68d21a68a3df345b830bc2a1e515b5a/services/java/com/\
+# android/server/BackupManagerService.java#L2367
+# After the header comes a tar file
+# If compressed, the entire tar file is compressed with JAVA deflate
+#
+# Include the version number hardcoded with the magic string to avoid
+# false positives
+0	string/b	ANDROID\ BACKUP\n1\n	Android Backup
+>17	string		0\n			\b, Not-Compressed
+>17	string		1\n			\b, Compressed
+# any string as long as it's not the word none (which is matched below)
+>>19    regex/1		\^([^n\n]|n[^o]|no[^n]|non[^e]|none.+).*	\b, Encrypted (%s)
+# Commented out because they don't seem useful to print
+# (but they are part of the header - the tar file comes after them):
+#>>>&1		regex/1 .*	\b, Password salt: %s
+#>>>>&1		regex/1 .*	\b, Master salt: %s
+#>>>>>&1	regex/1 .*	\b, PBKDF2 rounds: %s
+#>>>>>>&1	regex/1 .*	\b, IV: %s
+#>>>>>>>&1	regex/1 .*	\b, Key: %s
