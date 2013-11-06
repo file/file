@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.79 2013/09/03 08:54:47 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.80 2013/11/06 19:33:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -373,8 +373,9 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			pos = lseek(fd, (off_t)0, SEEK_CUR);
 	} else {
 		int flags = O_RDONLY|O_BINARY;
+		int okstat = stat(inname, &sb) == 0;
 
-		if (stat(inname, &sb) == 0 && S_ISFIFO(sb.st_mode)) {
+		if (okstat && S_ISFIFO(sb.st_mode)) {
 #ifdef O_NONBLOCK
 			flags |= O_NONBLOCK;
 #endif
@@ -383,7 +384,8 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 
 		errno = 0;
 		if ((fd = open(inname, flags)) < 0) {
-			if (unreadable_info(ms, sb.st_mode, inname) == -1)
+			if (okstat &&
+			    unreadable_info(ms, sb.st_mode, inname) == -1)
 				goto done;
 			rv = 0;
 			goto done;
@@ -418,7 +420,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 
 	} else {
 		if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
-			file_error(ms, errno, "cannot read `%s'", inname);
+			file_error(ms, errno, "cannot read");
 			goto done;
 		}
 	}
