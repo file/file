@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.1 2013/09/24 20:22:03 christos Exp $
+# $File: android,v 1.2 2013/11/05 14:00:25 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -90,6 +90,7 @@
 >17	string		1\n			\b, Compressed
 # any string as long as it's not the word none (which is matched below)
 >>19    regex/1		\^([^n\n]|n[^o]|no[^n]|non[^e]|none.+).*	\b, Encrypted (%s)
+>>19	string		none\n			\b, Not-Encrypted
 # Commented out because they don't seem useful to print
 # (but they are part of the header - the tar file comes after them):
 #>>>&1		regex/1 .*	\b, Password salt: %s
