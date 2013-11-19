@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.195 2013/09/12 15:57:32 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.196 2013/11/19 21:01:12 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -603,6 +603,10 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		return -1;
 	}
 
+#if 0
+	/*
+	 * Always leave the database loaded
+	 */
 	if (action == FILE_LOAD)
 		return 0;
 
@@ -610,8 +614,10 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		mlist_free(ms->mlist[i]);
 		ms->mlist[i] = NULL;
 	}
+#endif
 
 	switch (action) {
+	case FILE_LOAD:
 	case FILE_COMPILE:
 	case FILE_CHECK:
 	case FILE_LIST:
