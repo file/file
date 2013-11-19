@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.50 2013/06/26 14:48:31 christos Exp $
+# $File: linux,v 1.51 2013/10/20 17:41:05 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -103,7 +103,8 @@
 >>518	leshort		>0x1ff
 >>>529	byte		0		zImage,
 >>>529	byte		1		bzImage,
->>>(526.s+0x200) string	>\0		version %s,
+>>>526	lelong		>0
+>>>>(526.s+0x200) string	>\0	version %s,
 >>498	leshort		1		RO-rootFS,
 >>498	leshort		0		RW-rootFS,
 >>508	leshort		>0		root_dev 0x%X,
