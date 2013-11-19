@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.23 2013/02/06 14:18:52 christos Exp $
+# $File: riff,v 1.24 2013/11/19 23:58:17 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -54,6 +54,8 @@
 >>24	lelong		>0		%d Hz
 # Corel Draw Picture
 >8	string		CDRA		\b, Corel Draw Picture
+!:mime	image/x-coreldraw
+>8	string		CDR6		\b, Corel Draw Picture, version 6
 !:mime	image/x-coreldraw
 # AVI == Audio Video Interleave
 >8	string		AVI\040		\b, AVI
@@ -220,6 +222,7 @@
 >>24	belong		>0		%d Hz
 # Corel Draw Picture
 >8	string		CDRA		\b, Corel Draw Picture
+>8	string		CDR6		\b, Corel Draw Picture, version 6
 # AVI == Audio Video Interleave
 >8	string		AVI\040		\b, AVI
 # Animated Cursor format
