@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: macintosh,v 1.22 2011/05/17 17:40:31 rrt Exp $
+# $File: macintosh,v 1.23 2013/11/19 18:47:58 christos Exp $
 # macintosh description
 #
 # BinHex is the Macintosh ASCII-encoded file format (see also "apple")
@@ -261,6 +261,9 @@
 >40	string 		x		%s
 
 0	string		$FL2		SPSS System File
+>24	string		x		%s
+
+0	string		$FL3		SPSS System File
 >24	string		x		%s
 
 # Macintosh filesystem data
