@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.62 2013/07/21 21:06:41 rrt Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.63 2013/09/03 08:31:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -168,22 +168,18 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 	size_t ulen;
 	const char *code = NULL;
 	const char *code_mime = "binary";
-	const char *type = NULL;
+	const char *type = "application/octet-stream";
+	const char *def = "data";
 
 
 
 	if (nb == 0) {
-		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-		    file_printf(ms, mime ? "application/x-empty" :
-		    "empty") == -1)
-			return -1;
-		return 1;
+		def = "empty";
+		type = "application/x-empty";
+		goto simple;
 	} else if (nb == 1) {
-		if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-		    file_printf(ms, mime ? "application/octet-stream" :
-		    "very short file (no magic)") == -1)
-			return -1;
-		return 1;
+		def = "very short file (no magic)";
+		goto simple;
 	}
 
 	if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0) {
@@ -278,10 +274,11 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 		}
 	}
 
+simple:
 	/* give up */
 	m = 1;
 	if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-	    file_printf(ms, mime ? "application/octet-stream" : "data") == -1) {
+	    file_printf(ms, "%s", mime ? type : def) == -1) {
 	    rv = -1;
 	}
  done:
