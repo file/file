@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.84 2013/09/23 14:33:58 christos Exp $
+# $File: images,v 1.85 2013/09/27 23:30:39 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -256,6 +256,8 @@
 # at offset 8 starts imagedata followed by "RGB " marker
 
 # PC bitmaps (OS/2, Windows BMP files)  (Greg Roelofs, newt@uchicago.edu)
+# http://en.wikipedia.org/wiki/BMP_file_format#DIB_header_.\
+# 28bitmap_information_header.29
 0	string		BM
 >14	leshort		12		PC bitmap, OS/2 1.x format
 !:mime	image/x-ms-bmp
@@ -266,6 +268,16 @@
 >>18	leshort		x		\b, %d x
 >>20	leshort		x		%d
 >14	leshort		40		PC bitmap, Windows 3.x format
+!:mime	image/x-ms-bmp
+>>18	lelong		x		\b, %d x
+>>22	lelong		x		%d x
+>>28	leshort		x		%d
+>14	leshort		124		PC bitmap, Windows 98/2000 and newer format
+!:mime	image/x-ms-bmp
+>>18	lelong		x		\b, %d x
+>>22	lelong		x		%d x
+>>28	leshort		x		%d
+>14	leshort		108		PC bitmap, Windows 95/NT4 and newer format
 !:mime	image/x-ms-bmp
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
