@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.80 2013/11/06 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.81 2013/11/29 15:42:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -420,7 +420,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 
 	} else {
 		if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
-			file_error(ms, errno, "cannot read");
+			file_error(ms, errno, "cannot read `%s'", inname);
 			goto done;
 		}
 	}

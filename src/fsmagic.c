@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.69 2013/11/06 19:33:31 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.70 2013/11/29 15:42:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -125,10 +125,11 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 
 	if (ret) {
 		if (ms->flags & MAGIC_ERROR) {
-			file_error(ms, errno, "cannot stat");
+			file_error(ms, errno, "cannot stat `%s'", fn);
 			return -1;
 		}
-		if (file_printf(ms, "cannot open (%s)", strerror(errno)) == -1)
+		if (file_printf(ms, "cannot open `%s' (%s)",
+		    fn, strerror(errno)) == -1)
 			return -1;
 		return 0;
 	}
@@ -261,7 +262,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				if (handle_mime(ms, mime, "symlink") == -1)
 					return -1;
 			} else if (file_printf(ms,
-			    "%sunreadable symlink (%s)", COMMA,
+			    "%sunreadable symlink `%s'(%s)", COMMA, fn,
 			    strerror(errno)) == -1)
 				return -1;
 			break;
