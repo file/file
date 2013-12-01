@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.70 2013/11/29 15:42:51 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.71 2013/12/01 18:01:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -262,7 +262,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				if (handle_mime(ms, mime, "symlink") == -1)
 					return -1;
 			} else if (file_printf(ms,
-			    "%sunreadable symlink `%s'(%s)", COMMA, fn,
+			    "%sunreadable symlink `%s' (%s)", COMMA, fn,
 			    strerror(errno)) == -1)
 				return -1;
 			break;
