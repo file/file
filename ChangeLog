@@ -1,3 +1,10 @@
+2013-11-19  20:10  Christos Zoulas <christos@zoulas.com>
+
+	* always leave magic file loaded, don't unload for magic_check, etc.
+	* fix default encoding to binary instead of unknown which broke recently
+	* handle empty and one byte files, less specially so that
+	  --mime-encoding does not break completely.
+		`
 2013-11-06  14:40  Christos Zoulas <christos@zoulas.com>
 
 	* fix erroneous non-zero exit code from non-existant file and message
