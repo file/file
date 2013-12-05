@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.168 2013/05/30 15:53:33 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.169 2013/12/05 17:02:34 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -40,6 +40,9 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.168 2013/05/30 15:53:33 christos Exp $")
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
+#if defined(HAVE_LOCALE_H)
+#include <locale.h>
+#endif
 
 
 private int match(struct magic_set *, struct magic *, uint32_t,
@@ -337,22 +340,24 @@ private int
 check_fmt(struct magic_set *ms, struct magic *m)
 {
 	regex_t rx;
-	int rc;
+	int rc, rv = -1;
 
 	if (strchr(m->desc, '%') == NULL)
 		return 0;
 
+	(void)setlocale(LC_CTYPE, "C");
 	rc = regcomp(&rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
 	if (rc) {
 		char errmsg[512];
 		(void)regerror(rc, &rx, errmsg, sizeof(errmsg));
 		file_magerror(ms, "regex error %d, (%s)", rc, errmsg);
-		return -1;
 	} else {
 		rc = regexec(&rx, m->desc, 0, 0, 0);
 		regfree(&rx);
-		return !rc;
+		rv = !rc;
 	}
+	(void)setlocale(LC_CTYPE, "");
+	return rv;
 }
 
 #ifndef HAVE_STRNDUP

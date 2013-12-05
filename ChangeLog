@@ -1,3 +1,9 @@
+2013-12-05  12:00  Christos Zoulas <christos@zoulas.com>
+
+	* use strcasestr() to for cdf strings
+	* reset to the "C" locale while doing regex operations, or case
+	  insensitive comparisons; this is provisional
+
 2013-11-19  20:10  Christos Zoulas <christos@zoulas.com>
 
 	* always leave magic file loaded, don't unload for magic_check, etc.

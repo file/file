@@ -139,7 +139,7 @@ dnl Checks for functions
 AC_CHECK_FUNCS(strerror strndup strtoul mkstemp mkostemp utimes utime wcwidth strtof)
 
 dnl Provide implementation of some required functions if necessary
-AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline ctime_r asctime_r pread)
+AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline ctime_r asctime_r pread strcasestr)
 
 dnl Checks for libraries
 AC_CHECK_LIB(z,gzopen)
