@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.63 2013/09/03 08:31:48 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.64 2013/11/19 23:49:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,6 +43,9 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.63 2013/09/03 08:31:48 christos Exp $")
 #endif
 #if defined(HAVE_LIMITS_H)
 #include <limits.h>
+#endif
+#if defined(HAVE_LOCALE_H)
+#include <locale.h>
 #endif
 
 #ifndef SIZE_MAX
@@ -437,14 +440,14 @@ protected int
 file_replace(struct magic_set *ms, const char *pat, const char *rep)
 {
 	regex_t rx;
-	int rc;
+	int rc, rv = -1;
 
+	(void)setlocale(LC_CTYPE, "C");
 	rc = regcomp(&rx, pat, REG_EXTENDED);
 	if (rc) {
 		char errmsg[512];
 		(void)regerror(rc, &rx, errmsg, sizeof(errmsg));
 		file_magerror(ms, "regex error %d, (%s)", rc, errmsg);
-		return -1;
 	} else {
 		regmatch_t rm;
 		int nm = 0;
@@ -452,10 +455,13 @@ file_replace(struct magic_set *ms, const char *pat, const char *rep)
 			ms->o.buf[rm.rm_so] = '\0';
 			if (file_printf(ms, "%s%s", rep,
 			    rm.rm_eo != 0 ? ms->o.buf + rm.rm_eo : "") == -1)
-				return -1;
+				goto out;
 			nm++;
 		}
 		regfree(&rx);
-		return nm;
+		rv = nm;
 	}
+out:
+	(void)setlocale(LC_CTYPE, "");
+	return rv;
 }

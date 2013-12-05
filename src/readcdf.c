@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.34 2013/10/29 18:22:45 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.35 2013/10/29 18:30:45 christos Exp $")
 #endif
 
 #include <stdlib.h>
@@ -34,6 +34,9 @@ FILE_RCSID("@(#)$File: readcdf.c,v 1.34 2013/10/29 18:22:45 christos Exp $")
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#if defined(HAVE_LOCALE_H)
+#include <locale.h>
+#endif
 
 #include "cdf.h"
 #include "magic.h"
@@ -70,10 +73,15 @@ private const char *
 cdf_app_to_mime(const char *vbuf, const struct nv *nv)
 {
 	size_t i;
+	const char *rv = NULL;
 
+	(void)setlocale(LC_CTYPE, "C");
 	for (i = 0; nv[i].pattern != NULL; i++)
-		if (strstr(vbuf, nv[i].pattern) != NULL)
-			return nv[i].mime;
+		if (strcasestr(vbuf, nv[i].pattern) != NULL) {
+			rv = nv[i].mime;
+			break;
+		}
+	(void)setlocale(LC_CTYPE, "");
 	return NULL;
 }
 
