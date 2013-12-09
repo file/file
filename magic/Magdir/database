@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.35 2013/11/20 00:00:14 christos Exp $
+# $File: database,v 1.36 2013/12/09 20:31:53 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -86,6 +86,30 @@
 # Round Robin Database Tool by Tobias Oetiker <oetiker@ee.ethz.ch>
 0	string/b	RRD\0		RRDTool DB
 >4	string/b	x		version %s
+
+>>10	short		!0		16bit aligned
+>>>10	bedouble	8.642135e+130	big-endian
+>>>>18	short		x		32bit long (m68k)
+
+>>10	short		0
+>>>12	long		!0		32bit aligned
+>>>>12	bedouble	8.642135e+130	big-endian
+>>>>>20 long		0		64bit long
+>>>>>20 long		!0		32bit long  
+>>>>12	ledouble	8.642135e+130	little-endian
+>>>>>24 long		0		64bit long
+>>>>>24 long		!0		32bit long (i386)
+>>>>12	string		\x43\x2b\x1f\x5b\x2f\x25\xc0\xc7	middle-endian
+>>>>>24 short		!0		32bit long (arm)
+
+>>8	quad		0		64bit aligned
+>>>16	bedouble	8.642135e+130	big-endian
+>>>>24	long		0		64bit long (s390x)
+>>>>24	long		!0		32bit long (hppa/mips/ppc/s390/sparc)
+>>>16	ledouble	8.642135e+130	little-endian
+>>>>28	long		0		64bit long (alpha/amd64/ia64)
+>>>>28	long		!0		32bit long (armel/mipsel)
+
 #----------------------------------------------------------------------
 # ROOT: file(1) magic for ROOT databases
 #
