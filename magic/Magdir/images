@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.86 2013/11/19 23:56:04 christos Exp $
+# $File: images,v 1.87 2013/12/11 14:14:20 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -34,39 +34,39 @@
 # The next byte following the magic is always whitespace.
 # strength is changed to try these patterns before "x86 boot sector"
 0	search/1	P1		
->3	regex		=[0-9]*\ [0-9]*		Netpbm PBM image text
->3	regex		=[0-9]+\ 		\b, size = %sx
->>3	regex		=\ [0-9]+	\b%s
+>3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PBM image text
+>3	regex		=[0-9]{1,50}\ 		\b, size = %sx
+>>3	regex		=\ [0-9]{1,50}	\b%s
 !:strength + 45
 !:mime	image/x-portable-bitmap
 0	search/1	P2		
->3	regex		=[0-9]*\ [0-9]*		Netpbm PGM image text
->3	regex		=[0-9]+\ 		\b, size = %sx
->>3	regex		=\ [0-9]+	\b%s
+>3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PGM image text
+>3	regex		=[0-9]{1,50}\ 		\b, size = %sx
+>>3	regex		=\ [0-9]{1,50}	\b%s
 !:strength + 45
 !:mime	image/x-portable-greymap
 0	search/1	P3
->3	regex		=[0-9]*\ [0-9]*		Netpbm PPM image text
->3	regex		=[0-9]+\ 		\b, size = %sx
->>3	regex		=\ [0-9]+	\b%s
+>3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PPM image text
+>3	regex		=[0-9]{1,50}\ 		\b, size = %sx
+>>3	regex		=\ [0-9]{1,50}	\b%s
 !:strength + 45
 !:mime	image/x-portable-pixmap
 0	string		P4		
->3	regex		=[0-9]*\ [0-9]*		Netpbm PBM "rawbits" image data
->3	regex		=[0-9]+\ 		\b, size = %sx
->>3	regex		=\ [0-9]+	\b%s
+>3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PBM "rawbits" image data
+>3	regex		=[0-9]{1,50}\ 		\b, size = %sx
+>>3	regex		=\ [0-9]{1,50}	\b%s
 !:strength + 45
 !:mime	image/x-portable-bitmap
 0	string		P5		
->3	regex		=[0-9]*\ [0-9]*		Netpbm PGM "rawbits" image data
->3	regex		=[0-9]+\ 		\b, size = %sx
->>3	regex		=\ [0-9]+	\b%s
+>3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PGM "rawbits" image data
+>3	regex		=[0-9]{1,50}\ 		\b, size = %sx
+>>3	regex		=\ [0-9]{1,50}	\b%s
 !:strength + 45
 !:mime	image/x-portable-greymap
 0	string		P6		
->3	regex		=[0-9]*\ [0-9]*		Netpbm PPM "rawbits" image data
->3	regex		=[0-9]+\ 		\b, size = %sx
->>3	regex		=\ [0-9]+	\b%s
+>3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PPM "rawbits" image data
+>3	regex		=[0-9]{1,50}\ 		\b, size = %sx
+>>3	regex		=\ [0-9]{1,50}	\b%s
 !:strength + 45
 !:mime	image/x-portable-pixmap
 0	string		P7		Netpbm PAM image file
