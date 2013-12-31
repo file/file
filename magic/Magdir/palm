@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: palm,v 1.8 2011/12/15 16:21:43 christos Exp $
+# $File: palm,v 1.9 2012/01/16 15:16:43 christos Exp $
 # palm:	 file(1) magic for PalmOS {.prc,.pdb}: applications, docfiles, and hacks
 #
 # Brian Lalor <blalor@hcirisc.cs.binghamton.edu>
@@ -9,14 +9,34 @@
 # 8 character identifiers at byte 60, one I found for appl is BIGb.
 # What are the possibilities and where is this documented?
 
+# The common header format for PalmOS .pdb/.prc files is
+# {
+#         char            name[ 32 ];
+#         Word            attributes;
+#         Word            version;
+#         DWord           creationDate;
+#         DWord           modificationDate;
+#         DWord           lastBackupDate;
+#         DWord           modificationNumber;
+#         DWord           appInfoID;
+#         DWord           sortInfoID;
+#         char            type[4];
+#         char            creator[4];
+#         DWord           uniqueIDSeed;
+#         RecordListType  recordList;
+# };
+#
+# Datestamps are unsigned seconds since the MacOS epoch (Jan 1, 1904),
+# or Unix/POSIX time + 2082844800.
+
 # appl
 #59	byte			\0
 #>60	string			appl		PalmOS application
 #>0	string			>\0		"%s"
-# TEXt
-#59	byte			\0
-#>60	belong			TEXt		AportisDoc file
-#>0	string			>\0		"%s"
+# TEXtREAd
+59	byte			\0
+60	string			TEXtREAd 	AportisDoc/PalmDOC E-book
+>0	string			>\0		"%s"
 # HACK
 #59	byte			\0
 #>60	string			HACK		HackMaster hack
