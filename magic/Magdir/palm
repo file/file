@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: palm,v 1.10 2013/12/31 02:09:30 christos Exp $
+# $File: palm,v 1.11 2013/12/31 19:18:02 christos Exp $
 # palm:	 file(1) magic for PalmOS {.prc,.pdb}: applications, docfiles, and hacks
 #
 # Brian Lalor <blalor@hcirisc.cs.binghamton.edu>
@@ -29,18 +29,50 @@
 # Datestamps are unsigned seconds since the MacOS epoch (Jan 1, 1904),
 # or Unix/POSIX time + 2082844800.
 
+0		name		aportisdoc
+# date is supposed to be big-endian seconds since 1 Jan 1904, but many
+# files contain the timestamp in little-endian or a completely
+# nonsensical value...
+#>36		bedate-2082844800	>0	\b, created %s
+# compression: 1=uncomp, 2=orig, 0x4448=HuffDic
+>(78.L)		beshort		=1		\b, uncompressed
+# compressed
+>(78.L)		beshort		>1
+>>(78.L+4)	belong		x		\b, %d bytes uncompressed
+
 # appl
-#59	byte			\0
-#>60	string			appl		PalmOS application
-#>0	string			>\0		"%s"
-# TEXtREAd
-59	byte			\0
-60	string			TEXtREAd 	AportisDoc/PalmDOC E-book
->0	string			>\0		"%s"
+#60		string		appl		PalmOS application
+#>0		string		>\0		"%s"
+
 # HACK
-#59	byte			\0
-#>60	string			HACK		HackMaster hack
-#>0	string			>\0		"%s"
+#60		string		HACK		HackMaster hack
+#>0		string		>\0		"%s"
+
+# iSiloX e-book
+60		string		SDocSilX	iSiloX E-book
+>0		string		>\0		"%s"
+
+# Mobipocket (www.mobipocket.com), donated by Carl Witty
+# expanded by Ralf Brown
+60		string	 	BOOKMOBI	Mobipocket E-book
+# MobiPocket stores a full title, pointed at by the belong at offset
+# 0x54 in its header at (78.L), with length given by the belong at
+# offset 0x58.
+# there's no guarantee that the title string is null-terminated, but
+# we currently can't specify a variable-length string where the length
+# field is not at the start of the string; in practice, the data
+# following the string always seems to start with a zero byte
+>(78.L)		belong		x
+>>&(&0x50.L-4)	string		>\0		"%s"
+>0		use		aportisdoc
+>>(78.L+0x68)	belong		>0		\b, version %d
+>>(78.L+0x1C)	belong		!0		\b, codepage %d
+>>(78.L+0x0C)	beshort	 	>0		\b, encrypted (type %d)
+
+# AportisDoc/PalmDOC
+60		string		TEXtREAd	AportisDoc/PalmDOC E-book
+>0		string		>\0		"%s"
+>0		use		aportisdoc
 
 # Variety of PalmOS document types
 # Michael-John Turner <mj@debian.org>
