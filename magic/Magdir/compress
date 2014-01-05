@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.51 2013/11/19 20:38:57 christos Exp $
+# $File: compress,v 1.52 2013/12/11 17:55:00 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -208,6 +208,12 @@
 >4	byte		x			- version %d
 >5	byte		x			\b.%d
 !:mime	application/x-lrzip
+
+# http://fastcompression.blogspot.fi/2013/04/lz4-streaming-format-final.html
+0	lelong		0x184d2204	LZ4 compressed data
+!:mime	application/x-lz4
+0	lelong		0x184c2102	LZ4 compressed data, legacy format
+!:mime	application/x-lz4
 
 # AFX compressed files (Wolfram Kleff)
 2	string		-afx-		AFX compressed file data
