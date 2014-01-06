@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.79 2013/02/08 17:24:06 christos Exp $
+# $File: archive,v 1.80 2014/01/06 13:27:05 rrt Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -679,7 +679,7 @@
 #  EPUB (OEBPS) books using OCF (OEBPS Container Format)
 #    http://www.idpf.org/ocf/ocf1.0/download/ocf10.htm, section 4.
 #    From: Ralf Brown <ralf.brown@gmail.com>
->0x1E	string	mimetypeapplication/epub+zip	EPUB document
+>>50	string	epub+zip	EPUB document
 !:mime application/epub+zip
 
 #  Catch other ZIP-with-mimetype formats
