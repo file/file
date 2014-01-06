@@ -3,7 +3,7 @@ test_LDADD = $(top_builddir)/src/libmagic.la
 test_CPPFLAGS = -I$(top_srcdir)/src
 
 EXTRA_DIST = \
-	gedcom.magic gedcom.testfile gedcom.result
+	*.testfile *.result
 
 T = $(top_srcdir)/tests
 check-local:
