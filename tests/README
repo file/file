@@ -11,5 +11,4 @@ test consists of two files:
 where TEST is the base name of the test, TEST.testfile is the input,
 and TEST.result is the desired output from file.
 
-To add a new test, add the test files to the directory and their names
-to EXTRA_DIST in Makefile.am.
+To add a new test just add the test files to the directory.
