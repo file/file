@@ -8,4 +8,4 @@ EXTRA_DIST = \
 T = $(top_srcdir)/tests
 check-local:
 	MAGIC=$(top_builddir)/magic/magic ./test
-	for i in $T/*.testfile; do MAGIC=$T/$${i%%.testfile}.magic ./test $T/$$i $T/$${i%%.testfile}.result; done
+	for i in $T/*.testfile; do MAGIC=$(top_builddir)/magic/magic ./test $T/$$i $T/$${i%%.testfile}.result; done
