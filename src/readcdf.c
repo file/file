@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.36 2013/12/05 17:02:34 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.37 2014/01/06 13:41:18 rrt Exp $")
 #endif
 
 #include <stdlib.h>
@@ -82,7 +82,7 @@ cdf_app_to_mime(const char *vbuf, const struct nv *nv)
 			break;
 		}
 	(void)setlocale(LC_CTYPE, "");
-	return NULL;
+	return rv;
 }
 
 private int
