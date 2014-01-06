@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: scientific,v 1.7 2010/09/20 19:19:17 rrt Exp $
+# $File: scientific,v 1.8 2014/01/06 17:46:23 rrt Exp $
 # scientific:  file(1) magic for scientific formats 
 #
 # From: Joe Krahn <krahn@niehs.nih.gov>
@@ -65,7 +65,7 @@
 0       search/1/c	0\ HEAD         GEDCOM genealogy text
 >&0     search		1\ GEDC
 >>&0    search		2\ VERS         version
->>>&1   search/1	>\0		%s
+>>>&1   string		>\0		%s
 # From: Phil Endecott <phil05@chezphil.org>
 0	string	\000\060\000\040\000\110\000\105\000\101\000\104		GEDCOM data
 0	string	\060\000\040\000\110\000\105\000\101\000\104\000		GEDCOM data
