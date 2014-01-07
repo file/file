@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.64 2013/11/19 23:49:44 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.65 2013/12/05 17:02:34 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -98,6 +98,7 @@ file_printf(struct magic_set *ms, const char *fmt, ...)
  * error - print best error message possible
  */
 /*VARARGS*/
+__attribute__((__format__(__printf__, 3, 0)))
 private void
 file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
     size_t lineno)
