@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.84 2013/02/05 13:55:22 christos Exp $
+# $File: msdos,v 1.85 2013/03/09 22:36:00 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -806,6 +806,21 @@
 
 # http://www.gnome.org/~markmc/qcow-image-format.html
 >4	belong	2	(v2)
+# Using the existence of the Backing File Offset to determine whether
+# to read Backing File Information
+>>8	bequad  >0	 \b, has backing file
+# Note that this isn't a null-terminated string; the length is actually
+# (16.L). Assuming a null-terminated string happens to work usually, but it
+# may spew junk until it reaches a \0 in some cases. Also, since there's no
+# .Q modifier, we just use the bottom four bytes as an offset. Note that if
+# the file is over 4G, and the backing file path is stored after the first 4G,
+# the wrong filename will be printed. (This should be (8.Q), when that syntax
+# is introduced.)
+>>>(12.L)	 string >\0	(path %s)
+>>24	bequad	x	\b, %lld bytes
+>>32	belong	1	\b, AES-encrypted
+
+>4	belong	3	(v3)
 # Using the existence of the Backing File Offset to determine whether
 # to read Backing File Information
 >>8	bequad  >0	 \b, has backing file
