@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.169 2013/12/05 17:02:34 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.170 2014/01/06 02:25:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -194,6 +194,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		}
 
 		if ((e = handle_annotation(ms, m)) != 0) {
+			*need_separator = 1;
+			*printed_something = 1;
 			*returnval = 1;
 			return e;
 		}
@@ -282,6 +284,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				} else
 					ms->c.li[cont_level].got_match = 1;
 				if ((e = handle_annotation(ms, m)) != 0) {
+					*need_separator = 1;
+					*printed_something = 1;
 					*returnval = 1;
 					return e;
 				}
