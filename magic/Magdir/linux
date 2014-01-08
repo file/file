@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.51 2013/10/20 17:41:05 christos Exp $
+# $File: linux,v 1.52 2013/11/19 23:18:15 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -48,7 +48,10 @@
 2	string		LILO		Linux/i386 LILO boot/chain loader
 #
 # Linux make config build file, from Ole Aamot <oka@oka.no>
-28 	string		make\ config	Linux make config build file
+# Updated by Ken Sharp
+28	string		make\ config		Linux make config build file (old)
+49	search/70	Kernel\ Configuration	Linux make config build file
+
 #
 # PSF fonts, from H. Peter Anvin <hpa@yggdrasil.com>
 # Updated by Adam Buchbinder <adam.buchbinder@gmail.com>
