@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.102 2013/01/04 15:39:22 christos Exp $
+.\" $File: file.man,v 1.103 2013/07/21 19:52:55 rrt Exp $
 .Dd October 25, 2012
 .Dt FILE __CSECTION__
 .Os
@@ -553,7 +553,10 @@ returns 0 on success, and non-zero on error.
 Please report bugs and send patches to the bug tracker at
 .Pa http://bugs.gw.com/
 or the mailing list at
-.Aq file@mx.gw.com .
+.Aq file@mx.gw.com
+(visit
+.Pa http://mx.gw.com/mailman/listinfo/file
+first to subscribe).
 .Sh TODO
 .Pp
 Fix output so that tests for MIME and APPLE flags are not needed all
