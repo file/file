@@ -1,0 +1,30 @@
+These files were produced on Mac OS X 10.9 with the system compiler(s), plus
+the regular LLVM utilities which don't ship with Apple's developer tools.
+
+openclc is the system OpenCL compiler. It can be found on any Mac OS X 10.7+
+system at "/System/Library/Frameworks/OpenCL.framework/Libraries/openclc".
+
+It should be largely the same on other platforms.
+
+--- C / LLVM IR
+
+ echo 'int foo = 1;' > llvm.c
+
+ clang -flto      -c llvm.c    # llvm.o    - LLVM bitcode "object"
+ clang -emit-llvm -c llvm.c    # llvm.bc   - "Native" llvm bitcode - identical
+ clang -flto      -S llvm.c    # llvm.s    - LLVM IR "assembler"
+
+ llvm-dis            llvm.o    # llvm.o.ll - Bitcode from "object" - identical
+ clang            -S llvm.o.ll # llvm.o.s  - True assembler from LLVM IR
+ clang            -c llvm.o.s  # llvm.o.o  - Native object file
+
+
+--- OpenCL / SPIR (portable semicompiled code) / "native" OpenCL objects
+
+ echo '__constant int bar = 0;' > opencl.cl
+
+ clang -cc1 -triple spir-unknown-unknown -emit-llvm opencl.cl # opencl.bc
+ llvm-dis   opencl.bc # opencl.ll   - Portable OpenCL SPIR bitcode/"assembler"
+
+ openclc -c opencl.cl # opencl.o    - Apple OpenCL bitcode "object"
+ llvm-dis   opencl.o  # opencl.o.ll - Non-portable Apple OpenCL IR

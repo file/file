@@ -1,0 +1,8 @@
+These are just some examples pulled straight from Google's libvpx and openssl.
+
+I really don't know much about NASM, or assembler in general. 
+but the identifiers I found in libvpx for NASM/YASM style assembly do seem
+consistent across that project (and related WebM code.)
+
+I think a lot of the openssl files are neat examples as they're actually
+also perl scripts but file correctly identifies them as assembler.
