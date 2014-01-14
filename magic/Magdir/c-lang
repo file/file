@@ -9,6 +9,24 @@
 0	search/8192	"LIBHDR"	BCPL source text
 !:mime	text/x-bcpl
 
+# OpenCL
+0	regex	\^__kernel	OpenCL kernel source text
+!:mime	text/x-c
+0	regex	\^__private		OpenCL kernel source text
+!:mime	text/x-c
+0	regex	\^__global		OpenCL kernel source text
+!:mime	text/x-c
+0	regex	\^__static		COpenCL kernel source text
+!:mime	text/x-c
+0	regex	\^__local		OpenCL kernel source text
+!:mime	text/x-c
+0	regex	\^__constant		OpenCL kernel source text
+
+0	regex	\^#include.*CL\/cl\.h	OpenCL host source text
+!:mime	text/x-c
+0	regex	\^#include.*opencl.h	OpenCL host source text
+!:mime	text/x-c
+
 # C
 0	regex	\^#include	C source text
 !:mime	text/x-c
@@ -23,6 +41,8 @@
 0	regex	\^struct[\ \t\n]+		C source text
 !:mime	text/x-c
 0	regex	\^union[\ \t\n]+		C source text
+!:mime	text/x-c
+0	regex	\^int[\ \t\n]+	C source text
 !:mime	text/x-c
 0	search/8192	main(		C source text
 !:mime	text/x-c

@@ -1,0 +1,95 @@
+--------- ASM ----------------------------------------------------------------
+
+These are just some examples pulled straight from Google's libvpx and openssl.
+
+I really don't know much about NASM, or assembler in general.
+but the identifiers I found in libvpx for NASM/YASM style assembly do seem
+consistent across that project (and related WebM code.)
+
+I think a lot of the openssl files are neat examples as they're actually
+also perl scripts but file correctly identifies them as assembler.
+
+
+--------- LLVM ---------------------------------------------------------------
+
+These files were produced on Mac OS X 10.9 with the system compiler(s), plus
+the regular LLVM utilities which don't ship with Apple's developer tools.
+
+openclc is the system OpenCL compiler. It can be found on any Mac OS X 10.7+
+system at "/System/Library/Frameworks/OpenCL.framework/Libraries/openclc".
+
+It should be largely the same on other platforms.
+
+--- C / LLVM IR
+
+ echo 'int foo = 1;' > llvm.c
+
+ clang -flto      -c llvm.c    # llvm.o    - LLVM bitcode "object"
+ clang -emit-llvm -c llvm.c    # llvm.bc   - "Native" llvm bitcode - identical
+ clang -flto      -S llvm.c    # llvm.s    - LLVM IR "assembler"
+
+ llvm-dis            llvm.o    # llvm.o.ll - Bitcode from "object" - identical
+ clang            -S llvm.o.ll # llvm.o.s  - True assembler from LLVM IR
+ clang            -c llvm.o.s  # llvm.o.o  - Native object file
+
+
+--- OpenCL / SPIR (portable semicompiled code) / "native" OpenCL objects
+
+ echo '__constant int bar = 0;' > opencl.cl
+
+ clang -cc1 -triple spir-unknown-unknown -emit-llvm opencl.cl # opencl.bc
+ llvm-dis   opencl.bc # opencl.ll   - Portable OpenCL SPIR bitcode/"assembler"
+
+ openclc -c opencl.cl # opencl.o    - Apple OpenCL bitcode "object"
+ llvm-dis   opencl.o  # opencl.o.ll - Non-portable Apple OpenCL IR
+
+
+--------- DIRECTORY CONTENTS WITHOUT PATCHES ----------------------------------
+
+asm/:                           directory
+asm/README:                     ASCII text
+asm/libvpx/:                    directory
+asm/libvpx/ssim_opt.asm:        ASCII text
+asm/libvpx/vp8_memcpy_neon.asm: ASCII text
+asm/openssl/:                   directory
+asm/openssl/s390x.S:            assembler source, ASCII text
+asm/openssl/x86_64-gf2m.pl:     Perl script, ISO-8859 text executable
+llvm/:                          directory
+llvm/README:                    ASCII text
+llvm/llvm.bc:                   LLVM bitcode, wrapper x86_64
+llvm/llvm.c:                    ASCII text
+llvm/llvm.o:                    LLVM bitcode, wrapper x86_64
+llvm/llvm.o.ll:                 ASCII text
+llvm/llvm.o.o:                  Mach-O 64-bit x86_64 object
+llvm/llvm.o.s:                  assembler source, ASCII text
+llvm/llvm.s:                    ASCII text
+llvm/opencl.bc:                 LLVM IR bitcode
+llvm/opencl.cl:                 ASCII text
+llvm/opencl.ll:                 ASCII text
+llvm/opencl.o:                  LLVM bitcode, wrapper x86_64
+llvm/opencl.o.ll:               ASCII text
+
+--------- DIRECTORY CONTENTS WITH PATCHES -------------------------------------
+
+asm/:                           directory
+asm/README:                     ASCII text
+asm/libvpx/:                    directory
+asm/libvpx/ssim_opt.asm:        Intel/NASM syntax assembler source, ASCII text
+asm/libvpx/vp8_memcpy_neon.asm: ARM/NASM syntax assember source, ASCII text
+asm/openssl/:                   directory
+asm/openssl/s390x.S:            GAS syntax assembler source, ASCII text
+asm/openssl/x86_64-gf2m.pl:     GAS syntax assembler source, ISO-8859 text
+llvm/:                          directory
+llvm/README:                    ASCII text
+llvm/llvm.bc:                   LLVM IR bitcode object/wrapper, x86_64
+llvm/llvm.c:                    ASCII text
+llvm/llvm.o:                    LLVM IR bitcode object/wrapper, x86_64
+llvm/llvm.o.ll:                 LLVM IR assembler-like source, ASCII text
+llvm/llvm.o.o:                  Mach-O 64-bit x86_64 object
+llvm/llvm.o.s:                  GAS syntax assembler source, ASCII text
+llvm/llvm.s:                    LLVM IR assembler-like source, ASCII text
+llvm/opencl.bc:                 LLVM IR bitcode
+llvm/opencl.cl:                 ASCII text
+llvm/opencl.ll:                 LLVM IR assembler-like source, ASCII text
+llvm/opencl.o:                  LLVM IR bitcode object/wrapper, x86_64
+llvm/opencl.o.ll:               LLVM IR assembler-like source, ASCII text

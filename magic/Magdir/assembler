@@ -2,17 +2,25 @@
 # $File: assembler,v 1.5 2013/09/17 17:33:36 christos Exp $
 # make:  file(1) magic for assembler source
 #
-0	regex	\^[\040\t]{0,50}\\.asciiz		assembler source text
+
+# GAS
+0	regex	\^[\040\t]{0,50}\\.asciiz		GAS syntax assembler source text
 !:mime	text/x-asm
-0	regex	\^[\040\t]{0,50}\\.byte		assembler source text
+0	regex	\^[\040\t]{0,50}\\.byte		GAS syntax assembler source text
 !:mime	text/x-asm
-0	regex	\^[\040\t]{0,50}\\.even		assembler source text
+0	regex	\^[\040\t]{0,50}\\.even		GAS syntax assembler source text
 !:mime	text/x-asm
-0	regex	\^[\040\t]{0,50}\\.globl		assembler source text
+0	regex	\^[\040\t]{0,50}\\.globl		GAS syntax assembler source text
 !:mime	text/x-asm
-0	regex	\^[\040\t]{0,50}\\.text		assembler source text
+0	regex	\^[\040\t]{0,50}\\.text		GAS syntax assembler source text
 !:mime	text/x-asm
-0	regex	\^[\040\t]{0,50}\\.file		assembler source text
+0	regex	\^[\040\t]{0,50}\\.file		GAS syntax assembler source text
 !:mime	text/x-asm
-0	regex	\^[\040\t]{0,50}\\.type		assembler source text
+0	regex	\^[\040\t]{0,50}\\.type		GAS syntax assembler source text
+!:mime	text/x-asm
+
+# NASM
+0	regex	\^[\040\t]{0,50}\\global\ sym	Intel/NASM syntax assembler source text
+!:mime	text/x-asm
+0	regex	\^[\040\t]{0,50}\\AREA.*\..*\,		ARM/NASM syntax assember source text
 !:mime	text/x-asm

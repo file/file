@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/file $(find llvm-assembly-examples -type f)
