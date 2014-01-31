@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.103 2013/07/21 19:52:55 rrt Exp $
-.Dd October 25, 2012
+.\" $File: file.man,v 1.104 2014/01/08 11:27:53 kim Exp $
+.Dd January 30, 2014
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -8,7 +8,7 @@
 .Sh SYNOPSIS
 .Nm
 .Bk -words
-.Op Fl bchiklLNnprsvz0
+.Op Fl bcEhiklLNnprsvz0
 .Op Fl Fl apple
 .Op Fl Fl mime-encoding
 .Op Fl Fl mime-type
@@ -175,6 +175,10 @@ Cause a checking printout of the parsed form of the magic file.
 This is usually used in conjunction with the
 .Fl m
 flag to debug a new magic file before installing it.
+.It Fl E
+On filesystem errors (file not found etc), instead of handling the error
+as regular output as POSIX mandates and keep going, issue an error message
+and exit.
 .It Fl e , Fl Fl exclude Ar testname
 Exclude the test named in
 .Ar testname
