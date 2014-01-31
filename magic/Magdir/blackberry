@@ -1,0 +1,8 @@
+
+#------------------------------------------------------------------------------
+# $File: apple,v 1.27 2013/03/09 22:36:00 christos Exp $
+# blackberry:  file(1) magic for BlackBerry file formats
+#
+5	belong	0		
+>8	belong  010010010	BlackBerry RIM ETP file
+>>22	string	x		\b for %s
