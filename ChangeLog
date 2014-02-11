@@ -1,3 +1,19 @@
+2014-02-11  10:40  Christos Zoulas <christos@zoulas.com>
+
+	* Prevent infinite recursion on files with indirect offsets of 0
+
+2014-01-30  21:00  Christos Zoulas <christos@zoulas.com>
+
+	* Add -E flag that makes file print filesystem errors to stderr
+	  and exit.
+
+2014-01-08  17:20  Christos Zoulas <christos@zoulas.com>
+
+	* mime printing could print results from multiple magic entries
+	  if there were multiple matches.
+	* in some cases overflow was not detected when computing offsets
+	  in softmagic.
+
 2013-12-05  12:00  Christos Zoulas <christos@zoulas.com>
 
 	* use strcasestr() to for cdf strings
