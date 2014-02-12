@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.172 2014/01/08 22:22:54 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.173 2014/02/11 15:41:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -79,13 +79,13 @@ private void cvt_64(union VALUETYPE *, const struct magic *);
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
 protected int
 file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
-    int mode, int text)
+    size_t level, int mode, int text)
 {
 	struct mlist *ml;
 	int rv, printed_something = 0, need_separator = 0;
 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
 		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, 0, mode,
-		    text, 0, 0, &printed_something, &need_separator,
+		    text, 0, level, &printed_something, &need_separator,
 		    NULL)) != 0)
 			return rv;
 
@@ -1747,7 +1747,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		ms->o.buf = NULL;
 		ms->offset = 0;
 		rv = file_softmagic(ms, s + offset, nbytes - offset,
-		    BINTEST, text);
+		    recursion_level, BINTEST, text);
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			fprintf(stderr, "indirect @offs=%u[%d]\n", offset, rv);
 		rbuf = ms->o.buf;
