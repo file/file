@@ -3,7 +3,12 @@ test_LDADD = $(top_builddir)/src/libmagic.la
 test_CPPFLAGS = -I$(top_srcdir)/src
 
 EXTRA_DIST = \
-	*.testfile *.result
+escapevel.result \
+escapevel.testfile \
+gedcom.result \
+gedcom.testfile \
+issue311docx.result \
+issue311docx.testfile
 
 T = $(top_srcdir)/tests
 check-local:
