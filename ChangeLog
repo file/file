@@ -1,3 +1,7 @@
+2014-02-12  18:21  Christos Zoulas <christos@zoulas.com>
+
+	* Count recursion levels through indirect magic
+
 2014-02-11  10:40  Christos Zoulas <christos@zoulas.com>
 
 	* Prevent infinite recursion on files with indirect offsets of 0
