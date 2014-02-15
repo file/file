@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.23 2013/12/11 14:14:20 christos Exp $
+# $File: python,v 1.24 2014/02/15 01:30:52 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -44,13 +44,13 @@
 !:mime text/x-python
 
 # comments
-0	search/4096	'''
->&0	regex	.*'''$	Python script text executable
-!:mime text/x-python
+#0	search/4096	'''
+#>&0	regex	.*'''$	Python script text executable
+#!:mime text/x-python
 
-0	search/4096	"""
->&0	regex	.*"""$	Python script text executable
-!:mime text/x-python
+#0	search/4096	"""
+#>&0	regex	.*"""$	Python script text executable
+#!:mime text/x-python
 
 # try:
 # except: or finally:
