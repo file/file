@@ -1,0 +1,40 @@
+= How to get started developing
+
+@(#) $File$
+
+== Auto files
+
+After checking out the source, run the following:
+
+	libtoolize
+	aclocal
+	autoheader
+	automake --add-missing
+	autoconf
+	./configure
+
+== Installing dependencies
+
+If your platform doesn't have the above tools, install the following
+packages first.
+
+=== Debian
+
+	apt-get install \
+	    autoconf \
+	    automake \
+	    autotools-dev \
+	    build-essentials \
+	    libltdl-dev \
+	    libtool \
+	    libtool-doc \
+
+=== Mac OS X (MacPorts)
+
+	port install \
+	    autoconf \
+	    automake \
+	    libtool \
+
+Note that `libtoolize` is called `glibtoolize`.
+
