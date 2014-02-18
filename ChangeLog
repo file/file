@@ -1,3 +1,9 @@
+2014-02-18  13:04  Kimmo Suominen (kimmo@suominen.com)
+
+	* Cache old LC_CTYPE locale before setting it to "C", so
+	  we can use it to restore LC_CTYPE instead of asking
+	  setlocale() to scan the environment variables.
+
 2014-02-12  18:21  Christos Zoulas <christos@zoulas.com>
 
 	* Count recursion levels through indirect magic
