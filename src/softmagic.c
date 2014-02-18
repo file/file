@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.175 2014/02/18 11:09:31 kim Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.176 2014/02/18 17:59:21 kim Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1891,6 +1891,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	double dl, dv;
 	int matched;
 	union VALUETYPE *p = &ms->ms_value;
+	char *old_lc_ctype;
 
 	switch (m->type) {
 	case FILE_BYTE:
@@ -2049,6 +2050,11 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		if (ms->search.s == NULL)
 			return 0;
 
+		old_lc_ctype = setlocale(LC_CTYPE, NULL);
+		assert(old_lc_ctype != NULL);
+		old_lc_ctype = strdup(old_lc_ctype);
+		assert(old_lc_ctype != NULL);
+		(void)setlocale(LC_CTYPE, "C");
 		l = 0;
 		rc = regcomp(&rx, m->value.s,
 		    REG_EXTENDED|REG_NEWLINE|
@@ -2097,6 +2103,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			}
 			regfree(&rx);
 		}
+		(void)setlocale(LC_CTYPE, old_lc_ctype);
+		free(old_lc_ctype);
 		if (v == (uint64_t)-1)
 			return -1;
 		break;
