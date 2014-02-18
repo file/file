@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.174 2014/02/12 23:20:53 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.175 2014/02/18 11:09:31 kim Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -42,6 +42,7 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.174 2014/02/12 23:20:53 christos Exp $")
 #else
 #define F(a, b) (a)
 #endif
+#include <assert.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -352,10 +353,15 @@ check_fmt(struct magic_set *ms, struct magic *m)
 {
 	regex_t rx;
 	int rc, rv = -1;
+	char *old_lc_ctype;
 
 	if (strchr(m->desc, '%') == NULL)
 		return 0;
 
+	old_lc_ctype = setlocale(LC_CTYPE, NULL);
+	assert(old_lc_ctype != NULL);
+	old_lc_ctype = strdup(old_lc_ctype);
+	assert(old_lc_ctype != NULL);
 	(void)setlocale(LC_CTYPE, "C");
 	rc = regcomp(&rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
 	if (rc) {
@@ -367,7 +373,8 @@ check_fmt(struct magic_set *ms, struct magic *m)
 		regfree(&rx);
 		rv = !rc;
 	}
-	(void)setlocale(LC_CTYPE, "");
+	(void)setlocale(LC_CTYPE, old_lc_ctype);
+	free(old_lc_ctype);
 	return rv;
 }
 

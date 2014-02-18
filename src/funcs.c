@@ -27,10 +27,11 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.67 2014/02/12 23:20:53 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.68 2014/02/18 11:09:31 kim Exp $")
 #endif	/* lint */
 
 #include "magic.h"
+#include <assert.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -442,7 +443,12 @@ file_replace(struct magic_set *ms, const char *pat, const char *rep)
 {
 	regex_t rx;
 	int rc, rv = -1;
+	char *old_lc_ctype;
 
+	old_lc_ctype = setlocale(LC_CTYPE, NULL);
+	assert(old_lc_ctype != NULL);
+	old_lc_ctype = strdup(old_lc_ctype);
+	assert(old_lc_ctype != NULL);
 	(void)setlocale(LC_CTYPE, "C");
 	rc = regcomp(&rx, pat, REG_EXTENDED);
 	if (rc) {
@@ -463,6 +469,7 @@ file_replace(struct magic_set *ms, const char *pat, const char *rep)
 		rv = nm;
 	}
 out:
-	(void)setlocale(LC_CTYPE, "");
+	(void)setlocale(LC_CTYPE, old_lc_ctype);
+	free(old_lc_ctype);
 	return rv;
 }
