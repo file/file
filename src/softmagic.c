@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.175 2014/02/18 11:09:31 kim Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.176 2014/02/18 17:59:21 kim Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1762,12 +1762,16 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		ms->offset = soffset;
 		if (rv == 1) {
 			if ((ms->flags & (MAGIC_MIME|MAGIC_APPLE)) == 0 &&
-			    file_printf(ms, F(m->desc, "%u"), offset) == -1)
+			    file_printf(ms, F(m->desc, "%u"), offset) == -1) {
+				free(rbuf);
 				return -1;
-			if (file_printf(ms, "%s", rbuf) == -1)
+			}
+			if (file_printf(ms, "%s", rbuf) == -1) {
+				free(rbuf);
 				return -1;
-			free(rbuf);
+			}
 		}
+		free(rbuf);
 		return rv;
 
 	case FILE_USE:
