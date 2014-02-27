@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.38 2014/02/18 11:09:31 kim Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.39 2014/02/27 23:26:18 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -70,6 +70,34 @@ static const struct nv {
 	{ NULL,				NULL,			},
 };
 
+static const struct cv {
+	uint64_t clsid[2];
+	const char *mime;
+} clsid2mime[] = {
+	{
+		{ 0x00000000000c1084LLU, 0x46000000000000c0LLU },
+		"x-msi",
+	}
+}, clsid2desc[] = {
+	{
+		{ 0x00000000000c1084LLU, 0x46000000000000c0LLU },
+		"MSI Installer",
+	},
+};
+
+private const char *
+cdf_clsid_to_mime(const uint64_t clsid[2], const struct cv *cv)
+{
+	size_t i;
+	for (i = 0; cv[i].mime != NULL; i++) {
+	printf("%llx %llx %llx %llx\n",
+		clsid[0], cv[i].clsid[0], clsid[1], cv[i].clsid[1]);
+		if (clsid[0] == cv[i].clsid[0] && clsid[1] == cv[i].clsid[1])
+			return cv[i].mime;
+	}
+	return NULL;
+}
+
 private const char *
 cdf_app_to_mime(const char *vbuf, const struct nv *nv)
 {
@@ -94,7 +122,7 @@ cdf_app_to_mime(const char *vbuf, const struct nv *nv)
 
 private int
 cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
-    size_t count)
+    size_t count, const uint64_t clsid[2])
 {
         size_t i;
         cdf_timestamp_t tp;
@@ -103,6 +131,9 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
         const char *str = NULL;
         const char *s;
         int len;
+
+        if (!NOTMIME(ms))
+		str = cdf_clsid_to_mime(clsid, clsid2mime);
 
         for (i = 0; i < count; i++) {
                 cdf_print_property_name(buf, sizeof(buf), info[i].pi_id);
@@ -160,7 +191,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
                                                     buf, vbuf) == -1)
                                                         return -1;
                                         }
-                                } else if (info[i].pi_id ==
+                                } else if (str == NULL && info[i].pi_id ==
 				    CDF_PROPERTY_NAME_OF_APPLICATION) {
 					str = cdf_app_to_mime(vbuf, app2mime);
 				}
@@ -207,7 +238,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 
 private int
 cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
-    const cdf_stream_t *sst)
+    const cdf_stream_t *sst, const uint64_t clsid[2])
 {
         cdf_summary_info_header_t si;
         cdf_property_info_t *info;
@@ -218,6 +249,8 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
                 return -1;
 
         if (NOTMIME(ms)) {
+		const char *str;
+
                 if (file_printf(ms, "Composite Document File V2 Document")
 		    == -1)
                         return -1;
@@ -245,13 +278,31 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
                                 return -2;
                         break;
                 }
+		str = cdf_clsid_to_mime(clsid, clsid2desc);
+		if (str)
+                        if (file_printf(ms, ", %s", str) == -1)
+				return -2;
         }
 
-        m = cdf_file_property_info(ms, info, count);
+        m = cdf_file_property_info(ms, info, count, clsid);
         free(info);
 
         return m == -1 ? -2 : m;
 }
+
+#ifdef notdef
+private char *
+format_clsid(char *buf, size_t len, const uint64_t uuid[2]) {
+	snprintf(buf, len, "%.8" PRIx64 "-%.4" PRIx64 "-%.4" PRIx64 "-%.4" 
+	    PRIx64 "-%.12" PRIx64,
+	    (uuid[0] >> 32) & (uint64_t)0x000000000ffffffffLLU,
+	    (uuid[0] >> 16) & (uint64_t)0x0000000000000ffffLLU,
+	    (uuid[0] >>  0) & (uint64_t)0x0000000000000ffffLLU, 
+	    (uuid[1] >> 48) & (uint64_t)0x0000000000000ffffLLU,
+	    (uuid[1] >>  0) & (uint64_t)0x0000fffffffffffffLLU);
+	return buf;
+}
+#endif
 
 protected int
 file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
@@ -298,12 +349,25 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
                 goto out2;
         }
 
-        if ((i = cdf_read_short_stream(&info, &h, &sat, &dir, &sst)) == -1) {
+        const cdf_directory_t *root_storage;
+        if ((i = cdf_read_short_stream(&info, &h, &sat, &dir, &sst,
+	    &root_storage)) == -1) {
                 expn = "Cannot read short stream";
                 goto out3;
         }
 #ifdef CDF_DEBUG
         cdf_dump_dir(&info, &h, &sat, &ssat, &sst, &dir);
+#endif
+#ifdef notdef
+	if (root_storage) {
+		if (NOTMIME(ms)) {
+			char clsbuf[128];
+			if (file_printf(ms, "CLSID %s, ",
+			    format_clsid(clsbuf, sizeof(clsbuf),
+			    root_storage->d_storage_uuid)) == -1)
+				return -1;
+		}
+	}
 #endif
 
         if ((i = cdf_read_summary_info(&info, &h, &sat, &ssat, &sst, &dir,
@@ -319,23 +383,22 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 #ifdef CDF_DEBUG
         cdf_dump_summary_info(&h, &scn);
 #endif
-        if ((i = cdf_file_summary_info(ms, &h, &scn)) < 0)
+        if ((i = cdf_file_summary_info(ms, &h, &scn,
+	    root_storage->d_storage_uuid)) < 0)
                 expn = "Can't expand summary_info";
+
 	if (i == 0) {
 		const char *str = NULL;
 		cdf_directory_t *d;
 		char name[__arraycount(d->d_name)];
 		size_t j, k;
-		for (j = 0; j < dir.dir_len; j++) {
+
+		for (j = 0; str == NULL && j < dir.dir_len; j++) {
 			d = &dir.dir_tab[j];
 			for (k = 0; k < sizeof(name); k++)
 				name[k] = (char)cdf_tole2(d->d_name[k]);
-			if (NOTMIME(ms))
-				str = cdf_app_to_mime(name, name2desc);
-			else
-				str = cdf_app_to_mime(name, name2mime);
-			if (str != NULL)
-				break;
+			str = cdf_app_to_mime(name,
+			    NOTMIME(ms) ? name2desc : name2mime);
 		}
 		if (NOTMIME(ms)) {
 			if (str != NULL) {
