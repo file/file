@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.49 2013/08/15 13:15:11 christos Exp $
+# $File: animation,v 1.50 2014/03/01 03:01:45 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -451,6 +451,7 @@
 
 # MP2, M2A
 0       beshort&0xFFFE  0xFFF4         MPEG ADTS, layer II, v2
+!:mime	audio/mpeg
 # rate 
 >2      byte&0xF0       0x10           \b,   8 kbps
 >2      byte&0xF0       0x20           \b,  16 kbps 
