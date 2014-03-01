@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.85 2013/11/19 23:54:05 christos Exp $
+# $File: filesystems,v 1.86 2014/02/25 20:28:16 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -2325,3 +2325,17 @@
 # Gregoire Passault
 # http://www.forensicswiki.org/wiki/Encase_image_file_format
 0	string	EVF\x09\x0d\x0a\xff\x00	EWF/Expert Witness/EnCase image file format
+
+# UBIfs
+# Linux kernel sources: fs/ubifs/ubifs-media.h
+0       belong  0x31181006
+>0x16   short   0               UBIfs image
+>0x08   lequad  x               \b, sequence number %llu
+>0x10   leshort x               \b, length %u
+>0x04   lelong  x               \b, CRC 0x%08x
+
+0       belong  0x55424923
+>0x04   short   <2
+>0x05   string  \0\0\0
+>0x1c   string  \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
+>0x04   short   x       UBI image, version %u
