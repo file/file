@@ -119,7 +119,7 @@ class Magic(object):
             bi = bytes(filename, 'utf-8')
             return str(_file(self._magic_t, bi), 'utf-8')
         except:
-            return _file(self._magic_t, filename)
+            return _file(self._magic_t, filename.encode('utf-8'))
 
     def descriptor(self, fd):
         """
