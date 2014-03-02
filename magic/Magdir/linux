@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.52 2013/11/19 23:18:15 christos Exp $
+# $File: linux,v 1.53 2014/01/08 22:26:12 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -40,6 +40,7 @@
 >28	long		!0		not stripped
 # core dump file, from Bill Reynolds <bill@goshawk.lanl.gov>
 216	lelong		0421		Linux/i386 core file
+!:strength / 2
 >220	string		>\0		of '%s'
 >200	lelong		>0		(signal %d)
 #
