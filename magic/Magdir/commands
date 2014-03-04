@@ -1,25 +1,23 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.47 2014/03/01 22:32:39 christos Exp $
+# $File: commands,v 1.48 2014/03/04 12:20:42 kim Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
 0	string/wt	#!\ /bin/sh		POSIX shell script text executable
 !:mime	text/x-shellscript
-
 0	string/wb	#!\ /bin/sh		POSIX shell script executable (binary data)
 !:mime	text/x-shellscript
-
 
 0	string/wt	#!\ /bin/csh		C shell script text executable
 !:mime	text/x-shellscript
 
 # korn shell magic, sent by George Wu, gwu@clyde.att.com
 0	string/wt	#!\ /bin/ksh		Korn shell script text executable
+!:mime	text/x-shellscript
 0	string/wb	#!\ /bin/ksh		Korn shell script executable (binary data)
 !:mime	text/x-shellscript
 
-!:mime	text/x-shellscript
 0	string/wt 	#!\ /bin/tcsh		Tenex C shell script text executable
 !:mime	text/x-shellscript
 0	string/wt	#!\ /usr/bin/tcsh	Tenex C shell script text executable
