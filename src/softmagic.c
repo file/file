@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.176 2014/02/18 17:59:21 kim Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.177 2014/02/21 14:32:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -72,7 +72,7 @@ private void cvt_16(union VALUETYPE *, const struct magic *);
 private void cvt_32(union VALUETYPE *, const struct magic *);
 private void cvt_64(union VALUETYPE *, const struct magic *);
 
-#define OFFSET_OOB(n, o, i)	((n) < (o) || (i) >= ((n) - (o)))
+#define OFFSET_OOB(n, o, i)	((n) < (o) || (i) > ((n) - (o)))
 /*
  * softmagic - lookup one file in parsed, in-memory copy of database
  * Passed the name and FILE * of one file to be typed.
