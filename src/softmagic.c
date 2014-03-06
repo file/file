@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.178 2014/03/04 17:42:19 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.179 2014/03/06 15:23:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -538,8 +538,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_LEDATE:
 	case FILE_MEDATE:
 		if (file_printf(ms, F(m->desc, "%s"),
-		    file_fmttime(p->l, FILE_T_LOCAL,
-		    tbuf)) == -1)
+		    file_fmttime(p->l, FILE_T_LOCAL, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -1740,14 +1739,14 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		break;
 
 	case FILE_REGEX:
-		if (OFFSET_OOB(nbytes, offset, 0))
+		if (nbytes < offset)
 			return 0;
 		break;
 
 	case FILE_INDIRECT:
 		if (offset == 0)
 			return 0;
-		if (OFFSET_OOB(nbytes, offset, 0))
+		if (nbytes < offset)
 			return 0;
 		sbuf = ms->o.buf;
 		soffset = ms->offset;
@@ -1775,7 +1774,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		return rv;
 
 	case FILE_USE:
-		if (OFFSET_OOB(nbytes, offset, 0))
+		if (nbytes < offset)
 			return 0;
 		sbuf = m->value.s;
 		if (*sbuf == '^') {
