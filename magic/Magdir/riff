@@ -1,11 +1,51 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.24 2013/11/19 23:58:17 christos Exp $
+# $File: riff,v 1.25 2014/03/06 16:14:08 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
 #	http://www.seanet.com/users/matts/riffmci/riffmci.htm
 #
+
+# audio format tag. Assume limits: max 1024 bit, 128 channels, 1 MHz
+0   name    riff-wave
+>0	leshort		1		\b, Microsoft PCM
+>>14	leshort		>0
+>>>14	leshort		<1024	\b, %d bit
+>0	leshort		2		\b, Microsoft ADPCM
+>0	leshort		6		\b, ITU G.711 A-law
+>0	leshort		7		\b, ITU G.711 mu-law
+>0	leshort		8		\b, Microsoft DTS
+>0	leshort		17		\b, IMA ADPCM
+>0	leshort		20		\b, ITU G.723 ADPCM (Yamaha)
+>0	leshort		49		\b, GSM 6.10
+>0	leshort		64		\b, ITU G.721 ADPCM
+>0	leshort		80		\b, MPEG
+>0	leshort		85		\b, MPEG Layer 3
+>0	leshort		0x2001		\b, DTS
+>2	leshort		=1		\b, mono
+>2	leshort		=2		\b, stereo
+>2	leshort		>2
+>>2	leshort		<128	\b, %d channels
+>4	lelong		>0
+>>4	lelong		<1000000	%d Hz
+
+# try to find "fmt "
+0   name    riff-walk
+>0  string  fmt\x20
+>>4 lelong  <0x80
+>>>8 use    riff-wave
+>0  string  LIST
+>>&(4.l+4)  use riff-walk
+>0  string  DISP
+>>&(4.l+4)  use riff-walk
+>0  string  bext
+>>&(4.l+4)  use riff-walk
+>0  string  Fake
+>>&(4.l+4)  use riff-walk
+>0  string  fact
+>>&(4.l+4)  use riff-walk
+
 # AVI section extended by Patrik Radman <patrik+file-magic@iki.fi>
 #
 0	string		RIFF		RIFF (little-endian) data
@@ -35,23 +75,8 @@
 # Microsoft WAVE format (*.wav)
 >8	string		WAVE		\b, WAVE audio
 !:mime	audio/x-wav
->>20	leshort		1		\b, Microsoft PCM
->>>34	leshort		>0		\b, %d bit
->>20	leshort		2		\b, Microsoft ADPCM
->>20	leshort		6		\b, ITU G.711 A-law
->>20	leshort		7		\b, ITU G.711 mu-law
->>20	leshort		8		\b, Microsoft DTS
->>20	leshort		17		\b, IMA ADPCM
->>20	leshort		20		\b, ITU G.723 ADPCM (Yamaha)
->>20	leshort		49		\b, GSM 6.10
->>20	leshort		64		\b, ITU G.721 ADPCM
->>20	leshort		80		\b, MPEG
->>20	leshort		85		\b, MPEG Layer 3
->>20	leshort		0x2001		\b, DTS
->>22	leshort		=1		\b, mono
->>22	leshort		=2		\b, stereo
->>22	leshort		>2		\b, %d channels
->>24	lelong		>0		%d Hz
+>>12    string  >\0
+>>>12   use     riff-walk
 # Corel Draw Picture
 >8	string		CDRA		\b, Corel Draw Picture
 !:mime	image/x-coreldraw
