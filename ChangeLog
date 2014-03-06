@@ -1,3 +1,10 @@
+2014-03-06  12:01  Christos Zoulas <christos@zoulas.com>
+
+	* fix regression fix echo -ne "\012\013\014" | file -i -
+	  which printed "binary" instead of "application/octet-stream"
+
+	* add size_t overflow check for magic file size
+
 2014-02-18  13:04  Kimmo Suominen (kimmo@suominen.com)
 
 	* Cache old LC_CTYPE locale before setting it to "C", so
