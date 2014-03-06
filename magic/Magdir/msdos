@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.85 2013/03/09 22:36:00 christos Exp $
+# $File: msdos,v 1.86 2014/01/08 22:10:18 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -209,8 +209,8 @@
 # calculations (next embedded executable would be at &(&2*512+&0-2)
 # I suspect there are only LE executables in these multi-exe files
 >>>>&(2.s-514)	string	BW
->>>>>0x240	search/0x100	DOS/4G ,\b LE for MS-DOS, DOS4GW DOS extender (embedded)
->>>>>0x240	search/0x100	!DOS/4G ,\b BW collection for MS-DOS
+>>>>>0x240	search/0x100	DOS/4G	\b, LE for MS-DOS, DOS4GW DOS extender (embedded)
+>>>>>0x240	search/0x100	!DOS/4G	\b, BW collection for MS-DOS
 
 # This sequence skips to the first COFF segment, usually .text
 >(4.s*512)	leshort		0x014c \b, COFF
