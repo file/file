@@ -1,6 +1,6 @@
 = How to get started developing
 
-@(#) $File$
+@(#) $File: README.DEVELOPER,v 1.1 2014/02/18 18:51:51 kim Exp $
 
 == Auto files
 
@@ -11,7 +11,11 @@ After checking out the source, run the following:
 	autoheader
 	automake --add-missing
 	autoconf
+
+[christos: I run autoreconf -f -i instead of all the above]
+
 	./configure
+
 
 == Installing dependencies
 
@@ -24,7 +28,7 @@ packages first.
 	    autoconf \
 	    automake \
 	    autotools-dev \
-	    build-essentials \
+	    build-essential \
 	    libltdl-dev \
 	    libtool \
 	    libtool-doc \
