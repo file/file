@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.198 2014/03/06 16:18:53 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.199 2014/03/06 16:50:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -52,8 +52,10 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.198 2014/03/06 16:18:53 christos Exp $")
 #include <limits.h>
 #endif
 
-#ifndef SIZE_MAX
-#define SIZE_MAX        ((size_t)~0)
+#ifndef SSIZE_MAX
+#define MAXMAGIC_SIZE        ((ssize_t)0x7fffffff)
+#else
+#define MAXMAGIC_SIZE        SSIZE_MAX
 #endif
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
@@ -2608,7 +2610,7 @@ apprentice_map(struct magic_set *ms, const char *fn)
 		file_error(ms, errno, "cannot stat `%s'", dbname);
 		goto error;
 	}
-	if (st.st_size < 8 || st.st_size > (off_t)SIZE_MAX) {
+	if (st.st_size < 8 || st.st_size > MAXMAGIC_SIZE) {
 		file_error(ms, 0, "file `%s' is too %s", dbname,
 		    st.st_size < 8 ? "small" : "large");
 		goto error;
