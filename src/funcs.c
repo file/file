@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.67 2014/02/12 23:20:53 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.68 2014/02/18 11:09:31 kim Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -175,8 +175,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 	const char *code_mime = "binary";
 	const char *type = "application/octet-stream";
 	const char *def = "data";
-
-
+	const char *ftype = NULL;
 
 	if (nb == 0) {
 		def = "empty";
@@ -189,7 +188,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 
 	if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0) {
 		looks_text = file_encoding(ms, ubuf, nb, &u8buf, &ulen,
-		    &code, &code_mime, &type);
+		    &code, &code_mime, &ftype);
 	}
 
 #ifdef __EMX__
@@ -269,7 +268,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 		if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0) {
 			if (looks_text == 0)
 				if ((m = file_ascmagic_with_encoding( ms, ubuf,
-				    nb, u8buf, ulen, code, type, looks_text))
+				    nb, u8buf, ulen, code, ftype, looks_text))
 				    != 0) {
 					if ((ms->flags & MAGIC_DEBUG) != 0)
 						(void)fprintf(stderr,
