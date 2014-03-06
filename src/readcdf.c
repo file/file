@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.39 2014/02/27 23:26:18 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.40 2014/03/06 15:23:33 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -90,8 +90,6 @@ cdf_clsid_to_mime(const uint64_t clsid[2], const struct cv *cv)
 {
 	size_t i;
 	for (i = 0; cv[i].mime != NULL; i++) {
-	printf("%llx %llx %llx %llx\n",
-		clsid[0], cv[i].clsid[0], clsid[1], cv[i].clsid[1]);
 		if (clsid[0] == cv[i].clsid[0] && clsid[1] == cv[i].clsid[1])
 			return cv[i].mime;
 	}
