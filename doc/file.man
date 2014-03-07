@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.104 2014/01/08 11:27:53 kim Exp $
+.\" $File: file.man,v 1.105 2014/01/31 01:57:00 christos Exp $
 .Dd January 30, 2014
 .Dt FILE __CSECTION__
 .Os
@@ -164,6 +164,10 @@ in any of the character sets listed above is simply said to be
 .Dq data .
 .Sh OPTIONS
 .Bl -tag -width indent
+.It Fl Fl apple
+Causes the file command to output the file type and creator code as
+used by older MacOS versions. The code consists of eight letters,
+the first describing the file type, the latter the creator.
 .It Fl b , Fl Fl brief
 Do not prepend filenames to output lines (brief mode).
 .It Fl C , Fl Fl compile
