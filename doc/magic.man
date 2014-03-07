@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.78 2013/01/09 13:04:30 christos Exp $
+.\" $File: magic.man,v 1.79 2013/04/22 15:30:10 christos Exp $
 .Dd April 22, 2013
 .Dt MAGIC __FSECTION__
 .Os
@@ -249,15 +249,15 @@ not beginning and end of file.
 .It Dv search
 A literal string search starting at the given offset.
 The same modifier flags can be used as for string patterns.
-The modifier flags (if any) must be followed by
-.Dv /number
-the range, that is, the number of positions at which the match will be
+The search expression must contain the range in the form
+.Dv /number,
+that is the number of positions at which the match will be
 attempted, starting from the start offset.
 This is suitable for
 searching larger binary expressions with variable offsets, using
 .Dv \e
 escapes for special characters.
-The offset works as for regex.
+The order of modifier and number is not relevant.
 .It Dv default
 This is intended to be used with the test
 .Em x
