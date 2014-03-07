@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.94 2013/12/21 14:27:24 christos Exp $
+# $File: Makefile.am,v 1.95 2014/01/31 01:51:32 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -159,6 +159,7 @@ $(MAGIC_FRAGMENT_DIR)/mup \
 $(MAGIC_FRAGMENT_DIR)/music \
 $(MAGIC_FRAGMENT_DIR)/natinst \
 $(MAGIC_FRAGMENT_DIR)/ncr \
+$(MAGIC_FRAGMENT_DIR)/neko \
 $(MAGIC_FRAGMENT_DIR)/netbsd \
 $(MAGIC_FRAGMENT_DIR)/netscape \
 $(MAGIC_FRAGMENT_DIR)/netware \
@@ -182,6 +183,7 @@ $(MAGIC_FRAGMENT_DIR)/pbm \
 $(MAGIC_FRAGMENT_DIR)/pdf \
 $(MAGIC_FRAGMENT_DIR)/pdp \
 $(MAGIC_FRAGMENT_DIR)/perl \
+$(MAGIC_FRAGMENT_DIR)/pgf \
 $(MAGIC_FRAGMENT_DIR)/pgp \
 $(MAGIC_FRAGMENT_DIR)/pkgadd \
 $(MAGIC_FRAGMENT_DIR)/plan9 \
