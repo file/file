@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.88 2014/03/08 17:26:48 christos Exp $
+# $File: msdos,v 1.89 2014/03/08 21:43:09 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -675,6 +675,12 @@
 #0	string		AH		Halo(TM) bitmapped font file
 0	lelong		0x08086b70	TurboC BGI file
 0	lelong		0x08084b50	TurboC Font file
+
+# Debian#712046: The magic below identifies "Delphi compiled form data". 
+# An additional source of information is available at:
+# http://www.woodmann.com/fravia/dafix_t1.htm
+0	ptring		TPF0
+>4	pstring		>\0		Delphi compiled form '%s'
 
 # tests for DBase files moved, updated and merged to database
 
