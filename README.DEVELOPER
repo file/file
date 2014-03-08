@@ -1,44 +1,39 @@
-= How to get started developing
+# How to get started developing
 
-@(#) $File: README.DEVELOPER,v 1.2 2014/03/06 16:57:57 christos Exp $
+@(#) $File: README.DEVELOPER,v 1.3 2014/03/08 08:41:07 kim Exp $
 
-== Auto files
+## Auto files
 
 After checking out the source, run the following:
 
-	libtoolize
-	aclocal
-	autoheader
-	automake --add-missing
-	autoconf
-
-[christos: I run autoreconf -f -i instead of all the above]
-
-	./configure
+	autoreconf -f -i
+	./configure --disable-silent-rules
+	make -j4
+	make -C tests check
 
 
-== Installing dependencies
+## Installing dependencies
 
 If your platform doesn't have the above tools, install the following
 packages first.
 
-=== Debian
+### Debian
 
 	apt-get install \
-	    autoconf \
 	    automake \
 	    autotools-dev \
-	    build-essential \
-	    libltdl-dev \
+	    gcc \
+	    make \
 	    libtool \
-	    libtool-doc \
+	    python \
+	    zlib1g-dev \
 
-=== Mac OS X (MacPorts)
+See also `.travis.yml`.
+
+### Mac OS X (MacPorts)
 
 	port install \
 	    autoconf \
 	    automake \
 	    libtool \
-
-Note that `libtoolize` is called `glibtoolize`.
 
