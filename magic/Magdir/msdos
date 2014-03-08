@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.87 2014/03/06 19:30:52 christos Exp $
+# $File: msdos,v 1.88 2014/03/08 17:26:48 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -578,16 +578,47 @@
 #ico files
 0	string/b	\102\101\050\000\000\000\056\000\000\000\000\000\000\000	Icon for MS Windows
 
-# Windows icons (Ian Springer <ips@fpk.hp.com>)
-0	string/b	\000\000\001\000	MS Windows icon resource
-!:mime	image/x-icon
->4	byte	1			- 1 icon
->4	byte	>1			- %d icons
->>6	byte	>0			\b, %dx
->>>7	byte	>0			\b%d
->>8	byte	0			\b, 256-colors
->>8	byte	>0			\b, %d-colors
+# Windows icons
+0   name    ico-dir
+# not entirely accurate, the number of icons is part of the header
+>0  byte    1   - 1 icon
+>0  ubyte   >1  - %d icons
+>2  byte    0   \b, 256x
+>2  byte    !0  \b, %dx
+>3  byte    0   \b256
+>3  byte    !0  \b%d
+>4  ubyte   !0  \b, %d colors
 
+0   belong  0x00000100
+!:mime	image/x-icon
+
+>9  byte    0
+>>0 byte    x           MS Windows icon resource
+>>4 use     ico-dir
+>9  ubyte   0xff
+>>0 byte    x           MS Windows icon resource
+>>4 use     ico-dir
+
+# Windows non-animated cursors
+0   name    cur-dir
+# not entirely accurate, the number of icons is part of the header
+>0  byte        1   - 1 icon
+>0  ubyte       >1  - %d icons
+>2  byte        0   \b, 256x
+>2  byte        !0  \b, %dx
+>3  byte        0   \b256
+>3  byte        !0  \b%d
+>6  uleshort    x   \b, hotspot @%dx
+>8  uleshort    x   \b%d
+
+0   belong  0x00000200
+!:mime image/x-cur
+>9  byte    0
+>>0 byte    x           MS Windows cursor resource
+>>4 use     cur-dir
+>9  ubyte   0xff
+>>0 byte    x           MS Windows cursor resource
+>>4 use     cur-dir
 
 # .chr files
 0	string/b	PK\010\010BGI	Borland font 
