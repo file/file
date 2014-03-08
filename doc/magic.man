@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.80 2014/03/07 23:11:16 christos Exp $
+.\" $File: magic.man,v 1.81 2014/03/08 17:28:08 christos Exp $
 .Dd April 22, 2013
 .Dt MAGIC __FSECTION__
 .Os
@@ -425,6 +425,9 @@ This means that a line can match any non-empty string (usually used to
 then print the string), with
 .Em \*[Gt]\e0
 (because all non-empty strings are greater than the empty string).
+.Pp
+Dates are treated as numerical values in the respective internal
+representation.
 .Pp
 The special test
 .Em x
