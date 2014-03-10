@@ -1,3 +1,4 @@
+# $File$
 language: c
 compiler:
  - gcc
