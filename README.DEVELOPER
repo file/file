@@ -1,6 +1,6 @@
 # How to get started developing
 
-@(#) $File: README.DEVELOPER,v 1.3 2014/03/08 08:41:07 kim Exp $
+@(#) $File: README.DEVELOPER,v 1.4 2014/03/10 12:35:59 kim Exp $
 
 ## Auto files
 
@@ -21,7 +21,6 @@ packages first.
 
 	apt-get install \
 	    automake \
-	    autotools-dev \
 	    gcc \
 	    make \
 	    libtool \
