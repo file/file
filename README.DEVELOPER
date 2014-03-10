@@ -1,6 +1,6 @@
 # How to get started developing
 
-@(#) $File: README.DEVELOPER,v 1.4 2014/03/10 12:35:59 kim Exp $
+@(#) $File: README.DEVELOPER,v 1.5 2014/03/10 12:38:08 kim Exp $
 
 ## Auto files
 
@@ -22,8 +22,8 @@ packages first.
 	apt-get install \
 	    automake \
 	    gcc \
-	    make \
 	    libtool \
+	    make \
 	    python \
 	    zlib1g-dev \
 
