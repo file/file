@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.100 2014/03/11 15:52:54 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.101 2014/03/11 17:13:18 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -737,7 +737,6 @@ core:
 
 	default:
 		if (xnh_type == NT_PRPSINFO && *flags & FLAGS_IS_CORE) {
-/*###709 [cc] warning: declaration of 'i' shadows previous non-variable%%%*/
 			size_t i, j;
 			unsigned char c;
 			/*
