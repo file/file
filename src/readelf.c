@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.99 2013/11/05 15:44:01 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.100 2014/03/11 15:52:54 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -952,6 +952,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			break;
 		}
 
+printf("name %s type %d\n", name, xsh_type);
 		/* Things we can determine when we seek */
 		switch (xsh_type) {
 		case SHT_NOTE:
