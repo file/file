@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cafebabe,v 1.13 2013/02/26 21:04:38 christos Exp $
+# $File: cafebabe,v 1.14 2013/02/27 16:59:59 christos Exp $
 # Cafe Babes unite!
 #
 # Since Java bytecode and Mach-O universal binaries have the same magic number,
@@ -16,8 +16,8 @@
 #
 ### JAVA START ###
 0	belong		0xcafebabe
-!:mime	application/x-java-applet
 >4	belong		>30		compiled Java class data,
+!:mime	application/x-java-applet
 >>6	beshort		x	        version %d.
 >>4	beshort		x       	\b%d
 # Which is which?

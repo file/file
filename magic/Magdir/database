@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.35 2013/11/20 00:00:14 christos Exp $
+# $File: database,v 1.36 2013/12/09 20:31:53 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -170,7 +170,6 @@
 >>>>>>>>>>8	uleshort		>31		
 # skip PIC15736.PCX by test for language driver name or field name
 >>>>>>>>>>>32	ubyte			>0		
-!:mime	application/x-dbf
 #!:mime	application/x-dbf; charset=unknown-8bit ??
 #!:mime	application/x-dbase
 >>>>>>>>>>>>0	use			xbase-type
@@ -237,47 +236,69 @@
 >>0	ubyte		0x02		FoxBase
 # FoxBase+/dBaseIII+, no memo
 >>0	ubyte		0x03		FoxBase+/dBase III
+!:mime	application/x-dbf
 # dBASE IV no memo file
 >>0	ubyte		0x04		dBase IV
+!:mime	application/x-dbf
 # dBASE V no memo file
 >>0	ubyte		0x05		dBase V
+!:mime	application/x-dbf
 >>0	ubyte		0x30		Visual FoxPro
+!:mime	application/x-dbf
 >>0	ubyte		0x31		Visual FoxPro, autoincrement
+!:mime	application/x-dbf
 # Visual FoxPro, with field type Varchar or Varbinary
 >>0	ubyte		0x32		Visual FoxPro, with field type Varchar
+!:mime	application/x-dbf
 # dBASE IV SQL, no memo;dbv memo var size (Flagship)
 >>0	ubyte		0x43		dBase IV, with SQL table
+!:mime	application/x-dbf
 # http://msdn.microsoft.com/en-US/library/st4a0s68(v=vs.80).aspx
 #>>0	ubyte		0x62		dBase IV, with SQL table
+#!:mime	application/x-dbf
 # dBASE IV, with memo!!
 >>0	ubyte		0x7b		dBase IV, with memo
+!:mime	application/x-dbf
 # http://msdn.microsoft.com/en-US/library/st4a0s68(v=vs.80).aspx
 #>>0	ubyte		0x82		dBase IV, with SQL system
+#!:mime	application/x-dbf
 # FoxBase+/dBaseIII+ with memo .DBT!
 >>0	ubyte		0x83		FoxBase+/dBase III, with memo .DBT
+!:mime	application/x-dbf
 # VISUAL OBJECTS (first 1.0 versions) for the Dbase III files (NTX clipper driver); memo file
 >>0	ubyte		0x87		VISUAL OBJECTS, with memo file
+!:mime	application/x-dbf
 # http://msdn.microsoft.com/en-US/library/st4a0s68(v=vs.80).aspx
 #>>0	ubyte		0x8A		FoxBase+/dBase III, with memo .DBT
+#!:mime	application/x-dbf
 # dBASE IV with memo!
 >>0	ubyte		0x8B		dBase IV, with memo .DBT
+!:mime	application/x-dbf
 # dBase IV with SQL Table,no memo?
 >>0	ubyte		0x8E		dBase IV, with SQL table
+!:mime	application/x-dbf
 # .dbv and .dbt memo (Flagship)?
 >>0	ubyte		0xB3		Flagship
 # http://msdn.microsoft.com/en-US/library/st4a0s68(v=vs.80).aspx
 #>>0	ubyte		0xCA		dBase IV with memo .DBT
+#!:mime	application/x-dbf
 # dBASE IV with SQL table, with memo .DBT
 >>0	ubyte		0xCB		dBase IV with SQL table, with memo .DBT
+!:mime	application/x-dbf
 # HiPer-Six format;Clipper SIX, with SMT memo file		
 >>0	ubyte		0xE5		Clipper SIX with memo
+!:mime	application/x-dbf
 # http://msdn.microsoft.com/en-US/library/st4a0s68(v=vs.80).aspx
 #>>0	ubyte		0xF4		dBase IV, with SQL table, with memo
+#!:mime	application/x-dbf
 >>0	ubyte		0xF5		FoxPro with memo
+!:mime	application/x-dbf
 # http://msdn.microsoft.com/en-US/library/st4a0s68(v=vs.80).aspx
 #>>0	ubyte		0xFA		FoxPro 2.x, with memo
-# unkown version (should not happen)
+#!:mime	application/x-dbf
+# unknown version (should not happen)
 >>0	default		x		xBase
+!:mime	application/x-dbf
 >>>0	ubyte		x		(0x%x)
 # flags in version byte
 # DBT flag (with dBASE III memo .DBT)!!

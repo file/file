@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.49 2013/08/15 13:15:11 christos Exp $
+# $File: animation,v 1.50 2014/03/01 03:01:45 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -789,25 +789,26 @@
 
 #						MPEG file
 # MPEG sequences
-# FIXME: This section is from the old magic.mime file and needs integrating with the rest
-0       belong             0x000001BA
->4      byte               &0x40
-!:mime	video/mp2p
->4      byte               ^0x40
-!:mime	video/mpeg
-0       belong             0x000001BB
-!:mime	video/mpeg
-0       belong             0x000001B0
-!:mime	video/mp4v-es
-0       belong             0x000001B5
-!:mime	video/mp4v-es
-0       belong             0x000001B3
-!:mime	video/mpv
-0       belong&0xFF5FFF10  0x47400010
-!:mime	video/mp2t
-0       belong             0x00000001
->4      byte&0x1F	   0x07
-!:mime	video/h264
+# FIXME: This section is from the old magic.mime file and needs
+# integrating with the rest
+#0       belong             0x000001BA
+#>4      byte               &0x40
+#!:mime	video/mp2p
+#>4      byte               ^0x40
+#!:mime	video/mpeg
+#0       belong             0x000001BB
+#!:mime	video/mpeg
+#0       belong             0x000001B0
+#!:mime	video/mp4v-es
+#0       belong             0x000001B5
+#!:mime	video/mp4v-es
+#0       belong             0x000001B3
+#!:mime	video/mpv
+#0       belong&0xFF5FFF10  0x47400010
+#!:mime	video/mp2t
+#0       belong             0x00000001
+#>4      byte&0x1F	   0x07
+#!:mime	video/h264
 
 # Type: Bink Video
 # Extension: .bik
