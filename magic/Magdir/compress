@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.53 2014/01/05 15:55:21 christos Exp $
+# $File: compress,v 1.54 2014/03/14 18:47:29 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -191,8 +191,8 @@
 
 # Type: LZMA
 0	lelong&0xffffff	=0x5d
-!:mime	application/x-lzma
 >12	leshort		0xff			LZMA compressed data,
+!:mime	application/x-lzma
 >>5	lequad		=0xffffffffffffffff	streamed
 >>5	lequad		!0xffffffffffffffff	non-streamed, size %lld
 >12	leshort		0			LZMA compressed data,

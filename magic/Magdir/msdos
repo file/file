@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.91 2014/03/10 08:48:18 kim Exp $
+# $File: msdos,v 1.92 2014/03/14 18:47:29 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -42,9 +42,9 @@
 # Many of the compressed formats were extraced from IDARC 1.23 source code.
 #
 0	string/b	MZ
-!:mime	application/x-dosexec
 # All non-DOS EXE extensions have the relocation table more than 0x40 bytes into the file.
 >0x18	leshort <0x40 MS-DOS executable
+!:mime	application/x-dosexec
 # These traditional tests usually work but not always.  When test quality support is
 # implemented these can be turned on.
 #>>0x18	leshort	0x1c	(Borland compiler)
@@ -590,13 +590,14 @@
 >4  ubyte   !0  \b, %d colors
 
 0   belong  0x00000100
-!:mime	image/x-icon
 
 >9  byte    0
 >>0 byte    x           MS Windows icon resource
+!:mime	image/x-icon
 >>4 use     ico-dir
 >9  ubyte   0xff
 >>0 byte    x           MS Windows icon resource
+!:mime	image/x-icon
 >>4 use     ico-dir
 
 # Windows non-animated cursors
@@ -612,12 +613,13 @@
 >8  uleshort    x   \b%d
 
 0   belong  0x00000200
-!:mime image/x-cur
 >9  byte    0
 >>0 byte    x           MS Windows cursor resource
+!:mime image/x-cur
 >>4 use     cur-dir
 >9  ubyte   0xff
 >>0 byte    x           MS Windows cursor resource
+!:mime image/x-cur
 >>4 use     cur-dir
 
 # .chr files
