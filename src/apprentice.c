@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.199 2014/03/06 16:50:55 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.200 2014/03/14 14:58:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -562,7 +562,8 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	int file_err, errs = -1;
 	size_t i;
 
-	file_reset(ms);
+	if (ms->mlist[0] != NULL)
+		file_reset(ms);
 
 	if ((fn = magic_getpath(fn, action)) == NULL)
 		return -1;
