@@ -1,3 +1,12 @@
+2014-03-14  15:12  Christos Zoulas <christos@zoulas.com>
+
+	* prevent mime entries from being attached to magic
+	  entries with no descriptions
+
+	* adjust magic strength for regex type
+
+	* remove superfluous ascmagic with encoding test
+
 2014-03-06  12:01  Christos Zoulas <christos@zoulas.com>
 
 	* fix regression fix echo -ne "\012\013\014" | file -i -
