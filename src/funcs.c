@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.68 2014/02/18 11:09:31 kim Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.69 2014/03/06 16:03:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -262,19 +262,6 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void)fprintf(stderr, "ascmagic %d\n", m);
 			goto done;
-		}
-
-		/* try to discover text encoding */
-		if ((ms->flags & MAGIC_NO_CHECK_ENCODING) == 0) {
-			if (looks_text == 0)
-				if ((m = file_ascmagic_with_encoding( ms, ubuf,
-				    nb, u8buf, ulen, code, ftype, looks_text))
-				    != 0) {
-					if ((ms->flags & MAGIC_DEBUG) != 0)
-						(void)fprintf(stderr,
-						    "ascmagic/enc %d\n", m);
-					goto done;
-				}
 		}
 	}
 
