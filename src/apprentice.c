@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.200 2014/03/14 14:58:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.201 2014/03/14 17:38:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -639,13 +639,62 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 }
 
 /*
+ * Compute the real length of a magic expression, for the purposes
+ * of determining how "strong" a magic expression is (approximating
+ * how specific its matches are):
+ *	- magic characters count 0 unless escaped.
+ *	- [] expressions count 1
+ *	- {} expressions count 0
+ *	- regular characters or escaped magic characters count 1
+ *	- 0 length expressions count as one
+ */
+private size_t
+nonmagic(const char *str)
+{
+	const char *p;
+	size_t rv = 0;
+
+	for (p = str; *p; p++)
+		switch (*p) {
+		case '\\':	/* Escaped anything counts 1 */
+			if (!*++p)
+				p--;
+			rv++;
+			continue;
+		case '?':	/* Magic characters count 0 */
+		case '*':
+		case '.':
+		case '+':
+		case '^':
+		case '$':
+			continue;
+		case '[':	/* Bracketed expressions count 1 the ']' */
+			while (*p && *p != ']')
+				p++;
+			p--;
+			continue;
+		case '{':	/* Braced expressions count 0 */
+			while (*p && *p != '}')
+				p++;
+			if (!*p)
+				p--;
+			continue;
+		default:	/* Anything else counts 1 */
+			rv++;
+			continue;
+		}
+
+	return rv == 0 ? 1 : rv;	/* Return at least 1 */
+}
+
+/*
  * Get weight of this magic entry, for sorting purposes.
  */
 private size_t
 apprentice_magic_strength(const struct magic *m)
 {
 #define MULT 10
-	size_t val = 2 * MULT;	/* baseline strength */
+	size_t v, val = 2 * MULT;	/* baseline strength */
 
 	switch (m->type) {
 	case FILE_DEFAULT:	/* make sure this sorts last */
@@ -681,8 +730,12 @@ apprentice_magic_strength(const struct magic *m)
 		break;
 
 	case FILE_SEARCH:
-	case FILE_REGEX:
 		val += m->vallen * MAX(MULT / m->vallen, 1);
+		break;
+
+	case FILE_REGEX:
+		v = nonmagic(m->value.s);
+		val += v * MAX(MULT / v, 1);
 		break;
 
 	case FILE_DATE:
