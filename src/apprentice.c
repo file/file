@@ -32,13 +32,16 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.200 2014/03/14 14:58:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.201 2014/03/14 17:38:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#ifdef HAVE_STDDEF_H
+#include <stddef.h>
 #endif
 #include <string.h>
 #include <assert.h>
@@ -2056,33 +2059,43 @@ out:
 	return -1;
 }
 
-/*
- * Parse an Apple CREATOR/TYPE annotation from magic file and put it into
- * magic[index - 1]
- */
 private int
-parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
+parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
+    off_t off, size_t len, const char *name, int nt)
 {
 	size_t i;
 	const char *l = line;
 	struct magic *m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
+	char *buf = (char *)m + off;
 
-	if (m->apple[0] != '\0') {
-		file_magwarn(ms, "Current entry already has a APPLE type "
-		    "`%.8s', new type `%s'", m->mimetype, l);
+	if (buf[0] != '\0') {
+		len = nt ? strlen(buf) : len;
+		file_magwarn(ms, "Current entry already has a %s type "
+		    "`%.*s', new type `%s'", name, (int)len, buf, l);
 		return -1;
 	}	
+
+	if (*m->desc == '\0') {
+		file_magwarn(ms, "Current entry does not yet have a "
+		    "description for adding a %s type", name);
+		return -1;
+	}
 
 	EATAB;
 	for (i = 0; *l && ((isascii((unsigned char)*l) &&
 	    isalnum((unsigned char)*l)) || strchr("-+/.", *l)) &&
-	    i < sizeof(m->apple); m->apple[i++] = *l++)
+	    i < len; buf[i++] = *l++)
 		continue;
-	if (i == sizeof(m->apple) && *l) {
-		/* We don't need to NUL terminate here, printing handles it */
+
+	if (i == len && *l) {
+		if (nt)
+			buf[len - 1] = '\0';
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "APPLE type `%s' truncated %"
-			    SIZE_T_FORMAT "u", line, i);
+			file_magwarn(ms, "%s type `%s' truncated %"
+			    SIZE_T_FORMAT "u", name, line, i);
+	} else {
+		if (nt)
+			buf[i] = '\0';
 	}
 
 	if (i > 0)
@@ -2092,39 +2105,29 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 }
 
 /*
+ * Parse an Apple CREATOR/TYPE annotation from magic file and put it into
+ * magic[index - 1]
+ */
+private int
+parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
+{
+	struct magic *m = &me->mp[0];
+
+	return parse_extra(ms, me, line, offsetof(struct magic, apple),
+	    sizeof(m->apple), "APPLE", 0);
+}
+
+/*
  * parse a MIME annotation line from magic file, put into magic[index - 1]
  * if valid
  */
 private int
 parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 {
-	size_t i;
-	const char *l = line;
-	struct magic *m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
+	struct magic *m = &me->mp[0];
 
-	if (m->mimetype[0] != '\0') {
-		file_magwarn(ms, "Current entry already has a MIME type `%s',"
-		    " new type `%s'", m->mimetype, l);
-		return -1;
-	}	
-
-	EATAB;
-	for (i = 0; *l && ((isascii((unsigned char)*l) &&
-	    isalnum((unsigned char)*l)) || strchr("-+/.", *l)) &&
-	    i < sizeof(m->mimetype); m->mimetype[i++] = *l++)
-		continue;
-	if (i == sizeof(m->mimetype)) {
-		m->mimetype[sizeof(m->mimetype) - 1] = '\0';
-		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "MIME type `%s' truncated %"
-			    SIZE_T_FORMAT "u", m->mimetype, i);
-	} else
-		m->mimetype[i] = '\0';
-
-	if (i > 0)
-		return 0;
-	else
-		return -1;
+	return parse_extra(ms, me, line, offsetof(struct magic, mimetype),
+	    sizeof(m->mimetype), "MIME", 1);
 }
 
 private int
