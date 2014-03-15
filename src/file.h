@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.147 2014/01/07 03:15:09 christos Exp $
+ * @(#)$File: file.h,v 1.148 2014/02/12 23:20:53 christos Exp $
  */
 
 #ifndef __file_h__
@@ -513,6 +513,10 @@ char   *ctime_r(const time_t *, char *);
 #endif
 #ifndef HAVE_ASCTIME_R
 char   *asctime_r(const struct tm *, char *);
+#endif
+#ifndef HAVE_FMTCHECK
+const char *fmtcheck(const char *, const char *) 
+     __attribute__((__format_arg__(2)));
 #endif
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)

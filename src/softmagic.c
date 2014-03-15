@@ -32,16 +32,11 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.178 2014/03/04 17:42:19 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.179 2014/03/06 15:23:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
-#ifdef HAVE_FMTCHECK
-#include <stdio.h>
 #define F(a, b) fmtcheck((a), (b))
-#else
-#define F(a, b) (a)
-#endif
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
