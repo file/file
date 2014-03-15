@@ -1,3 +1,7 @@
+2014-03-15  17:45  Christos Zoulas <christos@zoulas.com>
+
+        * add fmtcheck(3) for those who don't have it
+
 2014-03-14  15:12  Christos Zoulas <christos@zoulas.com>
 
 	* prevent mime entries from being attached to magic
