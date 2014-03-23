@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.12 2013/07/04 15:24:37 christos Exp $
+# $File: cad,v 1.13 2014/03/23 18:05:38 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -149,3 +149,8 @@
 
 # 3DS (3d Studio files) Conflicts with diff output 0x3d '='
 #16	beshort		0x3d3d		image/x-3ds
+
+# MegaCAD 2D/3D drawing (.prt)
+# http://megacad.de/
+# From: Markus Heidelberg <markus.heidelberg@web.de>
+0	string	MegaCad23\0	MegaCAD 2D/3D drawing
