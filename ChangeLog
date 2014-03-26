@@ -1,3 +1,7 @@
+2014-03-26  11:25  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.18
+
 2014-03-15  17:45  Christos Zoulas <christos@zoulas.com>
 
         * add fmtcheck(3) for those who don't have it
