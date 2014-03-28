@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.181 2014/03/27 18:12:12 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.182 2014/03/28 19:07:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -90,9 +90,6 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
 #define FILE_FMTDEBUG
 #ifdef FILE_FMTDEBUG
 #define F(a, b, c) file_fmtcheck((a), (b), (c), __FILE__, __LINE__)
-#else
-#define F(a, b) fmtcheck((b)->desc, (c))
-#endif
 
 private const char * __attribute__((__format_arg__(3)))
 file_fmtcheck(struct magic_set *ms, const struct magic *m, const char *def,
@@ -105,6 +102,9 @@ file_fmtcheck(struct magic_set *ms, const struct magic *m, const char *def,
 		    file, line, m->desc, def);
 	return ptr;
 }
+#else
+#define F(a, b, c) fmtcheck((b)->desc, (c))
+#endif
 
 /*
  * Go through the whole list, stopping if you find a match.  Process all
