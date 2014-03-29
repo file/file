@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: mach,v 1.17 2013/03/07 02:22:52 christos Exp $
+# $File: mach,v 1.18 2014/03/29 15:40:34 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -121,7 +121,7 @@
 >>>4		belong&0x00ffffff	1	mc88100
 >>>4		belong&0x00ffffff	2	mc88110
 >>>4		belong&0x00ffffff	>2	mc88000 subarchitecture=%ld
->>0	belong&0x00ffffff	14	sparc
+>>0	belong&0x00ffffff	14	SPARC
 >>0	belong&0x00ffffff	15	i860g
 >>0	belong&0x00ffffff	16	alpha
 >>0	belong&0x00ffffff	17	rs6000
