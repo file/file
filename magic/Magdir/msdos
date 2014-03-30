@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.92 2014/03/14 18:47:29 christos Exp $
+# $File: msdos,v 1.93 2014/03/28 19:06:09 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -590,7 +590,6 @@
 >4  ubyte   !0  \b, %d colors
 
 0   belong  0x00000100
-!:strength - 2
 >9  byte    0
 >>0 byte    x           MS Windows icon resource
 !:mime	image/x-icon
@@ -614,7 +613,6 @@
 
 0   belong  0x00000200
 >9  byte    0
-!:strength - 2
 >>0 byte    x           MS Windows cursor resource
 !:mime image/x-cur
 >>4 use     cur-dir
