@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.87 2013/12/11 14:14:20 christos Exp $
+# $File: images,v 1.88 2014/03/30 21:41:45 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -18,14 +18,17 @@
 # `xv' recognizes only a subset of the following (RGB with pixelsize = 24)
 # `tgatoppm' recognizes a superset (Index may be anything)
 1	belong&0xfff7ffff	0x01010000	Targa image data - Map
+!:strength + 2
 >2	byte&8			8		- RLE
 >12	leshort			>0		%hd x
 >14	leshort			>0		%hd
 1	belong&0xfff7ffff	0x00020000	Targa image data - RGB
+!:strength + 2
 >2	byte&8			8		- RLE
 >12	leshort			>0		%hd x
 >14	leshort			>0		%hd
 1	belong&0xfff7ffff	0x00030000	Targa image data - Mono
+!:strength + 2
 >2	byte&8			8		- RLE
 >12	leshort			>0		%hd x
 >14	leshort			>0		%hd
