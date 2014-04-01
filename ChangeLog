@@ -1,3 +1,12 @@
+2014-04-01  15:25  Christos Zoulas <christos@zoulas.com>
+
+	* PR/341: Jan Kaluza, fix memory leak
+	* PR/342: Jan Kaluza, fix out of bounds read
+
+2014-03-28  15:25  Christos Zoulas <christos@zoulas.com>
+
+	* Fix issue with long formats not matching fmtcheck
+
 2014-03-26  11:25  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.18
