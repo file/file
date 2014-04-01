@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.202 2014/03/14 18:48:11 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.203 2014/04/01 15:57:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -517,14 +517,18 @@ apprentice_unmap(struct magic_map *map)
 {
 	if (map == NULL)
 		return;
-	if (map->p == NULL)
-		return;
+	if (map->p != NULL) {
 #ifdef QUICK
-	if (map->len)
-		(void)munmap(map->p, map->len);
-	else
+		if (map->len)
+			(void)munmap(map->p, map->len);
+		else
 #endif
 		free(map->p);
+	} else {
+		uint32_t j;
+		for (j = 0; j < MAGIC_SETS; j++)
+			free(map->magic[j]);
+	}
 	free(map);
 }
 
@@ -1290,11 +1294,7 @@ out:
 		magic_entry_free(mset[j].me, mset[j].count);
 
 	if (errs) {
-		for (j = 0; j < MAGIC_SETS; j++) {
-			if (map->magic[j])
-				free(map->magic[j]);
-		}
-		free(map);
+		apprentice_unmap(map);
 		return NULL;
 	}
 	return map;
