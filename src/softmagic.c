@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.182 2014/03/28 19:07:08 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.183 2014/04/01 15:44:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -235,8 +235,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		if (file_check_mem(ms, ++cont_level) == -1)
 			return -1;
 
-		while (magic[magindex+1].cont_level != 0 &&
-		    ++magindex < nmagic) {
+		while (++magindex < nmagic &&
+		    magic[magindex].cont_level != 0) {
 			m = &magic[magindex];
 			ms->line = m->lineno; /* for messages */
 
