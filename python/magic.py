@@ -116,7 +116,10 @@ class Magic(object):
         is set.  A call to errno() will return the numeric error code.
         """
         try: # attempt python3 approach first
-            bi = bytes(filename, 'utf-8')
+            if isinstance(filename, bytes):
+                bi = filename
+            else:
+                bi = bytes(filename, 'utf-8')
             return str(_file(self._magic_t, bi), 'utf-8')
         except:
             return _file(self._magic_t, filename.encode('utf-8'))
