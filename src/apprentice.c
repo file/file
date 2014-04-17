@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.202 2014/03/14 18:48:11 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.203 2014/04/01 15:57:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1749,7 +1749,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 			 */
 			m->type = get_standard_integer_type(l, &l);
 		}
-		// It's unsigned.
+		/* It's unsigned. */
 		if (m->type != FILE_INVALID)
 			m->flag |= UNSIGNED;
 	} else {
