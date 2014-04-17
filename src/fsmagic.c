@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.70 2013/11/29 15:42:51 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.71 2013/12/01 18:01:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -176,7 +176,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			if (handle_mime(ms, mime, "chardevice") == -1)
 				return -1;
 		} else {
-#ifdef HAVE_STAT_ST_RDEV
+#ifdef HAVE_STRUCT_STAT_ST_RDEV
 # ifdef dv_unit
 			if (file_printf(ms, "%scharacter special (%d/%d/%d)",
 			    COMMA, major(sb->st_rdev), dv_unit(sb->st_rdev),
@@ -210,7 +210,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			if (handle_mime(ms, mime, "blockdevice") == -1)
 				return -1;
 		} else {
-#ifdef HAVE_STAT_ST_RDEV
+#ifdef HAVE_STRUCT_STAT_ST_RDEV
 # ifdef dv_unit
 			if (file_printf(ms, "%sblock special (%d/%d/%d)",
 			    COMMA, major(sb->st_rdev), dv_unit(sb->st_rdev),
