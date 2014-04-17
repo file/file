@@ -108,7 +108,7 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.9 2012/08/09 16:33:30 christos Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.10 2012/08/09 16:40:04 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -639,7 +639,7 @@ int vasprintf(char **ptr, const char *format_string, va_list vargs)
 #ifdef __va_copy
   __va_copy (s.vargs, vargs);
 #else
-  memcpy (&s.vargs, vargs, sizeof (va_list));
+  memcpy (&s.vargs, &vargs, sizeof (s.va_args));
 #endif /* __va_copy */
 #endif /* va_copy */
   s.maxlen = (size_t)INT_MAX;
