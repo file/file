@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.13 2013/08/27 04:02:33 christos Exp $
+# $File: sql,v 1.14 2014/04/28 12:04:50 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -63,7 +63,7 @@
 >68 belong  =0x42654c6e  Bentley Systems Localization File - SQLite3 database
 >68 belong  =0x47504b47  OGC GeoPackage file - SQLite3 database
 >68 default x            SQLite 3.x database
->>68 belong  !0          \b, application id %u
+>>68 belong  !0          \b, application id %lu
 >>60 belong  !0          \b, user version %d
 
 # SQLite Write-Ahead Log from SQLite version >= 3.7.0

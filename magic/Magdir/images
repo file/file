@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.89 2014/04/12 14:51:52 christos Exp $
+# $File: images,v 1.90 2014/04/28 12:04:50 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -771,14 +771,14 @@
 # From Albert Cahalan <acahalan@gmail.com>
 # puredigital used it for the CVS disposable camcorder
 #8       lelong  4       ZBM bitmap image data
-#>4      leshort x       %u x
-#>6      leshort x       %u
+#>4      leshort x       %hu x
+#>6      leshort x       %hu
 
 # From Albert Cahalan <acahalan@gmail.com>
 # uncompressed 5:6:5 HighColor image for OLPC XO firmware icons
 0       string C565     OLPC firmware icon image data
->4      leshort x       %u x
->6      leshort x       %u
+>4      leshort x       %hu x
+>6      leshort x       %hu
 
 # Applied Images - Image files from Cytovision
 # Gustavo Junior Alves <gjalves@gjalves.com.br>

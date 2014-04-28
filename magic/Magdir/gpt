@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: gpt,v 1.1 2013/02/18 18:31:09 christos Exp $
+# $File: gpt,v 1.2 2014/04/28 12:04:50 christos Exp $
 #
 # GPT Partition table patterns.
 # Author: Rogier Goossens (goossens.rogier@gmail.com)
@@ -218,8 +218,8 @@
 
 # Print the information from a GPT partition table structure
 0		name		gpt-table
->10		uleshort	x		\b, version %u
->8		uleshort	x		\b.%u
+>10		uleshort	x		\b, version %hu
+>8		uleshort	x		\b.%hu
 # a GUID is just like a UUID, except it's displayed mixed-endian.
 >56		ulelong		x		\b, GUID: %08x
 >60		uleshort	x		\b-%04x

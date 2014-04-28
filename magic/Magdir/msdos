@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.94 2014/03/30 21:41:45 christos Exp $
+# $File: msdos,v 1.95 2014/04/28 12:04:50 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -290,7 +290,7 @@
 # TELVOX Teleinformatica CODEC self-extractor for OS/2:
 >49801	string	\x79\xff\x80\xff\x76\xff	\b, CODEC archive v3.21
 >>49824 leshort		=1			\b, 1 file
->>49824 leshort		>1			\b, %u files
+>>49824 leshort		>1			\b, %hu files
 
 # added by Joerg Jenderek of http://www.freedos.org/software/?prog=kc
 # and http://www.freedos.org/software/?prog=kpdos
@@ -760,15 +760,15 @@
 # Microsoft Cabinet files
 0	string/b	MSCF\0\0\0\0	Microsoft Cabinet archive data
 !:mime application/vnd.ms-cab-compressed
->8	lelong		x		\b, %u bytes
+>8	lelong		x		\b, %lu bytes
 >28	leshort		1		\b, 1 file
->28	leshort		>1		\b, %u files
+>28	leshort		>1		\b, %hu files
 
 # InstallShield Cabinet files
 0	string/b	ISc(		InstallShield Cabinet archive data
 >5	byte&0xf0	=0x60		version 6,
 >5	byte&0xf0	!0x60		version 4/5,
->(12.l+40)	lelong	x		%u files
+>(12.l+40)	lelong	x		%lu files
 
 # Windows CE package files
 0	string/b	MSCE\0\0\0\0	Microsoft WinCE install header
@@ -782,9 +782,9 @@
 >20	lelong		10005		\b, Hitachi SH4
 >20	lelong		70001		\b, ARM 7TDMI
 >52	leshort		1		\b, 1 file
->52	leshort		>1		\b, %u files
+>52	leshort		>1		\b, %hu files
 >56	leshort		1		\b, 1 registry entry
->56	leshort		>1		\b, %u registry entries
+>56	leshort		>1		\b, %hu registry entries
 
 
 # Windows Enhanced Metafile (EMF)
@@ -937,7 +937,7 @@
 
 # MS eBook format (.lit)
 0	string/b	ITOLITLS		Microsoft Reader eBook Data
->8	lelong	x			\b, version %u
+>8	lelong	x			\b, version %lu
 !:mime					application/x-ms-reader
 
 # Windows CE Binary Image Data Format

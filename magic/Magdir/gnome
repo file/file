@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: gnome,v 1.3 2013/02/05 15:20:47 christos Exp $
+# $File: gnome,v 1.4 2014/04/28 12:04:50 christos Exp $
 # GNOME related files
 
 # Contributed by Josh Triplett
@@ -20,11 +20,11 @@
 >>>>>>&0  ubeqdate x                    \b, last modified %s
 >>>>>>&8  ubeqdate x                    \b, created %s
 >>>>>>&16 ubelong  &1
->>>>>>>&0 ubelong  x                    \b, locked if idle for %u seconds
+>>>>>>>&0 ubelong  x                    \b, locked if idle for %lu seconds
 >>>>>>&16 ubelong  ^1                   \b, not locked if idle
->>>>>>&24 ubelong  x                    \b, hash iterations %u
+>>>>>>&24 ubelong  x                    \b, hash iterations %lu
 >>>>>>&28 ubequad  x                    \b, salt %llu
->>>>>>&52 ubelong  x                    \b, %u item(s)
+>>>>>>&52 ubelong  x                    \b, %lu item(s)
 
 # From: Alex Beregszaszi <alex@fsn.hu>
 4	string	gtktalog		GNOME Catalogue (gtktalog)
