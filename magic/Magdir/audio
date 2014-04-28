@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: audio,v 1.67 2013/08/14 09:01:45 christos Exp $
+# $File: audio,v 1.68 2013/12/02 13:32:26 christos Exp $
 # audio:  file(1) magic for sound formats (see also "iff")
 #
 # Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
@@ -467,7 +467,7 @@
 >>17	belong&0xfffff0		0x0fa000	\b, 64 kHz
 >>21	byte&0xf		>0		\b, >4G samples
 >>21	byte&0xf		0		\b
->>>22	belong			>0		\b, %u samples
+>>>22	belong			>0		\b, %hhu samples
 >>>22	belong			0		\b, length unknown
 
 # (ISDN) VBOX voice message file (Wolfram Kleff)

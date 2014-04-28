@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.54 2014/03/14 18:47:29 christos Exp $
+# $File: compress,v 1.55 2014/04/12 14:44:33 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -241,8 +241,8 @@
 
 # Valve Pack (VPK) files
 0	lelong	0x55aa1234	Valve Pak file
->0x4	lelong	x		\b, version %u
->0x8	lelong	x		\b, %u entries
+>0x4	lelong	x		\b, version %lu
+>0x8	lelong	x		\b, %lu entries
 
 # Snappy framing format
 # http://code.google.com/p/snappy/source/browse/trunk/framing_format.txt

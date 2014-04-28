@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.86 2014/02/25 20:28:16 christos Exp $
+# $File: filesystems,v 1.87 2014/03/01 03:04:06 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -233,7 +233,7 @@
 #offset is 128
 >>19	ubyte	128			
 >>>(19.b-1)	ubyte	0x0	DOS Emulator image
->>>>7	ulelong	>0		\b, %u heads
+>>>>7	ulelong	>0		\b, %lu heads
 >>>>11	ulelong	>0		\b, %d sectors/track
 >>>>15	ulelong	>0		\b, %d cylinders
 >>>>128	indirect	x	\b; contains 
@@ -1126,8 +1126,8 @@
 >0		string		RRaA		
 >>0x1E4		string		rrAa		\b, FSInfosector
 #>>0x1FC	uleshort	=0		SHOULD BE ZERO
->>>0x1E8	ulelong		<0xffffffff	\b, %u free clusters
->>>0x1EC	ulelong		<0xffffffff	\b, last allocated cluster %u
+>>>0x1E8	ulelong		<0xffffffff	\b, %lu free clusters
+>>>0x1EC	ulelong		<0xffffffff	\b, last allocated cluster %lu
 
 # updated by Joerg Jenderek at Sep 2007
 >3	ubyte	0			
@@ -1182,8 +1182,8 @@
 >>1		use		partition-chs
 >>5		ubyte		x	\b), end-CHS (
 >>5		use		partition-chs
->>8		ulelong		x	\b), startsector %u
->>12		ulelong		x	\b, %u sectors
+>>8		ulelong		x	\b), startsector %lu
+>>12		ulelong		x	\b, %lu sectors
 #		Print cylinder,head,sector (CHS) of partition entry
 0	name				partition-chs
 # cylinder
@@ -1193,9 +1193,9 @@
 >1		ubyte&0xC0	0xC0	\b3
 >2		ubyte		x	\b%x
 # head
->0		ubyte		x	\b,%u
+>0		ubyte		x	\b,%hhu
 # sector
->1		ubyte&0x3F	x	\b,%u
+>1		ubyte&0x3F	x	\b,%hhu
 
 # FATX 
 0		string		FATX		FATX filesystem data
@@ -1318,8 +1318,8 @@
 >(0x1BC.s)		string		NDTmbr			
 >>&-14			string		1234F\0			Turton mbr (
 # parameters also viewed by install-mbr --list
->>>(0x1BC.s+7)		ubyte		x			\b%u<=
->>>(0x1BC.s+9)		ubyte		x			\bVersion<=%u
+>>>(0x1BC.s+7)		ubyte		x			\b%hhu<=
+>>>(0x1BC.s+9)		ubyte		x			\bVersion<=%hhu
 #>>>(0x1BC.s+8)		ubyte		x			asm_flag_%x
 >>>(0x1BC.s+8)		ubyte&1		1			\b,Y2K-Fix
 # variant used by testdisk of http://www.cgsecurity.org/wiki/Menu_MBRCode
@@ -1330,8 +1330,8 @@
 #>>>(0x1BC.s+11)		ubyte		x			\b,cfg_def 0x%x
 # for older versions
 >>>(0x1BC.s+9)		ubyte		<2			
-#>>>>(0x1BC.s+12)	ubyte		18			\b,%u/18 seconds
->>>>(0x1BC.s+12)	ubyte		!18			\b,%u/18 seconds
+#>>>>(0x1BC.s+12)	ubyte		18			\b,%hhu/18 seconds
+>>>>(0x1BC.s+12)	ubyte		!18			\b,%hhu/18 seconds
 # floppy A: or B:
 >>>>(0x1BC.s+13)	ubyte		<2			\b,floppy 0x%x
 >>>>(0x1BC.s+13)	ubyte		>1			
@@ -1341,8 +1341,8 @@
 >>>>>(0x1BC.s+13)	ubyte		!0x80			\b,drive 0x%x
 # for version >= 2 maximal timeout can be 65534
 >>>(0x1BC.s+9)		ubyte		>1			
-#>>>>(0x1BC.s+12)	uleshort	18			\b,%u/18 seconds
->>>>(0x1BC.s+12)	uleshort	!18			\b,%u/18 seconds
+#>>>>(0x1BC.s+12)	uleshort	18			\b,%hu/18 seconds
+>>>>(0x1BC.s+12)	uleshort	!18			\b,%hu/18 seconds
 # floppy A: or B:
 >>>>(0x1BC.s+14)	ubyte		<2			\b,floppy 0x%x
 >>>>(0x1BC.s+14)	ubyte		>1			
@@ -1369,12 +1369,12 @@
 # config_file for stage1_5 is 0xffffffff + default "/boot/grub/stage2"
 >>>>0x217 	ubyte		0xFF		stage1_5
 >>>>0x217 	ubyte		<0xFF		stage2
->>>>0x206	ubyte		x		\b version %u
->>>>0x207	ubyte		x		\b.%u
+>>>>0x206	ubyte		x		\b version %hhu
+>>>>0x207	ubyte		x		\b.%hhu
 # module_size for 1.94
->>>>0x208	ulelong		<0xffffff	\b, installed partition %u
-#>>>>0x208	ulelong		=0xffffff	\b, %u (default)
->>>>0x208	ulelong		>0xffffff	\b, installed partition %u
+>>>>0x208	ulelong		<0xffffff	\b, installed partition %lu
+#>>>>0x208	ulelong		=0xffffff	\b, %lu (default)
+>>>>0x208	ulelong		>0xffffff	\b, installed partition %lu
 # GRUB 0.5.95 unofficial
 >>>>0x20C	ulelong&0x2E300000 0x2E300000	
 # 0=stage2	1=ffs	2=e2fs	3=fat	4=minix	5=reiserfs
@@ -1430,43 +1430,43 @@
 >>>>>3		string		>\0		\b, OEM-ID "%-.8s"
 #http://mirror.href.com/thestarman/asm/debug/debug2.htm#IHC
 >>>>>>8		string		IHC		\b cached by Windows 9M
->>>>>11		uleshort	>512		\b, Bytes/sector %u
-#>>>>>11	uleshort	=512		\b, Bytes/sector %u=512 (usual)
->>>>>11		uleshort	<512		\b, Bytes/sector %u
->>>>>13		ubyte		>1		\b, sectors/cluster %u
-#>>>>>13	ubyte		=1		\b, sectors/cluster %u (usual on Floppies)
+>>>>>11		uleshort	>512		\b, Bytes/sector %hu
+#>>>>>11	uleshort	=512		\b, Bytes/sector %hu=512 (usual)
+>>>>>11		uleshort	<512		\b, Bytes/sector %hu
+>>>>>13		ubyte		>1		\b, sectors/cluster %hhu
+#>>>>>13	ubyte		=1		\b, sectors/cluster %hhu (usual on Floppies)
 >>>>>82		string		FAT32		
->>>>>>14	uleshort	!32		\b, reserved sectors %u
-#>>>>>>14	uleshort	=32		\b, reserved sectors %u (usual Fat32)
+>>>>>>14	uleshort	!32		\b, reserved sectors %hu
+#>>>>>>14	uleshort	=32		\b, reserved sectors %hu (usual Fat32)
 >>>>>82		string		!FAT32		
->>>>>>14	uleshort	>1		\b, reserved sectors %u
-#>>>>>>14	uleshort	=1		\b, reserved sectors %u (usual FAT12,FAT16)
-#>>>>>>14	uleshort	0		\b, reserved sectors %u (usual NTFS)
->>>>>16		ubyte		>2		\b, FATs %u
-#>>>>>16	ubyte		=2		\b, FATs %u (usual)
->>>>>16		ubyte		=1		\b, FAT  %u
+>>>>>>14	uleshort	>1		\b, reserved sectors %hu
+#>>>>>>14	uleshort	=1		\b, reserved sectors %hu (usual FAT12,FAT16)
+#>>>>>>14	uleshort	0		\b, reserved sectors %hu (usual NTFS)
+>>>>>16		ubyte		>2		\b, FATs %hhu
+#>>>>>16	ubyte		=2		\b, FATs %hhu (usual)
+>>>>>16		ubyte		=1		\b, FAT  %hhu
 >>>>>16		ubyte		>0
->>>>>17		uleshort	>0		\b, root entries %u
-#>>>>>17	uleshort	=0		\b, root entries %u=0 (usual Fat32)
->>>>>19		uleshort	>0		\b, sectors %u (volumes <=32 MB) 
-#>>>>>19	uleshort	=0		\b, sectors %u=0 (usual Fat32)
+>>>>>17		uleshort	>0		\b, root entries %hu
+#>>>>>17	uleshort	=0		\b, root entries %hu=0 (usual Fat32)
+>>>>>19		uleshort	>0		\b, sectors %hu (volumes <=32 MB) 
+#>>>>>19	uleshort	=0		\b, sectors %hu=0 (usual Fat32)
 >>>>>21		ubyte		>0xF0		\b, Media descriptor 0x%x
 #>>>>>21	ubyte		=0xF0		\b, Media descriptor 0x%x (usual floppy)
 >>>>>21		ubyte		<0xF0		\b, Media descriptor 0x%x
->>>>>22		uleshort	>0		\b, sectors/FAT %u
-#>>>>>22	uleshort	=0		\b, sectors/FAT %u=0 (usual Fat32)
->>>>>24		uleshort	x		\b, sectors/track %u
->>>>>26		ubyte		>2		\b, heads %u
-#>>>>>26	ubyte		=2		\b, heads %u (usual floppy)
->>>>>26		ubyte		=1		\b, heads %u
+>>>>>22		uleshort	>0		\b, sectors/FAT %hu
+#>>>>>22	uleshort	=0		\b, sectors/FAT %hu=0 (usual Fat32)
+>>>>>24		uleshort	x		\b, sectors/track %hu
+>>>>>26		ubyte		>2		\b, heads %hhu
+#>>>>>26	ubyte		=2		\b, heads %hhu (usual floppy)
+>>>>>26		ubyte		=1		\b, heads %hhu
 # valid only for sector sizes with more then 32 Bytes
 >>>>>11		uleshort	>32		
 # skip for Digital Research DOS (version 3.41) 1440 kB Bootdisk
 >>>>>>38	ubyte		!0x70		
->>>>>>>28	ulelong		>0		\b, hidden sectors %u
-#>>>>>>>28	ulelong		=0		\b, hidden sectors %u (usual floppy)
->>>>>>>32	ulelong		>0		\b, sectors %u (volumes > 32 MB) 
-#>>>>>>>32	ulelong		=0		\b, sectors %u (volumes > 32 MB)
+>>>>>>>28	ulelong		>0		\b, hidden sectors %lu
+#>>>>>>>28	ulelong		=0		\b, hidden sectors %lu (usual floppy)
+>>>>>>>32	ulelong		>0		\b, sectors %lu (volumes > 32 MB) 
+#>>>>>>>32	ulelong		=0		\b, sectors %lu (volumes > 32 MB)
 # FAT<32 bit specific 
 >>>>>>>82	string		!FAT32
 #>>>>>>>>36	ubyte		0x80		\b, physical drive 0x%x=0x80 (usual harddisk)
@@ -1493,21 +1493,21 @@
 >>>>>>>54	string		FAT16		\b (16 bit)
 # FAT32 bit specific
 >>>>>82		string		FAT32		\b, FAT (32 bit)
->>>>>>36	ulelong		x		\b, sectors/FAT %u
+>>>>>>36	ulelong		x		\b, sectors/FAT %lu
 # http://technet.microsoft.com/en-us/library/cc977221.aspx
 >>>>>>40	uleshort	>0		\b, extension flags 0x%x
-#>>>>>>40	uleshort	=0		\b, extension flags %u
->>>>>>42	uleshort	>0		\b, fsVersion %u
-#>>>>>>42	uleshort	=0		\b, fsVersion %u (usual)
->>>>>>44	ulelong		>2		\b, rootdir cluster %u
-#>>>>>>44	ulelong		=2		\b, rootdir cluster %u
-#>>>>>>44	ulelong		=1		\b, rootdir cluster %u
->>>>>>48	uleshort	>1		\b, infoSector %u
-#>>>>>>48	uleshort	=1		\b, infoSector %u (usual)
->>>>>>48	uleshort	<1		\b, infoSector %u
->>>>>>50	uleshort	>6		\b, Backup boot sector %u
-#>>>>>>50	uleshort	=6		\b, Backup boot sector %u (usual) 
->>>>>>50	uleshort	<6		\b, Backup boot sector %u
+#>>>>>>40	uleshort	=0		\b, extension flags %hu
+>>>>>>42	uleshort	>0		\b, fsVersion %hu
+#>>>>>>42	uleshort	=0		\b, fsVersion %hu (usual)
+>>>>>>44	ulelong		>2		\b, rootdir cluster %lu
+#>>>>>>44	ulelong		=2		\b, rootdir cluster %lu
+#>>>>>>44	ulelong		=1		\b, rootdir cluster %lu
+>>>>>>48	uleshort	>1		\b, infoSector %hu
+#>>>>>>48	uleshort	=1		\b, infoSector %hu (usual)
+>>>>>>48	uleshort	<1		\b, infoSector %hu
+>>>>>>50	uleshort	>6		\b, Backup boot sector %hu
+#>>>>>>50	uleshort	=6		\b, Backup boot sector %hu (usual) 
+>>>>>>50	uleshort	<6		\b, Backup boot sector %hu
 # corrected by Joerg Jenderek at Feb 2011 according to http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
 >>>>>>52	ulelong		>0		\b, reserved1 0x%x
 >>>>>>56	ulelong		>0		\b, reserved2 0x%x
@@ -1546,8 +1546,8 @@
 # dos < 4.0 BootSector value found is 0x80
 #38	ubyte		=0x80			\b, dos < 4.0 BootSector (0x%x)
 >>>>>>>>22	uleshort	=0		\b; NTFS
->>>>>>>>>24	uleshort	>0		\b, sectors/track %u
->>>>>>>>>36	ulelong		!0x800080	\b, physical drive 0x%x
+>>>>>>>>>24	uleshort	>0		\b, sectors/track %hu
+>>>>>>>>>36	ulelong		!0x800080	\b, physical drive 0x%lx
 >>>>>>>>>40	ulequad		>0		\b, sectors %lld
 >>>>>>>>>48	ulequad		>0		\b, $MFT start cluster %lld
 >>>>>>>>>56	ulequad		>0		\b, $MFTMirror start cluster %lld
@@ -2282,25 +2282,25 @@
 # LFS
 0	lelong	0x070162	LFS filesystem image
 >4	lelong	1		version 1,
->>8	lelong	x		\b blocks %u,
->>12	lelong	x		\b blocks per segment %u,
+>>8	lelong	x		\b blocks %lu,
+>>12	lelong	x		\b blocks per segment %lu,
 >4	lelong	2		version 2,
->>8	lelong	x		\b fragments %u,
->>12	lelong	x		\b bytes per segment %u,
->16	lelong	x		\b disk blocks %u,
->20	lelong	x		\b block size %u,
->24	lelong	x		\b fragment size %u,
->28	lelong	x		\b fragments per block %u,
->32	lelong	x		\b start for free list %u,
->36	lelong	x		\b number of free blocks %d,
->40	lelong	x		\b number of files %u,
->44	lelong	x		\b blocks available for writing %d,
->48	lelong	x		\b inodes in cache %d,
->52	lelong	x		\b inode file disk address 0x%x,
->56	lelong	x		\b inode file inode number %u,
->60	lelong	x		\b address of last segment written 0x%x,
->64	lelong	x		\b address of next segment to write 0x%x,
->68	lelong	x		\b address of current segment written 0x%x
+>>8	lelong	x		\b fragments %lu,
+>>12	lelong	x		\b bytes per segment %lu,
+>16	lelong	x		\b disk blocks %lu,
+>20	lelong	x		\b block size %lu,
+>24	lelong	x		\b fragment size %lu,
+>28	lelong	x		\b fragments per block %lu,
+>32	lelong	x		\b start for free list %lu,
+>36	lelong	x		\b number of free blocks %ld,
+>40	lelong	x		\b number of files %lu,
+>44	lelong	x		\b blocks available for writing %ld,
+>48	lelong	x		\b inodes in cache %ld,
+>52	lelong	x		\b inode file disk address 0x%lx,
+>56	lelong	x		\b inode file inode number %lu,
+>60	lelong	x		\b address of last segment written 0x%lx,
+>64	lelong	x		\b address of next segment to write 0x%lx,
+>68	lelong	x		\b address of current segment written 0x%lx
 
 0	string	td\000		floppy image data (TeleDisk, compressed)
 0	string	TD\000		floppy image data (TeleDisk)
@@ -2331,11 +2331,11 @@
 0       belong  0x31181006
 >0x16   short   0               UBIfs image
 >0x08   lequad  x               \b, sequence number %llu
->0x10   leshort x               \b, length %u
+>0x10   leshort x               \b, length %hu
 >0x04   lelong  x               \b, CRC 0x%08x
 
 0       belong  0x55424923
 >0x04   short   <2
 >0x05   string  \0\0\0
 >0x1c   string  \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
->0x04   short   x       UBI image, version %u
+>0x04   short   x       UBI image, version %hu

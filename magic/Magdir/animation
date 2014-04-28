@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.50 2014/03/01 03:01:45 christos Exp $
+# $File: animation,v 1.51 2014/03/14 18:47:29 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -77,7 +77,7 @@
 >>5      byte               66             \b, baseline
 >>5      byte               77             \b, main
 >>5      byte               88             \b, extended
->>7      byte               x              \b @ L %u
+>>7      byte               x              \b @ L %hhu
 0        belong&0xFFFFFF00  0x00000100     
 >3       byte               0xBA           MPEG sequence
 !:mime  video/mpeg
@@ -88,7 +88,7 @@
 >>4      byte               66             \b, baseline
 >>4      byte               77             \b, main
 >>4      byte               88             \b, extended
->>6      byte               x              \b @ L %u
+>>6      byte               x              \b @ L %hhu
 # GRR too general as it catches also FoxPro Memo example NG.FPT
 >3       byte               0xB0           MPEG sequence, v4
 # TODO: maybe this extra line exclude FoxPro Memo example NG.FPT starting with 000001b0 00000100 00000000
@@ -621,7 +621,7 @@
 # Live MPEG-4 audio streams (instead of RTP FlexMux)
 0       beshort&0xFFE0  0x56E0         MPEG-4 LOAS
 !:mime	audio/x-mp4a-latm
-#>1     beshort&0x1FFF  x              \b, %u byte packet
+#>1     beshort&0x1FFF  x              \b, %hu byte packet
 >3      byte&0xE0       0x40
 >>4     byte&0x3C       0x04           \b, single stream
 >>4     byte&0x3C       0x08           \b, 2 streams

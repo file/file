@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.5 2012/04/03 22:25:07 christos Exp $
+# $File: windows,v 1.6 2013/04/19 20:12:29 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -106,7 +106,7 @@
 >28	leqwdate	x	\b, ctime=%s
 >36	leqwdate	x	\b, mtime=%s
 >44	leqwdate	x	\b, atime=%s
->52	lelong		x	\b, length=%u, window=
+>52	lelong		x	\b, length=%lu, window=
 >60	lelong&1	1	\bhide
 >60	lelong&2	2	\bnormal
 >60	lelong&4	4	\bshowminimized
@@ -248,14 +248,14 @@
 !:mime	application/x-pnf
 # currently only found Major Version=1 and Minor Version=1
 #>>>>0		uleshort	=0x0101		
-#>>>>>1		ubyte		x		\b, version %u
-#>>>>>0		ubyte		x		\b.%u
+#>>>>>1		ubyte		x		\b, version %hhu
+#>>>>>0		ubyte		x		\b.%hhu
 >>>>0		uleshort	!0x0101		
->>>>>1		ubyte		x		\b, version %u
->>>>>0		ubyte		x		\b.%u
+>>>>>1		ubyte		x		\b, version %hhu
+>>>>>0		ubyte		x		\b.%hhu
 # 1 ,2 (windows 98 SE)
-#>>>>2		uleshort	=2		\b, InfStyle %u
->>>>2		uleshort	!2		\b, InfStyle %u
+#>>>>2		uleshort	=2		\b, InfStyle %hu
+>>>>2		uleshort	!2		\b, InfStyle %hu
 #	PNF_FLAG_IS_UNICODE		0x00000001
 #	PNF_FLAG_HAS_STRINGS		0x00000002
 #	PNF_FLAG_SRCPATH_IS_URL		0x00000004

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.81 2014/01/08 22:27:31 christos Exp $
+# $File: archive,v 1.82 2014/03/14 18:47:29 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -498,7 +498,7 @@
 # This is a really bad format. A file containing HAWAII will match this...
 #0	string		HA		HA archive data,
 #>2	leshort		=1		1 file,
-#>2	leshort		>1		%u files,
+#>2	leshort		>1		%hu files,
 #>4	byte&0x0f	=0		first is type CPY
 #>4	byte&0x0f	=1		first is type ASC
 #>4	byte&0x0f	=2		first is type HSC
@@ -507,7 +507,7 @@
 # suggestion: at least identify small archives (<1024 files)
 0  belong&0xffff00fc 0x48410000 HA archive data
 >2	leshort		=1		1 file,
->2	leshort		>1		%u files,
+>2	leshort		>1		%hu files,
 >4	byte&0x0f	=0		first is type CPY
 >4	byte&0x0f	=1		first is type ASC
 >4	byte&0x0f	=2		first is type HSC
