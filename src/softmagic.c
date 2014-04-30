@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.183 2014/04/01 15:44:26 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.184 2014/04/12 15:47:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -427,13 +427,13 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			(void)snprintf(buf, sizeof(buf), "%c",
+			(void)snprintf(buf, sizeof(buf), "%d",
 			    (unsigned char)v);
 			if (file_printf(ms, F(ms, m, "%s"), buf) == -1)
 				return -1;
 			break;
 		default:
-			if (file_printf(ms, F(ms, m, "%c"),
+			if (file_printf(ms, F(ms, m, "%d"),
 			    (unsigned char) v) == -1)
 				return -1;
 			break;
@@ -449,13 +449,13 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			(void)snprintf(buf, sizeof(buf), "%hu",
+			(void)snprintf(buf, sizeof(buf), "%u",
 			    (unsigned short)v);
 			if (file_printf(ms, F(ms, m, "%s"), buf) == -1)
 				return -1;
 			break;
 		default:
-			if (file_printf(ms, F(ms, m, "%hu"),
+			if (file_printf(ms, F(ms, m, "%u"),
 			    (unsigned short) v) == -1)
 				return -1;
 			break;
@@ -472,14 +472,12 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			(void)snprintf(buf, sizeof(buf), "%lu",
-			    (unsigned long)(uint32_t) v);
+			(void)snprintf(buf, sizeof(buf), "%u", (uint32_t) v);
 			if (file_printf(ms, F(ms, m, "%s"), buf) == -1)
 				return -1;
 			break;
 		default:
-			if (file_printf(ms, F(ms, m, "%lu"),
-			    (unsigned long)(uint32_t) v) == -1)
+			if (file_printf(ms, F(ms, m, "%u"), (uint32_t) v) == -1)
 				return -1;
 			break;
 		}

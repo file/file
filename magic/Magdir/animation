@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.51 2014/03/14 18:47:29 christos Exp $
+# $File: animation,v 1.52 2014/04/28 12:04:50 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -77,7 +77,7 @@
 >>5      byte               66             \b, baseline
 >>5      byte               77             \b, main
 >>5      byte               88             \b, extended
->>7      byte               x              \b @ L %hhu
+>>7      byte               x              \b @ L %u
 0        belong&0xFFFFFF00  0x00000100     
 >3       byte               0xBA           MPEG sequence
 !:mime  video/mpeg
@@ -88,7 +88,7 @@
 >>4      byte               66             \b, baseline
 >>4      byte               77             \b, main
 >>4      byte               88             \b, extended
->>6      byte               x              \b @ L %hhu
+>>6      byte               x              \b @ L %u
 # GRR too general as it catches also FoxPro Memo example NG.FPT
 >3       byte               0xB0           MPEG sequence, v4
 # TODO: maybe this extra line exclude FoxPro Memo example NG.FPT starting with 000001b0 00000100 00000000
@@ -719,16 +719,16 @@
 !:mime	video/x-mng
 >4	belong			!0x0d0a1a0a	CORRUPTED,
 >4	belong			0x0d0a1a0a
->>16    belong	x				%ld x
->>20    belong	x				%ld
+>>16    belong	x				%d x
+>>20    belong	x				%d
 
 # JNG Video Format, <URL:http://www.libpng.org/pub/mng/spec/>
 0	string			\x8bJNG		JNG video data,
 !:mime	video/x-jng
 >4	belong			!0x0d0a1a0a	CORRUPTED,
 >4	belong			0x0d0a1a0a
->>16    belong	x				%ld x
->>20    belong	x				%ld
+>>16    belong	x				%d x
+>>20    belong	x				%d
 
 # Vivo video (Wolfram Kleff)
 3	string		\x0D\x0AVersion:Vivo	Vivo video data
