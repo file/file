@@ -1,3 +1,10 @@
+2014-04-30  17:39  Christos Zoulas <christos@zoulas.com>
+
+	* Fix integer formats: We don't specify 'l' or
+	  'h' and 'hh' specifiers anymore, only 'll' for
+	  quads and nothing for the rest. This is so that
+	  magic writing is simpler.
+
 2014-04-01  15:25  Christos Zoulas <christos@zoulas.com>
 
 	* PR/341: Jan Kaluza, fix memory leak
@@ -13,7 +20,7 @@
 
 2014-03-15  17:45  Christos Zoulas <christos@zoulas.com>
 
-        * add fmtcheck(3) for those who don't have it
+	* add fmtcheck(3) for those who don't have it
 
 2014-03-14  15:12  Christos Zoulas <christos@zoulas.com>
 

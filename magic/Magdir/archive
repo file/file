@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.83 2014/04/28 12:04:50 christos Exp $
+# $File: archive,v 1.84 2014/04/30 21:41:02 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -269,7 +269,7 @@
 >9	string	\0
 >>0	string	KWAJ
 >>>7	string	\321\003	MS Compress archive data
->>>>14	ulong	>0		\b, original size: %ld bytes
+>>>>14	ulong	>0		\b, original size: %d bytes
 >>>>18		ubyte	>0x65
 >>>>>18		string	x       \b, was %.8s
 >>>>>(10.b-4)	string	x       \b.%.3s
@@ -507,7 +507,7 @@
 # suggestion: at least identify small archives (<1024 files)
 0  belong&0xffff00fc 0x48410000 HA archive data
 >2	leshort		=1		1 file,
->2	leshort		>1		%hu files,
+>2	leshort		>1		%u files,
 >4	byte&0x0f	=0		first is type CPY
 >4	byte&0x0f	=1		first is type ASC
 >4	byte&0x0f	=2		first is type HSC
@@ -874,7 +874,7 @@
 # From: Dirk Jagdmann <doj@cubic.org>
 # xar archive format: http://code.google.com/p/xar/
 0	string	xar!		xar archive
->6	beshort	x		- version %ld
+>6	beshort	x		- version %d
 
 # From: "Nelson A. de Oliveira" <naoliv@gmail.com>
 # .kgb

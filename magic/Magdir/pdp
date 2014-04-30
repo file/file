@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pdp,v 1.9 2013/04/19 20:11:43 christos Exp $
+# $File: pdp,v 1.10 2014/04/30 21:41:02 christos Exp $
 # pdp:  file(1) magic for PDP-11 executable/object and APL workspace
 #
 0	lelong		0101555		PDP-11 single precision APL workspace
@@ -10,7 +10,7 @@
 #
 0	leshort		0407		PDP-11 executable
 >8	leshort		>0		not stripped
->15	byte		>0		- version %ld
+>15	byte		>0		- version %d
 
 # updated by Joerg Jenderek at Mar 2013
 # GRR: line below too general as it catches also Windows precompiled setup information *.PNF
@@ -23,11 +23,11 @@
 
 0	leshort		0410		PDP-11 pure executable
 >8	leshort		>0		not stripped
->15	byte		>0		- version %ld
+>15	byte		>0		- version %d
 
 0	leshort		0411		PDP-11 separate I&D executable
 >8	leshort		>0		not stripped
->15	byte		>0		- version %ld
+>15	byte		>0		- version %d
 
 0	leshort		0437		PDP-11 kernel overlay
 
