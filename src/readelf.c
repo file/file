@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.102 2014/03/11 21:00:13 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.103 2014/05/02 02:25:10 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1004,6 +1004,36 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				    (ssize_t)xcap_sizeof) {
 					file_badread(ms);
 					return -1;
+				}
+				if (cbuf[0] == 'A') {
+#ifdef notyet
+					char *p = cbuf + 1;
+					uint32_t len, tag;
+					memcpy(&len, p, sizeof(len));
+					p += 4;
+					len = getu32(swap, len);
+					if (memcmp("gnu", p, 3) != 0) {
+					    if (file_printf(ms,
+						", unknown capability %.3s", p)
+						== -1)
+						return -1;
+					    break;
+					}
+					p += strlen(p) + 1;
+					tag = *p++;
+					memcpy(&len, p, sizeof(len));
+					p += 4;
+					len = getu32(swap, len);
+					if (tag != 1) {
+					    if (file_printf(ms, ", unknown gnu"
+						" capability tag %d", tag)
+						== -1)
+						return -1;
+					    break;
+					}
+					// gnu attributes 
+#endif
+					break;
 				}
 				(void)memcpy(xcap_addr, cbuf, xcap_sizeof);
 				switch (xcap_tag) {
