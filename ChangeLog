@@ -1,3 +1,7 @@
+2014-05-04  14:55  Christos Zoulas <christos@zoulas.com>
+
+	* PR/351: Fix compilation of empty files 
+
 2014-04-30  17:39  Christos Zoulas <christos@zoulas.com>
 
 	* Fix integer formats: We don't specify 'l' or

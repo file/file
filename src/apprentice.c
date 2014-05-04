@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.205 2014/04/28 14:09:07 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.206 2014/04/30 21:41:02 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2793,10 +2793,6 @@ error:
 	return NULL;
 }
 
-private const uint32_t ar[] = {
-    MAGICNO, VERSIONNO
-};
-
 /*
  * handle an mmaped file.
  */
@@ -2810,6 +2806,10 @@ apprentice_compile(struct magic_set *ms, struct magic_map *map, const char *fn)
 	char *dbname;
 	int rv = -1;
 	uint32_t i;
+	union {
+		struct magic m;
+		uint32_t h[2 + MAGIC_SETS];
+	} hdr;
 
 	dbname = mkdbname(ms, fn, 1);
 
@@ -2821,21 +2821,13 @@ apprentice_compile(struct magic_set *ms, struct magic_map *map, const char *fn)
 		file_error(ms, errno, "cannot open `%s'", dbname);
 		goto out;
 	}
+	memset(&hdr, 0, sizeof(hdr));
+	hdr.h[0] = MAGICNO;
+	hdr.h[1] = VERSIONNO;
+	memcpy(hdr.h + 2, map->nmagic, nm);
 
-	if (write(fd, ar, sizeof(ar)) != (ssize_t)sizeof(ar)) {
+	if (write(fd, &hdr, sizeof(hdr)) != (ssize_t)sizeof(hdr)) {
 		file_error(ms, errno, "error writing `%s'", dbname);
-		goto out;
-	}
-
-	if (write(fd, map->nmagic, nm) != (ssize_t)nm) {
-		file_error(ms, errno, "error writing `%s'", dbname);
-		goto out;
-	}
-
-	assert(nm + sizeof(ar) < m);
-
-	if (lseek(fd, (off_t)m, SEEK_SET) != (off_t)m) {
-		file_error(ms, errno, "error seeking `%s'", dbname);
 		goto out;
 	}
 
