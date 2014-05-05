@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.184 2014/04/12 15:47:10 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.185 2014/04/30 21:41:02 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -364,30 +364,20 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 private int
 check_fmt(struct magic_set *ms, struct magic *m)
 {
-	regex_t rx;
+	file_regex_t rx;
 	int rc, rv = -1;
-	char *old_lc_ctype;
 
 	if (strchr(m->desc, '%') == NULL)
 		return 0;
 
-	old_lc_ctype = setlocale(LC_CTYPE, NULL);
-	assert(old_lc_ctype != NULL);
-	old_lc_ctype = strdup(old_lc_ctype);
-	assert(old_lc_ctype != NULL);
-	(void)setlocale(LC_CTYPE, "C");
-	rc = regcomp(&rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
+	rc = file_regcomp(&rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
 	if (rc) {
-		char errmsg[512];
-		(void)regerror(rc, &rx, errmsg, sizeof(errmsg));
-		file_magerror(ms, "regex error %d, (%s)", rc, errmsg);
+		file_regerror(&rx, rc, ms);
 	} else {
-		rc = regexec(&rx, m->desc, 0, 0, 0);
-		regfree(&rx);
+		rc = file_regexec(&rx, m->desc, 0, 0, 0);
 		rv = !rc;
 	}
-	(void)setlocale(LC_CTYPE, old_lc_ctype);
-	free(old_lc_ctype);
+	file_regfree(&rx);
 	return rv;
 }
 
@@ -1776,7 +1766,6 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	double dl, dv;
 	int matched;
 	union VALUETYPE *p = &ms->ms_value;
-	char *old_lc_ctype;
 
 	switch (m->type) {
 	case FILE_BYTE:
@@ -1929,28 +1918,19 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	}
 	case FILE_REGEX: {
 		int rc;
-		regex_t rx;
-		char errmsg[512];
+		file_regex_t rx;
 
 		if (ms->search.s == NULL)
 			return 0;
 
-		old_lc_ctype = setlocale(LC_CTYPE, NULL);
-		assert(old_lc_ctype != NULL);
-		old_lc_ctype = strdup(old_lc_ctype);
-		assert(old_lc_ctype != NULL);
-		(void)setlocale(LC_CTYPE, "C");
 		l = 0;
-		rc = regcomp(&rx, m->value.s,
+		rc = file_regcomp(&rx, m->value.s,
 		    REG_EXTENDED|REG_NEWLINE|
 		    ((m->str_flags & STRING_IGNORE_CASE) ? REG_ICASE : 0));
 		if (rc) {
-			(void)regerror(rc, &rx, errmsg, sizeof(errmsg));
-			file_magerror(ms, "regex error %d, (%s)",
-			    rc, errmsg);
+			file_regerror(&rx, rc, ms);
 			v = (uint64_t)-1;
-		}
-		else {
+		} else {
 			regmatch_t pmatch[1];
 #ifndef REG_STARTEND
 #define	REG_STARTEND	0
@@ -1961,7 +1941,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			pmatch[0].rm_so = 0;
 			pmatch[0].rm_eo = ms->search.s_len;
 #endif
-			rc = regexec(&rx, (const char *)ms->search.s,
+			rc = file_regexec(&rx, (const char *)ms->search.s,
 			    1, pmatch, REG_STARTEND);
 #if REG_STARTEND == 0
 			((char *)(intptr_t)ms->search.s)[l] = c;
@@ -1980,16 +1960,12 @@ magiccheck(struct magic_set *ms, struct magic *m)
 				break;
 
 			default:
-				(void)regerror(rc, &rx, errmsg, sizeof(errmsg));
-				file_magerror(ms, "regexec error %d, (%s)",
-				    rc, errmsg);
+				file_regerror(&rx, rc, ms);
 				v = (uint64_t)-1;
 				break;
 			}
-			regfree(&rx);
 		}
-		(void)setlocale(LC_CTYPE, old_lc_ctype);
-		free(old_lc_ctype);
+		file_regfree(&rx);
 		if (v == (uint64_t)-1)
 			return -1;
 		break;

@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.69 2014/03/06 16:03:39 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.70 2014/03/14 19:02:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -427,35 +427,65 @@ file_printedlen(const struct magic_set *ms)
 protected int
 file_replace(struct magic_set *ms, const char *pat, const char *rep)
 {
-	regex_t rx;
+	file_regex_t rx;
 	int rc, rv = -1;
-	char *old_lc_ctype;
 
-	old_lc_ctype = setlocale(LC_CTYPE, NULL);
-	assert(old_lc_ctype != NULL);
-	old_lc_ctype = strdup(old_lc_ctype);
-	assert(old_lc_ctype != NULL);
-	(void)setlocale(LC_CTYPE, "C");
-	rc = regcomp(&rx, pat, REG_EXTENDED);
+	rc = file_regcomp(&rx, pat, REG_EXTENDED);
 	if (rc) {
-		char errmsg[512];
-		(void)regerror(rc, &rx, errmsg, sizeof(errmsg));
-		file_magerror(ms, "regex error %d, (%s)", rc, errmsg);
+		file_regerror(&rx, rc, ms);
 	} else {
 		regmatch_t rm;
 		int nm = 0;
-		while (regexec(&rx, ms->o.buf, 1, &rm, 0) == 0) {
+		while (file_regexec(&rx, ms->o.buf, 1, &rm, 0) == 0) {
 			ms->o.buf[rm.rm_so] = '\0';
 			if (file_printf(ms, "%s%s", rep,
 			    rm.rm_eo != 0 ? ms->o.buf + rm.rm_eo : "") == -1)
 				goto out;
 			nm++;
 		}
-		regfree(&rx);
 		rv = nm;
 	}
 out:
-	(void)setlocale(LC_CTYPE, old_lc_ctype);
-	free(old_lc_ctype);
+	file_regfree(&rx);
 	return rv;
+}
+
+protected int
+file_regcomp(file_regex_t *rx, const char *pat, int flags)
+{
+	rx->old_lc_ctype = setlocale(LC_CTYPE, NULL);
+	assert(rx->old_lc_ctype != NULL);
+	rx->old_lc_ctype = strdup(rx->old_lc_ctype);
+	assert(rx->old_lc_ctype != NULL);
+	rx->pat = pat;
+
+	(void)setlocale(LC_CTYPE, "C");
+	return rx->rc = regcomp(&rx->rx, pat, flags);
+}
+
+protected int
+file_regexec(file_regex_t *rx, const char *str, size_t nmatch,
+    regmatch_t* pmatch, int eflags)
+{
+	assert(rx->rc == 0);
+	return regexec(&rx->rx, str, nmatch, pmatch, eflags);
+}
+
+protected void
+file_regfree(file_regex_t *rx)
+{
+	if (rx->rc == 0)
+		regfree(&rx->rx);
+	(void)setlocale(LC_CTYPE, rx->old_lc_ctype);
+	free(rx->old_lc_ctype);
+}
+
+protected void
+file_regerror(file_regex_t *rx, int rc, struct magic_set *ms)
+{
+	char errmsg[512];
+
+	(void)regerror(rc, &rx->rx, errmsg, sizeof(errmsg));
+	file_magerror(ms, "regex error %d for `%s', (%s)", rc, rx->pat,
+	    errmsg);
 }
