@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.54 2014/02/25 20:52:02 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.55 2014/02/27 23:26:17 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -352,10 +352,10 @@ cdf_read_short_sector(const cdf_stream_t *sst, void *buf, size_t offs,
 	size_t ss = CDF_SHORT_SEC_SIZE(h);
 	size_t pos = CDF_SHORT_SEC_POS(h, id);
 	assert(ss == len);
-	if (pos > CDF_SEC_SIZE(h) * sst->sst_len) {
+	if (pos + len > CDF_SEC_SIZE(h) * sst->sst_len) {
 		DPRINTF(("Out of bounds read %" SIZE_T_FORMAT "u > %"
 		    SIZE_T_FORMAT "u\n",
-		    pos, CDF_SEC_SIZE(h) * sst->sst_len));
+		    pos + len, CDF_SEC_SIZE(h) * sst->sst_len));
 		return -1;
 	}
 	(void)memcpy(((char *)buf) + offs,

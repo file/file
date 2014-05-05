@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.39 2014/02/27 23:26:18 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.40 2014/03/06 15:23:33 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -120,7 +120,7 @@ cdf_app_to_mime(const char *vbuf, const struct nv *nv)
 
 private int
 cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
-    size_t count, const uint64_t clsid[2])
+    size_t count, const cdf_directory_t *root_storage)
 {
         size_t i;
         cdf_timestamp_t tp;
@@ -130,8 +130,8 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
         const char *s;
         int len;
 
-        if (!NOTMIME(ms))
-		str = cdf_clsid_to_mime(clsid, clsid2mime);
+        if (!NOTMIME(ms) && root_storage)
+		str = cdf_clsid_to_mime(root_storage->d_storage_uuid, clsid2mime);
 
         for (i = 0; i < count; i++) {
                 cdf_print_property_name(buf, sizeof(buf), info[i].pi_id);
@@ -236,7 +236,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 
 private int
 cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
-    const cdf_stream_t *sst, const uint64_t clsid[2])
+    const cdf_stream_t *sst, const cdf_directory_t *root_storage)
 {
         cdf_summary_info_header_t si;
         cdf_property_info_t *info;
@@ -276,13 +276,15 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
                                 return -2;
                         break;
                 }
-		str = cdf_clsid_to_mime(clsid, clsid2desc);
-		if (str)
-                        if (file_printf(ms, ", %s", str) == -1)
-				return -2;
-        }
+		if (root_storage) {
+			str = cdf_clsid_to_mime(root_storage->d_storage_uuid, clsid2desc);
+			if (str)
+				if (file_printf(ms, ", %s", str) == -1)
+					return -2;
+			}
+		}
 
-        m = cdf_file_property_info(ms, info, count, clsid);
+        m = cdf_file_property_info(ms, info, count, root_storage);
         free(info);
 
         return m == -1 ? -2 : m;
@@ -381,9 +383,8 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 #ifdef CDF_DEBUG
         cdf_dump_summary_info(&h, &scn);
 #endif
-        if ((i = cdf_file_summary_info(ms, &h, &scn,
-	    root_storage->d_storage_uuid)) < 0)
-                expn = "Can't expand summary_info";
+        if ((i = cdf_file_summary_info(ms, &h, &scn, root_storage)) < 0)
+            expn = "Can't expand summary_info";
 
 	if (i == 0) {
 		const char *str = NULL;
