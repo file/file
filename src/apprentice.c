@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.206 2014/04/30 21:41:02 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.207 2014/05/04 18:57:35 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2377,6 +2377,16 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 				file_magwarn(ms, "cannot get string from `%s'",
 				    m->value.s);
 			return -1;
+		}
+		if (m->type == FILE_REGEX) {
+			file_regex_t rx;
+			int rc = file_regcomp(&rx, m->value.s, REG_EXTENDED);
+			if (rc) {
+				if (ms->flags & MAGIC_CHECK)
+					file_regerror(&rx, rc, ms);
+			}
+			file_regfree(&rx);
+			return rc ? -1 : 0;
 		}
 		return 0;
 	case FILE_FLOAT:
