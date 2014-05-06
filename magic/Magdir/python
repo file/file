@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.23 2013/12/11 14:14:20 christos Exp $
+# $File: python,v 1.24 2014/02/15 01:30:52 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -63,5 +63,5 @@
 
 # def name(args, args):
 0	regex	 \^(\ |\\t){0,50}def\ {1,50}[a-zA-Z]{1,100}
->&0	regex	\ {0,50}\\(([a-zA-Z]|,|\ ){1,500}\\):$ Python script text executable
+>&0	regex	\ {0,50}\\(([a-zA-Z]|,|\ ){1,255}\\):$ Python script text executable
 !:mime text/x-python
