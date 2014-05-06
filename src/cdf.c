@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.55 2014/02/27 23:26:17 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.56 2014/05/05 16:11:21 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -932,7 +932,7 @@ int
 cdf_unpack_summary_info(const cdf_stream_t *sst, const cdf_header_t *h,
     cdf_summary_info_header_t *ssi, cdf_property_info_t **info, size_t *count)
 {
-	size_t i, maxcount;
+	size_t maxcount;
 	const cdf_summary_info_header_t *si =
 	    CAST(const cdf_summary_info_header_t *, sst->sst_tab);
 	const cdf_section_declaration_t *sd =
@@ -947,21 +947,13 @@ cdf_unpack_summary_info(const cdf_stream_t *sst, const cdf_header_t *h,
 	ssi->si_os = CDF_TOLE2(si->si_os);
 	ssi->si_class = si->si_class;
 	cdf_swap_class(&ssi->si_class);
-	ssi->si_count = CDF_TOLE2(si->si_count);
+	ssi->si_count = CDF_TOLE4(si->si_count);
 	*count = 0;
 	maxcount = 0;
 	*info = NULL;
-	for (i = 0; i < CDF_TOLE4(si->si_count); i++) {
-		if (i >= CDF_LOOP_LIMIT) {
-			DPRINTF(("Unpack summary info loop limit"));
-			errno = EFTYPE;
-			return -1;
-		}
-		if (cdf_read_property_info(sst, h, CDF_TOLE4(sd->sd_offset),
-		    info, count, &maxcount) == -1) {
-			return -1;
-		}
-	}
+	if (cdf_read_property_info(sst, h, CDF_TOLE4(sd->sd_offset), info,
+	    count, &maxcount) == -1)
+		return -1;
 	return 0;
 }
 
