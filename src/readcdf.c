@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.40 2014/03/06 15:23:33 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.41 2014/05/05 16:11:21 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -173,12 +173,11 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
                                 if (info[i].pi_type == CDF_LENGTH32_WSTRING)
                                     k++;
                                 s = info[i].pi_str.s_buf;
-                                for (j = 0; j < sizeof(vbuf) && len--;
-                                    j++, s += k) {
+                                for (j = 0; j < sizeof(vbuf) && len--; s += k) {
                                         if (*s == '\0')
                                                 break;
                                         if (isprint((unsigned char)*s))
-                                                vbuf[j] = *s;
+                                                vbuf[j++] = *s;
                                 }
                                 if (j == sizeof(vbuf))
                                         --j;
