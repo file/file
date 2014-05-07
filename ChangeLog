@@ -1,3 +1,7 @@
+2014-05-06  6:12  Christos Zoulas <christos@zoulas.com>
+
+	* Fix uninitialized title in CDF files (Jan Kaluza)
+
 2014-05-04  14:55  Christos Zoulas <christos@zoulas.com>
 
 	* PR/351: Fix compilation of empty files 
