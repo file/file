@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.56 2014/04/28 12:04:50 christos Exp $
+# $File: compress,v 1.57 2014/04/30 21:41:02 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -210,9 +210,12 @@
 !:mime	application/x-lrzip
 
 # http://fastcompression.blogspot.fi/2013/04/lz4-streaming-format-final.html
-0	lelong		0x184d2204	LZ4 compressed data
+0	lelong		0x184d2204	LZ4 compressed data (v1.4+)
 !:mime	application/x-lz4
-0	lelong		0x184c2102	LZ4 compressed data, legacy format
+# Added by osm0sis@xda-developers.com
+0 	lelong		0x184c2103	LZ4 compressed data (v1.0-v1.3)
+!:mime	application/x-lz4
+0	lelong		0x184c2102	LZ4 compressed data (v0.1-v0.9)
 !:mime	application/x-lz4
 
 # AFX compressed files (Wolfram Kleff)
