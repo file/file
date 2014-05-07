@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.95 2014/04/28 12:04:50 christos Exp $
+# $File: msdos,v 1.96 2014/04/30 21:41:02 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -793,105 +793,6 @@
 0	ulelong 1
 >40	string	\ EMF		Windows Enhanced Metafile (EMF) image data
 >>44	ulelong x		version 0x%x
-
-# From: Alex Beregszaszi <alex@fsn.hu>
-0	string/b	COWD		VMWare3
->4	byte	3		disk image
->>32	lelong	x		(%d/
->>36	lelong	x		\b%d/
->>40	lelong	x		\b%d)
->4	byte	2		undoable disk image
->>32	string	>\0		(%s)
-
-0	string/b	VMDK		 VMware4 disk image
-0	string/b	KDMV		 VMware4 disk image
-
-#--------------------------------------------------------------------
-# Qemu Emulator Images
-# Lines written by Friedrich Schwittay (f.schwittay@yousable.de)
-# Updated by Adam Buchbinder (adam.buchbinder@gmail.com)
-# Made by reading sources, reading documentation, and doing trial and error
-# on existing QCOW files
-0	string/b	QFI\xFB	QEMU QCOW Image
-
-# Uncomment the following line to display Magic (only used for debugging
-# this magic number)
-#>0	string/b	x	, Magic: %s
-
-# There are currently 2 Versions: "1" and "2".
-# http://www.gnome.org/~markmc/qcow-image-format-version-1.html
->4	belong	1	(v1)
-
-# Using the existence of the Backing File Offset to determine whether
-# to read Backing File Information
->>12	belong	 >0	 \b, has backing file (
-# Note that this isn't a null-terminated string; the length is actually
-# (16.L). Assuming a null-terminated string happens to work usually, but it
-# may spew junk until it reaches a \0 in some cases.
->>>(12.L)	 string >\0	\bpath %s
-
-# Modification time of the Backing File
-# Really useful if you want to know if your backing
-# file is still usable together with this image
->>>>20	bedate >0	\b, mtime %s)
->>>>20	default x	\b)
-
-# Size is stored in bytes in a big-endian u64.
->>24	bequad	x	 \b, %lld bytes
-
-# 1 for AES encryption, 0 for none.
->>36	belong	1	\b, AES-encrypted
-
-# http://www.gnome.org/~markmc/qcow-image-format.html
->4	belong	2	(v2)
-# Using the existence of the Backing File Offset to determine whether
-# to read Backing File Information
->>8	bequad  >0	 \b, has backing file
-# Note that this isn't a null-terminated string; the length is actually
-# (16.L). Assuming a null-terminated string happens to work usually, but it
-# may spew junk until it reaches a \0 in some cases. Also, since there's no
-# .Q modifier, we just use the bottom four bytes as an offset. Note that if
-# the file is over 4G, and the backing file path is stored after the first 4G,
-# the wrong filename will be printed. (This should be (8.Q), when that syntax
-# is introduced.)
->>>(12.L)	 string >\0	(path %s)
->>24	bequad	x	\b, %lld bytes
->>32	belong	1	\b, AES-encrypted
-
->4	belong	3	(v3)
-# Using the existence of the Backing File Offset to determine whether
-# to read Backing File Information
->>8	bequad  >0	 \b, has backing file
-# Note that this isn't a null-terminated string; the length is actually
-# (16.L). Assuming a null-terminated string happens to work usually, but it
-# may spew junk until it reaches a \0 in some cases. Also, since there's no
-# .Q modifier, we just use the bottom four bytes as an offset. Note that if
-# the file is over 4G, and the backing file path is stored after the first 4G,
-# the wrong filename will be printed. (This should be (8.Q), when that syntax
-# is introduced.)
->>>(12.L)	 string >\0	(path %s)
->>24	bequad	x	\b, %lld bytes
->>32	belong	1	\b, AES-encrypted
-
->4	default x	(unknown version)
-
-0	string/b	QEVM		QEMU suspend to disk image
-
-# QEMU QED Image
-# http://wiki.qemu.org/Features/QED/Specification
-0	string/b	QED\0		QEMU QED Image
-
-# VDI Image
-64	string/b	\x7f\x10\xda\xbe	VDI Image
->68	string/b	\x01\x00\x01\x00	version 1.1
->0	string		>\0			(%s)
->368	lequad		x			 \b, %lld bytes
-
-0	string/b	Bochs\ Virtual\ HD\ Image	Bochs disk image,
->32	string	x				type %s,
->48	string	x				subtype %s
-
-0	lelong	0x02468ace			Bochs Sparse disk image
 
 # from http://filext.com by Derek M Jones <derek@knosof.co.uk>
 # False positive with PPT (also currently this string is too long)
