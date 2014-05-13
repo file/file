@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.57 2014/05/06 18:20:39 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.58 2014/05/13 16:41:06 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -471,6 +471,11 @@ cdf_count_chain(const cdf_sat_t *sat, cdf_secid_t sid, size_t size)
 			return (size_t)-1;
 		}
 		sid = CDF_TOLE4((uint32_t)sat->sat_tab[sid]);
+	}
+	if (i == 0) {
+		DPRINTF((" none, sid: %d\n", sid));
+		return (size_t)-1;
+
 	}
 	DPRINTF(("\n"));
 	return i;
