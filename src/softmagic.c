@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.185 2014/04/30 21:41:02 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.186 2014/05/05 20:53:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1835,7 +1835,6 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			break;
 
 		default:
-			matched = 0;
 			file_magerror(ms, "cannot happen with float: invalid relation `%c'",
 			    m->reln);
 			return -1;
@@ -1869,7 +1868,6 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			break;
 
 		default:
-			matched = 0;
 			file_magerror(ms, "cannot happen with double: invalid relation `%c'", m->reln);
 			return -1;
 		}
@@ -2062,7 +2060,6 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		break;
 
 	default:
-		matched = 0;
 		file_magerror(ms, "cannot happen: invalid relation `%c'",
 		    m->reln);
 		return -1;
