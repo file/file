@@ -108,7 +108,7 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.10 2012/08/09 16:40:04 christos Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.11 2014/04/17 12:45:50 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -559,7 +559,7 @@ static int dispatch(xprintf_struct *s)
  */
 static int core(xprintf_struct *s)
 {
-  size_t len, save_len;
+  size_t save_len;
   char *dummy_base;
 
   /* basic checks */
@@ -584,8 +584,7 @@ static int core(xprintf_struct *s)
   for (;;) {
     /* up to end of source string */
     if (*(s->src_string) == 0) {
-      *(s->dest_string) = 0;    /* final 0 */
-      len = s->real_len + 1;
+      *(s->dest_string) = '\0';    /* final NUL */
       break;
     }
 
@@ -594,15 +593,13 @@ static int core(xprintf_struct *s)
 
     /* up to end of dest string */
     if (s->real_len >= s->maxlen) {
-      (s->buffer_base)[s->maxlen] = 0; /* final 0 */
-      len = s->maxlen + 1;
+      (s->buffer_base)[s->maxlen] = '\0'; /* final NUL */
       break;
     }
   }
 
   /* for (v)asnprintf */
   dummy_base = s->buffer_base;
-  save_len = 0;                 /* just to avoid a compiler warning */
 
   dummy_base = s->buffer_base + s->real_len;
   save_len = s->real_len;
