@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.88 2014/04/28 12:04:50 christos Exp $
+# $File: filesystems,v 1.89 2014/04/30 21:41:02 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -319,8 +319,8 @@
 # assembler instructions: rep;movsb;retf;mov si,07be;mov cl,04
 >>>24		ubequad	0xf3a4cbbebe07b104		9M
 # "Invalid partition table"				nn=0x10F for english version
-# "Ungültige Partitionstabelle"				nn=0x10F for german version
-# "Table de partition erronée"				nn=0x10F for french version
+# "Ung\201ltige Partitionstabelle"				nn=0x10F for german version
+# "Table de partition erron\202e"				nn=0x10F for french version
 # "\216\257\245\340\240\346\250\256\255\255\240\357 \341\250\341\342\245\254\240 \255\245 \255\240\251\244\245\255\240"	nn=0x10F for russian version
 >>>>(0x3C.b+0x0FF)	string	Invalid\ partition\ table		english
 >>>>(0x3C.b+0x0FF)	string	Ung\201ltige\ Partitionstabelle		german
@@ -330,13 +330,13 @@
 >>>>(0x3C.b+0x0FF)	string	>\0			"%s"
 # "Error loading operating system"			nn=0x127 for english version
 # "Fehler beim Laden des Betriebssystems"		nn=0x12b for german version
-# "Erreur lors du chargement du système d'exploitation"	nn=0x12a for french version
+# "Erreur lors du chargement du syst\212me d'exploitation"	nn=0x12a for french version
 # "\216\350\250\241\252\240 \257\340\250 \247\240\243\340\343\247\252\245 \256\257\245\340\240\346\250\256\255\255\256\251 \341\250\341\342\245\254\353"	nn=0x12d for russian version
 >>>>0xBD		ubyte	x			at offset 0x1%x
 >>>>(0xBD.b+0x100)	string	>\0			"%s"
 # "Missing operating system"				nn=0x146 for english version
 # "Betriebssystem fehlt"				nn=0x151 for german version
-# "Système d'exploitation manquant"			nn=0x15e for french version
+# "Syst\212me d'exploitation manquant"			nn=0x15e for french version
 # "\216\257\245\340\240\346\250\256\255\255\240\357 \341\250\341\342\245\254\240 \255\245 \255\240\251\244\245\255\240"	nn=0x156 for russian version
 >>>>0xA9		ubyte	x			at offset 0x1%x
 >>>>(0xA9.b+0x100)	string	>\0			"%s"
@@ -347,7 +347,7 @@
 >>>>0x1B4	ubelong&0x00FFFFFF	0x002c4463	english
 >>>>0x1B4	ubelong&0x00FFFFFF	0x002c486e	german
 # "Invalid partition table"				xx=0x12C for english version
-# "Ungültige Partitionstabelle"				xx=0x12C for german version
+# "Ung\201ltige Partitionstabelle"				xx=0x12C for german version
 >>>>0x1b5	ubyte		>0			at offset 0x1%x
 >>>>(0x1b5.b+0x100)	string	>\0			"%s"
 # "Error loading operating system"			yy=0x144 for english version
@@ -368,7 +368,7 @@
 >>>>0x1B4	ubelong&0x00FFFFFF	0x00627a99	english
 #>>>>0x1B4	ubelong&0x00FFFFFF	?		german
 # "Invalid partition table"				xx=0x162 for english version
-# "Ungültige Partitionstabelle"				xx=0x1?? for german version
+# "Ung\201ltige Partitionstabelle"				xx=0x1?? for german version
 >>>>0x1b5	ubyte		>0			at offset 0x1%x
 >>>>(0x1b5.b+0x100)	string	>\0			"%s"
 # "Error loading operating system"			yy=0x17a for english version
@@ -386,7 +386,7 @@
 >>>>0x1B4	ubelong&0x00FFFFFF	0x00637b9a	english
 #>>>>0x1B4	ubelong&0x00FFFFFF	?		german
 # "Invalid partition table"				xx=0x163 for english version
-# "Ungültige Partitionstabelle"				xx=0x1?? for german version
+# "Ung\201ltige Partitionstabelle"				xx=0x1?? for german version
 >>>>0x1b5	ubyte		>0			at offset 0x1%x
 >>>>(0x1b5.b+0x100)	string	>\0			"%s"
 # "Error loading operating system"			yy=0x17b for english version
