@@ -2,7 +2,7 @@
 #------------------------------------------------------------------------------
 # msx:  file(1) magic for the SymbOS operating system
 # http://www.symbos.de
-# Fábio R. Schmidlin <frs@pop.com.br>
+# Fabio R. Schmidlin <frs@pop.com.br>
 
 # SymbOS EXE file
 0x30	string		SymExe		SymbOS executable
