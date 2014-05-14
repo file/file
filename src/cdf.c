@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.57 2014/05/06 18:20:39 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.58 2014/05/13 16:41:06 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -724,18 +724,27 @@ cdf_read_summary_info(const cdf_info_t *info, const cdf_header_t *h,
     const cdf_sat_t *sat, const cdf_sat_t *ssat, const cdf_stream_t *sst,
     const cdf_dir_t *dir, cdf_stream_t *scn)
 {
+	return cdf_read_user_stream(info, h, sat, ssat, sst, dir,
+	    "\05SummaryInformation", scn);
+}
+
+int
+cdf_read_user_stream(const cdf_info_t *info, const cdf_header_t *h,
+    const cdf_sat_t *sat, const cdf_sat_t *ssat, const cdf_stream_t *sst,
+    const cdf_dir_t *dir, const char *name, cdf_stream_t *scn)
+{
 	size_t i;
 	const cdf_directory_t *d;
-	static const char name[] = "\05SummaryInformation";
+	size_t name_len = strlen(name) + 1;
 
 	for (i = dir->dir_len; i > 0; i--)
 		if (dir->dir_tab[i - 1].d_type == CDF_DIR_TYPE_USER_STREAM &&
-		    cdf_namecmp(name, dir->dir_tab[i - 1].d_name, sizeof(name))
+		    cdf_namecmp(name, dir->dir_tab[i - 1].d_name, name_len)
 		    == 0)
 			break;
 
 	if (i == 0) {
-		DPRINTF(("Cannot find summary information section\n"));
+		DPRINTF(("Cannot find user stream `%s'\n", name));
 		errno = ESRCH;
 		return -1;
 	}

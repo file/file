@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.42 2014/05/07 10:13:12 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.43 2014/05/07 21:26:06 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -137,7 +137,8 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
         int len;
 
         if (!NOTMIME(ms) && root_storage)
-		str = cdf_clsid_to_mime(root_storage->d_storage_uuid, clsid2mime);
+		str = cdf_clsid_to_mime(root_storage->d_storage_uuid,
+		    clsid2mime);
 
         for (i = 0; i < count; i++) {
                 cdf_print_property_name(buf, sizeof(buf), info[i].pi_id);
@@ -282,7 +283,8 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
                         break;
                 }
 		if (root_storage) {
-			str = cdf_clsid_to_mime(root_storage->d_storage_uuid, clsid2desc);
+			str = cdf_clsid_to_mime(root_storage->d_storage_uuid,
+			    clsid2desc);
 			if (str)
 				if (file_printf(ms, ", %s", str) == -1)
 					return -2;
@@ -375,6 +377,30 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 	}
 #endif
 
+	if ((i = cdf_read_user_stream(&info, &h, &sat, &ssat, &sst, &dir,
+	    "FileHeader", &scn)) != -1) {
+#define HWP5_SIGNATURE "HWP Document File"
+		if (scn.sst_dirlen >= sizeof(HWP5_SIGNATURE) - 1
+		    && memcmp(scn.sst_tab, HWP5_SIGNATURE,
+		    sizeof(HWP5_SIGNATURE) - 1) == 0) {
+		    if (NOTMIME(ms)) {
+			if (file_printf(ms,
+			    "Hangul (Korean) Word Processor File 5.x") == -1)
+			    return -1;
+		    } else {
+			if (file_printf(ms, "application/x-hwp") == -1)
+			    return -1;
+		    }
+		    i = 1;
+		    goto out5;
+		} else {
+		    free(scn.sst_tab);
+		    scn.sst_tab = NULL;
+		    scn.sst_len = 0;
+		    scn.sst_dirlen = 0;
+		}
+	}
+
         if ((i = cdf_read_summary_info(&info, &h, &sat, &ssat, &sst, &dir,
             &scn)) == -1) {
                 if (errno == ESRCH) {
@@ -418,6 +444,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 			i = 1;
 		}
 	}
+out5:
         free(scn.sst_tab);
 out4:
         free(sst.sst_tab);
