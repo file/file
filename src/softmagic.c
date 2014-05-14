@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.186 2014/05/05 20:53:10 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.187 2014/05/13 16:42:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -482,13 +482,13 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			(void)snprintf(buf, sizeof(buf), "%llu",
+			(void)snprintf(buf, sizeof(buf), "%" INT64_T_FORMAT "u",
 			    (unsigned long long)v);
 			if (file_printf(ms, F(ms, m, "%s"), buf) == -1)
 				return -1;
 			break;
 		default:
-			if (file_printf(ms, F(ms, m, "%llu"),
+			if (file_printf(ms, F(ms, m, "%" INT64_T_FORMAT "u"),
 			    (unsigned long long) v) == -1)
 				return -1;
 			break;

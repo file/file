@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.208 2014/05/06 16:07:23 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.209 2014/05/13 16:42:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2767,7 +2767,8 @@ apprentice_map(struct magic_set *ms, const char *fn)
 	}
 	entries = (uint32_t)(st.st_size / sizeof(struct magic));
 	if ((off_t)(entries * sizeof(struct magic)) != st.st_size) {
-		file_error(ms, 0, "Size of `%s' %llu is not a multiple of %zu",
+		file_error(ms, 0, "Size of `%s' %" INT64_T_FORMAT "u is not "
+		    "a multiple of %" SIZE_T_FORMAT "u",
 		    dbname, (unsigned long long)st.st_size,
 		    sizeof(struct magic));
 		goto error;

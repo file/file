@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.149 2014/03/15 21:47:40 christos Exp $
+ * @(#)$File: file.h,v 1.150 2014/05/05 20:53:10 christos Exp $
  */
 
 #ifndef __file_h__
@@ -83,7 +83,7 @@
 
 #define private static
 
-#if HAVE_VISIBILITY
+#if HAVE_VISIBILITY && !defined(WIN32)
 #define public  __attribute__ ((__visibility__("default")))
 #ifndef protected
 #define protected __attribute__ ((__visibility__("hidden")))

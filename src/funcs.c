@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.70 2014/03/14 19:02:37 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.71 2014/05/05 20:53:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -280,7 +280,9 @@ simple:
 		if (file_printf(ms, "%s", code_mime) == -1)
 			rv = -1;
 	}
+#if HAVE_FORK
  done_encoding:
+#endif
 	free(u8buf);
 	if (rv)
 		return rv;
