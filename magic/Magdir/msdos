@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.96 2014/04/30 21:41:02 christos Exp $
+# $File: msdos,v 1.97 2014/05/07 21:25:41 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -56,6 +56,7 @@
 
 # Maybe it's a PE?
 >>(0x3c.l) string PE\0\0 PE
+!:mime	application/x-dosexec
 >>>(0x3c.l+24)	leshort		0x010b	\b32 executable
 >>>(0x3c.l+24)	leshort		0x020b	\b32+ executable
 >>>(0x3c.l+24)	leshort		0x0107	ROM image
@@ -134,8 +135,10 @@
 # Hmm, not a PE but the relocation table is too high for a traditional DOS exe,
 # must be one of the unusual subformats.
 >>(0x3c.l) string !PE\0\0 MS-DOS executable
+!:mime	application/x-dosexec
 
 >>(0x3c.l)		string		NE \b, NE
+!:mime	application/x-dosexec
 >>>(0x3c.l+0x36)	byte		1 for OS/2 1.x
 >>>(0x3c.l+0x36)	byte		2 for MS Windows 3.x
 >>>(0x3c.l+0x36)	byte		3 for MS-DOS
@@ -150,6 +153,7 @@
 >>>(0x3c.l+0x70)	search/0x80	WinZip(R)\ Self-Extractor \b, ZIP self-extracting archive (WinZip)
 
 >>(0x3c.l)		string		LX\0\0 \b, LX
+!:mime	application/x-dosexec
 >>>(0x3c.l+0x0a)	leshort		<1 (unknown OS)
 >>>(0x3c.l+0x0a)	leshort		1 for OS/2
 >>>(0x3c.l+0x0a)	leshort		2 for MS Windows
@@ -168,8 +172,10 @@
 
 # MS Windows system file, supposedly a collection of LE executables
 >>(0x3c.l)		string		W3 \b, W3 for MS Windows
+!:mime	application/x-dosexec
 
 >>(0x3c.l)		string		LE\0\0 \b, LE executable
+!:mime	application/x-dosexec
 >>>(0x3c.l+0x0a)	leshort		1
 # some DOS extenders use LE files with OS/2 header
 >>>>0x240		search/0x100	DOS/4G for MS-DOS, DOS4GW DOS extender
@@ -196,6 +202,7 @@
 # and definitely not NE/LE/LX/PE
 >>0x3c		lelong	>0x20000000
 >>>(4.s*512)	leshort !0x014c \b, MZ for MS-DOS
+!:mime	application/x-dosexec
 # header data too small for extended executable
 >2		long	!0
 >>0x18		leshort <0x40
@@ -203,6 +210,7 @@
 
 >>>>&(2.s-514)	string	!LE
 >>>>>&-2	string	!BW \b, MZ for MS-DOS
+!:mime	application/x-dosexec
 >>>>&(2.s-514)	string	LE \b, LE
 >>>>>0x240	search/0x100	DOS/4G for MS-DOS, DOS4GW DOS extender
 # educated guess since indirection is still not capable enough for complex offset
@@ -214,6 +222,7 @@
 
 # This sequence skips to the first COFF segment, usually .text
 >(4.s*512)	leshort		0x014c \b, COFF
+!:mime	application/x-dosexec
 >>(8.s*16)	string		go32stub for MS-DOS, DJGPP go32 DOS extender
 >>(8.s*16)	string		emx
 >>>&1		string		x for DOS, Win or OS/2, emx %s
