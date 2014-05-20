@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.55 2014/04/28 12:04:50 christos Exp $
+# $File: linux,v 1.56 2014/04/30 21:41:02 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -395,4 +395,21 @@
 >>0x1040	ubeshort	x	\b-%04x
 >>0x1042	ubelong		x	\b-%08x
 >>0x1046	ubeshort	x	\b%04x
+
+# Linux device tree:
+# File format description can be found in the Linux kernel sources at 
+# Documentation/devicetree/booting-without-of.txt
+# From Christoph Biedl
+0		belong		0xd00dfeed
+# structure and strings must be within blob
+>&(8.L)		byte		x
+>>&(12.L)	byte		x
+>>>20		belong		>1	Device Tree Blob version %d
+>>>>4		belong		x	\b, size=%d
+>>>>20		belong		>1
+>>>>>28		belong		x	\b, boot CPU=%d
+>>>>20		belong		>2
+>>>>>32		belong		x	\b, string block size=%d
+>>>>20		belong		>16
+>>>>>36		belong		x	\b, DT structure block size=%d
 
