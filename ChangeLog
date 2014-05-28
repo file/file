@@ -1,3 +1,9 @@
+2014-05-14  19:23  Christos Zoulas <christos@zoulas.com>
+
+	* PR/347: Windows fixes
+	* PR/352: Hangul word processor recognition
+	* PR/354: Encoding irregularities in text files
+
 2014-05-06  6:12  Christos Zoulas <christos@zoulas.com>
 
 	* Fix uninitialized title in CDF files (Jan Kaluza)
@@ -1064,7 +1070,7 @@
 
 	* Identify gnu tar vs. posix tar
 
-	* When keep going, don't print spurious newlines (Radek Vokál)
+	* When keep going, don't print spurious newlines (Radek Vokal)
 
 2006-04-01 12:02 Christos Zoulas <christos@astron.com>
 
@@ -1088,7 +1094,7 @@
 2005-10-31 8:54 Christos Zoulas <christos@astron.com>
 
 	* Fix regression where the core info was not completely processed
-	    (Radek Vokál)
+	    (Radek Vokal)
 
 2005-10-20 11:15 Christos Zoulas <christos@astron.com>
 
@@ -1105,7 +1111,7 @@
 2005-09-20 13:33 Christos Zoulas <christos@astron.com>
 
 	* Don't print SVR4 Style in core files multiple times
-	    (Radek Vokál)
+	    (Radek Vokal)
 
 2005-08-27 04:09 Christos Zoulas <christos@astron.com>
 
