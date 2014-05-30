@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.187 2014/05/13 16:42:17 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.188 2014/05/14 23:15:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1929,15 +1929,23 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			file_regerror(&rx, rc, ms);
 			v = (uint64_t)-1;
 		} else {
+#ifndef REG_STARTEND
+			char c;
+#endif
 			regmatch_t pmatch[1];
+			size_t slen = ms->search.s_len;
+			/* Limit by offset if requested */
+			if (m->str_range > 0)
+				slen = MIN(slen, m->str_range);
 #ifndef REG_STARTEND
 #define	REG_STARTEND	0
-			size_t l = ms->search.s_len - 1;
-			char c = ms->search.s[l];
-			((char *)(intptr_t)ms->search.s)[l] = '\0';
+			if (slen != 0)
+				slen--;
+			c = ms->search.s[slen];
+			((char *)(intptr_t)ms->search.s)[slen] = '\0';
 #else
 			pmatch[0].rm_so = 0;
-			pmatch[0].rm_eo = ms->search.s_len;
+			pmatch[0].rm_eo = slen;
 #endif
 			rc = file_regexec(&rx, (const char *)ms->search.s,
 			    1, pmatch, REG_STARTEND);
