@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.81 2014/03/08 17:28:08 christos Exp $
-.Dd April 22, 2013
+.\" $File: magic.man,v 1.82 2014/05/30 16:51:23 christos Exp $
+.Dd May 30, 2014
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -228,7 +228,10 @@ Regular expressions can take exponential time to process, and their
 performance is hard to predict, so their use is discouraged.
 When used in production environments, their performance
 should be carefully checked.
-The type specification can be optionally followed by
+The size of the string to search should also be limited by specifying
+.Dv /<length> ,
+to avoid performance issues scanning long files.
+The type specification can also be optionally followed by
 .Dv /[c][s] .
 The
 .Dq c
