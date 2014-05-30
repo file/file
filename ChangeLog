@@ -1,3 +1,8 @@
+2014-05-30  12:51  Christos Zoulas <christos@zoulas.com>
+
+	* Make the range operator limit the length of the
+	  regex search.
+
 2014-05-14  19:23  Christos Zoulas <christos@zoulas.com>
 
 	* PR/347: Windows fixes
