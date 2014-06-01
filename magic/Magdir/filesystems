@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.90 2014/05/14 23:30:28 christos Exp $
+# $File: filesystems,v 1.91 2014/06/01 19:13:54 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -1084,6 +1084,33 @@
 >>>>>495		string		RENF		\b, FAT (16 bit)
 # x86 bootloader end
 
+# added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
+# and http://en.wikipedia.org/wiki/File_Allocation_Table#FS_Information_Sector
+>0		string		RRaA		
+>>0x1E4		string		rrAa		\b, FSInfosector
+#>>0x1FC	uleshort	=0		SHOULD BE ZERO
+>>>0x1E8	ulelong		<0xffffffff	\b, %u free clusters
+>>>0x1EC	ulelong		<0xffffffff	\b, last allocated cluster %u
+
+# updated by Joerg Jenderek at Sep 2007
+>3	ubyte	0			
+#no active flag
+>>446	ubyte	0			
+# partition 1 not empty
+>>>450	ubyte	>0			
+# partitions 3,4 empty
+>>>>482		ubyte	0			
+>>>>>498	ubyte	0			
+# partition 2 ID=0,5,15
+>>>>>>466	ubyte	<0x10			
+>>>>>>>466	ubyte	0x05			\b, extended partition table
+>>>>>>>466	ubyte	0x0F			\b, extended partition table (LBA)
+>>>>>>>466	ubyte	0x0			\b, extended partition table (last)	
+
+# DOS x86 sector separated and moved from "DOS/MBR boot sector" by Joerg Jenderek at May 2011
+
+>0x200	lelong	0x82564557		\b, BSD disklabel
+
 # by Joerg Jenderek at Apr 2013
 #	Print the DOS filenames from directory entry form with 8 right space padded bytes + 3 bytes for extension
 #	like IO.SYS. MSDOS.SYS , KERNEL.SYS , DRBIO.SYS
@@ -1120,33 +1147,6 @@
 >0			use		DOS-filename
 >11			ubyte		x		\b+
 >11			use		DOS-filename
-
-# added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
-# and http://en.wikipedia.org/wiki/File_Allocation_Table#FS_Information_Sector
->0		string		RRaA		
->>0x1E4		string		rrAa		\b, FSInfosector
-#>>0x1FC	uleshort	=0		SHOULD BE ZERO
->>>0x1E8	ulelong		<0xffffffff	\b, %u free clusters
->>>0x1EC	ulelong		<0xffffffff	\b, last allocated cluster %u
-
-# updated by Joerg Jenderek at Sep 2007
->3	ubyte	0			
-#no active flag
->>446	ubyte	0			
-# partition 1 not empty
->>>450	ubyte	>0			
-# partitions 3,4 empty
->>>>482		ubyte	0			
->>>>>498	ubyte	0			
-# partition 2 ID=0,5,15
->>>>>>466	ubyte	<0x10			
->>>>>>>466	ubyte	0x05			\b, extended partition table
->>>>>>>466	ubyte	0x0F			\b, extended partition table (LBA)
->>>>>>>466	ubyte	0x0			\b, extended partition table (last)	
-
-# DOS x86 sector separated and moved from "DOS/MBR boot sector" by Joerg Jenderek at May 2011
-
->0x200	lelong	0x82564557		\b, BSD disklabel
 
 # http://en.wikipedia.org/wiki/Master_boot_record#PTE
 # display standard partition table
