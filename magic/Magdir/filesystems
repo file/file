@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.89 2014/04/30 21:41:02 christos Exp $
+# $File: filesystems,v 1.90 2014/05/14 23:30:28 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -249,7 +249,7 @@
 0	string	PNCIUNDO		Norton Disk Doctor UnDo file
 #
 
-# DOS/MBR boot sector updated by Joerg Jenderek at Sep 2007,May 2011
+# DOS/MBR boot sector updated by Joerg Jenderek at Sep 2007,May 2011,2013
 # for any allowed sector sizes
 30		search/481	\x55\xAA	
 # to display DOS/MBR boot sector (40) before old one (strength=50+21),Syslinux bootloader (71),SYSLINUX MBR (37+36),NetBSD mbr (110),AdvanceMAME mbr (111)
@@ -262,10 +262,10 @@
 >0x1FE		leshort		0xAA55		DOS/MBR boot sector
 # keep old DOS/MBR boot sector as dummy for mbr and bootloader displaying
 # only for sector sizes with 512 or more Bytes
-0x1FE		leshort		0xAA55		DOS/MBR boot sector
-!:strength +72
+0x1FE		leshort		0xAA55		
+#
 # to display information (50) before DOS BPB (strength=70) and after DOS floppy (120) like in old file version
-#!:strength +21
+!:strength +21
 >2	string	OSBS			\b, OS/BS MBR
 # added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/
 # and http://en.wikipedia.org/wiki/Master_Boot_Record
