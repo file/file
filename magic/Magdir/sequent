@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sequent,v 1.9 2014/04/30 21:41:02 christos Exp $
+# $File: sequent,v 1.10 2014/06/02 17:48:56 christos Exp $
 # sequent:  file(1) magic for Sequent machines
 #
 # Sequent information updated by Don Dwiggins <atsun!dwiggins>.
@@ -42,4 +42,4 @@
 # assuming version 28867614 is very low probable
 >>124	lelong	!28867614	SYMMETRY i386 standalone executable
 >>>16	lelong	>0		not stripped
->>>124	lelong	>0		version %ld
+>>>124	lelong	>0		version %d
