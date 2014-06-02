@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.92 2014/06/01 22:47:52 christos Exp $
+# $File: filesystems,v 1.93 2014/06/02 17:49:48 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -566,16 +566,11 @@
 #OEM-ID=BOOTWIZ0
 >442	string	Non-system\ disk,\ 	
 >>459	string	press\ any\ key...\x7\0		\b, Acronis Startup Recovery Loader
-# updated by Joerg Jenderek at Nov 2012
+# updated by Joerg Jenderek at Nov 2012, Sep 2013
 # DOS names like F11.SYS or BOOTWIZ.SYS are 8 right space padded bytes+3 bytes
->>>477		ubyte&0xDF	>0		
->>>>477		string		x 		\b %-.3s
->>>>>480	ubyte&0xDF	>0		
->>>>>>480	string		x 		\b%-.4s
->>>>>>>484	ubyte&0xDF	>0		
->>>>>>>>484	string		x 		\b%-.1s
->>>>485		ubyte&0xDF	>0		
->>>>>485	string		x 		\b.%-.3s
+# display 1 space
+>>>447	ubyte	x		\b 
+>>>477	use	DOS-filename
 #
 >185	string	FDBOOT\ Version\ 			
 >>204	string	\rNo\ Systemdisk.\ 			
