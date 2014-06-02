@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.92 2014/06/01 22:47:52 christos Exp $
+# $File: filesystems,v 1.93 2014/06/02 17:49:48 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -1010,73 +1010,16 @@
 # It just looks for a program file name at the root directory
 # and loads corresponding file with following execution.
 # DOS names like STARTUP.BIN,STARTUPC.COM,STARTUPE.EXE are 8 right space padded bytes+3 bytes
->>>>499			ubyte&0xDF	>0		\b, COM/EXE Bootloader
->>>>>499		string		x 		\b %-.1s
->>>>>>500		ubyte&0xDF	>0		
->>>>>>>500		string		x 		\b%-.1s
->>>>>>>>501		ubyte&0xDF	>0		
->>>>>>>>>501		string		x 		\b%-.1s
->>>>>>>>>>502		ubyte&0xDF	>0		
->>>>>>>>>>>502		string		x 		\b%-.1s
->>>>>>>>>>>>503		ubyte&0xDF	>0		
->>>>>>>>>>>>>503	string		x 		\b%-.1s
->>>>>>>>>>>>>>504	ubyte&0xDF	>0		
->>>>>>>>>>>>>>>504	string		x 		\b%-.1s
->>>>>>>>>>>>>>>>505	ubyte&0xDF	>0		
->>>>>>>>>>>>>>>>>505	string		x 		\b%-.1s
->>>>>>>>>>>>>>>>>>506	ubyte&0xDF	>0		
->>>>>>>>>>>>>>>>>>>506	string		x 		\b%-.1s
-#name extension
->>>>>507		ubyte&0xDF	>0		\b.
->>>>>>507		string		x 		\b%-.1s
->>>>>>>508		ubyte&0xDF	>0		
->>>>>>>>508		string		x 		\b%-.1s
->>>>>>>>>509		ubyte&0xDF	>0		
->>>>>>>>>>509		string		x 		\b%-.1s
+>>>>499			ubyte&0xDF	>0		\b, COM/EXE Bootloader 
+>>>>>499		use		DOS-filename
 #If the boot sector fails to read any other sector,
 #it prints a very short message ("RE") to the screen and hangs the computer.
 #If the boot sector fails to find needed program in the root directory,
 #it also hangs with another message ("NF").
 >>>>>492		string		RENF		\b, FAT (12 bit)
 >>>>>495		string		RENF		\b, FAT (16 bit)
-# http://alexfru.chat.ru/epm.html#bootprog
->494	ubyte	>0x4D					
->>495	string	>E					
->>>495	string	<S					
-#OEM-ID is not reliable
->>>>3	string	BootProg				
-# It just looks for a program file name at the root directory
-# and loads corresponding file with following execution.
-# DOS names like STARTUP.BIN,STARTUPC.COM,STARTUPE.EXE are 8 right space padded bytes+3 bytes
->>>>499			ubyte&0xDF	>0		\b, COM/EXE Bootloader
->>>>>499		string		x 		\b %-.1s
->>>>>>500		ubyte&0xDF	>0		
->>>>>>>500		string		x 		\b%-.1s
->>>>>>>>501		ubyte&0xDF	>0		
->>>>>>>>>501		string		x 		\b%-.1s
->>>>>>>>>>502		ubyte&0xDF	>0		
->>>>>>>>>>>502		string		x 		\b%-.1s
->>>>>>>>>>>>503		ubyte&0xDF	>0		
->>>>>>>>>>>>>503	string		x 		\b%-.1s
->>>>>>>>>>>>>>504	ubyte&0xDF	>0		
->>>>>>>>>>>>>>>504	string		x 		\b%-.1s
->>>>>>>>>>>>>>>>505	ubyte&0xDF	>0		
->>>>>>>>>>>>>>>>>505	string		x 		\b%-.1s
->>>>>>>>>>>>>>>>>>506	ubyte&0xDF	>0		
->>>>>>>>>>>>>>>>>>>506	string		x 		\b%-.1s
-#name extension
->>>>>507		ubyte&0xDF	>0		\b.
->>>>>>507		string		x 		\b%-.1s
->>>>>>>508		ubyte&0xDF	>0		
->>>>>>>>508		string		x 		\b%-.1s
->>>>>>>>>509		ubyte&0xDF	>0		
->>>>>>>>>>509		string		x 		\b%-.1s
 #If the boot sector fails to read any other sector,
 #it prints a very short message ("RE") to the screen and hangs the computer.
-#If the boot sector fails to find needed program in the root directory,
-#it also hangs with another message ("NF").
->>>>>492		string		RENF		\b, FAT (12 bit)
->>>>>495		string		RENF		\b, FAT (16 bit)
 # x86 bootloader end
 
 # added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
