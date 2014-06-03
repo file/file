@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.85 2014/05/30 15:07:02 christos Exp $
+# $File: archive,v 1.86 2014/06/01 19:15:26 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -93,9 +93,9 @@
 #
 0	string		=!<arch>\ndebian
 >8	string		debian-split	part of multipart Debian package
-!:mime	application/x-debian-package
+!:mime	application/vnd.debian.binary-package
 >8	string		debian-binary	Debian binary package
-!:mime	application/x-debian-package
+!:mime	application/vnd.debian.binary-package
 >8	string		!debian
 >68	string		>\0		(format %s)
 # These next two lines do not work, because a bzip2 Debian archive
