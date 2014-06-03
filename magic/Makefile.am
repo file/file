@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.96 2014/03/07 17:25:17 christos Exp $
+# $File: Makefile.am,v 1.97 2014/05/14 23:04:59 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -133,6 +133,7 @@ $(MAGIC_FRAGMENT_DIR)/macintosh \
 $(MAGIC_FRAGMENT_DIR)/magic \
 $(MAGIC_FRAGMENT_DIR)/mail.news \
 $(MAGIC_FRAGMENT_DIR)/make \
+$(MAGIC_FRAGMENT_DIR)/map \
 $(MAGIC_FRAGMENT_DIR)/maple \
 $(MAGIC_FRAGMENT_DIR)/marc21 \
 $(MAGIC_FRAGMENT_DIR)/mathcad \
