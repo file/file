@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.3 2013/11/08 01:24:22 christos Exp $
+# $File: android,v 1.4 2014/06/03 19:01:34 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -89,12 +89,12 @@
 >17	string		0\n			\b, Not-Compressed
 >17	string		1\n			\b, Compressed
 # any string as long as it's not the word none (which is matched below)
->>19    regex/1		\^([^n\n]|n[^o]|no[^n]|non[^e]|none.+).*	\b, Encrypted (%s)
+>>19    regex/1l	\^([^n\n]|n[^o]|no[^n]|non[^e]|none.+).*	\b, Encrypted (%s)
 >>19	string		none\n			\b, Not-Encrypted
 # Commented out because they don't seem useful to print
 # (but they are part of the header - the tar file comes after them):
-#>>>&1		regex/1 .*	\b, Password salt: %s
-#>>>>&1		regex/1 .*	\b, Master salt: %s
-#>>>>>&1	regex/1 .*	\b, PBKDF2 rounds: %s
-#>>>>>>&1	regex/1 .*	\b, IV: %s
-#>>>>>>>&1	regex/1 .*	\b, Key: %s
+#>>>&1		regex/1l .*	\b, Password salt: %s
+#>>>>&1		regex/1l .*	\b, Master salt: %s
+#>>>>>&1	regex/1l .*	\b, PBKDF2 rounds: %s
+#>>>>>>&1	regex/1l .*	\b, IV: %s
+#>>>>>>>&1	regex/1l .*	\b, Key: %s
