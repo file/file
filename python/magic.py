@@ -139,7 +139,7 @@ class Magic(object):
         as a buffer or None if an error occurred and the MAGIC_ERROR flag
         is set. A call to errno() will return the numeric error code.
         """
-        try:  # attempt python3 approach firstg
+        try:  # attempt python3 approach first
             return str(_buffer(self._magic_t, buf, len(buf)), 'utf-8')
         except:
             return _buffer(self._magic_t, buf, len(buf))
