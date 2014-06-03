@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.97 2014/05/07 21:25:41 christos Exp $
+# $File: msdos,v 1.98 2014/05/15 01:24:58 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -748,6 +748,19 @@
 # Microsoft Outlook's Transport Neutral Encapsulation Format (TNEF)
 0	leshort		0x223e9f78	TNEF
 !:mime	application/vnd.ms-tnef
+
+# Norton Guide (.NG , .HLP) files added by Joerg Jenderek from source NG2HTML.C
+# of http://www.davep.org/norton-guides/ng2h-105.tgz
+# http://en.wikipedia.org/wiki/Norton_Guides
+0	string		NG\0\001	
+# only value 0x100 found at offset 2
+>2	ulelong		0x00000100	Norton Guide
+# Title[40]
+>>8	string		>\0		"%-.40s"
+#>>6	uleshort	x		\b, MenuCount=%u
+# szCredits[5][66]
+>>48	string		>\0		\b, %-.66s
+>>114	string		>\0		%-.66s
 
 # 4DOS help (.HLP) files added by Joerg Jenderek from source TPHELP.PAS 
 # of http://www.4dos.info/
