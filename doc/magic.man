@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.82 2014/05/30 16:51:23 christos Exp $
-.Dd May 30, 2014
+.\" $File: magic.man,v 1.83 2014/06/03 17:36:13 christos Exp $
+.Dd June 3, 2014
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -238,12 +238,6 @@ The
 flag makes the match case insensitive, while the
 .Dq s
 flag update the offset to the start offset of the match, rather than the end.
-The regular expression is tested against line
-.Dv N + 1
-onwards, where
-.Dv N
-is the given offset.
-Line endings are assumed to be in the machine's native format.
 .Dv ^
 and
 .Dv $
