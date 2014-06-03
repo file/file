@@ -1,9 +1,9 @@
 
 #------------------------------------------------------------------------
-# $File: sysex,v 1.7 2013/09/16 15:12:42 christos Exp $
+# $File: sysex,v 1.8 2014/06/03 19:17:27 christos Exp $
 # sysex: file(1) magic for MIDI sysex files
 #
-# GRR: orginal 1 byte test at offset was too general as it catches also many FATs of DOS filesystems
+# GRR: original 1 byte test at offset was too general as it catches also many FATs of DOS filesystems
 # where real SYStem EXclusive messages at offset 1 are limited to seven bits
 # http://en.wikipedia.org/wiki/MIDI
 0	ubeshort&0xFF80		0xF000		SysEx File -
