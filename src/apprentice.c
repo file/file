@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.209 2014/05/13 16:42:17 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.210 2014/05/14 23:15:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1382,7 +1382,8 @@ string_modifier_check(struct magic_set *ms, struct magic *m)
 	if ((ms->flags & MAGIC_CHECK) == 0)
 		return 0;
 
-	if (m->type != FILE_PSTRING && (m->str_flags & PSTRING_LEN) != 0) {
+	if ((m->type != FILE_REGEX || (m->str_flags & REGEX_LINE_COUNT) == 0) &&
+	    (m->type != FILE_PSTRING && (m->str_flags & PSTRING_LEN) != 0)) {
 		file_magwarn(ms,
 		    "'/BHhLl' modifiers are only allowed for pascal strings\n");
 		return -1;
@@ -1875,8 +1876,13 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 					m->str_flags = (m->str_flags & ~PSTRING_LEN) | PSTRING_4_BE;
 					break;
 				case CHAR_PSTRING_4_LE:
-					if (m->type != FILE_PSTRING)
+					switch (m->type) {
+					case FILE_PSTRING:
+					case FILE_REGEX:
+						break;
+					default:
 						goto bad;
+					}
 					m->str_flags = (m->str_flags & ~PSTRING_LEN) | PSTRING_4_LE;
 					break;
 				case CHAR_PSTRING_LENGTH_INCLUDES_ITSELF:

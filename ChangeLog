@@ -1,3 +1,12 @@
+2014-06-02  14:50  Christos Zoulas <christos@zoulas.com>
+
+	* Enforce limit of 8K on regex searches that have no limits
+	* Allow the l modifier for regex to mean line count. Default
+	  to byte count. If line count is specified, assume a max
+	  of 80 characters per line to limit the byte count.
+	* Don't allow conversions to be used for dates, allowing
+	  the mask field to be used as an offset.
+
 2014-05-30  12:51  Christos Zoulas <christos@zoulas.com>
 
 	* Make the range operator limit the length of the

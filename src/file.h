@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.150 2014/05/05 20:53:10 christos Exp $
+ * @(#)$File: file.h,v 1.151 2014/05/14 23:15:42 christos Exp $
  */
 
 #ifndef __file_h__
@@ -133,7 +133,7 @@
 #define MAXstring 64		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	11
+#define VERSIONNO	12
 #define FILE_MAGICSIZE	248
 
 #define	FILE_LOAD	0
@@ -321,6 +321,7 @@ struct magic {
 #define PSTRING_2_LE				BIT(9)
 #define PSTRING_4_BE				BIT(10)
 #define PSTRING_4_LE				BIT(11)
+#define REGEX_LINE_COUNT			BIT(11)
 #define PSTRING_LEN	\
     (PSTRING_1_BE|PSTRING_2_LE|PSTRING_2_BE|PSTRING_4_LE|PSTRING_4_BE)
 #define PSTRING_LENGTH_INCLUDES_ITSELF		BIT(12)

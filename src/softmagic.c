@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.188 2014/05/14 23:15:42 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.189 2014/05/30 16:47:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -57,7 +57,7 @@ private int32_t mprint(struct magic_set *, struct magic *);
 private int32_t moffset(struct magic_set *, struct magic *);
 private void mdebug(uint32_t, const char *, size_t);
 private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
-    const unsigned char *, uint32_t, size_t, size_t);
+    const unsigned char *, uint32_t, size_t, struct magic *);
 private int mconvert(struct magic_set *, struct magic *, int);
 private int print_sep(struct magic_set *, int);
 private int handle_annotation(struct magic_set *, struct magic *);
@@ -540,7 +540,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_LEDATE:
 	case FILE_MEDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->l, FILE_T_LOCAL, tbuf)) == -1)
+		    file_fmttime(p->l + m->num_mask, FILE_T_LOCAL, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -550,7 +550,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_LELDATE:
 	case FILE_MELDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->l, 0, tbuf)) == -1)
+		    file_fmttime(p->l + m->num_mask, 0, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -559,7 +559,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQDATE:
 	case FILE_LEQDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->q, FILE_T_LOCAL, tbuf)) == -1)
+		    file_fmttime(p->q + m->num_mask, FILE_T_LOCAL, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -568,7 +568,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQLDATE:
 	case FILE_LEQLDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->q, 0, tbuf)) == -1)
+		    file_fmttime(p->q + m->num_mask, 0, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -577,7 +577,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQWDATE:
 	case FILE_LEQWDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->q, FILE_T_WINDOWS, tbuf)) == -1)
+		    file_fmttime(p->q + m->num_mask, FILE_T_WINDOWS, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -912,8 +912,9 @@ private int
 mconvert(struct magic_set *ms, struct magic *m, int flip)
 {
 	union VALUETYPE *p = &ms->ms_value;
+	uint8_t type;
 
-	switch (cvt_flip(m->type, flip)) {
+	switch (type = cvt_flip(m->type, flip)) {
 	case FILE_BYTE:
 		cvt_8(p, m);
 		return 1;
@@ -957,7 +958,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_BELDATE:
 		p->l = (int32_t)
 		    ((p->hl[0]<<24)|(p->hl[1]<<16)|(p->hl[2]<<8)|(p->hl[3]));
-		cvt_32(p, m);
+		if (type == FILE_BELONG)
+			cvt_32(p, m);
 		return 1;
 	case FILE_BEQUAD:
 	case FILE_BEQDATE:
@@ -968,7 +970,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		     ((uint64_t)p->hq[2]<<40)|((uint64_t)p->hq[3]<<32)|
 		     ((uint64_t)p->hq[4]<<24)|((uint64_t)p->hq[5]<<16)|
 		     ((uint64_t)p->hq[6]<<8)|((uint64_t)p->hq[7]));
-		cvt_64(p, m);
+		if (type == FILE_BEQUAD)
+			cvt_64(p, m);
 		return 1;
 	case FILE_LESHORT:
 		p->h = (short)((p->hs[1]<<8)|(p->hs[0]));
@@ -979,7 +982,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_LELDATE:
 		p->l = (int32_t)
 		    ((p->hl[3]<<24)|(p->hl[2]<<16)|(p->hl[1]<<8)|(p->hl[0]));
-		cvt_32(p, m);
+		if (type == FILE_LELONG)
+			cvt_32(p, m);
 		return 1;
 	case FILE_LEQUAD:
 	case FILE_LEQDATE:
@@ -990,14 +994,16 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		     ((uint64_t)p->hq[5]<<40)|((uint64_t)p->hq[4]<<32)|
 		     ((uint64_t)p->hq[3]<<24)|((uint64_t)p->hq[2]<<16)|
 		     ((uint64_t)p->hq[1]<<8)|((uint64_t)p->hq[0]));
-		cvt_64(p, m);
+		if (type == FILE_LEQUAD)
+			cvt_64(p, m);
 		return 1;
 	case FILE_MELONG:
 	case FILE_MEDATE:
 	case FILE_MELDATE:
 		p->l = (int32_t)
 		    ((p->hl[1]<<24)|(p->hl[0]<<16)|(p->hl[3]<<8)|(p->hl[2]));
-		cvt_32(p, m);
+		if (type == FILE_MELONG)
+			cvt_32(p, m);
 		return 1;
 	case FILE_FLOAT:
 		cvt_float(p, m);
@@ -1054,7 +1060,7 @@ mdebug(uint32_t offset, const char *str, size_t len)
 
 private int
 mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
-    const unsigned char *s, uint32_t offset, size_t nbytes, size_t linecnt)
+    const unsigned char *s, uint32_t offset, size_t nbytes, struct magic *m)
 {
 	/*
 	 * Note: FILE_SEARCH and FILE_REGEX do not actually copy
@@ -1074,15 +1080,29 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 			const char *last;	/* end of search region */
 			const char *buf;	/* start of search region */
 			const char *end;
-			size_t lines;
+			size_t lines, linecnt, bytecnt;
 
 			if (s == NULL) {
 				ms->search.s_len = 0;
 				ms->search.s = NULL;
 				return 0;
 			}
+
+			if (m->str_flags & REGEX_LINE_COUNT) {
+				linecnt = m->str_range;
+				bytecnt = linecnt * 80;
+			} else {
+				linecnt = 0;
+				bytecnt = m->str_range;
+			}
+
+			if (bytecnt == 0)
+				bytecnt = 8192;
+			if (bytecnt > nbytes)
+				bytecnt = nbytes;
+
 			buf = RCAST(const char *, s) + offset;
-			end = last = RCAST(const char *, s) + nbytes;
+			end = last = RCAST(const char *, s) + bytecnt;
 			/* mget() guarantees buf <= last */
 			for (lines = linecnt, b = buf; lines && b < end &&
 			     ((b = CAST(const char *,
@@ -1095,7 +1115,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 					b++;
 			}
 			if (lines)
-				last = RCAST(const char *, s) + nbytes;
+				last = RCAST(const char *, s) + bytecnt;
 
 			ms->search.s = buf;
 			ms->search.s_len = last - buf;
@@ -1166,7 +1186,6 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
     int *need_separator, int *returnval)
 {
 	uint32_t soffset, offset = ms->offset;
-	uint32_t count = m->str_range;
 	uint32_t lhs;
 	int rv, oneed_separator, in_type;
 	char *sbuf, *rbuf;
@@ -1179,13 +1198,12 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	}
 
 	if (mcopy(ms, p, m->type, m->flag & INDIR, s, (uint32_t)(offset + o),
-	    (uint32_t)nbytes, count) == -1)
+	    (uint32_t)nbytes, m) == -1)
 		return -1;
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
 		fprintf(stderr, "mget(type=%d, flag=%x, offset=%u, o=%zu, "
-		    "nbytes=%zu, count=%u)\n", m->type, m->flag, offset, o,
-		    nbytes, count);
+		    "nbytes=%zu)\n", m->type, m->flag, offset, o, nbytes);
 		mdebug(offset, (char *)(void *)p, sizeof(union VALUETYPE));
 #ifndef COMPILE_ONLY
 		file_mdump(m);
@@ -1550,7 +1568,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				fprintf(stderr, "indirect +offs=%u\n", offset);
 		}
-		if (mcopy(ms, p, m->type, 0, s, offset, nbytes, count) == -1)
+		if (mcopy(ms, p, m->type, 0, s, offset, nbytes, m) == -1)
 			return -1;
 		ms->offset = offset;
 
@@ -1906,7 +1924,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			if (slen + idx > ms->search.s_len)
 				break;
 
-			v = file_strncmp(m->value.s, ms->search.s + idx, slen, m->str_flags);
+			v = file_strncmp(m->value.s, ms->search.s + idx, slen,
+			    m->str_flags);
 			if (v == 0) {	/* found match */
 				ms->search.offset += idx;
 				break;
@@ -1929,16 +1948,11 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			file_regerror(&rx, rc, ms);
 			v = (uint64_t)-1;
 		} else {
-#ifndef REG_STARTEND
-			char c;
-#endif
 			regmatch_t pmatch[1];
 			size_t slen = ms->search.s_len;
-			/* Limit by offset if requested */
-			if (m->str_range > 0)
-				slen = MIN(slen, m->str_range);
 #ifndef REG_STARTEND
 #define	REG_STARTEND	0
+			char c;
 			if (slen != 0)
 				slen--;
 			c = ms->search.s[slen];

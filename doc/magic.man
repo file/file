@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.82 2014/05/30 16:51:23 christos Exp $
+.\" $File: magic.man,v 1.83 2014/06/03 17:36:13 christos Exp $
 .Dd June 3, 2014
 .Dt MAGIC __FSECTION__
 .Os
@@ -232,12 +232,21 @@ The size of the string to search should also be limited by specifying
 .Dv /<length> ,
 to avoid performance issues scanning long files.
 The type specification can also be optionally followed by
-.Dv /[c][s] .
+.Dv /[c][s][l] .
 The
 .Dq c
 flag makes the match case insensitive, while the
 .Dq s
 flag update the offset to the start offset of the match, rather than the end.
+The
+.Dq l
+modifier, changes the limit of length to mean number of lines instead of a
+byte count.
+Lines are delimited by the platforms native line delimiter.
+When a line count is specified, an implicit byte count also computed assuming
+each line is 80 characters long.
+If neither a byte or line count is specified, the search is limited automatically
+to 8KiB.
 .Dv ^
 and
 .Dv $
@@ -405,6 +414,9 @@ is decimal,
 is octal, and
 .Dv 0x13
 is hexadecimal.
+.Pp
+Numeric operations are not performed on date types, instead the numeric
+value is interpreted as an offset.
 .Pp
 For string values, the string from the
 file must match the specified string.
