@@ -1,9 +1,9 @@
 
 #------------------------------------------------------------------------------
-# $File: kml,v 1.3 2010/11/25 15:00:12 christos Exp $
+# $File: oasis,v 1.1 2011/03/15 02:09:38 christos Exp $
 # OASIS
 # Summary: OASIS stream file
-# Long descripton: Open Artwork System Interchange Standard
+# Long description: Open Artwork System Interchange Standard
 # File extension: .oas
 # Full name:	Ben Cowley (bcowley@broadcom.com)
 #		Philip Dixon (pdixon@broadcom.com)

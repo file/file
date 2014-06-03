@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.98 2014/05/15 01:24:58 christos Exp $
+# $File: msdos,v 1.99 2014/06/03 01:40:24 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -382,7 +382,7 @@
 # they have their real name at offset 22
 >>>>>22		string			>\0			\b%-.5s
 >4	uleshort&0x8000			0x0000			
-# 32 bit sector adressing ( > 32 MB) for block devices
+# 32 bit sector addressing ( > 32 MB) for block devices
 >>4	uleshort&0x0002			0x0002			\b,32-bit sector-
 # support by driver functions 13h, 17h, 18h
 >4	uleshort&0x0040			0x0040			\b,IOCTL-

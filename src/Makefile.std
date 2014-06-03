@@ -1,6 +1,6 @@
 # Makefile for file(1) cmd. 
 # Copyright (c) Ian F. Darwin 86/09/01 - see LEGAL.NOTICE.
-# @(#)$Id: Makefile.std,v 1.18 2011/12/30 16:51:19 christos Exp $
+# @(#)$Id: Makefile.std,v 1.19 2014-06-03 19:17:27 christos Exp $
 #
 # This software is not subject to any license of the American Telephone
 # and Telegraph Company or of the Regents of the University of California.
@@ -39,7 +39,7 @@ OFILE	= /usr/bin/file		# old or distributed version, for comparison
 BINDIR	= /usr/local/bin
 # For installing our man pages; 
 # MANCxxx is manual section for Commands, MANFxxx is section for file formats.
-# MANxDIR is directory names; MANxEXT is the filename extention. Usual values:
+# MANxDIR is directory names; MANxEXT is the filename extension. Usual values:
 # Variable	V7		4BSD		Sys V
 # MANCDIR 	/usr/man/man1	/usr/man/man1	/usr/man/u_man/man1
 # MANFDIR 	/usr/man/man5	/usr/man/man5	/usr/man/u_man/man4
@@ -60,7 +60,7 @@ MANCEXT	= 1
 MANFDIR	= /usr/local/man/man4
 MANFEXT	= 4
 
-# There are no system-dependant configuration options (except maybe CFLAGS).
+# There are no system-dependent configuration options (except maybe CFLAGS).
 # Uncomment any of these that is missing from your "standard" library.
 LOCALSRCS = # localsrc/getopt.c localsrc/strtol.c \
 #		localsrc/strtok.c localsrc/strchr.c
