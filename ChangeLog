@@ -1,3 +1,8 @@
+2014-06-09   9:04  Christos Zoulas <christos@zoulas.com>
+	
+	* Misc buffer overruns and missing buffer size tests in cdf parsing
+	  (Francisco Alonso, Jan Kaluza)
+
 2014-06-02  14:50  Christos Zoulas <christos@zoulas.com>
 
 	* Enforce limit of 8K on regex searches that have no limits
