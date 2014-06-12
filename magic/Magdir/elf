@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.66 2014/03/06 16:37:39 christos Exp $
+# $File: elf,v 1.67 2014/06/12 13:52:48 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -243,6 +243,20 @@
 >18	leshort		191		Tilera TILE-Gx,
 >18	leshort		197		Renesas RL78 family,
 >18	leshort		199		Renesas 78K0R,
+>18	leshort		200		Freescale 56800EX,
+>18	leshort		201		Beyond BA1,
+>18	leshort		202		Beyond BA2,
+>18	leshort		203		XMOS xCORE,
+>18	leshort		204		Microchip 8-bit PIC(r),
+>18	leshort		210		KM211 KM32,
+>18	leshort		211		KM211 KMX32,
+>18	leshort		212		KM211 KMX16,
+>18	leshort		213		KM211 KMX8,
+>18	leshort		214		KM211 KVARC,
+>18	leshort		215		Paneve CDP,
+>18	leshort		216		Cognitive Smart Memory,
+>18	leshort		217		iCelero CoolEngine,
+>18	leshort		218		Nanoradio Optimized RISC,
 >18	leshort		0x1057		AVR (unofficial),
 >18	leshort		0x1059		MSP430 (unofficial),
 >18	leshort		0x1223		Adapteva Epiphany (unofficial),
