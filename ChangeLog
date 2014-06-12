@@ -1,3 +1,7 @@
+2014-06-12  12:28  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.19
+
 2014-06-09   9:04  Christos Zoulas <christos@zoulas.com>
 	
 	* Misc buffer overruns and missing buffer size tests in cdf parsing
