@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.95 2014/06/03 19:17:27 christos Exp $
+# $File: filesystems,v 1.96 2014/06/19 17:17:58 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -2266,14 +2266,14 @@
 
 # UBIfs
 # Linux kernel sources: fs/ubifs/ubifs-media.h
-0       belong  0x31181006
->0x16   short   0               UBIfs image
->0x08   lequad  x               \b, sequence number %llu
->0x10   leshort x               \b, length %u
->0x04   lelong  x               \b, CRC 0x%08x
+0	lelong	0x06101831
+>0x16	leshort	0		UBIfs image
+>0x08	lequad	x		\b, sequence number %llu
+>0x10	leshort x		\b, length %u
+>0x04	lelong	x		\b, CRC 0x%08x
 
-0       belong  0x55424923
->0x04   short   <2
->0x05   string  \0\0\0
->0x1c   string  \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
->0x04   short   x       UBI image, version %u
+0	lelong	0x23494255
+>0x04	leshort	<2
+>0x05	string	\0\0\0
+>0x1c	string	\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
+>0x04	leshort	x		UBI image, version %u
