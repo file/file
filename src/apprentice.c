@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.211 2014/06/03 19:01:34 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.212 2014/06/26 12:53:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -416,9 +416,11 @@ add_mlist(struct mlist *mlp, struct magic_map *map, size_t idx)
 private int
 apprentice_1(struct magic_set *ms, const char *fn, int action)
 {
-	struct mlist *ml;
 	struct magic_map *map;
+#ifndef COMPILE_ONLY
+	struct mlist *ml;
 	size_t i;
+#endif
 
 	if (magicsize != FILE_MAGICSIZE) {
 		file_error(ms, 0, "magic element size %lu != %lu",
@@ -460,9 +462,8 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 			apprentice_list(ms->mlist[i], TEXTTEST);
 		}
 	}
-	
-	return 0;
 #endif /* COMPILE_ONLY */
+	return 0;
 }
 
 protected void
