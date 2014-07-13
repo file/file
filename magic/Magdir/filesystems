@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.96 2014/06/19 17:17:58 christos Exp $
+# $File: filesystems,v 1.97 2014/07/13 13:50:35 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -2277,3 +2277,20 @@
 >0x05	string	\0\0\0
 >0x1c	string	\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 >0x04	leshort	x		UBI image, version %u
+
+# NEC PC-88 2D disk image
+# From Fabio R. Schmidlin <sd-snatcher@users.sourceforge.net>
+0x20		ulelong&0xFFFFFEFF	0x2A0
+>0x10		string			\0\0\0\0\0\0\0\0\0\0
+>>0x280		string			\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
+>>>0x1A		ubyte&0xEF		0
+>>>>0x1B	ubyte&0x8F		0
+>>>>>0x1B	ubyte&70		<0x40
+>>>>>>0x1C	ulelong			>0x21
+>>>>>>>0	regex	[[:print:]]*	NEC PC-88 disk image, name=%s
+>>>>>>>>0x1B	ubyte	0		\b, media=2D
+>>>>>>>>0x1B	ubyte	0x10		\b, media=2DD
+>>>>>>>>0x1B	ubyte	0x20		\b, media=2HD
+>>>>>>>>0x1B	ubyte	0x30		\b, media=1D
+>>>>>>>>0x1B	ubyte	0x40		\b, media=1DD
+>>>>>>>>0x1A	ubyte	0x10		\b, write-protected
