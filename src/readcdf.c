@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.43 2014/05/07 21:26:06 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.44 2014/05/14 23:22:48 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -241,6 +241,37 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 }
 
 private int
+cdf_file_catalog(struct magic_set *ms, const cdf_header_t *h,
+    const cdf_stream_t *sst)
+{
+	cdf_catalog_t *cat;
+	size_t i;
+	char buf[256];
+	cdf_catalog_entry_t *ce;
+
+        if (NOTMIME(ms)) {
+		if (file_printf(ms, "Microsoft Thumbs.db [") == -1)
+			return -1;
+		if (cdf_unpack_catalog(h, sst, &cat) == -1)
+			return -1;
+		ce = cat->cat_e;
+		/* skip first entry since it has a , or paren */
+		for (i = 1; i < cat->cat_num; i++)
+			if (file_printf(ms, "%s%s",
+			    cdf_u16tos8(buf, ce[i].ce_namlen, ce[i].ce_name),
+			    i == cat->cat_num - 1 ? "]" : ", ") == -1) {
+				free(cat);
+				return -1;
+			}
+		free(cat);
+	} else {
+		if (file_printf(ms, "application/CDFV2") == -1)
+			return -1;
+	}
+	return 1;
+}
+
+private int
 cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
     const cdf_stream_t *sst, const cdf_directory_t *root_storage)
 {
@@ -285,11 +316,12 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
 		if (root_storage) {
 			str = cdf_clsid_to_mime(root_storage->d_storage_uuid,
 			    clsid2desc);
-			if (str)
+			if (str) {
 				if (file_printf(ms, ", %s", str) == -1)
 					return -2;
 			}
 		}
+	}
 
         m = cdf_file_property_info(ms, info, count, root_storage);
         free(info);
@@ -404,8 +436,18 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
         if ((i = cdf_read_summary_info(&info, &h, &sat, &ssat, &sst, &dir,
             &scn)) == -1) {
                 if (errno == ESRCH) {
-                        corrupt = expn;
-                        expn = "No summary info";
+			if ((i = cdf_read_catalog(&info, &h, &sat, &ssat, &sst,
+			    &dir, &scn)) == -1) {
+				corrupt = expn;
+				expn = "No summary info";
+				goto out4;
+			}
+#ifdef CDF_DEBUG
+			cdf_dump_catalog(&h, &scn);
+#endif
+			if ((i = cdf_file_catalog(ms, &h, &scn))
+			    < 0)
+				expn = "Can't expand catalog";
                 } else {
                         expn = "Cannot read summary info";
                 }
