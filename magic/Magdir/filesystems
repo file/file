@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.96 2014/06/19 17:17:58 christos Exp $
+# $File: filesystems,v 1.97 2014/07/13 13:50:35 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -265,8 +265,8 @@
 0x1FE		leshort		0xAA55		
 #
 # to display information (50) before DOS BPB (strength=70) and after DOS floppy (120) like in old file version
-!:strength +21
->2	string	OSBS			\b, OS/BS MBR
+!:strength +70
+>2	string	OSBS			OS/BS MBR
 # added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/
 # and http://en.wikipedia.org/wiki/Master_Boot_Record
 # test for nearly all MS-DOS Master Boot Record initial program loader (IPL) is now done by 
