@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.5 2014/06/16 16:56:57 christos Exp $
+# $File: android,v 1.6 2014/08/04 06:00:36 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -170,3 +170,13 @@
 #>>>>0x18	ulelong				x			\b, %db
 # partition size in blocks ?
 #>>>>0x22	ulelong				x			\b*%d
+
+# Android bootimg format
+# From https://android.googlesource.com/\
+# platform/system/core/+/master/libsparse/sparse_format.h
+0		lelong	0xed26ff3a		Android sparse image
+>4		leshort	x			\b, version: %d
+>6		leshort	x			\b.%d
+>16		lelong	x			\b, Total of %d
+>12		lelong	x			\b %d-byte output blocks in
+>20		lelong	x			\b %d input chunks.
