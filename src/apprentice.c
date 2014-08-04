@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.212 2014/06/26 12:53:36 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.213 2014/08/04 06:19:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2874,10 +2874,9 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 	}
 	entries = (uint32_t)(map->len / sizeof(struct magic));
 	if ((entries * sizeof(struct magic)) != map->len) {
-		file_error(ms, 0, "Size of `%s' %" INT64_T_FORMAT "u is not "
+		file_error(ms, 0, "Size of `%s' %" SIZE_T_FORMAT "u is not "
 		    "a multiple of %" SIZE_T_FORMAT "u",
-		    dbname, (unsigned long long)map->len,
-		    sizeof(struct magic));
+		    dbname, map->len, sizeof(struct magic));
 		return -1;
 	}
 	map->magic[0] = CAST(struct magic *, map->p) + 1;
@@ -2899,7 +2898,7 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 	if (needsbyteswap)
 		for (i = 0; i < MAGIC_SETS; i++)
 			byteswap(map->magic[i], map->nmagic[i]);
-	return -1;
+	return 0;
 }
 
 /*
