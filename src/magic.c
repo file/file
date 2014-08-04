@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.84 2014/05/14 23:15:42 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.85 2014/08/04 06:19:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -256,6 +256,20 @@ magic_load(struct magic_set *ms, const char *magicfile)
 		return -1;
 	return file_apprentice(ms, magicfile, FILE_LOAD);
 }
+
+#ifndef COMPILE_ONLY
+/*
+ * Install a set of compiled magic buffers.
+ */
+public int
+magic_load_buffers(struct magic_set *ms, void **bufs, size_t *sizes,
+    size_t nbufs)
+{
+	if (ms == NULL)
+		return -1;
+	return buffer_apprentice(ms, (struct magic **)bufs, sizes, nbufs);
+}
+#endif
 
 public int
 magic_compile(struct magic_set *ms, const char *magicfile)

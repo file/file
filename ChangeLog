@@ -1,3 +1,7 @@
+2014-08-04   9:18  Christos Zoulas <christos@zoulas.com>
+
+	* add magic_load_buffers from Brooks Davis
+
 2014-07-24  16:40  Christos Zoulas <christos@zoulas.com>
 
 	* add thumbs.db support
