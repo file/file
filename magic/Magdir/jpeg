@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.19 2013/02/04 15:50:03 christos Exp $
+# $File: jpeg,v 1.20 2014/08/05 07:32:31 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -131,18 +131,22 @@
 >>(4.S+6)	pstring/HJ	x		"%s"
 # Or, we can show the encoding type (I've included only the three most common)
 # and image dimensions if we are lucky and the SOFn (image segment) is here:
+# from: http://www.w3.org/Graphics/JPEG/itu-t81.pdf p35
 >(4.S+5)	byte		0xC0		\b, baseline
->>(4.S+6)	byte		x		\b, precision %d
->>(4.S+7)	beshort		x		\b, %dx
->>(4.S+9)	beshort		x		\b%d
+>>(4.S+8)	byte		x		\b, precision %d
+>>(4.S+9)	beshort		x		\b, %dx
+>>(4.S+11)	beshort		x		\b%d
+>>(4.S+13)	byte		x		\b, frames %d
 >(4.S+5)	byte		0xC1		\b, extended sequential
->>(4.S+6)	byte		x		\b, precision %d
->>(4.S+7)	beshort		x		\b, %dx
->>(4.S+9)	beshort		x		\b%d
+>>(4.S+8)	byte		x		\b, precision %d
+>>(4.S+9)	beshort		x		\b, %dx
+>>(4.S+11)	beshort		x		\b%d
+>>(4.S+13)	byte		x		\b, frames %d
 >(4.S+5)	byte		0xC2		\b, progressive
->>(4.S+6)	byte		x		\b, precision %d
->>(4.S+7)	beshort		x		\b, %dx
->>(4.S+9)	beshort		x		\b%d
+>>(4.S+8)	byte		x		\b, precision %d
+>>(4.S+9)	beshort		x		\b, %dx
+>>(4.S+11)	beshort		x		\b%d
+>>(4.S+13)	byte		x		\b, frames %d
 # I've commented-out quantisation table reporting.  I doubt anyone cares yet.
 #>(4.S+5)	byte		0xDB		\b, quantisation table
 #>>(4.S+6)	beshort		x		\b length=%d
