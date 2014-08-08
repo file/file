@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.98 2014/08/03 07:31:47 christos Exp $
+# $File: filesystems,v 1.99 2014/08/08 07:09:59 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -254,7 +254,7 @@
 30		search/481	\x55\xAA	
 # to display DOS/MBR boot sector (40) before old one (strength=50+21),Syslinux bootloader (71),SYSLINUX MBR (37+36),NetBSD mbr (110),AdvanceMAME mbr (111)
 # DOS BPB information (70) and after DOS floppy (120) like in previous file version
-!:strength +72
+!:strength +65
 # for sector sizes < 512 Bytes
 >11		uleshort	<512		
 >>(11.s-2)	uleshort	0xAA55		DOS/MBR boot sector
@@ -1881,11 +1881,19 @@
 #>>>>>0x162	use			2xDOS-filename
 
 # CDROM Filesystems
+# https://en.wikipedia.org/wiki/ISO_9660
 # Modified for UDF by gerardo.cacciari@gmail.com
-32769	string    CD001     #
-!:mime	application/x-iso9660-image
+32769	string    CD001
+# mime line at that position does not work
+# to display CD-ROM (70=81-11) after MBR (113=40+72+1), partition-table (71=50+21) and before Apple Driver Map (51)
+!:strength -11
+# to display CD-ROM (114=81+33) before MBR (113=40+72+1), partition-table (71=50+21) and Apple Driver Map (51)
+# does not work
+#!:strength +33
 >38913	string   !NSR0      ISO 9660 CD-ROM filesystem data
+!:mime	application/x-iso9660-image
 >38913	string    NSR0      UDF filesystem data
+!:mime	application/x-iso9660-image
 >>38917	string    1         (version 1.0)
 >>38917	string    2         (version 1.5)
 >>38917	string    3         (version 2.0)
