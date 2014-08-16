@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.98 2014/08/03 07:31:47 christos Exp $
+# $File: filesystems,v 1.99 2014/08/08 07:09:59 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -1353,11 +1353,12 @@
 # minimal short forward jump found 0x29 for bootloaders or 0x0
 # maximal short forward jump is 0x7f
 # OEM-ID is empty or contain readable bytes
-0		ulelong&0x804000E9	0x000000E9	
+# empty message does not work any more for version 5.19
+0		ulelong&0x804000E9	0x000000E9	\b 
 # mtools-3.9.8/msdos.h
 # usual values are marked with comments to get only informations of strange FAT systems
 # valid sectorsize must be a power of 2 from 32 to 32768
->11		uleshort&0xf001f	0	
+>11		uleshort&0x001f	0	
 >>11		uleshort	<32769		
 >>>11		uleshort	>31		
 >>>>21		ubyte&0xf0	0xF0		
