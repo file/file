@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.100 2014/08/16 10:43:28 christos Exp $
+# $File: filesystems,v 1.101 2014/08/16 16:07:12 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -1365,7 +1365,7 @@
 >>>>>0		ubyte		0xEB		
 >>>>>>1		ubyte		x		\b, code offset 0x%x+2
 >>>>>0		ubyte		0xE9		
->>>>>>1		uleshort	x		\b, code offset 0x%x+2
+>>>>>>1		uleshort	x		\b, code offset 0x%x+3
 >>>>>3		string		>\0		\b, OEM-ID "%-.8s"
 #http://mirror.href.com/thestarman/asm/debug/debug2.htm#IHC
 >>>>>>8		string		IHC		\b cached by Windows 9M
@@ -1374,10 +1374,11 @@
 >>>>>11		uleshort	<512		\b, Bytes/sector %u
 >>>>>13		ubyte		>1		\b, sectors/cluster %u
 #>>>>>13	ubyte		=1		\b, sectors/cluster %u (usual on Floppies)
->>>>>82		string		FAT32		
+# for lazy FAT32 implementation like Transcend digital photo frame PF830
+>>>>>82		string/c	fat32		
 >>>>>>14	uleshort	!32		\b, reserved sectors %u
 #>>>>>>14	uleshort	=32		\b, reserved sectors %u (usual Fat32)
->>>>>82		string		!FAT32		
+>>>>>82		string/c	!fat32		
 >>>>>>14	uleshort	>1		\b, reserved sectors %u
 #>>>>>>14	uleshort	=1		\b, reserved sectors %u (usual FAT12,FAT16)
 #>>>>>>14	uleshort	0		\b, reserved sectors %u (usual NTFS)
@@ -1400,24 +1401,29 @@
 >>>>>26		ubyte		=1		\b, heads %u
 # valid only for sector sizes with more then 32 Bytes
 >>>>>11		uleshort	>32		
-# skip for Digital Research DOS (version 3.41) 1440 kB Bootdisk
->>>>>>38	ubyte		!0x70		
+# http://en.wikipedia.org/wiki/Design_of_the_FAT_file_system#Extended_BIOS_Parameter_Block
+# skip for values 2,2Ah,70h,73h,DFh
+# and continue for extended boot signature values 0,28h,29h,80h
+>>>>>>38	ubyte&0x56	=0		
 >>>>>>>28	ulelong		>0		\b, hidden sectors %u
 #>>>>>>>28	ulelong		=0		\b, hidden sectors %u (usual floppy)
 >>>>>>>32	ulelong		>0		\b, sectors %u (volumes > 32 MB) 
 #>>>>>>>32	ulelong		=0		\b, sectors %u (volumes > 32 MB)
 # FAT<32 bit specific 
->>>>>>>82	string		!FAT32
+>>>>>>>82	string/c	!fat32		
 #>>>>>>>>36	ubyte		0x80		\b, physical drive 0x%x=0x80 (usual harddisk)
 #>>>>>>>>36	ubyte		0		\b, physical drive 0x%x=0 (usual floppy)
 >>>>>>>>36	ubyte		!0x80		
 >>>>>>>>>36	ubyte		!0		\b, physical drive 0x%x
+# VGA-copy CRC or
+# in Windows NT bit 0 is a dirty flag to request chkdsk at boot time. bit 1 requests surface scan too
 >>>>>>>>37	ubyte		>0		\b, reserved 0x%x
 #>>>>>>>>37	ubyte		=0		\b, reserved 0x%x
-# value is 0x80 for NTFS
+# extended boot signatur value is 0x80 for NTFS, 0x28 or 0x29 for others
 >>>>>>>>38	ubyte		!0x29		\b, dos < 4.0 BootSector (0x%x)
->>>>>>>>38	ubyte		=0x29
+>>>>>>>>38	ubyte&0xFE	=0x28
 >>>>>>>>>39	ulelong		x		\b, serial number 0x%x
+>>>>>>>>38	ubyte		=0x29
 >>>>>>>>>43	string		<NO\ NAME	\b, label: "%11.11s"
 >>>>>>>>>43	string		>NO\ NAME	\b, label: "%11.11s"
 >>>>>>>>>43	string		=NO\ NAME	\b, unlabeled
@@ -1427,11 +1433,35 @@
 # if it is small enough FAT is 12 bit, if it is too big enough FAT is 32 bit,
 # otherwise FAT is 16 bit.
 # http://homepage.ntlworld.com/jonathan.deboynepollard/FGA/determining-fat-widths.html
->>>>>>54	string		FAT		\b, FAT
->>>>>>>54	string		FAT12		\b (12 bit)
->>>>>>>54	string		FAT16		\b (16 bit)
+>>>>>82		string/c	!fat32		
+>>>>>>54	string		FAT12		\b, FAT (12 bit)
+>>>>>>54	string		FAT16		\b, FAT (16 bit)
+>>>>>>54	default		x		
+# determinate FAT bit size by media descriptor
+# small floppies implies FAT12
+>>>>>>>21	ubyte		<0xF0		\b, FAT (12 bit by descriptor)
+# with media descriptor F0h floppy or maybe superfloppy with FAT16
+>>>>>>>21	ubyte		=0xF0		
+# superfloppy (many sectors) implies FAT16
+>>>>>>>>32	ulelong		>0xFFFF		\b, FAT (16 bit by descriptor+sectors)
+# no superfloppy with media descriptor F0h implies FAT12
+>>>>>>>>32	default		x		\b, FAT (12 bit by descriptor+sectors)
+# with media descriptor F8h floppy or hard disc with FAT12 or FAT16
+>>>>>>>21	ubyte		=0xF8		
+# 360 KiB with media descriptor F8h, 9 sectors per track ,single sided floppy implies FAT12
+>>>>>>>>19	ubequad	0xd002f80300090001	\b, FAT (12 bit by descriptor+geometry)
+# hard disc with FAT12 or FAT16
+>>>>>>>>19	default		x		\b, FAT (1Y bit by descriptor)
+# with media descriptor FAh floppy, RAM disc with FAT12 or FAT16 or Tandy hard disc
+>>>>>>>21	ubyte		=0xFA		
+# 320 KiB with media descriptor FAh, 8 sectors per track ,single sided floppy implies FAT12
+>>>>>>>>19	ubequad	0x8002fa0200080001	\b, FAT (12 bit by descriptor+geometry)
+# RAM disc with FAT12 or FAT16 or Tandy hard disc
+>>>>>>>>19	default		x		\b, FAT (1Y bit by descriptor)
+# others are floppy
+>>>>>>>21	default		x		\b, FAT (12 bit by descriptor)
 # FAT32 bit specific
->>>>>82		string		FAT32		\b, FAT (32 bit)
+>>>>>82		string/c	fat32		\b, FAT (32 bit)
 >>>>>>36	ulelong		x		\b, sectors/FAT %u
 # http://technet.microsoft.com/en-us/library/cc977221.aspx
 >>>>>>40	uleshort	>0		\b, extension flags 0x%x
@@ -1444,9 +1474,12 @@
 >>>>>>48	uleshort	>1		\b, infoSector %u
 #>>>>>>48	uleshort	=1		\b, infoSector %u (usual)
 >>>>>>48	uleshort	<1		\b, infoSector %u
->>>>>>50	uleshort	>6		\b, Backup boot sector %u
+# 0 or 0xFFFF instead of usual 6 means no backup sector
+>>>>>>50	uleshort	=0xFFFF		\b, no Backup boot sector
+>>>>>>50	uleshort	=0		\b, no Backup boot sector
 #>>>>>>50	uleshort	=6		\b, Backup boot sector %u (usual) 
->>>>>>50	uleshort	<6		\b, Backup boot sector %u
+>>>>>>50	default		x		
+>>>>>>>50	uleshort	x		\b, Backup boot sector %u
 # corrected by Joerg Jenderek at Feb 2011 according to http://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
 >>>>>>52	ulelong		>0		\b, reserved1 0x%x
 >>>>>>56	ulelong		>0		\b, reserved2 0x%x
