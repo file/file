@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.101 2014/08/16 16:07:12 christos Exp $
+# $File: filesystems,v 1.102 2014/08/17 13:48:16 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -2173,7 +2173,6 @@
 # which is mapped to VBN 2 of [000000]INDEXF.SYS;1 - gerardo.cacciari@gmail.com
 #
 1008    string          DECFILE11       Files-11 On-Disk Structure
->525    byte            x               Level %d
 >525    byte            x               (ODS-%d);
 >1017   string          A               RSX-11, VAX/VMS or OpenVMS VAX file system;
 >1017   string          B
