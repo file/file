@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: vms,v 1.7 2013/03/09 22:36:00 christos Exp $
+# $File: vms,v 1.8 2014/08/17 12:58:54 christos Exp $
 # vms:  file(1) magic for VMS executables (experimental)
 #
 # VMS .exe formats, both VAX and AXP (Greg Roelofs, newt@uchicago.edu)
@@ -28,13 +28,3 @@
 0	belong	0x03000000	
 >8	ubelong	0xec020000	VMS Alpha executable
 >>75264	string	PK\003\004	\b, Info-ZIP SFX archive v5.12 w/decryption
-
-#------------------------------------------------------------------------------
-# Files-11 On-Disk Structure (RSX-11 file system) - bqt@softjar.se
-# These bits come from LBN 1 (home block) of ODS-1 volumes, which is
-# mapped to VBN 2 of [000000]INDEXF.SYS;1
-#
-1008	string		DECFILE11A	Files-11 On-Disk Structure
->525	byte		x		(ODS-%d RSX-11 file system),
->984	string		x		volume label is '%-12.12s'
-
