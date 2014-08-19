@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.41 2014/06/03 19:17:27 christos Exp $
+# $File: database,v 1.42 2014/08/19 14:18:04 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -9,9 +9,17 @@
 # GDBM magic numbers
 #  Will be maintained as part of the GDBM distribution in the future.
 #  <downsj@teeny.org>
-0	belong	0x13579ace	GNU dbm 1.x or ndbm database, big endian
+0	belong	0x13579acd	GNU dbm 1.x or ndbm database, big endian, 32-bit
 !:mime	application/x-gdbm
-0	lelong	0x13579ace	GNU dbm 1.x or ndbm database, little endian
+0	belong	0x13579ace	GNU dbm 1.x or ndbm database, big endian, old
+!:mime	application/x-gdbm
+0	belong	0x13579acf	GNU dbm 1.x or ndbm database, big endian, 64-bit
+!:mime	application/x-gdbm
+0	lelong	0x13579acd	GNU dbm 1.x or ndbm database, little endian, 32-bit
+!:mime	application/x-gdbm
+0	lelong	0x13579ace	GNU dbm 1.x or ndbm database, little endian, old
+!:mime	application/x-gdbm
+0	lelong	0x13579acf	GNU dbm 1.x or ndbm database, little endian, 64-bit
 !:mime	application/x-gdbm
 0	string	GDBM		GNU dbm 2.x database
 !:mime	application/x-gdbm
