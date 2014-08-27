@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.45 2014/07/24 19:35:39 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.46 2014/08/27 06:59:35 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -439,7 +439,13 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 			if ((i = cdf_read_catalog(&info, &h, &sat, &ssat, &sst,
 			    &dir, &scn)) == -1) {
 				corrupt = expn;
-				expn = "No summary info";
+				if ((i = cdf_read_encrypted_package(&info, &h,
+				    &sat, &ssat, &sst, &dir, &scn)) == -1)
+					expn = "No summary info";
+				else {
+					expn = "Encrypted";
+					i = -1;
+				}
 				goto out4;
 			}
 #ifdef CDF_DEBUG
