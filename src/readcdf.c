@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.45 2014/07/24 19:35:39 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.46 2014/08/27 06:59:35 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -512,7 +512,8 @@ out0:
 		    if (file_printf(ms, ", %s%s", corrupt, expn) == -1)
 			return -1;
 	    } else {
-		if (file_printf(ms, "application/CDFV2-corrupt") == -1)
+		if (file_printf(ms, "application/CDFV2-%s",
+		    *corrupt ? "corrupt" : "encrypted") == -1)
 		    return -1;
 	    }
 	    i = 1;
