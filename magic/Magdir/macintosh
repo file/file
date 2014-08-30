@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: macintosh,v 1.23 2013/11/19 18:47:58 christos Exp $
+# $File: macintosh,v 1.24 2014/08/30 08:34:17 christos Exp $
 # macintosh description
 #
 # BinHex is the Macintosh ASCII-encoded file format (see also "apple")
@@ -165,7 +165,7 @@
 #>65	string		ZSYS		(Pre-System 7 system file)
 #>65	string		acf3		(Aldus FreeHand)
 #>65	string		cdev		(control panel)
-#>65	string		dfil		(Desk Acessory suitcase)
+#>65	string		dfil		(Desk Accessory suitcase)
 #>65	string		libr		(library)
 #>65	string		nX^d		(WriteNow word processor)
 #>65	string		nX^w		(WriteNow dictionary)
