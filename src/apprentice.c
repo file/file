@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.214 2014/08/04 06:48:22 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.215 2014/08/30 10:19:54 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2124,8 +2124,14 @@ out:
 }
 
 private int
+goodchar(unsigned char x, const char *extra)
+{
+	return (isascii(x) && isalnum(x)) || strchr(extra, x);
+}
+
+private int
 parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
-    off_t off, size_t len, const char *name, int nt)
+    off_t off, size_t len, const char *name, const char *extra, int nt)
 {
 	size_t i;
 	const char *l = line;
@@ -2146,9 +2152,7 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
 	}
 
 	EATAB;
-	for (i = 0; *l && ((isascii((unsigned char)*l) &&
-	    isalnum((unsigned char)*l)) || strchr("-+/.", *l)) &&
-	    i < len; buf[i++] = *l++)
+	for (i = 0; *l && i < len && goodchar(*l, extra); buf[i++] = *l++)
 		continue;
 
 	if (i == len && *l) {
@@ -2158,14 +2162,18 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
 			file_magwarn(ms, "%s type `%s' truncated %"
 			    SIZE_T_FORMAT "u", name, line, i);
 	} else {
+		if (!isspace((unsigned char)*l) && !goodchar(*l, extra))
+			file_magwarn(ms, "%s type `%s' has bad char '%c'",
+			    name, line, *l);
 		if (nt)
 			buf[i] = '\0';
 	}
 
 	if (i > 0)
 		return 0;
-	else
-		return -1;
+
+	file_magerror(ms, "Bad magic entry '%s'", line);
+	return -1;
 }
 
 /*
@@ -2178,7 +2186,7 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 	struct magic *m = &me->mp[0];
 
 	return parse_extra(ms, me, line, offsetof(struct magic, apple),
-	    sizeof(m->apple), "APPLE", 0);
+	    sizeof(m->apple), "APPLE", "!+-./", 0);
 }
 
 /*
@@ -2191,7 +2199,7 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 	struct magic *m = &me->mp[0];
 
 	return parse_extra(ms, me, line, offsetof(struct magic, mimetype),
-	    sizeof(m->mimetype), "MIME", 1);
+	    sizeof(m->mimetype), "MIME", "+-/.", 1);
 }
 
 private int
