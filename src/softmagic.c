@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.191 2014/06/04 17:36:34 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.192 2014/08/30 15:30:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -41,10 +41,6 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.191 2014/06/04 17:36:34 christos Exp $")
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
-#if defined(HAVE_LOCALE_H)
-#include <locale.h>
-#endif
-
 
 private int match(struct magic_set *, struct magic *, uint32_t,
     const unsigned char *, size_t, size_t, int, int, int, int, int *, int *,

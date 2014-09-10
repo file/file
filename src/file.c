@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.152 2013/06/26 14:46:54 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.153 2014/02/11 15:41:04 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -53,9 +53,6 @@ FILE_RCSID("@(#)$File: file.c,v 1.152 2013/06/26 14:46:54 christos Exp $")
 #endif
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>	/* for read() */
-#endif
-#ifdef HAVE_LOCALE_H
-#include <locale.h>
 #endif
 #ifdef HAVE_WCHAR_H
 #include <wchar.h>

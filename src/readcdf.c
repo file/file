@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.46 2014/08/27 06:59:35 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.47 2014/08/27 13:00:37 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -35,9 +35,6 @@ FILE_RCSID("@(#)$File: readcdf.c,v 1.46 2014/08/27 06:59:35 christos Exp $")
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#if defined(HAVE_LOCALE_H)
-#include <locale.h>
-#endif
 
 #include "cdf.h"
 #include "magic.h"
@@ -107,20 +104,23 @@ cdf_app_to_mime(const char *vbuf, const struct nv *nv)
 {
 	size_t i;
 	const char *rv = NULL;
-	char *old_lc_ctype;
+#ifdef USE_C_LOCALE
+	locale_t old_lc_ctype, c_lc_ctype;
 
-	old_lc_ctype = setlocale(LC_CTYPE, NULL);
+	c_lc_ctype = newlocale(LC_CTYPE_MASK, "C", 0);
+	assert(c_lc_ctype != NULL);
+	old_lc_ctype = uselocale(c_lc_ctype);
 	assert(old_lc_ctype != NULL);
-	old_lc_ctype = strdup(old_lc_ctype);
-	assert(old_lc_ctype != NULL);
-	(void)setlocale(LC_CTYPE, "C");
+#endif
 	for (i = 0; nv[i].pattern != NULL; i++)
 		if (strcasestr(vbuf, nv[i].pattern) != NULL) {
 			rv = nv[i].mime;
 			break;
 		}
-	(void)setlocale(LC_CTYPE, old_lc_ctype);
-	free(old_lc_ctype);
+#ifdef USE_C_LOCALE
+	(void)uselocale(old_lc_ctype);
+	freelocale(c_lc_ctype);
+#endif
 	return rv;
 }
 
