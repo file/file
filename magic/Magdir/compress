@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.60 2014/09/12 13:37:11 christos Exp $
+# $File: compress,v 1.61 2014/09/12 20:57:45 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -260,4 +260,4 @@
 0	beshort%31	=0	
 >0	byte&0xf	=8
 >>0	byte&0x80 	=0	Zlib Archive
-:!mime	application/zlib
+!:mime	application/zlib
