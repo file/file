@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.53 2014/04/30 21:41:02 christos Exp $
+# $File: animation,v 1.54 2014/08/30 10:20:20 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -133,6 +133,7 @@
 >8	string		mmp4		\b, MPEG-4/3GPP Mobile Profile (.MP4 / .3GP) (for NTT)
 !:mime	video/mp4
 >8	string		mobi		\b, MPEG-4, MOBI format
+!:mime	video/mp4
 >8	string		mp21		\b, MPEG-21 [ISO/IEC 21000-9]
 >8	string		mp41		\b, MP4 v1 [ISO 14496-1:ch13]
 !:mime	video/mp4
