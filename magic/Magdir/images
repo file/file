@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.92 2014/09/13 19:46:47 christos Exp $
+# $File: images,v 1.93 2014/09/13 20:17:14 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -121,7 +121,7 @@
 >(4.l)	use		tiff_ifd
 
 0	name		tiff_ifd
->0	leshort		x		\b, direntries %d
+>0	leshort		x		\b, direntries=%d
 >2	use		tiff_entry
 
 0	name		tiff_entry
@@ -163,11 +163,17 @@
 >>>8	default		x	
 >>>>8	lelong		x		\b(unknown 0x%x)
 >>>12	use		tiff_entry
->0	leshort		0x106
->>4	lelong		1
->>>8	lelong		0		\b, WhiteIsZero
->>>8	lelong		1		\b, BlackIsZero
->>>12	use		tiff_entry
+>0	leshort		0x106		\b, PhotometricIntepretation=
+>>8	lelong		0		\bWhiteIsZero
+>>8	lelong		1		\bBlackIsZero
+>>8	lelong		2		\bRGB
+>>8	lelong		3		\bRGB Palette
+>>8	lelong		4		\bTransparency Mask
+>>8	lelong		5		\bCMYK
+>>8	lelong		6		\bYCbCr
+>>8	lelong		8		\bCIELab
+>>>8	lelong		x		\b(unknown=0x%x)
+>>12	use		tiff_entry
 # FillOrder
 >0	leshort		0x10a
 >>4	lelong		1
