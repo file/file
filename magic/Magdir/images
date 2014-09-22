@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.93 2014/09/13 20:17:14 christos Exp $
+# $File: images,v 1.94 2014/09/15 15:10:42 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -979,3 +979,53 @@
 #0	string	RIFF
 #>8	string	WEBP	Web/P image data
 #>>4	lelong	x	\b, %d bytes
+
+# doc: http://www.shikino.co.jp/eng/products/images/FLOWER.jpg.zip
+# example: http://www.shikino.co.jp/eng/products/images/FLOWER.wdp.zip
+90	bequad		0x574D50484F544F00	JPEG-XR Image
+>98	byte&0x08	=0x08			\b, hard tiling
+>99	byte&0x80	=0x80			\b, tiling present
+>99	byte&0x40	=0x40			\b, codestream present
+>99	byte&0x38	x			\b, spatial xform=
+>99	byte&0x38	0x00			\bTL
+>99	byte&0x38	0x08			\bBL
+>99	byte&0x38	0x10			\bTR
+>99	byte&0x38	0x18			\bBR
+>99	byte&0x38	0x20			\bBT
+>99	byte&0x38	0x28			\bRB
+>99	byte&0x38	0x30			\bLT
+>99	byte&0x38	0x38			\bLB
+>100	byte&0x80	=0x80			\b, short header
+>>102	beshort+1	x			\b, %d
+>>104	beshort+1	x			\bx%d
+>100	byte&0x80	=0x00			\b, long header
+>>102	belong+1	x			\b, %x
+>>106	belong+1	x			\bx%x
+>101	beshort&0xf	x			\b, bitdepth=
+>>101	beshort&0xf	0x0			\b1-WHITE=1
+>>101	beshort&0xf	0x1			\b8
+>>101	beshort&0xf	0x2			\b16
+>>101	beshort&0xf	0x3			\b16-SIGNED
+>>101	beshort&0xf	0x4			\b16-FLOAT
+>>101	beshort&0xf	0x5			\b(reserved 5)
+>>101	beshort&0xf	0x6			\b32-SIGNED
+>>101	beshort&0xf	0x7			\b32-FLOAT
+>>101	beshort&0xf	0x8			\b5
+>>101	beshort&0xf	0x9			\b10
+>>101	beshort&0xf	0xa			\b5-6-5
+>>101	beshort&0xf	0xb			\b(reserved %d)
+>>101	beshort&0xf	0xc			\b(reserved %d)
+>>101	beshort&0xf	0xd			\b(reserved %d)
+>>101	beshort&0xf	0xe			\b(reserved %d)
+>>101	beshort&0xf	0xf			\b1-BLACK=1
+>101	beshort&0xf0	x			\b, colorfmt=
+>>101	beshort&0xf0	0x00			\bYONLY
+>>101	beshort&0xf0	0x10			\bYUV240
+>>101	beshort&0xf0	0x20			\bYWV422
+>>101	beshort&0xf0	0x30			\bYWV444
+>>101	beshort&0xf0	0x40			\bCMYK
+>>101	beshort&0xf0	0x50			\bCMYKDIRECT
+>>101	beshort&0xf0	0x60			\bNCOMPONENT
+>>101	beshort&0xf0	0x70			\bRGB
+>>101	beshort&0xf0	0x80			\bRGBE
+>>101	beshort&0xf0	>0x80			\b(reserved 0x%x)
