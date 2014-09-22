@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.193 2014/09/10 18:41:51 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.194 2014/09/22 18:26:19 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -74,6 +74,7 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
 {
 	struct mlist *ml;
 	int rv, printed_something = 0, need_separator = 0;
+
 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
 		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, 0, mode,
 		    text, 0, level, &printed_something, &need_separator,
@@ -1940,6 +1941,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	case FILE_REGEX: {
 		int rc;
 		file_regex_t rx;
+		const char *search;
 
 		if (ms->search.s == NULL)
 			return 0;
@@ -1956,19 +1958,30 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			size_t slen = ms->search.s_len;
 #ifndef REG_STARTEND
 #define	REG_STARTEND	0
-			char c;
-			if (slen != 0)
-				slen--;
-			c = ms->search.s[slen];
-			((char *)(intptr_t)ms->search.s)[slen] = '\0';
+			char *copy;
+			if (slen != 0) {
+			    copy = malloc(slen);
+			    if (copy == NULL)  {
+				file_error(ms, errno,
+				    "can't allocate %zu bytes", slen);
+				return -1;
+			    }
+			    memcpy(copy, ms->search.s, slen);
+			    copy[--slen] = '\0';
+			    search = copy;
+			} else {
+			    search = ms->search.s;
+			    copy = NULL;
+			}
 #else
+			search = ms->search.s;
 			pmatch[0].rm_so = 0;
 			pmatch[0].rm_eo = slen;
 #endif
-			rc = file_regexec(&rx, (const char *)ms->search.s,
+			rc = file_regexec(&rx, (const char *)search,
 			    1, pmatch, REG_STARTEND);
 #if REG_STARTEND == 0
-			((char *)(intptr_t)ms->search.s)[l] = c;
+			free(copy);
 #endif
 			switch (rc) {
 			case 0:
