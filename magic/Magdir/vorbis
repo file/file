@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: vorbis,v 1.18 2014/04/30 21:41:02 christos Exp $
+# $File: vorbis,v 1.19 2014/09/23 12:57:41 christos Exp $
 # vorbis:  file(1) magic for Ogg/Vorbis files
 #
 # From Felix von Leitner <leitner@fefe.de>
@@ -34,7 +34,7 @@
 >>28		string		\x80theora	\b, Theora video
 !:mime		video/ogg
 # non-Vorbis content: Kate
->>28		string		\x80kate\0\0\0\0	\b, Kate
+>>28		string		\x80kate\0\0\0\0	\b, Kate (Karaoke and Text)
 !:mime		application/ogg
 >>>37		ubyte		x		v%u
 >>>38		ubyte		x		\b.%u,
@@ -46,7 +46,7 @@
 >>>76		string		\0		no category set
 # non-Vorbis content: Skeleton
 >>28		string		fishead\0	\b, Skeleton
-!:mime		application/ogg
+!:mime		video/ogg
 >>>36		short		x		v%u
 >>>40		short		x		\b.%u
 # non-Vorbis content: Speex
