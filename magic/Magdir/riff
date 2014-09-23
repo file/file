@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.28 2014/09/13 14:04:21 christos Exp $
+# $File: riff,v 1.29 2014/09/15 15:10:42 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -59,6 +59,10 @@
 >>>>>14		leshort&0xc000	0x1000	\bx[5/4]
 >>>>>14		leshort&0xc000	0x2000	\bx[5/3]
 >>>>>14		leshort&0xc000	0x3000	\bx[2]
+>>>>>15		byte&0x80	=0x00	\b, YUV color
+>>>>>15		byte&0x80	=0x80	\b, bad color specification
+>>>>>15		byte&0x40	=0x40	\b, no clamping required
+>>>>>15		byte&0x40	=0x00	\b, decoders should clamp
 #>0  string  x		we got %s
 #>>&(4.l+4)  use riff-walk
 
