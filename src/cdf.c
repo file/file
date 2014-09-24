@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.66 2014/08/27 06:59:35 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.67 2014/09/24 19:49:07 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1156,7 +1156,7 @@ cdf_dump_header(const cdf_header_t *h)
 	for (i = 0; i < __arraycount(h->h_master_sat); i++) {
 		if (h->h_master_sat[i] == CDF_SECID_FREE)
 			break;
-		(void)fprintf(stderr, "%35.35s[%.3zu] = %d\n",
+		(void)fprintf(stderr, "%35.35s[%.3" SIZE_T_FORMAT "u] = %d\n",
 		    "master_sat", i, h->h_master_sat[i]);
 	}
 }

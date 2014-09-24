@@ -97,7 +97,7 @@ main(int argc, char *argv[])
 	size_t n = 0;
 
 	while ((len = getline(&p, &n, stdin)) != -1)
-		(void)printf("%zd %s", len, p);
+		(void)printf("%" SIZE_T_FORMAT "d %s", len, p);
 	free(p);
 	return 0;
 }

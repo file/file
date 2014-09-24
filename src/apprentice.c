@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.215 2014/08/30 10:19:54 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.216 2014/09/24 19:49:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -464,7 +464,8 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 
 	if (action == FILE_LIST) {
 		for (i = 0; i < MAGIC_SETS; i++) {
-			printf("Set %zu:\nBinary patterns:\n", i);
+			printf("Set %" SIZE_T_FORMAT "u:\nBinary patterns:\n",
+			    i);
 			apprentice_list(ms->mlist[i], BINTEST);
 			printf("Text patterns:\n");
 			apprentice_list(ms->mlist[i], TEXTTEST);

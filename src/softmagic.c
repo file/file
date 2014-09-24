@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.194 2014/09/22 18:26:19 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.195 2014/09/24 19:49:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -95,8 +95,8 @@ file_fmtcheck(struct magic_set *ms, const struct magic *m, const char *def,
 	const char *ptr = fmtcheck(m->desc, def);
 	if (ptr == def)
 		file_magerror(ms,
-		    "%s, %zu: format `%s' does not match with `%s'",
-		    file, line, m->desc, def);
+		    "%s, %" SIZE_T_FORMAT "u: format `%s' does not match"
+		    " with `%s'", file, line, m->desc, def);
 	return ptr;
 }
 #else
@@ -1057,7 +1057,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 private void
 mdebug(uint32_t offset, const char *str, size_t len)
 {
-	(void) fprintf(stderr, "mget/%zu @%d: ", len, offset);
+	(void) fprintf(stderr, "mget/%" SIZE_T_FORMAT "u @%d: ", len, offset);
 	file_showstr(stderr, str, len);
 	(void) fputc('\n', stderr);
 	(void) fputc('\n', stderr);
@@ -1207,8 +1207,9 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		return -1;
 
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
-		fprintf(stderr, "mget(type=%d, flag=%x, offset=%u, o=%zu, "
-		    "nbytes=%zu)\n", m->type, m->flag, offset, o, nbytes);
+		fprintf(stderr, "mget(type=%d, flag=%x, offset=%u, o=%"
+		    SIZE_T_FORMAT "u, " "nbytes=%" SIZE_T_FORMAT "u)\n",
+		    m->type, m->flag, offset, o, nbytes);
 		mdebug(offset, (char *)(void *)p, sizeof(union VALUETYPE));
 #ifndef COMPILE_ONLY
 		file_mdump(m);
@@ -1963,7 +1964,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			    copy = malloc(slen);
 			    if (copy == NULL)  {
 				file_error(ms, errno,
-				    "can't allocate %zu bytes", slen);
+				    "can't allocate %" SIZE_T_FORMAT "u bytes",
+				    slen);
 				return -1;
 			    }
 			    memcpy(copy, ms->search.s, slen);
