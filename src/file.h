@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.154 2014/09/10 18:41:51 christos Exp $
+ * @(#)$File: file.h,v 1.155 2014/10/11 15:03:16 christos Exp $
  */
 
 #ifndef __file_h__
@@ -473,6 +473,9 @@ protected int file_os2_apptype(struct magic_set *, const char *, const void *,
 
 #if defined(HAVE_LOCALE_H)
 #include <locale.h>
+#endif
+#if defined(HAVE_XLOCALE_H)
+#include <xlocale.h>
 #endif
 
 typedef struct {
