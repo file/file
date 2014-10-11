@@ -1,3 +1,8 @@
+2014-10-11  15:02  Christos Zoulas <christos@zoulas.com>
+
+	* fix autoconf glue for setlocale and locale_t; some OS's
+	  have locale_t in xlocale.h
+
 2014-10-10  15:01  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.20
