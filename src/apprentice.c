@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.215 2014/08/30 10:19:54 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.216 2014/09/24 19:49:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1373,7 +1373,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		 * the sign extension must have happened.
 		 */
 		case FILE_BYTE:
-			v = (char) v;
+			v = (signed char) v;
 			break;
 		case FILE_SHORT:
 		case FILE_BESHORT:
