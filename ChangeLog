@@ -1,3 +1,7 @@
+2014-10-17  11:48  Christos Zoulas <christos@zoulas.com>
+
+	* fix bounds in note reading (Francisco Alonso / Red Hat)
+
 2014-10-11  15:02  Christos Zoulas <christos@zoulas.com>
 
 	* fix autoconf glue for setlocale and locale_t; some OS's
