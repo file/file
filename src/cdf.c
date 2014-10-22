@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.67 2014/09/24 19:49:07 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.68 2014/10/22 19:27:36 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -463,6 +463,12 @@ cdf_count_chain(const cdf_sat_t *sat, cdf_secid_t sid, size_t size)
 	    / sizeof(maxsector));
 
 	DPRINTF(("Chain:"));
+	if (sid == CDF_SECID_END_OF_CHAIN) {
+		/* 0-length chain. */
+		DPRINTF((" empty\n"));
+		return 0;
+	}
+
 	for (j = i = 0; sid >= 0; i++, j++) {
 		DPRINTF((" %d", sid));
 		if (j >= CDF_LOOP_LIMIT) {
