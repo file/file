@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.103 2014/09/11 15:09:34 christos Exp $
+# $File: filesystems,v 1.104 2014/10/22 18:16:03 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -260,13 +260,7 @@
 >>(11.s-2)	uleshort	0xAA55		DOS/MBR boot sector
 # for sector sizes with 512 or more Bytes
 >0x1FE		leshort		0xAA55		DOS/MBR boot sector
-# keep old DOS/MBR boot sector as dummy for mbr and bootloader displaying
-# only for sector sizes with 512 or more Bytes
-0x1FE		leshort		0xAA55		
-#
-# to display information (50) before DOS BPB (strength=70) and after DOS floppy (120) like in old file version
-!:strength +70
->2	string	OSBS			OS/BS MBR
+>2		string		OSBS		OS/BS MBR
 # added by Joerg Jenderek at Feb 2013 according to http://thestarman.pcministry.com/asm/mbr/
 # and http://en.wikipedia.org/wiki/Master_Boot_Record
 # test for nearly all MS-DOS Master Boot Record initial program loader (IPL) is now done by 
@@ -1045,7 +1039,7 @@
 >>>>>>466	ubyte	<0x10			
 >>>>>>>466	ubyte	0x05			\b, extended partition table
 >>>>>>>466	ubyte	0x0F			\b, extended partition table (LBA)
->>>>>>>466	ubyte	0x0			\b, extended partition table (last)	
+>>>>>>>466	ubyte	0x0			\b, extended partition table (last)
 
 # DOS x86 sector separated and moved from "DOS/MBR boot sector" by Joerg Jenderek at May 2011
 
@@ -1238,6 +1232,7 @@
 >>>>>181	search/166		Error\ \0			
 # "a: disk" , "Fn: diskn" or "NetBSD MBR boot"
 >>>>>>&3	string			x				\b,"%s"
+>>>446	use		partition-table
 # Andrea Mazzoleni AdvanceCD mbr loader of http://advancemame.sourceforge.net/boot-readme.html
 # added by Joerg Jenderek at Nov 2012 for versions 1.3 - 1.4
 # assembler instructions: jmp short 0x58;nop;ASCII
