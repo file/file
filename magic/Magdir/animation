@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.55 2014/09/13 14:29:51 christos Exp $
+# $File: animation,v 1.56 2014/10/23 23:12:51 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -114,11 +114,11 @@
 !:mime	image/jpx
 >8	string		KDDI		\b, 3GPP2 EZmovie for KDDI 3G cellphones
 !:mime	video/3gpp2
->8	string		M4A 		\b, Apple iTunes AAC-LC (.M4A) Audio
+>8	string		M4A 		\b, Apple iTunes ALAC/AAC-LC (.M4A) Audio
 !:mime	audio/x-m4a
->8	string		M4B 		\b, Apple iTunes AAC-LC (.M4B) Audio Book
+>8	string		M4B 		\b, Apple iTunes ALAC/AAC-LC (.M4B) Audio Book
 !:mime	audio/mp4
->8	string		M4P 		\b, Apple iTunes AAC-LC (.M4P) AES Protected Audio
+>8	string		M4P 		\b, Apple iTunes ALAC/AAC-LC (.M4P) AES Protected Audio
 !:mime	video/mp4
 >8	string		M4V 		\b, Apple iTunes Video (.M4V) Video
 !:mime	video/x-m4v
