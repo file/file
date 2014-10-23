@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.105 2014/10/22 19:16:30 christos Exp $
+# $File: filesystems,v 1.106 2014/10/23 17:17:09 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -1351,6 +1351,7 @@
 # maximal short forward jump is 0x7f
 # OEM-ID is empty or contain readable bytes
 0		ulelong&0x804000E9	0x000000E9
+!:strength	+60
 # mtools-3.9.8/msdos.h
 # usual values are marked with comments to get only informations of strange FAT systems
 # valid sectorsize must be a power of 2 from 32 to 32768
@@ -1358,7 +1359,7 @@
 >>11		uleshort	<32769		
 >>>11		uleshort	>31		
 >>>>21		ubyte&0xf0	0xF0		
->>>>>0		ubyte		0xEB		
+>>>>>0		ubyte		0xEB		DOS/MBR boot sector
 >>>>>>1		ubyte		x		\b, code offset 0x%x+2
 >>>>>0		ubyte		0xE9		
 >>>>>>1		uleshort	x		\b, code offset 0x%x+3
