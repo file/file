@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.218 2014/10/28 22:09:57 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.219 2014/10/28 22:10:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -577,7 +577,7 @@ protected int
 buffer_apprentice(struct magic_set *ms, struct magic **bufs,
     size_t *sizes, size_t nbufs)
 {
-	size_t i;
+	size_t i, j;
 	struct mlist *ml;
 	struct magic_map *map;
 
@@ -593,29 +593,31 @@ buffer_apprentice(struct magic_set *ms, struct magic **bufs,
 		mlist_free(ms->mlist[i]);
 		if ((ms->mlist[i] = mlist_alloc()) == NULL) {
 			file_oomem(ms, sizeof(*ms->mlist[i]));
-			while (i-- > 0) {
-				mlist_free(ms->mlist[i]);
-				ms->mlist[i] = NULL;
-			}
-			return -1;
+			goto fail;
 		}
 	}
 
 	for (i = 0; i < nbufs; i++) {
 		map = apprentice_buf(ms, bufs[i], sizes[i]);
 		if (map == NULL)
-			return -1;
+			goto fail;
 
-		for (i = 0; i < MAGIC_SETS; i++) {
-			if (add_mlist(ms->mlist[i], map, i) == -1) {
+		for (j = 0; j < MAGIC_SETS; j++) {
+			if (add_mlist(ms->mlist[j], map, j) == -1) {
 				file_oomem(ms, sizeof(*ml));
 				apprentice_unmap(map);
-				return -1;
+				goto fail;
 			}
 		}
 	}
 
 	return 0;
+fail:
+	for (i = 0; i < MAGIC_SETS; i++) {
+		mlist_free(ms->mlist[i]);
+		ms->mlist[i] = NULL;
+	}
+	return -1;
 }
 #endif
 
@@ -644,11 +646,9 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		mlist_free(ms->mlist[i]);
 		if ((ms->mlist[i] = mlist_alloc()) == NULL) {
 			file_oomem(ms, sizeof(*ms->mlist[i]));
-			if (i != 0) {
-				--i;
-				do
-					mlist_free(ms->mlist[i]);
-				while (i != 0);
+			while (i-- > 0) {
+				mlist_free(ms->mlist[i]);
+				ms->mlist[i] = NULL;
 			}
 			free(mfn);
 			return -1;
