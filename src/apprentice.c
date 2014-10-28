@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.217 2014/10/15 12:39:21 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.218 2014/10/28 22:09:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2759,7 +2759,7 @@ eatsize(const char **p)
 }
 
 /*
- * handle a buffer containging a compiled file.
+ * handle a buffer containing a compiled file.
  */
 private struct magic_map *
 apprentice_buf(struct magic_set *ms, struct magic *buf, size_t len)
