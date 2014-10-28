@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.216 2014/09/24 19:49:07 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.217 2014/10/15 12:39:21 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -593,11 +593,9 @@ buffer_apprentice(struct magic_set *ms, struct magic **bufs,
 		mlist_free(ms->mlist[i]);
 		if ((ms->mlist[i] = mlist_alloc()) == NULL) {
 			file_oomem(ms, sizeof(*ms->mlist[i]));
-			if (i != 0) {
-				--i;
-				do
-					mlist_free(ms->mlist[i]);
-				while (i != 0);
+			while (i-- > 0) {
+				mlist_free(ms->mlist[i]);
+				ms->mlist[i] = NULL;
 			}
 			return -1;
 		}
