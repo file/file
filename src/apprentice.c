@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.220 2014/10/28 22:25:17 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.221 2014/10/29 14:41:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -404,10 +404,11 @@ add_mlist(struct mlist *mlp, struct magic_map *map, size_t idx)
 {
 	struct mlist *ml;
 
+	mlp->map = idx == 0 ? map : NULL;
 	if ((ml = CAST(struct mlist *, malloc(sizeof(*ml)))) == NULL)
 		return -1;
 
-	ml->map = idx == 0 ? map : NULL;
+	ml->map = NULL;
 	ml->magic = map->magic[idx];
 	ml->nmagic = map->nmagic[idx];
 
@@ -457,8 +458,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	for (i = 0; i < MAGIC_SETS; i++) {
 		if (add_mlist(ms->mlist[i], map, i) == -1) {
 			file_oomem(ms, sizeof(*ml));
-			apprentice_unmap(map);
-			return -1;
+			goto fail;
 		}
 	}
 
@@ -471,8 +471,16 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 			apprentice_list(ms->mlist[i], TEXTTEST);
 		}
 	}
-#endif /* COMPILE_ONLY */
 	return 0;
+fail:
+	for (i = 0; i < MAGIC_SETS; i++) {
+		mlist_free(ms->mlist[i]);
+		ms->mlist[i] = NULL;
+	}
+	return -1;
+#else
+	return 0;
+#endif /* COMPILE_ONLY */
 }
 
 protected void
@@ -605,7 +613,6 @@ buffer_apprentice(struct magic_set *ms, struct magic **bufs,
 		for (j = 0; j < MAGIC_SETS; j++) {
 			if (add_mlist(ms->mlist[j], map, j) == -1) {
 				file_oomem(ms, sizeof(*ml));
-				apprentice_unmap(map);
 				goto fail;
 			}
 		}
