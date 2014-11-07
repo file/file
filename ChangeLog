@@ -1,3 +1,10 @@
+2014-11-07  10:25  Christos Zoulas <christos@zoulas.com>
+
+	* When printing strings from a file, convert them to printable
+	  on a byte by byte basis, so that we don't get issues with
+	  locale's trying to interpret random byte streams as UTF-8 and
+	  having printf error out with EILSEQ.
+	  
 2014-10-17  11:48  Christos Zoulas <christos@zoulas.com>
 
 	* fix bounds in note reading (Francisco Alonso / Red Hat)
