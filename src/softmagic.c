@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.194 2014/09/22 18:26:19 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.195 2014/09/24 19:49:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -397,6 +397,28 @@ strndup(const char *str, size_t n)
 }
 #endif /* HAVE_STRNDUP */
 
+static char *
+printable(char *buf, size_t bufsiz, const char *str)
+{
+	char *ptr, *eptr;
+	const unsigned char *s = (const unsigned char *)str;
+
+	for (ptr = buf, eptr = ptr + bufsiz - 1; ptr < eptr && *s; s++) {
+		if (isprint(*s)) {
+			*ptr++ = *s;
+			continue;
+		}
+		if (ptr >= eptr + 4)
+			break;
+		*ptr++ = '\\';
+		*ptr++ = ((*s >> 6) & 7) + '0';
+		*ptr++ = ((*s >> 3) & 7) + '0';
+		*ptr++ = ((*s >> 0) & 7) + '0';
+	}
+	*ptr = '\0';
+	return buf;
+}
+
 private int32_t
 mprint(struct magic_set *ms, struct magic *m)
 {
@@ -503,6 +525,7 @@ mprint(struct magic_set *ms, struct magic *m)
 			t = ms->offset + m->vallen;
 		}
 		else {
+			char sbuf[512];
 			char *str = p->s;
 
 			/* compute t before we mangle the string? */
@@ -524,7 +547,8 @@ mprint(struct magic_set *ms, struct magic *m)
 				*++last = '\0';
 			}
 
-			if (file_printf(ms, F(ms, m, "%s"), str) == -1)
+			if (file_printf(ms, F(ms, m, "%s"),
+			    printable(sbuf, sizeof(sbuf), str)) == -1)
 				return -1;
 
 			if (m->type == FILE_PSTRING)
