@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.196 2014/11/07 15:24:14 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.197 2014/11/11 17:48:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -964,14 +964,17 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		size_t sz = file_pstring_length_size(m);
 		char *ptr1 = p->s, *ptr2 = ptr1 + sz;
 		size_t len = file_pstring_get_length(m, ptr1);
-		if (len >= sizeof(p->s)) {
+		sz = sizeof(p->s) - sz; /* maximum length of string */
+		if (len >= sz) {
 			/*
 			 * The size of the pascal string length (sz)
 			 * is 1, 2, or 4. We need at least 1 byte for NUL
 			 * termination, but we've already truncated the
 			 * string by p->s, so we need to deduct sz.
+			 * Because we can use one of the bytes of the length
+			 * after we shifted as NUL termination.
 			 */ 
-			len = sizeof(p->s) - sz;
+			len = sz;
 		}
 		while (len--)
 			*ptr1++ = *ptr2++;
