@@ -1,3 +1,8 @@
+2014-11-11  12:35  Christos Zoulas <christos@zoulas.com>
+
+	* fix out of bounds read for pascal strings
+	* fix memory leak (not freeing the head of each mlist)
+
 2014-11-07  10:25  Christos Zoulas <christos@zoulas.com>
 
 	* When printing strings from a file, convert them to printable
