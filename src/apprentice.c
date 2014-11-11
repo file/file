@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.220 2014/10/28 22:25:17 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.221 2014/10/29 14:41:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -564,19 +564,19 @@ mlist_alloc(void)
 private void
 mlist_free(struct mlist *mlist)
 {
-	struct mlist *ml;
+	struct mlist *ml, *next;
 
 	if (mlist == NULL)
 		return;
 
-	for (ml = mlist->next; ml != mlist;) {
-		struct mlist *next = ml->next;
+	ml = mlist->next;
+	for (ml = mlist->next; (next = ml->next) != NULL; ml = next) {
 		if (ml->map)
 			apprentice_unmap(ml->map);
 		free(ml);
-		ml = next;
+		if (ml == mlist)
+			break;
 	}
-	free(ml);
 }
 
 #ifndef COMPILE_ONLY
