@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.10 2014/10/14 16:50:37 christos Exp $
+# $File: pgp,v 1.11 2014/11/11 21:32:38 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 # see http://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
@@ -21,10 +21,64 @@
 
 2	string	---BEGIN\ PGP\ PUBLIC\ KEY\ BLOCK-	PGP public key block
 !:mime	application/pgp-keys
+>10	search/100	\n\n
+>>&0	use		pgp
 0	string	-----BEGIN\040PGP\40MESSAGE-		PGP message
 !:mime	application/pgp
+>10	search/100	\n\n
+>>&0	use		pgp
 0	string	-----BEGIN\040PGP\40SIGNATURE-		PGP signature
 !:mime	application/pgp-signature
+>10	search/100	\n\n
+>>&0	use		pgp
+
+# Decode the type of the packet based on it's base64 encoding.
+# Idea from Mark Martinec
+# The specification is in RFC 4880, section 4.2 and 4.3:
+# http://tools.ietf.org/html/rfc4880#section-4.2
+
+0	name		pgp
+>0	byte		0x67		Reserved (old)
+>0	byte		0x68		Public-Key Encrypted Session Key (old)
+>0	byte		0x69		Signature (old)
+>0	byte		0x6a		Symmetric-Key Encrypted Session Key (old)
+>0	byte		0x6b		One-Pass Signature (old)
+>0	byte		0x6c		Secret-Key (old)
+>0	byte		0x6d		Public-Key (old)
+>0	byte		0x6e		Secret-Subkey (old)
+>0	byte		0x6f		Compressed Data (old)
+>0	byte		0x70		Symmetrically Encrypted Data (old)
+>0	byte		0x71		Marker (old)
+>0	byte		0x72		Literal Data (old)
+>0	byte		0x73		Trust (old)
+>0	byte		0x74		User ID (old)
+>0	byte		0x75		Public-Subkey (old)
+>0	byte		0x76		Unused (old)
+>0	byte		0x77
+>>1	byte&0xc0	0x00		Reserved
+>>1	byte&0xc0	0x40		Public-Key Encrypted Session Key
+>>1	byte&0xc0	0x80		Signature
+>>1	byte&0xc0	0xc0		Symmetric-Key Encrypted Session Key
+>0	byte		0x78
+>>1	byte&0xc0	0x00		One-Pass Signature
+>>1	byte&0xc0	0x40		Secret-Key
+>>1	byte&0xc0	0x80		Public-Key
+>>1	byte&0xc0	0xc0		Secret-Subkey
+>0	byte		0x79
+>>1	byte&0xc0	0x00		Compressed Data
+>>1	byte&0xc0	0x40		Symmetrically Encrypted Data
+>>1	byte&0xc0	0x80		Marker
+>>1	byte&0xc0	0xc0		Literal Data
+>0	byte		0x7a
+>>1	byte&0xc0	0x00		Trust
+>>1	byte&0xc0	0x40		User ID
+>>1	byte&0xc0	0x80		Public-Subkey
+>>1	byte&0xc0	0xc0		Unused [z%x]
+>0	byte		0x30
+>>1	byte&0xc0	0x00		Unused [0%x]
+>>1	byte&0xc0	0x40		User Attribute
+>>1	byte&0xc0	0x80		Sym. Encrypted and Integrity Protected Data 
+>>1	byte&0xc0	0xc0		Modification Detection Code
 
 # magic signatures to detect PGP crypto material (from stef)
 # detects and extracts metadata from:
