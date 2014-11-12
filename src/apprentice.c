@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.221 2014/10/29 14:41:32 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.222 2014/11/11 17:46:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -535,17 +535,21 @@ apprentice_unmap(struct magic_map *map)
 {
 	if (map == NULL)
 		return;
-	if (map->p != NULL && map->type != MAP_TYPE_USER) {
+
+	switch (map->type) {
 #ifdef QUICK
-		if (map->type == MAP_TYPE_MMAP)
+	case MAP_TYPE_MMAP:
+		if (map->p)
 			(void)munmap(map->p, map->len);
-		else
+		break;
 #endif
+	case MAP_TYPE_MALLOC:
 		free(map->p);
-	} else {
-		uint32_t j;
-		for (j = 0; j < MAGIC_SETS; j++)
-			free(map->magic[j]);
+		break;
+	case MAP_TYPE_USER:
+		break;
+	default:
+		abort();
 	}
 	free(map);
 }
