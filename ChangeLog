@@ -1,3 +1,7 @@
+2014-11-12  10:30  Christos Zoulas <christos@zoulas.com>
+
+	* fix bogus free in the user buffer case.
+
 2014-11-11  12:35  Christos Zoulas <christos@zoulas.com>
 
 	* fix out of bounds read for pascal strings
