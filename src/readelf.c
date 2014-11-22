@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.104 2014/10/17 15:49:00 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.105 2014/11/22 16:04:29 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -59,6 +59,18 @@ private size_t donote(struct magic_set *, void *, size_t, size_t, int,
 private uint16_t getu16(int, uint16_t);
 private uint32_t getu32(int, uint32_t);
 private uint64_t getu64(int, uint64_t);
+
+#define MAX_PHNUM	256
+#define	MAX_SHNUM	1024
+
+private int
+toomany(struct magic_set *ms, const char *name, uint16_t num)
+{
+	if (file_printf(ms, ", too many %s header sections (%u)", name, num
+	    ) == -1)
+		return -1;
+	return 0;
+}
 
 private uint16_t
 getu16(int swap, uint16_t value)
@@ -499,13 +511,13 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	if (namesz & 0x80000000) {
 	    (void)file_printf(ms, ", bad note name size 0x%lx",
 		(unsigned long)namesz);
-	    return offset;
+	    return 0;
 	}
 
 	if (descsz & 0x80000000) {
 	    (void)file_printf(ms, ", bad note description size 0x%lx",
 		(unsigned long)descsz);
-	    return offset;
+	    return 0;
 	}
 
 
@@ -1240,7 +1252,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	int flags = 0;
 	Elf32_Ehdr elf32hdr;
 	Elf64_Ehdr elf64hdr;
-	uint16_t type;
+	uint16_t type, phnum, shnum;
 
 	if (ms->flags & (MAGIC_MIME|MAGIC_APPLE))
 		return 0;
