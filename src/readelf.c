@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.105 2014/11/22 16:04:29 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.106 2014/11/22 23:57:44 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -919,6 +919,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	Elf32_Shdr sh32;
 	Elf64_Shdr sh64;
 	int stripped = 1;
+	size_t nbadcap = 0;
 	void *nbuf;
 	off_t noff, coff, name_off;
 	uint64_t cap_hw1 = 0;	/* SunOS 5.x hardware capabilites */
@@ -1007,6 +1008,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				goto skip;
 			}
 
+			if (nbadcap > 5)
+				break;
 			if (lseek(fd, xsh_offset, SEEK_SET) == (off_t)-1) {
 				file_badseek(ms);
 				return -1;
@@ -1072,6 +1075,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 					    (unsigned long long)xcap_tag,
 					    (unsigned long long)xcap_val) == -1)
 						return -1;
+					if (nbadcap++ > 2)
+						coff = xsh_size;
 					break;
 				}
 			}
