@@ -1,3 +1,13 @@
+2014-11-24   8:55  Christos Zoulas <christos@zoulas.com>
+
+	* The following fixes resulted from Tomas Jarosch's fuzzing
+	  tests that revealed severe performance issues on pathological
+	  input:
+	    - limit elf number of program and section sections processing
+	    - abort elf note processing quickly
+	    - reduce the numbeer of recursion levels from 20 to 10
+	    - preserve error messages in indirect magic handling
+
 2014-11-12  10:30  Christos Zoulas <christos@zoulas.com>
 
 	* fix bogus free in the user buffer case.
