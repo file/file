@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.105 2014/11/22 16:04:29 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.106 2014/11/22 23:57:44 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1200,7 +1200,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		/* Things we can determine when we seek */
 		switch (xph_type) {
 		case PT_NOTE:
-			if ((align = xph_align) & 0x80000000UL) {
+			if (((align = xph_align) & 0x80000000UL) != 0 ||
+			    align < 4) {
 				if (file_printf(ms, 
 				    ", invalid note alignment 0x%lx",
 				    (unsigned long)align) == -1)
