@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.105 2014/01/31 01:57:00 christos Exp $
-.Dd January 30, 2014
+.\" $File: file.man,v 1.106 2014/03/07 23:11:51 christos Exp $
+.Dd November 27, 2014
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -16,6 +16,7 @@
 .Op Fl F Ar separator
 .Op Fl f Ar namefile
 .Op Fl m Ar magicfiles
+.Op Fl R Ar maxrecursion
 .Ar
 .Ek
 .Nm
@@ -308,6 +309,11 @@ Don't translate unprintable characters to \eooo.
 Normally
 .Nm
 translates unprintable characters to their octal representation.
+.It Fl R , Fl Fl recursion Ar maxlevel
+Set the maximum recursion level for indirect type magic or name/use entry
+invocations.
+The default is
+.Dv 15 .
 .It Fl s , Fl Fl special-files
 Normally,
 .Nm
