@@ -1,3 +1,9 @@
+2014-11-27  11:12  Christos Zoulas <christos@zoulas.com>
+
+	* Adjust ELF parameters and the default recursion
+	  level.
+	* Allow setting the recursion level dynamically.
+
 2014-11-24   8:55  Christos Zoulas <christos@zoulas.com>
 
 	* The following fixes resulted from Thomas Jarosch's fuzzing
