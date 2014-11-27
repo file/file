@@ -1,3 +1,8 @@
+2014-11-27  18:40  Christos Zoulas <christos@zoulas.com>
+
+	* Allow setting more parameters from the command line.
+	* Split name/use and indirect magic recursion limits.
+
 2014-11-27  11:12  Christos Zoulas <christos@zoulas.com>
 
 	* Adjust ELF parameters and the default recursion

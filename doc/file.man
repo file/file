@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.107 2014/11/27 16:15:06 christos Exp $
+.\" $File: file.man,v 1.108 2014/11/27 23:42:58 christos Exp $
 .Dd November 27, 2014
 .Dt FILE __CSECTION__
 .Os
@@ -16,7 +16,7 @@
 .Op Fl F Ar separator
 .Op Fl f Ar namefile
 .Op Fl m Ar magicfiles
-.Op Fl R Ar maxrecursion
+.Op Fl P Ar name=value
 .Ar
 .Ek
 .Nm
@@ -304,16 +304,20 @@ or
 attempt to preserve the access time of files analyzed, to pretend that
 .Nm
 never read them.
+.It Fl P , Fl Fl parameter Ar name=value
+Set various parameter limits.
+.Bl -column "indir" "Default" "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" -offset indent
+.It Sy "Name" Ta Sy "Default" Ta Sy "Explanation"
+.It Li indir Ta 15 Ta recursion limit for indirect magic
+.It Li name Ta 40 Ta recursion limit for name/use magic
+.It Li phnum Ta 128 Ta max ELF program sections processed
+.It Li shnum Ta 32768 Ta max ELF sections processed
+.El
 .It Fl r , Fl Fl raw
 Don't translate unprintable characters to \eooo.
 Normally
 .Nm
 translates unprintable characters to their octal representation.
-.It Fl R , Fl Fl recursion Ar maxlevel
-Set the maximum recursion level for indirect type magic or name/use entry
-invocations.
-The default is
-.Dv 15 .
 .It Fl s , Fl Fl special-files
 Normally,
 .Nm
