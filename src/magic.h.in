@@ -96,12 +96,16 @@ int magic_setflags(magic_t, int);
 
 int magic_version(void);
 int magic_load(magic_t, const char *);
-int magic_load_buffers(struct magic_set *, void **, size_t *, size_t);
+int magic_load_buffers(magic_t, void **, size_t *, size_t);
 
 int magic_compile(magic_t, const char *);
 int magic_check(magic_t, const char *);
 int magic_list(magic_t, const char *);
 int magic_errno(magic_t);
+
+#define MAGIC_PARAM_MAX_RECURSION	0
+int magic_setparam(magic_t, int, const void *);
+int magic_getparam(magic_t, int, void *);
 
 #ifdef __cplusplus
 };

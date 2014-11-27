@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.155 2014/10/11 15:03:16 christos Exp $
+ * @(#)$File: file.h,v 1.156 2014/11/23 13:54:27 christos Exp $
  */
 
 #ifndef __file_h__
@@ -401,6 +401,8 @@ struct magic_set {
 	/* FIXME: Make the string dynamically allocated so that e.g.
 	   strings matched in files can be longer than MAXstring */
 	union VALUETYPE ms_value;	/* either number or string */
+	size_t max_recursion;
+#define	FILE_MAX_RECURSION	15
 };
 
 /* Type for Unicode characters */
