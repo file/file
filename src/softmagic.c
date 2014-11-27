@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.198 2014/11/23 13:54:27 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.199 2014/11/27 15:40:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,10 +43,10 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.198 2014/11/23 13:54:27 christos Exp $")
 #include <time.h>
 
 private int match(struct magic_set *, struct magic *, uint32_t,
-    const unsigned char *, size_t, size_t, int, int, int, int, int *, int *,
+    const unsigned char *, size_t, size_t, int, int, int, size_t, int *, int *,
     int *);
 private int mget(struct magic_set *, const unsigned char *,
-    struct magic *, size_t, size_t, unsigned int, int, int, int, int, int *,
+    struct magic *, size_t, size_t, unsigned int, int, int, int, size_t, int *,
     int *, int *);
 private int magiccheck(struct magic_set *, struct magic *);
 private int32_t mprint(struct magic_set *, struct magic *);
@@ -63,8 +63,6 @@ private void cvt_32(union VALUETYPE *, const struct magic *);
 private void cvt_64(union VALUETYPE *, const struct magic *);
 
 #define OFFSET_OOB(n, o, i)	((n) < (o) || (i) > ((n) - (o)))
-
-#define MAX_RECURSION_LEVEL	10
 
 /*
  * softmagic - lookup one file in parsed, in-memory copy of database
@@ -136,8 +134,8 @@ file_fmtcheck(struct magic_set *ms, const struct magic *m, const char *def,
 private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
     const unsigned char *s, size_t nbytes, size_t offset, int mode, int text,
-    int flip, int recursion_level, int *printed_something, int *need_separator,
-    int *returnval)
+    int flip, size_t recursion_level, int *printed_something,
+    int *need_separator, int *returnval)
 {
 	uint32_t magindex = 0;
 	unsigned int cont_level = 0;
@@ -1217,7 +1215,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 private int
 mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
     size_t nbytes, size_t o, unsigned int cont_level, int mode, int text,
-    int flip, int recursion_level, int *printed_something,
+    int flip, size_t recursion_level, int *printed_something,
     int *need_separator, int *returnval)
 {
 	uint32_t offset = ms->offset;
@@ -1228,8 +1226,9 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml;
 
-	if (recursion_level >= MAX_RECURSION_LEVEL) {
-		file_error(ms, 0, "recursion nesting exceeded");
+	if (recursion_level >= ms->max_recursion) {
+		file_error(ms, 0, "recursion nesting (%zu) exceeded",
+		    recursion_level);
 		return -1;
 	}
 

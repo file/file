@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.155 2014/10/11 15:03:16 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.156 2014/11/27 15:40:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -98,7 +98,7 @@ private const struct option long_options[] = {
 #undef OPT_LONGONLY
     {0, 0, NULL, 0}
 };
-#define OPTSTRING	"bcCde:Ef:F:hiklLm:nNprsvz0"
+#define OPTSTRING	"bcCde:Ef:F:hiklLm:nNprR:svz0"
 
 private const struct {
 	const char *name;
@@ -137,6 +137,7 @@ main(int argc, char *argv[])
 	size_t i;
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0, e = 0;
+	size_t max_recursion = 0;
 	struct magic_set *magic = NULL;
 	int longindex;
 	const char *magicfile = NULL;		/* where the magic is	*/
@@ -245,6 +246,9 @@ main(int argc, char *argv[])
 		case 'r':
 			flags |= MAGIC_RAW;
 			break;
+		case 'R':
+			max_recursion = atoi(optarg);
+			break;
 		case 's':
 			flags |= MAGIC_DEVICES;
 			break;
@@ -297,6 +301,8 @@ main(int argc, char *argv[])
 			    strerror(errno));
 			return 1;
 		}
+
+
 		switch(action) {
 		case FILE_CHECK:
 			c = magic_check(magic, magicfile);
@@ -320,6 +326,15 @@ main(int argc, char *argv[])
 		if (magic == NULL)
 			if ((magic = load(magicfile, flags)) == NULL)
 				return 1;
+		if (max_recursion) {
+			if (magic_setparam(magic, MAGIC_PARAM_MAX_RECURSION,
+			    &max_recursion) == -1) {
+				(void)fprintf(stderr,
+				    "%s: Can't set recurision %s\n", progname,
+				    strerror(errno));
+				return 1;
+			}
+		}
 		break;
 	}
 
