@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.29 2014/08/04 06:19:44 christos Exp $
+.\" $File: libmagic.man,v 1.30 2014/11/27 16:15:06 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003.
 .\" All Rights Reserved.
@@ -280,14 +280,31 @@ and
 .Fn magic_setparam
 allow getting and setting various limits related to the the magic
 library.
-.Bl -column "MAGIC_PARAM_MAX_RECURSION" "size_t" "Default" -offset indent
-.It Sy "Parameter" Ta Sy "Type" Ta Sy "Default
-.It Li MAGIC_PARAM_MAX_RECURSION Ta size_t Ta 15
+.Bl -column "MAGIC_PARAM_INDIR_RECURSION" "size_t" "Default" -offset indent
+.It Sy "Parameter" Ta Sy "Type" Ta Sy "Default"
+.It Li MAGIC_PARAM_INDIR_RECURSION Ta size_t Ta 15
+.It Li MAGIC_PARAM_NAME_RECURSION Ta size_t Ta 40
+.It Li MAGIC_PARAM_PHNUM_MAX Ta size_t Ta 128
+.It Li MAGIC_PARAM_SHNUM_MAX Ta size_t Ta 32768
 .El
+.Pp
 The
-.Dv MAGIC_PARAM_MAX_RECURSION
+.Dv MAGIC_PARAM_INDIR_RECURSION
 parameter controls how many levels of recursion will be followed for
-indirect magic entries or for name/use calls.
+indirect magic entries.
+.Pp
+The
+.Dv MAGIC_PARAM_NAME_RECURSION
+parameter controls how many levels of recursion will be followed for
+for name/use calls.
+.Pp
+The
+.Dv MAGIC_PARAM_PHNUM_MAX
+parameter controls how many elf program sections will be processed.
+.Pp
+The
+.Dv MAGIC_PARAM_SHNUM_MAX
+parameter controls how many elf sections will be processed.
 .Pp
 The
 .Fn magic_version

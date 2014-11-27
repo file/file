@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.155 2014/10/11 15:03:16 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.156 2014/11/27 15:40:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -98,7 +98,7 @@ private const struct option long_options[] = {
 #undef OPT_LONGONLY
     {0, 0, NULL, 0}
 };
-#define OPTSTRING	"bcCde:Ef:F:hiklLm:nNprR:svz0"
+#define OPTSTRING	"bcCde:Ef:F:hiklLm:nNpP:rsvz0"
 
 private const struct {
 	const char *name;
@@ -116,6 +116,17 @@ private const struct {
 	{ "tokens",	MAGIC_NO_CHECK_TOKENS }, /* OBSOLETE: ignored for backwards compatibility */
 };
 
+private struct {
+	const char *name;
+	int tag;
+	size_t value;
+} pm[] = {
+	{ "indir",	MAGIC_PARAM_INDIR_RECURSION, 0 },
+	{ "name",	MAGIC_PARAM_NAME_RECURSION, 0 },
+	{ "phnum",	MAGIC_PARAM_PHNUM_MAX, 0 },
+	{ "shnum",	MAGIC_PARAM_SHNUM_MAX, 0 },
+};
+
 private char *progname;		/* used throughout 		*/
 
 private void usage(void);
@@ -125,6 +136,8 @@ private void help(void);
 private int unwrap(struct magic_set *, const char *);
 private int process(struct magic_set *ms, const char *, int);
 private struct magic_set *load(const char *, int);
+private void setparam(const char *);
+private void applyparam(magic_t);
 
 
 /*
@@ -137,7 +150,6 @@ main(int argc, char *argv[])
 	size_t i;
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0, e = 0;
-	size_t max_recursion = 0;
 	struct magic_set *magic = NULL;
 	int longindex;
 	const char *magicfile = NULL;		/* where the magic is	*/
@@ -243,11 +255,12 @@ main(int argc, char *argv[])
 			flags |= MAGIC_PRESERVE_ATIME;
 			break;
 #endif
+		case 'P':
+			setparam(optarg);
+			break;
 		case 'r':
 			flags |= MAGIC_RAW;
 			break;
-		case 'R':
-			max_recursion = atoi(optarg);
 			break;
 		case 's':
 			flags |= MAGIC_DEVICES;
@@ -326,16 +339,7 @@ main(int argc, char *argv[])
 		if (magic == NULL)
 			if ((magic = load(magicfile, flags)) == NULL)
 				return 1;
-		if (max_recursion) {
-			if (magic_setparam(magic, MAGIC_PARAM_MAX_RECURSION,
-			    &max_recursion) == -1) {
-				(void)fprintf(stderr,
-				    "%s: Can't set recurision %s\n", progname,
-				    strerror(errno));
-				return 1;
-			}
-		}
-		break;
+		applyparam(magic);
 	}
 
 	if (optind == argc) {
@@ -365,6 +369,41 @@ main(int argc, char *argv[])
 	return e;
 }
 
+private void
+applyparam(magic_t magic)
+{
+	size_t i;
+
+	for (i = 0; i < __arraycount(pm); i++) {
+		if (pm[i].value == 0)
+			continue;
+		if (magic_setparam(magic, pm[i].tag, &pm[i].value) == -1) {
+			(void)fprintf(stderr, "%s: Can't set %s %s\n", progname,
+				pm[i].name, strerror(errno));
+			exit(1);
+		}
+	}
+}
+
+private void
+setparam(const char *p)
+{
+	size_t i;
+	char *s;
+
+	if ((s = strchr(p, '=')) == NULL)
+		goto badparm;
+
+	for (i = 0; i < __arraycount(pm); i++) {
+		if (strncmp(p, pm[i].name, s - p) != 0)
+			continue;
+		pm[i].value = atoi(s + 1);
+		return;
+	}
+badparm:
+	(void)fprintf(stderr, "%s: Unknown param %s\n", progname, p);
+	exit(1);
+}
 
 private struct magic_set *
 /*ARGSUSED*/

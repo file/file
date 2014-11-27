@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.156 2014/11/23 13:54:27 christos Exp $
+ * @(#)$File: file.h,v 1.157 2014/11/27 15:40:36 christos Exp $
  */
 
 #ifndef __file_h__
@@ -401,8 +401,14 @@ struct magic_set {
 	/* FIXME: Make the string dynamically allocated so that e.g.
 	   strings matched in files can be longer than MAXstring */
 	union VALUETYPE ms_value;	/* either number or string */
-	size_t max_recursion;
-#define	FILE_MAX_RECURSION	15
+	uint16_t indir_recursion;
+	uint16_t name_recursion;
+	uint16_t shnum_max;
+	uint16_t phnum_max;
+#define	FILE_INDIR_RECURSION	15
+#define	FILE_NAME_RECURSION	40
+#define FILE_ELF_SHNUM		32768
+#define FILE_ELF_PHNUM		128
 };
 
 /* Type for Unicode characters */
@@ -442,7 +448,7 @@ protected int file_encoding(struct magic_set *, const unsigned char *, size_t,
     unichar **, size_t *, const char **, const char **, const char **);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t,
-    size_t, int, int);
+    uint16_t, uint16_t, int, int);
 protected int file_apprentice(struct magic_set *, const char *, int);
 protected int buffer_apprentice(struct magic_set *, struct magic **,
     size_t *, size_t);

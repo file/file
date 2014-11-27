@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.223 2014/11/12 15:28:34 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.224 2014/11/27 15:40:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -524,7 +524,10 @@ file_ms_alloc(int flags)
 		ms->mlist[i] = NULL;
 	ms->file = "unknown";
 	ms->line = 0;
-	ms->max_recursion = FILE_MAX_RECURSION;
+	ms->indir_recursion = FILE_INDIR_RECURSION;
+	ms->name_recursion = FILE_NAME_RECURSION;
+	ms->shnum_max = FILE_ELF_SHNUM;
+	ms->phnum_max = FILE_ELF_PHNUM;
 	return ms;
 free:
 	free(ms);

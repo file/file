@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.85 2014/08/04 06:19:44 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.86 2014/11/27 15:40:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -541,8 +541,17 @@ public int
 magic_setparam(struct magic_set *ms, int param, const void *val)
 {
 	switch (param) {
-	case MAGIC_PARAM_MAX_RECURSION:
-		ms->max_recursion = *(const size_t *)val;
+	case MAGIC_PARAM_INDIR_RECURSION:
+		ms->indir_recursion = *(const size_t *)val;
+		return 0;
+	case MAGIC_PARAM_NAME_RECURSION:
+		ms->name_recursion = *(const size_t *)val;
+		return 0;
+	case MAGIC_PARAM_PHNUM_MAX:
+		ms->phnum_max = *(const size_t *)val;
+		return 0;
+	case MAGIC_PARAM_SHNUM_MAX:
+		ms->shnum_max = *(const size_t *)val;
 		return 0;
 	default:
 		errno = EINVAL;
@@ -554,8 +563,17 @@ public int
 magic_getparam(struct magic_set *ms, int param, void *val)
 {
 	switch (param) {
-	case MAGIC_PARAM_MAX_RECURSION:
-		*(size_t *)val = ms->max_recursion;
+	case MAGIC_PARAM_INDIR_RECURSION:
+		*(size_t *)val = ms->indir_recursion;
+		return 0;
+	case MAGIC_PARAM_NAME_RECURSION:
+		*(size_t *)val = ms->name_recursion;
+		return 0;
+	case MAGIC_PARAM_PHNUM_MAX:
+		*(size_t *)val = ms->phnum_max;
+		return 0;
+	case MAGIC_PARAM_SHNUM_MAX:
+		*(size_t *)val = ms->shnum_max;
 		return 0;
 	default:
 		errno = EINVAL;
