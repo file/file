@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.106 2014/11/22 23:57:44 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.107 2014/11/26 15:33:10 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -60,8 +60,8 @@ private uint16_t getu16(int, uint16_t);
 private uint32_t getu32(int, uint32_t);
 private uint64_t getu64(int, uint64_t);
 
-#define MAX_PHNUM	256
-#define	MAX_SHNUM	1024
+#define MAX_PHNUM	128
+#define	MAX_SHNUM	32768
 
 private int
 toomany(struct magic_set *ms, const char *name, uint16_t num)
