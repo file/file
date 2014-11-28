@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.200 2014/11/27 23:42:58 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.201 2014/11/28 02:35:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,11 +43,11 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.200 2014/11/27 23:42:58 christos Exp $")
 #include <time.h>
 
 private int match(struct magic_set *, struct magic *, uint32_t,
-    const unsigned char *, size_t, size_t, int, int, int, uint16_t, uint16_t,
+    const unsigned char *, size_t, size_t, int, int, int, uint16_t,
     uint16_t *, int *, int *, int *);
 private int mget(struct magic_set *, const unsigned char *,
     struct magic *, size_t, size_t, unsigned int, int, int, int, uint16_t,
-    uint16_t, uint16_t *, int *, int *, int *);
+    uint16_t *, int *, int *, int *);
 private int magiccheck(struct magic_set *, struct magic *);
 private int32_t mprint(struct magic_set *, struct magic *);
 private int32_t moffset(struct magic_set *, struct magic *);
@@ -71,8 +71,7 @@ private void cvt_64(union VALUETYPE *, const struct magic *);
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
 protected int
 file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
-    uint16_t indir_level, uint16_t name_level, uint16_t *name_count,
-	int mode, int text)
+    uint16_t indir_level, uint16_t *name_count, int mode, int text)
 {
 	struct mlist *ml;
 	int rv, printed_something = 0, need_separator = 0;
@@ -85,7 +84,7 @@ file_softmagic(struct magic_set *ms, const unsigned char *buf, size_t nbytes,
 
 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
 		if ((rv = match(ms, ml->magic, ml->nmagic, buf, nbytes, 0, mode,
-		    text, 0, indir_level, name_level, name_count,
+		    text, 0, indir_level, name_count,
 		    &printed_something, &need_separator, NULL)) != 0)
 			return rv;
 
@@ -141,7 +140,7 @@ file_fmtcheck(struct magic_set *ms, const struct magic *m, const char *def,
 private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
     const unsigned char *s, size_t nbytes, size_t offset, int mode, int text,
-    int flip, uint16_t indir_level, uint16_t name_level, uint16_t *name_count,
+    int flip, uint16_t indir_level, uint16_t *name_count,
     int *printed_something, int *need_separator, int *returnval)
 {
 	uint32_t magindex = 0;
@@ -179,7 +178,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 
 		/* if main entry matches, print it... */
 		switch (mget(ms, s, m, nbytes, offset, cont_level, mode, text,
-		    flip, indir_level, name_level, name_count,
+		    flip, indir_level, name_count,
 		    printed_something, need_separator, returnval)) {
 		case -1:
 			return -1;
@@ -268,7 +267,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			}
 #endif
 			switch (mget(ms, s, m, nbytes, offset, cont_level, mode,
-			    text, flip, indir_level, name_level, name_count,
+			    text, flip, indir_level, name_count,
 			    printed_something, need_separator, returnval)) {
 			case -1:
 				return -1;
@@ -1222,7 +1221,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 private int
 mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
     size_t nbytes, size_t o, unsigned int cont_level, int mode, int text,
-    int flip, uint16_t indir_level, uint16_t name_level, uint16_t *name_count,
+    int flip, uint16_t indir_level, uint16_t *name_count,
     int *printed_something, int *need_separator, int *returnval)
 {
 	uint32_t offset = ms->offset;
@@ -1233,15 +1232,9 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml;
 
-	if (indir_level >= ms->indir_recursion) {
+	if (indir_level >= ms->indir_max) {
 		file_error(ms, 0, "indirect recursion nesting (%hu) exceeded",
 		    indir_level);
-		return -1;
-	}
-
-	if (name_level >= ms->name_recursion) {
-		file_error(ms, 0, "name recursion nesting (%hu) exceeded",
-		    name_level);
 		return -1;
 	}
 
@@ -1258,9 +1251,9 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
 		fprintf(stderr, "mget(type=%d, flag=%x, offset=%u, o=%"
 		    SIZE_T_FORMAT "u, " "nbytes=%" SIZE_T_FORMAT
-		    "u, il=%hu, nl=%hu nc=%hu)\n",
+		    "u, il=%hu, nc=%hu)\n",
 		    m->type, m->flag, offset, o, nbytes,
-		    indir_level, name_level, *name_count);
+		    indir_level, *name_count);
 		mdebug(offset, (char *)(void *)p, sizeof(union VALUETYPE));
 #ifndef COMPILE_ONLY
 		file_mdump(m);
@@ -1701,7 +1694,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			return -1;
 
 		rv = file_softmagic(ms, s + offset, nbytes - offset,
-		    indir_level + 1, name_level, name_count, BINTEST, text);
+		    indir_level + 1, name_count, BINTEST, text);
 
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			fprintf(stderr, "indirect @offs=%u[%d]\n", offset, rv);
@@ -1741,7 +1734,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		if (m->flag & NOSPACE)
 			*need_separator = 0;
 		rv = match(ms, ml.magic, ml.nmagic, s, nbytes, offset + o,
-		    mode, text, flip, indir_level, name_level + 1, name_count,
+		    mode, text, flip, indir_level, name_count,
 		    printed_something, need_separator, returnval);
 		if (rv != 1)
 		    *need_separator = oneed_separator;
