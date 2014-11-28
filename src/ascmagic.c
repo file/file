@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.90 2014/11/28 02:35:05 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.91 2014/11/28 02:46:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -147,7 +147,7 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 		    == NULL)
 			goto done;
 		if ((rv = file_softmagic(ms, utf8_buf,
-		    (size_t)(utf8_end - utf8_buf), 0, 0, NULL,
+		    (size_t)(utf8_end - utf8_buf), 0, NULL,
 		    TEXTTEST, text)) == 0)
 			rv = -1;
 	}

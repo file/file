@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.159 2014/11/28 02:35:05 christos Exp $
+ * @(#)$File: file.h,v 1.160 2014/11/28 02:46:39 christos Exp $
  */
 
 #ifndef __file_h__
@@ -401,16 +401,14 @@ struct magic_set {
 	/* FIXME: Make the string dynamically allocated so that e.g.
 	   strings matched in files can be longer than MAXstring */
 	union VALUETYPE ms_value;	/* either number or string */
-	uint16_t indir_recursion;
-	uint16_t name_recursion;
+	uint16_t indir_max;
 	uint16_t name_max;
-	uint16_t shnum_max;
-	uint16_t phnum_max;
-#define	FILE_INDIR_RECURSION	15
-#define	FILE_NAME_RECURSION	40
-#define	FILE_NAME_MAX		30
-#define	FILE_ELF_SHNUM		32768
-#define	FILE_ELF_PHNUM		128
+	uint16_t elf_shnum_max;
+	uint16_t elf_phnum_max;
+#define	FILE_INDIR_MAX			15
+#define	FILE_NAME_MAX			30
+#define	FILE_ELF_SHNUM_MAX		32768
+#define	FILE_ELF_PHNUM_MAX		128
 };
 
 /* Type for Unicode characters */
@@ -450,7 +448,7 @@ protected int file_encoding(struct magic_set *, const unsigned char *, size_t,
     unichar **, size_t *, const char **, const char **, const char **);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t,
-    uint16_t, uint16_t, uint16_t *, int, int);
+    uint16_t, uint16_t *, int, int);
 protected int file_apprentice(struct magic_set *, const char *, int);
 protected int buffer_apprentice(struct magic_set *, struct magic **,
     size_t *, size_t);

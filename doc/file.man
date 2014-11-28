@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.109 2014/11/28 02:35:05 christos Exp $
+.\" $File: file.man,v 1.110 2014/11/28 02:46:39 christos Exp $
 .Dd November 27, 2014
 .Dt FILE __CSECTION__
 .Os
@@ -306,13 +306,12 @@ attempt to preserve the access time of files analyzed, to pretend that
 never read them.
 .It Fl P , Fl Fl parameter Ar name=value
 Set various parameter limits.
-.Bl -column "namenum" "Default" "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" -offset indent
+.Bl -column "elf_phnum" "Default" "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" -offset indent
 .It Sy "Name" Ta Sy "Default" Ta Sy "Explanation"
 .It Li indir Ta 15 Ta recursion limit for indirect magic
-.It Li name Ta 40 Ta recursion limit for name/use magic
-.It Li namenum Ta 30 Ta use count limit for name/use magic
-.It Li phnum Ta 128 Ta max ELF program sections processed
-.It Li shnum Ta 32768 Ta max ELF sections processed
+.It Li name Ta 30 Ta use count limit for name/use magic
+.It Li elf_phnum Ta 128 Ta max ELF program sections processed
+.It Li elf_shnum Ta 32768 Ta max ELF sections processed
 .El
 .It Fl r , Fl Fl raw
 Don't translate unprintable characters to \eooo.
