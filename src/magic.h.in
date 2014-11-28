@@ -105,8 +105,9 @@ int magic_errno(magic_t);
 
 #define MAGIC_PARAM_INDIR_RECURSION	0
 #define MAGIC_PARAM_NAME_RECURSION	1
-#define MAGIC_PARAM_PHNUM_MAX		2
-#define MAGIC_PARAM_SHNUM_MAX		3
+#define MAGIC_PARAM_NAME_MAX		2
+#define MAGIC_PARAM_PHNUM_MAX		3
+#define MAGIC_PARAM_SHNUM_MAX		4
 
 int magic_setparam(magic_t, int, const void *);
 int magic_getparam(magic_t, int, void *);
