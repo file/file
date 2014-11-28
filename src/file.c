@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.157 2014/11/27 23:42:58 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.158 2014/11/28 02:35:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -123,6 +123,7 @@ private struct {
 } pm[] = {
 	{ "indir",	MAGIC_PARAM_INDIR_RECURSION, 0 },
 	{ "name",	MAGIC_PARAM_NAME_RECURSION, 0 },
+	{ "namenum",	MAGIC_PARAM_NAME_MAX, 0 },
 	{ "phnum",	MAGIC_PARAM_PHNUM_MAX, 0 },
 	{ "shnum",	MAGIC_PARAM_SHNUM_MAX, 0 },
 };

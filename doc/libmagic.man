@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.31 2014/11/27 23:42:58 christos Exp $
+.\" $File: libmagic.man,v 1.32 2014/11/28 02:35:05 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003.
 .\" All Rights Reserved.
@@ -284,6 +284,7 @@ library.
 .It Sy "Parameter" Ta Sy "Type" Ta Sy "Default"
 .It Li MAGIC_PARAM_INDIR_RECURSION Ta size_t Ta 15
 .It Li MAGIC_PARAM_NAME_RECURSION Ta size_t Ta 40
+.It Li MAGIC_PARAM_NAME_MAX Ta size_t Ta 30
 .It Li MAGIC_PARAM_PHNUM_MAX Ta size_t Ta 128
 .It Li MAGIC_PARAM_SHNUM_MAX Ta size_t Ta 32768
 .El
@@ -297,6 +298,10 @@ The
 .Dv MAGIC_PARAM_NAME_RECURSION
 parameter controls how many levels of recursion will be followed for
 for name/use calls.
+.Pp
+The
+.Dv MAGIC_PARAM_NAME_MAX
+parameter controls the maximum number of calls for name/use.
 .Pp
 The
 .Dv MAGIC_PARAM_PHNUM_MAX

@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.75 2014/11/27 23:42:58 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.76 2014/11/28 02:35:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -227,7 +227,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unu
 
 	/* try soft magic tests */
 	if ((ms->flags & MAGIC_NO_CHECK_SOFT) == 0)
-		if ((m = file_softmagic(ms, ubuf, nb, 0, 0, BINTEST,
+		if ((m = file_softmagic(ms, ubuf, nb, 0, 0, NULL, BINTEST,
 		    looks_text)) != 0) {
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void)fprintf(stderr, "softmagic %d\n", m);
