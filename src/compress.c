@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.74 2014/10/26 20:23:30 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.75 2014/12/04 15:56:46 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -45,7 +45,7 @@ FILE_RCSID("@(#)$File: compress.c,v 1.74 2014/10/26 20:23:30 christos Exp $")
 #endif
 #include <string.h>
 #include <errno.h>
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) && !defined(WIN32)
 #include <sys/ioctl.h>
 #endif
 #ifdef HAVE_SYS_WAIT_H

@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.68 2014/10/22 19:27:36 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.69 2014/12/04 15:56:46 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -825,10 +825,11 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		goto out;
 	for (i = 0; i < sh.sh_properties; i++) {
 		size_t tail = (i << 1) + 1;
+		size_t ofs;
 		if (cdf_check_stream_offset(sst, h, p, tail * sizeof(uint32_t),
 		    __LINE__) == -1)
 			goto out;
-		size_t ofs = CDF_GETUINT32(p, tail);
+		ofs = CDF_GETUINT32(p, tail);
 		q = (const uint8_t *)(const void *)
 		    ((const char *)(const void *)p + ofs
 		    - 2 * sizeof(uint32_t));

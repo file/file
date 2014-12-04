@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.74 2014/10/13 20:21:49 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.75 2014/12/04 15:56:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -129,7 +129,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 
 #ifdef WIN32
 	{
-		HANDLE hFile = CreateFile(fn, 0, FILE_SHARE_DELETE |
+		HANDLE hFile = CreateFile((LPCSTR)fn, 0, FILE_SHARE_DELETE |
 		    FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0,
 		    NULL);
 		if (hFile != INVALID_HANDLE_VALUE) {

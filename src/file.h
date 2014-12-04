@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.160 2014/11/28 02:46:39 christos Exp $
+ * @(#)$File: file.h,v 1.161 2014/12/04 15:56:46 christos Exp $
  */
 
 #ifndef __file_h__
@@ -64,7 +64,9 @@
 #include <regex.h>
 #include <time.h>
 #include <sys/types.h>
+#ifndef WIN32
 #include <sys/param.h>
+#endif
 /* Do this here and now, because struct stat gets re-defined on solaris */
 #include <sys/stat.h>
 #include <stdarg.h>
