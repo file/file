@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.88 2014/11/28 02:35:05 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.89 2014/11/28 02:46:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -128,6 +128,7 @@ out:
 #else
 	char *hmagicp;
 	char *tmppath = NULL;
+	LPTSTR dllpath;
 	hmagicpath = NULL;
 
 #define APPENDPATH() \
@@ -173,7 +174,7 @@ out:
 	}
 
 	/* Third, try to get magic file relative to dll location */
-	LPTSTR dllpath = malloc(sizeof(*dllpath) * (MAX_PATH + 1));
+	dllpath = malloc(sizeof(*dllpath) * (MAX_PATH + 1));
 	dllpath[MAX_PATH] = 0;	/* just in case long path gets truncated and not null terminated */
 	if (GetModuleFileNameA(NULL, dllpath, MAX_PATH)){
 		PathRemoveFileSpecA(dllpath);
