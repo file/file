@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.95 2014/09/22 21:21:59 christos Exp $
+# $File: images,v 1.96 2014/12/08 16:05:47 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1029,3 +1029,11 @@
 >>101	beshort&0xf0	0x70			\bRGB
 >>101	beshort&0xf0	0x80			\bRGBE
 >>101	beshort&0xf0	>0x80			\b(reserved 0x%x)
+
+# From: Johan van der Knijff <johan.vanderknijff@kb.nl>
+#
+# BPG (Better Portable Graphics) format
+# http://bellard.org/bpg/
+#
+0	string	\x42\x50\x47\xFB	BPG (Better Portable Graphics)
+!:mime  image/bpg
