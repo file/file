@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.95 2014/09/22 21:21:59 christos Exp $
+# $File: images,v 1.96 2014/12/08 16:05:47 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1034,6 +1034,7 @@
 #
 # BPG (Better Portable Graphics) format
 # http://bellard.org/bpg/
+# http://fileformats.archiveteam.org/wiki/BPG
 #
 0	string	\x42\x50\x47\xFB	BPG (Better Portable Graphics)
 !:mime  image/bpg
