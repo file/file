@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.107 2014/11/26 15:33:10 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.108 2014/11/27 15:16:00 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -62,6 +62,7 @@ private uint64_t getu64(int, uint64_t);
 
 #define MAX_PHNUM	128
 #define	MAX_SHNUM	32768
+#define SIZE_UNKNOWN	((off_t)-1)
 
 private int
 toomany(struct magic_set *ms, const char *name, uint16_t num)
@@ -324,7 +325,7 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		}
 		off += size;
 
-		if (xph_offset > fsize) {
+		if (fsize != SIZE_UNKNOWN && xph_offset > fsize) {
 			/* Perhaps warn here */
 			continue;
 		}
@@ -964,7 +965,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			stripped = 0;
 			break;
 		default:
-			if (xsh_offset > fsize) {
+			if (fsize != SIZE_UNKNOWN && xsh_offset > fsize) {
 				/* Perhaps warn here */
 				continue;
 			}
@@ -1190,7 +1191,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			shared_libraries = " (uses shared libs)";
 			break;
 		default:
-			if (xph_offset > fsize) {
+			if (fsize != SIZE_UNKNOWN && xph_offset > fsize) {
 				/* Maybe warn here? */
 				continue;
 			}
@@ -1284,7 +1285,10 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
   		file_badread(ms);
 		return -1;
 	}
-	fsize = st.st_size;
+	if (S_ISREG(st.st_mode))
+		fsize = st.st_size;
+	else
+		fsize = SIZE_UNKNOWN;
 
 	clazz = buf[EI_CLASS];
 
