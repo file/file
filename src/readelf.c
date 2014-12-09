@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.110 2014/12/09 02:47:07 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.111 2014/12/09 02:47:45 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1285,7 +1285,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
   		file_badread(ms);
 		return -1;
 	}
-	if (S_ISREG(st.st_mode) || fsize != 0)
+	if (S_ISREG(st.st_mode) || st.st_size != 0)
 		fsize = st.st_size;
 	else
 		fsize = SIZE_UNKNOWN;
