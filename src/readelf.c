@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.112 2014/12/11 12:34:24 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.113 2014/12/11 14:10:53 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1227,7 +1227,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			if (bufsize) {
 				nbuf[bufsize - 1] = '\0';
 				interp = (const char *)nbuf;
-			}
+			} else
+				interp = "*empty*";
 			break;
 		case PT_NOTE:
 			/*
