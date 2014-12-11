@@ -1,3 +1,11 @@
+2014-12-11  20:01  Christos Zoulas <christos@zoulas.com>
+
+	* PR/405: ignore SIGPIPE from uncompress programs
+	* change printable -> file_printable and use it in
+	  more places for safety
+	* in ELF, instead of "(uses dynamic libraries)" when PT_INTERP
+	  is present print the interpreter name.
+	
 2014-12-10  20:01  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.21
