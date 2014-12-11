@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.110 2014/12/09 02:47:07 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.111 2014/12/09 02:47:45 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -489,6 +489,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 #endif
 	uint32_t namesz, descsz;
 	unsigned char *nbuf = CAST(unsigned char *, vbuf);
+	char sbuf[512];
 
 	if (xnh_sizeof + offset > size) {
 		/*
@@ -738,7 +739,8 @@ core:
 			 * including the terminating NUL.
 			 */
 			if (file_printf(ms, ", from '%.31s'",
-			    &nbuf[doff + 0x7c]) == -1)
+			    file_printable(sbuf, sizeof(sbuf),
+			    (const char *)&nbuf[doff + 0x7c])) == -1)
 				return size;
 			
 			/*
@@ -1163,8 +1165,9 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
 	const char *linking_style = "statically";
-	const char *shared_libraries = "";
+	const char *interp = "";
 	unsigned char nbuf[BUFSIZ];
+	char ibuf[BUFSIZ];
 	ssize_t bufsize;
 	size_t offset, align, len;
 	
@@ -1181,14 +1184,34 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		}
 
 		off += size;
+		bufsize = 0;
+		align = 4;
 
 		/* Things we can determine before we seek */
 		switch (xph_type) {
 		case PT_DYNAMIC:
 			linking_style = "dynamically";
 			break;
+		case PT_NOTE:
+			if (sh_num)	/* Did this through section headers */
+				continue;
+			if (((align = xph_align) & 0x80000000UL) != 0 ||
+			    align < 4) {
+				if (file_printf(ms, 
+				    ", invalid note alignment 0x%lx",
+				    (unsigned long)align) == -1)
+					return -1;
+				align = 4;
+			}
+			/*FALLTHROUGH*/
 		case PT_INTERP:
-			shared_libraries = " (uses shared libs)";
+			len = xph_filesz < sizeof(nbuf) ? xph_filesz
+			    : sizeof(nbuf);
+			bufsize = pread(fd, nbuf, len, xph_offset);
+			if (bufsize == -1) {
+				file_badread(ms);
+				return -1;
+			}
 			break;
 		default:
 			if (fsize != SIZE_UNKNOWN && xph_offset > fsize) {
@@ -1200,28 +1223,17 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 
 		/* Things we can determine when we seek */
 		switch (xph_type) {
-		case PT_NOTE:
-			if (((align = xph_align) & 0x80000000UL) != 0 ||
-			    align < 4) {
-				if (file_printf(ms, 
-				    ", invalid note alignment 0x%lx",
-				    (unsigned long)align) == -1)
-					return -1;
-				align = 4;
+		case PT_INTERP:
+			if (bufsize) {
+				nbuf[bufsize - 1] = '\0';
+				interp = (const char *)nbuf;
 			}
-			if (sh_num)
-				break;
+			break;
+		case PT_NOTE:
 			/*
 			 * This is a PT_NOTE section; loop through all the notes
 			 * in the section.
 			 */
-			len = xph_filesz < sizeof(nbuf) ? xph_filesz
-			    : sizeof(nbuf);
-			bufsize = pread(fd, nbuf, len, xph_offset);
-			if (bufsize == -1) {
-				file_badread(ms);
-				return -1;
-			}
 			offset = 0;
 			for (;;) {
 				if (offset >= (size_t)bufsize)
@@ -1237,9 +1249,13 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			break;
 		}
 	}
-	if (file_printf(ms, ", %s linked%s", linking_style, shared_libraries)
+	if (file_printf(ms, ", %s linked", linking_style)
 	    == -1)
-	    return -1;
+		return -1;
+	if (interp[0])
+		if (file_printf(ms, ", interpreter %s",
+		    file_printable(ibuf, sizeof(ibuf), interp)) == -1)
+			return -1;
 	return 0;
 }
 
