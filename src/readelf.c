@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.113 2014/12/11 14:10:53 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.114 2014/12/11 14:19:36 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1224,7 +1224,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		/* Things we can determine when we seek */
 		switch (xph_type) {
 		case PT_INTERP:
-			if (bufsize) {
+			if (bufsize && nbuf[0]) {
 				nbuf[bufsize - 1] = '\0';
 				interp = (const char *)nbuf;
 			} else
