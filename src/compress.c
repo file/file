@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.75 2014/12/04 15:56:46 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.76 2014/12/11 11:47:08 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -512,11 +512,16 @@ err:
 			    strerror(errno));
 #endif
 			n = NODATA;
-		} else if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+		} else if (!WIFEXITED(status)) {
 #ifdef DEBUG
-			(void)fprintf(stderr, "Child status (0x%x)\n", status);
+			(void)fprintf(stderr, "Child not exited (0x%x)\n",
+			    status);
 #endif
-			n = NODATA;
+		} else if (WEXITSTATUS(status) != 0) {
+#ifdef DEBUG
+			(void)fprintf(stderr, "Child exited (0x%d)\n",
+			    WEXITSTATUS(status));
+#endif
 		}
 
 		(void) close(fdin[0]);
