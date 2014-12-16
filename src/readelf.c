@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.113 2014/12/11 14:10:53 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.114 2014/12/11 14:19:36 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -319,7 +319,7 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	 * Loop through all the program headers.
 	 */
 	for ( ; num; num--) {
-		if (pread(fd, xph_addr, xph_sizeof, off) == -1) {
+		if (pread(fd, xph_addr, xph_sizeof, off) < (ssize_t)xph_sizeof) {
 			file_badread(ms);
 			return -1;
 		}
@@ -928,6 +928,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	uint64_t cap_hw1 = 0;	/* SunOS 5.x hardware capabilites */
 	uint64_t cap_sf1 = 0;	/* SunOS 5.x software capabilites */
 	char name[50];
+	ssize_t namesize;
 
 	if (size != xsh_sizeof) {
 		if (file_printf(ms, ", corrupted section header size") == -1)
@@ -936,7 +937,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	}
 
 	/* Read offset of name section to be able to read section names later */
-	if (pread(fd, xsh_addr, xsh_sizeof, off + size * strtab) == -1) {
+	if (pread(fd, xsh_addr, xsh_sizeof, off + size * strtab) < (ssize_t)xsh_sizeof) {
 		file_badread(ms);
 		return -1;
 	}
@@ -944,15 +945,15 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 
 	for ( ; num; num--) {
 		/* Read the name of this section. */
-		if (pread(fd, name, sizeof(name), name_off + xsh_name) == -1) {
+		if ((namesize = pread(fd, name, sizeof(name) - 1, name_off + xsh_name)) == -1) {
 			file_badread(ms);
 			return -1;
 		}
-		name[sizeof(name) - 1] = '\0';
+		name[namesize] = '\0';
 		if (strcmp(name, ".debug_info") == 0)
 			stripped = 0;
 
-		if (pread(fd, xsh_addr, xsh_sizeof, off) == -1) {
+		if (pread(fd, xsh_addr, xsh_sizeof, off) < (ssize_t)xsh_sizeof) {
 			file_badread(ms);
 			return -1;
 		}
@@ -982,7 +983,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				    " for note");
 				return -1;
 			}
-			if (pread(fd, nbuf, xsh_size, xsh_offset) == -1) {
+			if (pread(fd, nbuf, xsh_size, xsh_offset) < (ssize_t)xsh_size) {
 				file_badread(ms);
 				free(nbuf);
 				return -1;
@@ -1178,7 +1179,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	}
 
   	for ( ; num; num--) {
-		if (pread(fd, xph_addr, xph_sizeof, off) == -1) {
+		if (pread(fd, xph_addr, xph_sizeof, off) < (ssize_t)xph_sizeof) {
 			file_badread(ms);
 			return -1;
 		}
