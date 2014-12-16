@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.227 2014/11/28 02:46:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.228 2014/12/16 23:18:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -528,6 +528,7 @@ file_ms_alloc(int flags)
 	ms->name_max = FILE_NAME_MAX;
 	ms->elf_shnum_max = FILE_ELF_SHNUM_MAX;
 	ms->elf_phnum_max = FILE_ELF_PHNUM_MAX;
+	ms->elf_notes_max = FILE_ELF_NOTES_MAX;
 	return ms;
 free:
 	free(ms);

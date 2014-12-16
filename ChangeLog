@@ -1,3 +1,8 @@
+2014-12-16  18:10  Christos Zoulas <christos@zoulas.com>
+	
+	* restructure elf note printing to avoid repeated messages
+	* add note limit, suggested by Alexander Cherepanov
+
 2014-12-16  16:53  Christos Zoulas <christos@zoulas.com>
 	
 	* Bail out on partial pread()'s (Alexander Cherepanov)
