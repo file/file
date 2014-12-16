@@ -31,6 +31,8 @@
 	    - reduce the number of recursion levels from 20 to 10
 	    - preserve error messages in indirect magic handling
 
+	This is tracked as CVE-2014-8116 and CVE-2014-8117
+
 2014-11-12  10:30  Christos Zoulas <christos@zoulas.com>
 
 	* fix bogus free in the user buffer case.
