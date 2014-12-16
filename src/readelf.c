@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.116 2014/12/16 23:18:40 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.117 2014/12/16 23:29:42 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -900,19 +900,23 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	}
 
 	if (namesz == 7 && strcmp((char *)&nbuf[noff], "NetBSD") == 0) {
+		if (descsz > 100)
+			descsz = 100;
 		switch (xnh_type) {
 	    	case NT_NETBSD_VERSION:
 			return size;
 		case NT_NETBSD_MARCH:
 			if (*flags & FLAGS_DID_NETBSD_MARCH)
 				return size;
-			if (file_printf(ms, ", compiled for: %.*s", (int)descsz,
-			    (const char *)&nbuf[doff]) == -1)
+			*flags |= FLAGS_DID_NETBSD_MARCH;
+			if (file_printf(ms, ", compiled for: %.*s",
+			    (int)descsz, (const char *)&nbuf[doff]) == -1)
 				return size;
 			break;
 		case NT_NETBSD_CMODEL:
 			if (*flags & FLAGS_DID_NETBSD_CMODEL)
 				return size;
+			*flags |= FLAGS_DID_NETBSD_CMODEL;
 			if (file_printf(ms, ", compiler model: %.*s",
 			    (int)descsz, (const char *)&nbuf[doff]) == -1)
 				return size;
@@ -920,6 +924,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 		default:
 			if (*flags & FLAGS_DID_NETBSD_UNKNOWN)
 				return size;
+			*flags |= FLAGS_DID_NETBSD_UNKNOWN;
 			if (file_printf(ms, ", note=%u", xnh_type) == -1)
 				return size;
 			break;
