@@ -46,6 +46,7 @@ OPT('p', "preserve-date", 0, "        preserve access times on files\n")
 OPT('P', "parameter", 0, "            set file engine parameter limits\n"
     "                               indir        15 recursion limit for indirection\n"
     "                               name         30 use limit for name/use magic\n"
+    "                               elf_notes   256 max ELF notes processed\n"
     "                               elf_phnum   128 max ELF prog sections processed\n"
     "                               elf_shnum 32768 max ELF sections processed\n")
 OPT('r', "raw", 0, "                  don't translate unprintable chars to \\ooo\n")
