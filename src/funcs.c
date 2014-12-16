@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.78 2014/12/11 12:34:24 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.79 2014/12/16 20:52:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -546,7 +546,7 @@ file_printable(char *buf, size_t bufsiz, const char *str)
 			*ptr++ = *s;
 			continue;
 		}
-		if (ptr >= eptr + 4)
+		if (ptr >= eptr - 3)
 			break;
 		*ptr++ = '\\';
 		*ptr++ = ((*s >> 6) & 7) + '0';
