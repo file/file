@@ -1,3 +1,8 @@
+2014-12-16  16:53  Christos Zoulas <christos@zoulas.com>
+	
+	* Bail out on partial pread()'s (Alexander Cherepanov)
+	* Fix incorrect bounds check in file_printable (Alexander Cherepanov)
+
 2014-12-11  20:01  Christos Zoulas <christos@zoulas.com>
 
 	* PR/405: ignore SIGPIPE from uncompress programs
