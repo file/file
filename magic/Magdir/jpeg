@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.22 2015/01/01 02:57:40 christos Exp $
+# $File: jpeg,v 1.23 2015/01/01 04:17:41 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -32,7 +32,7 @@
 >>18	byte		!0		\b, thumbnail %dx
 >>>19	byte		x		\b%d
 >6	string		Exif		\b, Exif standard: [
->>12	indirect	x
+>>12	indirect/r	x
 >>12	string		x		\b]
 
 # Jump to the first segment
@@ -72,7 +72,7 @@
 >0	beshort		0xFFE1		
 #>>(2.S+2)	use			jpeg_segment
 >>4	string		Exif		\b, Exif Standard: [
->>>10	indirect	x		
+>>>10	indirect/r	x		
 >>>10	string		x		\b]
 
 # Application specific markers

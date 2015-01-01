@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.162 2014/12/11 12:34:24 christos Exp $
+ * @(#)$File: file.h,v 1.163 2014/12/16 23:18:40 christos Exp $
  */
 
 #ifndef __file_h__
@@ -234,6 +234,7 @@ struct magic {
 	 (t) == FILE_LESTRING16 || \
 	 (t) == FILE_REGEX || \
 	 (t) == FILE_SEARCH || \
+	 (t) == FILE_INDIRECT || \
 	 (t) == FILE_NAME || \
 	 (t) == FILE_USE)
 
@@ -346,6 +347,8 @@ struct magic {
 #define STRING_IGNORE_CASE		(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
 #define STRING_DEFAULT_RANGE		100
 
+#define	INDIRECT_RELATIVE			BIT(0)
+#define	CHAR_INDIRECT_RELATIVE			'r'
 
 /* list of magic entries */
 struct mlist {

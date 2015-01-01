@@ -1,3 +1,7 @@
+2015-01-01  12:01  Christos Zoulas <christos@zoulas.com>
+
+	* add indirect relative for TIFF/Exif
+
 2014-12-16  18:10  Christos Zoulas <christos@zoulas.com>
 	
 	* restructure elf note printing to avoid repeated messages
