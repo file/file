@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.99 2015/01/01 02:58:07 christos Exp $
+# $File: images,v 1.100 2015/01/01 02:58:53 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -125,6 +125,9 @@
 >2	use		tiff_entry
 
 0	name		tiff_entry
+# NewSubFileType
+>0	leshort		0xfe
+>>12	use		tiff_entry
 >0	leshort		0x100
 >>4	lelong		1
 >>>12	use		tiff_entry
@@ -188,14 +191,24 @@
 >>>12	use		tiff_entry
 # Make
 >0	leshort		0x10f
->>&(8.l+28)	string	x		\b, manufacturer=%s
+>>(8.l)	string		x		\b, manufacturer=%s
 >>>12	use		tiff_entry
 # Model
 >0	leshort		0x110
->>&(8.l+28)	string	x		\b, model=%s
+>>(8.l)	string		x		\b, model=%s
 >>>12	use		tiff_entry
 # StripOffsets
 >0	leshort		0x111
+>>12	use		tiff_entry
+# Orientation
+>0	leshort		0x112		\b, orientation=
+>>8	leshort		1		\bupper-left
+>>8	leshort		3		\blower-right
+>>8	leshort		6		\bupper-right
+>>8	leshort		8		\blower-left
+>>8	leshort		9		\bundefined
+>>8	default		x
+>>>8	leshort		x		\b[*%d*]
 >>12	use		tiff_entry
 # XResolution
 >0	leshort		0x11a
@@ -211,29 +224,44 @@
 >>12	use		tiff_entry
 # Software
 >0	leshort		0x131
->>&(8.l+28)	string	x		\b, software=%s
+>>(8.l)	string		x		\b, software=%s
 >>>12	use		tiff_entry
-# NewSubFileType
->0	leshort		0xfe
->>12	use		tiff_entry
 # Datetime
 >0	leshort		0x132
->>&(8.l+28)	string	x		\b, datetime=%s
+>>(8.l)	string		x		\b, datetime=%s
 >>>12	use		tiff_entry
 # HostComputer
 >0	leshort		0x13c
->>&(8.l+28)	string	x		\b, hostcomputer=%s
+>>(8.l)	string		x		\b, hostcomputer=%s
 >>>12	use		tiff_entry
+# WhitePoint
+>0	leshort		0x13e
+>>12	use		tiff_entry
+# PrimaryChromaticities
+>0	leshort		0x13f
+>>12	use		tiff_entry
+# YCbCrCoefficients
+>0	leshort		0x211
+>>12	use		tiff_entry
+# YCbCrPositioning
+>0	leshort		0x213
+>>12	use		tiff_entry
+# ReferenceBlackWhite
+>0	leshort		0x214
+>>12	use		tiff_entry
 # Copyright
 >0	leshort		0x8298
->>&(8.l+28)	string	x		\b, copyright=%s
+>>(8.l)	string		x		\b, copyright=%s
 >>>12	use		tiff_entry
 # ExifOffset
 >0	leshort		0x8769
 >>12	use		tiff_entry
+# GPS IFD
+>0	leshort		0x8825		\b, GPS-Data
+>>12	use		tiff_entry
 
 #>0	leshort		x		\b, unknown=0x%x
-#>>>12	use		tiff_entry
+#>>12	use		tiff_entry
 
 0	string		MM\x00\x2b	Big TIFF image data, big-endian
 !:mime	image/tiff
