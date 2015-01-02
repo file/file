@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.25 2015/01/02 16:56:50 christos Exp $
+# $File: jpeg,v 1.26 2015/01/02 22:40:27 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -41,7 +41,8 @@
 # This uses recursion...
 0		name		jpeg_segment
 >0	beshort		0xFFFE
->>(2.S+2)	use			jpeg_segment
+# Recursion handled by FFE0
+#>>(2.S+2)	use			jpeg_segment
 >>2	pstring/HJ	x		\b, comment: "%s"
 
 >0	beshort		0xFFC0
@@ -70,6 +71,7 @@
 >>(2.S+2)	use			jpeg_segment
 
 >0	beshort		0xFFE1		
+# Recursion handled by FFE0
 #>>(2.S+2)	use			jpeg_segment
 >>4	string		Exif		\b, Exif Standard: [
 >>>10	indirect/r	x		
@@ -85,7 +87,8 @@
 # D9: End of image
 # Dn: Restart
 >0	beshort&0xFFD0	=0xFFD0
->>(2.S+2)	use			jpeg_segment
+>>0	beshort&0xFFE0	!0xFFE0
+>>>(2.S+2)	use			jpeg_segment
 
 #>0	beshort		x		unknown 0x%x
 #>>(2.S+2)	use			jpeg_segment
