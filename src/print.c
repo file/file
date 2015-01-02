@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.76 2013/02/26 18:25:00 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.77 2015/01/02 21:29:39 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -164,6 +164,7 @@ file_mdump(struct magic *m)
 		case FILE_MELDATE:
 			(void)fprintf(stderr, "%s,",
 			    file_fmttime(m->value.l, 0, tbuf));
+			break;
 		case FILE_QDATE:
 		case FILE_LEQDATE:
 		case FILE_BEQDATE:

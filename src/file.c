@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.160 2014/12/16 23:18:40 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.161 2015/01/02 21:29:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -130,8 +130,14 @@ private struct {
 
 private char *progname;		/* used throughout 		*/
 
+#ifdef __dead
+__dead
+#endif
 private void usage(void);
 private void docprint(const char *);
+#ifdef __dead
+__dead
+#endif
 private void help(void);
 
 private int unwrap(struct magic_set *, const char *);
