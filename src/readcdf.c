@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.48 2014/09/10 18:41:51 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.49 2014/12/04 15:56:46 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -38,6 +38,10 @@ FILE_RCSID("@(#)$File: readcdf.c,v 1.48 2014/09/10 18:41:51 christos Exp $")
 
 #include "cdf.h"
 #include "magic.h"
+
+#ifndef __arraycount
+#define __arraycount(a) (sizeof(a) / sizeof(a[0]))
+#endif
 
 #define NOTMIME(ms) (((ms)->flags & MAGIC_MIME) == 0)
 

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.228 2014/12/16 23:18:40 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.229 2015/01/01 17:07:34 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2199,7 +2199,7 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
 	size_t i;
 	const char *l = line;
 	struct magic *m = &me->mp[me->cont_count == 0 ? 0 : me->cont_count - 1];
-	char *buf = (char *)m + off;
+	char *buf = CAST(char *, CAST(void *, m)) + off;
 
 	if (buf[0] != '\0') {
 		len = nt ? strlen(buf) : len;
@@ -2248,7 +2248,8 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 {
 	struct magic *m = &me->mp[0];
 
-	return parse_extra(ms, me, line, offsetof(struct magic, apple),
+	return parse_extra(ms, me, line,
+	    CAST(off_t, offsetof(struct magic, apple)),
 	    sizeof(m->apple), "APPLE", "!+-./", 0);
 }
 
@@ -2261,7 +2262,8 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 {
 	struct magic *m = &me->mp[0];
 
-	return parse_extra(ms, me, line, offsetof(struct magic, mimetype),
+	return parse_extra(ms, me, line,
+	    CAST(off_t, offsetof(struct magic, mimetype)),
 	    sizeof(m->mimetype), "MIME", "+-/.", 1);
 }
 

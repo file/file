@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.76 2014/12/11 11:47:08 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.77 2014/12/12 16:33:01 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -383,7 +383,6 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 	int fdin[2], fdout[2];
 	int status;
 	ssize_t r;
-	pid_t pid;
 
 #ifdef BUILTIN_DECOMPRESS
         /* FIXME: This doesn't cope with bzip2 */
@@ -397,7 +396,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 		file_error(ms, errno, "cannot create pipe");	
 		return NODATA;
 	}
-	switch (pid = fork()) {
+	switch (fork()) {
 	case 0:	/* child */
 		(void) close(0);
 		if (fd != -1) {

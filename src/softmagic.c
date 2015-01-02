@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.205 2015/01/01 04:12:23 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.206 2015/01/01 17:07:34 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1666,7 +1666,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 
 	case FILE_INDIRECT:
 		if (m->str_flags & INDIRECT_RELATIVE)
-			offset += o;
+			offset += CAST(uint32_t, o);
 		if (offset == 0)
 			return 0;
 

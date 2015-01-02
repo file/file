@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.163 2014/12/16 23:18:40 christos Exp $
+ * @(#)$File: file.h,v 1.164 2015/01/01 17:07:34 christos Exp $
  */
 
 #ifndef __file_h__
@@ -589,6 +589,9 @@ static const char *rcsid(const char *p) { \
 #endif
 #else
 #define FILE_RCSID(id)
+#endif
+#ifndef __RCSID
+#define __RCSID(a)
 #endif
 
 #endif /* __file_h__ */

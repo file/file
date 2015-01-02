@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.78 2014/12/11 12:34:24 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.79 2014/12/16 20:52:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -159,8 +159,9 @@ file_badread(struct magic_set *ms)
 }
 
 #ifndef COMPILE_ONLY
+/*ARGSUSED*/
 protected int
-file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((unused)),
+file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__unused__)),
     const void *buf, size_t nb)
 {
 	int m = 0, rv = 0, looks_text = 0;
@@ -549,9 +550,9 @@ file_printable(char *buf, size_t bufsiz, const char *str)
 		if (ptr >= eptr - 3)
 			break;
 		*ptr++ = '\\';
-		*ptr++ = ((*s >> 6) & 7) + '0';
-		*ptr++ = ((*s >> 3) & 7) + '0';
-		*ptr++ = ((*s >> 0) & 7) + '0';
+		*ptr++ = ((CAST(unsigned int, *s) >> 6) & 7) + '0';
+		*ptr++ = ((CAST(unsigned int, *s) >> 3) & 7) + '0';
+		*ptr++ = ((CAST(unsigned int, *s) >> 0) & 7) + '0';
 	}
 	*ptr = '\0';
 	return buf;
