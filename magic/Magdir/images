@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.100 2015/01/01 02:58:53 christos Exp $
+# $File: images,v 1.101 2015/01/01 04:16:51 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -225,15 +225,15 @@
 # Software
 >0	leshort		0x131
 >>(8.l)	string		x		\b, software=%s
->>>12	use		tiff_entry
+>>12	use		tiff_entry
 # Datetime
 >0	leshort		0x132
 >>(8.l)	string		x		\b, datetime=%s
->>>12	use		tiff_entry
+>>12	use		tiff_entry
 # HostComputer
 >0	leshort		0x13c
 >>(8.l)	string		x		\b, hostcomputer=%s
->>>12	use		tiff_entry
+>>12	use		tiff_entry
 # WhitePoint
 >0	leshort		0x13e
 >>12	use		tiff_entry
@@ -252,7 +252,7 @@
 # Copyright
 >0	leshort		0x8298
 >>(8.l)	string		x		\b, copyright=%s
->>>12	use		tiff_entry
+>>12	use		tiff_entry
 # ExifOffset
 >0	leshort		0x8769
 >>12	use		tiff_entry
