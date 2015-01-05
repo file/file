@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.208 2015/01/05 00:16:01 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.209 2015/01/05 20:05:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -518,7 +518,7 @@ mprint(struct magic_set *ms, struct magic *m)
 			t = ms->offset + strlen(str);
 
 			if (*m->value.s == '\0')
-				str[strcspn(str, "\n")] = '\0';
+				str[strcspn(str, "\r\n")] = '\0';
 
 			if (m->str_flags & STRING_TRIM) {
 				char *last;
@@ -707,7 +707,7 @@ moffset(struct magic_set *ms, struct magic *m)
 			uint32_t t;
 
 			if (*m->value.s == '\0')
-				p->s[strcspn(p->s, "\n")] = '\0';
+				p->s[strcspn(p->s, "\r\n")] = '\0';
 			t = CAST(uint32_t, (ms->offset + strlen(p->s)));
 			if (m->type == FILE_PSTRING)
 				t += (uint32_t)file_pstring_length_size(m);
