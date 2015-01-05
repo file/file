@@ -1,3 +1,7 @@
+2015-01-05  13:00  Christos Zoulas <christos@zoulas.com>
+
+	* PR/411: Fix memory corruption from corrupt cdf file.
+
 2015-01-02  15:15  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.22

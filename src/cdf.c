@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.70 2015/01/02 21:29:39 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.71 2015/01/05 18:00:36 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1002,8 +1002,10 @@ cdf_unpack_summary_info(const cdf_stream_t *sst, const cdf_header_t *h,
 
 
 #define extract_catalog_field(t, f, l) \
-    memcpy(&ce[i].f, b + (l), sizeof(ce[i].f)); \
-    ce[i].f = CAST(t, CDF_TOLE(ce[i].f))
+    if (b + l + sizeof(cep->f) > eb) \
+	break; \
+    memcpy(&cep->f, b + (l), sizeof(cep->f)); \
+    ce[i].f = CAST(t, CDF_TOLE(cep->f))
 
 int
 cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
@@ -1030,21 +1032,33 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 	(*cat)->cat_num = nr;
 	ce = (*cat)->cat_e;
 	b = CAST(const char *, sst->sst_tab);
-	for (i = 0; i < nr; i++) {
+	for (i = 0; i < nr; i++, b += reclen) {
+		cdf_catalog_entry_t *cep = &ce[i];
+		uint16_t rlen;
+
 		extract_catalog_field(uint16_t, ce_namlen, 0);
 		extract_catalog_field(uint16_t, ce_num, 2);
 		extract_catalog_field(uint64_t, ce_timestamp, 6);
-		reclen = ce[i].ce_namlen;
-		ce[i].ce_namlen =
-		    sizeof(ce[i].ce_name) / sizeof(ce[i].ce_name[0]) - 1;
-		if (ce[i].ce_namlen > reclen - 14)
-			ce[i].ce_namlen = reclen - 14;
-		np = CAST(const uint16_t *, CAST(const void *, (b + 16)));
-		for (k = 0; k < ce[i].ce_namlen; k++) {
-			ce[i].ce_name[k] = np[k]; /* XXX: CDF_TOLE2? */
+		reclen = cep->ce_namlen;
+
+		if (reclen < 14) {
+			cep->ce_namlen = 0;
+			cep->ce_name[0] = 0;
+			continue;
 		}
-		ce[i].ce_name[ce[i].ce_namlen] = 0;
-		b += reclen;
+
+		cep->ce_namlen = __arraycount(cep->ce_name) - 1;
+		rlen = reclen - 14;
+		if (cep->ce_namlen > rlen)
+			cep->ce_namlen = rlen;
+
+		np = CAST(const uint16_t *, CAST(const void *, (b + 16)));
+		if (CAST(const char *, np + cep->ce_namlen) > eb)
+			break;
+
+		for (k = 0; k < cep->ce_namlen; k++)
+			cep->ce_name[k] = np[k]; /* XXX: CDF_TOLE2? */
+		cep->ce_name[cep->ce_namlen] = 0;
 	}
 	return 0;
 }
@@ -1190,10 +1204,10 @@ cdf_dump_sat(const char *prefix, const cdf_sat_t *sat, size_t size)
 }
 
 void
-cdf_dump(void *v, size_t len)
+cdf_dump(const void *v, size_t len)
 {
 	size_t i, j;
-	unsigned char *p = v;
+	const unsigned char *p = v;
 	char abuf[16];
 	(void)fprintf(stderr, "%.4x: ", 0);
 	for (i = 0, j = 0; i < len; i++, p++) {
@@ -1329,10 +1343,10 @@ cdf_dump_property_info(const cdf_property_info_t *info, size_t count)
 				cdf_print_elapsed_time(buf, sizeof(buf), tp);
 				(void)fprintf(stderr, "timestamp %s\n", buf);
 			} else {
-				char buf[26];
+				char tbuf[26];
 				cdf_timestamp_to_timespec(&ts, tp);
 				(void)fprintf(stderr, "timestamp %s",
-				    cdf_ctime(&ts.tv_sec, buf));
+				    cdf_ctime(&ts.tv_sec, tbuf));
 			}
 			break;
 		case CDF_CLIPBOARD:
