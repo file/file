@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.209 2015/01/05 20:05:39 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.210 2015/01/05 20:21:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -361,6 +361,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		if ((ms->flags & MAGIC_CONTINUE) == 0 && *printed_something) {
 			return *returnval; /* don't keep searching */
 		}
+		cont_level = 0;
 	}
 	return *returnval;  /* This is hit if -k is set or there is no match */
 }
