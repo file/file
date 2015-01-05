@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.70 2015/01/02 21:29:39 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.71 2015/01/05 18:00:36 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1002,8 +1002,10 @@ cdf_unpack_summary_info(const cdf_stream_t *sst, const cdf_header_t *h,
 
 
 #define extract_catalog_field(t, f, l) \
-    if (b + l + sizeof(cep->f) > eb) \
-	break; \
+    if (b + l + sizeof(cep->f) > eb) { \
+	    cep->ce_namlen = 0; \
+	    break; \
+    } \
     memcpy(&cep->f, b + (l), sizeof(cep->f)); \
     ce[i].f = CAST(t, CDF_TOLE(cep->f))
 
@@ -1031,6 +1033,7 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 	    malloc(sizeof(cdf_catalog_t) + nr * sizeof(*ce)));
 	(*cat)->cat_num = nr;
 	ce = (*cat)->cat_e;
+	memset(ce, 0, nr * sizeof(*ce));
 	b = CAST(const char *, sst->sst_tab);
 	for (i = 0; i < nr; i++, b += reclen) {
 		cdf_catalog_entry_t *cep = &ce[i];
@@ -1043,7 +1046,6 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 
 		if (reclen < 14) {
 			cep->ce_namlen = 0;
-			cep->ce_name[0] = 0;
 			continue;
 		}
 
@@ -1053,8 +1055,10 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 			cep->ce_namlen = rlen;
 
 		np = CAST(const uint16_t *, CAST(const void *, (b + 16)));
-		if (CAST(const char *, np + cep->ce_namlen) > eb)
+		if (CAST(const char *, np + cep->ce_namlen) > eb) {
+			cep->ce_namlen = 0;
 			break;
+		}
 
 		for (k = 0; k < cep->ce_namlen; k++)
 			cep->ce_name[k] = np[k]; /* XXX: CDF_TOLE2? */
