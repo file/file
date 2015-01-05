@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.206 2015/01/01 17:07:34 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.207 2015/01/02 21:29:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -589,9 +589,9 @@ mprint(struct magic_set *ms, struct magic *m)
 		t = ms->offset + sizeof(uint64_t);
 		break;
 
-  	case FILE_FLOAT:
-  	case FILE_BEFLOAT:
-  	case FILE_LEFLOAT:
+	case FILE_FLOAT:
+	case FILE_BEFLOAT:
+	case FILE_LEFLOAT:
 		vf = p->f;
 		switch (check_fmt(ms, m)) {
 		case -1:
@@ -609,9 +609,9 @@ mprint(struct magic_set *ms, struct magic *m)
 		t = ms->offset + sizeof(float);
   		break;
 
-  	case FILE_DOUBLE:
-  	case FILE_BEDOUBLE:
-  	case FILE_LEDOUBLE:
+	case FILE_DOUBLE:
+	case FILE_BEDOUBLE:
+	case FILE_LEDOUBLE:
 		vd = p->d;
 		switch (check_fmt(ms, m)) {
 		case -1:
@@ -629,6 +629,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		t = ms->offset + sizeof(double);
   		break;
 
+	case FILE_SEARCH:
 	case FILE_REGEX: {
 		char *cp;
 		int rval;
@@ -651,16 +652,6 @@ mprint(struct magic_set *ms, struct magic *m)
 			t = ms->search.offset + ms->search.rm_len;
 		break;
 	}
-
-	case FILE_SEARCH:
-	  	if (file_printf(ms, F(ms, m, "%s"),
-		    file_printable(sbuf, sizeof(sbuf), m->value.s)) == -1)
-			return -1;
-		if ((m->str_flags & REGEX_OFFSET_START))
-			t = ms->search.offset;
-		else
-			t = ms->search.offset + m->vallen;
-		break;
 
 	case FILE_DEFAULT:
 	case FILE_CLEAR:
@@ -1965,6 +1956,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			    m->str_flags);
 			if (v == 0) {	/* found match */
 				ms->search.offset += idx;
+				ms->search.rm_len = m->str_range - idx;
 				break;
 			}
 		}
