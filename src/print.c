@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.76 2013/02/26 18:25:00 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.77 2015/01/02 21:29:39 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -232,13 +232,17 @@ protected const char *
 file_fmttime(uint64_t v, int flags, char *buf)
 {
 	char *pp;
-	time_t t = (time_t)v;
+	time_t t;
 	struct tm *tm;
 
 	if (flags & FILE_T_WINDOWS) {
 		struct timespec ts;
-		cdf_timestamp_to_timespec(&ts, t);
+		cdf_timestamp_to_timespec(&ts, v);
 		t = ts.tv_sec;
+	} else {
+		// XXX: perhaps detect and print something if overflow
+		// on 32 bit time_t?
+		t = (time_t)v;
 	}
 
 	if (flags & FILE_T_LOCAL) {
