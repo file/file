@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: vorbis,v 1.19 2014/09/23 12:57:41 christos Exp $
+# $File: vorbis,v 1.20 2014/09/23 16:35:08 christos Exp $
 # vorbis:  file(1) magic for Ogg/Vorbis files
 #
 # From Felix von Leitner <leitner@fefe.de>
@@ -47,8 +47,8 @@
 # non-Vorbis content: Skeleton
 >>28		string		fishead\0	\b, Skeleton
 !:mime		video/ogg
->>>36		short		x		v%u
->>>40		short		x		\b.%u
+>>>36		leshort		x		v%u
+>>>40		leshort		x		\b.%u
 # non-Vorbis content: Speex
 >>28		string		Speex\ \ \ 	\b, Speex audio
 !:mime		audio/ogg
