@@ -1,3 +1,10 @@
+2015-01-09  14:35  Christos Zoulas <christos@zoulas.com>
+
+	* Fix multiple issues with date formats reported by Christoph Biedl:
+		- T_LOCAL meaning was reversed
+		- Arithmetic did not work
+	  Also stop adjusting daylight savings for gmt printing.
+
 2015-01-05  13:00  Christos Zoulas <christos@zoulas.com>
 
 	* PR/411: Fix memory corruption from corrupt cdf file.
