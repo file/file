@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.164 2015/01/01 17:07:34 christos Exp $
+ * @(#)$File: file.h,v 1.165 2015/01/02 21:29:39 christos Exp $
  */
 
 #ifndef __file_h__
@@ -563,6 +563,12 @@ char   *ctime_r(const time_t *, char *);
 #endif
 #ifndef HAVE_ASCTIME_R
 char   *asctime_r(const struct tm *, char *);
+#endif
+#ifndef HAVE_GMTIME_R
+struct tm *gmtime_r(const time_t *, struct tm *);
+#endif
+#ifndef HAVE_LOCALTIME_R
+struct tm *localtime_r(const time_t *, struct tm *);
 #endif
 #ifndef HAVE_FMTCHECK
 const char *fmtcheck(const char *, const char *) 
