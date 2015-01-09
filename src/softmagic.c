@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.209 2015/01/05 20:05:39 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.210 2015/01/05 20:21:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -548,7 +548,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_LEDATE:
 	case FILE_MEDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->l + m->num_mask, FILE_T_LOCAL, tbuf)) == -1)
+		    file_fmttime(p->l, 0, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -558,7 +558,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_LELDATE:
 	case FILE_MELDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->l + m->num_mask, 0, tbuf)) == -1)
+		    file_fmttime(p->l, FILE_T_LOCAL, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -567,7 +567,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQDATE:
 	case FILE_LEQDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->q + m->num_mask, FILE_T_LOCAL, tbuf)) == -1)
+		    file_fmttime(p->q, 0, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -576,7 +576,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQLDATE:
 	case FILE_LEQLDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->q + m->num_mask, 0, tbuf)) == -1)
+		    file_fmttime(p->q, FILE_T_LOCAL, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -585,7 +585,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQWDATE:
 	case FILE_LEQWDATE:
 		if (file_printf(ms, F(ms, m, "%s"),
-		    file_fmttime(p->q + m->num_mask, FILE_T_WINDOWS, tbuf)) == -1)
+		    file_fmttime(p->q, FILE_T_WINDOWS, tbuf)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -970,8 +970,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_BELDATE:
 		p->l = (int32_t)
 		    ((p->hl[0]<<24)|(p->hl[1]<<16)|(p->hl[2]<<8)|(p->hl[3]));
-		if (type == FILE_BELONG)
-			cvt_32(p, m);
+		cvt_32(p, m);
 		return 1;
 	case FILE_BEQUAD:
 	case FILE_BEQDATE:
@@ -982,8 +981,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		     ((uint64_t)p->hq[2]<<40)|((uint64_t)p->hq[3]<<32)|
 		     ((uint64_t)p->hq[4]<<24)|((uint64_t)p->hq[5]<<16)|
 		     ((uint64_t)p->hq[6]<<8)|((uint64_t)p->hq[7]));
-		if (type == FILE_BEQUAD)
-			cvt_64(p, m);
+		cvt_64(p, m);
 		return 1;
 	case FILE_LESHORT:
 		p->h = (short)((p->hs[1]<<8)|(p->hs[0]));
@@ -994,8 +992,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_LELDATE:
 		p->l = (int32_t)
 		    ((p->hl[3]<<24)|(p->hl[2]<<16)|(p->hl[1]<<8)|(p->hl[0]));
-		if (type == FILE_LELONG)
-			cvt_32(p, m);
+		cvt_32(p, m);
 		return 1;
 	case FILE_LEQUAD:
 	case FILE_LEQDATE:
@@ -1006,16 +1003,14 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		     ((uint64_t)p->hq[5]<<40)|((uint64_t)p->hq[4]<<32)|
 		     ((uint64_t)p->hq[3]<<24)|((uint64_t)p->hq[2]<<16)|
 		     ((uint64_t)p->hq[1]<<8)|((uint64_t)p->hq[0]));
-		if (type == FILE_LEQUAD)
-			cvt_64(p, m);
+		cvt_64(p, m);
 		return 1;
 	case FILE_MELONG:
 	case FILE_MEDATE:
 	case FILE_MELDATE:
 		p->l = (int32_t)
 		    ((p->hl[1]<<24)|(p->hl[0]<<16)|(p->hl[3]<<8)|(p->hl[2]));
-		if (type == FILE_MELONG)
-			cvt_32(p, m);
+		cvt_32(p, m);
 		return 1;
 	case FILE_FLOAT:
 		cvt_float(p, m);
