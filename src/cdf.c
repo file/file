@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.72 2015/01/05 18:09:40 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.73 2015/01/11 16:58:25 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -751,7 +751,7 @@ cdf_read_user_stream(const cdf_info_t *info, const cdf_header_t *h,
 	int i = cdf_find_stream(dir, name, CDF_DIR_TYPE_USER_STREAM);
 
 	if (i <= 0)
-		return i;
+		return -1;
 
 	d = &dir->dir_tab[i - 1];
 	return cdf_read_sector_chain(info, h, sat, ssat, sst,
