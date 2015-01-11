@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.72 2015/01/05 18:09:40 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.73 2015/01/11 16:58:25 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -747,24 +747,33 @@ cdf_read_user_stream(const cdf_info_t *info, const cdf_header_t *h,
     const cdf_sat_t *sat, const cdf_sat_t *ssat, const cdf_stream_t *sst,
     const cdf_dir_t *dir, const char *name, cdf_stream_t *scn)
 {
-	size_t i;
 	const cdf_directory_t *d;
-	size_t name_len = strlen(name) + 1;
+	int i = cdf_find_stream(dir, name, CDF_DIR_TYPE_USER_STREAM);
 
-	for (i = dir->dir_len; i > 0; i--)
-		if (dir->dir_tab[i - 1].d_type == CDF_DIR_TYPE_USER_STREAM &&
-		    cdf_namecmp(name, dir->dir_tab[i - 1].d_name, name_len)
-		    == 0)
-			break;
+	if (i <= 0)
+		return i;
 
-	if (i == 0) {
-		DPRINTF(("Cannot find user stream `%s'\n", name));
-		errno = ESRCH;
-		return -1;
-	}
 	d = &dir->dir_tab[i - 1];
 	return cdf_read_sector_chain(info, h, sat, ssat, sst,
 	    d->d_stream_first_sector, d->d_size, scn);
+}
+
+int
+cdf_find_stream(const cdf_dir_t *dir, const char *name, int type)
+{
+	size_t i, name_len = strlen(name) + 1;
+
+	for (i = dir->dir_len; i > 0; i--)
+		if (dir->dir_tab[i - 1].d_type == type &&
+		    cdf_namecmp(name, dir->dir_tab[i - 1].d_name, name_len)
+		    == 0)
+			break;
+	if (i > 0)
+		return i;
+
+	DPRINTF(("Cannot find type %d `%s'\n", type, name));
+	errno = ESRCH;
+	return 0;
 }
 
 int
@@ -1213,6 +1222,7 @@ cdf_dump(const void *v, size_t len)
 	size_t i, j;
 	const unsigned char *p = v;
 	char abuf[16];
+
 	(void)fprintf(stderr, "%.4x: ", 0);
 	for (i = 0, j = 0; i < len; i++, p++) {
 		(void)fprintf(stderr, "%.2x ", *p);
