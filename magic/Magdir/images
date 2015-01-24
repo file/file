@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.102 2015/01/02 02:36:35 christos Exp $
+# $File: images,v 1.103 2015/01/06 02:06:35 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -36,42 +36,48 @@
 # PBMPLUS images
 # The next byte following the magic is always whitespace.
 # strength is changed to try these patterns before "x86 boot sector"
+0	name		netpbm
+>3	regex/s		=[0-9]{1,50}\ [0-9]{1,50}	Netpbm PPM image data
+>>&0	regex		=[0-9]{1,50} 			\b, size = %s x
+>>>&0	regex		=[0-9]{1,50}			\b %s
+
 0	search/1	P1		
->3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PBM image text
->3	regex		=[0-9]{1,50}\ 		\b, size = %sx
->>3	regex		=\ [0-9]{1,50}	\b%s
+>0	use		netpbm
+>>0	string		x	\b, bitmap
 !:strength + 45
 !:mime	image/x-portable-bitmap
+
 0	search/1	P2		
->3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PGM image text
->3	regex		=[0-9]{1,50}\ 		\b, size = %sx
->>3	regex		=\ [0-9]{1,50}	\b%s
+>0	use		netpbm
+>>0	string		x	\b, greymap
 !:strength + 45
 !:mime	image/x-portable-greymap
+
 0	search/1	P3
->3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PPM image text
->3	regex		=[0-9]{1,50}\ 		\b, size = %sx
->>3	regex		=\ [0-9]{1,50}	\b%s
+>0	use		netpbm
+>>0	string		x	\b, pixmap
 !:strength + 45
 !:mime	image/x-portable-pixmap
+
+
 0	string		P4		
->3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PBM "rawbits" image data
->3	regex		=[0-9]{1,50}\ 		\b, size = %sx
->>3	regex		=\ [0-9]{1,50}	\b%s
+>0	use		netpbm
+>>0	string		x	\b, rawbits, bitmap
 !:strength + 45
 !:mime	image/x-portable-bitmap
+
 0	string		P5		
->3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PGM "rawbits" image data
->3	regex		=[0-9]{1,50}\ 		\b, size = %sx
->>3	regex		=\ [0-9]{1,50}	\b%s
+>0	use		netpbm
+>>0	string		x	\b, rawbits, greymap
 !:strength + 45
 !:mime	image/x-portable-greymap
+
 0	string		P6		
->3	regex		=[0-9]{0,50}\ [0-9]{0,50}		Netpbm PPM "rawbits" image data
->3	regex		=[0-9]{1,50}\ 		\b, size = %sx
->>3	regex		=\ [0-9]{1,50}	\b%s
+>0	use		netpbm
+>>0	string		x	\b, rawbits, pixmap
 !:strength + 45
 !:mime	image/x-portable-pixmap
+
 0	string		P7		Netpbm PAM image file
 !:mime	image/x-portable-pixmap
 
