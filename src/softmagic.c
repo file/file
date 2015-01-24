@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.210 2015/01/05 20:21:30 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.211 2015/01/09 19:27:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1103,10 +1103,8 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 				bytecnt = m->str_range;
 			}
 
-			if (bytecnt == 0)
-				bytecnt = 8192;
-			if (bytecnt > nbytes)
-				bytecnt = nbytes;
+			if (bytecnt == 0 || bytecnt > nbytes - offset)
+				bytecnt = nbytes - offset;
 
 			buf = RCAST(const char *, s) + offset;
 			end = last = RCAST(const char *, s) + bytecnt;
