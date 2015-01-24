@@ -1,9 +1,11 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: mozilla,v 1.4 2009/09/19 16:28:11 christos Exp $
 # mozilla:  file(1) magic for Mozilla XUL fastload files 
 # (XUL.mfasl and XPC.mfasl)
 # URL:	http://www.mozilla.org/
 # From:	Josh Triplett <josh@freedesktop.org>
 
 0	string	XPCOM\nMozFASL\r\n\x1A		Mozilla XUL fastload data
+const MAGIC_NUMBER = new Uint8Array([109, 111, 122, 76, 122, 52, 48, 0]);
+0	string	mozLz4a				Mozilla lz4 compressed bookmark data
