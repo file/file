@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cafebabe,v 1.16 2014/04/30 21:41:02 christos Exp $
+# $File: cafebabe,v 1.17 2015/01/01 17:07:00 christos Exp $
 # Cafe Babes unite!
 #
 # Since Java bytecode and Mach-O universal binaries have the same magic number,
@@ -28,6 +28,8 @@
 >>4	belong		0x0030		(Java 1.4)
 >>4	belong		0x0031		(Java 1.5)
 >>4	belong		0x0032		(Java 1.6)
+>>4	belong		0x0033		(Java 1.7)
+>>4	belong		0x0034		(Java 1.8)
 
 0	belong		0xcafed00d	JAR compressed with pack200,
 >5	byte		x		version %d.
