@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.229 2015/01/01 17:07:34 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.230 2015/01/02 21:29:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -964,8 +964,9 @@ apprentice_list(struct mlist *mlist, int mode)
 			       *ml->magic[magindex].mimetype == '\0')
 				magindex++;
 
-			printf("Strength = %3" SIZE_T_FORMAT "u : %s [%s]\n",
+			printf("Strength = %3" SIZE_T_FORMAT "u@%u: %s [%s]\n",
 			    apprentice_magic_strength(m),
+			    ml->magic[magindex].lineno,
 			    ml->magic[magindex].desc,
 			    ml->magic[magindex].mimetype);
 		}
