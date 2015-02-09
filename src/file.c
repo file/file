@@ -268,7 +268,6 @@ main(int argc, char *argv[])
 		case 'r':
 			flags |= MAGIC_RAW;
 			break;
-			break;
 		case 's':
 			flags |= MAGIC_DEVICES;
 			break;
