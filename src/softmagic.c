@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.211 2015/01/09 19:27:41 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.212 2015/01/24 22:11:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1567,7 +1567,9 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			offset = ((((offset >>  0) & 0x7f) <<  0) |
 				 (((offset >>  8) & 0x7f) <<  7) |
 				 (((offset >> 16) & 0x7f) << 14) |
-				 (((offset >> 24) & 0x7f) << 21)) + 10;
+				 (((offset >> 24) & 0x7f) << 21));
+			if ((ms->flags & MAGIC_DEBUG) != 0)
+				fprintf(stderr, "id3 offs=%u\n", offset);
 			break;
 		default:
 			break;
