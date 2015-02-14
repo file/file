@@ -1,3 +1,7 @@
+2015-02-14  12:23  Christos Zoulas <christos@zoulas.com>
+
+	* Bump file search buffer size to 1M.
+
 2015-01-09  14:35  Christos Zoulas <christos@zoulas.com>
 
 	* Fix multiple issues with date formats reported by Christoph Biedl:
