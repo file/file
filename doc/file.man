@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.111 2014/12/16 23:18:40 christos Exp $
-.Dd December 16, 2014
+.\" $File: file.man,v 1.112 2015/02/14 17:24:30 christos Exp $
+.Dd February 14, 2015
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -599,7 +599,7 @@ Add syntax for relative offsets after current level (Debian bug #466037).
 Make file -ki work, i.e. give multiple MIME types.
 .Pp
 Add a zip library so we can peek inside Office2007 documents to
-figure out what they are.
+print more details about their contents.
 .Pp
 Add an option to print URLs for the sources of the file descriptions.
 .Pp
@@ -626,6 +626,15 @@ Make
 more efficient by keeping a sorted list of names.
 Special-case ^ to flip endianness in the parser so that it does not
 have to be escaped, and document it.
+.Pp
+If the offsets specified internally in the file exceed the buffer size
+(
+.Dv HOWMANY
+variable in file.h), then we don't seek to that offset, but we give up.
+It would be better if buffer managements was done when the file descriptor
+is available so move around the file.
+One must be careful though because this has performance (and thus security
+considerations).
 .Sh AVAILABILITY
 You can obtain the original author's latest version by anonymous FTP
 on
