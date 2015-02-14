@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: perl,v 1.21 2013/12/08 23:33:18 christos Exp $
+# $File: perl,v 1.22 2014/04/28 12:04:35 christos Exp $
 # perl:  file(1) magic for Larry Wall's perl language.
 #
 # The `eval' lines recognizes an outrageously clever hack.
@@ -18,7 +18,7 @@
 0	search/1	#!\ /usr/bin/env\ perl	Perl script text executable
 !:mime	text/x-perl
 0	search/1	#!
->0	regex	\^#!.*/bin/perl$	Perl script text executable
+>0	regex	\^#!.*/bin/perl([[:space:]].*)*$	Perl script text executable
 !:mime	text/x-perl
 
 # by Dmitry V. Levin and Alexey Tourbin
