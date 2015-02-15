@@ -1,6 +1,6 @@
 # HOW TO RELEASE FILE
 
-@(#) $File: RELEASE-PROCEDURE,v 1.2 2014/03/16 08:56:36 kim Exp $
+@(#) $File: RELEASE-PROCEDURE,v 1.3 2014/03/16 13:32:55 christos Exp $
 
 1)  Update version number in configure.ac
 2)  Note the new version in ChangeLog
@@ -9,6 +9,7 @@
 5)  Rebuild and run tests (see README.DEVELOPER)
 6)  Tag the release with FILEx_yy
 7)  Create the source tarball: make distcheck
+7a) Sign the source tarball.
 8)  Make the source tarball available on ftp
 9)  Add the new version to bugs.gw.com:
     - Click: Manage > Manage Projects > file
