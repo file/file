@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.74 2015/01/11 17:00:23 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.75 2015/02/27 21:16:55 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1483,8 +1483,8 @@ main(int argc, char *argv[])
 		else
 			cdf_dump_summary_info(&h, &scn);
 #endif
-		if (cdf_read_catalog(&info, &h, &sat, &ssat, &sst, &dir,
-		    &scn) == -1)
+		if (cdf_read_user_stream(&info, &h, &sat, &ssat, &sst,
+		    &dir, "Catalog", &scn) <= 0)
 			warn("Cannot read catalog");
 #ifdef CDF_DEBUG
 		else
