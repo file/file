@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.102 2015/01/28 01:05:21 christos Exp $
+# $File: Makefile.am,v 1.103 2015/03/17 15:15:12 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -161,6 +161,7 @@ $(MAGIC_FRAGMENT_DIR)/msx \
 $(MAGIC_FRAGMENT_DIR)/msvc \
 $(MAGIC_FRAGMENT_DIR)/mup \
 $(MAGIC_FRAGMENT_DIR)/music \
+$(MAGIC_FRAGMENT_DIR)/nasa \
 $(MAGIC_FRAGMENT_DIR)/natinst \
 $(MAGIC_FRAGMENT_DIR)/ncr \
 $(MAGIC_FRAGMENT_DIR)/neko \
