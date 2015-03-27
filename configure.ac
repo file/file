@@ -82,9 +82,13 @@ AC_HEADER_MAJOR
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(stdint.h fcntl.h locale.h stdint.h inttypes.h unistd.h)
 AC_CHECK_HEADERS(stddef.h utime.h wchar.h wctype.h limits.h)
-AC_CHECK_HEADERS(getopt.h err.h xlocale.h)
+AC_CHECK_HEADERS(getopt.h err.h xlocale.h signal.h)
 AC_CHECK_HEADERS(sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h)
 AC_CHECK_HEADERS(zlib.h)
+AC_CHECK_TYPE([sig_t],[AC_DEFINE([HAVE_SIG_T],1,[Have sig_t type])],,[
+#ifdef HAVE_SIGNAL_H
+#include <signal.h>
+#endif])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
