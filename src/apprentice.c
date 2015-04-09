@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.230 2015/01/02 21:29:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.231 2015/02/06 17:08:58 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -149,6 +149,7 @@ private int get_op(char);
 private int parse_mime(struct magic_set *, struct magic_entry *, const char *);
 private int parse_strength(struct magic_set *, struct magic_entry *, const char *);
 private int parse_apple(struct magic_set *, struct magic_entry *, const char *);
+private int parse_ext(struct magic_set *, struct magic_entry *, const char *);
 
 
 private size_t magicsize = sizeof(struct magic);
@@ -163,6 +164,7 @@ private struct {
 #define	DECLARE_FIELD(name) { # name, sizeof(# name) - 1, parse_ ## name }
 	DECLARE_FIELD(mime),
 	DECLARE_FIELD(apple),
+	DECLARE_FIELD(ext),
 	DECLARE_FIELD(strength),
 #undef	DECLARE_FIELD
 	{ NULL, 0, NULL }
@@ -2252,6 +2254,19 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
 	return parse_extra(ms, me, line,
 	    CAST(off_t, offsetof(struct magic, apple)),
 	    sizeof(m->apple), "APPLE", "!+-./", 0);
+}
+
+/*
+ * Parse a comma-separated list of extensions
+ */
+private int
+parse_ext(struct magic_set *ms, struct magic_entry *me, const char *line)
+{
+	struct magic *m = &me->mp[0];
+
+	return parse_extra(ms, me, line,
+	    CAST(off_t, offsetof(struct magic, ext)),
+	    sizeof(m->ext), "EXTENSION", ",!+-/", 0);
 }
 
 /*

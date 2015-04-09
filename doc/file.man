@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.111 2014/12/16 23:18:40 christos Exp $
-.Dd February 14, 2015
+.\" $File: file.man,v 1.112 2015/02/14 17:24:30 christos Exp $
+.Dd April 9, 2015
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -10,6 +10,7 @@
 .Bk -words
 .Op Fl bcEhiklLNnprsvz0
 .Op Fl Fl apple
+.Op Fl Fl extension
 .Op Fl Fl mime-encoding
 .Op Fl Fl mime-type
 .Op Fl e Ar testname
@@ -213,6 +214,8 @@ Consults magic files.
 .It tar
 Examines tar files.
 .El
+.It Fl Fl extension 
+Print a comma-separated list of valid extensions for the file type found.
 .It Fl F , Fl Fl separator Ar separator
 Use the specified string as the separator between the filename and the
 file result returned.

@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.117 2014/12/16 23:29:42 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.118 2015/01/02 21:29:39 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1353,7 +1353,7 @@ file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
 	Elf64_Ehdr elf64hdr;
 	uint16_t type, phnum, shnum, notecount;
 
-	if (ms->flags & (MAGIC_MIME|MAGIC_APPLE))
+	if (ms->flags & (MAGIC_MIME|MAGIC_APPLE|MAGIC_EXTENSION))
 		return 0;
 	/*
 	 * ELF executables have multiple section headers in arbitrary

@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.166 2015/01/09 19:28:32 christos Exp $
+ * @(#)$File: file.h,v 1.167 2015/02/14 17:19:29 christos Exp $
  */
 
 #ifndef __file_h__
@@ -135,8 +135,8 @@
 #define MAXstring 64		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	12
-#define FILE_MAGICSIZE	248
+#define VERSIONNO	13
+#define FILE_MAGICSIZE	312
 
 #define	FILE_LOAD	0
 #define FILE_CHECK	1
@@ -307,7 +307,9 @@ struct magic {
 	/* Words 33-52 */
 	char mimetype[MAXMIME]; /* MIME type */
 	/* Words 53-54 */
-	char apple[8];
+	char apple[8];		/* APPLE CREATOR/TYPE */
+	/* Words 55-63 */
+	char ext[64];		/* Popular extensions */
 };
 
 #define BIT(A)   (1 << (A))

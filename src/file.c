@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.161 2015/01/02 21:29:39 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.162 2015/02/09 20:15:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -75,7 +75,7 @@ int getopt_long(int argc, char * const *argv, const char *optstring, const struc
 
 # define USAGE  \
     "Usage: %s [" FILE_FLAGS \
-	"] [--apple] [--mime-encoding] [--mime-type]\n" \
+	"] [--apple] [--extension] [--mime-encoding] [--mime-type]\n" \
     "            [-e testname] [-F separator] [-f namefile] [-m magicfiles] " \
     "file ...\n" \
     "       %s -C [-m magicfiles]\n" \
@@ -191,9 +191,12 @@ main(int argc, char *argv[])
 				flags |= MAGIC_APPLE;
 				break;
 			case 11:
-				flags |= MAGIC_MIME_TYPE;
+				flags |= MAGIC_EXTENSION;
 				break;
 			case 12:
+				flags |= MAGIC_MIME_TYPE;
+				break;
+			case 13:
 				flags |= MAGIC_MIME_ENCODING;
 				break;
 			}

@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.51 2015/01/11 16:58:25 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.52 2015/02/27 21:16:38 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -454,7 +454,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
         info.i_fd = fd;
         info.i_buf = buf;
         info.i_len = nbytes;
-        if (ms->flags & MAGIC_APPLE)
+        if (ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION))
                 return 0;
         if (cdf_read_header(&info, &h) == -1)
                 return 0;

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.74 2014/10/13 20:21:49 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.75 2014/12/04 15:56:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -110,7 +110,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	struct stat tstatbuf;
 #endif
 
-	if (ms->flags & MAGIC_APPLE)
+	if (ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION))
 		return 0;
 	if (fn == NULL)
 		return 0;
