@@ -1,3 +1,8 @@
+2015-04-09  15:59  Christos Zoulas <christos@zoulas.com>
+
+	* Add --extension to list the known extensions for this file type
+	  Idea by Andrew J Roazen
+
 2015-02-14  12:23  Christos Zoulas <christos@zoulas.com>
 
 	* Bump file search buffer size to 1M.
