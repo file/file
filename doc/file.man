@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.113 2015/04/09 20:01:40 christos Exp $
+.\" $File: file.man,v 1.114 2015/04/10 15:36:01 christos Exp $
 .Dd April 9, 2015
 .Dt FILE __CSECTION__
 .Os
@@ -215,7 +215,7 @@ Consults magic files.
 Examines tar files.
 .El
 .It Fl Fl extension 
-Print a comma-separated list of valid extensions for the file type found.
+Print a slash-separated list of valid extensions for the file type found.
 .It Fl F , Fl Fl separator Ar separator
 Use the specified string as the separator between the filename and the
 file result returned.
