@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.59 2014/11/03 21:03:36 christos Exp $
+# $File: linux,v 1.60 2015/03/24 13:19:04 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -438,3 +438,11 @@
 # From: Pavel Emelyanov <xemul@parallels.com>
 0		lelong		0x45311224	iproute2 routes dump
 0		lelong		0x47361222	iproute2 addresses dump
+
+# Image and service files for CRIU tool.
+# URL: http://criu.org
+# From: Pavel Emelyanov <xemul@parallels.com>
+0		lelong		0x54564319	CRIU image file v1.1
+0		lelong		0x55105940	CRIU service file
+0		lelong		0x58313116	CRIU inventory
+
