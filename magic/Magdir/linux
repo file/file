@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.60 2015/03/24 13:19:04 christos Exp $
+# $File: linux,v 1.61 2015/04/14 14:23:42 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -446,3 +446,14 @@
 0		lelong		0x55105940	CRIU service file
 0		lelong		0x58313116	CRIU inventory
 
+# Kdump compressed dump files
+# http://sourceforge.net/p/makedumpfile/code/ci/master/tree/IMPLEMENTATION
+
+0		string		KDUMP          	Kdump compressed dump
+>8		long		x		v%d
+>12		string		>\0		\b, system %s
+>77		string		>\0		\b, node %s
+>142		string		>\0		\b, release %s
+>207		string		>\0		\b, version %s
+>272		string		>\0		\b, machine %s
+>337		string		>\0		\b, domain %s
