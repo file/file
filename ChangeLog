@@ -1,3 +1,7 @@
+2015-05-21  14:30  Christos Zoulas <christos@zoulas.com>
+
+	* don't print descriptions for NAME types when mime.
+
 2015-04-09  15:59  Christos Zoulas <christos@zoulas.com>
 
 	* Add --extension to list the known extensions for this file type
