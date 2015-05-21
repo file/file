@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.213 2015/02/14 18:43:12 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.214 2015/04/09 20:01:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -147,7 +147,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	unsigned int cont_level = 0;
 	int returnvalv = 0, e; /* if a match is found it is set to 1*/
 	int firstline = 1; /* a flag to print X\n  X\n- X */
-	int print = (ms->flags & (MAGIC_MIME|MAGIC_APPLE|MAGIC_EXTENSION)) == 0;
+	int print = (ms->flags & MAGIC_NODESC) == 0;
 
 	if (returnval == NULL)
 		returnval = &returnvalv;
@@ -1674,7 +1674,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			return -1;
 
 		if (rv == 1) {
-			if ((ms->flags & (MAGIC_MIME|MAGIC_APPLE|MAGIC_EXTENSION)) == 0 &&
+			if ((ms->flags & MAGIC_NODESC) == 0 &&
 			    file_printf(ms, F(ms, m, "%u"), offset) == -1) {
 				free(rbuf);
 				return -1;
@@ -1711,6 +1711,8 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		return rv;
 
 	case FILE_NAME:
+		if (ms->flags & MAGIC_NODESC)
+			return 1;
 		if (file_printf(ms, "%s", m->desc) == -1)
 			return -1;
 		return 1;
@@ -2152,7 +2154,7 @@ handle_annotation(struct magic_set *ms, struct magic *m)
 private int
 print_sep(struct magic_set *ms, int firstline)
 {
-	if (ms->flags & MAGIC_MIME)
+	if (ms->flags & MAGIC_NODESC)
 		return 0;
 	if (firstline)
 		return 0;
