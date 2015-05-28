@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.79 2014/12/16 20:52:49 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.80 2015/01/02 21:29:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -159,6 +159,17 @@ file_badread(struct magic_set *ms)
 }
 
 #ifndef COMPILE_ONLY
+
+static int
+checkdone(struct magic_set *ms, int *rv)
+{
+	if ((ms->flags & MAGIC_CONTINUE) == 0)
+		return 1;
+	if (file_printf(ms, "\n- ") == -1)
+		*rv = -1;
+	return 0;
+}
+
 /*ARGSUSED*/
 protected int
 file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__unused__)),
@@ -215,7 +226,8 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 		if ((m = file_is_tar(ms, ubuf, nb)) != 0) {
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void)fprintf(stderr, "tar %d\n", m);
-			goto done;
+			if (checkdone(ms, &rv))
+				goto done;
 		}
 
 	/* Check if we have a CDF file */
@@ -223,7 +235,8 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 		if ((m = file_trycdf(ms, fd, ubuf, nb)) != 0) {
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void)fprintf(stderr, "cdf %d\n", m);
-			goto done;
+			if (checkdone(ms, &rv))
+				goto done;
 		}
 
 	/* try soft magic tests */
@@ -250,7 +263,8 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 						    "elf %d\n", m);
 			}
 #endif
-			goto done;
+			if (checkdone(ms, &rv))
+				goto done;
 		}
 
 	/* try text properties */
@@ -259,7 +273,8 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 		if ((m = file_ascmagic(ms, ubuf, nb, looks_text)) != 0) {
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void)fprintf(stderr, "ascmagic %d\n", m);
-			goto done;
+			if (checkdone(ms, &rv))
+				goto done;
 		}
 	}
 
