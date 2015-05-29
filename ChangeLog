@@ -1,3 +1,7 @@
+2015-05-29  10:30  Christos Zoulas <christos@zoulas.com>
+
+	* handle MAGIC_CONTINUE everywhere, not just in softmagic
+
 2015-05-21  14:30  Christos Zoulas <christos@zoulas.com>
 
 	* don't print descriptions for NAME types when mime.
