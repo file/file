@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.113 2015/04/09 20:01:40 christos Exp $
-.Dd April 9, 2015
+.\" $File: file.man,v 1.114 2015/04/10 15:36:01 christos Exp $
+.Dd May 29, 2015
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -589,13 +589,20 @@ last-pushed (most specific, one hopes) value at the end, or
 use a default if the list is empty.
 This should not slow down evaluation.
 .Pp
+The handling of
+.Dv MAGIC_CONTINUE
+and printing \e012- between entries is clumsy and complicated; refactor
+and centralize.
+.Pp
 Continue to squash all magic bugs.
 See Debian BTS for a good source.
 .Pp
 Store arbitrarily long strings, for example for %s patterns, so that
 they can be printed out.
 Fixes Debian bug #271672.
-Would require more complex store/load code in apprentice.
+This can be done by allocating strings in a string pool, storing the
+string pool at the end of the magic file and converting all the string
+pointers to relative offsets from the string pool.
 .Pp
 Add syntax for relative offsets after current level (Debian bug #466037).
 .Pp
@@ -611,6 +618,9 @@ types (e.g. have a magic value for !:mime which causes the resulting
 string to be looked up in a table).
 This would avoid adding the same magic repeatedly for each new
 hash-bang interpreter.
+.Pp
+When a file descriptor is available, we can skip and adjust the buffer
+instead of the hacky buffer management we do now.
 .Pp
 Fix
 .Dq name
