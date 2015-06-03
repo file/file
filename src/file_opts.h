@@ -17,6 +17,7 @@ OPT('v', "version", 0, "              output version information and exit\n")
 OPT('m', "magic-file", 1, " LIST      use LIST as a colon-separated list of magic\n"
     "                               number files\n")
 OPT('z', "uncompress", 0, "           try to look inside compressed files\n")
+OPT('Z', "uncompress-noreport", 0, "  only print the contents of compressed files\n")
 OPT('b', "brief", 0, "                do not prepend filenames to output lines\n")
 OPT('c', "checking-printout", 0, "    print the parsed form of the magic file, use in\n"
     "                               conjunction with -m to debug a new magic file\n"

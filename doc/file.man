@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.115 2015/05/29 14:27:31 christos Exp $
-.Dd May 29, 2015
+.\" $File: file.man,v 1.116 2015/06/03 18:21:24 christos Exp $
+.Dd June 3, 2015
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -8,7 +8,7 @@
 .Sh SYNOPSIS
 .Nm
 .Bk -words
-.Op Fl bcEhiklLNnprsvz0
+.Op Fl bcEhiklLNnprsvzZ0
 .Op Fl Fl apple
 .Op Fl Fl extension
 .Op Fl Fl mime-encoding
@@ -346,6 +346,9 @@ since on some systems it reports a zero size for raw disk partitions.
 Print the version of the program and exit.
 .It Fl z , Fl Fl uncompress
 Try to look inside compressed files.
+.It Fl Z , Fl Fl uncompress-noreport
+Try to look inside compressed files, but report information about the contents
+only not the compression.
 .It Fl 0 , Fl Fl print0
 Output a null character
 .Sq \e0
