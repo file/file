@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.116 2015/06/03 18:21:24 christos Exp $
+.\" $File: file.man,v 1.117 2015/06/03 19:51:27 christos Exp $
 .Dd June 3, 2015
 .Dt FILE __CSECTION__
 .Os
@@ -596,6 +596,9 @@ The handling of
 .Dv MAGIC_CONTINUE
 and printing \e012- between entries is clumsy and complicated; refactor
 and centralize.
+.Pp
+Some of the encoding logic is hard-coded in encoding.c and can be moved
+to the magic files if we had a !:charset annotation
 .Pp
 Continue to squash all magic bugs.
 See Debian BTS for a good source.

@@ -1,4 +1,8 @@
 
+2015-06-03  16:00  Christos Zoulas <christos@zoulas.com>
+
+	* PR/455: Add utf-7 encoding
+
 2015-06-03  14:30  Christos Zoulas <christos@zoulas.com>
 
 	* PR/455: Implement -Z, look inside, but don't report on compression
