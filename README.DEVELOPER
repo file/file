@@ -1,6 +1,6 @@
 # How to get started developing
 
-@(#) $File: README.DEVELOPER,v 1.4 2014/03/10 12:35:59 kim Exp $
+@(#) $File: README.DEVELOPER,v 1.5 2014/03/10 12:38:08 kim Exp $
 
 ## Auto files
 
@@ -11,6 +11,8 @@ After checking out the source, run the following:
 	make -j4
 	make -C tests check
 
+If you see errors, make sure you have the latest libtool and autoconf
+This has been tested with autoconf-2.69 and libtool-2.4.2
 
 ## Installing dependencies
 
