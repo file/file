@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.80 2015/01/02 21:29:39 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.81 2015/05/28 19:26:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -416,7 +416,7 @@ file_check_mem(struct magic_set *ms, unsigned int level)
 	size_t len;
 
 	if (level >= ms->c.len) {
-		len = (ms->c.len += 20) * sizeof(*ms->c.li);
+		len = (ms->c.len = 20 + level) * sizeof(*ms->c.li);
 		ms->c.li = CAST(struct level_info *, (ms->c.li == NULL) ?
 		    malloc(len) :
 		    realloc(ms->c.li, len));
