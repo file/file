@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.78 2015/01/02 21:29:39 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.79 2015/03/27 17:35:39 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -130,7 +130,8 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 			if (file_buffer(ms, -1, name, newbuf, nsz) == -1)
 				goto error;
 
-			if (mime == MAGIC_MIME || mime == 0) {
+			if ((ms->flags & MAGIC_COMPRESS_TRANSP) == 0 &&
+			    (mime == MAGIC_MIME || mime == 0)) {
 				if (file_printf(ms, mime ?
 				    " compressed-encoding=" : " (") == -1)
 					goto error;
