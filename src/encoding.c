@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.11 2015/01/24 23:22:25 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.12 2015/06/03 19:51:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -89,7 +89,7 @@ file_encoding(struct magic_set *ms, const unsigned char *buf, size_t nbytes, uni
 	}
 
 	if (looks_ascii(buf, nbytes, *ubuf, ulen)) {
-		if (looks_utf7(buf, nbytes, *ubuf, ulen)) {
+		if (looks_utf7(buf, nbytes, *ubuf, ulen) > 0) {
 			DPRINTF(("utf-7 %" SIZE_T_FORMAT "u\n", *ulen));
 			*code = "UTF-7 Unicode";
 			*code_mime = "utf-7";
@@ -381,14 +381,14 @@ looks_utf8_with_BOM(const unsigned char *buf, size_t nbytes, unichar *ubuf,
 private int
 looks_utf7(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *ulen)
 {
-	if (ubuf)
-		*ulen = 0;
 	if (nbytes > 4 && buf[0] == '+' && buf[1] == '/' && buf[2] == 'v')
 		switch (buf[3]) {
 		case '8':
 		case '9':
 		case '+':
 		case '/':
+			if (ubuf)
+				*ulen = 0;
 			return 1;
 		default:
 			return -1;
