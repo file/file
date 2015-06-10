@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.231 2015/02/06 17:08:58 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.232 2015/04/09 20:01:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1842,15 +1842,19 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 		}
 	}
 	/* Indirect offsets are not valid at level 0. */
-	if (m->cont_level == 0 && (m->flag & (OFFADD | INDIROFFADD)))
+	if (m->cont_level == 0 && (m->flag & (OFFADD | INDIROFFADD))) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "relative offset at level 0");
+		return -1;
+	}
 
 	/* get offset, then skip over it */
 	m->offset = (uint32_t)strtoul(l, &t, 0);
-        if (l == t)
+        if (l == t) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "offset `%s' invalid", l);
+		return -1;
+	}
         l = t;
 
 	if (m->flag & INDIR) {
@@ -1906,7 +1910,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 					file_magwarn(ms,
 					    "indirect offset type `%c' invalid",
 					    *l);
-				break;
+				return -1;
 			}
 			l++;
 		}
@@ -1926,17 +1930,21 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 		}
 		if (isdigit((unsigned char)*l) || *l == '-') {
 			m->in_offset = (int32_t)strtol(l, &t, 0);
-			if (l == t)
+			if (l == t) {
 				if (ms->flags & MAGIC_CHECK)
 					file_magwarn(ms,
 					    "in_offset `%s' invalid", l);
+				return -1;
+			}
 			l = t;
 		}
 		if (*l++ != ')' || 
-		    ((m->in_op & FILE_OPINDIRECT) && *l++ != ')'))
+		    ((m->in_op & FILE_OPINDIRECT) && *l++ != ')')) {
 			if (ms->flags & MAGIC_CHECK)
 				file_magwarn(ms,
 				    "missing ')' in indirect offset");
+			return -1;
+		}
 	}
 	EATAB;
 
