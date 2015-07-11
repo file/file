@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.167 2015/02/14 17:19:29 christos Exp $
+ * @(#)$File: file.h,v 1.168 2015/04/09 20:01:41 christos Exp $
  */
 
 #ifndef __file_h__
@@ -44,9 +44,11 @@
     #define SIZE_T_FORMAT ""
   #endif
   #define INT64_T_FORMAT "I64"
+  #define INTMAX_T_FORMAT "I64"
 #else
   #define SIZE_T_FORMAT "z"
   #define INT64_T_FORMAT "ll"
+  #define INTMAX_T_FORMAT "j"
 #endif
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
