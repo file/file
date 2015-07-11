@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.93 2015/04/15 23:47:58 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.94 2015/07/11 14:41:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -136,6 +136,14 @@ _w32_get_magic_relative_to(char **hmagicpath, HINSTANCE module)
 		goto out;
 
 	PathRemoveFileSpecA(dllpath);
+
+	if (module) {
+		char exepath[MAX_PATH];
+		GetModuleFileNameA(NULL, exepath, MAX_PATH);
+		PathRemoveFileSpecA(exepath);
+		if (stricmp(exepath, dllpath) == 0)
+			goto out;
+	}
 
 	sp = strlen(dllpath);
 	if (sp > 3 && stricmp(&dllpath[sp - 3], "bin") == 0) {
