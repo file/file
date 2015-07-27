@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.232 2015/04/09 20:01:40 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.233 2015/06/10 00:57:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1348,8 +1348,9 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 			}
 			i = set_text_binary(ms, mset[j].me, mset[j].count, i);
 		}
-		qsort(mset[j].me, mset[j].count, sizeof(*mset[j].me),
-		    apprentice_sort);
+		if (mset[j].me)
+			qsort(mset[j].me, mset[j].count, sizeof(*mset[j].me),
+			    apprentice_sort);
 
 		/*
 		 * Make sure that any level 0 "default" line is last
@@ -3209,9 +3210,10 @@ file_pstring_length_size(const struct magic *m)
 	}
 }
 protected size_t
-file_pstring_get_length(const struct magic *m, const char *s)
+file_pstring_get_length(const struct magic *m, const char *ss)
 {
 	size_t len = 0;
+	const unsigned char *s = (const unsigned char *)ss;
 
 	switch (m->str_flags & PSTRING_LEN) {
 	case PSTRING_1_LE:
