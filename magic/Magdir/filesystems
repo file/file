@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.109 2015/02/22 01:22:54 christos Exp $
+# $File: filesystems,v 1.110 2015/08/24 05:11:10 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -1721,7 +1721,7 @@
 0x410	leshort		0x137f
 !:strength / 2
 >0x402	beshort		< 100
->0x402	beshort		> -1		Minix filesystem, V1, %d zones
+>0x402	beshort		> -1		Minix filesystem, V1, 14 char names, %d zones
 >0x1e	string		minix		\b, bootable
 0x410	beshort		0x137f
 !:strength / 2
@@ -1740,27 +1740,26 @@
 >0x1e	string		minix		\b, bootable
 0x410	leshort		0x2468
 >0x402	beshort		< 100
->>0x402	beshort		> -1		Minix filesystem, V2, %d zones
+>>0x402	beshort		> -1		Minix filesystem, V2, 14 char names
 >0x1e	string		minix		\b, bootable
 0x410	beshort		0x2468
 >0x402	beshort		< 100
->0x402	beshort		> -1		Minix filesystem, V2 (big endian), %d zones
->0x1e	string		minix		\b, bootable
-
-0x410	leshort		0x2478
->0x402	beshort		< 100
->0x402	beshort		> -1		Minix filesystem, V2, 30 char names, %d zones
+>0x402	beshort		> -1		Minix filesystem, V2 (big endian)
 >0x1e	string		minix		\b, bootable
 0x410	leshort		0x2478
 >0x402	beshort		< 100
->0x402	beshort		> -1		Minix filesystem, V2, 30 char names, %d zones
+>0x402	beshort		> -1		Minix filesystem, V2, 30 char names
+>0x1e	string		minix		\b, bootable
+0x410	leshort		0x2478
+>0x402	beshort		< 100
+>0x402	beshort		> -1		Minix filesystem, V2, 30 char names
 >0x1e	string		minix		\b, bootable
 0x410	beshort		0x2478
->0x402	beshort		!0		Minix filesystem, V2, 30 char names (big endian), %d zones
+>0x402	beshort		!0		Minix filesystem, V2, 30 char names (big endian)
 >0x1e	string		minix		\b, bootable
-0x410	leshort		0x4d5a
->0x402	beshort		!0		Minix filesystem, V3, %d zones
->0x1e	string		minix		\b, bootable
+0x418	leshort		0x4d5a
+>0x402	beshort		<100
+>>0x402	beshort		> -1		Minix filesystem, V3, 60 char names
 
 # SGI disk labels - Nathan Scott <nathans@debian.org>
 0	belong		0x0BE5A941	SGI disk label (volume header)
