@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.235 2015/09/10 13:59:47 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.236 2015/09/10 14:39:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2742,6 +2742,7 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 		} else
 			*p++ = (char)c;
 	}
+	--s;
 out:
 	*p = '\0';
 	m->vallen = CAST(unsigned char, (p - origp));
