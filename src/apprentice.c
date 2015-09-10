@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.234 2015/07/27 09:12:32 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.235 2015/09/10 13:59:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -540,6 +540,7 @@ free:
 private void
 apprentice_unmap(struct magic_map *map)
 {
+	size_t i;
 	if (map == NULL)
 		return;
 
@@ -552,6 +553,8 @@ apprentice_unmap(struct magic_map *map)
 #endif
 	case MAP_TYPE_MALLOC:
 		free(map->p);
+		for (i = 0; i < MAGIC_SETS; i++)
+			free(map->magic[i]);
 		break;
 	case MAP_TYPE_USER:
 		break;
@@ -1288,6 +1291,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 		file_oomem(ms, sizeof(*map));
 		return NULL;
 	}
+	map->type = MAP_TYPE_MALLOC;
 
 	/* print silly verbose header for USG compat. */
 	if (action == FILE_CHECK)
