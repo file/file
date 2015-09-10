@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.120 2015/06/16 14:18:07 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.121 2015/07/11 14:41:37 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1052,7 +1052,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		/* Things we can determine when we seek */
 		switch (xsh_type) {
 		case SHT_NOTE:
-			if (xsh_size + xsh_offset > (uintmax_t)fsize)  {
+			if ((uintmax_t)(xsh_size + xsh_offset) >
+			    (uintmax_t)fsize) {
 				if (file_printf(ms,
 				    ", note offset/size 0x%" INTMAX_T_FORMAT
 				    "x+0x%" INTMAX_T_FORMAT "x exceeds"
