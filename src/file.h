@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.170 2015/08/28 08:32:51 christos Exp $
+ * @(#)$File: file.h,v 1.171 2015/08/30 14:16:33 christos Exp $
  */
 
 #ifndef __file_h__
@@ -415,11 +415,13 @@ struct magic_set {
 	uint16_t elf_shnum_max;
 	uint16_t elf_phnum_max;
 	uint16_t elf_notes_max;
+	uint16_t regex_max;
 #define	FILE_INDIR_MAX			15
 #define	FILE_NAME_MAX			30
 #define	FILE_ELF_SHNUM_MAX		32768
 #define	FILE_ELF_PHNUM_MAX		2048
 #define	FILE_ELF_NOTES_MAX		256
+#define	FILE_REGEX_MAX			8192
 };
 
 /* Type for Unicode characters */
