@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.236 2015/09/10 14:39:55 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.237 2015/09/11 17:24:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2561,12 +2561,14 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 	case FILE_LEFLOAT:
 		if (m->reln != 'x') {
 			char *ep;
+			errno = 0;
 #ifdef HAVE_STRTOF
 			m->value.f = strtof(*p, &ep);
 #else
 			m->value.f = (float)strtod(*p, &ep);
 #endif
-			*p = ep;
+			if (errno == 0)
+				*p = ep;
 		}
 		return 0;
 	case FILE_DOUBLE:
@@ -2574,17 +2576,22 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 	case FILE_LEDOUBLE:
 		if (m->reln != 'x') {
 			char *ep;
+			errno = 0;
 			m->value.d = strtod(*p, &ep);
-			*p = ep;
+			if (errno == 0)
+				*p = ep;
 		}
 		return 0;
 	default:
 		if (m->reln != 'x') {
 			char *ep;
+			errno = 0;
 			m->value.q = file_signextend(ms, m,
 			    (uint64_t)strtoull(*p, &ep, 0));
-			*p = ep;
-			eatsize(p);
+			if (errno == 0) {
+				*p = ep;
+				eatsize(p);
+			}
 		}
 		return 0;
 	}
@@ -2620,6 +2627,7 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 			case '\0':
 				if (warn)
 					file_magwarn(ms, "incomplete escape");
+				s--;
 				goto out;
 
 			case '\t':
