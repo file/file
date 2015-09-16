@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.239 2015/09/16 18:21:26 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.240 2015/09/16 18:34:21 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2348,7 +2348,7 @@ check_format_type(const char *ptr, int type, const char **estr)
 #define CHECKLEN() do { \
 	for (len = cnt = 0; isdigit((unsigned char)*ptr); ptr++, cnt++) \
 		len = len * 10 + (*ptr - '0'); \
-	if (cnt > 10 || len > 1024) \
+	if (cnt > 5 || len > 1024) \
 		goto toolong; \
 } while (/*CONSTCOND*/0)
 
