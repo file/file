@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.238 2015/09/12 18:10:42 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.239 2015/09/16 18:21:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -143,7 +143,7 @@ private int check_buffer(struct magic_set *, struct magic_map *, const char *);
 private void apprentice_unmap(struct magic_map *);
 private int apprentice_compile(struct magic_set *, struct magic_map *,
     const char *);
-private int check_format_type(const char *, int);
+private int check_format_type(const char *, int, const char **);
 private int check_format(struct magic_set *, struct magic *);
 private int get_op(char);
 private int parse_mime(struct magic_set *, struct magic_entry *, const char *);
@@ -2298,11 +2298,13 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
 }
 
 private int
-check_format_type(const char *ptr, int type)
+check_format_type(const char *ptr, int type, const char **estr)
 {
 	int quad = 0, h;
+	size_t len, cnt;
 	if (*ptr == '\0') {
 		/* Missing format string; bad */
+		*estr = "missing format spec";
 		return -1;
 	}
 
@@ -2339,15 +2341,22 @@ check_format_type(const char *ptr, int type)
 			ptr++;
 		if (*ptr == '.')
 			ptr++;
-		while (isdigit((unsigned char)*ptr)) ptr++;
+#define CHECKLEN() do { \
+	for (len = cnt = 0; isdigit((unsigned char)*ptr); ptr++, cnt++) \
+		len = len * 10 + (*ptr - '0'); \
+	if (cnt > 10 || len > 1024) \
+		goto toolong; \
+} while (/*CONSTCOND*/0)
+
+		CHECKLEN();
 		if (*ptr == '.')
 			ptr++;
-		while (isdigit((unsigned char)*ptr)) ptr++;
+		CHECKLEN();
 		if (quad) {
 			if (*ptr++ != 'l')
-				return -1;
+				goto invalid;
 			if (*ptr++ != 'l')
-				return -1;
+				goto invalid;
 		}
 	
 		switch (*ptr++) {
@@ -2361,9 +2370,11 @@ check_format_type(const char *ptr, int type)
 			case 'o':
 			case 'x':
 			case 'X':
-				return h != 0 ? -1 : 0;
+				if (h == 0)
+					return 0;
+				/*FALLTHROUGH*/
 			default:
-				return -1;
+				goto invalid;
 			}
 		
 		/*
@@ -2372,11 +2383,11 @@ check_format_type(const char *ptr, int type)
 		 */
 		case 'h':
 			if (h-- <= 0)
-				return -1;
+				goto invalid;
 			switch (*ptr++) {
 			case 'h':
 				if (h-- <= 0)
-					return -1;
+					goto invalid;
 				switch (*ptr++) {
 				case 'i':
 				case 'd':
@@ -2386,7 +2397,7 @@ check_format_type(const char *ptr, int type)
 				case 'X':
 					return 0;
 				default:
-					return -1;
+					goto invalid;
 				}
 			case 'i':
 			case 'd':
@@ -2394,13 +2405,17 @@ check_format_type(const char *ptr, int type)
 			case 'o':
 			case 'x':
 			case 'X':
-				return h != 0 ? -1 : 0;
+				if (h == 0)
+					return 0;
+				/*FALLTHROUGH*/
 			default:
-				return -1;
+				goto invalid;
 			}
 #endif
 		case 'c':
-			return h != 2 ? -1 : 0;
+			if (h == 2)
+				return 0;
+			goto invalid;
 		case 'i':
 		case 'd':
 		case 'u':
@@ -2408,12 +2423,14 @@ check_format_type(const char *ptr, int type)
 		case 'x':
 		case 'X':
 #ifdef STRICT_FORMAT
-			return h != 0 ? -1 : 0;
+			if (h == 0)
+				return 0;
+			/*FALLTHROUGH*/
 #else
 			return 0;
 #endif
 		default:
-			return -1;
+			goto invalid;
 		}
 		
 	case FILE_FMT_FLOAT:
@@ -2422,11 +2439,10 @@ check_format_type(const char *ptr, int type)
 			ptr++;
 		if (*ptr == '.')
 			ptr++;
-		while (isdigit((unsigned char)*ptr)) ptr++;
+		CHECKLEN();
 		if (*ptr == '.')
 			ptr++;
-		while (isdigit((unsigned char)*ptr)) ptr++;
-	
+		CHECKLEN();
 		switch (*ptr++) {
 		case 'e':
 		case 'E':
@@ -2437,7 +2453,7 @@ check_format_type(const char *ptr, int type)
 			return 0;
 			
 		default:
-			return -1;
+			goto invalid;
 		}
 		
 
@@ -2456,14 +2472,17 @@ check_format_type(const char *ptr, int type)
 		case 's':
 			return 0;
 		default:
-			return -1;
+			goto invalid;
 		}
 		
 	default:
 		/* internal error */
 		abort();
 	}
-	/*NOTREACHED*/
+invalid:
+	*estr = "not valid";
+toolong:
+	*estr = "too long";
 	return -1;
 }
 	
@@ -2475,6 +2494,7 @@ private int
 check_format(struct magic_set *ms, struct magic *m)
 {
 	char *ptr;
+	const char *estr;
 
 	for (ptr = m->desc; *ptr; ptr++)
 		if (*ptr == '%')
@@ -2498,13 +2518,13 @@ check_format(struct magic_set *ms, struct magic *m)
 	}
 
 	ptr++;
-	if (check_format_type(ptr, m->type) == -1) {
+	if (check_format_type(ptr, m->type, &estr) == -1) {
 		/*
 		 * TODO: this error message is unhelpful if the format
 		 * string is not one character long
 		 */
-		file_magwarn(ms, "Printf format `%c' is not valid for type "
-		    "`%s' in description `%s'", *ptr ? *ptr : '?',
+		file_magwarn(ms, "Printf format is %s for type "
+		    "`%s' in description `%s'", estr,
 		    file_names[m->type], m->desc);
 		return -1;
 	}
