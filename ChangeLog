@@ -1,3 +1,7 @@
+2015-09-16   9:50  Christos Zoulas <christos@zoulas.com>
+	
+	* release 5.25
+
 2015-09-11  13:25  Christos Zoulas <christos@zoulas.com>
 
 	* add a limit to the length of regex searches
