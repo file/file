@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.220 2015/09/16 22:17:12 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.221 2015/09/16 22:37:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1098,12 +1098,6 @@ private int
 mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
     const unsigned char *s, uint32_t offset, size_t nbytes, struct magic *m)
 {
-	if (offset >= nbytes) {
-		file_magerror(ms,
-		    "offset in magic %u greater than buffer size %zu",
-		    offset, nbytes);
-		return -1;
-	}
 	/*
 	 * Note: FILE_SEARCH and FILE_REGEX do not actually copy
 	 * anything, but setup pointers into the source
@@ -1268,7 +1262,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		if (m->in_op & FILE_OPINDIRECT) {
 			const union VALUETYPE *q = CAST(const union VALUETYPE *,
 			    ((const void *)(s + offset + off)));
-			if (OFFSET_OOB(offset + off, nbytes, sizeof(*q)))
+			if (OFFSET_OOB(nbytes, offset + off, sizeof(*q)))
 				return 0;
 			switch (cvt_flip(m->in_type, flip)) {
 			case FILE_BYTE:
@@ -2166,7 +2160,6 @@ magiccheck(struct magic_set *ms, struct magic *m)
 private int
 handle_annotation(struct magic_set *ms, struct magic *m)
 {
-printf("desc = %s, ext = %s mime = %s\n", m->desc, m->ext, m->mimetype);
 	if (ms->flags & MAGIC_APPLE) {
 		if (file_printf(ms, "%.8s", m->apple) == -1)
 			return -1;
