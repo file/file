@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.220 2015/09/16 22:17:12 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.221 2015/09/16 22:37:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -228,17 +228,18 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 			continue;
 		}
 
+		if ((e = handle_annotation(ms, m)) != 0) {
+			*need_separator = 1;
+			*printed_something = 1;
+			*returnval = 1;
+			return e;
+		}
+
 		/*
 		 * If we are going to print something, we'll need to print
 		 * a blank before we print something else.
 		 */
 		if (*m->desc) {
-			if ((e = handle_annotation(ms, m)) != 0) {
-				*need_separator = 1;
-				*printed_something = 1;
-				*returnval = 1;
-				return e;
-			}
 			*need_separator = 1;
 			*printed_something = 1;
 			if (print_sep(ms, firstline) == -1)
@@ -318,17 +319,18 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 						break;
 				} else
 					ms->c.li[cont_level].got_match = 1;
+
+				if ((e = handle_annotation(ms, m)) != 0) {
+					*need_separator = 1;
+					*printed_something = 1;
+					*returnval = 1;
+					return e;
+				}
 				/*
 				 * If we are going to print something,
 				 * make sure that we have a separator first.
 				 */
 				if (*m->desc) {
-					if ((e = handle_annotation(ms, m)) != 0) {
-						*need_separator = 1;
-						*printed_something = 1;
-						*returnval = 1;
-						return e;
-					}
 					if (!*printed_something) {
 						*printed_something = 1;
 						if (print_sep(ms, firstline)
@@ -2160,12 +2162,12 @@ magiccheck(struct magic_set *ms, struct magic *m)
 private int
 handle_annotation(struct magic_set *ms, struct magic *m)
 {
-	if (ms->flags & MAGIC_APPLE) {
+	if ((ms->flags & MAGIC_APPLE) && m->apple[0]) {
 		if (file_printf(ms, "%.8s", m->apple) == -1)
 			return -1;
 		return 1;
 	}
-	if (ms->flags & MAGIC_EXTENSION) {
+	if ((ms->flags & MAGIC_EXTENSION) && m->ext[0]) {
 		if (file_printf(ms, "%s", m->ext) == -1)
 			return -1;
 		return 1;
