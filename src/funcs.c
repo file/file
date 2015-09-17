@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.83 2015/06/16 14:17:37 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.84 2015/09/10 13:32:19 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -293,9 +293,18 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 simple:
 	/* give up */
 	m = 1;
-	if ((!mime || (mime & MAGIC_MIME_TYPE)) &&
-	    file_printf(ms, "%s", mime ? type : def) == -1) {
-	    rv = -1;
+	if (ms->flags & MAGIC_MIME) {
+		if (file_printf(ms, "%s", type) == -1)
+			rv = -1;
+	} else if (ms->flags & MAGIC_APPLE) {
+		if (file_printf(ms, "UNKNUNKN") == -1)
+			rv = -1;
+	} else if (ms->flags & MAGIC_EXTENSION) {
+		if (file_printf(ms, "???") == -1)
+			rv = -1;
+	} else {
+		if (file_printf(ms, "%s", def) == -1)
+			rv = -1;
 	}
  done:
 	if ((ms->flags & MAGIC_MIME_ENCODING) != 0) {
