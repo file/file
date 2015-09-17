@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.85 2015/09/17 01:10:51 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.86 2015/09/17 01:14:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -178,7 +178,6 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
     const void *buf, size_t nb)
 {
 	int m = 0, rv = 0, looks_text = 0;
-	int mime = ms->flags & MAGIC_MIME;
 	const unsigned char *ubuf = CAST(const unsigned char *, buf);
 	unichar *u8buf = NULL;
 	size_t ulen;
