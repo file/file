@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.106 2015/02/22 01:26:05 christos Exp $
+# $File: images,v 1.107 2015/07/11 14:40:10 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -998,7 +998,22 @@
 !:mime	image/x-polar-monitor-bitmap
 
 # From: Rick Richardson <rickrich@gmail.com>
+# updated by: Joerg Jenderek
+# URL: http://techmods.net/nuvi/
 0	string	GARMIN\ BITMAP\ 01	Garmin Bitmap file
+# extension is also used for 
+# Sony SRF raw image (image/x-sony-srf)
+# SRF map
+# Terragen Surface Map (http://www.planetside.co.uk/terragen)
+# FileLocator Pro search criteria file (http://www.mythicsoft.com/filelocatorpro)
+!:ext srf
+#!:mime	image/x-garmin-srf
+# version 1.00,2.00,2.10,2.40,2.50
+>0x2f	string		>0		\b, version %4.4s
+# width (2880,2881,3240)
+>0x55	uleshort	>0		\b, %dx
+# height (80,90)
+>>0x53	uleshort	x		\b%d
 
 # Type:	Ulead Photo Explorer5 (.pe5)
 # URL:	http://www.jisyo.com/cgibin/view.cgi?EXT=pe5 (Japanese)
