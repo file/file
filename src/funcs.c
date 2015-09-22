@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.85 2015/09/17 01:10:51 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.86 2015/09/17 01:14:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -293,7 +293,8 @@ simple:
 	/* give up */
 	m = 1;
 	if (ms->flags & MAGIC_MIME) {
-		if (file_printf(ms, "%s", type) == -1)
+		if ((ms->flags & MAGIC_MIME_TYPE) &&
+		    file_printf(ms, "%s", type) == -1)
 			rv = -1;
 	} else if (ms->flags & MAGIC_APPLE) {
 		if (file_printf(ms, "UNKNUNKN") == -1)
