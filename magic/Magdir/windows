@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.11 2015/07/27 15:24:00 christos Exp $
+# $File: windows,v 1.12 2015/08/29 07:10:35 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -335,4 +335,103 @@
 >>>>>>(84.l)	lestring16	x		InfName "%s"
 >>>>>4	ulelong&0x00000001	!0x00000001	
 >>>>>>(84.l)	string		>\0		InfName "%s"
+
+# Summary: backup file created with utility like NTBACKUP.EXE shipped with Windows NT/2K/XP/2003
+# Extension: .bkf
+# Created by: Joerg Jenderek
+# URL: http://en.wikipedia.org/wiki/NTBackup
+# Reference: http://laytongraphics.com/mtf/MTF_100a.PDF
+# Descriptor BloCK name of Microsoft Tape Format
+0	string			TAPE		
+# Format Logical Address is zero
+>20	ulequad			0		
+# Reserved for MBC is zero
+>>28	uleshort		0		
+# Control Block ID is zero
+>>>36	ulelong			0		
+# BIT4-BIT15, BIT18-BIT31 of block attributes are unused
+>>>>4	ulelong&0xFFfcFFe0	0		Windows NTbackup archive
+#!:mime application/x-ntbackup
+!:ext bkf
+# OS ID
+>>>>>10	ubyte			1		\b NetWare
+>>>>>10	ubyte			13		\b NetWare SMS
+>>>>>10	ubyte			14		\b NT
+>>>>>10	ubyte			24		\b 3
+>>>>>10	ubyte			25		\b OS/2
+>>>>>10	ubyte			26		\b 95
+>>>>>10	ubyte			27		\b Macintosh
+>>>>>10	ubyte			28		\b UNIX
+# OS Version (2)
+#>>>>>11	ubyte			x		OS V=%x
+# MTF_CONTINUATION	Media Sequence Number > 1
+#>>>>>4	ulelong&0x00000001	!0		\b, continued
+# MTF_COMPRESSION
+>>>>>4	ulelong&0x00000004	!0		\b, compressed
+# MTF_EOS_AT_EOM	End Of Medium was hit during end of set processing
+>>>>>4	ulelong&0x00000008	!0		\b, End Of Medium hit
+>>>>>4	ulelong&0x00020000	0		
+# MTF_SET_MAP_EXISTS	A Media Based Catalog Set Map may exist on tape
+>>>>>>4	ulelong&0x00010000	!0		\b, with catalog
+# MTF_FDD_ALLOWED	However File/Directory Detail can only exist if a Set Map is also present
+>>>>>4	ulelong&0x00020000	!0		\b, with file catalog
+# Offset To First Event 238h,240h,28Ch
+#>>>>>8	uleshort		x		\b, event offset %4.4x
+# Displayable Size (20e0230h 20e024ch 20e0224h)
+#>>>>>8	ulequad			x		dis. size %16.16llx
+# Media Family ID (455288C4h 4570BD1Ah 45708F2Fh 4570BBF5h)
+#>>>>>52	ulelong			x		family ID %8.8x
+# TAPE Attributes (3)
+#>>>>>56	ulelong			x		TAPE %8.8x
+# Media Sequence Number
+>>>>>60	uleshort		>1		\b, sequence %u
+# Password Encryption Algorithm (3)
+>>>>>62	uleshort		>0		\b, 0x%x encrypted
+# Soft Filemark Block Size * 512 (2)
+#>>>>>64	uleshort		=2		\b, soft size %u*512
+>>>>>64	uleshort		!2		\b, soft size %u*512
+# Media Based Catalog Type (1,2)
+#>>>>>66	uleshort		x		\b, catalog type %4.4x
+# size of Media Name (66,68,6Eh)
+>>>>>68	uleshort		>0		
+# offset of Media Name (5Eh)
+>>>>>>70	uleshort	>0		
+# 0~, 1~ANSI, 2~UNICODE
+>>>>>>>48	ubyte		1		
+# size terminated ansi coded string normally followed by "MTF Media Label"
+>>>>>>>>(70.s)	string		>\0		\b, name: %s
+>>>>>>>48	ubyte		2		
+# Not null, but size terminated unicoded string
+>>>>>>>>(70.s)	lestring16	x		\b, name: %s
+# size of Media Label (104h)
+>>>>>72	uleshort		>0		
+# offset of Media Label (C4h,C6h,CCh)
+>>>>>74		uleshort	>0		
+>>>>>>48	ubyte		1		
+#Tag|Version|Vendor|Vendor ID|Creation Time Stamp|Cartridge Label|Side|Media ID|Media Domain ID|Vendor Specific fields
+>>>>>>>(74.s)	string		>\0		\b, label: %s
+>>>>>>48	ubyte		2		
+>>>>>>>(74.s)	lestring16	x		\b, label: %s
+# size of password name (0,1Ch)
+#>>>>>76	uleshort		>0		\b, password size %4.4x
+# Software Vendor ID (CBEh)
+>>>>>86	uleshort		x		\b, software (0x%x)
+# size of Software Name (6Eh)
+>>>>>80	uleshort		>0		
+# offset of Software Name (1C8h,1CAh,1D0h)
+>>>>>>82	uleshort	>0		
+# 1~ANSI, 2~UNICODE
+>>>>>>>48	ubyte		1		
+>>>>>>>>(82.s)	string		>\0		\b: %s
+>>>>>>>48	ubyte		2		
+# size terminated unicoded coded string normally followed by "SPAD"
+>>>>>>>>(82.s)	lestring16	x		\b: %s
+# Format Logical Block Size (512,1024)
+#>>>>>84	uleshort		=1024		\b, block size %u
+>>>>>84	uleshort		!1024		\b, block size %u
+# Media Date of MTF_DATE_TIME type with 5 bytes
+#>>>>>>88	ubequad			x		DATE %16.16llx
+# MTF Major Version (1)
+#>>>>>>93	ubyte		x		\b, MFT version %x
+#
 
