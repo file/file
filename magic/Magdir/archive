@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.90 2015/04/24 15:44:12 christos Exp $
+# $File: archive,v 1.91 2015/09/16 13:49:33 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -577,20 +577,43 @@
 2   string      -lz         LZS archive data
 2   string      -sw1-       Swag archive data
 
-# RAR archiver (Greg Roelofs, newt@uchicago.edu)
-0	string		Rar!		RAR archive data,
+0	name		rar-file-header
+>24	byte		15		\b, v1.5
+>24	byte		20		\b, v2.0
+>24	byte		29		\b, v4
+>15	byte		0		\b, os: MS-DOS
+>15	byte		1		\b, os: OS/2
+>15	byte		2		\b, os: Win32
+>15	byte		3		\b, os: Unix
+>15	byte		4		\b, os: Mac OS
+>15	byte		5		\b, os: BeOS
+
+0	name		rar-archive-header
+>3	leshort&0x1ff	>0		\b, flags:
+>>3	leshort		&0x01		ArchiveVolume
+>>3	leshort		&0x02		Commented
+>>3	leshort		&0x04		Locked
+>>3	leshort		&0x10		NewVolumeNaming
+>>3	leshort		&0x08		Solid
+>>3	leshort		&0x20		Authenticated
+>>3	leshort		&0x40		RecoveryRecordPresent
+>>3	leshort		&0x80		EncryptedBlockHeader
+>>3	leshort		&0x100		FirstVolume
+
+# RAR (Roshal Archive) archive
+0	string		Rar!\x1a\7\0		RAR archive data
 !:mime	application/x-rar
->44	byte		x		v%0x,
->10	byte		>0		flags:
->>10	byte		&0x01		Archive volume,
->>10	byte		&0x02		Commented,
->>10	byte		&0x04		Locked,
->>10	byte		&0x08		Solid,
->>10	byte		&0x20		Authenticated,
->35	byte		0		os: MS-DOS
->35	byte		1		os: OS/2
->35	byte		2		os: Win32
->35	byte		3		os: Unix
+# file header
+>(0xc.l+9)	byte	0x74
+>>(0xc.l+7)	use	rar-file-header
+# subblock seems to share information with file header
+>(0xc.l+9)	byte	0x7a
+>>(0xc.l+7)	use	rar-file-header
+>9		byte	0x73
+>>7		use	rar-archive-header
+
+0	string		Rar!\x1a\7\1\0		RAR archive data, v5
+
 # some old version? idarc says:
 0   string      RE\x7e\x5e  RAR archive data
 
