@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.91 2015/09/16 13:49:33 christos Exp $
+# $File: archive,v 1.92 2015/09/28 14:51:01 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -613,6 +613,7 @@
 >>7		use	rar-archive-header
 
 0	string		Rar!\x1a\7\1\0		RAR archive data, v5
+!:mime	application/x-rar
 
 # some old version? idarc says:
 0   string      RE\x7e\x5e  RAR archive data
