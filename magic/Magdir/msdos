@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.100 2014/06/03 19:17:27 christos Exp $
+# $File: msdos,v 1.101 2015/08/24 05:08:48 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -24,7 +24,11 @@
 100	search/0xffff   say
 >100	regex/c =^[\ \t]{0,10}say\ ['"]			OS/2 REXX batch file text
 
-0	leshort		0x14c	MS Windows COFF Intel 80386 object file
+# updated by Joerg Jenderek at Oct 2015
+# https://de.wikipedia.org/wiki/Common_Object_File_Format
+# http://www.delorie.com/djgpp/doc/coff/filhdr.html
+# ./intel already labeled COFF type 0x14c=0514 as "80386 COFF executable"
+#0	leshort		0x14c	MS Windows COFF Intel 80386 object file
 #>4	ledate		x	stamp %s
 0	leshort		0x166	MS Windows COFF MIPS R4000 object file
 #>4	ledate		x	stamp %s
