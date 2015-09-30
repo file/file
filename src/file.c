@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.166 2015/09/08 13:46:49 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.167 2015/09/11 17:24:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -94,9 +94,9 @@ private const struct option long_options[] = {
 #define OPT_EXTENSIONS		3
 #define OPT_MIME_TYPE		4
 #define OPT_MIME_ENCODING	5
-#define OPT(shortname, longname, opt, doc)      \
+#define OPT(shortname, longname, opt, def, doc)      \
     {longname, opt, NULL, shortname},
-#define OPT_LONGONLY(longname, opt, doc, id)        \
+#define OPT_LONGONLY(longname, opt, def, doc, id)        \
     {longname, opt, NULL, id},
 #include "file_opts.h"
 #undef OPT
@@ -135,12 +135,13 @@ private struct {
 };
 
 private char *progname;		/* used throughout 		*/
+private int posixly;
 
 #ifdef __dead
 __dead
 #endif
 private void usage(void);
-private void docprint(const char *);
+private void docprint(const char *, int);
 #ifdef __dead
 __dead
 #endif
@@ -183,7 +184,8 @@ main(int argc, char *argv[])
 		progname = argv[0];
 
 #ifdef S_IFLNK
-	flags |= getenv("POSIXLY_CORRECT") ? MAGIC_SYMLINK : 0;
+	posixly = getenv("POSIXLY_CORRECT") != NULL;
+	flags |=  posixly ? MAGIC_SYMLINK : 0;
 #endif
 	while ((c = getopt_long(argc, argv, OPTSTRING, long_options,
 	    &longindex)) != -1)
@@ -559,7 +561,17 @@ usage(void)
 }
 
 private void
-docprint(const char *opts)
+defprint(int def)
+{
+	if (!def)
+		return;
+	if (((def & 1) && posixly) || ((def & 2) && !posixly))
+		fprintf(stdout, " (default)");
+	fputc('\n', stdout);
+}
+
+private void
+docprint(const char *opts, int def)
 {
 	size_t i;
 	int comma;
@@ -568,6 +580,7 @@ docprint(const char *opts)
 	p = strstr(opts, "%o");
 	if (p == NULL) {
 		fprintf(stdout, "%s", opts);
+		defprint(def);
 		return;
 	}
 
@@ -595,12 +608,12 @@ help(void)
 "Usage: file [OPTION...] [FILE...]\n"
 "Determine type of FILEs.\n"
 "\n", stdout);
-#define OPT(shortname, longname, opt, doc)      \
+#define OPT(shortname, longname, opt, def, doc)      \
 	fprintf(stdout, "  -%c, --" longname, shortname), \
-	docprint(doc);
-#define OPT_LONGONLY(longname, opt, doc, id)        \
+	docprint(doc, def);
+#define OPT_LONGONLY(longname, opt, def, doc, id)        \
 	fprintf(stdout, "      --" longname),	\
-	docprint(doc);
+	docprint(doc, def);
 #include "file_opts.h"
 #undef OPT
 #undef OPT_LONGONLY
