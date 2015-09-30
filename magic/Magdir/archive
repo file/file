@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.92 2015/09/28 14:51:01 christos Exp $
+# $File: archive,v 1.93 2015/09/30 13:44:38 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -603,6 +603,7 @@
 # RAR (Roshal Archive) archive
 0	string		Rar!\x1a\7\0		RAR archive data
 !:mime	application/x-rar
+!:ext	rar
 # file header
 >(0xc.l+9)	byte	0x74
 >>(0xc.l+7)	use	rar-file-header
@@ -614,9 +615,12 @@
 
 0	string		Rar!\x1a\7\1\0		RAR archive data, v5
 !:mime	application/x-rar
+!:ext	rar
 
-# some old version? idarc says:
-0   string      RE\x7e\x5e  RAR archive data
+# Very old RAR archive
+0	string		RE\x7e\x5e  RAR archive data (<v1.5)
+!:mime	application/x-rar
+!:ext	rar
 
 # SQUISH archiver (Greg Roelofs, newt@uchicago.edu)
 0	string		SQSH		squished archive data (Acorn RISCOS)
