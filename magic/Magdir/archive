@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.94 2015/09/30 18:32:46 christos Exp $
+# $File: archive,v 1.95 2015/09/30 18:33:35 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -618,6 +618,7 @@
 !:ext	rar
 
 # Very old RAR archive
+# http://jasonblanks.com/wp-includes/images/papers/KnowyourarchiveRAR.pdf
 0	string		RE\x7e\x5e  RAR archive data (<v1.5)
 !:mime	application/x-rar
 !:ext	rar
