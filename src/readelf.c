@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.121 2015/07/11 14:41:37 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.122 2015/09/10 13:59:32 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -879,25 +879,25 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	if ((*flags & FLAGS_DID_OS_NOTE) == 0) {
 		if (do_os_note(ms, nbuf, xnh_type, swap,
 		    namesz, descsz, noff, doff, flags))
-			return size;
+			return offset;
 	}
 
 	if ((*flags & FLAGS_DID_BUILD_ID) == 0) {
 		if (do_bid_note(ms, nbuf, xnh_type, swap,
 		    namesz, descsz, noff, doff, flags))
-			return size;
+			return offset;
 	}
 		
 	if ((*flags & FLAGS_DID_NETBSD_PAX) == 0) {
 		if (do_pax_note(ms, nbuf, xnh_type, swap,
 		    namesz, descsz, noff, doff, flags))
-			return size;
+			return offset;
 	}
 
 	if ((*flags & FLAGS_DID_CORE) == 0) {
 		if (do_core_note(ms, nbuf, xnh_type, swap,
 		    namesz, descsz, noff, doff, flags, size, clazz))
-			return size;
+			return offset;
 	}
 
 	if (namesz == 7 && strcmp((char *)&nbuf[noff], "NetBSD") == 0) {
@@ -905,32 +905,32 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 			descsz = 100;
 		switch (xnh_type) {
 	    	case NT_NETBSD_VERSION:
-			return size;
+			return offset;
 		case NT_NETBSD_MARCH:
 			if (*flags & FLAGS_DID_NETBSD_MARCH)
-				return size;
+				return offset;
 			*flags |= FLAGS_DID_NETBSD_MARCH;
 			if (file_printf(ms, ", compiled for: %.*s",
 			    (int)descsz, (const char *)&nbuf[doff]) == -1)
-				return size;
+				return offset;
 			break;
 		case NT_NETBSD_CMODEL:
 			if (*flags & FLAGS_DID_NETBSD_CMODEL)
-				return size;
+				return offset;
 			*flags |= FLAGS_DID_NETBSD_CMODEL;
 			if (file_printf(ms, ", compiler model: %.*s",
 			    (int)descsz, (const char *)&nbuf[doff]) == -1)
-				return size;
+				return offset;
 			break;
 		default:
 			if (*flags & FLAGS_DID_NETBSD_UNKNOWN)
-				return size;
+				return offset;
 			*flags |= FLAGS_DID_NETBSD_UNKNOWN;
 			if (file_printf(ms, ", note=%u", xnh_type) == -1)
-				return size;
+				return offset;
 			break;
 		}
-		return size;
+		return offset;
 	}
 
 	return offset;
