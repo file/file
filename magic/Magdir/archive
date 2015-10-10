@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.96 2015/10/10 15:36:32 christos Exp $
+# $File: archive,v 1.97 2015/10/10 15:37:44 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1001,3 +1001,9 @@
 >0xE08	search/7776		\x55\xAA	
 >>&-512	indirect		x		\b; contains 
 
+# Google Chrome extensions
+# https://developer.chrome.com/extensions/crx
+# https://developer.chrome.com/extensions/hosting
+0	string	Cr24	Google Chrome extension
+!:mime	application/x-chrome-extension
+>4	ulong	x	\b, version %u
