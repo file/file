@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.95 2015/09/30 18:33:35 christos Exp $
+# $File: archive,v 1.96 2015/10/10 15:36:32 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -918,19 +918,16 @@
 # From "Nelson A. de Oliveira" <naoliv@gmail.com>
 0	string	MPQ\032		MoPaQ (MPQ) archive
 
-# From: Dirk Jagdmann <doj@cubic.org>
-# xar archive format: http://code.google.com/p/xar/
-0	string	xar!		xar archive
->6	beshort	x		- version %d
-
 # From: "Nelson A. de Oliveira" <naoliv@gmail.com>
 # .kgb
 0	string KGB_arch		KGB Archiver file
 >10	string x		with compression level %.1s
 
 # xar (eXtensible ARchiver) archive
+# xar archive format: http://code.google.com/p/xar/
 # From: "David Remahl" <dremahl@apple.com>
 0	string	xar!		xar archive
+!:mime	application/x-xar
 #>4	beshort	x		header size %d
 >6	beshort	x		version %d,
 #>8	quad	x		compressed TOC: %d,
