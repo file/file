@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: mach,v 1.21 2015/10/15 15:42:17 christos Exp $
+# $File: mach,v 1.22 2015/10/15 16:54:01 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -210,6 +210,34 @@
 >12	belong		11		kext bundle
 >12	belong		>11
 >>12	belong		x		filetype=%d
+>24	belong		>0		\b, flags:<
+>>24	belong		&0x0000001	\bNOUNDEFS
+>>24	belong		&0x0000002	\b|INCRLINK
+>>24	belong		&0x0000004	\b|DYLDLINK
+>>24	belong		&0x0000008	\b|BINDATLOAD
+>>24	belong		&0x0000010	\b|PREBOUND
+>>24	belong		&0x0000020	\b|SPLIT_SEGS
+>>24	belong		&0x0000040	\b|LAZY_INIT
+>>24	belong		&0x0000080	\b|TWOLEVEL
+>>24	belong		&0x0000100	\b|FORCE_FLAT
+>>24	belong		&0x0000200	\b|NOMULTIDEFS
+>>24	belong		&0x0000400	\b|NOFIXPREBINDING
+>>24	belong		&0x0000800	\b|PREBINDABLE
+>>24	belong		&0x0001000	\b|ALLMODSBOUND
+>>24	belong		&0x0002000	\b|SUBSECTIONS_VIA_SYMBOLS
+>>24	belong		&0x0004000	\b|CANONICAL
+>>24	belong		&0x0008000	\b|WEAK_DEFINES
+>>24	belong		&0x0010000	\b|BINDS_TO_WEAK
+>>24	belong		&0x0020000	\b|ALLOW_STACK_EXECUTION
+>>24	belong		&0x0040000	\b|ROOT_SAFE
+>>24	belong		&0x0080000	\b|SETUID_SAFE
+>>24	belong		&0x0100000	\b|NO_REEXPORTED_DYLIBS
+>>24	belong		&0x0200000	\b|PIE
+>>24	belong		&0x0400000	\b|DEAD_STRIPPABLE_DYLIB
+>>24	belong		&0x0800000	\b|HAS_TLV_DESCRIPTORS
+>>24	belong		&0x1000000	\b|NO_HEAP_EXECUTION
+>>24	belong		&0x2000000	\b|APP_EXTENSION_SAFE
+>>24	belong		x		\b>
 
 #
 0	lelong&0xfffffffe	0xfeedface	Mach-O
