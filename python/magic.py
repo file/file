@@ -118,14 +118,15 @@ class Magic(object):
         as a filename or None if an error occurred and the MAGIC_ERROR flag
         is set.  A call to errno() will return the numeric error code.
         """
-        try:  # attempt python3 approach first
-            if isinstance(filename, bytes):
-                bi = filename
-            else:
-                bi = bytes(filename, 'utf-8')
-            return str(_file(self._magic_t, bi), 'utf-8')
-        except:
-            return _file(self._magic_t, filename.encode('utf-8'))
+        if isinstance(filename, bytes):
+            bi = filename
+        else:
+            bi = bytes(filename, 'utf-8')
+        r = _file(self._magic_t, bi)
+        if isinstance(r, str):
+            return r
+        else:
+            return str(r, 'utf-8')
 
     def descriptor(self, fd):
         """
@@ -139,20 +140,22 @@ class Magic(object):
         as a buffer or None if an error occurred and the MAGIC_ERROR flag
         is set. A call to errno() will return the numeric error code.
         """
-        try:  # attempt python3 approach first
-            return str(_buffer(self._magic_t, buf, len(buf)), 'utf-8')
-        except:
-            return _buffer(self._magic_t, buf, len(buf))
+        r = _buffer(self._magic_t, buf, len(buf))
+        if isinstance(r, str):
+            return r
+        else:
+            return str(r, 'utf-8')
 
     def error(self):
         """
         Returns a textual explanation of the last error or None
         if there was no error.
         """
-        try:  # attempt python3 approach first
-            return str(_error(self._magic_t), 'utf-8')
-        except:
-            return _error(self._magic_t)
+        e = _error(self._magic_t)
+        if isinstance(e, str):
+            return e
+        else:
+            return str(e, 'utf-8')
 
     def setflags(self, flags):
         """
