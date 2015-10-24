@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.107 2015/07/11 14:40:10 christos Exp $
+# $File: images,v 1.108 2015/09/21 21:12:43 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -545,8 +545,12 @@
 0	beshort		0x1010		PEX Binary Archive
 
 # DICOM medical imaging data
+# URL:		https://en.wikipedia.org/wiki/DICOM#Data_format
+# Note:		"dcm" is the official file name extension
+# 		XnView mention also "dc3" and "acr" as file name extension
 128	string	DICM			DICOM medical imaging data
 !:mime	application/dicom
+!:ext dcm/dicom/dic
 
 # XWD - X Window Dump file.
 #   As described in /usr/X11R6/include/X11/XWDFile.h
