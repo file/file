@@ -1,7 +1,8 @@
 #------------------------------------------------------------------------------
-# $File: c-lang,v 1.20 2015/07/27 14:33:10 christos Exp $
+# $File: c-lang,v 1.21 2015/10/29 18:45:05 christos Exp $
 # c-lang:  file(1) magic for C and related languages programs
 #
+# The strength is to beat standard HTML
 
 # BCPL
 0	search/8192	"libhdr"	BCPL source text
