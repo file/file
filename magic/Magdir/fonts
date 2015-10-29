@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.26 2013/03/09 22:36:00 christos Exp $
+# $File: fonts,v 1.27 2014/04/30 21:41:02 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -58,8 +58,11 @@
 4098	string		DOSFONT		DOSFONT2 encrypted font data
 
 # downloadable fonts for browser (prints type) anthon@mnt.org
-0	string		PFR1		PFR1 font
+# https://tools.ietf.org/html/rfc3073
+0	string		PFR1		Portable Font Resource font data (new)
 >102	string		>0		\b: %s
+0	string		PFR0		Portable Font Resource font data (old)
+>4	beshort		>0		version %d
 
 # True Type fonts
 0	string	\000\001\000\000\000	TrueType font data
