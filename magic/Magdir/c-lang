@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: c-lang,v 1.20 2015/07/27 14:33:10 christos Exp $
+# $File: c-lang,v 1.21 2015/10/29 18:45:05 christos Exp $
 # c-lang:  file(1) magic for C and related languages programs
 #
 
@@ -11,6 +11,7 @@
 
 # C
 0	regex	\^#include	C source text
+!:strength +25
 !:mime	text/x-c
 0	regex	\^char[\ \t\n]+	C source text
 !:mime	text/x-c
@@ -30,19 +31,19 @@
 # C++
 # The strength of these rules is increased so they beat the C rules above
 0	regex	\^template[\ \t]+<.*>[\ \t\n]+	C++ source text
-!:strength + 5
+!:strength + 30
 !:mime	text/x-c++
 0	regex	\^virtual[\ \t\n]+		C++ source text
-!:strength + 5
+!:strength + 30
 !:mime	text/x-c++
 0	regex	\^class[\ \t\n]+		C++ source text
-!:strength + 5
+!:strength + 30
 !:mime	text/x-c++
 0	regex	\^public:		C++ source text
-!:strength + 5
+!:strength + 30
 !:mime	text/x-c++
 0	regex	\^private:		C++ source text
-!:strength + 5
+!:strength + 30
 !:mime	text/x-c++
 
 # From: Mikhail Teterin <mi@aldan.algebra.com> 
