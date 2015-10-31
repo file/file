@@ -95,7 +95,7 @@ private ssize_t swrite(int, const void *, size_t);
 #if HAVE_FORK
 private size_t ncompr = sizeof(compr) / sizeof(compr[0]);
 private size_t uncompressbuf(struct magic_set *, int, size_t,
-    const unsigned char *, unsigned char **, size_t);
+    const unsigned char *, unsigned char **, const char *, size_t);
 #ifdef BUILTIN_DECOMPRESS
 private size_t uncompressgzipped(struct magic_set *, const unsigned char *,
     unsigned char **, size_t);
@@ -123,7 +123,7 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 		if (nbytes < compr[i].maglen)
 			continue;
 		if (memcmp(buf, compr[i].magic, compr[i].maglen) == 0 &&
-		    (nsz = uncompressbuf(ms, fd, i, buf, &newbuf,
+		    (nsz = uncompressbuf(ms, fd, i, buf, &newbuf, name,
 		    nbytes)) != NODATA) {
 			ms->flags &= ~MAGIC_COMPRESS;
 			rv = -1;
@@ -390,7 +390,7 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 
 private size_t
 uncompressbuf(struct magic_set *ms, int fd, size_t method,
-    const unsigned char *old, unsigned char **newch, size_t n)
+    const unsigned char *old, unsigned char **newch, const char * name, size_t n)
 {
 	int fdin[2], fdout[2];
 	int status;
@@ -446,7 +446,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 
 	default: /* parent */
 		(void) close(fdout[1]);
-		if (fd == -1) {
+		if (fd == -1 && name != NULL) {
 			(void) close(fdin[0]);
 			/* 
 			 * fork again, to avoid blocking because both
