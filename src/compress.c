@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.79 2015/03/27 17:35:39 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.80 2015/06/03 18:21:24 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -63,6 +63,11 @@ typedef void (*sig_t)(int);
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 #define BUILTIN_DECOMPRESS
 #include <zlib.h>
+#endif
+#ifdef DEBUG
+#define DPRINTF(...)	fprintf(stderr, __VA_ARGS__)
+#else
+#define DPRINTF(...)
 #endif
 
 private const struct {
@@ -404,7 +409,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 	(void)fflush(stdout);
 	(void)fflush(stderr);
 
-	if ((fd != -1 && pipe(fdin) == -1) || pipe(fdout) == -1) {
+	if ((fd == -1 && pipe(fdin) == -1) || pipe(fdout) == -1) {
 		file_error(ms, errno, "cannot create pipe");	
 		return NODATA;
 	}
@@ -412,19 +417,28 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 	case 0:	/* child */
 		(void) close(0);
 		if (fd != -1) {
-		    if (dup(fd) == -1)
-			_exit(1);
+		    if (dup(fd) == -1) {
+			    DPRINTF("dup[0] fd=%d failed (%s)\n",
+				fd, strerror(errno));
+			    exit(1);
+		    }
 		    (void) lseek(0, (off_t)0, SEEK_SET);
 		} else {
-		    if (dup(fdin[0]) == -1)
-			_exit(1);
+		    if (dup(fdin[0]) == -1) {
+			    DPRINTF("dup[0] fdin=%d failed (%s)\n",
+				fdin[0], strerror(errno));
+			    exit(1);
+		    }
 		    (void) close(fdin[0]);
 		    (void) close(fdin[1]);
 		}
 
 		(void) close(1);
-		if (dup(fdout[1]) == -1)
-			_exit(1);
+		if (dup(fdout[1]) == -1) {
+			DPRINTF("dup[1] %d failed (%s)\n",
+			    fdout[1], strerror(errno));
+			exit(1);
+		}
 		(void) close(fdout[0]);
 		(void) close(fdout[1]);
 #ifndef DEBUG
@@ -434,10 +448,8 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 
 		(void)execvp(compr[method].argv[0],
 		    (char *const *)(intptr_t)compr[method].argv);
-#ifdef DEBUG
-		(void)fprintf(stderr, "exec `%s' failed (%s)\n",
+		DPRINTF("exec `%s' failed (%s)\n",
 		    compr[method].argv[0], strerror(errno));
-#endif
 		exit(1);
 		/*NOTREACHED*/
 	case -1:
@@ -456,31 +468,22 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 			case 0: /* child */
 				(void)close(fdout[0]);
 				if (swrite(fdin[1], old, n) != (ssize_t)n) {
-#ifdef DEBUG
-					(void)fprintf(stderr,
-					    "Write failed (%s)\n",
+					DPRINTF("Write failed (%s)\n",
 					    strerror(errno));
-#endif
 					exit(1);
 				}
 				exit(0);
 				/*NOTREACHED*/
 
 			case -1:
-#ifdef DEBUG
-				(void)fprintf(stderr, "Fork failed (%s)\n",
-				    strerror(errno));
-#endif
+				DPRINTF("Fork failed (%s)\n", strerror(errno));
 				exit(1);
 				/*NOTREACHED*/
 
 			default:  /* parent */
 				if (wait(&status) == -1) {
-#ifdef DEBUG
-					(void)fprintf(stderr,
-					    "Wait failed (%s)\n",
+					DPRINTF("Wait failed (%s)\n",
 					    strerror(errno));
-#endif
 					exit(1);
 				}
 				exit(WIFEXITED(status) ?
@@ -500,10 +503,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 			goto err;
 		}
 		if ((r = sread(fdout[0], *newch, HOWMANY, 0)) <= 0) {
-#ifdef DEBUG
-			(void)fprintf(stderr, "Read failed (%s)\n",
-			    strerror(errno));
-#endif
+			DPRINTF("Read failed (%s)\n", strerror(errno));
 			free(*newch);
 			n = NODATA;
 			*newch = NULL;
@@ -518,21 +518,12 @@ err:
 			(void) close(fdin[1]);
 		(void) close(fdout[0]);
 		if (wait(&status) == -1) {
-#ifdef DEBUG
-			(void)fprintf(stderr, "Wait failed (%s)\n",
-			    strerror(errno));
-#endif
+			DPRINTF("Wait failed (%s)\n", strerror(errno));
 			n = NODATA;
 		} else if (!WIFEXITED(status)) {
-#ifdef DEBUG
-			(void)fprintf(stderr, "Child not exited (0x%x)\n",
-			    status);
-#endif
+			DPRINTF("Child not exited (0x%x)\n", status);
 		} else if (WEXITSTATUS(status) != 0) {
-#ifdef DEBUG
-			(void)fprintf(stderr, "Child exited (0x%d)\n",
-			    WEXITSTATUS(status));
-#endif
+			DPRINTF("Child exited (0x%d)\n", WEXITSTATUS(status));
 		}
 
 		(void) close(fdin[0]);
