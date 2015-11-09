@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.80 2015/06/03 18:21:24 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.81 2015/11/05 16:21:06 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -63,6 +63,7 @@ typedef void (*sig_t)(int);
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 #define BUILTIN_DECOMPRESS
 #include <zlib.h>
+#define ZLIBSUPPORT
 #endif
 #ifdef DEBUG
 #define DPRINTF(...)	fprintf(stderr, __VA_ARGS__)
@@ -70,28 +71,81 @@ typedef void (*sig_t)(int);
 #define DPRINTF(...)
 #endif
 
+#ifdef ZLIBSUPPORT
+/*
+ * The following python code is not really used because ZLIBSUPPORT is only
+ * defined if we have a built-in zlib, and the built-in zlib handles that.
+ */
+static const char zlibcode[] =
+    "import sys, zlib; sys.stdout.write(zlib.decompress(sys.stdin.read()))";
+
+static const char *zlib_args[] = { "python", "-c", zlibcode, NULL };
+
+static int
+zlibcmp(const unsigned char *buf)
+{
+	unsigned short x = 1;
+	unsigned char *s = (unsigned char *)&x;
+
+	if ((buf[0] & 0xf) != 8 || (buf[0] & 0x80) != 0)
+		return 1;
+	if (s[0] != 1)	/* endianness test */
+		x = buf[0] | (buf[1] << 8);
+	else
+		x = buf[1] | (buf[0] << 8);
+	if (x % 31)
+		return 1;
+	return 0;
+}
+#endif
+
+static const char *gzip_args[] = {
+	"gzip", "-cdq", NULL
+};
+static const char *uncompress_args[] = {
+	"uncompress", "-c", NULL
+};
+static const char *bzip2_args[] = {
+	"bzip2", "-cd", NULL
+};
+static const char *lzip_args[] = {
+	"lzip", "-cdq", NULL
+};
+static const char *xz_args[] = {
+	"xz", "-cd", NULL
+};
+static const char *lrzip_args[] = {
+	"lrzip", "-dqo-", NULL
+};
+static const char *lz4_args[] = {
+	"lz4", "-cd", NULL
+};
+
 private const struct {
-	const char magic[8];
+	const void *magic;
 	size_t maglen;
-	const char *argv[3];
+	const char **argv;
 	int silent;
 } compr[] = {
-	{ "\037\235", 2, { "gzip", "-cdq", NULL }, 1 },		/* compressed */
+	{ "\037\235",	2, gzip_args,	1 },		/* compressed */
 	/* Uncompress can get stuck; so use gzip first if we have it
 	 * Idea from Damien Clark, thanks! */
-	{ "\037\235", 2, { "uncompress", "-c", NULL }, 1 },	/* compressed */
-	{ "\037\213", 2, { "gzip", "-cdq", NULL }, 1 },		/* gzipped */
-	{ "\037\236", 2, { "gzip", "-cdq", NULL }, 1 },		/* frozen */
-	{ "\037\240", 2, { "gzip", "-cdq", NULL }, 1 },		/* SCO LZH */
+	{ "\037\235",	2, uncompress_args, 1,		/* compressed */
+	{ "\037\213",	2, gzip_args,	1 },		/* gzipped */
+	{ "\037\236",	2, gzip_args,	1 },		/* frozen */
+	{ "\037\240",	2, gzip_args,	1 },		/* SCO LZH */
 	/* the standard pack utilities do not accept standard input */
-	{ "\037\036", 2, { "gzip", "-cdq", NULL }, 0 },		/* packed */
-	{ "PK\3\4",   4, { "gzip", "-cdq", NULL }, 1 },		/* pkzipped, */
-					    /* ...only first file examined */
-	{ "BZh",      3, { "bzip2", "-cd", NULL }, 1 },		/* bzip2-ed */
-	{ "LZIP",     4, { "lzip", "-cdq", NULL }, 1 },
- 	{ "\3757zXZ\0",6,{ "xz", "-cd", NULL }, 1 },		/* XZ Utils */
- 	{ "LRZI",     4, { "lrzip", "-dqo-", NULL }, 1 },	/* LRZIP */
- 	{ "\004\"M\030", 4, { "lz4", "-cd", NULL }, 1 },	/* LZ4 */
+	{ "\037\036",	2, gzip_args,	0 },		/* packed */
+	{ "PK\3\4",	4, gzip_args,	1 },		/* pkzipped, */
+	/* ...only first file examined */
+	{ "BZh",	3, bzip2_args,	1 },		/* bzip2-ed */
+	{ "LZIP",	4, lzip_args,	1 },		/* lzip-ed */
+ 	{ "\3757zXZ\0",	6, xz_args,	1 },		/* XZ Utils */
+ 	{ "LRZI",	4, lrzip_args,	1 },		/* LRZIP */
+ 	{ "\004\"M\030",4, lz4_args,	1 },		/* LZ4 */
+#ifdef ZLIBSUPPORT
+	{ zlibcmp,	0, zlib_args,	1 },		/* zlib */
+#endif
 };
 
 #define NODATA ((size_t)~0)
@@ -102,6 +156,8 @@ private size_t ncompr = sizeof(compr) / sizeof(compr[0]);
 private size_t uncompressbuf(struct magic_set *, int, size_t,
     const unsigned char *, unsigned char **, size_t);
 #ifdef BUILTIN_DECOMPRESS
+private size_t uncompresszlib(struct magic_set *, const unsigned char *,
+    unsigned char **, size_t, int);
 private size_t uncompressgzipped(struct magic_set *, const unsigned char *,
     unsigned char **, size_t);
 #endif
@@ -127,7 +183,15 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 	for (i = 0; i < ncompr; i++) {
 		if (nbytes < compr[i].maglen)
 			continue;
-		if (memcmp(buf, compr[i].magic, compr[i].maglen) == 0 &&
+#ifdef ZLIBSUPPORT
+		if (compr[i].maglen == 0)
+			rv = (CAST(int (*)(const unsigned char *),
+			    CCAST(void *, compr[i].magic)))(buf);
+		else
+#endif
+			rv = memcmp(buf, compr[i].magic, compr[i].maglen);
+
+		if (rv == 0 &&
 		    (nsz = uncompressbuf(ms, fd, i, buf, &newbuf,
 		    nbytes)) != NODATA) {
 			ms->flags &= ~MAGIC_COMPRESS;
@@ -333,8 +397,6 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 {
 	unsigned char flg = old[3];
 	size_t data_start = 10;
-	z_stream z;
-	int rc;
 
 	if (flg & FEXTRA) {
 		if (data_start+1 >= n)
@@ -356,14 +418,22 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 
 	if (data_start >= n)
 		return 0;
+	return uncompresszlib(ms, old + data_start, newch, n - data_start, 0);
+}
+
+private size_t
+uncompresszlib(struct magic_set *ms, const unsigned char *old,
+	unsigned char **newch, size_t n, int zlib)
+{
+	int rc;
+	z_stream z;
+
 	if ((*newch = CAST(unsigned char *, malloc(HOWMANY + 1))) == NULL) {
 		return 0;
 	}
-	
-	/* XXX: const castaway, via strchr */
-	z.next_in = (Bytef *)strchr((const char *)old + data_start,
-	    old[data_start]);
-	z.avail_in = CAST(uint32_t, (n - data_start));
+
+	z.next_in = CCAST(Bytef *, old);
+	z.avail_in = CAST(uint32_t, n);
 	z.next_out = *newch;
 	z.avail_out = HOWMANY;
 	z.zalloc = Z_NULL;
@@ -371,7 +441,7 @@ uncompressgzipped(struct magic_set *ms, const unsigned char *old,
 	z.opaque = Z_NULL;
 
 	/* LINTED bug in header macro */
-	rc = inflateInit2(&z, -15);
+	rc = zlib ? inflateInit(&z) : inflateInit2(&z, -15);
 	if (rc != Z_OK) {
 		file_error(ms, 0, "zlib: %s", z.msg);
 		return 0;
@@ -405,6 +475,8 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
         /* FIXME: This doesn't cope with bzip2 */
 	if (method == 2)
 		return uncompressgzipped(ms, old, newch, n);
+	if (compr[method].maglen == 0)
+		return uncompresszlib(ms, old, newch, n, 1);
 #endif
 	(void)fflush(stdout);
 	(void)fflush(stderr);
