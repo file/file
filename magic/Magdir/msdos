@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.102 2015/09/30 20:32:35 christos Exp $
+# $File: msdos,v 1.103 2015/10/27 23:24:33 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -409,8 +409,31 @@
 #>>10	string				x			%-.8s
 #>4	uleshort&0x4000			0x4000			\b,control strings-support)
 
-# test too generic ?
-0	byte		0x8c		DOS executable (COM)
+# updated by Joerg Jenderek
+# GRR: line below too general as it catches also 
+# rt.lib DYADISKS.PIC and many more
+# start with assembler instruction MOV
+0	ubyte		0x8c		
+# skip "AppleWorks word processor data" like ARTICLE.1 ./apple
+>4	string			!O====	
+# skip some unknown basic binaries like RocketRnger.SHR
+>>5	string			!MAIN	
+# skip "GPG symmetrically encrypted data" ./gnu
+# skip "PGP symmetric key encrypted data" ./pgp 
+# openpgpdefs.h: fourth byte < 14 indicate cipher algorithm type
+>>>4	ubyte			>13	DOS executable (COM, 0x8C-variant)
+# the remaining files should be DOS *.COM executables
+# dosshell.COM	8cc0 2ea35f07 e85211 e88a11 b80058 cd
+# hmload.COM	8cc8 8ec0 bbc02b 89dc 83c30f c1eb04 b4
+# UNDELETE.COM	8cca 2e8916 6503 b430 cd21 8b 2e0200 8b
+# BOOTFIX.COM	8cca 2e8916 9603 b430 cd21 8b 2e0200 8b
+# RAWRITE3.COM	8cca 2e8916 d602 b430 cd21 8b 2e0200 8b
+# SHARE.COM	8cca 2e8916 d602 b430 cd21 8b 2e0200 8b
+# validchr.COM	8cca 2e8916 9603 b430 cd21 8b 2e028b1e
+# devload.COM	8cca 8916ad01 b430 cd21 8b2e0200 892e
+!:mime	application/x-dosexec
+!:ext com
+
 # updated by Joerg Jenderek at Oct 2008
 0	ulelong		0xffff10eb	DR-DOS executable (COM)
 # byte 0xeb conflicts with "sequent" magic leshort 0xn2eb
