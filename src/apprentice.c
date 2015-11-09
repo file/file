@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.241 2015/09/16 22:52:54 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.242 2015/10/31 15:37:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -548,7 +548,7 @@ apprentice_unmap(struct magic_map *map)
 	switch (map->type) {
 #ifdef QUICK
 	case MAP_TYPE_MMAP:
-		if (map->p)
+		if (map->p && map->p != MAP_FAILED)
 			(void)munmap(map->p, map->len);
 		break;
 #endif
@@ -2946,13 +2946,14 @@ apprentice_map(struct magic_set *ms, const char *fn)
 
 	map->len = (size_t)st.st_size;
 #ifdef QUICK
+	map->type = MAP_TYPE_MMAP;
 	if ((map->p = mmap(0, (size_t)st.st_size, PROT_READ|PROT_WRITE,
 	    MAP_PRIVATE|MAP_FILE, fd, (off_t)0)) == MAP_FAILED) {
 		file_error(ms, errno, "cannot map `%s'", dbname);
 		goto error;
 	}
-	map->type = MAP_TYPE_MMAP;
 #else
+	map->type = MAP_TYPE_MALLOC;
 	if ((map->p = CAST(void *, malloc(map->len))) == NULL) {
 		file_oomem(ms, map->len);
 		goto error;
@@ -2961,7 +2962,6 @@ apprentice_map(struct magic_set *ms, const char *fn)
 		file_badread(ms);
 		goto error;
 	}
-	map->type = MAP_TYPE_MALLOC;
 #define RET	1
 #endif
 	(void)close(fd);
