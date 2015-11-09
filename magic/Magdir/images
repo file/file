@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.109 2015/10/24 15:32:58 christos Exp $
+# $File: images,v 1.110 2015/11/09 17:02:41 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1143,10 +1143,10 @@
 # From: Joerg Jenderek
 # URL: https://en.wikipedia.org/wiki/Apple_Icon_Image_format
 0	string		icns		Mac OS X icon
->4	ubelong		>0		
 !:mime	image/x-icns
 !:apple	????icns
 !:ext icns
+>4	ubelong		>0		
 # file size
 >>4	ubelong		x		\b, %d bytes
 # icon type
