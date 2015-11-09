@@ -1,3 +1,7 @@
+2015-11-09  16:05  Christos Zoulas <christos@zoulas.com>
+
+	* Add zlib support if we have it.
+
 2015-11-05  11:22  Christos Zoulas <christos@zoulas.com>
 
 	* PR/492: compression forking was broken with magic_buffer.
