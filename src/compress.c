@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.81 2015/11/05 16:21:06 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.82 2015/11/09 21:03:51 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -130,7 +130,7 @@ private const struct {
 	{ "\037\235",	2, gzip_args,	1 },		/* compressed */
 	/* Uncompress can get stuck; so use gzip first if we have it
 	 * Idea from Damien Clark, thanks! */
-	{ "\037\235",	2, uncompress_args, 1,		/* compressed */
+	{ "\037\235",	2, uncompress_args, 1 },	/* compressed */
 	{ "\037\213",	2, gzip_args,	1 },		/* gzipped */
 	{ "\037\236",	2, gzip_args,	1 },		/* frozen */
 	{ "\037\240",	2, gzip_args,	1 },		/* SCO LZH */
