@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.82 2015/11/09 21:03:51 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.83 2015/11/10 17:47:02 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -88,19 +88,28 @@ zlibcmp(const unsigned char *buf)
 	unsigned char *s = (unsigned char *)&x;
 
 	if ((buf[0] & 0xf) != 8 || (buf[0] & 0x80) != 0)
-		return 1;
+		return 0;
 	if (s[0] != 1)	/* endianness test */
 		x = buf[0] | (buf[1] << 8);
 	else
 		x = buf[1] | (buf[0] << 8);
 	if (x % 31)
-		return 1;
-	return 0;
+		return 0;
+	return 1;
 }
 #endif
 
+#ifndef DEBUG
+#define gzip_flags "-cdq"
+#define lrzip_flags "-dqo"
+#else
+#define gzip_flags "-cd"
+#define lrzip_flags "-do"
+#endif
+#define lzip_flags gzip_flags
+
 static const char *gzip_args[] = {
-	"gzip", "-cdq", NULL
+	"gzip", gzip_flags, NULL
 };
 static const char *uncompress_args[] = {
 	"uncompress", "-c", NULL
@@ -109,13 +118,13 @@ static const char *bzip2_args[] = {
 	"bzip2", "-cd", NULL
 };
 static const char *lzip_args[] = {
-	"lzip", "-cdq", NULL
+	"lzip", lzip_flags, NULL
 };
 static const char *xz_args[] = {
 	"xz", "-cd", NULL
 };
 static const char *lrzip_args[] = {
-	"lrzip", "-dqo-", NULL
+	"lrzip", lrzip_flags, NULL
 };
 static const char *lz4_args[] = {
 	"lz4", "-cd", NULL
@@ -181,18 +190,18 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 	osigpipe = signal(SIGPIPE, SIG_IGN);
 #endif
 	for (i = 0; i < ncompr; i++) {
+		int zm;
 		if (nbytes < compr[i].maglen)
 			continue;
 #ifdef ZLIBSUPPORT
 		if (compr[i].maglen == 0)
-			rv = (CAST(int (*)(const unsigned char *),
+			zm = (CAST(int (*)(const unsigned char *),
 			    CCAST(void *, compr[i].magic)))(buf);
 		else
 #endif
-			rv = memcmp(buf, compr[i].magic, compr[i].maglen);
+			zm = memcmp(buf, compr[i].magic, compr[i].maglen) == 0;
 
-		if (rv == 0 &&
-		    (nsz = uncompressbuf(ms, fd, i, buf, &newbuf,
+		if (zm && (nsz = uncompressbuf(ms, fd, i, buf, &newbuf,
 		    nbytes)) != NODATA) {
 			ms->flags &= ~MAGIC_COMPRESS;
 			rv = -1;
@@ -220,6 +229,7 @@ error:
 #endif
 	free(newbuf);
 	ms->flags |= MAGIC_COMPRESS;
+	DPRINTF("Zmagic returns %d\n", rv);
 	return rv;
 }
 #endif
@@ -481,7 +491,12 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 	(void)fflush(stdout);
 	(void)fflush(stderr);
 
+	fdin[0] = fdout[0] = fdin[1] = fdout[1] = -1;
 	if ((fd == -1 && pipe(fdin) == -1) || pipe(fdout) == -1) {
+		if (fdin[0] != -1) {
+			(void) close(fdin[0]);
+			(void) close(fdin[1]);
+		}
 		file_error(ms, errno, "cannot create pipe");	
 		return NODATA;
 	}
@@ -503,6 +518,8 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 		    }
 		    (void) close(fdin[0]);
 		    (void) close(fdin[1]);
+		    fdin[0] = -1;
+		    fdin[1] = -1;
 		}
 
 		(void) close(1);
@@ -512,7 +529,9 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 			exit(1);
 		}
 		(void) close(fdout[0]);
+		fdout[0] = -1;
 		(void) close(fdout[1]);
+		fdout[1] = -1;
 #ifndef DEBUG
 		if (compr[method].silent)
 			(void)close(2);
@@ -530,8 +549,10 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 
 	default: /* parent */
 		(void) close(fdout[1]);
+		fdout[1] = -1;
 		if (fd == -1) {
 			(void) close(fdin[0]);
+			fdin[0] = -1;
 			/* 
 			 * fork again, to avoid blocking because both
 			 * pipes filled
@@ -539,6 +560,7 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 			switch (fork()) {
 			case 0: /* child */
 				(void)close(fdout[0]);
+				fdout[0] = -1;
 				if (swrite(fdin[1], old, n) != (ssize_t)n) {
 					DPRINTF("Write failed (%s)\n",
 					    strerror(errno));
@@ -558,24 +580,21 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
 					    strerror(errno));
 					exit(1);
 				}
-				exit(WIFEXITED(status) ?
-				    WEXITSTATUS(status) : 1);
-				/*NOTREACHED*/
+				DPRINTF("Grandchild wait return %#x\n", status);
 			}
 			(void) close(fdin[1]);
 			fdin[1] = -1;
 		}
 
-		if ((*newch = (unsigned char *) malloc(HOWMANY + 1)) == NULL) {
-#ifdef DEBUG
-			(void)fprintf(stderr, "Malloc failed (%s)\n",
-			    strerror(errno));
-#endif
+		*newch = CAST(unsigned char *, malloc(HOWMANY + 1));
+		if (*newch == NULL) {
+			DPRINTF("Malloc failed (%s)\n", strerror(errno));
 			n = NODATA;
 			goto err;
 		}
 		if ((r = sread(fdout[0], *newch, HOWMANY, 0)) <= 0) {
-			DPRINTF("Read failed (%s)\n", strerror(errno));
+			DPRINTF("Read failed %d (%s)\n", fdout[0],
+				r != -1 ? strerror(errno) : "no data");
 			free(*newch);
 			n = NODATA;
 			*newch = NULL;
@@ -586,9 +605,13 @@ uncompressbuf(struct magic_set *ms, int fd, size_t method,
  		/* NUL terminate, as every buffer is handled here. */
  		(*newch)[n] = '\0';
 err:
-		if (fdin[1] != -1)
+		if (fdin[1] != -1) {
 			(void) close(fdin[1]);
+			fdin[1] = -1;
+		}
 		(void) close(fdout[0]);
+		fdout[0] = -1;
+		DPRINTF("Child wait return %#x\n", status);
 		if (wait(&status) == -1) {
 			DPRINTF("Wait failed (%s)\n", strerror(errno));
 			n = NODATA;
@@ -599,6 +622,7 @@ err:
 		}
 
 		(void) close(fdin[0]);
+		DPRINTF("Returning n=%zd\n", n);
 	    
 		return n;
 	}
