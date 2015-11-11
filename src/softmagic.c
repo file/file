@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.221 2015/09/16 22:37:05 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.222 2015/09/17 01:10:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2005,10 +2005,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			file_regerror(&rx, rc, ms);
 			v = (uint64_t)-1;
 		} else {
-			regmatch_t pmatch[1];
+			regmatch_t pmatch;
 			size_t slen = ms->search.s_len;
-#ifndef REG_STARTEND
-#define	REG_STARTEND	0
 			char *copy;
 			if (slen != 0) {
 			    copy = malloc(slen);
@@ -2025,22 +2023,15 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			    search = ms->search.s;
 			    copy = NULL;
 			}
-#else
-			search = ms->search.s;
-			pmatch[0].rm_so = 0;
-			pmatch[0].rm_eo = slen;
-#endif
 			rc = file_regexec(&rx, (const char *)search,
-			    1, pmatch, REG_STARTEND);
-#if REG_STARTEND == 0
+			    1, &pmatch, 0);
 			free(copy);
-#endif
 			switch (rc) {
 			case 0:
-				ms->search.s += (int)pmatch[0].rm_so;
-				ms->search.offset += (size_t)pmatch[0].rm_so;
+				ms->search.s += (int)pmatch.rm_so;
+				ms->search.offset += (size_t)pmatch.rm_so;
 				ms->search.rm_len =
-				    (size_t)(pmatch[0].rm_eo - pmatch[0].rm_so);
+				    (size_t)(pmatch.rm_eo - pmatch.rm_so);
 				v = 0;
 				break;
 
