@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.86 2015/11/11 22:22:19 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.87 2015/11/11 22:26:30 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -535,7 +535,7 @@ static void
 copydesc(int i, int *fd)
 {
 	(void) close(i);
-	if (dup(fd[i == 0 ? 0 : 1]) == -1) {
+	if (dup(fd[i == STDIN_FILENO ? 0 : 1]) == -1) {
 		abort();
 		DPRINTF("dup[%d] failed (%s)\n", i, strerror(errno));
 		exit(1);
@@ -658,7 +658,7 @@ uncompressbuf(int fd, size_t method, const unsigned char *old,
 
 		(void)execvp(compr[method].argv[0],
 		    (char *const *)(intptr_t)compr[method].argv);
-		dprintf(2, "exec `%s' failed, %s", 
+		dprintf(STDERR_FILENO, "exec `%s' failed, %s", 
 		    compr[method].argv[0], strerror(errno));
 		exit(1);
 		/*NOTREACHED*/
