@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.84 2015/11/10 22:52:07 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.85 2015/11/11 21:19:12 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -175,6 +175,7 @@ private int uncompresszlib(const unsigned char *, unsigned char **, size_t *,
 private int uncompressgzipped(const unsigned char *, unsigned char **,
     size_t *);
 #endif
+private const char *methodname(size_t);
 
 protected int
 file_zmagic(struct magic_set *ms, int fd, const char *name,
@@ -214,8 +215,8 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 		case ERRDATA:
 			ms->flags &= ~MAGIC_COMPRESS;
 			if (rv == ERRDATA)
-				rv = file_printf(ms, "UNCOMPRESS ERROR: %s",
-				    newbuf);
+				rv = file_printf(ms, "%s ERROR: %s",
+				    methodname(i), newbuf);
 			else
 				rv = file_buffer(ms, -1, name, newbuf, nsz);
 			if (rv == -1)
@@ -603,6 +604,17 @@ filter_error(unsigned char *ubuf, ssize_t n)
 	if (islower(*ubuf))
 		*ubuf = toupper(*ubuf);
 	return n;
+}
+
+private const char *
+methodname(size_t method)
+{
+#ifdef BUILTIN_DECOMPRESS
+        /* FIXME: This doesn't cope with bzip2 */
+	if (method == 2 || compr[method].maglen == 0)
+	    return "zlib";
+#endif
+	return compr[method].argv[0];
 }
 
 private int
