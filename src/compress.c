@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.87 2015/11/11 22:26:30 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.88 2015/11/11 22:30:29 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -183,6 +183,8 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 {
 	unsigned char *newbuf = NULL;
 	size_t i, nsz;
+	char *rbuf;
+	file_pushbuf_t *pb;
 	int rv = 0;
 	int mime = ms->flags & MAGIC_MIME;
 #ifdef HAVE_SIGNAL_H
@@ -210,9 +212,13 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 		if (!zm)
 			continue;
 		nsz = nbytes;
-		switch (rv = uncompressbuf(fd, i, buf, &newbuf, &nsz)) {
+		rv = uncompressbuf(fd, i, buf, &newbuf, &nsz);
+		DPRINTF("uncompressbuf = %d, %s, %zu\n", rv, (char *)newbuf,
+		    nsz);
+		switch (rv) {
 		case OKDATA:
 		case ERRDATA:
+			
 			ms->flags &= ~MAGIC_COMPRESS;
 			if (rv == ERRDATA)
 				rv = file_printf(ms, "%s ERROR: %s",
@@ -221,6 +227,7 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 				rv = file_buffer(ms, -1, name, newbuf, nsz);
 			if (rv == -1)
 				goto error;
+			DPRINTF("rv = %d\n", rv);
 			if ((ms->flags & MAGIC_COMPRESS_TRANSP) != 0)
 				goto out;
 			if (mime != MAGIC_MIME && mime != 0)
@@ -228,8 +235,17 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 			if ((file_printf(ms,
 			    mime ? " compressed-encoding=" : " (")) == -1)
 				goto error;
+			if ((pb = file_push_buffer(ms)) == NULL)
+				goto error;
 			if (file_buffer(ms, -1, NULL, buf, nbytes) == -1)
 				goto error;
+			if ((rbuf = file_pop_buffer(ms, pb)) != NULL) {
+				if (file_printf(ms, "%s", rbuf) == -1) {
+					free(rbuf);
+					goto error;
+				}
+				free(rbuf);
+			}
 			if (!mime && file_printf(ms, ")") == -1)
 				goto error;
 			goto out;
@@ -501,7 +517,9 @@ uncompresszlib(const unsigned char *old, unsigned char **newch, size_t *n,
 		goto err;
 
 	*n = (size_t)z.total_out;
-	(void)inflateEnd(&z);
+	rc = inflateEnd(&z);
+	if (rc != Z_OK)
+		goto err;
 	
 	/* let's keep the nul-terminate tradition */
 	(*newch)[*n] = '\0';
@@ -705,7 +723,6 @@ uncompressbuf(int fd, size_t method, const unsigned char *old,
 	*n = r;
 	/* NUL terminate, as every buffer is handled here. */
 	(*newch)[*n] = '\0';
-	DPRINTF("got [[[%s]]]\n", *newch);
 err:
 	closefd(fdp[STDIN_FILENO], 1);
 	closefd(fdp[STDOUT_FILENO], 0);
