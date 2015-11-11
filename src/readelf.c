@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.123 2015/10/09 14:38:47 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.124 2015/11/05 16:58:31 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -945,7 +945,7 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		switch(xauxv_type) {
 		case AT_LINUX_EXECFN:
 			is_string = 1;
-			tag = "from";
+			tag = "execfn";
 			break;
 		case AT_LINUX_PLATFORM:
 			is_string = 1;
