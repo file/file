@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.19 2013/02/06 14:18:52 christos Exp $
+# $File: console,v 1.20 2015/03/15 23:21:42 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 #    ines:  file(1) magic for Marat's iNES Nintendo Entertainment System
@@ -133,8 +133,24 @@
 #------------------------------------------------------------------------------
 # Sony Playstation executables (Adam Sjoegren <asjo@diku.dk>) :
 0	string	PS-X\ EXE	Sony Playstation executable
+>16	lelong	x		PC=0x%08lx,
+>20	lelong	!0		GP=0x%08lx,
+>24	lelong	!0		.text=[0x%08lx,
+>>28	lelong	x		\b0x%lx],
+>32	lelong	!0		.data=[0x%08lx,
+>>36	lelong	x		\b0x%lx],
+>40	lelong	!0		.bss=[0x%08lx,
+>>44	lelong	x		\b0x%lx],
+>48	lelong	!0		Stack=0x%08lx,
+>48	lelong	=0		No Stack!,
+>52	lelong	!0		StackSize=0x%lx,
+#>76	string	>\0		(%s)
 #  Area:
 >113	string	x		(%s)
+
+# CPE executables
+0	string	CPE		CPE executable
+>3	byte	x		(version %d)
 
 #------------------------------------------------------------------------------
 # Microsoft Xbox executables .xbe (Esa Hyytia <ehyytia@cc.hut.fi>)
