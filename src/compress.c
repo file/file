@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.89 2015/11/11 22:50:12 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.90 2015/11/13 15:35:10 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -435,25 +435,6 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 #define FNAME		(1 << 3)
 #define FCOMMENT	(1 << 4)
 
-static int
-makeerror(unsigned char **buf, size_t *len, const char *fmt, ...)
-{
-	char *msg;
-	va_list ap;
-	int rv;
-
-	va_start(ap, fmt);
-	rv = vasprintf(&msg, fmt, ap);
-	va_end(ap);
-	if (rv < 0) {
-		*buf = NULL;
-		*len = 0;
-		return NODATA;
-	}
-	*buf = (unsigned char *)msg;
-	*len = strlen(msg);
-	return ERRDATA;
-}
 
 private int
 uncompressgzipped(const unsigned char *old, unsigned char **newch, size_t *n)
@@ -531,6 +512,26 @@ err:
 	return ERRDATA;
 }
 #endif
+
+static int
+makeerror(unsigned char **buf, size_t *len, const char *fmt, ...)
+{
+	char *msg;
+	va_list ap;
+	int rv;
+
+	va_start(ap, fmt);
+	rv = vasprintf(&msg, fmt, ap);
+	va_end(ap);
+	if (rv < 0) {
+		*buf = NULL;
+		*len = 0;
+		return NODATA;
+	}
+	*buf = (unsigned char *)msg;
+	*len = strlen(msg);
+	return ERRDATA;
+}
 
 static void
 closefd(int *fd, size_t i)
