@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.90 2015/11/13 15:35:10 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.91 2015/11/13 15:42:18 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -175,6 +175,8 @@ private int uncompresszlib(const unsigned char *, unsigned char **, size_t *,
 private int uncompressgzipped(const unsigned char *, unsigned char **,
     size_t *);
 #endif
+static int makeerror(unsigned char **, size_t *, const char *, ...)
+    __attribute__((__format__(__printf__, 3, 4)));
 private const char *methodname(size_t);
 
 protected int
