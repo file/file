@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.242 2015/10/31 15:37:17 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.243 2015/11/09 21:21:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -86,9 +86,9 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.242 2015/10/31 15:37:17 christos Exp $")
 #define ALLOC_CHUNK	(size_t)10
 #define ALLOC_INCR	(size_t)200
 
-#define MAP_TYPE_MMAP	0
+#define MAP_TYPE_USER	0
 #define MAP_TYPE_MALLOC	1
-#define MAP_TYPE_USER	2
+#define MAP_TYPE_MMAP	2
 
 struct magic_entry {
 	struct magic *mp;	
@@ -546,12 +546,8 @@ apprentice_unmap(struct magic_map *map)
 		return;
 
 	switch (map->type) {
-#ifdef QUICK
-	case MAP_TYPE_MMAP:
-		if (map->p && map->p != MAP_FAILED)
-			(void)munmap(map->p, map->len);
+	case MAP_TYPE_USER:
 		break;
-#endif
 	case MAP_TYPE_MALLOC:
 		for (i = 0; i < MAGIC_SETS; i++) {
 			if ((char *)map->magic[i] >= (char *)map->p &&
@@ -561,8 +557,12 @@ apprentice_unmap(struct magic_map *map)
 		}
 		free(map->p);
 		break;
-	case MAP_TYPE_USER:
+#ifdef QUICK
+	case MAP_TYPE_MMAP:
+		if (map->p && map->p != MAP_FAILED)
+			(void)munmap(map->p, map->len);
 		break;
+#endif
 	default:
 		abort();
 	}
@@ -2926,6 +2926,7 @@ apprentice_map(struct magic_set *ms, const char *fn)
 		file_oomem(ms, sizeof(*map));
 		goto error;
 	}
+	map->type = MAP_TYPE_USER;	/* unspecified */
 
 	dbname = mkdbname(ms, fn, 0);
 	if (dbname == NULL)
