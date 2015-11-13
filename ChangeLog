@@ -1,3 +1,7 @@
+2015-11-13  10:35  Christos Zoulas <christos@zoulas.com>
+
+	* provide dprintf(3) for the OS's that don't have it.
+
 2015-11-11  16:25  Christos Zoulas <christos@zoulas.com>
 
 	* redo the compression code report decompression errors

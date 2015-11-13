@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.172 2015/09/11 17:24:09 christos Exp $
+ * @(#)$File: file.h,v 1.173 2015/11/09 21:03:42 christos Exp $
  */
 
 #ifndef __file_h__
@@ -551,6 +551,9 @@ int vasprintf(char **, const char *, va_list);
 #endif
 #ifndef HAVE_ASPRINTF
 int asprintf(char **, const char *, ...);
+#endif
+#ifndef HAVE_DPRINTF
+int dprintf(int, const char *, ...);
 #endif
 
 #ifndef HAVE_STRLCPY
