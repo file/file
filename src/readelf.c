@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.124 2015/11/05 16:58:31 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.125 2015/11/11 21:20:18 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -840,8 +840,6 @@ get_offset_from_virtaddr(struct magic_set *ms, int swap, int clazz, int fd,
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
-	size_t prev_vaddr = 0;
-	size_t prev_off = 0;
 
 	/*
 	 * Loop through all the program headers and find the header with
@@ -859,17 +857,8 @@ get_offset_from_virtaddr(struct magic_set *ms, int swap, int clazz, int fd,
 			continue;
 		}
 
-		if (virtaddr >= prev_vaddr && virtaddr < xph_vaddr) {
-			/*
-			 * The previous program header was the right one, so
-			 * compute the file offset and return.
-			 */
-			return prev_off + (virtaddr - prev_vaddr);
-		}
-
-		prev_vaddr = xph_vaddr;
-		prev_off = xph_offset;
-
+		if (virtaddr >= xph_vaddr && virtaddr < xph_vaddr + xph_filesz)
+			return xph_offset + (virtaddr - xph_vaddr);
 	}
 	return 0;
 }
@@ -887,7 +876,7 @@ get_string_on_virtaddr(struct magic_set *ms,
 
 	offset = get_offset_from_virtaddr(ms, swap, clazz, fd, ph_off, ph_num,
 	    fsize, virtaddr);
-	if (pread(fd, buf, buflen, offset) != buflen) {
+	if ((buflen = pread(fd, buf, buflen, offset)) <= 0) {
 		file_badread(ms);
 		return 0;
 	}
@@ -919,7 +908,7 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	size_t elsize = xauxv_sizeof;
 	const char *tag;
 	int is_string;
-	uint32_t val[30];
+	uint64_t val[30];
 	size_t nval;
 
 	if (type != NT_AUXV || (*flags & FLAGS_IS_CORE) == 0)
@@ -931,16 +920,16 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	for (size_t off = 0; off + elsize <= descsz; off += elsize) {
 		(void)memcpy(xauxv_addr, &nbuf[doff + off], xauxv_sizeof);
 		for (size_t i = 0; i < nval; i++)
-			if (val[i] == (uint32_t)xauxv_type) {
-				file_error(ms, 0, "Repeated ELF Auxv type %u",
-				    val[i]);
+			if (val[i] == (uint64_t)xauxv_type) {
+				file_error(ms, 0, "Repeated ELF Auxv type %ju",
+				    (uintmax_t)val[i]);
 				return 1;
 			}
 		if (nval >= __arraycount(val)) {
 			file_error(ms, 0, "Too many ELF Auxv elements");
 			return 1;
 		}
-		val[nval++] = (uint32_t)xauxv_type;
+		val[nval++] = (uint64_t)xauxv_type;
 
 		switch(xauxv_type) {
 		case AT_LINUX_EXECFN:
@@ -1026,6 +1015,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 	namesz = xnh_namesz;
 	descsz = xnh_descsz;
+
 	if ((namesz == 0) && (descsz == 0)) {
 		/*
 		 * We're out of note headers.
