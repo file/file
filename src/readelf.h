@@ -59,7 +59,7 @@ typedef struct {
 } Aux32Info;
 
 typedef struct {
-	Elf64_Word	a_type;		/* 32-bit id */
+	Elf64_Xword	a_type;		/* 64-bit id */
 	Elf64_Xword	a_v;		/* 64-bit id */
 } Aux64Info;
 
