@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.125 2015/11/11 21:20:18 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.126 2015/11/16 16:03:45 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -908,7 +908,6 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	size_t elsize = xauxv_sizeof;
 	const char *tag;
 	int is_string;
-	uint64_t val[30];
 	size_t nval;
 
 	if (type != NT_AUXV || (*flags & FLAGS_IS_CORE) == 0)
@@ -919,17 +918,11 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	nval = 0;
 	for (size_t off = 0; off + elsize <= descsz; off += elsize) {
 		(void)memcpy(xauxv_addr, &nbuf[doff + off], xauxv_sizeof);
-		for (size_t i = 0; i < nval; i++)
-			if (val[i] == (uint64_t)xauxv_type) {
-				file_error(ms, 0, "Repeated ELF Auxv type %ju",
-				    (uintmax_t)val[i]);
-				return 1;
-			}
-		if (nval >= __arraycount(val)) {
+		/* Limit processing to 50 vector entries to prevent DoS */
+		if (nval++ >= 50) {
 			file_error(ms, 0, "Too many ELF Auxv elements");
 			return 1;
 		}
-		val[nval++] = (uint64_t)xauxv_type;
 
 		switch(xauxv_type) {
 		case AT_LINUX_EXECFN:
