@@ -1,9 +1,12 @@
-#!/usr/bin/env python
+# coding: utf-8
+
 '''
 Python bindings for libmagic
 '''
 
 import ctypes
+
+from collections import namedtuple
 
 from ctypes import *
 from ctypes.util import find_library
@@ -32,7 +35,7 @@ MAGIC_PRESERVE_ATIME = PRESERVE_ATIME = 128
 MAGIC_RAW = RAW = 256
 MAGIC_ERROR = ERROR = 512
 MAGIC_MIME_ENCODING = MIME_ENCODING = 1024
-MAGIC_MIME = MIME = 1040
+MAGIC_MIME = MIME = 1040  # MIME_TYPE + MIME_ENCODING
 MAGIC_APPLE = APPLE = 2048
 
 MAGIC_NO_CHECK_COMPRESS = NO_CHECK_COMPRESS = 4096
@@ -46,6 +49,8 @@ MAGIC_NO_CHECK_TOKENS = NO_CHECK_TOKENS = 1048576
 MAGIC_NO_CHECK_ENCODING = NO_CHECK_ENCODING = 2097152
 
 MAGIC_NO_CHECK_BUILTIN = NO_CHECK_BUILTIN = 4173824
+
+FileMagic = namedtuple('FileMagic', ('mime_type', 'encoding', 'name'))
 
 
 class magic_set(Structure):
@@ -222,3 +227,48 @@ def open(flags):
     Flags argument as for setflags.
     """
     return Magic(_open(flags))
+
+
+# Objects used by `detect_from_` functions
+mime_magic = Magic(_open(MAGIC_MIME))
+mime_magic.load()
+none_magic = Magic(_open(MAGIC_NONE))
+none_magic.load()
+
+
+def _create_filemagic(mime_detected, type_detected):
+    mime_type, mime_encoding = mime_detected.split('; ')
+
+    return FileMagic(name=type_detected, mime_type=mime_type,
+                     encoding=mime_encoding.replace('charset=', ''))
+
+
+def detect_from_filename(filename):
+    '''Detect mime type, encoding and file type from a filename
+
+    Returns a `FileMagic` namedtuple.
+    '''
+
+    return _create_filemagic(mime_magic.file(filename),
+                             none_magic.file(filename))
+
+
+def detect_from_fobj(fobj):
+    '''Detect mime type, encoding and file type from file-like object
+
+    Returns a `FileMagic` namedtuple.
+    '''
+
+    file_descriptor = fobj.fileno()
+    return _create_filemagic(mime_magic.descriptor(file_descriptor),
+                             none_magic.descriptor(file_descriptor))
+
+
+def detect_from_content(byte_content):
+    '''Detect mime type, encoding and file type from bytes
+
+    Returns a `FileMagic` namedtuple.
+    '''
+
+    return _create_filemagic(mime_magic.buffer(byte_content),
+                             none_magic.buffer(byte_content))
