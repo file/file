@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.53 2015/04/09 20:01:41 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.54 2015/11/23 21:20:50 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -60,6 +60,7 @@ static const struct nv {
 	{ "Windows Installer",		"vnd.ms-msi",		},
 	{ NULL,				NULL,			},
 }, name2mime[] = {
+	{ "Workbook",			"vnd.ms-excel",		},
 	{ "WordDocument",		"msword",		},
 	{ "PowerPoint",			"vnd.ms-powerpoint",	},
 	{ "DigitalSignature",		"vnd.ms-msi",		},
