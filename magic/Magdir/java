@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: java,v 1.16 2013/09/24 20:22:03 christos Exp $
+# $File: java,v 1.17 2015/11/09 16:57:19 christos Exp $
 # Java ByteCode and Mach-O binaries (e.g., Mac OS X) use the
 # same magic number, 0xcafebabe, so they are both handled
 # in the entry called "cafebabe".
@@ -16,7 +16,7 @@
 !:mime	application/x-java-jce-keystore
 
 # Java source
-0	regex	^import.*;$	Java source
+0	regex	\^import.*;$	Java source
 !:mime	text/x-java
 
 # Java HPROF dumps
