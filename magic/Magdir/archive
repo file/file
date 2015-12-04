@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.98 2015/11/20 17:05:42 christos Exp $
+# $File: archive,v 1.99 2015/12/04 20:48:02 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -731,7 +731,7 @@
 # RAR (Roshal Archive) archive
 0	string		Rar!\x1a\7\0		RAR archive data
 !:mime	application/x-rar
-!:ext	rar
+!:ext	rar/cbr
 # file header
 >(0xc.l+9)	byte	0x74
 >>(0xc.l+7)	use	rar-file-header
@@ -749,7 +749,7 @@
 # http://jasonblanks.com/wp-includes/images/papers/KnowyourarchiveRAR.pdf
 0	string		RE\x7e\x5e  RAR archive data (<v1.5)
 !:mime	application/x-rar
-!:ext	rar
+!:ext	rar/cbr
 
 # SQUISH archiver (Greg Roelofs, newt@uchicago.edu)
 0	string		SQSH		squished archive data (Acorn RISCOS)
@@ -761,10 +761,13 @@
 # PKZIP multi-volume archive
 0	string		PK\x07\x08PK\x03\x04	Zip multi-volume archive data, at least PKZIP v2.50 to extract
 !:mime	application/zip
+!:ext zip/cbz
 
 # Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 0	string		PK\005\006	Zip archive data (empty)
 0	string		PK\003\004
+!:mime application/zip
+!:ext zip/cbz
 
 # Specialised zip formats which start with a member named 'mimetype'
 # (stored uncompressed, with no 'extra field') containing the file's MIME type.
