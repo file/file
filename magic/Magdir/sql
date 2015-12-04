@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.16 2015/11/04 01:02:02 christos Exp $
+# $File: sql,v 1.17 2015/11/05 18:20:46 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -73,6 +73,8 @@
 >68 default x
 >>68 belong  !0          \b, application id %u
 >>60 belong  !0          \b, user version %d
+>96 belong  x            \b, last written using SQLite version %d
+
 
 # SQLite Write-Ahead Log from SQLite version >= 3.7.0
 # http://www.sqlite.org/fileformat.html#walformat
