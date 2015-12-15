@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.12 2015/08/29 07:10:35 christos Exp $
+# $File: windows,v 1.13 2015/09/23 16:03:03 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -64,10 +64,148 @@
 
 
 # Summary: Old format help files
-# Extension: .hlp
+# URL: https://en.wikipedia.org/wiki/WinHelp
+# Reference: http://www.oocities.org/mwinterhoff/helpfile.htm
+# Update: Joerg Jenderek 
 # Created by: Dirk Jagdmann <doj@cubic.org>
-0	lelong		0x00035f3f		MS Windows 3.x help file
+#
+# check and then display version and date inside MS Windows HeLP file fragment
+0	name				help-ver-date
+# look for Magic of SYSTEMHEADER
+>0	leshort		0x036C		
+# version Major		1 for right file fragment
+>>4	leshort		1		Windows
+# print non empty string above to avoid error message
+# Warning: Current entry does not yet have a description for adding a MIME type
+!:mime	application/winhelp
+!:ext	hlp
+# version Minor of help file format is hint for windows version
+>>>2	leshort		0x0F		3.x
+>>>2	leshort		0x15		3.0
+>>>2	leshort		0x21		3.1
+>>>2	leshort		0x27		x.y
+>>>2	leshort		0x33		95
+>>>2	default		x		y.z
+>>>>2	leshort		x		0x%x
+# to complete message string like "MS Windows 3.x help file"
+>>>2	leshort		x		help
+# GenDate often older than file creation date
+>>>6	ldate		x		\b, %s
+#
+# Magic for HeLP files
+0	lelong		0x00035f3f		
+# ./windows (version 5.25) labeled the entry as "MS Windows 3.x help file"
+# file header magic 0x293B at DirectoryStart+9
+>(4.l+9)	uleshort	0x293B		MS
+# look for @VERSION	bmf.. like IBMAVW.ANN
+>>0xD4		string	=\x62\x6D\x66\x01\x00	Windows help annotation
+!:mime	application/x-winhelp
+!:ext	ann
+>>0xD4		string	!\x62\x6D\x66\x01\x00	
+# "GID Help index" by TrID
+>>>(4.l+0x65)	string	=|Pete			Windows help Global Index
+!:mime	application/x-winhelp
+!:ext	gid
+# HeLP Bookmark or
+# "Windows HELP File" by TrID
+>>>(4.l+0x65)		string		!|Pete		
+# maybe there exist a cleaner way to detect HeLP fragments
+# brute search for Magic 0x036C with matching Major maximal 7 iterations
+# discapp.hlp
+>>>>16			search/0x49AF/s	\x6c\x03 	
+>>>>>&0			use 		help-ver-date
+>>>>>&4			leshort		!1		
+# putty.hlp
+>>>>>>&0		search/0x69AF/s	\x6c\x03 	
+>>>>>>>&0		use 		help-ver-date
+>>>>>>>&4		leshort		!1		
+>>>>>>>>&0		search/0x49AF/s	\x6c\x03 	
+>>>>>>>>>&0		use 		help-ver-date
+>>>>>>>>>&4		leshort		!1		
+>>>>>>>>>>&0		search/0x49AF/s	\x6c\x03 	
+>>>>>>>>>>>&0		use 		help-ver-date
+>>>>>>>>>>>&4		leshort		!1		
+>>>>>>>>>>>>&0		search/0x49AF/s	\x6c\x03 	
+>>>>>>>>>>>>>&0		use 		help-ver-date
+>>>>>>>>>>>>>&4		leshort		!1		
+>>>>>>>>>>>>>>&0	search/0x49AF/s	\x6c\x03 	
+>>>>>>>>>>>>>>>&0	use 		help-ver-date
+>>>>>>>>>>>>>>>&4	leshort		!1		
+>>>>>>>>>>>>>>>>&0	search/0x49AF/s	\x6c\x03 	
+# GCC.HLP is detected after 7 iterations
+>>>>>>>>>>>>>>>>>&0	use 		help-ver-date
+# this only happens if bigger hlp file is detected after used search iterations
+>>>>>>>>>>>>>>>>>&4	leshort		!1		Windows y.z help
+!:mime	application/winhelp
+!:ext	hlp
+# repeat search again or following default line does not work
+>>>>16			search/0x49AF/s	\x6c\x03 	
+# remaining files should be HeLP Bookmark WinHlp32.BMK (XP 32-bit) or WinHlp32 (Windows 8.1 64-bit)
+>>>>16	default				x	Windows help Bookmark
+!:mime	application/x-winhelp
+!:ext	/bmk
+## FirstFreeBlock normally FFFFFFFFh 10h for *ANN
+##>>8	lelong			x		\b, FirstFreeBlock 0x%8.8x
+# EntireFileSize
+>>12	lelong			x		\b, %d bytes
+## ReservedSpace normally 042Fh AFh for *.ANN
+#>>(4.l)	lelong		x		\b, ReservedSpace 0x%8.8x
+## UsedSpace normally 0426h A6h for *.ANN
+#>>(4.l+4)	lelong		x		\b, UsedSpace 0x%8.8x
+## FileFlags normally 04...
+#>>(4.l+5)	lelong		x		\b, FileFlags 0x%8.8x
+## file header magic 0x293B
+#>>(4.l+9)	uleshort	x		\b, file header magic 0x%4.4x
+## file header Flags		0x0402
+#>>(4.l+11)	uleshort	x		\b, file header Flags 0x%4.4x
+## file header PageSize	0400h 80h for *.ANN
+#>>(4.l+13)	uleshort	x		\b, PageSize 0x%4.4x
+## Structure[16]		z4
+#>>(4.l+15)	string		>\0		\b, Structure_"%-.16s"
+## MustBeZero			0
+#>>(4.l+31)	uleshort	x		\b, MustBeZero 0x%4.4x
+## PageSplits
+#>>(4.l+33)	uleshort	x		\b, PageSplits 0x%4.4x
+## RootPage
+#>>(4.l+35)	uleshort	x		\b, RootPage 0x%4.4x
+## MustBeNegOne			0xffff
+#>>(4.l+37)	uleshort	x		\b, MustBeNegOne 0x%4.4x
+## TotalPages			1
+#>>(4.l+39)	uleshort	x		\b, TotalPages 0x%4.4x
+## NLevels			0x0001
+#>>(4.l+41)	uleshort	x		\b, NLevels 0x%4.4x
+## TotalBtreeEntries
+#>>(4.l+43)	ulelong		x		\b, TotalBtreeEntries 0x%8.8x
+## pages of the B+ tree
+#>>(4.l+47)	ubequad		x		\b, PageStart 0x%16.16llx
 
+# start with colon or semicolon for comment line like Back2Life.cnt
+0		regex		\^(:|;)		
+# look for first keyword Base
+>0		search/45	:Base 		
+>>&0				use 		cnt-name
+# only solution to search again from beginning , because relative offsets changes when use is called
+>0		search/45	:Base 		
+>0		default		x		
+# look for other keyword Title like in putty.cnt
+>>0		search/45	:Title 		
+>>>&0				use 		cnt-name
+#
+# display mime type and name of Windows help Content source
+0	name				cnt-name
+# skip space at beginning
+>0     string		\ 		
+# name without extension and greater character or name with hlp extension
+>>1	regex/c		\^([^\xd>]*|.*\.hlp)	MS Windows help file Content, based "%s"
+!:mime	text/plain
+!:apple	????TEXT
+!:ext	cnt
+#
+# Windows creates an full text search from hlp file, if the user clicks the "Find" tab and enables keyword indexing
+0	string		tfMR			MS Windows help Full Text Search index
+!:mime application/x-winhelp-fts
+!:ext	fts
+>16	string		>\0			for "%s"
 
 # Summary: Hyper terminal
 # Extension: .ht
