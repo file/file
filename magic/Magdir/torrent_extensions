@@ -1,0 +1,4 @@
+#2015/12/24 Add support for Multitracker Metadata Extension as per http://www.bittorrent.org/beps/bep_0012.html
+#           (Durval Menezes, jmgthbfile@durval.com) 
+0       string  d13:announce-list       BitTorrent file
+!:mime  application/x-bittorrent
