@@ -1,4 +1,13 @@
-#2015/12/24 Add support for Multitracker Metadata Extension as per http://www.bittorrent.org/beps/bep_0012.html
-#           (Durval Menezes, jmgthbfile@durval.com) 
+# $File: torrent_extensions,v 1.0 2015/12/24 11:34:26 durval.menezes Exp $
+
+#Adds support for Torrent file format extensions (Durval Menezes, jmgthbfile AT durval DOT com)
+#Initially supports the Multitracker Metadata Extension, in the future other bittorrent 
+#      torrent file extensions should be added here
+#File extension: .torrent
+#Contact: Durval Menezes, <jmgthbfile AT durval DOT com>
+#Documentation of extensions: http://www.bittorrent.org/beps/bep_0000.html (not all of them are *file* format extensions)
+
+#2015/12/24 Multitracker Metadata Extension as per http://www.bittorrent.org/beps/bep_0012.html
+#           Contact: Durval Menezes, <jmgthbfile AT durval DOT com>
 0       string  d13:announce-list       BitTorrent file
 !:mime  application/x-bittorrent
