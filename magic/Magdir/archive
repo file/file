@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.100 2015/12/15 01:06:00 christos Exp $
+# $File: archive,v 1.101 2016/01/08 00:41:02 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -246,7 +246,15 @@
 # BA
 # TODO: idarc says "bytes 0-2 == bytes 3-5"
 # TTComp
-0	string	\0\6 TTComp archive data
+# URL: http://fileformats.archiveteam.org/wiki/TTComp_archive
+# Update: Joerg Jenderek
+# GRR: line below is too general as it matches also Panorama database "TCDB 2003-10 demo.pan", others
+0	string	\0\6 
+# look for first keyword of Panorama database *.pan
+>12	search/261	DESIGN	
+# skip keyword with low entropy
+>12	default		x	TTComp archive, binary, 4K dictionary
+# (version 5.25) labeled the above entry as "TTComp archive data"
 # ESP, could this conflict with Easy Software Products' (e.g.ESP ghostscript) documentation?
 0	string	ESP ESP archive data
 # ZPack
