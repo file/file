@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.101 2016/01/08 00:41:02 christos Exp $
+# $File: archive,v 1.102 2016/01/11 20:59:24 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -981,6 +981,9 @@
 
 # Felix von Leitner <felix-file@fefe.de>
 0	string	d8:announce	BitTorrent file
+!:mime	application/x-bittorrent
+# Durval Menezes, <jmgthbfile at durval dot com>
+0	string	d13:announce-list	BitTorrent file
 !:mime	application/x-bittorrent
 
 # Atari MSA archive - Teemu Hukkanen <tjhukkan@iki.fi>
