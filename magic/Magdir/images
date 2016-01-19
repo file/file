@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.111 2015/11/09 18:21:05 christos Exp $
+# $File: images,v 1.112 2015/11/13 00:38:33 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -690,6 +690,7 @@
 
 # GEM Image: Version 1, Headerlen 8 (Wolfram Kleff)
 # Format variations from: Bernd Nuernberger <bernd.nuernberger@web.de>
+# Update: Joerg Jenderek
 # See http://fileformats.archiveteam.org/wiki/GEM_Raster
 # For variations, also see:
 #    http://www.seasip.info/Gem/ff_img.html (Ventura) 
@@ -697,23 +698,59 @@
 #    http://www.fileformat.info/format/gemraster/spec/index.htm (XIMG, STTT)
 #    http://sylvana.net/1stguide/1STGUIDE.ENG (TIMG)
 0       beshort     0x0001
->2      beshort     0x0008      GEM Image data
+# header_size
+>2      beshort     0x0008      
 >>0     use gem_info
->2      beshort     0x0009      GEM Image data (Ventura)
+>2      beshort     0x0009      
 >>0     use gem_info
-16      string      XIMG\0      GEM XIMG Image data
+# no example for NOSIG
+>2      beshort     24      
+>>0     use gem_info
+# no example for HYPERPAINT
+>2      beshort     25      
+>>0     use gem_info
+16      string      XIMG\0      
 >0      use gem_info
-16      string      STTT\0\x10  GEM STTT Image data 
+# no example
+16      string      STTT\0\x10  
 >0      use gem_info
-16      string      TIMG\0      GEM TIMG Image data
+# no example or description
+16      string      TIMG\0      
 >0      use gem_info
 
 0   name        gem_info
->12	beshort		x		%d x
->14	beshort		x		%d,
->4	beshort		x		%d planes,
->8	beshort		x		%d x
->10	beshort		x		%d pixelsize
+# version is 2 for some XIMG and 1 for all others
+>0	beshort		<0x0003		GEM
+# http://www.snowstone.org.uk/riscos/mimeman/mimemap.txt
+!:mime	image/x-gem
+# header_size 24 25 27 59 779 words for colored bitmaps
+>>2	beshort		>9		
+>>>16	string		STTT\0\x10	STTT
+>>>16	string		TIMG\0		TIMG
+# HYPERPAINT or NOSIG variant
+>>>16	string		\0\x80		
+>>>>2	beshort		=24		NOSIG
+>>>>2	beshort		!24		HYPERPAINT
+# NOSIG or XIMG variant
+>>>16	default		x		
+>>>>16	string		!XIMG\0		NOSIG
+>>16	string		=XIMG\0		XIMG Image data
+!:ext	img/ximg
+# to avoid Warning: Current entry does not yet have a description for adding a EXTENSION type
+>>16	string		!XIMG\0		Image data
+!:ext	img
+# header_size is 9 for Ventura files and 8 for other GEM Paint files
+>>2	beshort		9		(Ventura)
+#>>2	beshort		8		(Paint)
+>>12	beshort		x		%d x
+>>14	beshort		x		%d,
+# 1 4 8
+>>4	beshort		x		%d planes,
+# in tenths of a millimetre
+>>8	beshort		x		%d x
+>>10	beshort		x		%d pixelsize
+# pattern_size 1-8. 2 for GEM Paint
+>>6	beshort		!2		\b, pattern size %d
 
 # GEM Metafile (Wolfram Kleff)
 0	lelong		0x0018FFFF	GEM Metafile data
