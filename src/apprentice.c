@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.245 2016/01/19 04:17:07 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.246 2016/01/19 15:09:21 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2979,6 +2979,12 @@ apprentice_map(struct magic_set *ms, const char *fn)
 
 	if (check_buffer(ms, map, dbname) != 0)
 		goto error;
+#ifdef QUICK
+	if (mprotect(map->p, (size_t)st.st_size, PROT_READ) == -1) {
+		file_error(ms, errno, "cannot mprotect `%s'", dbname);
+		goto error;
+	}
+#endif
 
 	free(dbname);
 	return map;
