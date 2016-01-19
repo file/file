@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.243 2015/11/09 21:21:16 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.244 2015/11/13 16:45:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -268,6 +268,7 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("name"),		FILE_NAME,		FILE_FMT_NONE },
 	{ XX("use"),		FILE_USE,		FILE_FMT_NONE },
 	{ XX("clear"),		FILE_CLEAR,		FILE_FMT_NONE },
+	{ XX("der"),		FILE_DER,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -276,6 +277,7 @@ static const struct type_tbl_s type_tbl[] = {
  * unsigned.
  */
 static const struct type_tbl_s special_tbl[] = {
+	{ XX("der"),		FILE_DER,		FILE_FMT_STR },
 	{ XX("name"),		FILE_NAME,		FILE_FMT_STR },
 	{ XX("use"),		FILE_USE,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
@@ -866,6 +868,9 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_USE:
 		break;
 
+	case FILE_DER:
+		val += MULT;
+
 	default:
 		(void)fprintf(stderr, "Bad type %d\n", m->type);
 		abort();
@@ -1021,6 +1026,7 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
+	case FILE_DER:
 		mstart->flag |= BINTEST;
 		break;
 	case FILE_STRING:
@@ -1452,6 +1458,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_NAME:
 		case FILE_USE:
 		case FILE_CLEAR:
+		case FILE_DER:
 			break;
 		default:
 			if (ms->flags & MAGIC_CHECK)
@@ -2562,6 +2569,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 	case FILE_SEARCH:
 	case FILE_NAME:
 	case FILE_USE:
+	case FILE_DER:
 		*p = getstr(ms, m, *p, action == FILE_COMPILE);
 		if (*p == NULL) {
 			if (ms->flags & MAGIC_CHECK)

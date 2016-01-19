@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.173 2015/11/09 21:03:42 christos Exp $
+ * @(#)$File: file.h,v 1.174 2015/11/13 15:36:14 christos Exp $
  */
 
 #ifndef __file_h__
@@ -227,7 +227,8 @@ struct magic {
 #define				FILE_NAME	45
 #define				FILE_USE	46
 #define				FILE_CLEAR	47
-#define				FILE_NAMES_SIZE	48 /* size of array to contain all names */
+#define				FILE_DER	48
+#define				FILE_NAMES_SIZE	49 /* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
