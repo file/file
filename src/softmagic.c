@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.224 2016/01/19 04:17:07 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.225 2016/01/19 15:08:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -524,7 +524,6 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_PSTRING:
   	case FILE_BESTRING16:
   	case FILE_LESTRING16:
-	case FILE_DER:
 		if (m->reln == '=' || m->reln == '!') {
 			if (file_printf(ms, F(ms, m, "%s"), 
 			    file_printable(sbuf, sizeof(sbuf), m->value.s))
@@ -686,7 +685,12 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_NAME:
 		t = ms->offset;
 		break;
-
+	case FILE_DER:
+		if (file_printf(ms, F(ms, m, "%s"), 
+		    file_printable(sbuf, sizeof(sbuf), ms->ms_value.s)) == -1)
+			return -1;
+		t = ms->offset;
+		break;
 	default:
 		file_magerror(ms, "invalid m->type (%d) in mprint()", m->type);
 		return -1;
