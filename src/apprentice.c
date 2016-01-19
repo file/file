@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.244 2015/11/13 16:45:01 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.245 2016/01/19 04:17:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -870,6 +870,7 @@ apprentice_magic_strength(const struct magic *m)
 
 	case FILE_DER:
 		val += MULT;
+		break;
 
 	default:
 		(void)fprintf(stderr, "Bad type %d\n", m->type);
