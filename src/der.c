@@ -31,10 +31,12 @@
  * http://fm4dd.com/openssl/certexamples.htm
  * http://blog.engelke.com/2014/10/17/parsing-ber-and-der-encoded-asn-1-objects/
  */
+#ifndef TEST_DER
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.76 2015/02/28 00:18:02 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.1 2016/01/19 04:17:07 christos Exp $")
+#endif
 #endif
 
 #include <sys/types.h>
@@ -48,7 +50,10 @@ FILE_RCSID("@(#)$File: cdf.c,v 1.76 2015/02/28 00:18:02 christos Exp $")
 #include <string.h>
 #include <ctype.h>
 
+#ifndef TEST_DER
+#include "magic.h"
 #include "der.h"
+#endif
 
 #define DER_CLASS_UNIVERSAL	0
 #define	DER_CLASS_APPLICATION	1
@@ -166,6 +171,7 @@ der_tag(char *buf, size_t len, uint32_t tag)
 	return buf;
 }
 
+#ifndef TEST_DER
 static int
 der_data(char *buf, size_t blen, uint32_t tag, const void *q, uint32_t len)
 {
@@ -174,6 +180,7 @@ der_data(char *buf, size_t blen, uint32_t tag, const void *q, uint32_t len)
 	case DER_TAG_PRINTABLE_STRING:
 	case DER_TAG_UTF8_STRING:
 	case DER_TAG_IA5_STRING:
+	case DER_TAG_UTCTIME:
 		return snprintf(buf, blen, "%.*s", len, (const char *)q);
 	default:
 		break;
@@ -221,7 +228,9 @@ der_cmp(struct magic_set *ms, struct magic *m)
 	char buf[128];
 
 	der_tag(buf, sizeof(buf), tag);
-	DPRINTF(("%s: tag %p got=%s exp=%s\n", __func__, b, buf, s));
+	if ((ms->flags & MAGIC_DEBUG) != 0)
+		fprintf(stderr, "%s: tag %p got=%s exp=%s\n", __func__, b,
+		    buf, s);
 	size_t slen = strlen(buf);
 
 	if (strncmp(buf, s, slen) != 0)
@@ -244,7 +253,9 @@ again:
 		do
 			slen = slen * 10 + *s - '0';
 		while (isdigit((unsigned char)*++s));
-		DPRINTF(("%s: len %zu %u\n", __func__, slen, tlen));
+		if ((ms->flags & MAGIC_DEBUG) != 0)
+			fprintf(stderr, "%s: len %zu %u\n", __func__,
+			    slen, tlen);
 		if (tlen != slen)
 			return 0;
 		goto again;
@@ -252,12 +263,14 @@ again:
 val:
 	DPRINTF(("%s: before data %zu %u\n", __func__, offs, tlen));
 	der_data(buf, sizeof(buf), tag, b + offs, tlen);
-	DPRINTF(("%s: data %s %s\n", __func__, buf, s));
+	if ((ms->flags & MAGIC_DEBUG) != 0)
+		fprintf(stderr, "%s: data %s %s\n", __func__, buf, s);
 	if (strcmp(buf, s) != 0 && strcmp("x", s) != 0)
 		return 0;
-	strlcpy(m->value.s, buf, sizeof(m->value.s));
+	strlcpy(ms->ms_value.s, buf, sizeof(ms->ms_value.s));
 	return 1;
 }
+#endif
 
 #ifdef TEST_DER
 static void
@@ -290,6 +303,8 @@ printdata(size_t level, const void *v, size_t x, size_t l)
 		uint8_t c = getclass(p[x]);
 		uint8_t t = gettype(p[x]);
 		ox = x;
+		if (x != 0)
+		printf("%.2x %.2x %.2x\n", p[x - 1], p[x], p[x + 1]);
 		uint32_t tag = gettag(p, &x, ep - p + x);
 		if (p + x >= ep)
 			break;
@@ -299,12 +314,8 @@ printdata(size_t level, const void *v, size_t x, size_t l)
 		    der_class[c], der_type[t],
 		    der_tag(buf, sizeof(buf), tag), len);
 		q = p + x;
-		if (len == 0x80) {
-			const uint8_t *e = q;
-			while (*e && e < ep)
-				e++;
-			len = e - q;
-		}
+		if (p + len > ep)
+			errx(EXIT_FAILURE, "corrupt der");
 		printtag(tag, q, len);
 		if (t != DER_TYPE_PRIMITIVE)
 			printdata(level + 1, p, x, len + x);
