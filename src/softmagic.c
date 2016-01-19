@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.223 2015/11/11 04:25:41 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.224 2016/01/19 04:17:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -41,6 +41,7 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.223 2015/11/11 04:25:41 christos Exp $")
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
+#include "der.h"
 
 private int match(struct magic_set *, struct magic *, uint32_t,
     const unsigned char *, size_t, size_t, int, int, int, uint16_t,
@@ -523,6 +524,7 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_PSTRING:
   	case FILE_BESTRING16:
   	case FILE_LESTRING16:
+	case FILE_DER:
 		if (m->reln == '=' || m->reln == '!') {
 			if (file_printf(ms, F(ms, m, "%s"), 
 			    file_printable(sbuf, sizeof(sbuf), m->value.s))
@@ -782,6 +784,8 @@ moffset(struct magic_set *ms, struct magic *m)
 	case FILE_DEFAULT:
 	case FILE_INDIRECT:
 		return ms->offset;
+	case FILE_DER:
+		return der_offs(ms, m);
 
 	default:
 		return 0;
@@ -1076,6 +1080,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_CLEAR:
 	case FILE_NAME:
 	case FILE_USE:
+	case FILE_DER:
 		return 1;
 	default:
 		file_magerror(ms, "invalid type %d in mconvert()", m->type);
@@ -1106,6 +1111,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 	 */
 	if (indir == 0) {
 		switch (type) {
+		case FILE_DER:
 		case FILE_SEARCH:
 			ms->search.s = RCAST(const char *, s) + offset;
 			ms->search.s_len = nbytes - offset;
@@ -1745,6 +1751,7 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 		if (file_printf(ms, "%s", m->desc) == -1)
 			return -1;
 		return 1;
+	case FILE_DER:
 	case FILE_DEFAULT:	/* nothing to check */
 	case FILE_CLEAR:
 	default:
@@ -2054,6 +2061,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	case FILE_USE:
 	case FILE_NAME:
 		return 1;
+	case FILE_DER:
+		return der_cmp(ms, m);
 	default:
 		file_magerror(ms, "invalid type %d in magiccheck()", m->type);
 		return -1;
