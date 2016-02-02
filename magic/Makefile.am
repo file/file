@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.108 2016/01/19 15:08:14 christos Exp $
+# $File: Makefile.am,v 1.109 2016/02/02 21:30:47 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -296,7 +296,7 @@ ${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
 	@(if expr "${FILE_COMPILE}" : '.*/.*' > /dev/null; then \
 	    echo "Using ${FILE_COMPILE} to generate ${MAGIC}" > /dev/null; \
 	  else \
-	    v=$$(file --version | sed -e s/file-// -e q); \
+	    v=$$(${FILE_COMPILE} --version | sed -e s/file-// -e q); \
 	    if [ "$$v" != "${PACKAGE_VERSION}" ]; then \
 		echo "Cannot use the installed version of file ($$v) to"; \
 		echo "cross-compile file ${PACKAGE_VERSION}"; \
