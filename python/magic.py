@@ -126,12 +126,15 @@ class Magic(object):
         if isinstance(filename, bytes):
             bi = filename
         else:
-            bi = bytes(filename, 'utf-8')
+            try:  # keep Python 2 compatibility
+                bi = bytes(filename, 'utf-8')
+            except TypeError:
+                bi = bytes(filename)
         r = _file(self._magic_t, bi)
         if isinstance(r, str):
             return r
         else:
-            return str(r, 'utf-8')
+            return str(r).encode('utf-8')
 
     def descriptor(self, fd):
         """
@@ -149,7 +152,7 @@ class Magic(object):
         if isinstance(r, str):
             return r
         else:
-            return str(r, 'utf-8')
+            return str(r).encode('utf-8')
 
     def error(self):
         """
@@ -160,7 +163,7 @@ class Magic(object):
         if isinstance(e, str):
             return e
         else:
-            return str(e, 'utf-8')
+            return str(e).encode('utf-8')
 
     def setflags(self, flags):
         """
