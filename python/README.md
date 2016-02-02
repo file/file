@@ -10,6 +10,8 @@ You can install `file-magic` either with:
     python setup.py install
     # or
     easy_install .
+    # or
+    pip install file-magic
 
 
 ## Using
