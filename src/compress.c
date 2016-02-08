@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.90 2015/11/13 15:35:10 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.91 2015/11/13 15:42:18 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -555,10 +555,11 @@ closep(int *fd)
 static void
 copydesc(int i, int *fd)
 {
-	(void) close(i);
-	if (dup(fd[i == STDIN_FILENO ? 0 : 1]) == -1) {
-		abort();
-		DPRINTF("dup[%d] failed (%s)\n", i, strerror(errno));
+	int j = fd[i == STDIN_FILENO ? 0 : 1];
+	if (j == i)
+		return;
+	if (dup2(j, i) == -1) {
+		DPRINTF("dup(%d, %d) failed (%s)\n", j, i, strerror(errno));
 		exit(1);
 	}
 	closep(fd);
