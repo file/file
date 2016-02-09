@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.108 2016/01/19 15:08:14 christos Exp $
+# $File: Makefile.am,v 1.109 2016/02/02 21:30:47 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -149,6 +149,7 @@ $(MAGIC_FRAGMENT_DIR)/mcrypt \
 $(MAGIC_FRAGMENT_DIR)/mercurial \
 $(MAGIC_FRAGMENT_DIR)/metastore \
 $(MAGIC_FRAGMENT_DIR)/meteorological \
+$(MAGIC_FRAGMENT_DIR)/microfocus \
 $(MAGIC_FRAGMENT_DIR)/mime \
 $(MAGIC_FRAGMENT_DIR)/mips \
 $(MAGIC_FRAGMENT_DIR)/mirage \
