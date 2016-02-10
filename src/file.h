@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.174 2015/11/13 15:36:14 christos Exp $
+ * @(#)$File: file.h,v 1.175 2016/01/19 04:17:07 christos Exp $
  */
 
 #ifndef __file_h__
@@ -509,6 +509,8 @@ typedef struct {
 #define USE_C_LOCALE
 	locale_t old_lc_ctype;
 	locale_t c_lc_ctype;
+#else
+	char *old_lc_ctype;
 #endif
 	int rc;
 	regex_t rx;
