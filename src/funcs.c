@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.87 2015/09/22 15:40:32 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.88 2016/02/10 15:57:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -494,6 +494,8 @@ file_regcomp(file_regex_t *rx, const char *pat, int flags)
 	assert(rx->c_lc_ctype != NULL);
 	rx->old_lc_ctype = uselocale(rx->c_lc_ctype);
 	assert(rx->old_lc_ctype != NULL);
+#else
+	rx->old_lc_ctype = setlocale(LC_CTYPE, "C");
 #endif
 	rx->pat = pat;
 
@@ -516,6 +518,8 @@ file_regfree(file_regex_t *rx)
 #ifdef USE_C_LOCALE
 	(void)uselocale(rx->old_lc_ctype);
 	freelocale(rx->c_lc_ctype);
+#else
+	(void)setlocale(LC_CTYPE, rx->old_lc_ctype);
 #endif
 }
 
