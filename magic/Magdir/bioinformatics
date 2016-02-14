@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: bioinformatics,v 1.1 2016/02/14 15:32:22 christos Exp $
+# $File: bioinformatics,v 1.2 2016/02/14 15:53:53 christos Exp $
 # bioinfomatics:  file(1) magic for Bioinfomatics file formats
 
 ###############################################################################
@@ -117,14 +117,15 @@
 # FASTQ
 # used by MAQ (http://maq.sourceforge.net/fastq.shtml)
 ###############################################################################
+# XXX Broken?
 # @<seqname>
-0	regex	=^@[A-Za-z0-9_.:-]+?\n	
+#0	regex	=^@[A-Za-z0-9_.:-]+\?\n	
 # <seq>
->&1	regex	=^[A-Za-z\n\.~]+\+	
+#>&1	regex	=^[A-Za-z\n.~]++
 # +[<seqname>]
->>&1	regex	=^[A-Za-z0-9_.:-]*?\n	
+#>>&1	regex	=^[A-Za-z0-9_.:-]*\?\n	
 # <qual>
->>>&1	regex	=^[!-~\n]+\n		FASTQ
+#>>>&1	regex	=^[!-~\n]+\n		FASTQ
 
 ###############################################################################
 # FASTA
