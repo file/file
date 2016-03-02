@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.224 2016/01/19 04:17:07 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.225 2016/01/19 15:08:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -796,6 +796,18 @@ moffset(struct magic_set *ms, struct magic *m)
 	}
 }
 
+private uint32_t
+cvt_id3(struct magic_set *ms, uint32_t v)
+{
+	v = ((((v >>  0) & 0x7f) <<  0) |
+	     (((v >>  8) & 0x7f) <<  7) |
+	     (((v >> 16) & 0x7f) << 14) |
+	     (((v >> 24) & 0x7f) << 21));
+	if ((ms->flags & MAGIC_DEBUG) != 0)
+		fprintf(stderr, "id3 offs=%u\n", v);
+	return v;
+}
+
 private int
 cvt_flip(int type, int flip)
 {
@@ -1456,6 +1468,8 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			if (OFFSET_OOB(nbytes, offset, 4))
 				return 0;
 			lhs = BE32(p);
+			if (in_type == FILE_BEID3)
+				lhs = cvt_id3(ms, lhs);
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
 				case FILE_OPAND:
@@ -1493,6 +1507,8 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 			if (OFFSET_OOB(nbytes, offset, 4))
 				return 0;
 			lhs = LE32(p);
+			if (in_type == FILE_LEID3)
+				lhs = cvt_id3(ms, lhs);
 			if (off) {
 				switch (m->in_op & FILE_OPS_MASK) {
 				case FILE_OPAND:
@@ -1595,20 +1611,6 @@ mget(struct magic_set *ms, const unsigned char *s, struct magic *m,
 				offset = p->l;
 			if (m->in_op & FILE_OPINVERSE)
 				offset = ~offset;
-			break;
-		default:
-			break;
-		}
-
-		switch (in_type) {
-		case FILE_LEID3:
-		case FILE_BEID3:
-			offset = ((((offset >>  0) & 0x7f) <<  0) |
-				  (((offset >>  8) & 0x7f) <<  7) |
-				  (((offset >> 16) & 0x7f) << 14) |
-				  (((offset >> 24) & 0x7f) << 21));
-			if ((ms->flags & MAGIC_DEBUG) != 0)
-				fprintf(stderr, "id3 offs=%u\n", offset);
 			break;
 		default:
 			break;
