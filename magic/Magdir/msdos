@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.104 2015/11/09 16:59:45 christos Exp $
+# $File: msdos,v 1.105 2016/03/03 18:58:14 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -914,6 +914,7 @@
 
 # Windows Imaging (WIM) Image
 0	string/b	MSWIM\000\000\000	Windows imaging (WIM) image
+0	string/b	WLPWM\000\000\000	Windows imaging (WIM) image, wimlib pipable format
 
 # The second byte of these signatures is a file version; I don't know what, 
 # if anything, produced files with version numbers 0-2.
