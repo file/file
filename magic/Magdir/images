@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.113 2016/01/19 16:35:14 christos Exp $
+# $File: images,v 1.114 2016/03/11 18:10:06 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1224,3 +1224,11 @@
 >6		leshort		x		Version %d,
 >4		leshort		x		Quantization %d,
 >0		leshort		x		(Decompresses to %d words)
+
+# Type: farbfeld image.
+# Url: http://tools.suckless.org/farbfeld/
+# From: Ian D. Scott <ian@iandouglasscott.com>
+#
+0		string		farbfeld	farbfeld image data,
+>8		ubelong		x		%dx
+>12		ubelong		x		\b%d
