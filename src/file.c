@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.168 2015/09/30 14:02:06 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.169 2016/03/14 02:30:22 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -206,7 +206,7 @@ main(int argc, char *argv[])
 			flags |= MAGIC_MIME_ENCODING;
 			break;
 		case '0':
-			nulsep = 1;
+			nulsep++;
 			break;
 		case 'b':
 			bflag++;
@@ -494,24 +494,28 @@ unwrap(struct magic_set *ms, const char *fn)
 private int
 process(struct magic_set *ms, const char *inname, int wid)
 {
-	const char *type;
+	const char *type, c = nulsep > 1 ? '\0' : '\n';
 	int std_in = strcmp(inname, "-") == 0;
 
 	if (wid > 0 && !bflag) {
 		(void)printf("%s", std_in ? "/dev/stdin" : inname);
 		if (nulsep)
 			(void)putc('\0', stdout);
-		(void)printf("%s", separator);
-		(void)printf("%*s ",
-		    (int) (nopad ? 0 : (wid - file_mbswidth(inname))), "");
+		if (nulsep < 2) {
+			(void)printf("%s", separator);
+			(void)printf("%*s ",
+			    (int) (nopad ? 0 : (wid - file_mbswidth(inname))),
+			    "");
+		}
 	}
 
 	type = magic_file(ms, std_in ? NULL : inname);
+
 	if (type == NULL) {
-		(void)printf("ERROR: %s\n", magic_error(ms));
+		(void)printf("ERROR: %s%c", magic_error(ms), c);
 		return 1;
 	} else {
-		(void)printf("%s\n", type);
+		(void)printf("%s%c", type, c);
 		return 0;
 	}
 }
