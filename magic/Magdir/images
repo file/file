@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.113 2016/01/19 16:35:14 christos Exp $
+# $File: images,v 1.114 2016/03/11 18:10:06 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -12,26 +12,155 @@
 
 # Targa - matches `povray', `ppmtotga' and `xv' outputs
 # by Philippe De Muyter <phdm@macqel.be>
+# URL: http://justsolve.archiveteam.org/wiki/TGA
+# Reference: http://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf
+# Update: Joerg Jenderek
 # at 2, byte ImgType must be 1, 2, 3, 9, 10 or 11
+#	,32 or 33 (both not observed)
 # at 1, byte CoMapType must be 1 if ImgType is 1 or 9, 0 otherwise
+#	or theoretically 2-128 reserved for use by Truevision or 128-255 may be used for developer applications
 # at 3, leshort Index is 0 for povray, ppmtotga and xv outputs
 # `xv' recognizes only a subset of the following (RGB with pixelsize = 24)
 # `tgatoppm' recognizes a superset (Index may be anything)
-1	belong&0xfff7ffff	0x01010000	Targa image data - Map
-!:strength + 2
->2	byte&8			8		- RLE
->12	leshort			>0		%d x
->14	leshort			>0		%d
-1	belong&0xfff7ffff	0x00020000	Targa image data - RGB
-!:strength + 2
->2	byte&8			8		- RLE
->12	leshort			>0		%d x
->14	leshort			>0		%d
-1	belong&0xfff7ffff	0x00030000	Targa image data - Mono
-!:strength + 2
->2	byte&8			8		- RLE
->12	leshort			>0		%d x
->14	leshort			>0		%d
+#
+# test of Color Map Type 0~no 1~color map
+# and Image Type 1 2 3 9 10 11 32 33
+# and Color Map Entry Size 0 15 16 24 32
+0	ubequad&0x00FeC400000000C0	0	
+# skip more garbage by looking for positive image type
+>2	ubyte			>0		
+# skip some compiled terminfo by looking for image type less equal 33
+>>2	ubyte			<34		
+# skip arches.3200 , Finder.Root , Slp.1 by looking for low pixel sizes 15 16 24 32
+>>>16	ubyte			<33		
+# skip more by looking for pixel size 0Fh 10h 18h 20h
+>>>>16	ubyte&0xC0		0x00	
+# skip 260-16.ico by looking for no color map
+>>>>>1	ubyte			0	
+# implies no first map entry
+>>>>>>3	uleshort		0	
+>>>>>>>0	use		tga-image
+# Color Map
+>>>>>1	ubyte			>0	
+>>>>>>0		use		tga-image
+#	display tga bitmap image information
+0	name				tga-image
+>2	ubyte		<34		Targa image data
+!:mime	image/x-tga
+!:apple	????TPIC
+# normal extension .tga but some Truevision products used others:
+# tpic (Apple),icb (Image Capture Board),vda (Video Display Adapter),vst (NuVista),win (UNSURE about that)
+!:ext	tga/tpic/icb/vda/vst
+# image type 1 2 3 9 10 11 32 33
+>2	ubyte&0xF7	1		- Map
+>2	ubyte&0xF7	2		- RGB
+# alpha channel
+>>17	ubyte&0x0F	>0		\bA
+>2	ubyte&0xF7	3		- Mono
+# type not found, but by http://www.fileformat.info/format/tga/corion.htm
+# Compressed color-mapped data, using Huffman, Delta, and runlength encoding
+>2	ubyte		32		- Color
+# Compressed color-mapped data, using Huffman, Delta, and RLE. 4-pass quadtree- type process
+>2	ubyte		33		- Color
+# Color Map Type 0~no 1~color map
+>1	ubyte		1		(
+# first color map entry, 0 normal
+>>3	uleshort	>0		\b%d-
+# color map length 0 2 1dh 3bh d9h 100h
+>>5	uleshort	x		\b%d)
+# 8~run length encoding bit
+>2	ubyte&0x08	8		- RLE
+# gimp can create big pictures!
+>12	uleshort	>0		%d x
+>12	uleshort	=0		65536 x
+# image height. 0 interpreted as 65536
+>14	uleshort	>0		%d
+>14	uleshort	=0		65536
+# Image Pixel Size 15 16 24 32
+>16	ubyte		x		x %d
+# X origin of image. 0 normal 
+>8	uleshort	>0		+%d
+# Y origin of image. 0 normal; positive for top
+>10	uleshort	>0		+%d
+# Image descriptor: bits 3-0 give the alpha channel depth, bits 5-4 give direction
+>17	ubyte&0x0F	>0		- %d-bit alpha
+# bits 5-4 give direction. normal bottom left
+>17	ubyte		&0x20		- top
+#>17	ubyte		^0x20		- bottom
+>17	ubyte		&0x10		- right
+#>17	ubyte		^0x10		- left
+# some info say other bits 6-7 should be zero
+# but data storage interleave by http://www.fileformat.info/format/tga/corion.htm 
+# 00 - no interleave;01 - even/odd interleave; 10 - four way interleave; 11 - reserved
+#>17	ubyte&0xC0	0x00		- no interleave
+>17	ubyte&0xC0	0x40		- interleave
+>17	ubyte&0xC0	0x80		- four way interleave
+>17	ubyte&0xC0	0xC0		- reserved
+# positive length implies identification field 
+>0	ubyte		>0		
+>>18	string		x		"%s"
+# last 18 bytes of newer tga file footer signature
+>18	search/4261301/s	TRUEVISION-XFILE.\0	
+# extension area offset if not 0
+>>&-8		ulelong			>0			
+# length of the extension area. normal 495 for version 2.0
+>>>(&-4.l)	uleshort		0x01EF		
+# AuthorName[41]
+>>>>&0		string			>\0		- author "%-.40s"
+# Comment[324]=4 * 80 null terminated
+>>>>&41		string			>\0		- comment "%-.80s"
+# date
+>>>>&365	ubequad&0xffffFFFFffff0000	!0		
+# Day
+>>>>>&-6		uleshort		x		%d
+# Month
+>>>>>&-8		uleshort		x		\b-%d
+# Year
+>>>>>&-4		uleshort		x		\b-%d
+# time
+>>>>&371	ubequad&0xffffFFFFffff0000	!0		
+# hour
+>>>>>&-8		uleshort		x		%d
+# minutes
+>>>>>&-6		uleshort		x		\b:%.2d
+# second
+>>>>>&-4		uleshort		x		\b:%.2d
+# JobName[41]
+>>>>&377		string			>\0		- job "%-.40s"
+# JobHour Jobminute Jobsecond
+>>>>&418	ubequad&0xffffFFFFffff0000	!0		
+>>>>>&-8		uleshort		x		%d
+>>>>>&-6		uleshort		x		\b:%.2d
+>>>>>&-4		uleshort		x		\b:%.2d
+# SoftwareId[41]
+>>>>&424		string			>\0		- %-.40s
+# SoftwareVersionNumber
+>>>>&424	ubyte				>0		
+>>>>>&40		uleshort/100		x		%d
+>>>>>&40		uleshort%100		x		\b.%d
+# VersionLetter
+>>>>>&42		ubyte			>0x20		\b%c
+# KeyColor
+>>>>&468		ulelong			>0		- keycolor 0x%8.8x
+# Denominator of Pixel ratio. 0~no pixel aspect
+>>>>&474	uleshort			>0			
+# Numerator
+>>>>>&-4		uleshort		>0		- aspect %d
+>>>>>&-2		uleshort		x		\b/%d
+# Denominator of Gamma ratio. 0~no Gamma value
+>>>>&478	uleshort			>0		
+# Numerator
+>>>>>&-4		uleshort		>0		- gamma %d
+>>>>>&-2		uleshort		x		\b/%d
+# ColorOffset 
+#>>>>&480	ulelong			x		- col offset 0x%8.8x
+# StampOffset
+#>>>>&484	ulelong			x		- stamp offset 0x%8.8x
+# ScanOffset
+#>>>>&488	ulelong			x		- scan offset 0x%8.8x
+# AttributesType
+#>>>>&492	ubyte			x		- Attributes 0x%x
+## EndOfTGA
 
 # PBMPLUS images
 # The next byte following the magic is always whitespace.
