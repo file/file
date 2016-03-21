@@ -1,5 +1,6 @@
-2016-03-21  11:56  Christos Zoulas <christos@zoulas.com>
+2016-03-21  13:40  Christos Zoulas <christos@zoulas.com>
 
+	* Add bounds checks for DER code (discovered by Thomas Jarosch)
 	* Change indirect recursion limit to indirect use count and
 	  bump from 15 to 50 to prevent abuse.
 

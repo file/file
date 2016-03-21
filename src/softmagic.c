@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.226 2016/03/02 18:27:53 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.227 2016/03/21 15:56:53 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -51,7 +51,7 @@ private int mget(struct magic_set *, const unsigned char *,
     uint16_t *, int *, int *, int *);
 private int magiccheck(struct magic_set *, struct magic *);
 private int32_t mprint(struct magic_set *, struct magic *);
-private int32_t moffset(struct magic_set *, struct magic *);
+private int moffset(struct magic_set *, struct magic *, int32_t *);
 private void mdebug(uint32_t, const char *, size_t);
 private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, struct magic *);
@@ -255,7 +255,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 		if (print && mprint(ms, m) == -1)
 			return -1;
 
-		ms->c.li[cont_level].off = moffset(ms, m);
+		if (moffset(ms, m, &ms->c.li[cont_level].off) == -1)
+			return -1;
 
 		/* and any continuations that match */
 		if (file_check_mem(ms, ++cont_level) == -1)
@@ -361,7 +362,9 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 				if (print && mprint(ms, m) == -1)
 					return -1;
 
-				ms->c.li[cont_level].off = moffset(ms, m);
+				if (moffset(ms, m, &ms->c.li[cont_level].off)
+				    == -1)
+					return -1;
 
 				if (*m->desc)
 					*need_separator = 1;
@@ -702,36 +705,40 @@ mprint(struct magic_set *ms, struct magic *m)
 	return (int32_t)t;
 }
 
-private int32_t
-moffset(struct magic_set *ms, struct magic *m)
+private int
+moffset(struct magic_set *ms, struct magic *m, int32_t *o)
 {
   	switch (m->type) {
   	case FILE_BYTE:
-		return CAST(int32_t, (ms->offset + sizeof(char)));
+		*o = CAST(int32_t, (ms->offset + sizeof(char)));
+		return 0;
 
   	case FILE_SHORT:
   	case FILE_BESHORT:
   	case FILE_LESHORT:
-		return CAST(int32_t, (ms->offset + sizeof(short)));
+		*o = CAST(int32_t, (ms->offset + sizeof(short)));
+		return 0;
 
   	case FILE_LONG:
   	case FILE_BELONG:
   	case FILE_LELONG:
   	case FILE_MELONG:
-		return CAST(int32_t, (ms->offset + sizeof(int32_t)));
+		*o = CAST(int32_t, (ms->offset + sizeof(int32_t)));
+		return 0;
 
   	case FILE_QUAD:
   	case FILE_BEQUAD:
   	case FILE_LEQUAD:
-		return CAST(int32_t, (ms->offset + sizeof(int64_t)));
+		*o = CAST(int32_t, (ms->offset + sizeof(int64_t)));
+		return 0;
 
   	case FILE_STRING:
   	case FILE_PSTRING:
   	case FILE_BESTRING16:
   	case FILE_LESTRING16:
-		if (m->reln == '=' || m->reln == '!')
-			return ms->offset + m->vallen;
-		else {
+		if (m->reln == '=' || m->reln == '!') {
+			*o = ms->offset + m->vallen;
+		} else {
 			union VALUETYPE *p = &ms->ms_value;
 			uint32_t t;
 
@@ -740,60 +747,79 @@ moffset(struct magic_set *ms, struct magic *m)
 			t = CAST(uint32_t, (ms->offset + strlen(p->s)));
 			if (m->type == FILE_PSTRING)
 				t += (uint32_t)file_pstring_length_size(m);
-			return t;
+			*o = t;
 		}
+		return 0;
 
 	case FILE_DATE:
 	case FILE_BEDATE:
 	case FILE_LEDATE:
 	case FILE_MEDATE:
-		return CAST(int32_t, (ms->offset + sizeof(uint32_t)));
+		*o = CAST(int32_t, (ms->offset + sizeof(uint32_t)));
+		return 0;
 
 	case FILE_LDATE:
 	case FILE_BELDATE:
 	case FILE_LELDATE:
 	case FILE_MELDATE:
-		return CAST(int32_t, (ms->offset + sizeof(uint32_t)));
+		*o = CAST(int32_t, (ms->offset + sizeof(uint32_t)));
+		return 0;
 
 	case FILE_QDATE:
 	case FILE_BEQDATE:
 	case FILE_LEQDATE:
-		return CAST(int32_t, (ms->offset + sizeof(uint64_t)));
+		*o = CAST(int32_t, (ms->offset + sizeof(uint64_t)));
+		return 0;
 
 	case FILE_QLDATE:
 	case FILE_BEQLDATE:
 	case FILE_LEQLDATE:
-		return CAST(int32_t, (ms->offset + sizeof(uint64_t)));
+		*o = CAST(int32_t, (ms->offset + sizeof(uint64_t)));
+		return 0;
 
   	case FILE_FLOAT:
   	case FILE_BEFLOAT:
   	case FILE_LEFLOAT:
-		return CAST(int32_t, (ms->offset + sizeof(float)));
+		*o = CAST(int32_t, (ms->offset + sizeof(float)));
+		return 0;
 
   	case FILE_DOUBLE:
   	case FILE_BEDOUBLE:
   	case FILE_LEDOUBLE:
-		return CAST(int32_t, (ms->offset + sizeof(double)));
+		*o = CAST(int32_t, (ms->offset + sizeof(double)));
+		return 0;
 
 	case FILE_REGEX:
 		if ((m->str_flags & REGEX_OFFSET_START) != 0)
-			return CAST(int32_t, ms->search.offset);
+			*o = CAST(int32_t, ms->search.offset);
 		else
-			return CAST(int32_t, (ms->search.offset +
-			    ms->search.rm_len));
+			*o = CAST(int32_t,
+			    (ms->search.offset + ms->search.rm_len));
+		return 0;
 
 	case FILE_SEARCH:
 		if ((m->str_flags & REGEX_OFFSET_START) != 0)
-			return CAST(int32_t, ms->search.offset);
+			*o = CAST(int32_t, ms->search.offset);
 		else
-			return CAST(int32_t, (ms->search.offset + m->vallen));
+			*o = CAST(int32_t, (ms->search.offset + m->vallen));
+		return 0;
 
 	case FILE_CLEAR:
 	case FILE_DEFAULT:
 	case FILE_INDIRECT:
-		return ms->offset;
+		*o = ms->offset;
+		return 0;
+
 	case FILE_DER:
-		return der_offs(ms, m);
+		{
+			int t = der_offs(ms, m);
+			if (t == -1) {
+				file_error(ms, 0, "EOF computing DER offset");
+				return -1;
+			}
+			*o = t;
+			return 0;
+		}
 
 	default:
 		return 0;

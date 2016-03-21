@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.1 2016/01/19 04:17:07 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.2 2016/01/19 15:09:28 christos Exp $")
 #endif
 #endif
 
@@ -54,6 +54,8 @@ FILE_RCSID("@(#)$File: der.c,v 1.1 2016/01/19 04:17:07 christos Exp $")
 #include "magic.h"
 #include "der.h"
 #endif
+
+#define DER_BAD	((uint32_t)-1)
 
 #define DER_CLASS_UNIVERSAL	0
 #define	DER_CLASS_APPLICATION	1
@@ -131,14 +133,24 @@ gettype(uint8_t c)
 static uint32_t
 gettag(const uint8_t *c, size_t *p, size_t l)
 {
-	uint32_t tag = c[(*p)++] & 0x1f;
-	l--;
+	uint32_t tag;
+
+	if (*p >= l)
+		return DER_BAD;
+
+	tag = c[(*p)++] & 0x1f;
 
 	if (tag != 0x1f)
 		return tag;
 
-	while (c[*p] >= 0x80 && l-- > 0)
+	if (*p >= l)
+		return DER_BAD;
+
+	while (c[*p] >= 0x80) {
 		tag = tag * 128 + c[(*p)++] - 0x80;
+		if (*p >= l)
+			return DER_BAD;
+	}
 	return tag;
 }
 
@@ -148,15 +160,21 @@ getlength(const uint8_t *c, size_t *p, size_t l)
 	uint8_t digits, i;
 	size_t len;
 
+	if (*p >= l)
+		return DER_BAD;
+
 	digits = c[(*p)++];
-	l--;
+
         if ((digits & 0x80) == 0)
 		return digits;
 
         digits &= 0x7f;
 	len = 0;
 
-	for (i = 0; i < digits && l-- > 0; i++)
+	if (*p + digits >= l)
+		return DER_BAD;
+
+	for (i = 0; i < digits; i++)
 		len = (len << 8) | c[(*p)++];
         return len;
 }
@@ -199,7 +217,8 @@ der_offs(struct magic_set *ms, struct magic *m)
 {
 	const uint8_t *b = CAST(const void *, ms->search.s);
 	size_t offs = 0, len = ms->search.rm_len;
-	(void)gettag(b, &offs, len);
+	if (gettag(b, &offs, len) == DER_BAD)
+		return -1;
 	DPRINTF(("%s1: %d %zu %u\n", __func__, ms->offset, offs, m->offset));
 	uint32_t tlen = getlength(b, &offs, len);
 	DPRINTF(("%s2: %d %zu %u\n", __func__, ms->offset, offs, tlen));
@@ -223,9 +242,16 @@ der_cmp(struct magic_set *ms, struct magic *m)
 	const uint8_t *b = CAST(const void *, ms->search.s);
 	const char *s = m->value.s;
 	size_t offs = 0, len = ms->search.s_len;
-	uint32_t tag = gettag(b, &offs, len);
-	uint32_t tlen = getlength(b, &offs, len);
+	uint32_t tag, tlen;
 	char buf[128];
+
+	tag = gettag(b, &offs, len);
+	if (tag == DER_BAD)
+		return -1;
+
+	tlen = getlength(b, &offs, len);
+	if (tlen == DER_BAD)
+		return -1;
 
 	der_tag(buf, sizeof(buf), tag);
 	if ((ms->flags & MAGIC_DEBUG) != 0)
