@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.3 2016/03/21 17:41:14 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.4 2016/03/21 23:04:40 christos Exp $")
 #endif
 #endif
 
@@ -213,15 +213,20 @@ der_data(char *buf, size_t blen, uint32_t tag, const void *q, uint32_t len)
 }
 
 int32_t
-der_offs(struct magic_set *ms, struct magic *m)
+der_offs(struct magic_set *ms, struct magic *m, size_t nbytes)
 {
 	const uint8_t *b = CAST(const void *, ms->search.s);
-	size_t offs = 0, len = ms->search.rm_len;
+	size_t offs = 0, len = ms->search.rm_len ? ms->search.rm_len : nbytes;
+
 	if (gettag(b, &offs, len) == DER_BAD)
 		return -1;
 	DPRINTF(("%s1: %d %zu %u\n", __func__, ms->offset, offs, m->offset));
+
 	uint32_t tlen = getlength(b, &offs, len);
+	if (tlen == DER_BAD)
+		return -1;
 	DPRINTF(("%s2: %d %zu %u\n", __func__, ms->offset, offs, tlen));
+
 	offs += ms->offset + m->offset;
 	DPRINTF(("cont_level = %d\n", m->cont_level));
 #ifdef DEBUG_DER
@@ -229,6 +234,8 @@ der_offs(struct magic_set *ms, struct magic *m)
 		printf("cont_level[%zu] = %u\n", i, ms->c.li[i].off);
 #endif
 	if (m->cont_level != 0) {
+		if (offs + tlen > nbytes)
+			return DER_BAD;
 		ms->c.li[m->cont_level - 1].off = offs + tlen;
 		DPRINTF(("cont_level[%u] = %u\n", m->cont_level - 1,
 		    ms->c.li[m->cont_level - 1].off));
