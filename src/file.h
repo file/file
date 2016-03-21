@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.176 2016/02/10 15:57:40 christos Exp $
+ * @(#)$File: file.h,v 1.177 2016/03/21 15:56:53 christos Exp $
  */
 
 #ifndef __file_h__
@@ -419,7 +419,7 @@ struct magic_set {
 	uint16_t elf_phnum_max;
 	uint16_t elf_notes_max;
 	uint16_t regex_max;
-#define	FILE_INDIR_MAX			15
+#define	FILE_INDIR_MAX			50
 #define	FILE_NAME_MAX			30
 #define	FILE_ELF_SHNUM_MAX		32768
 #define	FILE_ELF_PHNUM_MAX		2048
@@ -464,7 +464,7 @@ protected int file_encoding(struct magic_set *, const unsigned char *, size_t,
     unichar **, size_t *, const char **, const char **, const char **);
 protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
 protected int file_softmagic(struct magic_set *, const unsigned char *, size_t,
-    uint16_t, uint16_t *, int, int);
+    uint16_t *, uint16_t *, int, int);
 protected int file_apprentice(struct magic_set *, const char *, int);
 protected int buffer_apprentice(struct magic_set *, struct magic **,
     size_t *, size_t);
