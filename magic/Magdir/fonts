@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.28 2015/10/29 18:52:16 christos Exp $
+# $File: fonts,v 1.29 2016/02/08 17:06:40 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -28,6 +28,25 @@
 
 # X11 Bitmap Distribution Format, from Daniel Quinlan (quinlan@yggdrasil.com)
 0	search/1	STARTFONT\ 		X11 BDF font text
+
+# From: Joerg Jenderek
+# URL: http://grub.gibibit.com/New_font_format
+# Reference: util/grub-mkfont.c
+#		include/grub/fontformat.h 
+# FONT_FORMAT_SECTION_NAMES_FILE
+0			string		FILE		
+# FONT_FORMAT_PFF2_MAGIC
+>8			string		PFF2		
+# leng 4 only at the moment
+>>4			ubelong		4		
+# FONT_FORMAT_SECTION_NAMES_FONT_NAME
+>>>12			string		NAME		GRUB2 font
+!:mime			application/x-font-pf2
+!:ext			pf2
+# length of font_name
+>>>>16			ubelong		>0		
+# font_name
+>>>>>20			string		>\0		"%-s"
 
 # X11 fonts, from Daniel Quinlan (quinlan@yggdrasil.com)
 # PCF must come before SGI additions ("MIPSEL MIPS-II COFF" collides)
