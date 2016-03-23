@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.115 2016/03/16 14:41:39 christos Exp $
+# $File: images,v 1.116 2016/03/23 15:29:20 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1361,3 +1361,87 @@
 0		string		farbfeld	farbfeld image data,
 >8		ubelong		x		%dx
 >12		ubelong		x		\b%d
+
+# Type: Sega PVR image.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - http://fabiensanglard.net/Mykaruga/tools/segaPVRFormat.txt
+# - https://github.com/yazgoo/pvrx2png
+# - https://github.com/nickworonekin/puyotools
+
+# Sega PVR header.
+0	name	sega-pvr-image-header
+>0x0C	leshort	x	%d x
+>0x0E	leshort	x	%d
+# Image format.
+>0x08	byte	0	\b, ARGB1555
+>0x08	byte	1	\b, RGB565
+>0x08	byte	2	\b, ARGB4444
+>0x08	byte	3	\b, YUV442
+>0x08	byte	4	\b, Bump
+>0x08	byte	5	\b, 4bpp
+>0x08	byte	6	\b, 8bpp
+# Image data type.
+>0x09	byte	0x01	\b, square twiddled
+>0x09	byte	0x02	\b, square twiddled & mipmap
+>0x09	byte	0x03	\b, VQ
+>0x09	byte	0x04	\b, VQ & mipmap
+>0x09	byte	0x05	\b, 8-bit CLUT twiddled
+>0x09	byte	0x06	\b, 4-bit CLUT twiddled
+>0x09	byte	0x07	\b, 8-bit direct twiddled
+>0x09	byte	0x08	\b, 4-bit direct twiddled
+>0x09	byte	0x09	\b, rectangle
+>0x09	byte	0x0B	\b, rectangular stride
+>0x09	byte	0x0D	\b, rectangular twiddled
+>0x09	byte	0x10	\b, small VQ
+>0x09	byte	0x11	\b, small VQ & mipmap
+>0x09	byte	0x12	\b, square twiddled & mipmap
+
+# Sega PVR (Xbox) image header.
+# Contains an embedded DirectDraw surface instead of PVR data.
+0	name	sega-pvr-xbox-dds-header
+>16	lelong	x	%d x
+>12	lelong	x	%d,
+>84	string	x	%.4s
+
+# Sega PVR image.
+0	string	PVRT
+>0x10	string	DDS\040\174\000\000\000 Sega PVR (Xbox) image:
+>>0x20	use	sega-pvr-xbox-dds-header
+>0x10	belong	!0x44445320		Sega PVR image:
+>>0	use	sega-pvr-image-header
+
+# Sega PVR image with GBIX.
+0	string	GBIX
+>0x10	string	PVRT
+>>0x10	string	DDS\040\174\000\000\000 Sega PVR (Xbox) image:
+>>>0x20	use	sega-pvr-xbox-dds-header
+>>0x10	belong	!0x44445320		Sega PVR image:
+>>>0x10	use	sega-pvr-image-header
+>>0x08	lelong	x	\b, global index = %u
+
+# Sega GVR header.
+0	name	sega-gvr-image-header
+>0x0C	beshort	x	%d x
+>0x0E	beshort	x	%d
+# Image data format.
+>0x0B	byte	0	\b, I4
+>0x0B	byte	1	\b, I8
+>0x0B	byte	2	\b, IA4
+>0x0B	byte	3	\b, IA8
+>0x0B	byte	4	\b, RGB565
+>0x0B	byte	5	\b, RGB5A3
+>0x0B	byte	6	\b, ARGB8888
+>0x0B	byte	8	\b, CI4
+>0x0B	byte	9	\b, CI8
+>0x0B	byte	14	\b, DXT1
+
+# Sega GVR image.
+0	string	GVRT	Sega GVR image:
+>0x10	use	sega-gvr-image-header
+
+# Sega GVR image with GBIX.
+0	string	GBIX
+>0x10	string	GVRT	Sega GVR image:
+>>0x10	use	sega-gvr-image-header
+>>0x08	belong	x	\b, global index = %u
