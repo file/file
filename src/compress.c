@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.91 2015/11/13 15:42:18 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.92 2016/02/08 01:29:49 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -167,12 +167,12 @@ private const struct {
 private ssize_t swrite(int, const void *, size_t);
 #if HAVE_FORK
 private size_t ncompr = sizeof(compr) / sizeof(compr[0]);
-private int uncompressbuf(int, size_t, const unsigned char *, unsigned char **,
-    size_t *);
+private int uncompressbuf(int, size_t, size_t, const unsigned char *,
+    unsigned char **, size_t *);
 #ifdef BUILTIN_DECOMPRESS
-private int uncompresszlib(const unsigned char *, unsigned char **, size_t *,
-    int);
-private int uncompressgzipped(const unsigned char *, unsigned char **,
+private int uncompresszlib(const unsigned char *, unsigned char **, size_t,
+    size_t *, int);
+private int uncompressgzipped(const unsigned char *, unsigned char **, size_t,
     size_t *);
 #endif
 static int makeerror(unsigned char **, size_t *, const char *, ...)
@@ -214,7 +214,7 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 		if (!zm)
 			continue;
 		nsz = nbytes;
-		rv = uncompressbuf(fd, i, buf, &newbuf, &nsz);
+		rv = uncompressbuf(fd, ms->bytes_max, i, buf, &newbuf, &nsz);
 		DPRINTF("uncompressbuf = %d, %s, %zu\n", rv, (char *)newbuf,
 		    nsz);
 		switch (rv) {
@@ -439,7 +439,8 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 
 
 private int
-uncompressgzipped(const unsigned char *old, unsigned char **newch, size_t *n)
+uncompressgzipped(const unsigned char *old, unsigned char **newch,
+    size_t bytes_max, size_t *n)
 {
 	unsigned char flg = old[3];
 	size_t data_start = 10;
@@ -467,25 +468,25 @@ uncompressgzipped(const unsigned char *old, unsigned char **newch, size_t *n)
 
 	*n -= data_start;
 	old += data_start;
-	return uncompresszlib(old, newch, n, 0);
+	return uncompresszlib(old, newch, bytes_max, n, 0);
 err:
 	return makeerror(newch, n, "File too short");
 }
 
 private int
-uncompresszlib(const unsigned char *old, unsigned char **newch, size_t *n,
-    int zlib)
+uncompresszlib(const unsigned char *old, unsigned char **newch,
+    size_t bytes_max, size_t *n, int zlib)
 {
 	int rc;
 	z_stream z;
 
-	if ((*newch = CAST(unsigned char *, malloc(HOWMANY + 1))) == NULL) 
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL) 
 		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
 	z.next_in = CCAST(Bytef *, old);
 	z.avail_in = CAST(uint32_t, *n);
 	z.next_out = *newch;
-	z.avail_out = HOWMANY;
+	z.avail_out = bytes_max;
 	z.zalloc = Z_NULL;
 	z.zfree = Z_NULL;
 	z.opaque = Z_NULL;
@@ -509,7 +510,7 @@ uncompresszlib(const unsigned char *old, unsigned char **newch, size_t *n,
 
 	return OKDATA;
 err:
-	strlcpy((char *)*newch, z.msg, HOWMANY);
+	strlcpy((char *)*newch, z.msg, bytes_max);
 	*n = strlen((char *)*newch);
 	return ERRDATA;
 }
@@ -640,7 +641,7 @@ methodname(size_t method)
 }
 
 private int
-uncompressbuf(int fd, size_t method, const unsigned char *old,
+uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
     unsigned char **newch, size_t* n)
 {
 	int fdp[3][2];
@@ -651,9 +652,9 @@ uncompressbuf(int fd, size_t method, const unsigned char *old,
 #ifdef BUILTIN_DECOMPRESS
         /* FIXME: This doesn't cope with bzip2 */
 	if (method == 2)
-		return uncompressgzipped(old, newch, n);
+		return uncompressgzipped(old, newch, bytes_max, n);
 	if (compr[method].maglen == 0)
-		return uncompresszlib(old, newch, n, 1);
+		return uncompresszlib(old, newch, bytes_max, n, 1);
 #endif
 	(void)fflush(stdout);
 	(void)fflush(stderr);
@@ -696,21 +697,21 @@ uncompressbuf(int fd, size_t method, const unsigned char *old,
 		if (fd == -1)
 			writechild(fdp, old, *n);
 
-		*newch = CAST(unsigned char *, malloc(HOWMANY + 1));
+		*newch = CAST(unsigned char *, malloc(bytes_max + 1));
 		if (*newch == NULL) {
 			rv = makeerror(newch, n, "No buffer, %s",
 			    strerror(errno));
 			goto err;
 		}
 		rv = OKDATA;
-		if ((r = sread(fdp[STDOUT_FILENO][0], *newch, HOWMANY, 0)) > 0)
+		if ((r = sread(fdp[STDOUT_FILENO][0], *newch, bytes_max, 0)) > 0)
 			break;
 		DPRINTF("Read stdout failed %d (%s)\n", fdp[STDOUT_FILENO][0],
 		    r != -1 ? strerror(errno) : "no data");
 
 		rv = ERRDATA;
 		if (r == 0 &&
-		    (r = sread(fdp[STDERR_FILENO][0], *newch, HOWMANY, 0)) > 0)
+		    (r = sread(fdp[STDERR_FILENO][0], *newch, bytes_max, 0)) > 0)
 		{
 			r = filter_error(*newch, r);
 			break;

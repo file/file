@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.168 2015/09/30 14:02:06 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.169 2016/03/14 02:30:22 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -132,6 +132,7 @@ private struct {
 	{ "elf_shnum",	MAGIC_PARAM_ELF_SHNUM_MAX, 0 },
 	{ "elf_notes",	MAGIC_PARAM_ELF_NOTES_MAX, 0 },
 	{ "regex",	MAGIC_PARAM_REGEX_MAX, 0 },
+	{ "bytes",	MAGIC_PARAM_BYTES_MAX, 0 },
 };
 
 private char *progname;		/* used throughout 		*/
