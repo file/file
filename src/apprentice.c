@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.247 2016/01/19 15:18:02 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.248 2016/03/31 17:51:12 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -534,6 +534,7 @@ file_ms_alloc(int flags)
 	ms->elf_phnum_max = FILE_ELF_PHNUM_MAX;
 	ms->elf_notes_max = FILE_ELF_NOTES_MAX;
 	ms->regex_max = FILE_REGEX_MAX;
+	ms->bytes_max = FILE_BYTES_MAX;
 	return ms;
 free:
 	free(ms);
@@ -2115,7 +2116,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 
 	/*
 	 * TODO finish this macro and start using it!
-	 * #define offsetcheck {if (offset > HOWMANY-1) 
+	 * #define offsetcheck {if (offset > ms->bytes_max -1) 
 	 *	magwarn("offset too big"); }
 	 */
 

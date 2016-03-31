@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.39 2015/10/07 02:36:50 christos Exp $
+.\" $File: libmagic.man,v 1.40 2016/03/31 17:51:12 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003.
 .\" All Rights Reserved.
@@ -292,6 +292,7 @@ library.
 .It Li MAGIC_PARAM_ELF_PHNUM_MAX Ta size_t Ta 128
 .It Li MAGIC_PARAM_ELF_SHNUM_MAX Ta size_t Ta 32768
 .It Li MAGIC_PARAM_REGEX_MAX Ta size_t Ta 8192
+.It Li MAGIC_PARAM_BYTES_MAX Ta size_t Ta 1048576
 .El
 .Pp
 The

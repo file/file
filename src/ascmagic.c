@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.93 2016/03/21 15:56:53 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.94 2016/03/31 17:51:12 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -183,10 +183,10 @@ file_ascmagic_with_encoding(struct magic_set *ms, const unsigned char *buf,
 	}
 
 	/* Beware, if the data has been truncated, the final CR could have
-	   been followed by a LF.  If we have HOWMANY bytes, it indicates
+	   been followed by a LF.  If we have ms->bytes_max bytes, it indicates
 	   that the data might have been truncated, probably even before
 	   this function was called. */
-	if (seen_cr && nbytes < HOWMANY)
+	if (seen_cr && nbytes < ms->bytes_max)
 		n_cr++;
 
 	if (strcmp(type, "binary") == 0) {

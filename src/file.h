@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.177 2016/03/21 15:56:53 christos Exp $
+ * @(#)$File: file.h,v 1.178 2016/03/31 17:51:12 christos Exp $
  */
 
 #ifndef __file_h__
@@ -127,8 +127,8 @@
 #define	MAX(a,b)	(((a) > (b)) ? (a) : (b))
 #endif
 
-#ifndef HOWMANY
-# define HOWMANY (1024 * 1024)	/* how much of the file to look at */
+#ifndef FILE_BYTES_MAX
+# define FILE_BYTES_MAX (1024 * 1024)	/* how much of the file to look at */
 #endif
 #define MAXMAGIS 8192		/* max entries in any one magic file
 				   or directory */
@@ -419,6 +419,7 @@ struct magic_set {
 	uint16_t elf_phnum_max;
 	uint16_t elf_notes_max;
 	uint16_t regex_max;
+	size_t bytes_max;		/* number of bytes to read from file */
 #define	FILE_INDIR_MAX			50
 #define	FILE_NAME_MAX			30
 #define	FILE_ELF_SHNUM_MAX		32768
