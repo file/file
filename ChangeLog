@@ -1,3 +1,7 @@
+2016-04-16  18:34  Christos Zoulas <christos@zoulas.com>
+	
+	* release 5.25
+
 2016-03-31  13:50  Christos Zoulas <christos@zoulas.com>
 
 	* make the number of bytes read from files configurable.
