@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.3 2016/03/21 17:41:14 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.4 2016/03/21 23:04:40 christos Exp $")
 #endif
 #endif
 
@@ -61,11 +61,15 @@ FILE_RCSID("@(#)$File: der.c,v 1.3 2016/03/21 17:41:14 christos Exp $")
 #define	DER_CLASS_APPLICATION	1
 #define	DER_CLASS_CONTEXT	2
 #define	DER_CLASS_PRIVATE	3
+#ifdef DEBUG_DER
 static const char der_class[] = "UACP";
+#endif
 
 #define DER_TYPE_PRIMITIVE	0
 #define DER_TYPE_CONSTRUCTED	1
+#ifdef DEBUG_DER
 static const char der_type[] = "PC";
+#endif
 
 #define	DER_TAG_EOC			0x00
 #define	DER_TAG_BOOLEAN			0x01
