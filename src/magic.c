@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.97 2016/03/31 17:51:12 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.98 2016/04/19 20:51:54 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -346,7 +346,7 @@ private void
 close_and_restore(const struct magic_set *ms, const char *name, int fd,
     const struct stat *sb)
 {
-	if (name == NULL)
+	if (fd == STDIN_FILENO || name == NULL)
 		return;
 	(void) close(fd);
 
