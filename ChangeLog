@@ -1,3 +1,12 @@
+2016-04-18   9:35  Christos Zoulas <christos@zoulas.com>
+	
+	* Errors comparing DER entries or computing offsets
+	  are just indications of malformed non-DER files.
+	  Don't print them.
+	* Offset comparison was off-by-one.
+	* Fix compression code (Werner Fink)
+	* Put new bytes constant in the right file (not the generated one)
+
 2016-04-16  18:34  Christos Zoulas <christos@zoulas.com>
 	
 	* release 5.26
