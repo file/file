@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.93 2016/03/31 17:51:12 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.94 2016/04/19 13:39:19 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -231,9 +231,9 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 				goto error;
 			DPRINTF("rv = %d\n", rv);
 			if ((ms->flags & MAGIC_COMPRESS_TRANSP) != 0)
-				goto out;
+				break;
 			if (mime != MAGIC_MIME && mime != 0)
-				goto out;
+				break;
 			if ((file_printf(ms,
 			    mime ? " compressed-encoding=" : " (")) == -1)
 				goto error;
@@ -250,16 +250,19 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 			}
 			if (!mime && file_printf(ms, ")") == -1)
 				goto error;
-			goto out;
+			/*FALLTHROUGH*/
 		case NODATA:
-			goto out;
+			break;
 		default:
 			abort();
+			/*NOTREACHED*/
+		error:
+			rv = -1;
+			break;
 		}
 	}
-out:
-	rv = 1;
-error:
+	DPRINTF("rv = %d\n", rv);
+
 #ifdef HAVE_SIGNAL_H
 	(void)signal(SIGPIPE, osigpipe);
 #endif
