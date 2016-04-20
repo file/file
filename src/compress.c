@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.95 2016/04/19 23:36:36 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.96 2016/04/20 00:00:26 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -215,7 +215,7 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 			continue;
 		nsz = nbytes;
 		urv = uncompressbuf(fd, ms->bytes_max, i, buf, &newbuf, &nsz);
-		DPRINTF("uncompressbuf = %d, %s, %zu\n", rv, (char *)newbuf,
+		DPRINTF("uncompressbuf = %d, %s, %zu\n", urv, (char *)newbuf,
 		    nsz);
 		switch (urv) {
 		case OKDATA:
@@ -239,6 +239,10 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 				goto error;
 			if ((pb = file_push_buffer(ms)) == NULL)
 				goto error;
+			/*
+			 * XXX: If file_buffer fails here, we overwrite
+			 * the compressed text. FIXME.
+			 */
 			if (file_buffer(ms, -1, NULL, buf, nbytes) == -1)
 				goto error;
 			if ((rbuf = file_pop_buffer(ms, pb)) != NULL) {
