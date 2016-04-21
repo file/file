@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.230 2016/04/18 15:10:34 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.231 2016/04/21 15:23:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -254,7 +254,6 @@ flush:
 
 		switch (moffset(ms, m, nbytes, &ms->c.li[cont_level].off)) {
 		case -1:
-			return -1;
 		case 0:
 			goto flush;
 		default:
@@ -368,7 +367,6 @@ flush:
 				switch (moffset(ms, m, nbytes,
 				    &ms->c.li[cont_level].off)) {
 				case -1:
-					return -1;
 				case 0:
 					flush = 1;
 					break;
@@ -840,8 +838,10 @@ moffset(struct magic_set *ms, struct magic *m, size_t nbytes, int32_t *op)
 	}
 
 	if ((size_t)o > nbytes) {
+#if 0
 		file_error(ms, 0, "Offset out of range %zu > %zu",
 		    (size_t)o, nbytes);
+#endif
 		return -1;
 	}
 	*op = o;
