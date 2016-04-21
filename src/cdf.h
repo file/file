@@ -277,7 +277,7 @@ typedef struct {
 
 typedef struct {
 	size_t cat_num;
-	cdf_catalog_entry_t cat_e[0];
+	cdf_catalog_entry_t cat_e[1];
 } cdf_catalog_t;
 
 struct timespec;
