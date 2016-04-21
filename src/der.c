@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.5 2016/04/17 19:44:45 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.6 2016/04/21 14:26:03 christos Exp $")
 #endif
 #endif
 
@@ -44,7 +44,6 @@ FILE_RCSID("@(#)$File: der.c,v 1.5 2016/04/17 19:44:45 christos Exp $")
 #include <sys/mman.h>
 
 #include <stdio.h>
-#include <err.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,6 +52,8 @@ FILE_RCSID("@(#)$File: der.c,v 1.5 2016/04/17 19:44:45 christos Exp $")
 #ifndef TEST_DER
 #include "magic.h"
 #include "der.h"
+#else
+#include <err.h>
 #endif
 
 #define DER_BAD	((uint32_t)-1)
