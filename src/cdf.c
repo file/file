@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.77 2016/04/22 16:00:29 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.78 2016/04/22 16:11:49 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -267,13 +267,32 @@ cdf_unpack_dir(cdf_directory_t *d, char *buf)
 }
 
 static int
+cdf_zero_stream(cdf_stream_t *scn)
+{
+	scn->sst_len = 0;
+	scn->sst_dirlen = 0;
+	scn->sst_ss = 0;
+	free(scn->sst_tab);
+	scn->sst_tab = NULL;
+	return -1;
+}
+
+static size_t
+cdf_check_stream(const cdf_stream_t *sst, const cdf_header_t *h)
+{
+	size_t ss = sst->sst_dirlen < h->h_min_size_standard_stream ?
+	    CDF_SHORT_SEC_SIZE(h) : CDF_SEC_SIZE(h);
+	assert(ss == sst->sst_ss);
+	return sst->sst_ss;
+}
+
+static int
 cdf_check_stream_offset(const cdf_stream_t *sst, const cdf_header_t *h,
     const void *p, size_t tail, int line)
 {
 	const char *b = (const char *)sst->sst_tab;
 	const char *e = ((const char *)p) + tail;
-	size_t ss = sst->sst_dirlen < h->h_min_size_standard_stream ?
-	    CDF_SHORT_SEC_SIZE(h) : CDF_SEC_SIZE(h);
+	size_t ss = cdf_check_stream(sst, h);
 	/*LINTED*/(void)&line;
 	if (e >= b && (size_t)(e - b) <= ss * sst->sst_len)
 		return 0;
@@ -501,15 +520,17 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 {
 	size_t ss = CDF_SEC_SIZE(h), i, j;
 	ssize_t nr;
+	scn->sst_tab = NULL;
 	scn->sst_len = cdf_count_chain(sat, sid, ss);
 	scn->sst_dirlen = len;
+	scn->sst_ss = ss;
 
 	if (scn->sst_len == (size_t)-1)
-		return -1;
+		goto out;
 
 	scn->sst_tab = calloc(scn->sst_len, ss);
 	if (scn->sst_tab == NULL)
-		return -1;
+		goto out;
 
 	for (j = i = 0; sid >= 0; i++, j++) {
 		if (j >= CDF_LOOP_LIMIT) {
@@ -537,8 +558,7 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 	}
 	return 0;
 out:
-	free(scn->sst_tab);
-	return -1;
+	return cdf_zero_stream(scn);
 }
 
 int
@@ -547,15 +567,17 @@ cdf_read_short_sector_chain(const cdf_header_t *h,
     cdf_secid_t sid, size_t len, cdf_stream_t *scn)
 {
 	size_t ss = CDF_SHORT_SEC_SIZE(h), i, j;
+	scn->sst_tab = NULL;
 	scn->sst_len = cdf_count_chain(ssat, sid, ss);
 	scn->sst_dirlen = len;
+	scn->sst_ss = ss;
 
 	if (sst->sst_tab == NULL || scn->sst_len == (size_t)-1)
-		return -1;
+		goto out;
 
 	scn->sst_tab = calloc(scn->sst_len, ss);
 	if (scn->sst_tab == NULL)
-		return -1;
+		goto out;
 
 	for (j = i = 0; sid >= 0; i++, j++) {
 		if (j >= CDF_LOOP_LIMIT) {
@@ -579,8 +601,7 @@ cdf_read_short_sector_chain(const cdf_header_t *h,
 	}
 	return 0;
 out:
-	free(scn->sst_tab);
-	return -1;
+	return cdf_zero_stream(scn);
 }
 
 int
@@ -718,9 +739,7 @@ cdf_read_short_stream(const cdf_info_t *info, const cdf_header_t *h,
 	return	cdf_read_long_sector_chain(info, h, sat,
 	    d->d_stream_first_sector, d->d_size, scn);
 out:
-	scn->sst_tab = NULL;
-	scn->sst_len = 0;
-	scn->sst_dirlen = 0;
+	(void)cdf_zero_stream(scn);
 	return 0;
 }
 
@@ -1022,8 +1041,7 @@ int
 cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
     cdf_catalog_t **cat)
 {
-	size_t ss = sst->sst_dirlen < h->h_min_size_standard_stream ?
-	    CDF_SHORT_SEC_SIZE(h) : CDF_SEC_SIZE(h);
+	size_t ss = cdf_check_stream(sst, h);
 	const char *b = CAST(const char *, sst->sst_tab);
 	const char *eb = b + ss * sst->sst_len;
 	size_t nr, i, j, k;
@@ -1245,8 +1263,7 @@ cdf_dump(const void *v, size_t len)
 void
 cdf_dump_stream(const cdf_header_t *h, const cdf_stream_t *sst)
 {
-	size_t ss = sst->sst_dirlen < h->h_min_size_standard_stream ?
-	    CDF_SHORT_SEC_SIZE(h) : CDF_SEC_SIZE(h);
+	size_t ss = sst->sst_ss;
 	cdf_dump(sst->sst_tab, ss * sst->sst_len);
 }
 
