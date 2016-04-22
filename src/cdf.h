@@ -129,6 +129,7 @@ typedef struct {
 	void *sst_tab;
 	size_t sst_len;
 	size_t sst_dirlen;
+	size_t sst_ss;
 } cdf_stream_t;
 
 typedef struct {
