@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.77 2016/04/22 16:00:29 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.78 2016/04/22 16:11:49 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -739,6 +739,7 @@ cdf_read_short_stream(const cdf_info_t *info, const cdf_header_t *h,
 	return	cdf_read_long_sector_chain(info, h, sat,
 	    d->d_stream_first_sector, d->d_size, scn);
 out:
+	scn->sst_tab = NULL;
 	(void)cdf_zero_stream(scn);
 	return 0;
 }
