@@ -1,11 +1,19 @@
-# $File: .travis.yml,v 1.6 2014/03/10 12:42:49 kim Exp $
+# $File: .travis.yml,v 1.7 2016/04/26 16:24:43 glen Exp $
+
 language: c
+
+os:
+ - linux
+ - osx
+
 compiler:
  - gcc
  - clang
+
 before_install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq automake libtool make python zlib1g-dev
+ - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
+ - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq automake libtool make python zlib1g-dev; fi
+
 script:
  - autoreconf -f -i
  - ./configure --disable-silent-rules
