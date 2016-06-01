@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.230 2016/04/18 15:10:34 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.231 2016/04/21 15:23:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -827,6 +827,7 @@ moffset(struct magic_set *ms, struct magic *m, size_t nbytes, int32_t *op)
 					    "Bad DER offset %d nbytes=%zu",
 					    o, nbytes);
 				}
+				*op = 0;
 				return 0;
 			}
 			break;
