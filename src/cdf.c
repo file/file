@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.81 2016/06/01 22:21:14 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.82 2016/06/01 22:25:25 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1068,6 +1068,8 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 		if (b > eb)
 		    break;
 	}
+	if (nr == 0)
+		return -1;
 	nr--;
 	*cat = CAST(cdf_catalog_t *,
 	    malloc(sizeof(cdf_catalog_t) + nr * sizeof(*ce)));
