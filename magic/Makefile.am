@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.114 2016/06/05 00:21:30 christos Exp $
+# $File: Makefile.am,v 1.115 2016/06/05 00:25:58 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -58,6 +58,7 @@ $(MAGIC_FRAGMENT_DIR)/communications \
 $(MAGIC_FRAGMENT_DIR)/compress \
 $(MAGIC_FRAGMENT_DIR)/console \
 $(MAGIC_FRAGMENT_DIR)/convex \
+$(MAGIC_FRAGMENT_DIR)/coverage \
 $(MAGIC_FRAGMENT_DIR)/cracklib \
 $(MAGIC_FRAGMENT_DIR)/ctags \
 $(MAGIC_FRAGMENT_DIR)/ctf \
