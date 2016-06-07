@@ -22,3 +22,4 @@ file-*.tar.gz
 compile
 .git
 .gitignore
+.config_*.cache
