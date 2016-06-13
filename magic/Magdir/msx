@@ -213,7 +213,7 @@
 
 0	string/b		AB\0\0\0\0
 >6	uleshort	>0x400F			MSX device BIOS
->>>6	uleshort	>0			\b, devhdl=0x%04x
+>>6	uleshort	>0			\b, devhdl=0x%04x
 
 
 0	string/b		AB
