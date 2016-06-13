@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.232 2016/06/01 22:01:15 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.233 2016/06/01 22:04:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2080,6 +2080,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			if (slen != 0) {
 			    copy = malloc(slen);
 			    if (copy == NULL)  {
+				file_regfree(&rx);
 				file_error(ms, errno,
 				    "can't allocate %" SIZE_T_FORMAT "u bytes",
 				    slen);
