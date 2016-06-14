@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.234 2016/06/13 12:02:06 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.235 2016/06/14 00:22:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -57,7 +57,7 @@ private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, struct magic *);
 private int mconvert(struct magic_set *, struct magic *, int);
 private int print_sep(struct magic_set *, int);
-private int handle_annotation(struct magic_set *, struct magic *);
+private int handle_annotation(struct magic_set *, struct magic *, int);
 private int cvt_8(union VALUETYPE *, const struct magic *);
 private int cvt_16(union VALUETYPE *, const struct magic *);
 private int cvt_32(union VALUETYPE *, const struct magic *);
@@ -230,7 +230,7 @@ flush:
 			goto flush;
 		}
 
-		if ((e = handle_annotation(ms, m)) != 0) {
+		if ((e = handle_annotation(ms, m, firstline)) != 0) {
 			*need_separator = 1;
 			*printed_something = 1;
 			*returnval = 1;
@@ -328,7 +328,7 @@ flush:
 				} else
 					ms->c.li[cont_level].got_match = 1;
 
-				if ((e = handle_annotation(ms, m)) != 0) {
+				if ((e = handle_annotation(ms, m, firstline)) != 0) {
 					*need_separator = 1;
 					*printed_something = 1;
 					*returnval = 1;
@@ -2231,19 +2231,25 @@ magiccheck(struct magic_set *ms, struct magic *m)
 }
 
 private int
-handle_annotation(struct magic_set *ms, struct magic *m)
+handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 {
 	if ((ms->flags & MAGIC_APPLE) && m->apple[0]) {
+		if (!firstline && file_printf(ms, "\n- ") == -1)
+			return -1;
 		if (file_printf(ms, "%.8s", m->apple) == -1)
 			return -1;
 		return 1;
 	}
 	if ((ms->flags & MAGIC_EXTENSION) && m->ext[0]) {
+		if (!firstline && file_printf(ms, "\n- ") == -1)
+			return -1;
 		if (file_printf(ms, "%s", m->ext) == -1)
 			return -1;
 		return 1;
 	}
 	if ((ms->flags & MAGIC_MIME_TYPE) && m->mimetype[0]) {
+		if (!firstline && file_printf(ms, "\n- ") == -1)
+			return -1;
 		if (file_printf(ms, "%s", m->mimetype) == -1)
 			return -1;
 		return 1;
@@ -2254,8 +2260,8 @@ handle_annotation(struct magic_set *ms, struct magic *m)
 private int
 print_sep(struct magic_set *ms, int firstline)
 {
-	if (ms->flags & MAGIC_NODESC)
-		return 0;
+//	if (ms->flags & MAGIC_NODESC)
+//		return 0;
 	if (firstline)
 		return 0;
 	/*
