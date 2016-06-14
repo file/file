@@ -1,3 +1,7 @@
+2016-06-13  20:20  Christos Zoulas <christos@zoulas.com>
+
+	* PR/556: Fix separators on annotations.
+
 2016-06-13  19:40  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.28
