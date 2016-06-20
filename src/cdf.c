@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.81 2016/06/01 22:21:14 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.82 2016/06/01 22:25:25 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -731,22 +731,25 @@ cdf_read_short_stream(const cdf_info_t *info, const cdf_header_t *h,
 			break;
 
 	/* If the it is not there, just fake it; some docs don't have it */
-	if (i == dir->dir_len)
+	if (i == dir->dir_len) {
+		DPRINTF(("Cannot find root storage dir\n"));
 		goto out;
+	}
 	d = &dir->dir_tab[i];
 	*root = d;
 
 	/* If the it is not there, just fake it; some docs don't have it */
-	if (d->d_stream_first_sector < 0)
+	if (d->d_stream_first_sector < 0) {
+		DPRINTF(("No first secror in dir\n"));
 		goto out;
+	}
 
 	return cdf_read_long_sector_chain(info, h, sat,
 	    d->d_stream_first_sector, d->d_size, scn);
 out:
 	scn->sst_tab = NULL;
 	(void)cdf_zero_stream(scn);
-	errno = EFTYPE;
-	return -1;
+	return 0;
 }
 
 static int
@@ -1275,7 +1278,7 @@ cdf_dump(const void *v, size_t len)
 }
 
 void
-cdf_dump_stream(const cdf_header_t *h, const cdf_stream_t *sst)
+cdf_dump_stream(const cdf_stream_t *sst)
 {
 	size_t ss = sst->sst_ss;
 	cdf_dump(sst->sst_tab, ss * sst->sst_len);
@@ -1331,7 +1334,7 @@ cdf_dump_dir(const cdf_info_t *info, const cdf_header_t *h,
 				    name, d->d_stream_first_sector, d->d_size);
 				break;
 			}
-			cdf_dump_stream(h, &scn);
+			cdf_dump_stream(&scn);
 			free(scn.sst_tab);
 			break;
 		default:
@@ -1507,7 +1510,7 @@ main(int argc, char *argv[])
 		    == -1)
 			err(1, "Cannot read short stream");
 #ifdef CDF_DEBUG
-		cdf_dump_stream(&h, &sst);
+		cdf_dump_stream(&sst);
 #endif
 
 #ifdef CDF_DEBUG

@@ -336,7 +336,7 @@ char *cdf_u16tos8(char *, size_t, const uint16_t *);
 void cdf_dump_header(const cdf_header_t *);
 void cdf_dump_sat(const char *, const cdf_sat_t *, size_t);
 void cdf_dump(const void *, size_t);
-void cdf_dump_stream(const cdf_header_t *, const cdf_stream_t *);
+void cdf_dump_stream(const cdf_stream_t *);
 void cdf_dump_dir(const cdf_info_t *, const cdf_header_t *, const cdf_sat_t *,
     const cdf_sat_t *, const cdf_stream_t *, const cdf_dir_t *);
 void cdf_dump_property_info(const cdf_property_info_t *, size_t);
