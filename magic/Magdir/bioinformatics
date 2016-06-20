@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: bioinformatics,v 1.3 2016/06/20 16:13:14 christos Exp $
+# $File: bioinformatics,v 1.4 2016/06/20 16:13:46 christos Exp $
 # bioinfomatics:  file(1) magic for Bioinfomatics file formats
 
 ###############################################################################
@@ -163,7 +163,7 @@
 # SAM Alignment MAPQ
 >>>>0		regex	=^([^\t]+\t){4}[0-9]{1,3}\t
 # SAM Alignment CIGAR
->>>>>0		regex	=\t\\*|([0-9]+[MIDNSHPX=])+)\t
+>>>>>0		regex	=\t(\\*|([0-9]+[MIDNSHPX=])+)\t
 # SAM Alignment RNEXT
 >>>>>>0		regex	=\t(\\*|=|[!-()+->?-~][!-~]*)\t
 # SAM Alignment PNEXT
