@@ -517,7 +517,10 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	strlcpy((char *)*newch, z.msg, bytes_max);
+	if (z.msg != NULL)
+		strlcpy((char *)*newch, z.msg, bytes_max);
+	else
+		strlcpy((char *)*newch, zError(rc), bytes_max);
 	*n = strlen((char *)*newch);
 	return ERRDATA;
 }
