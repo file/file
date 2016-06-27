@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.121 2016/06/07 22:09:20 rrt Exp $
+.\" $File: file.man,v 1.122 2016/06/27 19:07:20 christos Exp $
 .Dd March 13, 2016
 .Dt FILE __CSECTION__
 .Os
@@ -312,7 +312,7 @@ attempt to preserve the access time of files analyzed, to pretend that
 never read them.
 .It Fl P , Fl Fl parameter Ar name=value
 Set various parameter limits.
-.Bl -column "elf_phnum" "Default" "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" -offset indent
+.Bl -column "elf_phnum" "Default" "XXXXXXXXXXXXXXXXXXXXXXXXXXX" -offset indent
 .It Sy "Name" Ta Sy "Default" Ta Sy "Explanation"
 .It Li indir Ta 15 Ta recursion limit for indirect magic
 .It Li name Ta 30 Ta use count limit for name/use magic
