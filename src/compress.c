@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.97 2016/05/13 23:02:28 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.98 2016/06/28 16:38:26 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -517,7 +517,7 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	strlcpy((char *)*newch, z.msg, bytes_max);
+	strlcpy((char *)*newch, z.msg ? z.msg : zError(rc), bytes_max);
 	*n = strlen((char *)*newch);
 	return ERRDATA;
 }
