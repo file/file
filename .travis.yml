@@ -1,4 +1,4 @@
-# $File: .travis.yml,v 1.7 2016/04/26 16:24:43 glen Exp $
+# $File: .travis.yml,v 1.8 2016/06/28 06:34:34 kim Exp $
 
 language: c
 
@@ -19,3 +19,10 @@ script:
  - ./configure --disable-silent-rules
  - make -j4
  - make -C tests check
+
+notifications:
+ email:
+  recipients:
+   - file-tests@mx.gw.com
+  on_success: change
+  on_failure: always
