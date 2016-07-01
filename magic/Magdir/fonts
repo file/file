@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.30 2016/03/22 22:27:47 christos Exp $
+# $File: fonts,v 1.31 2016/07/01 23:27:28 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -110,7 +110,12 @@
 >14	string		x		version %s
 
 # EOT
-34	string		LP		Embedded OpenType (EOT)
+0x40	string		\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
+>0x22	string		LP		Embedded OpenType (EOT)
+# workaround until there's lepstring16
+# >0x52	lepstring16/h	>\0		\b, %s family
+>0x52	short	!0
+>>0x54	lestring16	x		\b, %s family
 !:mime application/vnd.ms-fontobject
 
 # Web Open Font Format (.woff)
