@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.18 2015/12/04 20:38:43 christos Exp $
+# $File: sql,v 1.19 2016/07/04 15:20:01 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -136,3 +136,6 @@
 >126	string		SQLite\ format\ 3	
 #!:mime	application/x-panasonic-sqlite3
 >>&-15	indirect	x			\b; contains 
+
+# H2 Database from http://www.h2database.com/
+0	string		--\ H2\ 0.5/B\ --\ \n	H2 Database file
