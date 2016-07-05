@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.105 2016/03/03 18:58:14 christos Exp $
+# $File: msdos,v 1.106 2016/06/11 00:52:14 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -585,10 +585,90 @@
 >4	belong	0x07800100	fm3 or fmb document data
 >4	belong	0x07800000	fm3 or fmb document data
 #
-0	belong	0x00000200	Lotus 1-2-3
-!:mime	application/x-123
->4	belong	0x06040600	wk1 document data
->4	belong	0x06800200	fmt document data
+# Update: Joerg Jenderek
+# URL: http://fileformats.archiveteam.org/wiki/Lotus_1-2-3
+# Reference: http://www.schnarff.com/file-formats/lotus-1-2-3/WSFF2.TXT
+# Note: Used by both old Lotus 1-2-3 and Lotus Symphony (DOS) til version 2.x
+# record type (BeginningOfFile=0000h) + length (0002h)
+0	belong	0x00000200	
+# GRR: line above is too general as it catches also MS Windows CURsor
+# to display MS Windows cursor (strength=70) before Lotus 1-2-3 (strength=70-1)
+!:strength -1
+# skip Windows cursors with image height <256 and keep Lotus with low opcode 0001-0083h
+>7	ubyte		0	
+# skip Windows cursors with image width 256 and keep Lotus with positiv opcode
+>>6	ubyte		>0	Lotus
+# !:mime	application/x-123
+!:mime	application/vnd.lotus-1-2-3
+!:apple	????L123
+# revision number (0404h = 123 1A, 0405h = Lotus Symphony , 0406h = 123 2.x wk1 , 8006h = fmt , ...)
+# undocumented; (version 5.26) labeled the configurations as "Lotus 1-2-3"
+>>>4	uleshort	0x0007	1-2-3 CoNFiguration, version 2.x (PGRAPH.CNF)
+!:ext	cnf
+>>>4	uleshort	0x0C05	1-2-3 CoNFiguration, version 2.4J
+!:ext	cnf
+>>>4	uleshort	0x0801	1-2-3 CoNFiguration, version 1-2.1
+!:ext	cnf
+>>>4	uleshort	0x0802	Symphony CoNFiguration
+!:ext	cnf
+>>>4	uleshort	0x0804	1-2-3 CoNFiguration, version 2.2
+!:ext	cnf
+>>>4	uleshort	0x080A	1-2-3 CoNFiguration, version 2.3-2.4
+!:ext	cnf
+>>>4	uleshort	0x1402	1-2-3 CoNFiguration, version 3.x
+!:ext	cnf
+>>>4	uleshort	0x1450	1-2-3 CoNFiguration, version 4.x
+!:ext	cnf
+# (version 5.26) labeled the entry as "Lotus 123"
+# TrID labeles the entry as "Lotus 123 Worksheet (generic)"
+>>>4	uleshort	0x0404	1-2-3 WorKSheet, version 1
+# extension "wks" also for Microsoft Works document
+!:ext	wks
+# (version 5.26) labeled the entry as "Lotus 123"
+# TrID labeles the entry as "Lotus 123 Worksheet (generic)"
+>>>4	uleshort	0x0405	Symphony WoRksheet, version 1.0
+!:ext	wrk/wr1
+# (version 5.26) labeled the entry as "Lotus 1-2-3 wk1 document data"
+# TrID labeles the entry as "Lotus 123 Worksheet (V2)"
+>>>4	uleshort	0x0406	1-2-3/Symphony worksheet, version 2
+# Symphony (.wr1)
+!:ext	wk1/wr1
+# no example for this japan version
+>>>4	uleshort	0x0600	1-2-3 WorKsheet, version 1.xJ
+!:ext	wj1
+# no example or documentation for wk2
+#>>>4	uleshort	0x????	1-2-3 WorKsheet, version 2
+#!:ext	wk2
+# undocumented japan version
+>>>4	uleshort	0x0602	1-2-3 worksheet, version 2.4J
+!:ext	wj3
+# (version 5.26) labeled the entry as "Lotus 1-2-3 fmt document data"
+>>>4	uleshort	0x8006	1-2-3 ForMaTting data, version 2.x
+# japan version 2.4J (fj3)
+!:ext	fmt/fj3
+# no example for this version
+>>>4	uleshort	0x8007	1-2-3 FoRMatting data, version 2.0
+!:ext	frm
+# (version 5.26) labeled the entry as "Lotus 1-2-3"
+>>>4	default		x	unknown worksheet or configuration
+!:ext	cnf
+>>>>4	uleshort	x	\b, revision 0x%x
+# 2nd record for most worksheets describes cells range
+>>>6		use	lotus-cells
+# 3nd record for most japan worksheets describes cells range
+>>>(8.s+10)	use	lotus-cells
+#	check and then display Lotus worksheet cells range
+0	name		lotus-cells
+# look for type (RANGE=0006h) + length (0008h) at record begin
+>0	ubelong	0x06000800	\b, cell range 
+# cell range (start column, row, end column, row) start values normally 0,0~A1 cell
+>>4	ulong		!0	
+>>>4	uleshort	x	\b%d,
+>>>6	uleshort	x	\b%d-
+# end of cell range
+>>8	uleshort	x	\b%d,
+>>10	uleshort	x	\b%d
+# EndOfLotus123
 0	string/b		WordPro\0	Lotus WordPro
 !:mime	application/vnd.lotus-wordpro
 0	string/b		WordPro\r\373	Lotus WordPro
