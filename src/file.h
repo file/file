@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.177 2016/03/21 15:56:53 christos Exp $
+ * @(#)$File: file.h,v 1.178 2016/03/31 17:51:12 christos Exp $
  */
 
 #ifndef __file_h__
@@ -134,11 +134,11 @@
 				   or directory */
 #define MAXDESC	64		/* max len of text description/MIME type */
 #define MAXMIME	80		/* max len of text MIME type */
-#define MAXstring 64		/* max len of "string" types */
+#define MAXstring 96		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	13
-#define FILE_MAGICSIZE	312
+#define VERSIONNO	14
+#define FILE_MAGICSIZE	344
 
 #define	FILE_LOAD	0
 #define FILE_CHECK	1

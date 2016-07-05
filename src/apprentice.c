@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.248 2016/03/31 17:51:12 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.249 2016/05/17 21:43:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -451,6 +451,8 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 
 #ifndef COMPILE_ONLY
 	map = apprentice_map(ms, fn);
+	if (map == (struct magic_map *)-1)
+		goto fail;
 	if (map == NULL) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "using regular magic file `%s'", fn);
@@ -2930,6 +2932,7 @@ apprentice_map(struct magic_set *ms, const char *fn)
 	struct stat st;
 	char *dbname = NULL;
 	struct magic_map *map;
+	struct magic_map *rv = NULL;
 
 	fd = -1;
 	if ((map = CAST(struct magic_map *, calloc(1, sizeof(*map)))) == NULL) {
@@ -2978,8 +2981,10 @@ apprentice_map(struct magic_set *ms, const char *fn)
 	(void)close(fd);
 	fd = -1;
 
-	if (check_buffer(ms, map, dbname) != 0)
+	if (check_buffer(ms, map, dbname) != 0) {
+		rv = (struct magic_map *)-1;
 		goto error;
+	}
 #ifdef QUICK
 	if (mprotect(map->p, (size_t)st.st_size, PROT_READ) == -1) {
 		file_error(ms, errno, "cannot mprotect `%s'", dbname);
@@ -2995,7 +3000,7 @@ error:
 		(void)close(fd);
 	apprentice_unmap(map);
 	free(dbname);
-	return NULL;
+	return rv;
 }
 
 private int
