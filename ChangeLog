@@ -1,3 +1,7 @@
+2016-07-05  15:20  Christos Zoulas <christos@zoulas.com>
+
+	* Bump string size from 64 to 96.
+
 2016-06-13  20:20  Christos Zoulas <christos@zoulas.com>
 
 	* PR/556: Fix separators on annotations.
