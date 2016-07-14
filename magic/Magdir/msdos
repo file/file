@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.106 2016/06/11 00:52:14 christos Exp $
+# $File: msdos,v 1.107 2016/07/05 12:40:09 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -578,12 +578,73 @@
 0	string/b	\x09\x04\x06\x00\x00\x00\x10\x00	Microsoft Excel Worksheet
 !:mime	application/vnd.ms-excel
 #
-0	belong	0x00001a00	Lotus 1-2-3
-!:mime	application/x-123
->4	belong	0x00100400	wk3 document data
->4	belong	0x02100400	wk4 document data
->4	belong	0x07800100	fm3 or fmb document data
->4	belong	0x07800000	fm3 or fmb document data
+# Update: Joerg Jenderek
+# URL: https://en.wikipedia.org/wiki/Lotus_1-2-3
+# Reference: http://www.aboutvb.de/bas/formate/pdf/wk3.pdf
+# Note: newer Lotus versions >2 use longer BOF record
+# record type (BeginningOfFile=0000h) + length (001Ah)
+0	belong	0x00001a00	
+# reserved should be 0h but 8c0dh for TUTMAC.WK3, 5h for SAMPADNS.WK3, 1h for a_readme.wk3, 1eh for K&G86.WK3
+#>18	uleshort&0x73E0	0	
+# Lotus Multi Byte Character Set (LMBCS=1-31)
+>20	ubyte		>0	
+>>20	ubyte		<32	Lotus 1-2-3
+#!:mime	application/x-123
+!:mime	application/vnd.lotus-1-2-3
+!:apple	????L123
+# (version 5.26) labeled the entry as "Lotus 1-2-3 wk3 document data"
+>>>4	uleshort	0x1000	WorKsheet, version 3
+!:ext	wk3
+# (version 5.26) labeled the entry as "Lotus 1-2-3 wk4 document data"
+>>>4	uleshort	0x1002	WorKsheet, version 4
+# also worksheet template 4 (.wt4)
+!:ext	wk4/wt4
+# no example or documentation for wk5
+#>>4	uleshort	0x????	WorKsheet, version 4
+#!:ext	wk5
+# only MacrotoScript.123 example
+>>>4	uleshort	0x1003	WorKsheet, version 97
+# also worksheet template Smartmaster (.12M)?
+!:ext	123
+# only Set_Y2K.123 example
+>>>4	uleshort	0x1005	WorKsheet, version 9.8 Millennium
+!:ext	123
+# no example for this version
+>>>4	uleshort	0x8001	FoRMatting data
+!:ext	frm
+# (version 5.26) labeled the entry as "Lotus 1-2-3 fm3 or fmb document data"
+# TrID labeles the entry as "Formatting Data for Lotus 1-2-3 worksheet"
+>>>4	uleshort	0x8007	ForMatting data, version 3
+!:ext	fm3
+>>>4	default		x	unknown
+# file revision sub code 0004h for worksheets
+>>>>6	uleshort	=0x0004	worksheet
+!:ext	wXX
+>>>>6	uleshort	!0x0004	formatting data
+!:ext	fXX
+# main revision number
+>>>>4	uleshort	x	\b, revision 0x%x
+>>>6	uleshort	=0x0004	\b, cell range 
+# active cellcoord range (start row, page,column ; end row, page, column)
+# start values normally 0~1st sheet A1
+>>>>8	ulelong		!0	
+>>>>>10	ubyte		>0	\b%d*
+>>>>>8	uleshort	x	\b%d,
+>>>>>11	ubyte		x	\b%d-
+# end page mostly 0
+>>>>14	ubyte		>0	\b%d*
+# end raw, column normally not 0
+>>>>12	uleshort	x	\b%d,
+>>>>15	ubyte		x	\b%d
+# Lotus Multi Byte Character Set (1~cp850,2~cp851,...,16~japan,...,31~??)
+>>>>20	ubyte		>1	\b, character set 0x%x
+# flags
+>>>>21	ubyte		x	\b, flags 0x%x
+>>>6	uleshort	!0x0004	
+# record type (FONTNAME=00AEh)
+>>>>30	search/29	\0\xAE	
+# variable length m (2) + entries (1) + ?? (1) + LCMBS string (n)
+>>>>>&4	string		>\0	\b, 1st font "%s"
 #
 # Update: Joerg Jenderek
 # URL: http://fileformats.archiveteam.org/wiki/Lotus_1-2-3
