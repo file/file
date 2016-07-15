@@ -35,13 +35,11 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.7 2016/06/01 22:01:15 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.8 2016/07/15 00:56:04 christos Exp $")
 #endif
 #endif
 
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
 
 #include <stdio.h>
 #include <fcntl.h>
@@ -53,6 +51,8 @@ FILE_RCSID("@(#)$File: der.c,v 1.7 2016/06/01 22:01:15 christos Exp $")
 #include "magic.h"
 #include "der.h"
 #else
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <err.h>
 #endif
 
