@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.98 2016/04/19 20:51:54 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.99 2016/05/03 16:09:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -492,7 +492,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			if (r < PIPE_BUF) break;
 		}
 
-		if (nbytes == 0) {
+		if (nbytes == 0 && inname) {
 			/* We can not read it, but we were able to stat it. */
 			if (unreadable_info(ms, sb.st_mode, inname) == -1)
 				goto done;
