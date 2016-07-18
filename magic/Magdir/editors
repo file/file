@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: editors,v 1.8 2009/09/19 16:28:09 christos Exp $
+# $File: editors,v 1.9 2016/07/18 11:55:11 christos Exp $
 # T602 editor documents 
 # by David Necas <yeti@physics.muni.cz>
 0	string	@CT\ 	T602 document data,
@@ -16,3 +16,13 @@
 # by Sven Wegener <swegener@gentoo.org>
 0	string	b0VIM\ 		Vim swap file
 >&0	string	>\0		\b, version %s
+
+
+# nano lock file
+0	string		b0nano
+>2	string		x	%s lock file
+>24	uleshort	x	\b, pid %d
+>28	string		>\0	\b, user %s
+>68	string		>\0	\b, host %s
+>108	string		>\0	\b, file %s
+>1007	byte		0x55	\b, modified
