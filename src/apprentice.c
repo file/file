@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.250 2016/07/05 19:20:19 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.251 2016/07/20 11:27:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1881,10 +1881,13 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 	if (m->flag & INDIR) {
 		m->in_type = FILE_LONG;
 		m->in_offset = 0;
+		m->in_op = 0;
 		/*
-		 * read [.lbs][+-]nnnnn)
+		 * read [.,lbs][+-]nnnnn)
 		 */
-		if (*l == '.') {
+		if (*l == '.' || *l == ',') {
+			if (*l == ',')
+				m->in_op |= FILE_OPSIGNED;
 			l++;
 			switch (*l) {
 			case 'l':
@@ -1936,7 +1939,6 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 			l++;
 		}
 
-		m->in_op = 0;
 		if (*l == '~') {
 			m->in_op |= FILE_OPINVERSE;
 			l++;
