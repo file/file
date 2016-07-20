@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.178 2016/03/31 17:51:12 christos Exp $
+ * @(#)$File: file.h,v 1.179 2016/07/05 19:20:19 christos Exp $
  */
 
 #ifndef __file_h__
@@ -275,7 +275,7 @@ struct magic {
 #define				FILE_OPS_MASK	0x07 /* mask for above ops */
 #define				FILE_UNUSED_1	0x08
 #define				FILE_UNUSED_2	0x10
-#define				FILE_UNUSED_3	0x20
+#define				FILE_OPSIGNED	0x20
 #define				FILE_OPINVERSE	0x40
 #define				FILE_OPINDIRECT	0x80
 

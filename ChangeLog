@@ -1,3 +1,11 @@
+2016-07-20   7:26  Christos Zoulas <christos@zoulas.com>
+
+	* Add support for signed indirect offsets
+
+2016-07-18   7:41  Christos Zoulas <christos@zoulas.com>
+
+	* cat /dev/null | file - should print empty (Christoph Biedl)
+
 2016-07-05  15:20  Christos Zoulas <christos@zoulas.com>
 
 	* Bump string size from 64 to 96.
