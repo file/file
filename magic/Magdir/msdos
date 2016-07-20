@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.107 2016/07/05 12:40:09 christos Exp $
+# $File: msdos,v 1.108 2016/07/14 17:37:12 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -328,15 +328,6 @@
 0	string	\xffKEYB\ \ \ \0\0\0\0	
 >12	string	\0\0\0\0`\004\360	MS-DOS KEYBoard Layout file
 
-# .COM formats (Daniel Quinlan, quinlan@yggdrasil.com)
-# Uncommenting only the first two lines will cover about 2/3 of COM files,
-# but it isn't feasible to match all COM files since there must be at least
-# two dozen different one-byte "magics".
-# test too generic ?
-0	byte		0xe9		DOS executable (COM)
->0x1FE leshort		0xAA55		\b, boot code
->6	string		SFX\ of\ LHarc	(%s)
-
 # DOS device driver updated by Joerg Jenderek at May 2011
 # http://maben.homeip.net/static/S100/IBM/software/DOS/DOS%20techref/CHAPTER.009
 0	ulequad&0x07a0ffffffff		0xffffffff		DOS executable (
@@ -439,12 +430,37 @@
 # byte 0xeb conflicts with "sequent" magic leshort 0xn2eb
 0	ubeshort&0xeb8d	>0xeb00		
 # DR-DOS STACKER.COM SCREATE.SYS missed
->0	byte		0xeb
->>0x1FE leshort		0xAA55		DOS executable (COM), boot code
->>85	string		UPX		DOS executable (COM), UPX compressed
->>4	string		\ $ARX		DOS executable (COM), ARX self-extracting archive
->>4	string		\ $LHarc	DOS executable (COM), LHarc self-extracting archive
->>0x20e string		SFX\ by\ LARC	DOS executable (COM), LARC self-extracting archive
+
+0       name    msdos-com
+>0  byte        x               DOS executable (COM)
+>6	string		SFX\ of\ LHarc	\b, %s
+>0x1FE leshort	0xAA55		    \b, boot code
+>85	string		UPX		        \b, UPX compressed
+>4	string		\ $ARX		    \b, ARX self-extracting archive
+>4	string		\ $LHarc	    \b, LHarc self-extracting archive
+>0x20e string	SFX\ by\ LARC	\b, LARC self-extracting archive
+
+# JMP 8bit
+0	        byte	0xeb
+# allow forward jumps only
+>1          byte    >-1
+# that offset must be accessible
+>>(1.b+2)   byte    x
+>>>0        use msdos-com
+
+# JMP 16bit
+0           byte    0xe9
+# forward jumps
+>1          short   >-1
+# that offset must be accessible
+>>(1.s+3)   byte    x
+>>>0        use msdos-com
+# negative offset, must not lead into PSP
+>1          short   <-259
+# that offset must be accessible
+>>(1,s+65539)   byte    x
+>>>0        use msdos-com
+
 # updated by Joerg Jenderek at Oct 2008,2015
 # following line is too general
 0	ubyte		0xb8		
