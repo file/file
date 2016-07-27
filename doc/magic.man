@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.87 2016/07/20 11:27:08 christos Exp $
+.\" $File: magic.man,v 1.88 2016/07/27 09:42:49 rrt Exp $
 .Dd July 20, 2016
 .Dt MAGIC __FSECTION__
 .Os
@@ -569,9 +569,9 @@ That way variable length structures can be examined:
 \*[Gt]\*[Gt](0x3c.l)  string  LX\e0\e0  LX executable (OS/2)
 .Ed
 .Pp
-This strategy of examining has a drawback: You must make sure that
-you eventually print something, or users may get empty output (like, when
-there is neither PE\e0\e0 nor LE\e0\e0 in the above example)
+This strategy of examining has a drawback: you must make sure that you
+eventually print something, or users may get empty output (such as when
+there is neither PE\e0\e0 nor LE\e0\e0 in the above example).
 .Pp
 If this indirect offset cannot be used directly, simple calculations are
 possible: appending
