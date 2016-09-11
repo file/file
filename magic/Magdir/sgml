@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------ # $File: sgml,v 1.32 2015/07/11 15:08:53 christos Exp $
+#------------------------------------------------------------------------------ # $File: sgml,v 1.33 2015/11/29 22:14:49 christos Exp $
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
 0	string		\<?xml\ version="
@@ -7,6 +7,8 @@
 !:mime	image/svg+xml
 >>19	search/4096	\<gnc-v2		GnuCash file
 !:mime	application/x-gnucash
+0	string		\<svg			SVG Scalable Vector Graphics image
+!:mime	image/svg
 
 # Sitemap file
 0	string/t		\<?xml\ version="
