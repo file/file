@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.250 2016/07/05 19:20:19 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.251 2016/07/20 11:27:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -408,11 +408,11 @@ add_mlist(struct mlist *mlp, struct magic_map *map, size_t idx)
 {
 	struct mlist *ml;
 
-	mlp->map = idx == 0 ? map : NULL;
+	mlp->map = NULL;
 	if ((ml = CAST(struct mlist *, malloc(sizeof(*ml)))) == NULL)
 		return -1;
 
-	ml->map = NULL;
+	ml->map = idx == 0 ? map : NULL;
 	ml->magic = map->magic[idx];
 	ml->nmagic = map->nmagic[idx];
 
@@ -556,7 +556,7 @@ apprentice_unmap(struct magic_map *map)
 	case MAP_TYPE_MALLOC:
 		for (i = 0; i < MAGIC_SETS; i++) {
 			if ((char *)map->magic[i] >= (char *)map->p &&
-			    (char *)map->magic[i] < (char *)map->p + map->len)
+			    (char *)map->magic[i] <= (char *)map->p + map->len)
 				continue;
 			free(map->magic[i]);
 		}
