@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.251 2016/07/20 11:27:08 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.252 2016/09/11 13:53:02 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3158,7 +3158,7 @@ mkdbname(struct magic_set *ms, const char *fn, int strip)
 		return NULL;
 
 	/* Compatibility with old code that looked in .mime */
-	if (strstr(p, ".mime") != NULL)
+	if (strstr(fn, ".mime") != NULL)
 		ms->flags &= MAGIC_MIME_TYPE;
 	return buf;
 }
