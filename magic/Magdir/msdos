@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.110 2016/09/11 14:49:54 christos Exp $
+# $File: msdos,v 1.111 2016/09/14 01:26:26 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -894,24 +894,6 @@
 
 0	lelong		0x00000005
 >12	lelong		0x00000320	Windows Recycle Bin INFO2 file (Win2k - WinXP)
-
-
-##### put in Either Magic/font or Magic/news
-# Acroread or something	 files wrongly identified as G3	 .pfm
-# these have the form \000 \001 any? \002 \000 \000
-# or \000 \001 any? \022 \000 \000
-0	belong&0xffff00ff	0x00010012	PFM data
->4	string			\000\000
->6	string			>\060		- %s
-
-0	belong&0xffff00ff	0x00010002	PFM data
->4	string			\000\000
->6	string			>\060		- %s
-#0	string	\000\001 pfm?
-#>3	string	\022\000\000Copyright\	yes
-#>3	string	\002\000\000Copyright\	yes
-#>3	string	>\0	oops, not a font file. Cancel that.
-#it clashes with ttf files so put it lower down.
 
 # From Doug Lee via a FreeBSD pr
 9	string		GERBILDOC	First Choice document
