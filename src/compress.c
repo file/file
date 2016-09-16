@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.97 2016/05/13 23:02:28 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.98 2016/06/28 16:38:26 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -132,6 +132,9 @@ static const char *lrzip_args[] = {
 static const char *lz4_args[] = {
 	"lz4", "-cd", NULL
 };
+static const char *zstd_args[] = {
+	"zstd", "-cd", NULL
+};
 
 private const struct {
 	const void *magic;
@@ -154,6 +157,7 @@ private const struct {
  	{ "\3757zXZ\0",	6, xz_args },		/* XZ Utils */
  	{ "LRZI",	4, lrzip_args },	/* LRZIP */
  	{ "\004\"M\030",4, lz4_args },		/* LZ4 */
+ 	{ "\x28\xB5\x2F\xFD", 4, zstd_args },	/* zstd */
 #ifdef ZLIBSUPPORT
 	{ zlibcmp,	0, zlib_args },		/* zlib */
 #endif
