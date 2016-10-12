@@ -104,6 +104,7 @@ main(int argc, char **argv)
                                 if (strcmp(result, desired) != 0) {
 					(void)fprintf(stderr, "Error: result was\n%s\nexpected:\n%s\n", result, desired);
 					free(desired);
+					magic_close(ms);
 					return 1;
                                 }
 				free(desired);
