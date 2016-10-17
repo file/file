@@ -1,0 +1,7 @@
+
+#------------------------------------------------------------------------------
+# $File: apple,v 1.35 2016/08/17 09:45:13 christos Exp $
+# application:  file(1) magic for applications on small devices
+#
+# Pebble Application
+0	string	PBLAPP\000\000	Pebble application
