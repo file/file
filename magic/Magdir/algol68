@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: algol68,v 1.1 2016/08/02 16:53:28 christos Exp $
+# $File: algol68,v 1.2 2016/10/17 14:17:48 christos Exp $
 # algol68:  file(1) magic for Algol 68 source
 #
 0	search/8192	(input,			Algol 68 source text
@@ -13,7 +13,7 @@
 !:mime	text/x-Algol68
 0	regex          	FLEX[\t\ ]\*\\[		Algol 68 source text
 !:mime	text/x-Algol68
-0	regex          	[\t\ ]OD		Algol 68 source text
-!:mime	text/x-Algol68
-0	regex          	[\t\ ]FI		Algol 68 source text
-!:mime	text/x-Algol68
+#0	regex          	[\t\ ]OD		Algol 68 source text
+#!:mime	text/x-Algol68
+#0	regex          	[\t\ ]FI		Algol 68 source text
+#!:mime	text/x-Algol68
