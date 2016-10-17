@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.60 2016/10/17 15:25:34 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.61 2016/10/17 23:04:27 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -465,7 +465,7 @@ private struct sinfo {
 	},
 	{ "Microsoft Excel", "application/vnd.ms-excel",
 		{
-			"Book", "WorkBook", NULL, NULL, NULL,
+			"Book", "Workbook", NULL, NULL, NULL,
 		},
 		{
 			CDF_DIR_TYPE_USER_STREAM,
@@ -494,7 +494,7 @@ private struct sinfo {
 	{ "Microsoft Outlook Message", "application/vnd.ms-outlook",
 		{
 			"__properties_version1.0",
-			"__recpi_version1.0_#00000000",
+			"__recip_version1.0_#00000000",
 			NULL, NULL, NULL,
 		},
 		{
