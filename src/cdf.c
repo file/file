@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.83 2016/06/20 16:08:14 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.84 2016/10/17 15:25:34 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -266,7 +266,7 @@ cdf_unpack_dir(cdf_directory_t *d, char *buf)
 	CDF_UNPACK(d->d_unused0);
 }
 
-static int
+int
 cdf_zero_stream(cdf_stream_t *scn)
 {
 	scn->sst_len = 0;
@@ -759,6 +759,15 @@ cdf_namecmp(const char *d, const uint16_t *s, size_t l)
 		if (*d != CDF_TOLE2(*s))
 			return (unsigned char)*d - CDF_TOLE2(*s);
 	return 0;
+}
+
+int
+cdf_read_doc_summary_info(const cdf_info_t *info, const cdf_header_t *h,
+    const cdf_sat_t *sat, const cdf_sat_t *ssat, const cdf_stream_t *sst,
+    const cdf_dir_t *dir, cdf_stream_t *scn)
+{
+	return cdf_read_user_stream(info, h, sat, ssat, sst, dir,
+	    "\05DocumentSummaryInformation", scn);
 }
 
 int

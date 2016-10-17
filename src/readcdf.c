@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2008 Christos Zoulas
+ * Copyright (c) 2008, 2016 Christos Zoulas
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.59 2016/10/17 15:14:35 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.60 2016/10/17 15:25:34 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -380,6 +380,54 @@ cdf_file_catalog_info(struct magic_set *ms, const cdf_info_t *info,
 	return i;
 }
 
+private int
+cdf_check_summary_info(struct magic_set *ms, const cdf_info_t *info,
+    const cdf_header_t *h, const cdf_sat_t *sat, const cdf_sat_t *ssat,
+    const cdf_stream_t *sst, const cdf_dir_t *dir, cdf_stream_t *scn,
+    const cdf_directory_t *root_storage, const char **expn)
+{
+	int i;
+	const char *str = NULL;
+	cdf_directory_t *d;
+	char name[__arraycount(d->d_name)];
+	size_t j, k;
+
+#ifdef CDF_DEBUG
+        cdf_dump_summary_info(h, scn);
+#endif
+        if ((i = cdf_file_summary_info(ms, h, scn, root_storage)) < 0) {
+            *expn = "Can't expand summary_info";
+	    return i;
+	}
+	if (i == 1)
+		return i;
+	for (j = 0; str == NULL && j < dir->dir_len; j++) {
+		d = &dir->dir_tab[j];
+		for (k = 0; k < sizeof(name); k++)
+			name[k] = (char)cdf_tole2(d->d_name[k]);
+		str = cdf_app_to_mime(name,
+				      NOTMIME(ms) ? name2desc : name2mime);
+	}
+	if (NOTMIME(ms)) {
+		if (str != NULL) {
+			if (file_printf(ms, "%s", str) == -1)
+				return -1;
+			i = 1;
+		}
+	} else {
+		if (str == NULL)
+			str = "vnd.ms-office";
+		if (file_printf(ms, "application/%s", str) == -1)
+			return -1;
+		i = 1;
+	}
+	if (i <= 0) {
+		i = cdf_file_catalog_info(ms, info, h, sat, ssat, sst,
+					  dir, scn);
+	}
+	return i;
+}
+
 private struct sinfo {
 	const char *name;
 	const char *mime;
@@ -502,6 +550,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
         const char *expn = "";
         const cdf_directory_t *root_storage;
 
+        scn.sst_tab = NULL;
         info.i_fd = fd;
         info.i_buf = buf;
         info.i_len = nbytes;
@@ -571,10 +620,7 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
 		    i = 1;
 		    goto out5;
 		} else {
-		    free(scn.sst_tab);
-		    scn.sst_tab = NULL;
-		    scn.sst_len = 0;
-		    scn.sst_dirlen = 0;
+		    cdf_zero_stream(&scn);
 		}
 	}
 
@@ -582,56 +628,31 @@ file_trycdf(struct magic_set *ms, int fd, const unsigned char *buf,
             &scn)) == -1) {
                 if (errno != ESRCH) {
                         expn = "Cannot read summary info";
-			goto out4;
 		}
-		i = cdf_file_catalog_info(ms, &info, &h, &sat, &ssat, &sst,
-		    &dir, &scn);
-		if (i > 0)
-			goto out4;
-		i = cdf_file_dir_info(ms, &dir);
-		if (i < 0)
-                        expn = "Cannot read section info";
-		goto out4;
+	} else {
+		i = cdf_check_summary_info(ms, &info, &h,
+		    &sat, &ssat, &sst, &dir, &scn, root_storage, &expn);
+		cdf_zero_stream(&scn);
 	}
-
-
-#ifdef CDF_DEBUG
-        cdf_dump_summary_info(&h, &scn);
-#endif
-        if ((i = cdf_file_summary_info(ms, &h, &scn, root_storage)) < 0)
-            expn = "Can't expand summary_info";
-
-	if (i == 0) {
-		const char *str = NULL;
-		cdf_directory_t *d;
-		char name[__arraycount(d->d_name)];
-		size_t j, k;
-
-		for (j = 0; str == NULL && j < dir.dir_len; j++) {
-			d = &dir.dir_tab[j];
-			for (k = 0; k < sizeof(name); k++)
-				name[k] = (char)cdf_tole2(d->d_name[k]);
-			str = cdf_app_to_mime(name,
-			    NOTMIME(ms) ? name2desc : name2mime);
-		}
-		if (NOTMIME(ms)) {
-			if (str != NULL) {
-				if (file_printf(ms, "%s", str) == -1)
-					return -1;
-				i = 1;
+	if (i <= 0) {
+		if ((i = cdf_read_doc_summary_info(&info, &h, &sat, &ssat,
+		    &sst, &dir, &scn)) == -1) {
+			if (errno != ESRCH) {
+				expn = "Cannot read summary info";
 			}
 		} else {
-			if (str == NULL)
-				str = "vnd.ms-office";
-			if (file_printf(ms, "application/%s", str) == -1)
-				return -1;
-			i = 1;
+			i = cdf_check_summary_info(ms, &info, &h, &sat, &ssat,
+			    &sst, &dir, &scn, root_storage, &expn);
 		}
 	}
+	if (i <= 0) {
+		i = cdf_file_dir_info(ms, &dir);
+		if (i < 0)
+			expn = "Cannot read section info";
+	}
 out5:
-        free(scn.sst_tab);
-out4:
-        free(sst.sst_tab);
+	cdf_zero_stream(&scn);
+	cdf_zero_stream(&sst);
 out3:
         free(dir.dir_tab);
 out2:
