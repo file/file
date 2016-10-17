@@ -1,3 +1,7 @@
+2016-10-17  11:26  Christos Zoulas <christos@zoulas.com>
+
+	* CDF parsing improvements (Guy Helmer)
+
 2016-07-20   7:26  Christos Zoulas <christos@zoulas.com>
 
 	* Add support for signed indirect offsets
