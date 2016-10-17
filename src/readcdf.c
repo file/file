@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.58 2016/06/20 16:08:14 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.59 2016/10/17 15:14:35 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -388,10 +388,13 @@ private struct sinfo {
 } sectioninfo[] = {
 	{ "Encrypted", "encrypted", 
 		{
-			"EncryptedPackage", NULL, NULL, NULL, NULL,
+			"EncryptedPackage", "EncryptedSummary",
+			NULL, NULL, NULL,
 		},
 		{
-			CDF_DIR_TYPE_USER_STREAM, 0, 0, 0, 0,
+			CDF_DIR_TYPE_USER_STREAM,
+			CDF_DIR_TYPE_USER_STREAM,
+			0, 0, 0,
 
 		},
 	},
@@ -410,6 +413,46 @@ private struct sinfo {
 #endif
 			CDF_DIR_TYPE_USER_STREAM,
 			0, 0, 0, 0
+		},
+	},
+	{ "Microsoft Excel", "application/vnd.ms-excel",
+		{
+			"Book", "WorkBook", NULL, NULL, NULL,
+		},
+		{
+			CDF_DIR_TYPE_USER_STREAM,
+			CDF_DIR_TYPE_USER_STREAM,
+			0, 0, 0,
+		},
+	},
+	{ "Microsoft Word", "application/msword",
+		{
+			"WordDocument", NULL, NULL, NULL, NULL,
+		},
+		{
+			CDF_DIR_TYPE_USER_STREAM,
+			0, 0, 0, 0,
+		},
+	},
+	{ "Microsoft PowerPoint", "application/vnd.ms-powerpoint",
+		{
+			"PowerPoint", NULL, NULL, NULL, NULL,
+		},
+		{
+			CDF_DIR_TYPE_USER_STREAM,
+			0, 0, 0, 0,
+		},
+	},
+	{ "Microsoft Outlook Message", "application/vnd.ms-outlook",
+		{
+			"__properties_version1.0",
+			"__recpi_version1.0_#00000000",
+			NULL, NULL, NULL,
+		},
+		{
+			CDF_DIR_TYPE_USER_STREAM,
+			CDF_DIR_TYPE_USER_STORAGE,
+			0, 0, 0,
 		},
 	},
 };
