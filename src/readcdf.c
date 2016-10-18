@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.61 2016/10/17 23:04:27 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.62 2016/10/18 16:10:07 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -463,7 +463,7 @@ private struct sinfo {
 			0, 0, 0, 0
 		},
 	},
-	{ "Microsoft Excel", "application/vnd.ms-excel",
+	{ "Microsoft Excel", "vnd.ms-excel",
 		{
 			"Book", "Workbook", NULL, NULL, NULL,
 		},
@@ -473,7 +473,7 @@ private struct sinfo {
 			0, 0, 0,
 		},
 	},
-	{ "Microsoft Word", "application/msword",
+	{ "Microsoft Word", "msword",
 		{
 			"WordDocument", NULL, NULL, NULL, NULL,
 		},
@@ -482,7 +482,7 @@ private struct sinfo {
 			0, 0, 0, 0,
 		},
 	},
-	{ "Microsoft PowerPoint", "application/vnd.ms-powerpoint",
+	{ "Microsoft PowerPoint", "vnd.ms-powerpoint",
 		{
 			"PowerPoint", NULL, NULL, NULL, NULL,
 		},
@@ -491,7 +491,7 @@ private struct sinfo {
 			0, 0, 0, 0,
 		},
 	},
-	{ "Microsoft Outlook Message", "application/vnd.ms-outlook",
+	{ "Microsoft Outlook Message", "vnd.ms-outlook",
 		{
 			"__properties_version1.0",
 			"__recip_version1.0_#00000000",
@@ -526,8 +526,7 @@ cdf_file_dir_info(struct magic_set *ms, const cdf_dir_t *dir)
 			if (file_printf(ms, "CDFV2 %s", si->name) == -1)
 				return -1;
 		} else {
-			if (file_printf(ms, "application/CDFV2-%s",
-			    si->mime) == -1)
+			if (file_printf(ms, "application/%s", si->mime) == -1)
 				return -1;
 		}
 		return 1;
@@ -667,7 +666,7 @@ out0:
 		    if (file_printf(ms, ", %s", expn) == -1)
 			return -1;
 	    } else {
-		if (file_printf(ms, "application/CDFV2-unknown") == -1)
+		if (file_printf(ms, "application/CDFV2") == -1)
 		    return -1;
 	    }
 	    i = 1;
