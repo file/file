@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.121 2016/06/07 22:09:20 rrt Exp $
-.Dd June 20, 2016
+.\" $File: file.man,v 1.123 2016/06/30 14:50:55 christos Exp $
+.Dd October 19, 2016
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -210,7 +210,8 @@ Prints details of Compound Document Files.
 .It compress
 Checks for, and looks inside, compressed files.
 .It elf
-Prints ELF file details.
+Prints ELF file details, provided soft magic tests are enabled and the
+elf magic is found.
 .It soft
 Consults magic files.
 .It tar
