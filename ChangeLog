@@ -1,3 +1,8 @@
+2016-10-24  11:20  Christos Zoulas <christos@zoulas.com>
+
+	* der getlength overflow (Jonas Wagner)
+	* multiple magic file load failure (Christoph Biedl)
+
 2016-10-17  11:26  Christos Zoulas <christos@zoulas.com>
 
 	* CDF parsing improvements (Guy Helmer)
