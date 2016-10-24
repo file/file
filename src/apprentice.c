@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.252 2016/09/11 13:53:02 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.253 2016/09/13 13:14:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -452,7 +452,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 #ifndef COMPILE_ONLY
 	map = apprentice_map(ms, fn);
 	if (map == (struct magic_map *)-1)
-		goto fail;
+		return -1;
 	if (map == NULL) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "using regular magic file `%s'", fn);
@@ -464,7 +464,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	for (i = 0; i < MAGIC_SETS; i++) {
 		if (add_mlist(ms->mlist[i], map, i) == -1) {
 			file_oomem(ms, sizeof(*ml));
-			goto fail;
+			return -1;
 		}
 	}
 
@@ -478,12 +478,6 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 		}
 	}
 	return 0;
-fail:
-	for (i = 0; i < MAGIC_SETS; i++) {
-		mlist_free(ms->mlist[i]);
-		ms->mlist[i] = NULL;
-	}
-	return -1;
 #else
 	return 0;
 #endif /* COMPILE_ONLY */
