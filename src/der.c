@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.8 2016/07/15 00:56:04 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.9 2016/10/24 15:19:08 christos Exp $")
 #endif
 #endif
 
@@ -181,6 +181,8 @@ getlength(const uint8_t *c, size_t *p, size_t l)
 
 	for (i = 0; i < digits; i++)
 		len = (len << 8) | c[(*p)++];
+	if (*p + len >= l)
+		return DER_BAD;
         return len;
 }
 
