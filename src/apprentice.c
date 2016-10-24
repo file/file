@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.253 2016/09/13 13:14:44 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.254 2016/10/24 15:21:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -590,7 +590,7 @@ mlist_free(struct mlist *mlist)
 	ml = mlist->next;
 	for (ml = mlist->next; (next = ml->next) != NULL; ml = next) {
 		if (ml->map)
-			apprentice_unmap(ml->map);
+			apprentice_unmap(CAST(struct magic_map *, ml->map));
 		free(ml);
 		if (ml == mlist)
 			break;

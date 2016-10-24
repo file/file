@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.98 2016/06/28 16:38:26 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.99 2016/09/16 12:12:05 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -159,7 +159,7 @@ private const struct {
  	{ "\004\"M\030",4, lz4_args },		/* LZ4 */
  	{ "\x28\xB5\x2F\xFD", 4, zstd_args },	/* zstd */
 #ifdef ZLIBSUPPORT
-	{ zlibcmp,	0, zlib_args },		/* zlib */
+	{ RCAST(const void *, zlibcmp),	0, zlib_args },		/* zlib */
 #endif
 };
 
@@ -208,7 +208,7 @@ file_zmagic(struct magic_set *ms, int fd, const char *name,
 			continue;
 #ifdef ZLIBSUPPORT
 		if (compr[i].maglen == 0)
-			zm = (CAST(int (*)(const unsigned char *),
+			zm = (RCAST(int (*)(const unsigned char *),
 			    CCAST(void *, compr[i].magic)))(buf);
 		else
 #endif
@@ -366,7 +366,7 @@ nocheck:
 			return rn - n;
 		default:
 			n -= rv;
-			buf = ((char *)buf) + rv;
+			buf = CAST(char *, CCAST(void *, buf)) + rv;
 			break;
 		}
 	while (n > 0);

@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.83 2016/06/20 16:08:14 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.84 2016/10/17 15:25:34 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1110,7 +1110,7 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 			cep->ce_namlen = rlen;
 
 		np = CAST(const uint16_t *, CAST(const void *, (b + 16)));
-		if (CAST(const char *, np + cep->ce_namlen) > eb) {
+		if (RCAST(const char *, np + cep->ce_namlen) > eb) {
 			cep->ce_namlen = 0;
 			break;
 		}
