@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.111 2016/09/14 01:26:26 christos Exp $
+# $File: msdos,v 1.112 2016/10/30 00:36:27 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -565,10 +565,23 @@
 0	string/b	PO^Q`				Microsoft Word 6.0 Document
 !:mime	application/msword
 #
-0	string/b	\376\067\0\043			Microsoft Office Document
+4   long        0
+>0  belong      0xfe320000      Microsoft Word for Macintosh 1.0
 !:mime	application/msword
-0	string/b	\333\245-\0\0\0			Microsoft Office Document
+!:ext   mcw
+>0  belong      0xfe340000      Microsoft Word for Macintosh 3.0
 !:mime	application/msword
+!:ext   mcw
+>0  belong      0xfe37001c      Microsoft Word for Macintosh 4.0
+!:mime	application/msword
+!:ext   mcw
+>0  belong      0xfe370023      Microsoft Word for Macintosh 5.0
+!:mime	application/msword
+!:ext   mcw
+
+0	string/b	\333\245-\0\0\0			Microsoft Word 2.0 Document
+!:mime	application/msword
+!:ext   doc
 512	string/b	\354\245\301			Microsoft Word Document
 !:mime	application/msword
 
