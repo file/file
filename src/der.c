@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.10 2016/10/24 18:02:17 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.11 2016/11/07 15:51:23 christos Exp $")
 #endif
 #endif
 
@@ -159,31 +159,49 @@ gettag(const uint8_t *c, size_t *p, size_t l)
 	return tag;
 }
 
+/*
+ * Read the length of a DER tag from the input.
+ *
+ * `c` is the input, `p` is an output parameter that specifies how much of the
+ * input we consumed, and `l` is the maximum input length.
+ *
+ * Returns the length, or DER_BAD if the end of the input is reached or the
+ * length exceeds the remaining input.
+ */
 static uint32_t
 getlength(const uint8_t *c, size_t *p, size_t l)
 {
 	uint8_t digits, i;
 	size_t len;
+	int is_onebyte_result;
 
 	if (*p >= l)
 		return DER_BAD;
 
-	digits = c[(*p)++];
-
-        if ((digits & 0x80) == 0)
-		return digits;
-
-        digits &= 0x7f;
-	len = 0;
-
+	/*
+	 * Digits can either be 0b0 followed by the result, or 0b1
+	 * followed by the number of digits of the result. In either case,
+	 * we verify that we can read so many bytes from the input.
+	 */
+	is_onebyte_result = (c[*p] & 0x80) == 0;
+	digits = c[(*p)++] & 0x7f;
 	if (*p + digits >= l)
 		return DER_BAD;
 
+	if (is_onebyte_result)
+		return digits;
+
+	/*
+	 * Decode len. We've already verified that we're allowed to read
+	 * `digits` bytes.
+	 */
+	len = 0;
 	for (i = 0; i < digits; i++)
 		len = (len << 8) | c[(*p)++];
+
 	if (*p + len >= l)
 		return DER_BAD;
-        return len;
+	return len;
 }
 
 static const char *
