@@ -1,3 +1,8 @@
+2016-11-06  10:52  Christos Zoulas <christos@zoulas.com>
+
+	* Allow @@@ in extensions
+	* Add missing overflow check in der magic (Jonas Wagner)
+
 2016-10-25  10:40  Christos Zoulas <christos@zoulas.com>
 	
 	* release 5.29
