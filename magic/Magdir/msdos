@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.112 2016/10/30 00:36:27 christos Exp $
+# $File: msdos,v 1.113 2016/11/07 15:37:29 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1119,3 +1119,40 @@
 0	string	MIOPEN		Mallard BASIC Jetsam data
 0	string	Jetsam0		Mallard BASIC Jetsam index data
 
+# DOS backup 2.0 to 3.2
+
+# backupid.@@@
+
+# plausibility check for date
+0x3	ushort	>1979
+>0x5	ubyte-1 <31
+>>0x6	ubyte-1 <12
+# actually 121 nul bytes
+>>>0x7	string	\0\0\0\0\0\0\0\0
+>>>>0x1 ubyte	x	DOS 2.0 backup id file, sequence %d
+!:ext @@@
+>>>>0x0 ubyte	0xff	\b, last disk
+
+# backed up file
+
+# plausibility check for file name length
+0x53	ubyte	<79
+# actually 54 nul bytes
+>0x54	string	\0\0\0\0\0\0\0\0
+>>0x5	string	x	DOS 2.0 backed up file %s,
+>>0	ubyte	0xff	complete file
+>>0	ubyte	!0xff
+>>>1	ushort	x	split file, sequence %d
+
+
+# DOS backup 3.3 to 5.x
+
+# CONTROL.nnn files
+0	string	\x8bBACKUP\x20
+# actually 128 nul bytes
+>0xa	string	\0\0\0\0\0\0\0\0
+>>0x9	ubyte	x	DOS 3.3 backup control file, sequence %d
+>>0x8a	ubyte	0xff	\b, last disk
+
+# NB: The BACKUP.nnn files consist of the files backed up,
+# concatenated.
