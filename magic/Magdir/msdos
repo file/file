@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.112 2016/10/30 00:36:27 christos Exp $
+# $File: msdos,v 1.113 2016/11/07 15:37:29 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1136,9 +1136,9 @@
 # backed up file
 
 # plausibility check for file name length
-0x53	ubyte	<79
+0x53	ubyte-1	<80
 # actually 54 nul bytes
->0x54	string	\0\0\0\0\0\0\0\0
+>0x54	string	\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 >>0x5	string	x	DOS 2.0 backed up file %s,
 >>0	ubyte	0xff	complete file
 >>0	ubyte	!0xff
