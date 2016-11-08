@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.116 2016/03/23 15:29:20 christos Exp $
+# $File: images,v 1.117 2016/07/05 19:12:21 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1451,3 +1451,27 @@
 >0x10	string	GVRT	Sega GVR image:
 >>0x10	use	sega-gvr-image-header
 >>0x08	belong	x	\b, global index = %u
+
+# Light Field Picture
+# Documentation: http://optics.miloush.net/lytro/TheFileFormat.aspx
+# Typical file extensions: .lfp .lfr .lfx
+
+0	belong	0x894C4650
+>4	belong	0x0D0A1A0A
+>12	belong	0x00000000	Lytro Light Field Picture
+>8	belong	x		\b, version %d
+
+# Standard Portable Intermediate Representation (SPIR)
+# Documentation: https://www.khronos.org/spir
+# Typical file extension: .spv
+
+0	belong	0x07230203	Khronos SPIR-V binary, big-endian
+>4	belong	x		\b, version 0x%08x
+>8	belong	x		\b, generator 0x%08x
+
+0	lelong	0x07230203      Khronos SPIR-V binary, little-endian
+>4	lelong	x		\b, version 0x%08x
+>8	lelong	x		\b, generator 0x%08x
+
+
+
