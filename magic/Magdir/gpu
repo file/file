@@ -1,0 +1,16 @@
+
+#------------------------------------------------------------------------------
+# $File: gpu,v 1.1 2016/11/09 18:20:53 christos Exp $
+# gpu: file(1) magic for GPU input files
+
+# Standard Portable Intermediate Representation (SPIR)
+# Documentation: https://www.khronos.org/spir
+# Typical file extension: .spv
+
+0	belong	0x07230203	Khronos SPIR-V binary, big-endian
+>4	belong	x		\b, version 0x%08x
+>8	belong	x		\b, generator 0x%08x
+
+0	lelong	0x07230203      Khronos SPIR-V binary, little-endian
+>4	lelong	x		\b, version 0x%08x
+>8	lelong	x		\b, generator 0x%08x
