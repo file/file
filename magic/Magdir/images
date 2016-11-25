@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.119 2016/11/09 18:20:53 christos Exp $
+# $File: images,v 1.120 2016/11/25 01:54:24 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -41,7 +41,11 @@
 >>>>>>3	uleshort		0	
 >>>>>>>0	use		tga-image
 # Color Map
->>>>>1	ubyte			>0	
+>>>>>1	belong&0xfff7ffff	0x01010000
+>>>>>>0		use		tga-image
+>>>>>1	belong&0xfff7ffff	0x00020000
+>>>>>>0		use		tga-image
+>>>>>1	belong&0xfff7ffff	0x00030000
 >>>>>>0		use		tga-image
 #	display tga bitmap image information
 0	name				tga-image
