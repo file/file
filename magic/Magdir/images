@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.119 2016/11/09 18:20:53 christos Exp $
+# $File: images,v 1.120 2016/11/25 01:54:24 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -422,6 +422,7 @@
 #
 0	string		\x89PNG\x0d\x0a\x1a\x0a		PNG image data
 !:mime	image/png
+!:strength +10
 >16	belong		x		\b, %d x
 >20	belong		x		%d,
 >24	byte		x		%d-bit
