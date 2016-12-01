@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.90 2016/10/19 20:51:17 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.91 2016/12/01 16:16:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -76,7 +76,7 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 	ms->o.buf = buf;
 	return 0;
 out:
-	file_error(ms, errno, "vasprintf failed");
+	fprintf(stderr, "vasprintf failed (%s)", strerror(errno));
 	return -1;
 }
 
