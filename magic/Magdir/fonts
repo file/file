@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.32 2016/07/03 14:13:11 christos Exp $
+# $File: fonts,v 1.33 2016/09/14 01:26:26 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -100,9 +100,11 @@
 
 # X11 fonts, from Daniel Quinlan (quinlan@yggdrasil.com)
 # PCF must come before SGI additions ("MIPSEL MIPS-II COFF" collides)
-0	string		\001fcp			X11 Portable Compiled Font data
->12	byte		0x02			\b, LSB first
->12	byte		0x0a			\b, MSB first
+0	string		\001fcp			X11 Portable Compiled Font data,
+>12	lelong		^0x08			bit: LSB,
+>12	lelong		&0x08			bit: MSB,
+>12	lelong		^0x04			byte: LSB first
+>12	lelong		&0x04			byte: MSB first
 0	string		D1.0\015		X11 Speedo font data
 
 #------------------------------------------------------------------------------
