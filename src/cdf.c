@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.85 2016/10/24 18:02:17 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.86 2016/12/01 16:44:47 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -529,6 +529,9 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 	scn->sst_len = cdf_count_chain(sat, sid, ss);
 	scn->sst_dirlen = len;
 	scn->sst_ss = ss;
+
+	if (sid == CDF_SECID_END_OF_CHAIN || len == 0)
+		return cdf_zero_stream(scn);
 
 	if (scn->sst_len == (size_t)-1)
 		goto out;
