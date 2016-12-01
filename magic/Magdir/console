@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.25 2016/04/18 20:22:10 christos Exp $
+# $File: console,v 1.26 2016/06/12 15:20:37 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -617,6 +617,52 @@
 >0x218	belong	0x5D1C9EA3	Nintendo Wii disc image (WBFS format):
 >>0x200	use	nintendo-gcn-disc-common
 
+# Type: Nintendo GameCube/Wii disc image (CISO format)
+# NOTE: This is NOT the same as Compact ISO or PSP CISO,
+# though it has the same magic number.
+0		string	CISO
+# Other fields are used to determine what type of CISO this is:
+# - 0x04 == 0x00200000: GameCube/Wii CISO (block_size)
+# - 0x10 == 0x00000800: PSP CISO (ISO-9660 sector size)
+# - None of the above: Compact ISO.
+>4		lelong	0x200000
+>>8		byte	1
+>>>0x801C	belong	0xC2339F3D	Nintendo GameCube disc image (CISO format):
+>>>>0x8000	use	nintendo-gcn-disc-common
+>>>0x8018	belong	0x5D1C9EA3	Nintendo Wii disc image (CISO format):
+>>>>0x8000	use	nintendo-gcn-disc-common
+
+# Type: Nintendo GameCube/Wii disc image (GCZ format)
+# Due to zlib compression, we can't get the actual disc information.
+0	lelong	0xB10BC001
+>4	lelong	0		Nintendo GameCube disc image (GCZ format)
+>4	lelong	1		Nintendo Wii disc image (GCZ format)
+>4	lelong	>1		Nintendo GameCube/Wii disc image (GCZ format)
+
+# Type: Nintendo GameCube/Wii disc image (WDF format)
+0		string	WII\001DISC
+>8		belong	1
+# WDFv1
+>>0x54		belong	0xC2339F3D	Nintendo GameCube disc image (WDFv1 format):
+>>>0x38		use	nintendo-gcn-disc-common
+>>0x58		belong	0x5D1C9EA3	Nintendo Wii disc image (WDFv1 format):
+>>>0x38		use	nintendo-gcn-disc-common
+>8		belong	2
+# WDFv2
+>>(12.L+0x1C)	belong	0xC2339F3D	Nintendo GameCube disc image (WDFv2 format):
+>>>(12.L)	use	nintendo-gcn-disc-common
+>>(12.L+0x18)	belong	0x5D1C9EA3	Nintendo Wii disc image (WDFv2 format):
+>>>(12.L)	use	nintendo-gcn-disc-common
+
+# Type: Nintendo GameCube/Wii disc image (WIA format)
+0	string	WIA\001	Nintendo
+>0x48	belong	0	GameCube/Wii
+>0x48	belong	1	GameCube
+>0x48	belong	2	Wii
+>0x48	belong	>2	GameCube/Wii
+>0x48	belong	x	disc image (WIA format):
+>>0x58	use	nintendo-gcn-disc-common
+
 #------------------------------------------------------------------------------
 # Nintendo 3DS file formats.
 #
@@ -750,3 +796,17 @@
 #
 0	string	g\ GCE	Vectrex ROM image
 >0x11	string	>\0	\b: "%.16s"
+
+#------------------------------------------------------------------------------
+# amiibo: file(1) magic for Nintendo amiibo NFC dumps.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# Reference: https://www.3dbrew.org/wiki/Amiibo
+0x00		byte	0x04
+>0x0A		beshort	0x0FE0
+>>0x0C		belong	0xF110FFEE
+>>>0x208	beshort	0x0100
+>>>>0x020A	byte	0x0F
+>>>>>0x020C	bequad	0x000000045F000000
+>>>>>>0x5B	byte	0x02
+>>>>>>>0x54	belong	x	Nintendo amiibo NFC dump - amiibo ID: %08X-
+>>>>>>>0x58	belong	x	\b%08X
