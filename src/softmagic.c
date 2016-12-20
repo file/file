@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.238 2016/10/24 18:02:17 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.239 2016/12/20 03:15:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1888,7 +1888,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			    copy[--slen] = '\0';
 			    search = copy;
 			} else {
-			    search = ms->search.s;
+			    search = __UNCONST("");
 			    copy = NULL;
 			}
 			rc = file_regexec(&rx, (const char *)search,
