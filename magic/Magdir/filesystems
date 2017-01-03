@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.115 2016/12/01 15:34:44 christos Exp $
+# $File: filesystems,v 1.116 2017/01/03 11:25:37 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -2053,6 +2053,13 @@
 >29	byte	16		\bBlackfin,
 >29	byte	17		\bAVR32,
 >29	byte	18		\bSTMicroelectronics ST200,
+>29	byte	19		\bSandbox architecture,
+>29	byte	20		\bANDES Technology NDS32,
+>29	byte	21		\bOpenRISC 1000,
+>29	byte	22		\bARM 64-bit,
+>29	byte	23		\bDesignWare ARC,
+>29	byte	24		\bx86_64,
+>29	byte	25		\bXtensa,
 >30	byte	0		Invalid Image
 >30	byte	1		Standalone Program
 >30	byte	2		OS Kernel Image
