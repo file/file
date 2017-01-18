@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.100 2016/10/24 18:02:17 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.101 2017/01/18 16:33:57 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -62,7 +62,7 @@ typedef void (*sig_t)(int);
 #if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
 #endif
-#if defined(HAVE_ZLIB_H)
+#if defined(HAVE_ZLIB_H) && defined(ZLIBSUPPORT)
 #define BUILTIN_DECOMPRESS
 #include <zlib.h>
 #endif
@@ -83,6 +83,7 @@ int tty = -1;
 /*
  * The following python code is not really used because ZLIBSUPPORT is only
  * defined if we have a built-in zlib, and the built-in zlib handles that.
+ * That is not true for android where we have zlib.h and not -lz.
  */
 static const char zlibcode[] =
     "import sys, zlib; sys.stdout.write(zlib.decompress(sys.stdin.read()))";
