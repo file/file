@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.127 2015/11/18 12:29:29 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.128 2016/10/04 21:43:10 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1203,8 +1203,9 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	/* Read offset of name section to be able to read section names later */
 	if (pread(fd, xsh_addr, xsh_sizeof, CAST(off_t, (off + size * strtab)))
 	    < (ssize_t)xsh_sizeof) {
-		file_badread(ms);
-		return -1;
+		if (file_printf(ms, ", missing section headers") == -1)
+			return -1;
+		return 0;
 	}
 	name_off = xsh_offset;
 
