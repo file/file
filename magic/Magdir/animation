@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.58 2016/07/03 14:13:11 christos Exp $
+# $File: animation,v 1.59 2017/01/21 16:07:14 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -855,10 +855,12 @@
 
 # X3D (Extensible 3D) [http://www.web3d.org/specifications/x3d-3.0.dtd]
 # From Michel Briand <michelbriand@free.fr>
-0	string/t		\<?xml\ version="
-!:strength +1
->20	search/1000/cw  \<!DOCTYPE\ X3D		X3D (Extensible 3D) model xml text
-!:mime model/x3d
+# mimetype from https://www.iana.org/assignments/media-types/model/x3d+xml
+# Example http://www.web3d.org/x3d/content/examples/Basic/course/CreateX3DFromStringRandomSpheres.x3d
+0	string/w	\<?xml\ version=
+!:strength + 5
+>20	search/1000/w	\<!DOCTYPE\ X3D		X3D (Extensible 3D) model xml text
+!:mime model/x3d+xml
 
 #---------------------------------------------------------------------------
 # HVQM4: compressed movie format designed by Hudson for Nintendo GameCube
