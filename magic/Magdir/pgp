@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.11 2014/11/11 21:32:38 christos Exp $
+# $File: pgp,v 1.12 2016/10/07 20:22:12 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 # see http://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
@@ -19,15 +19,15 @@
 #>15	string	SIGNED\040MESSAGE-	signed message
 #>15	string	PGP\040SIGNATURE-	signature
 
-2	string	---BEGIN\ PGP\ PUBLIC\ KEY\ BLOCK-	PGP public key block
+2	string	---BEGIN\040PGP\040PUBLIC\040KEY\040BLOCK-	PGP public key block
 !:mime	application/pgp-keys
 >10	search/100	\n\n
 >>&0	use		pgp
-0	string	-----BEGIN\040PGP\40MESSAGE-		PGP message
+0	string	-----BEGIN\040PGP\040MESSAGE-		PGP message
 !:mime	application/pgp
 >10	search/100	\n\n
 >>&0	use		pgp
-0	string	-----BEGIN\040PGP\40SIGNATURE-		PGP signature
+0	string	-----BEGIN\040PGP\040SIGNATURE-		PGP signature
 !:mime	application/pgp-signature
 >10	search/100	\n\n
 >>&0	use		pgp
