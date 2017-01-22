@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.26 2016/06/12 15:20:37 christos Exp $
+# $File: console,v 1.27 2016/12/01 15:34:44 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -9,17 +9,19 @@
 # References:
 # - http://wiki.nesdev.com/w/index.php/INES
 # - http://wiki.nesdev.com/w/index.php/NES_2.0
-0	string		NES\x1A		iNES ROM image
+
+# Common header for iNES, NES 2.0, and Wii U iNES.
+0	name		nes-rom-image-ines
 >7	byte&0x0C	=0x8		(NES 2.0)
 >4	byte		x		\b: %ux16k PRG
->5	byte		x		\b, %ux16k CHR
+>5	byte		x		\b, %ux8k CHR
 >6	byte&0x08	=0x8		[4-Scr]
 >6	byte&0x09	=0x0		[H-mirror]
 >6	byte&0x09	=0x1		[V-mirror]
 >6	byte&0x02	=0x2		[SRAM]
 >6	byte&0x04	=0x4		[Trainer]
 >7	byte&0x03	=0x2		[PC10]
->7	byte&0x03	=0x1		[VS
+>7	byte&0x03	=0x1		[VS]
 >>7	byte&0x0C	=0x8
 # NES 2.0: VS PPU
 >>>13	byte&0x0F	=0x0		\b, RP2C03B
@@ -43,17 +45,24 @@
 >>12	byte&0x03	=0x1		[PAL]
 >>12	byte&0x02	=0x2		[NTSC+PAL]
 
+# Standard iNES ROM header.
+0	string		NES\x1A		NES ROM image (iNES)
+>0	use		nes-rom-image-ines
+
+# Wii U Virtual Console iNES ROM header.
+0	belong		0x4E455300	NES ROM image (Wii U Virtual Console)
+>0	use		nes-rom-image-ines
+
 #------------------------------------------------------------------------------
 # unif: file(1) magic for UNIF-format Nintendo Entertainment System ROM images
 # Reference: http://wiki.nesdev.com/w/index.php/UNIF
 # From: David Korth <gerbilsoft@gerbilsoft.com>
-# TODO commit on 2016/03/21
 #
 # NOTE: The UNIF format uses chunks instead of a fixed header,
 # so most of the data isn't easily parseable.
 #
 0	string	UNIF
->4	lelong	<16	UNIF v%d format NES ROM image
+>4	lelong	<16	NES ROM image (UNIF v%d format)
 
 #------------------------------------------------------------------------------
 # fds: file(1) magic for Famciom Disk System disk images
@@ -63,23 +72,38 @@
 
 # Disk info block. (block 1)
 0	name	nintendo-fds-disk-info-block
->1	string	*NINTENDO-HVC*	Famicom Disk System disk image:
 >23	byte	!1		FMC-
 >23	byte	1		FSC-
 >16	string	x		\b%.3s
->15	byte	x		\b, mfr 0x%02X
+>15	byte	x		\b, mfr %02X
 >20	byte	x		(Rev.%02u)
 
 # Headered version.
 0	string	FDS\x1A
->0x11	string	*NINTENDO-HVC*
+>0x11	string	*NINTENDO-HVC*	Famicom Disk System disk image:
 >>0x10	use	nintendo-fds-disk-info-block
 >4	byte	1	(%u side)
 >4	byte	!1	(%u sides)
 
 # Unheadered version.
-1	string	*NINTENDO-HVC*
+1	string	*NINTENDO-HVC*	Famicom Disk System disk image:
 >0	use	nintendo-fds-disk-info-block
+
+#------------------------------------------------------------------------------
+# tnes: file(1) magic for TNES-format Nintendo Entertainment System ROM images
+# Used by Nintendo 3DS NES Virtual Console games.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+#
+0		string	TNES	NES ROM image (Nintendo 3DS Virtual Console)
+>4		byte	100	\b: FDS,
+>>0x2010	use	nintendo-fds-disk-info-block
+>4		byte	!100	\b: TNES mapper %u
+>>5	byte		x		\b, %ux8k PRG
+>>6	byte		x		\b, %ux8k CHR
+>>7	byte&0x08	=1		[WRAM]
+>>8	byte&0x09	=1		[H-mirror]
+>>8	byte&0x09	=2		[V-mirror]
+>>8	byte&0x02	=3		[VRAM]
 
 #------------------------------------------------------------------------------
 # gameboy: file(1) magic for the Nintendo (Color) Gameboy raw ROM format
