@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.129 2017/01/18 16:08:25 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.130 2017/01/29 19:34:24 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1185,7 +1185,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 {
 	Elf32_Shdr sh32;
 	Elf64_Shdr sh64;
-	int stripped = 1;
+	int stripped = 1, has_debug_info = 1;
 	size_t nbadcap = 0;
 	void *nbuf;
 	off_t noff, coff, name_off;
@@ -1216,8 +1216,10 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			return -1;
 		}
 		name[namesize] = '\0';
-		if (strcmp(name, ".debug_info") == 0)
+		if (strcmp(name, ".debug_info") == 0) {
+			has_debug_info = 1;
 			stripped = 0;
+		}
 
 		if (pread(fd, xsh_addr, xsh_sizeof, off) < (ssize_t)xsh_sizeof) {
 			file_badread(ms);
@@ -1373,6 +1375,10 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 
 	if (file_printf(ms, ", %sstripped", stripped ? "" : "not ") == -1)
 		return -1;
+	if (has_debug_info) {
+		if (file_printf(ms, ", with debug_info") == -1)
+			return -1;
+	}
 	if (cap_hw1) {
 		const cap_desc_t *cdp;
 		switch (mach) {
