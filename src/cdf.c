@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.85 2016/10/24 18:02:17 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.86 2016/12/01 16:44:47 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -891,8 +891,8 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			DPRINTF(("Wrapped around %p < %p\n", q, p));
 			goto out;
 		}
-		if (q > e) {
-			DPRINTF(("Ran of the end %p > %p\n", q, e));
+		if (q >= e) {
+			DPRINTF(("Ran of the end %p >= %p\n", q, e));
 			goto out;
 		}
 		inp[i].pi_id = CDF_GETUINT32(p, i << 1);
