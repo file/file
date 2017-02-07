@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.242 2016/12/20 22:44:32 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.243 2017/02/07 23:27:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1844,7 +1844,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 
 		for (idx = 0; m->str_range == 0 || idx < m->str_range; idx++) {
 			if (slen + idx >= ms->search.s_len)
-				break;
+				return 0;
 
 			v = file_strncmp(m->value.s, ms->search.s + idx, slen,
 			    m->str_flags);
