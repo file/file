@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.89 2016/10/25 20:33:30 christos Exp $
-.Dd July 20, 2016
+.\" $File: magic.man,v 1.90 2017/02/08 21:52:03 christos Exp $
+.Dd February 8, 2017
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -657,7 +657,7 @@ start of the main indirect offset.
 \*[Gt]\*[Gt]\*[Gt]\*[Gt](\*[Am]0xe.l+(-4)) string       PK\e3\e4 \eb, ZIP self-extracting archive
 .Ed
 .Pp
-If you have a list of known avalues at a particular continuation level,
+If you have a list of known values at a particular continuation level,
 and you want to provide a switch-like default case:
 .Bd -literal -offset indent
 # clear that continuation level match
