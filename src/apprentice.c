@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.257 2017/02/04 16:46:16 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.258 2017/02/10 18:14:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -549,8 +549,10 @@ apprentice_unmap(struct magic_map *map)
 		break;
 	case MAP_TYPE_MALLOC:
 		for (i = 0; i < MAGIC_SETS; i++) {
-			if ((char *)map->magic[i] >= (char *)map->p &&
-			    (char *)map->magic[i] <= (char *)map->p + map->len)
+			void *b = map->magic[i];
+			void *p = map->p;
+			if (CAST(char *, b) >= CAST(char *, p) &&
+			    CAST(char *, b) <= CAST(char *, p) + map->len)
 				continue;
 			free(map->magic[i]);
 		}

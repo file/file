@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.11 2016/11/07 15:51:23 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.12 2017/02/10 18:14:01 christos Exp $")
 #endif
 #endif
 
@@ -201,7 +201,7 @@ getlength(const uint8_t *c, size_t *p, size_t l)
 
 	if (*p + len >= l)
 		return DER_BAD;
-	return len;
+	return CAST(uint32_t, len);
 }
 
 static const char *
@@ -260,12 +260,12 @@ der_offs(struct magic_set *ms, struct magic *m, size_t nbytes)
 #endif
 	if (m->cont_level != 0) {
 		if (offs + tlen > nbytes)
-			return DER_BAD;
-		ms->c.li[m->cont_level - 1].off = offs + tlen;
+			return -1;
+		ms->c.li[m->cont_level - 1].off = CAST(int, offs + tlen);
 		DPRINTF(("cont_level[%u] = %u\n", m->cont_level - 1,
 		    ms->c.li[m->cont_level - 1].off));
 	}
-	return offs;
+	return CAST(int32_t, offs);
 }
 
 int

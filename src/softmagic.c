@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.243 2017/02/07 23:27:32 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.244 2017/02/10 18:14:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1017,9 +1017,8 @@ private int
 mconvert(struct magic_set *ms, struct magic *m, int flip)
 {
 	union VALUETYPE *p = &ms->ms_value;
-	uint8_t type;
 
-	switch (type = cvt_flip(m->type, flip)) {
+	switch (cvt_flip(m->type, flip)) {
 	case FILE_BYTE:
 		if (cvt_8(p, m) == -1)
 			goto out;
@@ -1184,7 +1183,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		case FILE_DER:
 		case FILE_SEARCH:
 			if (offset > nbytes)
-				offset = nbytes;
+				offset = CAST(uint32_t, nbytes);
 			ms->search.s = RCAST(const char *, s) + offset;
 			ms->search.s_len = nbytes - offset;
 			ms->search.offset = offset;
