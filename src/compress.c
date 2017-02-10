@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.101 2017/01/18 16:33:57 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.102 2017/02/10 18:14:01 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -94,7 +94,7 @@ static int
 zlibcmp(const unsigned char *buf)
 {
 	unsigned short x = 1;
-	unsigned char *s = CCAST(unsigned char *, &x);
+	unsigned char *s = CAST(unsigned char *, CAST(void *, &x));
 
 	if ((buf[0] & 0xf) != 8 || (buf[0] & 0x80) != 0)
 		return 0;
