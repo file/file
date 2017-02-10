@@ -1,3 +1,18 @@
+2017-02-07  23:27  Christos Zoulas <christos@zoulas.com>
+
+	* If we exceeded the offset in a search return no match
+	  (Christoph Biedl)
+	* Be more lenient on corrupt CDF files (Christoph Biedl)
+
+2017-02-04  16:46  Christos Zoulas <christos@zoulas.com>
+
+	* pacify ubsan sign extension (oss-fuzz/524)
+
+2017-02-01  12:42  Christos Zoulas <christos@zoulas.com>
+
+	* off by one in cdf parsing (PR/593)
+	* report debugging sections in elf (PR/591)
+
 2016-11-06  10:52  Christos Zoulas <christos@zoulas.com>
 
 	* Allow @@@ in extensions
