@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.131 2017/02/10 18:14:01 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.132 2017/02/11 18:12:03 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1185,7 +1185,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 {
 	Elf32_Shdr sh32;
 	Elf64_Shdr sh64;
-	int stripped = 1, has_debug_info = 1;
+	int stripped = 1, has_debug_info = 0;
 	size_t nbadcap = 0;
 	void *nbuf;
 	off_t noff, coff, name_off;
