@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.115 2016/12/01 15:34:44 christos Exp $
+# $File: filesystems,v 1.116 2017/01/03 11:25:37 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid  
@@ -1552,6 +1552,16 @@
 >>0x12		string		$	
 >>>0x0c		lestring16	x	\b%-2.2s
 ### DOS,NTFS boot sectors end
+
+# ntfsclone-image is a special save format for NTFS volumes,
+# created and restored by the ntfsclone program
+0	string	\0ntfsclone-image	ntfsclone image,
+>0x10	byte	x			version %d.
+>0x11	byte	x			\b%d,
+>0x12	lelong	x			cluster size %d,
+>0x16	lequad	x			device size %lld,
+>0x1e	lequad	x			%lld total clusters,
+>0x26	lequad	x			%lld clusters in use
 
 9564	lelong		0x00011954	Unix Fast File system [v1] (little-endian),
 >8404	string		x		last mounted on %s,
