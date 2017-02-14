@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.132 2017/02/11 18:12:03 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.133 2017/02/14 12:56:48 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1373,12 +1373,12 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		}
 	}
 
-	if (file_printf(ms, ", %sstripped", stripped ? "" : "not ") == -1)
-		return -1;
 	if (has_debug_info) {
 		if (file_printf(ms, ", with debug_info") == -1)
 			return -1;
 	}
+	if (file_printf(ms, ", %sstripped", stripped ? "" : "not ") == -1)
+		return -1;
 	if (cap_hw1) {
 		const cap_desc_t *cdp;
 		switch (mach) {
