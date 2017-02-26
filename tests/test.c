@@ -103,8 +103,11 @@ main(int argc, char **argv)
 				(void)printf("%s: %s\n", argv[1], result);
                                 if (strcmp(result, desired) != 0) {
 					(void)fprintf(stderr, "Error: result was\n%s\nexpected:\n%s\n", result, desired);
+					free(desired);
+					magic_close(ms);
 					return 1;
                                 }
+				free(desired);
 			}
 		}
 	}
