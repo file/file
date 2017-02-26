@@ -1,0 +1,4 @@
+#!/bin/sh
+files(){ m=magic/Magdir; mm='magic\/Magdir\/'
+         mmm=$m/$(echo $(ls $m) | sed "s/ /:$mm/g"); file -m $mmm "$@" ;}
+files "$@" 2>/dev/null
