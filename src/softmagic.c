@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.245 2017/03/07 22:36:10 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.246 2017/03/08 20:45:35 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1632,6 +1632,7 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 	 */
 	const unsigned char *a = (const unsigned char *)s1;
 	const unsigned char *b = (const unsigned char *)s2;
+	const unsigned char *eb = b + len;
 	uint64_t v;
 
 	/*
@@ -1646,6 +1647,10 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 	}
 	else { /* combine the others */
 		while (len-- > 0) {
+			if (b >= eb) {
+				v = 1;
+				break;
+			}
 			if ((flags & STRING_IGNORE_LOWERCASE) &&
 			    islower(*a)) {
 				if ((v = tolower(*b++) - *a++) != '\0')
@@ -1661,7 +1666,7 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 				a++;
 				if (isspace(*b++)) {
 					if (!isspace(*a))
-						while (isspace(*b))
+						while (b < eb && isspace(*b))
 							b++;
 				}
 				else {
@@ -1672,7 +1677,7 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 			else if ((flags & STRING_COMPACT_OPTIONAL_WHITESPACE) &&
 			    isspace(*a)) {
 				a++;
-				while (isspace(*b))
+				while (b < eb && isspace(*b))
 					b++;
 			}
 			else {
