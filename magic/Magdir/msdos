@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.115 2017/01/18 16:24:56 christos Exp $
+# $File: msdos,v 1.116 2017/03/12 22:08:51 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -328,9 +328,15 @@
 0	string	\xffKEYB\ \ \ \0\0\0\0	
 >12	string	\0\0\0\0`\004\360	MS-DOS KEYBoard Layout file
 
-# DOS device driver updated by Joerg Jenderek at May 2011
-# http://maben.homeip.net/static/S100/IBM/software/DOS/DOS%20techref/CHAPTER.009
-0	ulequad&0x07a0ffffffff		0xffffffff		DOS executable (
+# DOS device driver updated by Joerg Jenderek at May 2011,Mar 2017
+# https://amaus.net/static/S100/IBM/software/DOS/DOS%20techref/CHAPTER.009
+0	ulequad&0x07a0ffffffff		0xffffffff	
+>0	use				msdos-driver
+0       name    			msdos-driver		DOS executable (
+#!:mime	application/octet-stream
+!:mime	application/x-dosdriver
+# also found FreeDOS print driver SPOOL.DEV and disc compression driver STACLOAD.BIN
+!:ext	sys/dev/bin
 >40	search/7			UPX!			\bUPX compressed 
 # DOS device driver attributes
 >4	uleshort&0x8000			0x0000			\bblock device driver
@@ -350,7 +356,7 @@
 >>40	search/7			UPX!			
 >>40	default				x			
 # leading/trailing nulls, zeros or non ASCII characters in 8-byte name field at offset 10 are skipped
->>>12		ubyte			>0x27			\b 
+>>>12		ubyte			>0x2E			\b 
 >>>>10		ubyte			>0x20			
 >>>>>10		ubyte			!0x2E			
 >>>>>>10	ubyte			!0x2A			\b%c
@@ -372,10 +378,10 @@
 >>>>>17		ubyte			!0x2E			
 >>>>>>17	ubyte			<0x90			\b%c
 # some character device drivers like ASPICD.SYS, btcdrom.sys and Cr_atapi.sys contain only spaces or points in name field
->>>4		uleshort&0x8000		0x8000			
->>>>12		ubyte			<0x2F			
+>>>12		ubyte			<0x2F			
 # they have their real name at offset 22
->>>>>22		string			>\0			\b%-.5s
+# also block device drivers like DUMBDRV.SYS
+>>>>22		string			>\056			%-.6s
 >4	uleshort&0x8000			0x0000			
 # 32 bit sector addressing ( > 32 MB) for block devices
 >>4	uleshort&0x0002			0x0002			\b,32-bit sector-
@@ -394,11 +400,20 @@
 >>4	uleshort&0x4842			>0			\bsupport
 >0	ubyte				x			\b)
 # DOS driver cmd640x.sys has 0x12 instead of 0xffffffff for pointer field to next device header 
-# Too weak, matches files that only contain 0's
-#0	ulequad&0x000007a0ffffffed	0x0000000000000000	DOS-executable (
-#>4	uleshort&0x8000			0x8000			\bcharacter device driver
-#>>10	string				x			%-.8s
-#>4	uleshort&0x4000			0x4000			\b,control strings-support)
+0	ulequad				0x0513c00000000012	
+>0	use				msdos-driver
+# DOS drivers DC2975.SYS, DUMBDRV.SYS, ECHO.SYS has also none 0xffffffff for pointer field
+0	ulequad				0x32f28000ffff0016	
+>0	use				msdos-driver
+0	ulequad				0x007f00000000ffff	
+>0	use				msdos-driver
+0	ulequad				0x001600000000ffff	
+>0	use				msdos-driver
+# DOS drivers LS120.SYS, MKELS120.SYS use reserved bits of attribute field
+0	ulequad				0x0bf708c2ffffffff	
+>0	use				msdos-driver
+0	ulequad				0x07bd08c2ffffffff	
+>0	use				msdos-driver
 
 # updated by Joerg Jenderek
 # GRR: line below too general as it catches also 
