@@ -1,0 +1,14 @@
+#------------------------------------------------------------------------------
+# $File: webassembly,v 1.1 2017/03/12 22:57:44 christos Exp $
+# webassembly:  file(1) magic for WebAssembly modules
+#
+# WebAssembly is a virtual architecture developed by a W3C Community
+# Group at http://webassembly.org/. The file extension is .wasm, and
+# the MIME type is application/wasm.
+#
+# http://webassembly.org/docs/binary-encoding/ is the main
+# document describing the binary format.
+# From: Pip Cet <pipcet@gmail.com>
+
+0     lelong     0x6d736100  WebAssembly module
+>4    lelong     x           \b, version %d
