@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: c-lang,v 1.24 2016/07/01 23:31:13 christos Exp $
+# $File: c-lang,v 1.25 2017/03/17 21:35:28 christos Exp $
 # c-lang:  file(1) magic for C and related languages programs
 #
 # The strength is to beat standard HTML
@@ -53,7 +53,7 @@
 !:strength +25
 !:mime	text/x-objective-c
 
-# From: Mikhail Teterin <mi@aldan.algebra.com> 
+# From: Mikhail Teterin <mi@aldan.algebra.com>
 0	string		cscope		cscope reference data
 >7	string		x		version %.2s
 # We skip the path here, because it is often long (so file will

@@ -7,7 +7,7 @@
 ############## MSX Music file formats ##############
 
 # Gigamix MGSDRV music file
-0	string/b		MGS	MSX Gigamix MGSDRV3 music file, 
+0	string/b		MGS	MSX Gigamix MGSDRV3 music file,
 >6	ubeshort	0x0D0A
 >>3	byte		x	\bv%c
 >>4	byte		x	\b.%c
@@ -35,7 +35,7 @@
 >>0xF	byte&0x02	0	\b, soundchips: AY-3-8910, SCC(+)
 >>0xF	byte&0x02	0x02	\b, soundchips: SN76489
 >>>0xF	byte&0x04	0x04	stereo
->>0xF	byte&0x01	0x01	\b, 
+>>0xF	byte&0x01	0x01	\b,
 >>>0xF	byte&0x18	0x00	\bYM2413
 >>>0xF	byte&0x18	0x08	\bYM2413, Y8950
 >>>0xF	byte&0x18	0x18	\bYM2413+Y8950 pseudostereo
@@ -296,7 +296,7 @@
 4	uleshort	0x0900
 >0xF	byte		1
 >>0x14	byte		0
->>>0x1E	string		\ \ \ 
+>>>0x1E	string		\ \ \
 >>>>0x23	byte	1
 >>>>>0x25	byte	0
 >>>>>>0x15	string	>\x30

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.121 2016/12/01 16:20:13 christos Exp $
+# $File: images,v 1.122 2017/03/17 21:35:28 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -26,19 +26,19 @@
 # test of Color Map Type 0~no 1~color map
 # and Image Type 1 2 3 9 10 11 32 33
 # and Color Map Entry Size 0 15 16 24 32
-0	ubequad&0x00FeC400000000C0	0	
+0	ubequad&0x00FeC400000000C0	0
 # skip more garbage by looking for positive image type
->2	ubyte			>0		
+>2	ubyte			>0
 # skip some compiled terminfo by looking for image type less equal 33
->>2	ubyte			<34		
+>>2	ubyte			<34
 # skip arches.3200 , Finder.Root , Slp.1 by looking for low pixel sizes 15 16 24 32
->>>16	ubyte			<33		
+>>>16	ubyte			<33
 # skip more by looking for pixel size 0Fh 10h 18h 20h
->>>>16	ubyte&0xC0		0x00	
+>>>>16	ubyte&0xC0		0x00
 # skip 260-16.ico by looking for no color map
->>>>>1	ubyte			0	
+>>>>>1	ubyte			0
 # implies no first map entry
->>>>>>3	uleshort		0	
+>>>>>>3	uleshort		0
 >>>>>>>0	use		tga-image
 # Color Map
 >>>>>1	belong&0xfff7ffff	0x01010000
@@ -82,7 +82,7 @@
 >14	uleshort	=0		65536
 # Image Pixel Size 15 16 24 32
 >16	ubyte		x		x %d
-# X origin of image. 0 normal 
+# X origin of image. 0 normal
 >8	uleshort	>0		+%d
 # Y origin of image. 0 normal; positive for top
 >10	uleshort	>0		+%d
@@ -94,27 +94,27 @@
 >17	ubyte		&0x10		- right
 #>17	ubyte		^0x10		- left
 # some info say other bits 6-7 should be zero
-# but data storage interleave by http://www.fileformat.info/format/tga/corion.htm 
+# but data storage interleave by http://www.fileformat.info/format/tga/corion.htm
 # 00 - no interleave;01 - even/odd interleave; 10 - four way interleave; 11 - reserved
 #>17	ubyte&0xC0	0x00		- no interleave
 >17	ubyte&0xC0	0x40		- interleave
 >17	ubyte&0xC0	0x80		- four way interleave
 >17	ubyte&0xC0	0xC0		- reserved
-# positive length implies identification field 
->0	ubyte		>0		
+# positive length implies identification field
+>0	ubyte		>0
 >>18	string		x		"%s"
 # last 18 bytes of newer tga file footer signature
->18	search/4261301/s	TRUEVISION-XFILE.\0	
+>18	search/4261301/s	TRUEVISION-XFILE.\0
 # extension area offset if not 0
->>&-8		ulelong			>0			
+>>&-8		ulelong			>0
 # length of the extension area. normal 495 for version 2.0
->>>(&-4.l)	uleshort		0x01EF		
+>>>(&-4.l)	uleshort		0x01EF
 # AuthorName[41]
 >>>>&0		string			>\0		- author "%-.40s"
 # Comment[324]=4 * 80 null terminated
 >>>>&41		string			>\0		- comment "%-.80s"
 # date
->>>>&365	ubequad&0xffffFFFFffff0000	!0		
+>>>>&365	ubequad&0xffffFFFFffff0000	!0
 # Day
 >>>>>&-6		uleshort		x		%d
 # Month
@@ -122,7 +122,7 @@
 # Year
 >>>>>&-4		uleshort		x		\b-%d
 # time
->>>>&371	ubequad&0xffffFFFFffff0000	!0		
+>>>>&371	ubequad&0xffffFFFFffff0000	!0
 # hour
 >>>>>&-8		uleshort		x		%d
 # minutes
@@ -132,14 +132,14 @@
 # JobName[41]
 >>>>&377		string			>\0		- job "%-.40s"
 # JobHour Jobminute Jobsecond
->>>>&418	ubequad&0xffffFFFFffff0000	!0		
+>>>>&418	ubequad&0xffffFFFFffff0000	!0
 >>>>>&-8		uleshort		x		%d
 >>>>>&-6		uleshort		x		\b:%.2d
 >>>>>&-4		uleshort		x		\b:%.2d
 # SoftwareId[41]
 >>>>&424		string			>\0		- %-.40s
 # SoftwareVersionNumber
->>>>&424	ubyte				>0		
+>>>>&424	ubyte				>0
 >>>>>&40		uleshort/100		x		%d
 >>>>>&40		uleshort%100		x		\b.%d
 # VersionLetter
@@ -147,16 +147,16 @@
 # KeyColor
 >>>>&468		ulelong			>0		- keycolor 0x%8.8x
 # Denominator of Pixel ratio. 0~no pixel aspect
->>>>&474	uleshort			>0			
+>>>>&474	uleshort			>0
 # Numerator
 >>>>>&-4		uleshort		>0		- aspect %d
 >>>>>&-2		uleshort		x		\b/%d
 # Denominator of Gamma ratio. 0~no Gamma value
->>>>&478	uleshort			>0		
+>>>>&478	uleshort			>0
 # Numerator
 >>>>>&-4		uleshort		>0		- gamma %d
 >>>>>&-2		uleshort		x		\b/%d
-# ColorOffset 
+# ColorOffset
 #>>>>&480	ulelong			x		- col offset 0x%8.8x
 # StampOffset
 #>>>>&484	ulelong			x		- stamp offset 0x%8.8x
@@ -174,14 +174,14 @@
 >>&0	regex		=[0-9]{1,50} 			\b, size = %s x
 >>>&0	regex		=[0-9]{1,50}			\b %s
 
-0	search/1	P1		
+0	search/1	P1
 >0	regex/4		P1\\s
 >>0	use		netpbm
 >>>0	string		x	\b, bitmap
 !:strength + 45
 !:mime	image/x-portable-bitmap
 
-0	search/1	P2		
+0	search/1	P2
 >0	regex/4		P2\\s
 >>0	use		netpbm
 >>>0	string		x	\b, greymap
@@ -195,21 +195,21 @@
 !:strength + 45
 !:mime	image/x-portable-pixmap
 
-0	string		P4		
+0	string		P4
 >0	regex/4		P4\\s
 >>0	use		netpbm
 >>>0	string		x	\b, rawbits, bitmap
 !:strength + 45
 !:mime	image/x-portable-bitmap
 
-0	string		P5		
+0	string		P5
 >0	regex/4		P5\\s
 >>0	use		netpbm
 >>>0	string		x	\b, rawbits, greymap
 !:strength + 45
 !:mime	image/x-portable-greymap
 
-0	string		P6		
+0	string		P6
 >0	regex/4		P6\\s
 >>0	use		netpbm
 >>>0	string		x	\b, rawbits, pixmap
@@ -307,7 +307,7 @@
 >>>8	leshort		0x8765		\bJBIG
 >>>8	leshort		0x8798		\bJPEG2000
 >>>8	leshort		0x8799		\bNikon NEF Compressed
->>>8	default		x	
+>>>8	default		x
 >>>>8	leshort		x		\b(unknown 0x%x)
 >>>12	use		tiff_entry
 >0	leshort		0x106		\b, PhotometricIntepretation=
@@ -443,13 +443,13 @@
 !:mime	image/x-unknown
 #
 # GRR 950115:  this is Jeremy Wohl's Free Graphics Format (better):
-#					
+#
 0	string		FGF95a		FGF image (GIF+deflate beta)
 !:mime	image/x-unknown
 #
 # GRR 950115:  this is Thomas Boutell's Portable Bitmap Format proposal
 # (best; not yet implemented):
-#					
+#
 0	string		PBF		PBF image (deflate compression)
 !:mime	image/x-unknown
 
@@ -533,19 +533,19 @@
 # http://www.blackfiveservices.co.uk/awbmtools.shtml
 # http://biosgfx.narod.ru/v3/
 # http://biosgfx.narod.ru/abr-2/
-0	string		AWBM		
+0	string		AWBM
 >4	leshort		<1981		Award BIOS bitmap
 !:mime	image/x-award-bmp
 # image width is a multiple of 4
->>4	leshort&0x0003	0		
+>>4	leshort&0x0003	0
 >>>4		leshort	x		\b, %d
 >>>6		leshort	x		x %d
 >>4	leshort&0x0003	>0		\b,
->>>4	leshort&0x0003	=1		
+>>>4	leshort&0x0003	=1
 >>>>4		leshort	x		%d+3
->>>4	leshort&0x0003	=2		
+>>>4	leshort&0x0003	=2
 >>>>4		leshort	x		%d+2
->>>4	leshort&0x0003	=3		
+>>>4	leshort&0x0003	=3
 >>>>4		leshort	x		%d+1
 >>>6		leshort	x		x %d
 # at offset 8 starts imagedata followed by "RGB " marker
@@ -769,11 +769,11 @@
 # http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
 # GRR: original test was still too general as it catches xbase examples T5.DBT,T6.DBT with 0xa000000
 # test for bytes 0x0a,version byte (0,2,3,4,5),compression byte flag(0,1), bit depth (>0) of PCX or T5.DBT,T6.DBT
-0	ubelong&0xffF8fe00	0x0a000000	
-# for PCX bit depth > 0 
->3	ubyte		>0	
+0	ubelong&0xffF8fe00	0x0a000000
+# for PCX bit depth > 0
+>3	ubyte		>0
 # test for valid versions
->>1	ubyte		<6	
+>>1	ubyte		<6
 >>>1	ubyte		!1	PCX
 !:mime	image/x-pcx
 #!:mime	image/pcx
@@ -833,29 +833,29 @@
 # Update: Joerg Jenderek
 # See http://fileformats.archiveteam.org/wiki/GEM_Raster
 # For variations, also see:
-#    http://www.seasip.info/Gem/ff_img.html (Ventura) 
+#    http://www.seasip.info/Gem/ff_img.html (Ventura)
 #    http://www.atari-wiki.com/?title=IMG_file (XIMG, STTT)
 #    http://www.fileformat.info/format/gemraster/spec/index.htm (XIMG, STTT)
 #    http://sylvana.net/1stguide/1STGUIDE.ENG (TIMG)
 0       beshort     0x0001
 # header_size
->2      beshort     0x0008      
+>2      beshort     0x0008
 >>0     use gem_info
->2      beshort     0x0009      
+>2      beshort     0x0009
 >>0     use gem_info
 # no example for NOSIG
->2      beshort     24      
+>2      beshort     24
 >>0     use gem_info
 # no example for HYPERPAINT
->2      beshort     25      
+>2      beshort     25
 >>0     use gem_info
-16      string      XIMG\0      
+16      string      XIMG\0
 >0      use gem_info
 # no example
-16      string      STTT\0\x10  
+16      string      STTT\0\x10
 >0      use gem_info
 # no example or description
-16      string      TIMG\0      
+16      string      TIMG\0
 >0      use gem_info
 
 0   name        gem_info
@@ -864,15 +864,15 @@
 # http://www.snowstone.org.uk/riscos/mimeman/mimemap.txt
 !:mime	image/x-gem
 # header_size 24 25 27 59 779 words for colored bitmaps
->>2	beshort		>9		
+>>2	beshort		>9
 >>>16	string		STTT\0\x10	STTT
 >>>16	string		TIMG\0		TIMG
 # HYPERPAINT or NOSIG variant
->>>16	string		\0\x80		
+>>>16	string		\0\x80
 >>>>2	beshort		=24		NOSIG
 >>>>2	beshort		!24		HYPERPAINT
 # NOSIG or XIMG variant
->>>16	default		x		
+>>>16	default		x
 >>>>16	string		!XIMG\0		NOSIG
 >>16	string		=XIMG\0		XIMG Image data
 !:ext	img/ximg
@@ -1182,7 +1182,7 @@
 # updated by: Joerg Jenderek
 # URL: http://techmods.net/nuvi/
 0	string	GARMIN\ BITMAP\ 01	Garmin Bitmap file
-# extension is also used for 
+# extension is also used for
 # Sony SRF raw image (image/x-sony-srf)
 # SRF map
 # Terragen Surface Map (http://www.planetside.co.uk/terragen)
@@ -1323,7 +1323,7 @@
 !:mime	image/x-icns
 !:apple	????icns
 !:ext icns
->4	ubelong		>0		
+>4	ubelong		>0
 # file size
 >>4	ubelong		x		\b, %d bytes
 # icon type

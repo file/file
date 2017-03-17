@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.34 2016/12/01 15:30:33 christos Exp $
+# $File: fonts,v 1.35 2017/03/17 21:35:28 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -19,17 +19,17 @@
 # URL:		https://en.wikipedia.org/wiki/PostScript_fonts
 # Reference:	http://partners.adobe.com/public/developer/en/font/5178.PFM.pdf
 # Modified by:	Joerg Jenderek
-# Note:		moved from ./msdos magic 
-# dfVersion 256=0100h 
-0		uleshort	0x0100		
+# Note:		moved from ./msdos magic
+# dfVersion 256=0100h
+0		uleshort	0x0100
 # GRR: line above is too general as it catches also TrueType font,
 # raw G3 data FAX, WhatsApp encrypted and Panorama database
 # dfType 129=0081h
->66		uleshort	0x0081		
+>66		uleshort	0x0081
 # dfVertRes 300=012Ch not needed as additional test
-#>>70		uleshort	0x012c		
+#>>70		uleshort	0x012c
 # dfHorizRes 300=012Ch
-#>>>72		uleshort	0x012c		
+#>>>72		uleshort	0x012c
 # dfDriverInfo points to postscript information section
 >>(101.l)	string/c	Postscript	Printer Font Metrics
 # above labeled "PFM data" by ./msdos (version 5.28) or "Adobe Printer Font Metrics" by TrID
@@ -40,13 +40,13 @@
 # dfCopyright 60 byte null padded Copyright string. uncomment it to get old looking
 #>>>6		string		>\060		- %-.60s
 # dfDriverInfo
->>>139		ulelong		>0		
+>>>139		ulelong		>0
 # often abbreviated and same as filename
 >>>>(139.l)	string		x		%s
 # dfSize
 >>>2		ulelong		x		\b, %d bytes
 # dfFace 210=D2h 9Eh
->>>105		ulelong		>0		
+>>>105		ulelong		>0
 # Windows font name
 >>>>(105.l)	string		x		\b, %s
 # dfItalic
@@ -72,7 +72,7 @@
 #>104	belong		00000004		X11 SNF font data, MSB first
 !:mime	application/x-font-sfn
 # GRR: line below too general as it catches also Xbase index file t3-CHAR.NDX
-0	lelong		00000004		
+0	lelong		00000004
 >104	lelong		00000004		X11 SNF font data, LSB first
 !:mime	application/x-font-sfn
 
@@ -82,19 +82,19 @@
 # From: Joerg Jenderek
 # URL: http://grub.gibibit.com/New_font_format
 # Reference: util/grub-mkfont.c
-#		include/grub/fontformat.h 
+#		include/grub/fontformat.h
 # FONT_FORMAT_SECTION_NAMES_FILE
-0			string		FILE		
+0			string		FILE
 # FONT_FORMAT_PFF2_MAGIC
->8			string		PFF2		
+>8			string		PFF2
 # leng 4 only at the moment
->>4			ubelong		4		
+>>4			ubelong		4
 # FONT_FORMAT_SECTION_NAMES_FONT_NAME
 >>>12			string		NAME		GRUB2 font
 !:mime			application/x-font-pf2
 !:ext			pf2
 # length of font_name
->>>>16			ubelong		>0		
+>>>>16			ubelong		>0
 # font_name
 >>>>>20			string		>\0		"%-s"
 
@@ -156,8 +156,8 @@
 0	string		OTTO		OpenType font data
 !:mime application/vnd.ms-opentype
 
-# Gurkan Sengun <gurkan@linuks.mine.nu>, www.linuks.mine.nu 
-0	string		SplineFontDB:	Spline Font Database 
+# Gurkan Sengun <gurkan@linuks.mine.nu>, www.linuks.mine.nu
+0	string		SplineFontDB:	Spline Font Database
 !:mime application/vnd.font-fontforge-sfd
 >14	string		x		version %s
 

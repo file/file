@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: icc,v 1.2 2016/12/02 19:32:15 christos Exp $
+# $File: icc,v 1.3 2017/03/17 21:35:28 christos Exp $
 # icc:  file(1) magic for International Color Consortium file formats
 
 #
@@ -21,9 +21,9 @@
 #
 #	check and display ICC/ICM color profile
 0	name	color-profile
->36	string		acsp		
+>36	string		acsp
 # skip ASCII like Cognacspirit.txt by month <= 12
->>26	ubeshort	<13		
+>>26	ubeshort	<13
 # platform/operating system. Only 5 mentioned
 
 #
@@ -53,7 +53,7 @@
 #>>>40	string		x		(%.4s)
 !:mime	application/vnd.iccprofile
 # for "ICM" extension only versions 2.x and for Kodak "CC" 2.0 is found
->>>8	ubyte		=2		
+>>>8	ubyte		=2
 # do not use empty message text to a avoid error like
 # icc, 82: Warning: Current entry does not yet have a description for adding a EXTENSION type
 # file.exe: could not find any valid magic files!
@@ -89,9 +89,9 @@
 # eleven device classes
 >>>12	string		x		\b-%.4s device
 # skip 00001964h in hpf69000.icc or 0h in XRDC50Q.ICM or " ROT" in brmsl05f.icm
->>>52	string		>\ 		
+>>>52	string		>\
 # skip "none" model like in "Trinitron Compatible 9300K G2.2.icm"
->>>>52	ubelong		!0x6e6f6e65	
+>>>>52	ubelong		!0x6e6f6e65
 # device manufacturer field like "HP  " "IBM " EPSO
 >>>>>48	string		x		\b, %.2s
 >>>>>50	string		>\  		\b%.1s
@@ -107,7 +107,7 @@
 # profile size
 >>>0	ubelong		x		\b, %u bytes
 # skip invalid date 0 like in linearSRGB.icc
->>>24	ubequad		!0		
+>>>24	ubequad		!0
 # datetime dd-mm-yyyy hh:mm:ss
 >>>>28	ubeshort	x		\b, %u
 # month <= 12
@@ -181,10 +181,10 @@
 # tag table
 # 6 <= tags count <= 43
 #>>>128	ubelong		>43		\b, %u tags
->>>128	ubelong		x		
+>>>128	ubelong		x
 # shall contain the profileDescriptionTag "desc" , copyrightTag "cprt"
 # search range = tags count * 12 -8=< maximal tag count * 12 -8= 43 * 12 -8= 508
->>>>132	search/508	cprt		
+>>>>132	search/508	cprt
 # but no copyright tag in linearSRGB.icc
 # beneath /System/Library/Frameworks/WebKit.framework/
 # Versions/A/Frameworks/WebCore.framework/Versions/A/Resources
@@ -195,20 +195,20 @@
 #>>>140	ubelong		x		0x%x len
 # 2nd tag,...
 # look also for profileDescriptionTag "desc"
->>>132	search/508	desc		
+>>>132	search/508	desc
 # look further for TextDescriptionType "desc" signature
->>>>(&0.L)	string		=desc	
+>>>>(&0.L)	string		=desc
 >>>>>&4		pstring/l	x	"%s"
 # look alternative for multiLocalizedUnicodeType "mluc" signature like in VideoPAL.icc
->>>>(&0.L)	string		=mluc	
->>>>>&(&8.L)	ubequad		x		
+>>>>(&0.L)	string		=mluc
+>>>>>&(&8.L)	ubequad		x
 >>>>>>&4	bestring16	x	'%s'
 
 # Any other profile.
 # XXX - should we use "acsp\0\0\0\0" for "no primary platform" profiles,
 # and use "acsp" for everything else and dump the "primary platform"
 # string in those cases?
-36	string		acsp		
+36	string		acsp
 >0	use		color-profile
 
 

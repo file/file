@@ -2,14 +2,14 @@
 # marc21: file(1) magic for MARC 21 Format
 #
 # Kevin Ford (kefo@loc.gov)
-# 
+#
 # MARC21 formats are for the representation and communication
 # of bibliographic and related information in machine-readable
 # form.  For more info, see http://www.loc.gov/marc/
 
 
 # leader position 20-21 must be 45
-20	string	45	
+20	string	45
 
 # leader starts with 5 digits, followed by codes specific to MARC format
 >0	regex/1l	(^[0-9]{5})[acdnp][^bhlnqsu-z]	MARC21 Bibliographic
