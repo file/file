@@ -296,7 +296,7 @@
 4	uleshort	0x0900
 >0xF	byte		1
 >>0x14	byte		0
->>>0x1E	string		\ \ \
+>>>0x1E	string		\040\040\040
 >>>>0x23	byte	1
 >>>>>0x25	byte	0
 >>>>>>0x15	string	>\x30

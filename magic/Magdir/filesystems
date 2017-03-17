@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.118 2017/03/17 21:35:28 christos Exp $
+# $File: filesystems,v 1.119 2017/03/17 22:20:22 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -449,7 +449,7 @@
 # Ranish Partition Manager http://www.ranish.com/part/
 >387	search/4	\0\ Error!\r
 >>378	search/7	Virus!
->>>397	search/4	Booting\
+>>>397	search/4	Booting\040
 >>>>408	search/4	HD1/\0	 			\b, Ranish MBR (
 >>>>>416	string	Writing\ changes...		\b2.37
 >>>>>>438	ubyte		x			\b,0x%x dots
@@ -467,7 +467,7 @@
 # SYSLINUX MBR moved
 # http://www.acronis.de/
 >362	string	MBR\ Error\ \0\r
->>376	string	ress\ any\ key\ to\
+>>376	string	ress\ any\ key\ to\040
 >>>392	string	boot\ from\ floppy...\0			\b, Acronis MBR
 # added by Joerg Jenderek
 # http://www.visopsys.org/
@@ -565,7 +565,7 @@
 # http://www.acronis.de/
 #FAT label=ACRONIS\ SZ
 #OEM-ID=BOOTWIZ0
->442	string	Non-system\ disk,\
+>442	string	Non-system\ disk,\040
 >>459	string	press\ any\ key...\x7\0		\b, Acronis Startup Recovery Loader
 # updated by Joerg Jenderek at Nov 2012, Sep 2013
 # DOS names like F11.SYS or BOOTWIZ.SYS are 8 right space padded bytes+3 bytes
@@ -573,11 +573,11 @@
 >>>447	ubyte	x		\b
 >>>477	use	DOS-filename
 #
->185	string	FDBOOT\ Version\
->>204	string	\rNo\ Systemdisk.\
+>185	string	FDBOOT\ Version\040
+>>204	string	\rNo\ Systemdisk.\040
 >>>220	string	Booting\ from\ harddisk.\n\r
 >>>245	string	Cannot\ load\ from\ harddisk.\n\r
->>>>273 string	Insert\ Systemdisk\
+>>>>273 string	Insert\ Systemdisk\040
 >>>>>291 string and\ press\ any\ key.\n\r		\b, FDBOOT harddisk Bootloader
 >>>>>>200 string	>\0                             \b, version %-3s
 >242	string	Bootsector\ from\ C.H.\ Hochst\204
@@ -616,11 +616,11 @@
 >>>>>>>>>>>>>>0x77	string	>\0			"%-s"
 >214	string	Please\ try\ to\ install\ FreeDOS\ 	\b, DOS Emulator boot message display
 #>>244	string	from\ dosemu-freedos-*-bin.tgz\r
-#>>>170	string	Sorry,\ could\ not\ load\ an\
+#>>>170	string	Sorry,\ could\ not\ load\ an\040
 #>>>>195	string	operating\ system.\r\n
 #
->103	string	This\ is\ not\ a\ bootable\ disk.\
->>132	string	Please\ insert\ a\ bootable\
+>103	string	This\ is\ not\ a\ bootable\ disk.\040
+>>132	string	Please\ insert\ a\ bootable\040
 >>>157	string	floppy\ and\r\n
 >>>>169	string	press\ any\ key\ to\ try\ again...\r	\b, FREE-DOS message display
 #
@@ -640,11 +640,11 @@
 >>>470	string	OS2BOOT\ \ \ \ 				\b, IBM OS/2 Warp Bootloader
 >112		string	This\ disk\ is\ not\ bootable\r
 >>142		string	If\ you\ wish\ to\ make\ it\ bootable
->>>176		string	run\ the\ DOS\ program\ SYS\
+>>>176		string	run\ the\ DOS\ program\ SYS\040
 >>>200		string	after\ the\r
 >>>>216		string	system\ has\ been\ loaded\r\n
->>>>>242	string	Please\ insert\ a\ DOS\ diskette\
->>>>>271	string	into\r\n\ the\ drive\ and\
+>>>>>242	string	Please\ insert\ a\ DOS\ diskette\040
+>>>>>271	string	into\r\n\ the\ drive\ and\040
 >>>>>>292	string	strike\ any\ key...\0		\b, IBM OS/2 Warp message display
 # XP
 >430	string	NTLDR\ is\ missing\xFF\r\n
@@ -737,24 +737,24 @@
 >>>>>>425	string		>\ 			\b.%-.3s
 #
 
-#>3	string	NTFS\ \ \ \
->389	string	Fehler\ beim\ Lesen\
+#>3	string	NTFS\ \ \ \040
+>389	string	Fehler\ beim\ Lesen\040
 >>407	string	des\ Datentr\204gers
 >>>426	string	NTLDR\ fehlt
 >>>>440	string	NTLDR\ ist\ komprimiert
 >>>>>464 string	Neustart\ mit\ Strg+Alt+Entf\r		\b, Microsoft Windows XP Bootloader NTFS (german)
-#>3	string	NTFS\ \ \ \
+#>3	string	NTFS\ \ \ \040
 >313	string	A\ disk\ read\ error\ occurred.\r
->>345	string	A\ kernel\ file\ is\ missing\
+>>345	string	A\ kernel\ file\ is\ missing\040
 >>>370	string	from\ the\ disk.\r
 >>>>484	string	NTLDR\ is\ compressed
->>>>>429 string	Insert\ a\ system\ diskette\
+>>>>>429 string	Insert\ a\ system\ diskette\040
 >>>>>>454 string and\ restart\r\nthe\ system.\r		\b, Microsoft Windows XP Bootloader NTFS
 # DOS loader variants different languages,offsets
 >472	ubyte&0xDF	>0
 >>389	string	Invalid\ system\ disk\xFF\r\n
 >>>411	string	Disk\ I/O\ error
->>>>428	string	Replace\ the\ disk,\ and\
+>>>>428	string	Replace\ the\ disk,\ and\040
 >>>>>455 string	press\ any\ key				\b, Microsoft Windows 98 Bootloader
 #IO.SYS
 >>>>>>472	ubyte&0xDF	>0
@@ -775,11 +775,11 @@
 #
 >>390	string	Invalid\ system\ disk\xFF\r\n
 >>>412	string	Disk\ I/O\ error\xFF\r\n
->>>>429	string	Replace\ the\ disk,\ and\
+>>>>429	string	Replace\ the\ disk,\ and\040
 >>>>>451 string	then\ press\ any\ key\r			\b, Microsoft Windows 98 Bootloader
 >>388	string	Ungueltiges\ System\ \xFF\r\n
 >>>410	string	E/A-Fehler\ \ \ \ \xFF\r\n
->>>>427	string	Datentraeger\ wechseln\ und\
+>>>>427	string	Datentraeger\ wechseln\ und\040
 >>>>>453 string	Taste\ druecken\r			\b, Microsoft Windows 95/98/ME Bootloader (german)
 #WINBOOT.SYS only not spaces (0xDF)
 >>>>>>497	ubyte&0xDF	>0
@@ -811,7 +811,7 @@
 #
 >>390	string	Ungueltiges\ System\ \xFF\r\n
 >>>412	string	E/A-Fehler\ \ \ \ \xFF\r\n
->>>>429	string	Datentraeger\ wechseln\ und\
+>>>>429	string	Datentraeger\ wechseln\ und\040
 >>>>>455 string	Taste\ druecken\r			\b, Microsoft Windows 95/98/ME Bootloader (German)
 #WINBOOT.SYS only not spaces (0xDF)
 >>>>>>497	ubyte&0xDF	>0
@@ -837,7 +837,7 @@
 #
 >>389	string	Ungueltiges\ System\ \xFF\r\n
 >>>411	string	E/A-Fehler\ \ \ \ \xFF\r\n
->>>>428	string	Datentraeger\ wechseln\ und\
+>>>>428	string	Datentraeger\ wechseln\ und\040
 >>>>>454 string	Taste\ druecken\r			\b, Microsoft Windows 95/98/ME Bootloader (GERMAN)
 # DOS names like IO.SYS,WINBOOT.SYS,MSDOS.SYS,WINBOOT.INI are 8 right space padded bytes+3 bytes
 >>>>>>472	string		x 			%-.2s
@@ -856,7 +856,7 @@
 >>>>>>>491	ubyte&0xDF	>0
 >>>>>>>>491	string		x 			\b.%-.3s
 >479	ubyte&0xDF	>0
->>416	string	Kein\ System\ oder\
+>>416	string	Kein\ System\ oder\040
 >>>433	string	Laufwerksfehler
 >>>>450	string	Wechseln\ und\ Taste\ dr\201cken	\b, Microsoft DOS Bootloader (german)
 #IO.SYS
@@ -873,9 +873,9 @@
 >>>>>>>498	ubyte&0xDF	>0
 >>>>>>>>498	string		x 			\b.%-.3s
 #
->376	search/41	Non-System\ disk\ or\
+>376	search/41	Non-System\ disk\ or\040
 >>395	search/41	disk\ error\r
->>>407	search/41	Replace\ and\
+>>>407	search/41	Replace\ and\040
 >>>>419	search/41	press\ 				\b,
 >>>>419	search/41	strike\ 			\b, old
 >>>>426	search/41	any\ key\ when\ ready\r		MS or PC-DOS bootloader
@@ -900,7 +900,7 @@
 >>>>>>>&7	ubyte&0xDF	>0			\b.
 >>>>>>>>&-1	string		x 			\b%-.3s
 >441	string	Cannot\ load\ from\ harddisk.\n\r
->>469	string	Insert\ Systemdisk\
+>>469	string	Insert\ Systemdisk\040
 >>>487	string	and\ press\ any\ key.\n\r		\b, MS (2.11) DOS bootloader
 #>43	string	\224R-LOADER\ \ SYS			=label
 >54	string	SYS
@@ -920,9 +920,9 @@
 >>>>>>>52	string		x 			\b.%-.3s
 #
 >70	string	IBMBIO\ \ COM
->>472	string	Cannot\ load\ DOS!\
+>>472	string	Cannot\ load\ DOS!\040
 >>>489	string	Any\ key\ to\ retry			\b, DR-DOS Bootloader
->>471	string	Cannot\ load\ DOS\
+>>471	string	Cannot\ load\ DOS\040
 >>487	string	press\ key\ to\ retry			\b, Open-DOS Bootloader
 #??
 >444	string	KERNEL\ \ SYS
@@ -984,7 +984,7 @@
 >>>>>>>>504	string		x 			\b%-.1s
 >>>>505		ubyte&0xDF	>0
 >>>>>505	string		x 			\b.%-.3s
->336	string	Error!\
+>336	string	Error!\040
 >>343	string	Hit\ a\ key\ to\ reboot.		\b, FREE-DOS Beta 0.9sr1 Bootloader
 >>>497		ubyte&0xDF	>0
 >>>>497		string		x 			\b %-.6s
@@ -999,7 +999,7 @@
 # http://partitionlogic.org.uk/
 # OEM-ID=Visopsys
 >478		ulelong	0
->>(1.b+326)	string	I/O\ Error\ reading\
+>>(1.b+326)	string	I/O\ Error\ reading\040
 >>>(1.b+344)	string	Visopsys\ loader\r
 >>>>(1.b+361)	string	Press\ any\ key\ to\ continue.\r	\b, Visopsys loader
 # http://alexfru.chat.ru/epm.html#bootprog

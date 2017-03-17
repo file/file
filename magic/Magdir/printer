@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: printer,v 1.27 2017/03/17 21:35:28 christos Exp $
+# $File: printer,v 1.28 2017/03/17 22:20:22 christos Exp $
 # printer:  file(1) magic for printer-formatted files
 #
 
@@ -13,7 +13,7 @@
 >>>15	string		EPS		\b, type %s
 >>>15	string		Query		\b, type %s
 >>>15	string		ExitServer	\b, type %s
->>>15   search/1000		%%LanguageLevel:\
+>>>15   search/1000		%%LanguageLevel:\040
 >>>>&0	string		>\0		\b, Level %s
 # Some PCs have the annoying habit of adding a ^D as a document separator
 0	string		\004%!		PostScript document text
@@ -24,7 +24,7 @@
 >>>16	string		EPS		\b, type %s
 >>>16	string		Query		\b, type %s
 >>>16	string		ExitServer	\b, type %s
->>>16   search/1000		%%LanguageLevel:\
+>>>16   search/1000		%%LanguageLevel:\040
 >>>>&0	string		>\0		\b, Level %s
 0	string		\033%-12345X%!PS	PostScript document
 
