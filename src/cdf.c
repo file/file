@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.90 2017/02/25 18:54:07 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.91 2017/03/17 19:50:22 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -982,19 +982,26 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			for (j = 0; j < nelements && i < sh.sh_properties;
 			    j++, i++)
 			{
-				uint32_t l = CDF_GETUINT32(q, o);
+				uint32_t l;
+
+				o4 += sizeof(uint32_t);
+				if (q + o >= e || q + o4 >= e)
+					goto out;
+
+				l = CDF_GETUINT32(q, o);
 				inp[i].pi_str.s_len = l;
-				inp[i].pi_str.s_buf = (const char *)
-				    (const void *)(&q[o4 + sizeof(l)]);
+				inp[i].pi_str.s_buf = CAST(const char *,
+				    CAST(const void *, &q[o4]));
+
 				DPRINTF(("l = %d, r = %" SIZE_T_FORMAT
 				    "u, s = %s\n", l,
 				    CDF_ROUND(l, sizeof(l)),
 				    inp[i].pi_str.s_buf));
+
 				if (l & 1)
 					l++;
+
 				o += l >> 1;
-				if (q + o >= e)
-					goto out;
 				o4 = o * sizeof(uint32_t);
 			}
 			i--;
