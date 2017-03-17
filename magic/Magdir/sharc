@@ -1,9 +1,9 @@
 
 #------------------------------------------------------------------------
-# $File: sharc,v 1.6 2009/09/19 16:28:12 christos Exp $
+# $File: sharc,v 1.8 2017/03/17 21:35:28 christos Exp $
 # file(1) magic for sharc files
 #
-# SHARC DSP, MIDI SysEx and RiscOS filetype definitions added by 
+# SHARC DSP, MIDI SysEx and RiscOS filetype definitions added by
 # FutureGroove Music (dsp@futuregroove.de)
 
 #------------------------------------------------------------------------
