@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.15 2017/03/17 21:35:28 christos Exp $
+# $File: windows,v 1.16 2017/03/17 22:20:22 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -194,7 +194,7 @@
 # display mime type and name of Windows help Content source
 0	name				cnt-name
 # skip space at beginning
->0     string		\
+>0     string		\040
 # name without extension and greater character or name with hlp extension
 >>1	regex/c		\^([^\xd>]*|.*\.hlp)	MS Windows help file Content, based "%s"
 !:mime	text/plain
@@ -210,10 +210,10 @@
 # Summary: Hyper terminal
 # Extension: .ht
 # Created by: unknown
-0	string		HyperTerminal\
+0	string		HyperTerminal\040
 >15	string		1.0\ --\ HyperTerminal\ data\ file	MS Windows HyperTerminal profile
 
-# http://ithreats.files.wordpress.com/2009/05/\
+# http://ithreats.files.wordpress.com/2009/05/\040
 # lnk_the_windows_shortcut_file_format.pdf
 # Summary: Windows shortcut
 # Extension: .lnk
@@ -293,7 +293,7 @@
 # Extension: .reg
 # Submitted by: Abel Cheung <abelcheung@gmail.com>
 0	string		REGEDIT4\r\n\r\n	Windows Registry text (Win95 or above)
-0	string		Windows\ Registry\ Editor\
+0	string		Windows\ Registry\ Editor\040
 >&0	string		Version\ 5.00\r\n\r\n	Windows Registry text (Win2K or above)
 
 # Windows *.INF *.INI files updated by Joerg Jenderek at Apr 2013

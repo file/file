@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msvc,v 1.7 2017/03/17 21:35:28 christos Exp $
+# $File: msvc,v 1.8 2017/03/17 22:20:22 christos Exp $
 # msvc:  file(1) magic for msvc
 # "H. Nanosecond" <aldomel@ix.netcom.com>
 # Microsoft visual C
@@ -33,7 +33,7 @@
 # Update: Joerg Jenderek
 # Note:	test only for Windows XP+SP3 x86 , 8.1 x64 arm and 10.1 x86
 #	info does only applies partly for older files like msvbvm50.pdb about year 2001
-0	string	Microsoft\ C/C++\
+0	string	Microsoft\ C/C++\040
 # "Microsoft Program DataBase" by TrID
 >24	search/14	\r\n\x1A	MSVC program database
 !:mime	application/x-ms-pdb
