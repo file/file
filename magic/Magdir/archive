@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.106 2017/03/17 22:20:22 christos Exp $
+# $File: archive,v 1.107 2017/03/20 19:51:15 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1179,3 +1179,10 @@
 0	string	Cr24	Google Chrome extension
 !:mime	application/x-chrome-extension
 >4	ulong	x	\b, version %u
+
+# SeqBox - Sequenced container
+# ext: sbx, seqbox
+# Marco Pontello marcopon@gmail.com
+# reference: https://github.com/MarcoPon/SeqBox
+0	string	SBx	SeqBox,
+>3	byte	x	version %d
