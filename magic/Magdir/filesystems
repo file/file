@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.119 2017/03/17 22:20:22 christos Exp $
+# $File: filesystems,v 1.120 2017/03/24 19:29:26 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1678,6 +1678,13 @@
 >&-1316	belong		x		minimum percentage of free blocks %d,
 >&-1248	belong		0		TIME optimization
 >&-1248	belong		1		SPACE optimization
+
+0	ulequad		0xc8414d4dc5523031	HAMMER filesystem (little-endian),
+>0x90	lelong+1	x			volume %d
+>0x94	lelong		x			(of %d),
+>0x50	string		x			name %s,
+>0x98	ulelong		x			version %u,
+>0xa0	ulelong		x			flags 0x%x
 
 # ext2/ext3 filesystems - Andreas Dilger <adilger@dilger.ca>
 # ext4 filesystem - Eric Sandeen <sandeen@sandeen.net>
