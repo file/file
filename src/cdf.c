@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.93 2017/03/27 20:58:11 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.94 2017/03/27 21:34:32 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -891,7 +891,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 	int64_t s64;
 	uint64_t u64;
 	cdf_timestamp_t tp;
-	size_t i, o4, nelements, j, slen;
+	size_t i, o4, nelements, j, slen, left;
 	cdf_property_info_t *inp;
 
 	if (offs > UINT32_MAX / 4) {
@@ -907,6 +907,10 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		errno = EFTYPE;
 		goto out;
 	}
+
+	if (cdf_check_stream_offset(sst, h, shp, sh.sh_len, __LINE__) == -1)
+		goto out;
+
 	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
 	if (sh.sh_properties > CDF_PROP_LIMIT)
 		goto out;
@@ -940,6 +944,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			nelements = 1;
 			slen = 1;
 		}
+		left = CAST(size_t, e - q);
 		o4 = slen * sizeof(uint32_t);
 		if (inp[i].pi_type & (CDF_ARRAY|CDF_BYREF|CDF_RESERVED))
 			goto unknown;
@@ -1008,12 +1013,12 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			{
 				uint32_t l;
 
-				if (q + slen + sizeof(uint32_t) >= e)
+				if (o4 + sizeof(uint32_t) > left)
 					goto out;
 
 				l = CDF_GETUINT32(q, slen);
 				o4 += sizeof(uint32_t);
-				if (o4 + l > CAST(size_t, e - q))
+				if (o4 + l > left)
 					goto out;
 
 				inp[i].pi_str.s_len = l;
@@ -1021,8 +1026,8 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 				    CAST(const void *, &q[o4]));
 
 				DPRINTF(("o=%zu l=%d(%" SIZE_T_FORMAT
-				    "u), t=%td s=%s\n", o4, l,
-				    CDF_ROUND(l, sizeof(l)), e - q,
+				    "u), t=%zu s=%s\n", o4, l,
+				    CDF_ROUND(l, sizeof(l)), left,
 				    inp[i].pi_str.s_buf));
 
 				if (l & 1)
