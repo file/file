@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.92 2017/03/17 23:56:16 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.93 2017/03/27 20:58:11 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -818,6 +818,66 @@ cdf_find_stream(const cdf_dir_t *dir, const char *name, int type)
 	return 0;
 }
 
+#define CDF_SHLEN_LIMIT (UINT32_MAX / 8)
+#define CDF_PROP_LIMIT (UINT32_MAX / (4 * sizeof(cdf_property_info_t)))
+
+static const void *
+cdf_offset(const void *p, size_t l)
+{
+	return CAST(const void *, CAST(const uint8_t *, p) + l);
+}
+
+static const uint8_t *
+cdf_get_property_info_pos(const cdf_stream_t *sst, const cdf_header_t *h, 
+    const uint8_t *p, const uint8_t *e, size_t i)
+{
+	size_t tail = (i << 1) + 1;
+	size_t ofs;
+	const uint8_t *q;
+
+	if (cdf_check_stream_offset(sst, h, p, tail * sizeof(uint32_t),
+	    __LINE__) == -1)
+		return NULL;
+	ofs = CDF_GETUINT32(p, tail);
+	q = CAST(const uint8_t *, cdf_offset(CAST(const void *, p), 
+	    ofs - 2 * sizeof(uint32_t)));
+
+	if (q < p) {
+		DPRINTF(("Wrapped around %p < %p\n", q, p));
+		return NULL;
+	}
+
+	if (q >= e) {
+		DPRINTF(("Ran off the end %p >= %p\n", q, e));
+		return NULL;
+	}
+	return q;
+}
+
+static cdf_property_info_t *
+cdf_grow_info(cdf_property_info_t **info, size_t *maxcount, size_t incr)
+{
+	cdf_property_info_t *inp;
+	size_t newcount = *maxcount + incr;
+
+	if (newcount > CDF_PROP_LIMIT)
+		goto out;
+	
+	inp = CAST(cdf_property_info_t *,
+	    realloc(*info, newcount * sizeof(*inp)));
+	if (inp == NULL)
+		goto out;
+
+	*info = inp;
+	*maxcount = newcount;
+	return inp;
+out:
+	free(*info);
+	*maxcount = 0;
+	*info = NULL;
+	return NULL;
+}
+
 int
 cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
     uint32_t offs, cdf_property_info_t **info, size_t *count, size_t *maxcount)
@@ -831,70 +891,40 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 	int64_t s64;
 	uint64_t u64;
 	cdf_timestamp_t tp;
-	size_t i, o, o4, nelements, j;
+	size_t i, o4, nelements, j, slen;
 	cdf_property_info_t *inp;
 
 	if (offs > UINT32_MAX / 4) {
 		errno = EFTYPE;
 		goto out;
 	}
-	shp = CAST(const cdf_section_header_t *, (const void *)
-	    ((const char *)sst->sst_tab + offs));
+	shp = CAST(const cdf_section_header_t *,
+	    cdf_offset(sst->sst_tab, offs));
 	if (cdf_check_stream_offset(sst, h, shp, sizeof(*shp), __LINE__) == -1)
 		goto out;
 	sh.sh_len = CDF_TOLE4(shp->sh_len);
-#define CDF_SHLEN_LIMIT (UINT32_MAX / 8)
 	if (sh.sh_len > CDF_SHLEN_LIMIT) {
 		errno = EFTYPE;
 		goto out;
 	}
 	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
-#define CDF_PROP_LIMIT (UINT32_MAX / (4 * sizeof(*inp)))
 	if (sh.sh_properties > CDF_PROP_LIMIT)
 		goto out;
 	DPRINTF(("section len: %u properties %u\n", sh.sh_len,
 	    sh.sh_properties));
-	if (*maxcount) {
-		if (*maxcount > CDF_PROP_LIMIT)
-			goto out;
-		*maxcount += sh.sh_properties;
-		inp = CAST(cdf_property_info_t *,
-		    realloc(*info, *maxcount * sizeof(*inp)));
-	} else {
-		*maxcount = sh.sh_properties;
-		inp = CAST(cdf_property_info_t *,
-		    malloc(*maxcount * sizeof(*inp)));
-	}
+	inp = cdf_grow_info(info, maxcount, sh.sh_properties);
 	if (inp == NULL)
-		goto out1;
-	*info = inp;
+		goto out;
 	inp += *count;
 	*count += sh.sh_properties;
-	p = CAST(const uint8_t *, (const void *)
-	    ((const char *)(const void *)sst->sst_tab +
-	    offs + sizeof(sh)));
-	e = CAST(const uint8_t *, (const void *)
-	    (((const char *)(const void *)shp) + sh.sh_len));
+	p = CAST(const uint8_t *, cdf_offset(sst->sst_tab, offs + sizeof(sh)));
+	e = CAST(const uint8_t *, cdf_offset(shp, sh.sh_len));
 	if (cdf_check_stream_offset(sst, h, e, 0, __LINE__) == -1)
 		goto out;
+
 	for (i = 0; i < sh.sh_properties; i++) {
-		size_t tail = (i << 1) + 1;
-		size_t ofs;
-		if (cdf_check_stream_offset(sst, h, p, tail * sizeof(uint32_t),
-		    __LINE__) == -1)
+		if ((q = cdf_get_property_info_pos(sst, h, p, e, i)) == NULL)
 			goto out;
-		ofs = CDF_GETUINT32(p, tail);
-		q = (const uint8_t *)(const void *)
-		    ((const char *)(const void *)p + ofs
-		    - 2 * sizeof(uint32_t));
-		if (q < p) {
-			DPRINTF(("Wrapped around %p < %p\n", q, p));
-			goto out;
-		}
-		if (q >= e) {
-			DPRINTF(("Ran off the end %p >= %p\n", q, e));
-			goto out;
-		}
 		inp[i].pi_id = CDF_GETUINT32(p, i << 1);
 		inp[i].pi_type = CDF_GETUINT32(q, 0);
 		DPRINTF(("%" SIZE_T_FORMAT "u) id=%x type=%x offs=0x%tx,0x%x\n",
@@ -905,12 +935,12 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 				DPRINTF(("CDF_VECTOR with nelements == 0\n"));
 				goto out;
 			}
-			o = 2;
+			slen = 2;
 		} else {
 			nelements = 1;
-			o = 1;
+			slen = 1;
 		}
-		o4 = o * sizeof(uint32_t);
+		o4 = slen * sizeof(uint32_t);
 		if (inp[i].pi_type & (CDF_ARRAY|CDF_BYREF|CDF_RESERVED))
 			goto unknown;
 		switch (inp[i].pi_type & CDF_TYPEMASK) {
@@ -966,16 +996,10 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		case CDF_LENGTH32_WSTRING:
 			if (nelements > 1) {
 				size_t nelem = inp - *info;
-				if (*maxcount > CDF_PROP_LIMIT
-				    || nelements > CDF_PROP_LIMIT)
-					goto out;
-				*maxcount += nelements;
-				inp = CAST(cdf_property_info_t *,
-				    realloc(*info, *maxcount * sizeof(*inp)));
+				inp = cdf_grow_info(info, maxcount, nelements);
 				if (inp == NULL)
-					goto out1;
-				*info = inp;
-				inp = *info + nelem;
+					goto out;
+				inp += nelem;
 			}
 			DPRINTF(("nelements = %" SIZE_T_FORMAT "u\n",
 			    nelements));
@@ -984,28 +1008,28 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			{
 				uint32_t l;
 
-				if (q + o + sizeof(uint32_t) >= e)
+				if (q + slen + sizeof(uint32_t) >= e)
 					goto out;
 
-				l = CDF_GETUINT32(q, o);
+				l = CDF_GETUINT32(q, slen);
 				o4 += sizeof(uint32_t);
-				if (q + o4 + l >= e)
+				if (o4 + l > CAST(size_t, e - q))
 					goto out;
 
 				inp[i].pi_str.s_len = l;
 				inp[i].pi_str.s_buf = CAST(const char *,
 				    CAST(const void *, &q[o4]));
 
-				DPRINTF(("l = %d, r = %" SIZE_T_FORMAT
-				    "u, s = %s\n", l,
-				    CDF_ROUND(l, sizeof(l)),
+				DPRINTF(("o=%zu l=%d(%" SIZE_T_FORMAT
+				    "u), t=%td s=%s\n", o4, l,
+				    CDF_ROUND(l, sizeof(l)), e - q,
 				    inp[i].pi_str.s_buf));
 
 				if (l & 1)
 					l++;
 
-				o += l >> 1;
-				o4 = o * sizeof(uint32_t);
+				slen += l >> 1;
+				o4 = slen * sizeof(uint32_t);
 			}
 			i--;
 			break;
@@ -1029,8 +1053,6 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 	return 0;
 out:
 	errno = EFTYPE;
-out1:
-	free(*info);
 	return -1;
 }
 
