@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.94 2017/03/27 21:34:32 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.95 2017/03/28 15:13:07 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1057,6 +1057,10 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 	}
 	return 0;
 out:
+	free(*info);
+	*info = NULL;
+	*count = 0;
+	*maxcount = 0;
 	errno = EFTYPE;
 	return -1;
 }
