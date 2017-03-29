@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.134 2017/03/29 15:57:48 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.135 2017/03/29 15:58:12 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -715,26 +715,23 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	case OS_STYLE_NETBSD:
 		if (type == NT_NETBSD_CORE_PROCINFO) {
 			char sbuf[512];
-			uint32_t signo;
-			/*
-			 * Extract the program name.  It is at
-			 * offset 0x7c, and is up to 32-bytes,
-			 * including the terminating NUL.
-			 */
-			if (file_printf(ms, ", from '%.31s'",
+			struct NetBSD_elfcore_procinfo pi;
+			memset(&pi, 0, sizeof(pi));
+			memcpy(&pi, nbuf + doff, descsz);
+
+			if (file_printf(ms, ", from '%.31s', pid=%u, uid=%u, "
+			    "gid=%u, nlwps=%u, lwp=%u (signal %u/code %u)",
 			    file_printable(sbuf, sizeof(sbuf),
-			    (const char *)&nbuf[doff + 0x7c])) == -1)
+			    CAST(char *, pi.cpi_name)),
+			    elf_getu32(swap, pi.cpi_pid),
+			    elf_getu32(swap, pi.cpi_euid),
+			    elf_getu32(swap, pi.cpi_egid),
+			    elf_getu32(swap, pi.cpi_nlwps),
+			    elf_getu32(swap, pi.cpi_siglwp),
+			    elf_getu32(swap, pi.cpi_signo),
+			    elf_getu32(swap, pi.cpi_sigcode)) == -1)
 				return 1;
-			
-			/*
-			 * Extract the signal number.  It is at
-			 * offset 0x08.
-			 */
-			(void)memcpy(&signo, &nbuf[doff + 0x08],
-			    sizeof(signo));
-			if (file_printf(ms, " (signal %u)",
-			    elf_getu32(swap, signo)) == -1)
-				return 1;
+
 			*flags |= FLAGS_DID_CORE;
 			return 1;
 		}
