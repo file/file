@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.102 2017/02/10 18:14:01 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.104 2017/03/29 15:57:48 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -749,9 +749,9 @@ err:
 		rv = makeerror(newch, n, "Wait failed, %s", strerror(errno));
 		DPRINTF("Child wait return %#x\n", status);
 	} else if (!WIFEXITED(status)) {
-		DPRINTF("Child not exited (0x%x)\n", status);
+		DPRINTF("Child not exited (%#x)\n", status);
 	} else if (WEXITSTATUS(status) != 0) {
-		DPRINTF("Child exited (0x%d)\n", WEXITSTATUS(status));
+		DPRINTF("Child exited (%#u)\n", WEXITSTATUS(status));
 	}
 
 	closefd(fdp[STDIN_FILENO], 0);

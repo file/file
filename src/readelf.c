@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.132 2017/02/11 18:12:03 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.134 2017/03/29 15:57:48 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1031,13 +1031,13 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	}
 
 	if (namesz & 0x80000000) {
-	    (void)file_printf(ms, ", bad note name size 0x%lx",
+	    (void)file_printf(ms, ", bad note name size %#lx",
 		(unsigned long)namesz);
 	    return 0;
 	}
 
 	if (descsz & 0x80000000) {
-	    (void)file_printf(ms, ", bad note description size 0x%lx",
+	    (void)file_printf(ms, ", bad note description size %#lx",
 		(unsigned long)descsz);
 	    return 0;
 	}
@@ -1250,9 +1250,9 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			if ((uintmax_t)(xsh_size + xsh_offset) >
 			    (uintmax_t)fsize) {
 				if (file_printf(ms,
-				    ", note offset/size 0x%" INTMAX_T_FORMAT
-				    "x+0x%" INTMAX_T_FORMAT "x exceeds"
-				    " file size 0x%" INTMAX_T_FORMAT "x",
+				    ", note offset/size %#" INTMAX_T_FORMAT
+				    "x+%#" INTMAX_T_FORMAT "x exceeds"
+				    " file size %#" INTMAX_T_FORMAT "x",
 				    (uintmax_t)xsh_offset, (uintmax_t)xsh_size,
 				    (uintmax_t)fsize) == -1)
 					return -1;
@@ -1356,7 +1356,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				default:
 					if (file_printf(ms,
 					    ", with unknown capability "
-					    "0x%" INT64_T_FORMAT "x = 0x%"
+					    "%#" INT64_T_FORMAT "x = %#"
 					    INT64_T_FORMAT "x",
 					    (unsigned long long)xcap_tag,
 					    (unsigned long long)xcap_val) == -1)
@@ -1410,13 +1410,13 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			}
 			if (cap_hw1)
 				if (file_printf(ms,
-				    " unknown hardware capability 0x%"
+				    " unknown hardware capability %#"
 				    INT64_T_FORMAT "x",
 				    (unsigned long long)cap_hw1) == -1)
 					return -1;
 		} else {
 			if (file_printf(ms,
-			    " hardware capability 0x%" INT64_T_FORMAT "x",
+			    " hardware capability %#" INT64_T_FORMAT "x",
 			    (unsigned long long)cap_hw1) == -1)
 				return -1;
 		}
@@ -1432,7 +1432,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		cap_sf1 &= ~SF1_SUNW_MASK;
 		if (cap_sf1)
 			if (file_printf(ms,
-			    ", with unknown software capability 0x%"
+			    ", with unknown software capability %#"
 			    INT64_T_FORMAT "x",
 			    (unsigned long long)cap_sf1) == -1)
 				return -1;
@@ -1486,7 +1486,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			if (((align = xph_align) & 0x80000000UL) != 0 ||
 			    align < 4) {
 				if (file_printf(ms, 
-				    ", invalid note alignment 0x%lx",
+				    ", invalid note alignment %#lx",
 				    (unsigned long)align) == -1)
 					return -1;
 				align = 4;

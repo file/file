@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.95 2017/03/28 15:13:07 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.96 2017/03/29 15:57:48 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -340,18 +340,18 @@ cdf_read_header(const cdf_info_t *info, cdf_header_t *h)
 	cdf_unpack_header(h, buf);
 	cdf_swap_header(h);
 	if (h->h_magic != CDF_MAGIC) {
-		DPRINTF(("Bad magic 0x%" INT64_T_FORMAT "x != 0x%"
+		DPRINTF(("Bad magic %#" INT64_T_FORMAT "x != %#"
 		    INT64_T_FORMAT "x\n",
 		    (unsigned long long)h->h_magic,
 		    (unsigned long long)CDF_MAGIC));
 		goto out;
 	}
 	if (h->h_sec_size_p2 > 20) {
-		DPRINTF(("Bad sector size 0x%u\n", h->h_sec_size_p2));
+		DPRINTF(("Bad sector size %#hu\n", h->h_sec_size_p2));
 		goto out;
 	}
 	if (h->h_short_sec_size_p2 > 20) {
-		DPRINTF(("Bad short sector size 0x%u\n",
+		DPRINTF(("Bad short sector size %#hu\n",
 		    h->h_short_sec_size_p2));
 		goto out;
 	}
@@ -931,7 +931,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			goto out;
 		inp[i].pi_id = CDF_GETUINT32(p, i << 1);
 		inp[i].pi_type = CDF_GETUINT32(q, 0);
-		DPRINTF(("%" SIZE_T_FORMAT "u) id=%x type=%x offs=0x%tx,0x%x\n",
+		DPRINTF(("%" SIZE_T_FORMAT "u) id=%#x type=%#x offs=%#tx,%#x\n",
 		    i, inp[i].pi_id, inp[i].pi_type, q - p, offs));
 		if (inp[i].pi_type & CDF_VECTOR) {
 			nelements = CDF_GETUINT32(q, 1);
@@ -1050,7 +1050,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			break;
 		default:
 		unknown:
-			DPRINTF(("Don't know how to deal with %x\n",
+			DPRINTF(("Don't know how to deal with %#x\n",
 			    inp[i].pi_type));
 			break;
 		}
@@ -1215,7 +1215,7 @@ cdf_print_property_name(char *buf, size_t bufsiz, uint32_t p)
 	for (i = 0; i < __arraycount(vn); i++)
 		if (vn[i].v == p)
 			return snprintf(buf, bufsiz, "%s", vn[i].n);
-	return snprintf(buf, bufsiz, "0x%x", p);
+	return snprintf(buf, bufsiz, "%#x", p);
 }
 
 int
@@ -1274,7 +1274,7 @@ cdf_dump_header(const cdf_header_t *h)
     h->h_ ## b, 1 << h->h_ ## b)
 	DUMP("%d", revision);
 	DUMP("%d", version);
-	DUMP("0x%x", byte_order);
+	DUMP("%#x", byte_order);
 	DUMP2("%d", sec_size_p2);
 	DUMP2("%d", short_sec_size_p2);
 	DUMP("%d", num_sectors_in_sat);
@@ -1368,7 +1368,7 @@ cdf_dump_dir(const cdf_info_t *info, const cdf_header_t *h,
 		    d->d_color ? "black" : "red");
 		(void)fprintf(stderr, "Left child: %d\n", d->d_left_child);
 		(void)fprintf(stderr, "Right child: %d\n", d->d_right_child);
-		(void)fprintf(stderr, "Flags: 0x%x\n", d->d_flags);
+		(void)fprintf(stderr, "Flags: %#x\n", d->d_flags);
 		cdf_timestamp_to_timespec(&ts, d->d_created);
 		(void)fprintf(stderr, "Created %s", cdf_ctime(&ts.tv_sec, buf));
 		cdf_timestamp_to_timespec(&ts, d->d_modified);
@@ -1461,7 +1461,7 @@ cdf_dump_property_info(const cdf_property_info_t *info, size_t count)
 			(void)fprintf(stderr, "CLIPBOARD %u\n", info[i].pi_u32);
 			break;
 		default:
-			DPRINTF(("Don't know how to deal with %x\n",
+			DPRINTF(("Don't know how to deal with %#x\n",
 			    info[i].pi_type));
 			break;
 		}
@@ -1480,7 +1480,7 @@ cdf_dump_summary_info(const cdf_header_t *h, const cdf_stream_t *sst)
 	(void)&h;
 	if (cdf_unpack_summary_info(sst, h, &ssi, &info, &count) == -1)
 		return;
-	(void)fprintf(stderr, "Endian: %x\n", ssi.si_byte_order);
+	(void)fprintf(stderr, "Endian: %#x\n", ssi.si_byte_order);
 	(void)fprintf(stderr, "Os Version %d.%d\n", ssi.si_os_version & 0xff,
 	    ssi.si_os_version >> 8);
 	(void)fprintf(stderr, "Os %d\n", ssi.si_os);
