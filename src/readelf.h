@@ -355,6 +355,11 @@ typedef struct {
  */
 #define NT_NETBSD_CMODEL	6
 
+/*
+ * FreeBSD specific notes
+ */
+#define NT_FREEBSD_PROCSTAT_AUXV	16
+
 #if !defined(ELFSIZE) && defined(ARCH_ELFSIZE)
 #define ELFSIZE ARCH_ELFSIZE
 #endif

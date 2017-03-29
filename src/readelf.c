@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.135 2017/03/29 15:58:12 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.136 2017/03/29 19:09:52 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -310,16 +310,18 @@ private const char os_style_names[][8] = {
 	"NetBSD",
 };
 
-#define FLAGS_DID_CORE			0x001
-#define FLAGS_DID_OS_NOTE		0x002
-#define FLAGS_DID_BUILD_ID		0x004
-#define FLAGS_DID_CORE_STYLE		0x008
-#define FLAGS_DID_NETBSD_PAX		0x010
-#define FLAGS_DID_NETBSD_MARCH		0x020
-#define FLAGS_DID_NETBSD_CMODEL		0x040
-#define FLAGS_DID_NETBSD_UNKNOWN	0x080
-#define FLAGS_IS_CORE			0x100
-#define FLAGS_DID_AUXV			0x200
+#define FLAGS_CORE_STYLE		0x003
+
+#define FLAGS_DID_CORE			0x004
+#define FLAGS_DID_OS_NOTE		0x008
+#define FLAGS_DID_BUILD_ID		0x010
+#define FLAGS_DID_CORE_STYLE		0x020
+#define FLAGS_DID_NETBSD_PAX		0x040
+#define FLAGS_DID_NETBSD_MARCH		0x080
+#define FLAGS_DID_NETBSD_CMODEL		0x100
+#define FLAGS_DID_NETBSD_UNKNOWN	0x200
+#define FLAGS_IS_CORE			0x400
+#define FLAGS_DID_AUXV			0x800
 
 private int
 dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
@@ -709,6 +711,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		    == -1)
 			return 1;
 		*flags |= FLAGS_DID_CORE_STYLE;
+		*flags |= os_style;
 	}
 
 	switch (os_style) {
@@ -921,8 +924,28 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	int is_string;
 	size_t nval;
 
-	if (type != NT_AUXV || (*flags & FLAGS_IS_CORE) == 0)
+	if ((*flags & (FLAGS_IS_CORE|FLAGS_DID_CORE_STYLE)) !=
+	    (FLAGS_IS_CORE|FLAGS_DID_CORE_STYLE))
 		return 0;
+
+	switch (*flags & FLAGS_CORE_STYLE) {
+	case OS_STYLE_SVR4:
+		if (type != NT_AUXV)
+			return 0;
+		break;
+#ifdef notyet
+	case OS_STYLE_NETBSD:
+		if (type != NT_NETBSD_CORE_AUXV)
+			return 0;
+		break;
+	case OS_STYLE_FREEBSD:
+		if (type != NT_FREEBSD_PROCSTAT_AUXV)
+			return 0;
+		break;
+#endif
+	default:
+		return 0;
+	}
 
 	*flags |= FLAGS_DID_AUXV;
 
