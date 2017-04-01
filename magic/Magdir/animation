@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.60 2017/03/17 21:35:28 christos Exp $
+# $File: animation,v 1.61 2017/04/01 18:26:03 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -34,6 +34,13 @@
 !:mime	image/jp2
 # http://www.ftyps.com/ with local additions
 4	string		ftyp		ISO Media
+# http://aeroquartet.com/wordpress/2016/03/05/3-xavc-s/
+>8	string		XAVC		\b, MPEG v4 system, Sony XAVC Codec
+>>96	string		x		\b, Audio "%.4s"
+>>118	beshort		x		at %dHz
+>>140	string		x		\b, Video "%.4s"
+>>168	beshort		x		%d
+>>170	beshort		x		\bx%d
 >8	string		3g2		\b, MPEG v4 system, 3GPP2
 !:mime	video/3gpp2
 >>11	byte		4		\b v4 (H.263/AMR GSM 6.10)
