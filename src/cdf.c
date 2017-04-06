@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.97 2017/03/29 19:45:22 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.98 2017/04/06 19:20:35 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1039,6 +1039,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			break;
 		default:
 		unknown:
+			memset(&inp[i].pi_val, 0, sizeof(inp[i].pi_val));
 			DPRINTF(("Don't know how to deal with %#x\n",
 			    inp[i].pi_type));
 			break;
