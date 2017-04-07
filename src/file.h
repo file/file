@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.180 2016/07/20 11:27:08 christos Exp $
+ * @(#)$File: file.h,v 1.182 2017/04/07 19:46:44 christos Exp $
  */
 
 #ifndef __file_h__
@@ -54,12 +54,12 @@
   #define INT64_T_FORMAT "ll"
   #define INTMAX_T_FORMAT "j"
 #endif
+#include <stdint.h>
+#endif
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 #include <errno.h>
 #include <fcntl.h>	/* For open and flags */
-#include <stdint.h>
-#endif
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
