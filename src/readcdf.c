@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.64 2017/03/09 16:57:53 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.65 2017/04/08 20:58:03 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -152,7 +152,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
         struct timespec ts;
         char buf[64];
         const char *str = NULL;
-        const char *s;
+        const char *s, *e;
         int len;
 
         if (!NOTMIME(ms) && root_storage)
@@ -199,7 +199,9 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
                                 if (info[i].pi_type == CDF_LENGTH32_WSTRING)
                                     k++;
                                 s = info[i].pi_str.s_buf;
-                                for (j = 0; j < sizeof(vbuf) && len--; s += k) {
+				e = info[i].pi_str.s_buf + len;
+                                for (j = 0; s < e && j < sizeof(vbuf)
+				    && len--; s += k) {
                                         if (*s == '\0')
                                                 break;
                                         if (isprint((unsigned char)*s))
