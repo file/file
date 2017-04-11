@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.30 2017/04/04 20:34:24 christos Exp $
+# $File: python,v 1.31 2017/04/11 14:59:28 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -42,11 +42,13 @@
 
 # from module.submodule import func1, func2
 0	regex		\^from[\040\t\f\r\n]+([A-Za-z0-9_]|\\.)+[\040\t\f\r\n]+import.*$	Python script text executable
+!:strength + 15
 !:mime text/x-python
 
 # def __init__ (self, ...):
 0	search/4096	def\ __init__
 >&0	search/64 self	Python script text executable
+!:strength + 15
 !:mime text/x-python
 
 # comments
@@ -63,6 +65,7 @@
 # block
 0	search/4096	try:
 >&0	regex	\^[A-Za-z0-9_]*except.*:	Python script text executable
+!:strength + 15
 !:mime text/x-python
 >&0	search/4096	finally:	Python script text executable
 !:mime text/x-python
@@ -71,3 +74,4 @@
 0	regex	 \^(\ |\\t){0,50}def\ {1,50}[a-zA-Z]{1,100}
 >&0	regex	\ {0,50}\\(([a-zA-Z]|,|\ ){1,255}\\):$ Python script text executable
 !:mime text/x-python
+!:strength + 15
