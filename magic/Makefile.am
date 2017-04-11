@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.123 2017/03/12 22:57:44 christos Exp $
+# $File: Makefile.am,v 1.124 2017/04/11 14:52:15 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -21,6 +21,7 @@ $(MAGIC_FRAGMENT_DIR)/amigaos \
 $(MAGIC_FRAGMENT_DIR)/android \
 $(MAGIC_FRAGMENT_DIR)/animation \
 $(MAGIC_FRAGMENT_DIR)/aout \
+$(MAGIC_FRAGMENT_DIR)/apache \
 $(MAGIC_FRAGMENT_DIR)/apl \
 $(MAGIC_FRAGMENT_DIR)/apple \
 $(MAGIC_FRAGMENT_DIR)/application \
