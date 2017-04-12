@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.100 2017/04/08 20:38:46 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.101 2017/04/12 14:57:22 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -959,7 +959,12 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		inp[i].pi_type = CDF_GETUINT32(q, 0);
 		DPRINTF(("%" SIZE_T_FORMAT "u) id=%#x type=%#x offs=%#tx,%#x\n",
 		    i, inp[i].pi_id, inp[i].pi_type, q - p, offs));
+		left = CAST(size_t, e - q);
 		if (inp[i].pi_type & CDF_VECTOR) {
+			if (left < sizeof(uint32_t)) {
+				DPRINTF(("missing CDF_VECTOR length\n"));
+				goto out;
+			}
 			nelements = CDF_GETUINT32(q, 1);
 			if (nelements == 0) {
 				DPRINTF(("CDF_VECTOR with nelements == 0\n"));
@@ -970,7 +975,6 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 			nelements = 1;
 			slen = 1;
 		}
-		left = CAST(size_t, e - q);
 		o4 = slen * sizeof(uint32_t);
 		if (inp[i].pi_type & (CDF_ARRAY|CDF_BYREF|CDF_RESERVED))
 			goto unknown;
