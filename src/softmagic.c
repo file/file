@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.247 2017/03/29 15:57:48 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.248 2017/04/21 16:54:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -192,6 +192,7 @@ flush:
 			while (magindex < nmagic - 1 &&
 			    magic[magindex + 1].cont_level != 0)
 				magindex++;
+			cont_level = 0;
 			continue; /* Skip to next top-level test*/
 		}
 
@@ -370,6 +371,7 @@ flush:
 				case -1:
 				case 0:
 					flush = 1;
+					cont_level--;
 					break;
 				default:
 					break;
