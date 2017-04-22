@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.101 2017/04/12 14:57:22 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.102 2017/04/22 20:02:34 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -961,7 +961,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		    i, inp[i].pi_id, inp[i].pi_type, q - p, offs));
 		left = CAST(size_t, e - q);
 		if (inp[i].pi_type & CDF_VECTOR) {
-			if (left < sizeof(uint32_t)) {
+			if (left < sizeof(uint32_t) * 2) {
 				DPRINTF(("missing CDF_VECTOR length\n"));
 				goto out;
 			}
