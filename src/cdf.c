@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.102 2017/04/22 20:02:34 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.103 2017/04/24 18:57:35 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -80,6 +80,28 @@ static union {
 			    CDF_TOLE8(CAST(uint64_t, x))))
 #define CDF_GETUINT32(x, y)	cdf_getuint32(x, y)
 
+#define CDF_MALLOC(n) cdf_malloc(__FILE__, __LINE__, (n))
+#define CDF_REALLOC(p, n) cdf_realloc(__FILE__, __LINE__, (p), (n))
+#define CDF_CALLOC(n, u) cdf_calloc(__FILE__, __LINE__, (n), (u))
+
+
+static void *
+cdf_malloc(const char *file, size_t line, size_t n) {
+	DPRINTF(("%s,%zu: %s %zu\n", file, line, __func__, n));
+	return malloc(n);
+}
+
+static void *
+cdf_realloc(const char *file, size_t line, void *p, size_t n) {
+	DPRINTF(("%s,%zu: %s %zu\n", file, line, __func__, n));
+	return realloc(p, n);
+}
+
+static void *
+cdf_calloc(const char *file, size_t line, size_t n, size_t u) {
+	DPRINTF(("%s,%zu: %s %zu %zu\n", file, line, __func__, n, u));
+	return calloc(n, u);
+}
 
 /*
  * swap a short
@@ -347,11 +369,11 @@ cdf_read_header(const cdf_info_t *info, cdf_header_t *h)
 		goto out;
 	}
 	if (h->h_sec_size_p2 > 20) {
-		DPRINTF(("Bad sector size %#hu\n", h->h_sec_size_p2));
+		DPRINTF(("Bad sector size %hu\n", h->h_sec_size_p2));
 		goto out;
 	}
 	if (h->h_short_sec_size_p2 > 20) {
-		DPRINTF(("Bad short sector size %#hu\n",
+		DPRINTF(("Bad short sector size %hu\n",
 		    h->h_short_sec_size_p2));
 		goto out;
 	}
@@ -421,7 +443,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 	sat->sat_len = h->h_num_sectors_in_master_sat * nsatpersec + i;
 	DPRINTF(("sat_len = %" SIZE_T_FORMAT "u ss = %" SIZE_T_FORMAT "u\n",
 	    sat->sat_len, ss));
-	if ((sat->sat_tab = CAST(cdf_secid_t *, calloc(sat->sat_len, ss)))
+	if ((sat->sat_tab = CAST(cdf_secid_t *, CDF_CALLOC(sat->sat_len, ss)))
 	    == NULL)
 		return -1;
 
@@ -435,7 +457,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 		}
 	}
 
-	if ((msa = CAST(cdf_secid_t *, calloc(1, ss))) == NULL)
+	if ((msa = CAST(cdf_secid_t *, CDF_CALLOC(1, ss))) == NULL)
 		goto out1;
 
 	mid = h->h_secid_first_sector_in_master_sat;
@@ -536,7 +558,7 @@ cdf_read_long_sector_chain(const cdf_info_t *info, const cdf_header_t *h,
 	if (scn->sst_len == (size_t)-1)
 		goto out;
 
-	scn->sst_tab = calloc(scn->sst_len, ss);
+	scn->sst_tab = CDF_CALLOC(scn->sst_len, ss);
 	if (scn->sst_tab == NULL)
 		return cdf_zero_stream(scn);
 
@@ -582,7 +604,7 @@ cdf_read_short_sector_chain(const cdf_header_t *h,
 	if (scn->sst_len == (size_t)-1)
 		goto out;
 
-	scn->sst_tab = calloc(scn->sst_len, ss);
+	scn->sst_tab = CDF_CALLOC(scn->sst_len, ss);
 	if (scn->sst_tab == NULL)
 		return cdf_zero_stream(scn);
 
@@ -640,11 +662,11 @@ cdf_read_dir(const cdf_info_t *info, const cdf_header_t *h,
 
 	dir->dir_len = ns * nd;
 	dir->dir_tab = CAST(cdf_directory_t *,
-	    calloc(dir->dir_len, sizeof(dir->dir_tab[0])));
+	    CDF_CALLOC(dir->dir_len, sizeof(dir->dir_tab[0])));
 	if (dir->dir_tab == NULL)
 		return -1;
 
-	if ((buf = CAST(char *, malloc(ss))) == NULL) {
+	if ((buf = CAST(char *, CDF_MALLOC(ss))) == NULL) {
 		free(dir->dir_tab);
 		return -1;
 	}
@@ -690,7 +712,7 @@ cdf_read_ssat(const cdf_info_t *info, const cdf_header_t *h,
 	if (ssat->sat_len == (size_t)-1)
 		goto out;
 
-	ssat->sat_tab = CAST(cdf_secid_t *, calloc(ssat->sat_len, ss));
+	ssat->sat_tab = CAST(cdf_secid_t *, CDF_CALLOC(ssat->sat_len, ss));
 	if (ssat->sat_tab == NULL)
 		goto out1;
 
@@ -819,7 +841,7 @@ cdf_find_stream(const cdf_dir_t *dir, const char *name, int type)
 }
 
 #define CDF_SHLEN_LIMIT (UINT32_MAX / 8)
-#define CDF_PROP_LIMIT (UINT32_MAX / (4 * sizeof(cdf_property_info_t)))
+#define CDF_PROP_LIMIT (UINT32_MAX / (8 * sizeof(cdf_property_info_t)))
 
 static const void *
 cdf_offset(const void *p, size_t l)
@@ -864,11 +886,13 @@ cdf_grow_info(cdf_property_info_t **info, size_t *maxcount, size_t incr)
 	cdf_property_info_t *inp;
 	size_t newcount = *maxcount + incr;
 
-	if (newcount > CDF_PROP_LIMIT)
+	if (newcount > CDF_PROP_LIMIT) {
+		DPRINTF(("exceeded property limit %zu > %zu\n", 
+		    newcount, CDF_PROP_LIMIT));
 		goto out;
-	
+	}
 	inp = CAST(cdf_property_info_t *,
-	    realloc(*info, newcount * sizeof(*inp)));
+	    CDF_REALLOC(*info, newcount * sizeof(*inp)));
 	if (inp == NULL)
 		goto out;
 
@@ -938,10 +962,10 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		goto out;
 
 	sh.sh_properties = CDF_TOLE4(shp->sh_properties);
-	if (sh.sh_properties > CDF_PROP_LIMIT)
-		goto out;
 	DPRINTF(("section len: %u properties %u\n", sh.sh_len,
 	    sh.sh_properties));
+	if (sh.sh_properties > CDF_PROP_LIMIT)
+		goto out;
 	inp = cdf_grow_info(info, maxcount, sh.sh_properties);
 	if (inp == NULL)
 		goto out;
@@ -1126,7 +1150,7 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 		return -1;
 	nr--;
 	*cat = CAST(cdf_catalog_t *,
-	    malloc(sizeof(cdf_catalog_t) + nr * sizeof(*ce)));
+	    CDF_MALLOC(sizeof(cdf_catalog_t) + nr * sizeof(*ce)));
 	if (*cat == NULL)
 		return -1;
 	ce = (*cat)->cat_e;
