@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.103 2017/04/24 18:57:35 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.104 2017/04/26 15:08:07 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -86,19 +86,25 @@ static union {
 
 
 static void *
-cdf_malloc(const char *file, size_t line, size_t n) {
+cdf_malloc(const char *file __attribute__((__unused__)),
+    size_t line __attribute__((__unused__)), size_t n)
+{
 	DPRINTF(("%s,%zu: %s %zu\n", file, line, __func__, n));
 	return malloc(n);
 }
 
 static void *
-cdf_realloc(const char *file, size_t line, void *p, size_t n) {
+cdf_realloc(const char *file __attribute__((__unused__)),
+    size_t line __attribute__((__unused__)), void *p, size_t n)
+{
 	DPRINTF(("%s,%zu: %s %zu\n", file, line, __func__, n));
 	return realloc(p, n);
 }
 
 static void *
-cdf_calloc(const char *file, size_t line, size_t n, size_t u) {
+cdf_calloc(const char *file __attribute__((__unused__)),
+    size_t line __attribute__((__unused__)), size_t n, size_t u)
+{
 	DPRINTF(("%s,%zu: %s %zu %zu\n", file, line, __func__, n, u));
 	return calloc(n, u);
 }
