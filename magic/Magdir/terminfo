@@ -1,14 +1,12 @@
 
 #------------------------------------------------------------------------------
-# $File: terminfo,v 1.8 2017/03/17 21:35:28 christos Exp $
+# $File: terminfo,v 1.9 2017/04/28 16:28:58 christos Exp $
 # terminfo:  file(1) magic for terminfo
 #
-# XXX - byte order for screen images?
+# URL: http://invisible-island.net/ncurses/man/term.5.html
+# URL: http://invisible-island.net/ncurses/man/scr_dump.5.html
 #
-# URL: https://en.wikipedia.org/wiki/Terminfo
-# Reference: ncurses-5.9/ncurses/tinfo/write_entry.c
-# Update: Joerg Jenderek
-#
+# Workaround for Targa image type by Joerg Jenderek
 # GRR: line below too general as it catches also
 # Targa image type 1 with 26 long identification field
 # and HELP.DSK
@@ -20,5 +18,34 @@
 !:mime	application/x-terminfo
 # no extension
 #!:ext
-0	short		0433		Curses screen image
-0	short		0434		Curses screen image
+#
+# While the compiled terminfo uses little-endian format irregardless of
+# platform, SystemV screen dumps do not.  They came later, and that detail was
+# overlooked.
+#
+# AIX and HPUX use the SVr4 big-endian format
+# Solaris uses the SVr3 formats (sparc and x86 differ endian-ness)
+0	beshort		0433 		SVr2 curses screen image, big-endian
+0	beshort		0434		SVr3 curses screen image, big-endian
+0	beshort		0435		SVr4 curses screen image, big-endian
+#
+0	leshort		0433		SVr2 curses screen image, little-endian
+0	leshort		0434		SVr3 curses screen image, little-endian
+0	leshort		0435		SVr4 curses screen image, little-endian
+#
+# Rather than SVr4, Solaris "xcurses" writes this header:
+0	regex		\^MAX=[0-9]+,[0-9]+$
+>1	regex		\^BEG=[0-9]+,[0-9]+$
+>2	regex		\^SCROLL=[0-9]+,[0-9]+$
+>3	regex		\^VMIN=[0-9]+$
+>4	regex		\^VTIME=[0-9]+$
+>5	regex		\^FLAGS=0x[[:xdigit:]]+$
+>6	regex		\^FG=[0-9],[0-9]+$
+>7	regex		\^BG=[0-9]+,[0-9]+,	Solaris xcurses screen image
+#
+# ncurses5 (and before) did not use a magic number, making screen dumps "data".
+# ncurses6 (2015) uses this format, ignoring byte-order
+0	string	\210\210\210\210ncurses	ncurses6 screen image
+#
+# PDCurses added this in 2005
+0	string		PDC\001		PDCurses screen image
