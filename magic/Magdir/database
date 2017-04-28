@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.50 2017/03/17 21:35:28 christos Exp $
+# $File: database,v 1.51 2017/04/28 16:28:16 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -622,3 +622,13 @@
 # MUIbase Database Tool by Stefan A. Haubenthal <polluks@web.de>
 0	string	MBSTV\040	MUIbase DB
 >6	string	x		version %s
+
+#
+# CDB database
+0	string	NBCDB\012	NetBSD Constant Database
+>7	byte	x		\b, version %d
+>8	string	x		\b, for '%s'
+>24	lelong	x		\b, datasize %d
+>28	lelong	x		\b, entries %d
+>32	lelong	x		\b, index %d
+>36	lelong	x		\b, seed %#x
