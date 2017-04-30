@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.105 2017/04/28 15:03:47 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.106 2017/04/30 17:05:02 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -867,7 +867,7 @@ cdf_get_property_info_pos(const cdf_stream_t *sst, const cdf_header_t *h,
 		DPRINTF(("Past end %p < %p\n", e, p));
 		return NULL;
 	}
-	if (cdf_check_stream_offset(sst, h, p, tail * sizeof(uint32_t),
+	if (cdf_check_stream_offset(sst, h, p, (tail + 1) * sizeof(uint32_t),
 	    __LINE__) == -1)
 		return NULL;
 	ofs = CDF_GETUINT32(p, tail);
