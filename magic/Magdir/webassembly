@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: webassembly,v 1.1 2017/03/12 22:57:44 christos Exp $
+# $File: webassembly,v 1.2 2017/05/02 14:05:29 christos Exp $
 # webassembly:  file(1) magic for WebAssembly modules
 #
 # WebAssembly is a virtual architecture developed by a W3C Community
@@ -8,7 +8,8 @@
 #
 # http://webassembly.org/docs/binary-encoding/ is the main
 # document describing the binary format.
-# From: Pip Cet <pipcet@gmail.com>
+# From: Pip Cet <pipcet@gmail.com> and Joel Martin
 
-0     lelong     0x6d736100  WebAssembly module
->4    lelong     x           \b, version %d
+0	string	\0asm	WebAssembly (wasm) binary module
+>4	lelong	=1	version %#x (MVP)
+>4	lelong	>1	version %#x
