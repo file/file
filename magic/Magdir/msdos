@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.117 2017/03/17 21:35:28 christos Exp $
+# $File: msdos,v 1.118 2017/05/20 19:55:27 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1151,14 +1151,40 @@
 
 # backed up file
 
+# skip some AppleWorks word like Tomahawk.Awp, WIN98SE-DE.vhd
+# by looking for trailing nul of maximal file name string
+0x52	ubyte	0	
+# test for flag byte: FFh~complete file, 00h~split file
+# FFh -127 =	-1 -127 =	-128
+# 00h -127 =	 0 -127 =	-127
+>0	byte-127	<-126
 # plausibility check for file name length
-0x53	ubyte-1	<80
-# actually 54 nul bytes
->0x54	string	\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
->>0x5	string	x	DOS 2.0 backed up file %s,
->>0	ubyte	0xff	complete file
->>0	ubyte	!0xff
->>>1	ushort	x	split file, sequence %d
+>>0x53	ubyte-1	<78	
+# looking for terminating nul of file name string
+>>>(0x53.b+4)	ubyte	0	
+# looking if last char of string is valid DOS file name
+>>>>(0x53.b+3)	ubyte	>0x1F	
+# actually 44 nul bytes
+# but sometimes garbage according to Ralf Quint. So can not be used as test
+#>0x54	string	\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
+# first char of full file name is DOS (5Ch) or UNIX (2Fh) path separator
+# only DOS variant found. UNIX variant according to V32SLASH.TXT in archive PD0315.EXE 
+>>>>>5	ubyte&0x8C	0x0C	
+# ./msdos (version 5.30) labeled the entry as
+# "DOS 2.0 backed up file %s, split file, sequence %d" or
+# "DOS 2.0 backed up file %s, complete file"
+>>>>>>0	ubyte	x	DOS 2.0-3.2 backed up
+#>>>>>>0	ubyte	0xff	complete
+>>>>>>0	ubyte	0
+>>>>>>>1 uleshort	x	sequence %d of
+# full file name with path but without drive letter and colon stored from 0x05 til 0x52
+>>>>>>0x5	string	x	file %s
+# backup name is original filename
+#!:ext	*
+# magic/Magdir/msdos, 1169: Warning: EXTENSION type `     *' has bad char '*'
+# file: line 1169: Bad magic entry '  *'
+# after header original file content
+>>>>>>128	indirect x	\b; 
 
 
 # DOS backup 3.3 to 5.x
