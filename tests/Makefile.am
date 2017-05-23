@@ -1,6 +1,6 @@
 check_PROGRAMS = test
 test_LDADD = $(top_builddir)/src/libmagic.la
-test_CPPFLAGS = -I$(top_srcdir)/src
+test_CPPFLAGS = -I$(top_builddir)/src
 
 EXTRA_DIST = \
 escapevel.result \
