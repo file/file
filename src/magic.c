@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.99 2016/05/03 16:09:38 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.101 2017/05/23 21:54:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -565,6 +565,15 @@ magic_errno(struct magic_set *ms)
 	if (ms == NULL)
 		return EINVAL;
 	return (ms->event_flags & EVENT_HAD_ERR) ? ms->error : 0;
+}
+
+public int
+magic_getflags(struct magic_set *ms)
+{
+	if (ms == NULL)
+		return -1;
+
+	return ms->flags;
 }
 
 public int
