@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.61 2017/04/01 18:26:03 christos Exp $
+# $File: animation,v 1.62 2017/05/25 20:07:23 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -46,9 +46,9 @@
 >>11	byte		4		\b v4 (H.263/AMR GSM 6.10)
 >>11	byte		5		\b v5 (H.263/AMR GSM 6.10)
 >>11	byte		6		\b v6 (ITU H.264/AMR GSM 6.10)
->>11	byte		a		\b C.S0050-0 V1.0
->>11	byte		b		\b C.S0050-0-A V1.0.0
->>11	byte		c		\b C.S0050-0-B V1.0
+>>11	byte		0xa		\b C.S0050-0 V1.0
+>>11	byte		0xb		\b C.S0050-0-A V1.0.0
+>>11	byte		0xc		\b C.S0050-0-B V1.0
 >8	string		3ge		\b, MPEG v4 system, 3GPP
 !:mime	video/3gpp
 >>11	byte		6		\b, Release 6 MBMS Extended Presentations

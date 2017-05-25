@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: flash,v 1.11 2014/05/02 00:26:49 christos Exp $
+# $File: flash,v 1.13 2017/05/25 20:07:23 christos Exp $
 # flash:	file(1) magic for Macromedia Flash file format
 #
 # See
@@ -22,10 +22,10 @@
 >>8     byte        0x18    Macromedia Flash data
 !:mime  application/x-shockwave-flash
 >>>3    byte        x       \b, version %d
->>8     beshort&ff87 0x2000 Macromedia Flash data
+>>8     beshort&0xff87 0x2000 Macromedia Flash data
 !:mime  application/x-shockwave-flash
 >>>3    byte        x       \b, version %d
->>8     beshort&ffe0 0x3000 Macromedia Flash data
+>>8     beshort&0xffe0 0x3000 Macromedia Flash data
 !:mime  application/x-shockwave-flash
 >>>3    byte        x       \b, version %d
 >>8     byte&0x7    0
