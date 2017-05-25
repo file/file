@@ -1,3 +1,7 @@
+2017-05-24  17:30  Christos Zoulas <christos@zoulas.com>
+
+	* pickier parsing of numeric values in magic files.
+
 2017-05-23  17:55  Christos Zoulas <christos@zoulas.com>
 
 	* PR/615 add magic_getflags()
