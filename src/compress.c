@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.104 2017/03/29 15:57:48 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.105 2017/05/25 00:13:03 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -751,7 +751,7 @@ err:
 	} else if (!WIFEXITED(status)) {
 		DPRINTF("Child not exited (%#x)\n", status);
 	} else if (WEXITSTATUS(status) != 0) {
-		DPRINTF("Child exited (%#u)\n", WEXITSTATUS(status));
+		DPRINTF("Child exited (%#x)\n", WEXITSTATUS(status));
 	}
 
 	closefd(fdp[STDIN_FILENO], 0);
