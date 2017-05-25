@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.118 2017/05/20 19:55:27 christos Exp $
+# $File: msdos,v 1.119 2017/05/25 20:33:57 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -998,7 +998,7 @@
 
 # TNEF magic From "Joomy" <joomy@se-ed.net>
 # Microsoft Outlook's Transport Neutral Encapsulation Format (TNEF)
-0	leshort		0x223e9f78	TNEF
+0	lelong		0x223e9f78	TNEF
 !:mime	application/vnd.ms-tnef
 
 # Norton Guide (.NG , .HLP) files added by Joerg Jenderek from source NG2HTML.C
