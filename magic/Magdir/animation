@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.62 2017/05/25 20:07:23 christos Exp $
+# $File: animation,v 1.63 2017/05/26 14:33:07 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -46,9 +46,11 @@
 >>11	byte		4		\b v4 (H.263/AMR GSM 6.10)
 >>11	byte		5		\b v5 (H.263/AMR GSM 6.10)
 >>11	byte		6		\b v6 (ITU H.264/AMR GSM 6.10)
->>11	byte		0xa		\b C.S0050-0 V1.0
->>11	byte		0xb		\b C.S0050-0-A V1.0.0
->>11	byte		0xc		\b C.S0050-0-B V1.0
+# http://www.3gpp2.org/Public_html/Specs/C.S0050-B_v1.0_070521.pdf
+# Section 8.1.1, corresponds to a, b, c
+>>11	byte		0x61		\b C.S0050-0 V1.0
+>>11	byte		0x62		\b C.S0050-0-A V1.0.0
+>>11	byte		0x63		\b C.S0050-0-B V1.0
 >8	string		3ge		\b, MPEG v4 system, 3GPP
 !:mime	video/3gpp
 >>11	byte		6		\b, Release 6 MBMS Extended Presentations
