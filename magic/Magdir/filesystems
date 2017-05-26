@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.120 2017/03/24 19:29:26 christos Exp $
+# $File: filesystems,v 1.121 2017/05/26 15:44:48 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1959,11 +1959,10 @@
 32769	string    CD001
 # mime line at that position does not work
 # to display CD-ROM (70=81-11) after MBR (113=40+72+1), partition-table (71=50+21) and before Apple Driver Map (51)
-!:strength -11
+#!:strength -11
 # to display CD-ROM (114=81+33) before MBR (113=40+72+1), partition-table (71=50+21) and Apple Driver Map (51)
-# does not work
-#!:strength +33
->0	use cdrom
+!:strength +34
+>0	use	cdrom
 
 # .cso files
 # Reference: http://pismotec.com/ciso/ciso.h
