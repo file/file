@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.30 2017/03/17 21:35:28 christos Exp $
+# $File: console,v 1.31 2017/06/11 22:26:46 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -413,6 +413,15 @@
 >0x1E	byte	x		\b, Rev.%02u)
 >0x12	byte	2		(DSi enhanced)
 >0x12	byte	3		(DSi only)
+# Secure Area check.
+>0x20		lelong	<0x4000		(homebrew)
+>0x20		lelong	>0x3FFF
+>>0x4000	lequad	0x0000000000000000	(multiboot)
+>>0x4000	lequad	!0x0000000000000000
+>>>0x4000	lequad	0xE7FFDEFFE7FFDEFF	(decrypted)
+>>>0x4000	lequad	!0xE7FFDEFFE7FFDEFF
+>>>>0x1000	lequad	0x0000000000000000	(encrypted)
+>>>>0x1000	lequad	!0x0000000000000000	(mask ROM)
 
 #------------------------------------------------------------------------------
 # nds_passme: file(1) magic for Nintendo DS ROM images for GBA cartridge boot.
