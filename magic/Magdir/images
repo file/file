@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.125 2017/06/05 17:40:31 christos Exp $
+# $File: images,v 1.126 2017/06/11 22:25:44 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -419,22 +419,35 @@
 # (Greg Roelofs, newt@uchicago.edu)
 # (Albert Cahalan, acahalan@cs.uml.edu)
 #
-# 137 P N G \r \n ^Z \n [4-byte length] H E A D [HEAD data] [HEAD crc] ...
+# 137 P N G \r \n ^Z \n [4-byte length] I H D R [HEAD data] [HEAD crc] ...
 #
-0	string		\x89PNG\x0d\x0a\x1a\x0a		PNG image data
+
+# IHDR parser
+0	name		png-ihdr
+>0	belong		x		\b, %d x
+>4	belong		x		%d,
+>8	byte		x		%d-bit
+>9	byte		0		grayscale,
+>9	byte		2		\b/color RGB,
+>9	byte		3		colormap,
+>9	byte		4		gray+alpha,
+>9	byte		6		\b/color RGBA,
+#>10	byte		0		deflate/32K,
+>12	byte		0		non-interlaced
+>12	byte		1		interlaced
+
+# Standard PNG image.
+0	string		\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0DIHDR	PNG image data
 !:mime	image/png
 !:strength +10
->16	belong		x		\b, %d x
->20	belong		x		%d,
->24	byte		x		%d-bit
->25	byte		0		grayscale,
->25	byte		2		\b/color RGB,
->25	byte		3		colormap,
->25	byte		4		gray+alpha,
->25	byte		6		\b/color RGBA,
-#>26	byte		0		deflate/32K,
->28	byte		0		non-interlaced
->28	byte		1		interlaced
+>16	use		png-ihdr
+
+# Apple CgBI PNG image.
+0	string		\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x04CgBI
+>24	string  	\x00\x00\x00\x0DIHDR	PNG image data (CgBI)
+!:mime	image/png
+!:strength +10
+>>32	use		png-ihdr
 
 # possible GIF replacements; none yet released!
 # (Greg Roelofs, newt@uchicago.edu)
