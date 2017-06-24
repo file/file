@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.14 2017/03/17 21:35:28 christos Exp $
+# $File: cad,v 1.15 2017/06/24 15:24:56 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -147,8 +147,13 @@
 >0x02	byte	0xfe
 >>0x04	beshort	0x1800		CIT raster CAD
 
-# 3DS (3d Studio files) Conflicts with diff output 0x3d '='
-#16	beshort		0x3d3d		image/x-3ds
+# 3DS (3d Studio files)
+0	leshort		0x4d4d
+>6	leshort		0x2
+>>8	lelong		0xa
+>>>16	leshort		0x3d3d	3D Studio model
+!:mime	image/x-3ds
+!:extension 3ds
 
 # MegaCAD 2D/3D drawing (.prt)
 # http://megacad.de/
