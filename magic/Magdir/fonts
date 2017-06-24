@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.36 2017/06/12 13:52:54 christos Exp $
+# $File: fonts,v 1.37 2017/06/24 00:39:00 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -256,14 +256,39 @@
 0	string		\012\001\001\000Copyright\ (c)\ 199	Adobe Multiple Master font
 
 # TrueType/OpenType font collections (.ttc)
+# URL: https://en.wikipedia.org/wiki/OpenType
 # http://www.microsoft.com/typography/otspec/otff.htm
-0	string		ttcf		TrueType font collection data
->4	belong		0x00010000	\b, 1.0
->>8	belong		>0		\b, %d fonts
->4	belong		0x00020000	\b, 2.0
->>8	belong		>0		\b, %d fonts
+# Modified by: Joerg Jenderek
+# Note:	container for TrueType, OpenType font
+0	string		ttcf
+# skip ASCII text
+>4	ubyte		0		
+# sfnt version often 0x00010000 of 1st table is TrueType
+>>(12.L)	ubelong	!0x4f54544f	TrueType
+#!:mime	font/ttf
+!:apple	????tfil
+!:ext	ttc
+# sfnt version 4F54544Fh~OTTO of 1st table is OpenType font 
+>>(12.L)	ubelong	=0x4f54544f	OpenType
+#!:mime	font/otf
+!:apple	????OTTO
+# no example found for otc
+!:ext	ttc/otc
+>>4	ubyte		x		font collection data
+!:mime	application/font-sfnt
+#!:mime	font/collection
+# TCC version
+>>4	belong		0x00010000	\b, 1.0
+>>4	belong		0x00020000	\b, 2.0
+>>8	ubelong		>0		\b, %d fonts
+# array offset size = fonts * offsetsize = fonts * 4
+>>(8.L*4) ubequad	x		
 # 0x44454947 = 'DSIG'
->>>16	belong		0x44534947	\b, digitally signed
+>>>&4	belong		0x44534947	\b, digitally signed
+# offset to 1st font
+>>12	ubelong		x		\b, at 0x%x
+# point to 1st font that starts with sfnt version
+>>(12.L) use		sfnt-font
 
 # Opentype font data from Avi Bercovich
 0	string		OTTO		OpenType font data
