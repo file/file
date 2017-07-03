@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: adventure,v 1.16 2017/03/17 21:35:28 christos Exp $
+# $File: adventure,v 1.17 2017/07/03 16:03:40 christos Exp $
 # adventure: file(1) magic for Adventure game files
 #
 # from Allen Garvin <earendil@faeryland.tamu-commerce.edu>
@@ -36,11 +36,12 @@
 >0	ubyte			<9
 >>16	belong&0xfe00f0f0	0x3030
 >>>0	ubyte			< 10
->>>>2	ubeshort		< 10
+>>>>2	ubeshort		x
 >>>>>18	regex			[0-9][0-9][0-9][0-9][0-9][0-9]
->>>>>>0	ubyte			< 10	Infocom (Z-machine %d,
->>>>>>>2	ubeshort	< 10 	Release %d /
->>>>>>>>18	string		>\0	Serial %.6s)
+>>>>>>0	ubyte			< 10	Infocom (Z-machine %d
+>>>>>>>2	ubeshort	x 	\b, Release %d
+>>>>>>>>18	string		>\0	\b, Serial %.6s
+>>>>>>>>18	string		x	\b)
 !:strength + 40
 !:mime	application/x-zmachine
 
