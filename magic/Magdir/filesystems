@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.121 2017/05/26 15:44:48 christos Exp $
+# $File: filesystems,v 1.122 2017/07/21 10:34:41 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2387,3 +2387,13 @@
 >>>>>>>>0x1B	ubyte	0x30		\b, media=1D
 >>>>>>>>0x1B	ubyte	0x40		\b, media=1DD
 >>>>>>>>0x1A	ubyte	0x10		\b, write-protected
+
+# HDD Raw Copy Tool disk image, file extension: .imgc
+# From Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+0	pstring	HDD\ Raw\ Copy\ Tool	%s
+>0x100	pstring	x			%s
+>0x200	pstring	x			- HD model: %s
+#>0x300	pstring	x			unknown %s
+>0x400	pstring	x			serial: %s
+#>0x500	pstring	x			unknown: %s
+!:ext	imgc

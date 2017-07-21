@@ -7,6 +7,8 @@ escapevel.result \
 escapevel.testfile \
 gedcom.result \
 gedcom.testfile \
+hddrawcopytool.result \
+hddrawcopytool.testfile \
 issue311docx.result \
 issue311docx.testfile
 
