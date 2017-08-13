@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.32 2017/05/31 15:48:50 christos Exp $
+# $File: python,v 1.33 2017/08/13 08:26:40 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -24,7 +24,11 @@
 0	belong		0x6c0c0d0a	python 3.2 byte-compiled
 0	belong		0x9e0c0d0a	python 3.3 byte-compiled
 0	belong		0xee0c0d0a	python 3.4 byte-compiled
-0	belong		0x160d0d0a	python 3.5 byte-compiled
+0	belong		0x160d0d0a	python 3.5.1- byte-compiled
+0	belong		0x170d0d0a	python 3.5.2+ byte-compiled
+0	belong		0x330d0d0a	python 3.6 byte-compiled
+0	belong		0x3e0d0d0a	python 3.7 byte-compiled
+
 
 0	search/1/w	#!\ /usr/bin/python	Python script text executable
 !:strength + 15
