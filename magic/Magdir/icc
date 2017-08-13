@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: icc,v 1.4 2017/03/17 22:20:22 christos Exp $
+# $File: icc,v 1.5 2017/08/13 00:21:47 christos Exp $
 # icc:  file(1) magic for International Color Consortium file formats
 
 #
@@ -48,7 +48,7 @@
 # 5th platform
 >>>40	string		TGNT		Taligent
 
-# remaing "l" "e" of "color profile" printed later to avoid error
+# remaining "l" "e" of "color profile" printed later to avoid error
 >>>40	string		x 		color profi
 #>>>40	string		x		(%.4s)
 !:mime	application/vnd.iccprofile

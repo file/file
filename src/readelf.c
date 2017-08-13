@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.136 2017/03/29 19:09:52 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.137 2017/08/13 00:21:47 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1209,8 +1209,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	size_t nbadcap = 0;
 	void *nbuf;
 	off_t noff, coff, name_off;
-	uint64_t cap_hw1 = 0;	/* SunOS 5.x hardware capabilites */
-	uint64_t cap_sf1 = 0;	/* SunOS 5.x software capabilites */
+	uint64_t cap_hw1 = 0;	/* SunOS 5.x hardware capabilities */
+	uint64_t cap_sf1 = 0;	/* SunOS 5.x software capabilities */
 	char name[50];
 	ssize_t namesize;
 

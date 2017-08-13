@@ -429,7 +429,7 @@
 		`
 2013-11-06  14:40  Christos Zoulas <christos@zoulas.com>
 
-	* fix erroneous non-zero exit code from non-existant file and message
+	* fix erroneous non-zero exit code from non-existent file and message
 
 2013-10-29  14:25  Christos Zoulas <christos@zoulas.com>
 

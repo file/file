@@ -141,7 +141,7 @@ typedef struct {
 #define	SHT_SYMTAB	2
 #define	SHT_NOTE	7
 #define	SHT_DYNSYM	11
-#define	SHT_SUNW_cap	0x6ffffff5	/* SunOS 5.x hw/sw capabilites */
+#define	SHT_SUNW_cap	0x6ffffff5	/* SunOS 5.x hw/sw capabilities */
 
 /* elf type */
 #define	ELFDATANONE	0		/* e_ident[EI_DATA] */

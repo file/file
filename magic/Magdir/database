@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.51 2017/04/28 16:28:16 christos Exp $
+# $File: database,v 1.52 2017/08/13 00:21:47 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -207,7 +207,7 @@
 >>>>>>>>>>>>>8		uleshort	>0		\b, at offset %d
 >>>>>>>>>>>>>(8.s+1)	ubyte		>0
 >>>>>>>>>>>>>>&-1	string		>\0		1st record "%s"
-# for multiple index files (*.MDX) Production flag,tag numbers(<=0x30),tag length(<=0x20), reserverd (NULL)
+# for multiple index files (*.MDX) Production flag,tag numbers(<=0x30),tag length(<=0x20), reserved (NULL)
 >>>>>>>24	ubelong&0x0133f7ff	>0
 # test for reserved NULL byte
 >>>>>>>>47	ubyte			0

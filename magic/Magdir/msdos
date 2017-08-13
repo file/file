@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.119 2017/05/25 20:33:57 christos Exp $
+# $File: msdos,v 1.120 2017/08/13 00:21:47 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -820,7 +820,7 @@
 # Windows icons
 # Update: Joerg Jenderek
 # URL: https://en.wikipedia.org/wiki/CUR_(file_format)
-# Note: similiar to Windows CURsor. container for BMP (only DIB part) or PNG
+# Note: similar to Windows CURsor. container for BMP (only DIB part) or PNG
 0   belong  0x00000100
 >9  byte    0
 >>0 byte    x
@@ -891,7 +891,7 @@
 # Windows non-animated cursors
 # Update: Joerg Jenderek
 # URL: https://en.wikipedia.org/wiki/CUR_(file_format)
-# Note: similiar to Windows ICOn. container for BMP ( only DIB part)
+# Note: similar to Windows ICOn. container for BMP ( only DIB part)
 # GRR: line below is too general as it catches also Lotus 1-2-3 files
 0   belong  0x00000200
 >9  byte    0
