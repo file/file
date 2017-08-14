@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.58 2017/05/31 15:48:50 christos Exp $
+# $File: commands,v 1.59 2017/08/14 07:40:38 christos Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
@@ -84,7 +84,7 @@
 # PHP scripts
 # Ulf Harnhammar <ulfh@update.uu.se>
 0	search/1/c	=<?php			PHP script text
-!:strength + 10
+!:strength + 30
 !:mime	text/x-php
 0	search/1	=<?\n			PHP script text
 !:mime	text/x-php

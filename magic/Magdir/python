@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.33 2017/08/13 08:26:40 christos Exp $
+# $File: python,v 1.34 2017/08/14 07:40:38 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -55,6 +55,17 @@
 !:strength + 15
 !:mime text/x-python
 
+# if __name__ == "__main__":
+0 search/4096 if\ __name__
+>&0 search/64 '__main__'	Python script text executable
+>&0 search/64 "__main__"	Python script text executable
+!:strength + 15
+!:mime text/x-python
+
+# import module [as abrev]
+0	regex	\^import\ [_[:alpha:]]+\ as\ [[:alpha:]][[:space:]]*$ Python script text executable
+!:mime text/x-python
+
 # comments
 #0	search/4096	'''
 #>&0	regex	.*'''$	Python script text executable
@@ -68,14 +79,19 @@
 # except: or finally:
 # block
 0	search/4096	try:
->&0	regex	\^[\040\t\f\r\n]*except.*:	Python script text executable
+>&0	regex	\^[[:space:]]*except.*:$	Python script text executable
 !:strength + 15
 !:mime text/x-python
 >&0	search/4096	finally:	Python script text executable
 !:mime text/x-python
 
-# def name(args, args):
-0	regex	 \^(\ |\\t){0,50}def\ {1,50}[a-zA-Z]{1,100}
->&0	regex	\ {0,50}\\(([a-zA-Z]|,|\ ){1,255}\\):$ Python script text executable
-!:mime text/x-python
+# class name[(base classes,)]: [pass]
+0	regex	\^class\ [_[:alpha:]]+(\\(.*\\))?(\ )*:([\ \t]+pass)?$		Python script text executable
 !:strength + 15
+!:mime text/x-python
+
+# def name(*args, **kwargs):
+0	regex	 \^[[:space:]]{0,50}def\ {1,50}[_a-zA-Z]{1,100}
+>&0	regex	 \\(([[:alpha:]*_,\ ]){0,255}\\):$ Python script text executable
+!:strength + 15
+!:mime text/x-python
