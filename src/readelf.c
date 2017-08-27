@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.137 2017/08/13 00:21:47 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.138 2017/08/27 07:55:02 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -511,7 +511,7 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     size_t noff, size_t doff, int *flags)
 {
 	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
-	    type == NT_GNU_BUILD_ID && (descsz >= 4 || descsz <= 20)) {
+	    type == NT_GNU_BUILD_ID && (descsz >= 4 && descsz <= 20)) {
 		uint8_t desc[20];
 		const char *btype;
 		uint32_t i;
