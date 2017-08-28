@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.261 2017/05/25 20:34:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.262 2017/08/28 13:39:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -612,8 +612,7 @@ buffer_apprentice(struct magic_set *ms, struct magic **bufs,
 	if (nbufs == 0)
 		return -1;
 
-	if (ms->mlist[0] != NULL)
-		file_reset(ms);
+	(void)file_reset(ms, 0);
 
 	init_file_tables();
 
@@ -656,8 +655,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	int file_err, errs = -1;
 	size_t i;
 
-	if (ms->mlist[0] != NULL)
-		file_reset(ms);
+	(void)file_reset(ms, 0);
 
 	if ((fn = magic_getpath(fn, action)) == NULL)
 		return -1;
