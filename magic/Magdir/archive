@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.107 2017/03/20 19:51:15 christos Exp $
+# $File: archive,v 1.108 2017/08/30 13:45:10 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -565,12 +565,12 @@
 # check header level 0 1 2 3
 >>>20	ubyte		<4
 # check 2nd, 3th and 4th character of method id
->>>>3	regex		\^(lh[0-9a-ex]|lz[s2-8]|pm[012]|pc1)		\b\040
+>>>>3	regex		\^(lh[0-9a-ex]|lz[s2-8]|pm[012]|pc1)		\b 
 !:mime	application/x-lzh-compressed
 # creator type "LHA "
 !:apple	????LHA
 # display archive type name like "LHa/LZS archive data" or "LArc archive"
->>>>>2	string		-lz		\b\040
+>>>>>2	string		-lz		\b 
 !:ext	lzs
 # already known  -lzs- -lz4- -lz5- with old names
 >>>>>>2	string	-lzs		LHa/LZS archive data
@@ -584,12 +584,12 @@
 # LHice archiver use ".ICE" as name extension instead usual one ".lzh"
 # FOOBAR archiver use ".foo" as name extension instead usual one
 # "Florain Orjanov's and Olga Bachetska's ARchiver" not found at the moment
->>>>>>>2	string	-lh1		\b\040
+>>>>>>>2	string	-lh1		\b 
 !:ext lha/lzh/ice
 >>>>>>3	regex		\^lh[23d]	LHa 2.x? archive data
 >>>>>>3	regex		\^lh[7]		LHa (2.x)/LHark archive data
 >>>>>>3	regex		\^lh[456]	LHa (2.x) archive data
->>>>>>>2	string	-lh5		\b\040
+>>>>>>>2	string	-lh5		\b 
 # https://en.wikipedia.org/wiki/BIOS
 # Some mainboard BIOS like Award use LHa compression. So archives with unusal extension are found like
 # bios.rom , kd7_v14.bin, 1010.004, ...
@@ -599,7 +599,7 @@
 # UNLHA32 2.67a
 >>>>>>2	string		-lhx		LHa (UNLHA32) archive
 # lha archives with standard file name extensions ".lha" ".lzh"
->>>>>>3	regex		!\^(lh1|lh5)	\b\040
+>>>>>>3	regex		!\^(lh1|lh5)	\b 
 !:ext lha/lzh
 # this should not happen if all -lh variants are described
 >>>>>>2	default		x		LHa (unknown) archive
