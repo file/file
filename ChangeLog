@@ -1,3 +1,7 @@
+2017-09-02  11:53  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.32
+
 2017-08-28  16:37  Christos Zoulas <christos@zoulas.com>
 
 	* Always reset state in {file,buffer}_apprentice (Krzysztof Wilczynski)
