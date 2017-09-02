@@ -2,6 +2,10 @@
 
 	* Always reset state in {file,buffer}_apprentice (Krzysztof Wilczynski)
 
+2017-08-27  03:55  Christos Zoulas <christos@zoulas.com>
+
+	* Fix always true condition (Thomas Jarosch)
+
 2017-05-24  17:30  Christos Zoulas <christos@zoulas.com>
 
 	* pickier parsing of numeric values in magic files.
