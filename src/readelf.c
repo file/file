@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.138 2017/08/27 07:55:02 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.139 2017/09/08 13:44:09 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -726,11 +726,11 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			    "gid=%u, nlwps=%u, lwp=%u (signal %u/code %u)",
 			    file_printable(sbuf, sizeof(sbuf),
 			    CAST(char *, pi.cpi_name)),
-			    elf_getu32(swap, pi.cpi_pid),
+			    elf_getu32(swap, (uint32_t)pi.cpi_pid),
 			    elf_getu32(swap, pi.cpi_euid),
 			    elf_getu32(swap, pi.cpi_egid),
 			    elf_getu32(swap, pi.cpi_nlwps),
-			    elf_getu32(swap, pi.cpi_siglwp),
+			    elf_getu32(swap, (uint32_t)pi.cpi_siglwp),
 			    elf_getu32(swap, pi.cpi_signo),
 			    elf_getu32(swap, pi.cpi_sigcode)) == -1)
 				return 1;
@@ -908,6 +908,7 @@ get_string_on_virtaddr(struct magic_set *ms,
 }
 
 
+/*ARGSUSED*/
 private int
 do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     int swap, uint32_t namesz __attribute__((__unused__)),

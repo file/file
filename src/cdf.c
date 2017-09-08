@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.106 2017/04/30 17:05:02 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.107 2017/09/08 13:44:09 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -85,6 +85,7 @@ static union {
 #define CDF_CALLOC(n, u) cdf_calloc(__FILE__, __LINE__, (n), (u))
 
 
+/*ARGSUSED*/
 static void *
 cdf_malloc(const char *file __attribute__((__unused__)),
     size_t line __attribute__((__unused__)), size_t n)
@@ -93,6 +94,7 @@ cdf_malloc(const char *file __attribute__((__unused__)),
 	return malloc(n);
 }
 
+/*ARGSUSED*/
 static void *
 cdf_realloc(const char *file __attribute__((__unused__)),
     size_t line __attribute__((__unused__)), void *p, size_t n)
@@ -101,6 +103,7 @@ cdf_realloc(const char *file __attribute__((__unused__)),
 	return realloc(p, n);
 }
 
+/*ARGSUSED*/
 static void *
 cdf_calloc(const char *file __attribute__((__unused__)),
     size_t line __attribute__((__unused__)), size_t n, size_t u)
