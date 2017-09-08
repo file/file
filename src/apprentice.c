@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.262 2017/08/28 13:39:18 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.263 2017/09/08 13:43:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2608,6 +2608,9 @@ check_format(struct magic_set *ms, struct magic *m)
 private int
 getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 {
+	char *ep;
+	uint64_t ull;
+
 	switch (m->type) {
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
@@ -2636,79 +2639,78 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			return rc ? -1 : 0;
 		}
 		return 0;
+	default:
+		if (m->reln == 'x')
+			return 0;
+		break;
+	}
+
+	switch (m->type) {
 	case FILE_FLOAT:
 	case FILE_BEFLOAT:
 	case FILE_LEFLOAT:
-		if (m->reln != 'x') {
-			char *ep;
-			errno = 0;
+		errno = 0;
 #ifdef HAVE_STRTOF
-			m->value.f = strtof(*p, &ep);
+		m->value.f = strtof(*p, &ep);
 #else
-			m->value.f = (float)strtod(*p, &ep);
+		m->value.f = (float)strtod(*p, &ep);
 #endif
-			if (errno == 0)
-				*p = ep;
-		}
+		if (errno == 0)
+			*p = ep;
 		return 0;
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
-		if (m->reln != 'x') {
-			char *ep;
-			errno = 0;
-			m->value.d = strtod(*p, &ep);
-			if (errno == 0)
-				*p = ep;
-		}
+		errno = 0;
+		m->value.d = strtod(*p, &ep);
+		if (errno == 0)
+			*p = ep;
 		return 0;
 	default:
-		if (m->reln != 'x') {
-			char *ep;
-			uint64_t ull;
-			errno = 0;
-			ull = (uint64_t)strtoull(*p, &ep, 0);
-			m->value.q = file_signextend(ms, m, ull);
-			if (*p == ep) {
-				file_magwarn(ms, "Unparseable number `%s'", *p);
-			} else {
-				size_t ts = typesize(m->type);
-				uint64_t x;
-				const char *q;
+		errno = 0;
+		ull = (uint64_t)strtoull(*p, &ep, 0);
+		m->value.q = file_signextend(ms, m, ull);
+		if (*p == ep) {
+			file_magwarn(ms, "Unparseable number `%s'", *p);
+		} else {
+			size_t ts = typesize(m->type);
+			uint64_t x;
+			const char *q;
 
-				if (ts == (size_t)~0) {
-					file_magwarn(ms, "Expected numeric type got `%s'",
-					    type_tbl[m->type].name);
-				}
-				for (q = *p; isspace((unsigned char)*q); q++)
-					continue;
-				if (*q == '-')
-					ull = -(int64_t)ull;
-				switch (ts) {
-				case 1:
-					x = ull & ~0xffULL;
-					break;
-				case 2:
-					x = ull & ~0xffffULL;
-					break;
-				case 4:
-					x = ull & ~0xffffffffULL;
-					break;
-				case 8:
-					x = 0;
-					break;
-				default:
-					abort();
-				}
-				if (x) {
-					file_magwarn(ms, "Overflow for numeric type `%s' value %#" PRIx64,
-					    type_tbl[m->type].name, ull);
-				}
+			if (ts == (size_t)~0) {
+				file_magwarn(ms,
+				    "Expected numeric type got `%s'",
+				    type_tbl[m->type].name);
 			}
-			if (errno == 0) {
-				*p = ep;
-				eatsize(p);
+			for (q = *p; isspace((unsigned char)*q); q++)
+				continue;
+			if (*q == '-')
+				ull = -(int64_t)ull;
+			switch (ts) {
+			case 1:
+				x = (uint64_t)(ull & ~0xffULL);
+				break;
+			case 2:
+				x = (uint64_t)(ull & ~0xffffULL);
+				break;
+			case 4:
+				x = (uint64_t)(ull & ~0xffffffffULL);
+				break;
+			case 8:
+				x = 0;
+				break;
+			default:
+				abort();
 			}
+			if (x) {
+				file_magwarn(ms, "Overflow for numeric"
+				    " type `%s' value %#" PRIx64,
+				    type_tbl[m->type].name, ull);
+			}
+		}
+		if (errno == 0) {
+			*p = ep;
+			eatsize(p);
 		}
 		return 0;
 	}
