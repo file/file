@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.126 2017/06/11 22:25:44 christos Exp $
+# $File: images,v 1.127 2017/09/15 15:25:11 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1087,8 +1087,15 @@
 # ANSI/SMPTE 268M-1994, SMPTE Standard for File Format for Digital
 # Moving-Picture Exchange (DPX), v1.0, 18 February 1994
 # Robert Minsk <robertminsk at yahoo.com>
+# Modified by Harry Mallon <hjmallon at gmail.com>
 0	string		SDPX	DPX image data, big-endian,
 !:mime image/x-dpx
+>0	use		dpx_info
+0	string		XPDS	DPX image data, little-endian,
+!:mime image/x-dpx
+>0	use		\^dpx_info
+
+0	name		dpx_info
 >768	beshort		<4
 >>772	belong		x	%dx
 >>776	belong		x	\b%d,
@@ -1101,8 +1108,8 @@
 >768	beshort		3	right to left/bottom to top
 >768	beshort		4	top to bottom/left to right
 >768	beshort		5	top to bottom/right to left
->768	leshort		6	bottom to top/left to right
->768	leshort		7	bottom to top/right to left
+>768	beshort		6	bottom to top/left to right
+>768	beshort		7	bottom to top/right to left
 
 # From: Tom Hilinski <tom.hilinski@comcast.net>
 # http://www.unidata.ucar.edu/packages/netcdf/
