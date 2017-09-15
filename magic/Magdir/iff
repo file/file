@@ -1,4 +1,3 @@
-
 #------------------------------------------------------------------------------
 # $File: iff,v 1.13 2011/09/06 11:00:06 christos Exp $
 # iff:	file(1) magic for Interchange File Format (see also "audio" & "images")
@@ -7,16 +6,101 @@
 # Arts for file interchange.  It has also been used by Apple, SGI, and
 # especially Commodore-Amiga.
 #
+# Ronald van Engelen (ronalde@lacocina.nl) -- Output formatted like WAV(E) RIFF
+# files, except for sample rate(1):
+#   RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz
+#   IFF (big-endian) data, AIFF audio, Linear PCM, 16 bit, stereo, (1 * 44100) Hz.
+#
 # IFF files begin with an 8 byte FORM header, followed by a 4 character
 # FORM type, which is followed by the first chunk in the FORM.
-
-0	string		FORM		IFF data
-#>4	belong		x		\b, FORM is %d bytes long
-# audio formats
->8	string		AIFF		\b, AIFF audio
+#
+# AIFF
+#  a. >> 0 FORM AIFF Chunk
+#  b. >> 4 ID             chunkID;           4 bytes: FORM
+#  c. >> 8                formType;          4 bytes: AIFF or AIFC
+#     >>12
+#
+# for audio the chunk with chunkID 'COMM' contains STREAMINFO with
+# the following layout:
+#  d. >>+ 0  ++ 0 (12) ID             chunkID;           4 bytes=COMM
+#  e. >>+ 4  ++ 4 (16) long           chunkSize;         4 bytes=18 or 23
+#  f. >>+ 4  ++ 8 (20) short          numChannels;       2 bytes=0x1, 0x2, ..., 0x6
+#  g. >>+ 2  ++10 (22) unsigned long  numSampleFrames;   4 bytes
+#  h. >>+ 4  ++14 (26) short          sampleSize;        2 bytes=4, 8, 16 or 24
+#  i. >>+ 2  ++16 (28) extended       sampleRate;       10 bytes
+#     >>+10  ++26 (38)
+#  Ad (1): sampleRate is an extended 80bit float; to reconstruct the sample
+#  rate in Hz one has to perform the following calculations, which seem
+#  impossible in current file magic implementation:
+#  (courtesy https://cycling74.com/forums/aiffs-80-bit-sample-rate-value/)
+#     lsb_pad=value of 2 bytes at >>&12 minus 16398 (either 0, 1, 2 or 3)
+#     base1=value of byte at >>&14 (either 172 for base freq 44100 or 187 for 48000)
+#     base2=value of byte at >>&14 (either 68  for base freq 44100 or 128 for 48000)
+#  first bit shift ${base1} 8 bits left,
+#  then add ${base2} and bit shift the sum with ${lsb_pas} bits left.
+#  in bash syntax:
+#     samplerate=$(( ( (${base1} << 8 ) + ${base2}) << ${lsb_pad} ))
+#  or:
+#     samplerate=$(echo "((${base1}*2^8)+${base2})*(2^${lsb_pad}) | bc)
+#  or, to simplify:
+#     base_freq=value of unsigned 2 bytes at >>&14
+#               (either 44100 (0xac44) or 48000 (0xbb80))
+#     samplerate=$(( (${lsb_pad}+1)*${base_freq} ))
+#
+#  a. >> 0 FORM AIFF Chunk
+#  b. >> 4 ID            chunkID;           4 bytes: FORM
+0	string		FORM		IFF (big-endian) data
+#  c. >> 8                formType;          4 bytes: AIFF or AIFC
+>8	string		AIFF		\b, AIFF audio, Linear PCM
 !:mime	audio/x-aiff
+# COMM chunk
+#  d. >>+ 0  ++ 0 (12) ID             chunkID;           4 bytes=COMM
+>>&0 	search 	        COMM
+#  e. >>+ 4  ++ 4 (16) long           chunkSize;         4 bytes=18 (or non standard 23)
+#>>>&0	belong	       x	     	\b, chunkSize=%d
+>>>&0	belong	       0x12
+>>>&0	belong	       0x17
+#  h. >>+ 4  ++14 (26) short          sampleSize;        2 bytes
+>>>&10	beshort	       x		\b, %d bit
+#  f. >>+ 4  ++ 8 (20) short          numChannels;       2 bytes: 0x0, 0x1, 0x2 ...
+#>>>&4	beshort	       x		\b, numChannels=%d
+>>>&4	beshort	       0x1		\b, mono
+>>>&4	beshort	       0x2		\b, stereo
+>>>&4	beshort	       0x3		\b, 3 channels
+>>>&4	beshort	       0x4		\b, 4 channels
+>>>&4	beshort	       0x5		\b, 5 channels
+>>>&4	beshort	       0x6		\b, 6 channels
+#  i. >>+ 2  ++16 (28) extended       sampleRate;       10 bytes
+# lsb-pad
+#>>>&12 beshort-16398  x		\b, lsbPad-16398*=%d
+>>>&12 	beshort-16398  0		\b, (1 *
+>>>&12 	beshort-16398  1		\b, (2 *
+>>>&12 	beshort-16398  2		\b, (3 *
+>>>&12 	beshort-16398  3		\b, (4 *
+>>>&14 ubeshort        0xac44		\b 44100) Hz
+>>>&14 ubeshort        0xbb80		\b 48000) Hz
+# to clairfy, what would be needed is something like this (bash syntax):
+# case ">>&14 ubeshort" in
+#  0xac44)
+#   case pad_size in
+#   	 0) samplerate=44100 ;;
+#  	 1) samplerate=88200 ;;
+#  	 2) samplerate=176400 ;;
+#  	 3) samplerate=352800 ;;
+#   esac
+#  0xbb80)
+#   	 0) samplerate=48000 ;;
+#  	 1) samplerate=96000 ;;
+#  	 2) samplerate=192000 ;;
+#  	 3) samplerate=384800 ;;
+#   esac
+#  esac
+#  g. >>+ 2  ++10 (22) unsigned long  numSampleFrames;   4 bytes
+>>>&6	ubelong	       x		\b, %d samples
 >8	string		AIFC		\b, AIFF-C compressed audio
 !:mime	audio/x-aiff
+#
+# non AIFF audio IFF formats
 >8	string		8SVX		\b, 8SVX 8-bit sampled sound voice
 !:mime	audio/x-aiff
 >8	string		16SV		\b, 16SV 16-bit sampled sound voice
