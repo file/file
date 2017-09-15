@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.127 2017/09/15 15:25:11 christos Exp $
+# $File: images,v 1.128 2017/09/15 18:34:02 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1065,7 +1065,9 @@
 >>&16	byte		5		pxr24
 >>&16	byte		6		b44
 >>&16	byte		7		b44a
->>&16	byte		>7		unknown
+>>&16	byte		8		dwaa
+>>&16	byte		9		dwab
+>>&16	byte		>9		unknown
 >8	 search/0x1000	dataWindow\0	\b, dataWindow:
 >>&10	lelong		x		(%d
 >>&14	lelong		x		%d)-
