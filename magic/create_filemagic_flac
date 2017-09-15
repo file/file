@@ -47,23 +47,14 @@ for base_fs in "${a_ground_fs[@]}"; do
     done
 done
 
-declare -a stripped_rates
 declare -a lines
 for samplerate in "${samplerates[@]}"; do
-    ## use bc with sed to convert and format Hz to kHz
-    stripped_rate="$(LANG=C bc <<< "scale=5; ${samplerate} / 1000" | \
-			      sed 's#[0\.]*$##g')"
-    ## only add uniq sample rates (should be neccessary
-    if [[ ! "${stripped_rates[@]}" =~ ${stripped_rate} ]]; then
-	printf -v line ">>17\tbelong&%#-15x\t%#08x\t%s, %s kHz\n" \
-	       "16777200" \
-	       "$(( samplerate * 16 ))" \
-	       "\b" \
-	       "${stripped_rate}"
-	stripped_rates+=("${stripped_rate}")
-	lines+=("${line}")
-    fi
-
+    printf -v line ">>17\tbelong&%#-15x\t%#08x\t%s, %s Hz\n" \
+	   "16777200" \
+	   "$(( samplerate * 16 ))" \
+	   "\b" \
+	   "${samplerate}"
+    lines+=("${line}")
 done
 printf "## start cutting >>> \n"
 ## print out the formatted lines
