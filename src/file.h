@@ -615,4 +615,9 @@ static const char *rcsid(const char *p) { \
 #define __RCSID(a)
 #endif
 
+//todo: check if libseccomp is available 
+#ifndef HAVE_LIBSECCOMP
+#define HAVE_LIBSECCOMP
+#endif 
+
 #endif /* __file_h__ */

@@ -6,6 +6,7 @@ bin_PROGRAMS = file
 
 AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
 AM_CFLAGS = $(CFLAG_VISIBILITY) @WARNINGS@
+LIBS += -lseccomp
 
 libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
 	encoding.c compress.c is_tar.c readelf.c print.c fsmagic.c \
@@ -19,7 +20,7 @@ MINGWLIBS =
 endif
 libmagic_la_LIBADD = $(LTLIBOBJS) $(MINGWLIBS)
 
-file_SOURCES = file.c
+file_SOURCES = file.c libsec.c
 file_LDADD = libmagic.la
 CLEANFILES = magic.h
 EXTRA_DIST = magic.h.in
