@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.107 2017/09/08 13:44:09 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.108 2017/09/18 20:39:33 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1573,32 +1573,32 @@ main(int argc, char *argv[])
 	info.i_len = 0;
 	for (i = 1; i < argc; i++) {
 		if ((info.i_fd = open(argv[1], O_RDONLY)) == -1)
-			err(1, "Cannot open `%s'", argv[1]);
+			err(EXIT_FAILURE, "Cannot open `%s'", argv[1]);
 
 		if (cdf_read_header(&info, &h) == -1)
-			err(1, "Cannot read header");
+			err(EXIT_FAILURE, "Cannot read header");
 #ifdef CDF_DEBUG
 		cdf_dump_header(&h);
 #endif
 
 		if (cdf_read_sat(&info, &h, &sat) == -1)
-			err(1, "Cannot read sat");
+			err(EXIT_FAILURE, "Cannot read sat");
 #ifdef CDF_DEBUG
 		cdf_dump_sat("SAT", &sat, CDF_SEC_SIZE(&h));
 #endif
 
 		if (cdf_read_ssat(&info, &h, &sat, &ssat) == -1)
-			err(1, "Cannot read ssat");
+			err(EXIT_FAILURE, "Cannot read ssat");
 #ifdef CDF_DEBUG
 		cdf_dump_sat("SSAT", &ssat, CDF_SHORT_SEC_SIZE(&h));
 #endif
 
 		if (cdf_read_dir(&info, &h, &sat, &dir) == -1)
-			err(1, "Cannot read dir");
+			err(EXIT_FAILURE, "Cannot read dir");
 
 		if (cdf_read_short_stream(&info, &h, &sat, &dir, &sst, &root)
 		    == -1)
-			err(1, "Cannot read short stream");
+			err(EXIT_FAILURE, "Cannot read short stream");
 #ifdef CDF_DEBUG
 		cdf_dump_stream(&sst);
 #endif
