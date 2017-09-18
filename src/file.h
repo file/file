@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.183 2017/08/28 13:39:18 christos Exp $
+ * @(#)$File: file.h,v 1.184 2017/09/18 20:40:10 christos Exp $
  */
 
 #ifndef __file_h__
@@ -589,6 +589,17 @@ struct tm *localtime_r(const time_t *, struct tm *);
 const char *fmtcheck(const char *, const char *) 
      __attribute__((__format_arg__(2)));
 #endif
+
+protected const char *file_getprogname(void);
+protected void file_setprogname(const char *);
+protected void file_err(int, const char *, ...)
+    __attribute__((__format__(__printf__, 2, 3)));
+protected void file_errx(int, const char *, ...)
+    __attribute__((__format__(__printf__, 2, 3)));
+protected void file_warn(const char *, ...)
+    __attribute__((__format__(__printf__, 1, 2)));
+protected void file_warnx(const char *, ...)
+    __attribute__((__format__(__printf__, 1, 2)));
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)
 #define QUICK
