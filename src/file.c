@@ -168,13 +168,15 @@ main(int argc, char *argv[])
 #ifdef HAVE_LIBSECCOMP
 
         /* if(enableSandboxBasic()){ */
-	/*     perror("SECCOMP initialisation failed"); */
-	/*     exit(EXIT_FAILURE); */
+        /*     file_err(1, "SECCOMP initialisation failed"); */
+        /*     //perror("SECCOMP initialisation failed"); */
+	/*     //exit(EXIT_FAILURE); */
 	/* } */
 
         if(enableSandboxFull()){
-	    perror("SECCOMP initialisation failed");
-	    exit(EXIT_FAILURE);
+	    file_err(1, "SECCOMP initialisation failed");
+	    //perror("SECCOMP initialisation failed");
+	    //exit(EXIT_FAILURE);
 	}
 
 	
