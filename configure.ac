@@ -162,6 +162,34 @@ if test "$MINGW" = 1; then
   AC_CHECK_LIB(gnurx,regexec,,AC_MSG_ERROR([libgnurx is required to build file(1) with MinGW]))
 fi
 
+dnl Check if we are on linux
+case $host in
+    *-*-linux*)
+        os_linux=yes
+        ;;
+esac
+
+dnl Check for libseccomp
+PKG_CHECK_MODULES(LIBSECCOMP,
+                  [libseccomp >= 2.0],
+                  [have_libseccomp=yes],
+                  [have_libseccomp=no])
+
+if test "$have_libseccomp" = "yes"; then
+   LIBS="$LIBS $LIBSECCOMP_LIBS"
+   CFLAGS="$CFLAGS $LIBSECCOMP_CFLAGS"
+   AC_DEFINE(HAVE_LIBSECCOMP, [], [Define if we have libseccomp])
+fi
+
+AC_SUBST(HAVE_LIBSECCOMP)
+AM_CONDITIONAL(HAVE_LIBSECCOMP, test "$have_libseccomp" = "yes")
+
+if test "$have_libseccomp" = "no"; then
+echo "
+WARNING: libseccomp was not found.
+"
+fi
+
 dnl See if we are cross-compiling
 AM_CONDITIONAL(IS_CROSS_COMPILE, test "$cross_compiling" = yes)
 

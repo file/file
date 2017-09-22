@@ -37,6 +37,10 @@ FILE_RCSID("@(#)$File: file.c,v 1.173 2017/09/18 20:40:10 christos Exp $")
 
 #include "magic.h"
 
+#ifdef HAVE_LIBSECCOMP
+#include "libsec.h"
+#endif /* HAVE_LIBSECCOMP */
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -160,6 +164,25 @@ private void applyparam(magic_t);
 int
 main(int argc, char *argv[])
 {
+
+#ifdef HAVE_LIBSECCOMP
+
+        /* if(enableSandboxBasic()){ */
+        /*     file_err(1, "SECCOMP initialisation failed"); */
+        /*     //perror("SECCOMP initialisation failed"); */
+	/*     //exit(EXIT_FAILURE); */
+	/* } */
+
+        if(enableSandboxFull()){
+	    file_err(1, "SECCOMP initialisation failed");
+	    //perror("SECCOMP initialisation failed");
+	    //exit(EXIT_FAILURE);
+	}
+
+	
+#endif /* HAVE_LIBSECCOMP */
+
+    
 	int c;
 	size_t i;
 	int action = 0, didsomefiles = 0, errflg = 0;
