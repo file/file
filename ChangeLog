@@ -1,3 +1,7 @@
+2017-09-24  12:02  Christos Zoulas <christos@zoulas.com>
+
+	* seccomp support (Paul Moore)
+
 2017-09-02  11:53  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.32

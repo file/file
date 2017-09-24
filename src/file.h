@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.184 2017/09/18 20:40:10 christos Exp $
+ * @(#)$File: file.h,v 1.185 2017/09/24 16:04:56 christos Exp $
  */
 
 #ifndef __file_h__
@@ -588,6 +588,18 @@ struct tm *localtime_r(const time_t *, struct tm *);
 #ifndef HAVE_FMTCHECK
 const char *fmtcheck(const char *, const char *) 
      __attribute__((__format_arg__(2)));
+#endif
+
+#ifdef HAVE_LIBSECCOMP
+// basic filter 
+// this mode should not interfere with normal operations
+// only some dangerous syscalls are blacklisted
+int enable_sandbox_basic(void);
+
+// enhanced filter 
+// this mode allows only the necessary syscalls used during normal operation
+// extensive testing required !!!
+int enable_sandbox_full(void);
 #endif
 
 protected const char *file_getprogname(void);

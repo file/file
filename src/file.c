@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.173 2017/09/18 20:40:10 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.174 2017/09/24 16:04:56 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -185,6 +185,15 @@ main(int argc, char *argv[])
 		progname = argv[0];
 
 	file_setprogname(progname);
+
+#ifdef HAVE_LIBSECCOMP
+#if 0
+	if (enable_sandbox_basic() == -1)
+#else
+	if (enable_sandbox_full() == -1)
+#endif
+		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
+#endif /* HAVE_LIBSECCOMP */
 
 #ifdef S_IFLNK
 	posixly = getenv("POSIXLY_CORRECT") != NULL;
