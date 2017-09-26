@@ -1,3 +1,7 @@
+2017-09-26   8:22  Christos Zoulas <christos@zoulas.com>
+
+	* close the file on error when writing magic (Steve Grubb)
+
 2017-09-24  12:02  Christos Zoulas <christos@zoulas.com>
 
 	* seccomp support (Paul Moore)
