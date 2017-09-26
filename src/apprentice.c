@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.263 2017/09/08 13:43:37 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.264 2017/09/26 12:21:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3177,20 +3177,21 @@ apprentice_compile(struct magic_set *ms, struct magic_map *map, const char *fn)
 
 	if (write(fd, &hdr, sizeof(hdr)) != (ssize_t)sizeof(hdr)) {
 		file_error(ms, errno, "error writing `%s'", dbname);
-		goto out;
+		goto out2;
 	}
 
 	for (i = 0; i < MAGIC_SETS; i++) {
 		len = m * map->nmagic[i];
 		if (write(fd, map->magic[i], len) != (ssize_t)len) {
 			file_error(ms, errno, "error writing `%s'", dbname);
-			goto out;
+			goto out2;
 		}
 	}
 
+	rv = 0;
+out2:
 	if (fd != -1)
 		(void)close(fd);
-	rv = 0;
 out:
 	apprentice_unmap(map);
 	free(dbname);
