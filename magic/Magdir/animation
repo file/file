@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.63 2017/05/26 14:33:07 christos Exp $
+# $File: animation,v 1.64 2017/10/06 01:14:08 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -56,20 +56,20 @@
 >>11	byte		6		\b, Release 6 MBMS Extended Presentations
 >>11	byte		7		\b, Release 7 MBMS Extended Presentations
 >8	string		3gg		\b, MPEG v4 system, 3GPP
->11	byte		6		\b, Release 6 General Profile
 !:mime	video/3gpp
+>>11	byte		6		\b, Release 6 General Profile
 >8	string		3gp		\b, MPEG v4 system, 3GPP
->11	byte		1		\b, Release %d (non existent)
->11	byte		2		\b, Release %d (non existent)
->11	byte		3		\b, Release %d (non existent)
->11	byte		4		\b, Release %d
->11	byte		5		\b, Release %d
->11	byte		6		\b, Release %d
->11	byte		7		\b, Release %d Streaming Servers
 !:mime	video/3gpp
+>>11	byte		1		\b, Release %d (non existent)
+>>11	byte		2		\b, Release %d (non existent)
+>>11	byte		3		\b, Release %d (non existent)
+>>11	byte		4		\b, Release %d
+>>11	byte		5		\b, Release %d
+>>11	byte		6		\b, Release %d
+>>11	byte		7		\b, Release %d Streaming Servers
 >8	string		3gs		\b, MPEG v4 system, 3GPP
->11	byte		7		\b, Release %d Streaming Servers
 !:mime	video/3gpp
+>>11	byte		7		\b, Release %d Streaming Servers
 >8	string		avc1		\b, MPEG v4 system, 3GPP JVT AVC [ISO 14496-12:2005]
 !:mime	video/mp4
 >8	string/W	qt		\b, Apple QuickTime movie
