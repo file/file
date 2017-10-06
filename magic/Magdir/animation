@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.65 2017/10/06 14:08:55 christos Exp $
+# $File: animation,v 1.66 2017/10/06 15:36:38 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -197,9 +197,9 @@
 >8	string		heic		\b, HEIF Image HEVC Main or Main Still Picture Profile
 !:mime image/heic
 >8	string		heix		\b, HEIF Image HEVC Main 10 Profile
-!:mime image/heic-sequence
->8	string		hevc		\b, HEIF Image Sequenz HEVC Main or Main Still Picture Profile
 !:mime image/heic
+>8	string		hevc		\b, HEIF Image Sequenz HEVC Main or Main Still Picture Profile
+!:mime image/heic-sequence
 >8	string		hevx		\b, HEIF Image Sequence HEVC Main 10 Profile
 !:mime image/heic-sequence
 # following HEIF brands are not mentioned in the heif technical info currently (Oct 2017)
