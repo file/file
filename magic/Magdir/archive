@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.108 2017/08/30 13:45:10 christos Exp $
+# $File: archive,v 1.109 2017/10/07 18:41:00 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -483,9 +483,19 @@
 
 # These were inspired by idarc, but actually verified
 # Dzip archiver (.dz)
-0	string	DZ Dzip archive data
->2	byte	x \b, version %i
->3	byte	x \b.%i
+# Update: Joerg Jenderek
+# URL: http://speeddemosarchive.com/dzip/
+# reference: http://speeddemosarchive.com/dzip/dz29src.zip/main.c 
+# GRR: line below is too general as it matches also ASCII texts like Doszip commander help dz.txt
+0	string	DZ 
+# latest version is 2.9 dated 7 may 2003
+>2	byte	<4 Dzip archive data
+!:mime	application/x-dzip
+!:ext	dz
+>>2	byte	x \b, version %i
+>>3	byte	x \b.%i
+>>4	ulelong	x \b, offset 0x%x
+>>8	ulelong	x \b, %u files
 # ZZip archiver (.zz)
 0	string	ZZ\ \0\0 ZZip archive data
 0	string	ZZ0 ZZip archive data
