@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.16 2017/03/17 22:20:22 christos Exp $
+# $File: windows,v 1.17 2017/10/07 13:29:26 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -572,4 +572,17 @@
 # MTF Major Version (1)
 #>>>>>>93	ubyte		x		\b, MFT version %x
 #
+
+# URL: https://en.wikipedia.org/wiki/PaintShop_Pro
+# Reference: http://www.cryer.co.uk/file-types/p/pal.htm
+# Created by: Joerg Jenderek
+# Note: there exist other color palette formats also with .pal extension
+0	string	JASC-PAL\r\n	PaintShop Pro color palette
+#!:mime	text/plain
+# PspPalette extension is used by newer (probably 8) PaintShopPro versions
+!:ext	pal/PspPalette
+# 2nd line contains palette file version. For example "0100"
+>10	string	!0100		\b, version %.4s
+# third line contains the number of colours: 16 256 ...
+>16	string	x		\b, %.3s colors
 
