@@ -40,7 +40,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.39 2017/03/17 20:45:01 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.40 2017/10/13 15:25:12 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -53,10 +53,10 @@ FILE_RCSID("@(#)$File: is_tar.c,v 1.39 2017/03/17 20:45:01 christos Exp $")
 private int is_tar(const unsigned char *, size_t);
 private int from_oct(const char *, size_t);	/* Decode octal number */
 
-static const char tartype[][32] = {
-	"tar archive",
+static const char tartype[][32] = {	/* should be equal to messages */
+	"tar archive",			/* found in ../magic/Magdir/archive */
 	"POSIX tar archive",
-	"POSIX tar archive (GNU)",
+	"POSIX tar archive (GNU)",	/*  */
 };
 
 protected int
