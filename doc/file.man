@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.124 2016/10/19 20:52:45 christos Exp $
-.Dd October 19, 2016
+.\" $File: file.man,v 1.126 2017/10/13 15:37:03 christos Exp $
+.Dd October 13, 2017
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -215,7 +215,9 @@ elf magic is found.
 .It soft
 Consults magic files.
 .It tar
-Examines tar files.
+Examines tar files by verifying the checksum of the 512 byte tar header.
+Excluding this test can provide more detailed content description by using
+the soft magic method.
 .It text
 A synonym for
 .Sq ascii .
