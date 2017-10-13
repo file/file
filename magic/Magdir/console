@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.33 2017/10/13 15:37:30 christos Exp $
+# $File: console,v 1.34 2017/10/13 20:47:14 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -847,16 +847,3 @@
 >>>>>>0x5B	byte	0x02
 >>>>>>>0x54	belong	x	Nintendo amiibo NFC dump - amiibo ID: %08X-
 >>>>>>>0x58	belong	x	\b%08X
-
-# Maxis Database Packed Files, the stored data file format used by all
-# Maxis games after the Sims: http://wiki.niotso.org/DBPF
-# http://www.wiki.sc4devotion.com/index.php?title=DBPF
-# 12 Oct 2017, Kip Warner <kip at thevertigo dot com>
-0	string  DBPF	Maxis Database Packed File (Version 
-4	ulelong x	\b%u.
-8	ulelong x	\b%u)
-!:ext	dbpf/package/dat/sc4
-4	ulelong	1
->8	ulelong	0
->>24	ledate	x	created: %s
->>28	ledate	x	\b, modified: %s
