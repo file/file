@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.18 2017/10/19 16:37:41 christos Exp $
+# $File: windows,v 1.19 2017/10/25 23:44:38 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -585,4 +585,51 @@
 >10	string	!0100		\b, version %.4s
 # third line contains the number of colours: 16 256 ...
 >16	string	x		\b, %.3s colors
+
+# URL: http://en.wikipedia.org/wiki/Innosetup
+# Reference: https://github.com/jrsoftware/issrc/blob/master/Projects/Undo.pas
+# Created by: Joerg Jenderek
+# Note:	created by like "InnoSetup self-extracting archive" inside ./msdos
+# TrID labeles the entry as "Inno Setup Uninstall Log"
+#	TUninstallLogID
+0	string	Inno\ Setup\ Uninstall\ Log\ (b)	InnoSetup Log
+!:mime	application/x-innosetup
+# unins000.dat, unins001.dat, ...
+!:ext	dat
+# " 64-bit" variant
+>0x1c	string		>\0				\b%.7s
+# AppName[0x80] like "Minimal SYStem", ClamWin Free Antivirus , ...
+>0xc0	string		x				%s
+# AppId[0x80] is simliar to AppName or
+# GUID like {4BB0DCDC-BC24-49EC-8937-72956C33A470} start with left brace
+>0x40	ubyte		0x7b
+>>0x40	string		x				%-.38s
+# do not know how this log version correlates to program version
+>0x140	ulelong		x				\b, version 0x%x
+# NumRecs
+#>0x144	ulelong		x				\b, 0x%4.4x records
+# EndOffset means files size
+>0x148	ulelong		x				\b, %u bytes
+# Flags 5 25h 35h
+#>0x14c	ulelong		x				\b, flags %8.8x
+# Reserved: array[0..26] of Longint
+# the non Unicode HighestSupportedVersion may never become greater than or equal to 1000
+>0x140	ulelong		<1000
+# hostname
+>>0x1d6	pstring		x				\b, %s
+# user name
+>>>&0	pstring		x				\b\%s
+# directory like C:\Program Files (x86)\GnuWin32
+>>>>&0	pstring		x				\b, "%s"
+# version 1000 or higher implies unicode
+>0x140	ulelong		>999
+# hostname
+>>0x1db	lestring16	x				\b, %-.9s
+# utf string variant with prepending fe??ffFFff
+>>0x1db	search/43	\xFF\xFF\xFF			
+# user name
+>>>&0	lestring16	x				\b\%-.9s
+>>>&0	search/43	\xFF\xFF\xFF			
+# directory like C:\Program Files\GIMP 2
+>>>>&0	lestring16	x				\b, %-.42s
 
