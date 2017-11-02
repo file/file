@@ -40,7 +40,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.40 2017/10/13 15:25:12 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.41 2017/11/02 20:25:39 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -60,8 +60,10 @@ static const char tartype[][32] = {	/* should be equal to messages */
 };
 
 protected int
-file_is_tar(struct magic_set *ms, const unsigned char *buf, size_t nbytes)
+file_is_tar(struct magic_set *ms, const struct buffer *b)
 {
+	const unsigned char *buf = b->fbuf;
+	size_t nbytes = b->flen;
 	/*
 	 * Do the tar test first, because if the first file in the tar
 	 * archive starts with a dot, we can confuse it with an nroff file.

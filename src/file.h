@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.185 2017/09/24 16:04:56 christos Exp $
+ * @(#)$File: file.h,v 1.186 2017/11/02 20:25:39 christos Exp $
  */
 
 #ifndef __file_h__
@@ -144,6 +144,14 @@
 #define FILE_CHECK	1
 #define FILE_COMPILE	2
 #define FILE_LIST	3
+
+struct buffer {
+	int fd;
+	const void *fbuf;
+	size_t flen;
+	void *ebuf;
+	size_t elen;
+};
 
 union VALUETYPE {
 	uint8_t b;
@@ -287,7 +295,7 @@ struct magic {
 #endif /* ENABLE_CONDITIONALS */
 
 	/* Word 4 */
-	uint32_t offset;	/* offset to magic number */
+	int32_t offset;		/* offset to magic number */
 	/* Word 5 */
 	int32_t in_offset;	/* offset from indirection */
 	/* Word 6 */
@@ -394,7 +402,7 @@ struct magic_set {
 		char *buf;		/* Accumulation buffer */
 		char *pbuf;		/* Printable buffer */
 	} o;
-	uint32_t offset;
+	int32_t offset;
 	int error;
 	int flags;			/* Control magic tests. */
 	int event_flags;		/* Note things that happened. */
@@ -448,23 +456,20 @@ protected int file_replace(struct magic_set *, const char *, const char *);
 protected int file_printf(struct magic_set *, const char *, ...)
     __attribute__((__format__(__printf__, 2, 3)));
 protected int file_reset(struct magic_set *, int);
-protected int file_tryelf(struct magic_set *, int, const unsigned char *,
-    size_t);
-protected int file_trycdf(struct magic_set *, int, const unsigned char *,
-    size_t);
+protected int file_tryelf(struct magic_set *, const struct buffer *);
+protected int file_trycdf(struct magic_set *, const struct buffer *);
 #if HAVE_FORK
-protected int file_zmagic(struct magic_set *, int, const char *,
-    const unsigned char *, size_t);
+protected int file_zmagic(struct magic_set *, const struct buffer *,
+    const char *);
 #endif
-protected int file_ascmagic(struct magic_set *, const unsigned char *, size_t,
+protected int file_ascmagic(struct magic_set *, const struct buffer *,
     int);
 protected int file_ascmagic_with_encoding(struct magic_set *,
-    const unsigned char *, size_t, unichar *, size_t, const char *,
-    const char *, int);
-protected int file_encoding(struct magic_set *, const unsigned char *, size_t,
+    const struct buffer *, unichar *, size_t, const char *, const char *, int);
+protected int file_encoding(struct magic_set *, const struct buffer *,
     unichar **, size_t *, const char **, const char **, const char **);
-protected int file_is_tar(struct magic_set *, const unsigned char *, size_t);
-protected int file_softmagic(struct magic_set *, const unsigned char *, size_t,
+protected int file_is_tar(struct magic_set *, const struct buffer *);
+protected int file_softmagic(struct magic_set *, const struct buffer *,
     uint16_t *, uint16_t *, int, int);
 protected int file_apprentice(struct magic_set *, const char *, int);
 protected int buffer_apprentice(struct magic_set *, struct magic **,
@@ -496,6 +501,9 @@ protected char * file_printable(char *, size_t, const char *);
 protected int file_os2_apptype(struct magic_set *, const char *, const void *,
     size_t);
 #endif /* __EMX__ */
+
+protected void buffer_init(struct buffer *, int, const void *, size_t);
+protected void buffer_fini(struct buffer *);
 
 #if defined(HAVE_LOCALE_H)
 #include <locale.h>

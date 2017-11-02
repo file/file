@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.264 2017/09/26 12:21:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.265 2017/11/02 20:25:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -652,7 +652,7 @@ protected int
 file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
 	char *p, *mfn;
-	int file_err, errs = -1;
+	int fileerr, errs = -1;
 	size_t i;
 
 	(void)file_reset(ms, 0);
@@ -687,8 +687,8 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 			*p++ = '\0';
 		if (*fn == '\0')
 			break;
-		file_err = apprentice_1(ms, fn, action);
-		errs = MAX(errs, file_err);
+		fileerr = apprentice_1(ms, fn, action);
+		errs = MAX(errs, fileerr);
 		fn = p;
 	}
 
@@ -1910,7 +1910,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 	}
 
 	/* get offset, then skip over it */
-	m->offset = (uint32_t)strtoul(l, &t, 0);
+	m->offset = (int32_t)strtol(l, &t, 0);
         if (l == t) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "offset `%s' invalid", l);
@@ -3324,7 +3324,7 @@ private void
 bs1(struct magic *m)
 {
 	m->cont_level = swap2(m->cont_level);
-	m->offset = swap4((uint32_t)m->offset);
+	m->offset = swap4((int32_t)m->offset);
 	m->in_offset = swap4((uint32_t)m->in_offset);
 	m->lineno = swap4((uint32_t)m->lineno);
 	if (IS_STRING(m->type)) {

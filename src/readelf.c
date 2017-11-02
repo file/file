@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.139 2017/09/08 13:44:09 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.140 2017/11/02 20:25:39 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1571,9 +1571,11 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 
 
 protected int
-file_tryelf(struct magic_set *ms, int fd, const unsigned char *buf,
-    size_t nbytes)
+file_tryelf(struct magic_set *ms, const struct buffer *b)
 {
+	int fd = b->fd;
+	const unsigned char *buf = b->fbuf;
+	size_t nbytes = b->flen;
 	union {
 		int32_t l;
 		char c[sizeof (int32_t)];

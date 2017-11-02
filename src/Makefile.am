@@ -7,7 +7,7 @@ bin_PROGRAMS = file
 AM_CPPFLAGS = -DMAGIC='"$(MAGIC)"'
 AM_CFLAGS = $(CFLAG_VISIBILITY) @WARNINGS@
 
-libmagic_la_SOURCES = magic.c apprentice.c softmagic.c ascmagic.c \
+libmagic_la_SOURCES = buffer.c magic.c apprentice.c softmagic.c ascmagic.c \
 	encoding.c compress.c is_tar.c readelf.c print.c fsmagic.c \
 	funcs.c file.h readelf.h tar.h apptype.c der.c der.h \
 	file_opts.h elfclass.h mygetopt.h cdf.c cdf_time.c readcdf.c cdf.h
