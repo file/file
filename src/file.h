@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.186 2017/11/02 20:25:39 christos Exp $
+ * @(#)$File: file.h,v 1.187 2017/11/03 00:18:55 christos Exp $
  */
 
 #ifndef __file_h__
@@ -504,6 +504,7 @@ protected int file_os2_apptype(struct magic_set *, const char *, const void *,
 
 protected void buffer_init(struct buffer *, int, const void *, size_t);
 protected void buffer_fini(struct buffer *);
+protected int buffer_fill(const struct buffer *);
 
 #if defined(HAVE_LOCALE_H)
 #include <locale.h>

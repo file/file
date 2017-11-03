@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.251 2017/11/02 20:25:39 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.252 2017/11/03 00:18:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1345,10 +1345,10 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
     int flip, uint16_t *indir_count, uint16_t *name_count,
     int *printed_something, int *need_separator, int *returnval)
 {
+	const unsigned char *s;
+	size_t nbytes;
+	uint32_t offset;
 	struct buffer bb;
-	const unsigned char *s = b->fbuf;
-	size_t nbytes = b->flen;
-	uint32_t offset = ms->offset;
 	intmax_t lhs;
 	file_pushbuf_t *pb;
 	int rv, oneed_separator, in_type;
@@ -1366,6 +1366,31 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		file_error(ms, 0, "name use count (%hu) exceeded",
 		    *name_count);
 		return -1;
+	}
+
+	if (ms->offset < 0) {
+		if (cont_level > 0) {
+			file_error(ms, 0, "negative offset %d at continuation"
+			    "level %u", ms->offset, cont_level);
+			return -1;
+		}
+		if (buffer_fill(b) == -1)
+			return -1;
+		if (o != 0) {
+			// Not yet!
+			file_magerror(ms, "non zero offset %zu at"
+			    " level %u", o, cont_level);
+			return -1;
+		}
+		if ((size_t)-ms->offset > b->elen)
+			return -1;
+		s = b->ebuf;
+		nbytes = b->elen;
+		offset = b->elen + ms->offset;
+	} else {
+		s = b->fbuf;
+		nbytes = b->flen;
+		offset = ms->offset;
 	}
 
 	if (mcopy(ms, p, m->type, m->flag & INDIR, s, (uint32_t)(offset + o),
@@ -1593,6 +1618,11 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		return rv;
 
 	case FILE_USE:
+		if (ms->offset < 0) {
+			file_magerror(ms, "negative offset not supported yet"
+			    " for USE magic");
+			return -1;
+		}
 		if (nbytes < offset)
 			return 0;
 		rbuf = m->value.s;

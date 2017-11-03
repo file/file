@@ -27,25 +27,13 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: buffer.c,v 1.1 2017/11/02 20:25:39 christos Exp $")
+FILE_RCSID("@(#)$File: buffer.c,v 1.2 2017/11/03 00:18:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
-#include <assert.h>
-#include <stdarg.h>
+#include <unistd.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#if defined(HAVE_WCHAR_H)
-#include <wchar.h>
-#endif
-#if defined(HAVE_WCTYPE_H)
-#include <wctype.h>
-#endif
-#if defined(HAVE_LIMITS_H)
-#include <limits.h>
-#endif
-
+#include <sys/stat.h>
 
 void
 buffer_init(struct buffer *b, int fd, const void *data, size_t len)
@@ -61,4 +49,32 @@ void
 buffer_fini(struct buffer *b)
 {
 	free(b->ebuf);
+}
+
+int
+buffer_fill(const struct buffer *bb)
+{
+	// XXX: should be cached?
+	struct stat st;
+	struct buffer *b = CCAST(struct buffer *, bb);
+
+	if (b->elen != 0)
+		return b->elen == (size_t)~0 ? -1 : 0;
+
+	if (b->fd == -1 || fstat(b->fd, &st) == -1 || !S_ISREG(st.st_mode))
+		goto out;
+
+	b->elen =  (size_t)st.st_size < b->flen ? (size_t)st.st_size : b->flen;
+	if ((b->ebuf = malloc(b->elen)) == NULL)
+		goto out;
+
+	if (pread(b->fd, b->ebuf, b->elen, st.st_size - b->elen) == -1) {
+		free(b->ebuf);
+		goto out;
+	}
+
+	return 0;
+out:
+	b->elen = (size_t)~0;
+	return -1;
 }
