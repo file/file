@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.127 2017/10/13 20:47:39 christos Exp $
+# $File: Makefile.am,v 1.128 2017/11/03 23:37:34 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -294,6 +294,7 @@ $(MAGIC_FRAGMENT_DIR)/xwindows \
 $(MAGIC_FRAGMENT_DIR)/yara \
 $(MAGIC_FRAGMENT_DIR)/zfs \
 $(MAGIC_FRAGMENT_DIR)/zilog \
+$(MAGIC_FRAGMENT_DIR)/zip \
 $(MAGIC_FRAGMENT_DIR)/zyxel 
 
 MAGIC = magic.mgc
