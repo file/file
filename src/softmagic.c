@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.254 2017/11/03 14:28:54 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.255 2017/11/03 23:27:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1352,6 +1352,8 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 {
 	if (m->offset < 0) {
 		if (cont_level > 0) {
+			if (m->flag & (OFFADD|INDIROFFADD))
+				goto normal;
 			file_error(ms, 0, "negative offset %d at continuation"
 			    "level %u", m->offset, cont_level);
 			return -1;
@@ -1366,18 +1368,17 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 		}
 		if ((size_t)-m->offset > b->elen)
 			return -1;
-		buffer_init(bb, -1, b->ebuf, bb->elen);
+		buffer_init(bb, -1, b->ebuf, b->elen);
 		ms->eoffset = ms->offset = b->elen + m->offset;
 	} else {
 		if (cont_level == 0) {
+normal:
 			// XXX: Pass real fd, then who frees bb?
 			buffer_init(bb, -1, b->fbuf, b->flen);
 			ms->offset = m->offset;
+			ms->eoffset = 0;
 		} else {
-			if (bb->fbuf == b->ebuf)
-				ms->offset = ms->eoffset + m->offset;
-			else
-				ms->offset = m->offset;
+			ms->offset = ms->eoffset + m->offset;
 		}
 	}
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
