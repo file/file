@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: buffer.c,v 1.2 2017/11/03 00:18:55 christos Exp $")
+FILE_RCSID("@(#)$File: buffer.c,v 1.3 2017/11/03 23:28:04 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -41,6 +41,7 @@ buffer_init(struct buffer *b, int fd, const void *data, size_t len)
 	b->fd = fd;
 	b->fbuf = data;
 	b->flen = len;
+	b->eoff = 0;
 	b->ebuf = NULL;
 	b->elen = 0;
 }
@@ -68,7 +69,8 @@ buffer_fill(const struct buffer *bb)
 	if ((b->ebuf = malloc(b->elen)) == NULL)
 		goto out;
 
-	if (pread(b->fd, b->ebuf, b->elen, st.st_size - b->elen) == -1) {
+	b->eoff = st.st_size - b->elen;
+	if (pread(b->fd, b->ebuf, b->elen, b->eoff) == -1) {
 		free(b->ebuf);
 		goto out;
 	}

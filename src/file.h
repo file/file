@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.189 2017/11/03 14:28:54 christos Exp $
+ * @(#)$File: file.h,v 1.190 2017/11/03 23:28:04 christos Exp $
  */
 
 #ifndef __file_h__
@@ -149,6 +149,7 @@ struct buffer {
 	int fd;
 	const void *fbuf;
 	size_t flen;
+	off_t eoff;
 	void *ebuf;
 	size_t elen;
 };
