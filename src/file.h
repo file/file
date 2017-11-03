@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.187 2017/11/03 00:18:55 christos Exp $
+ * @(#)$File: file.h,v 1.188 2017/11/03 02:20:12 christos Exp $
  */
 
 #ifndef __file_h__
@@ -402,7 +402,7 @@ struct magic_set {
 		char *buf;		/* Accumulation buffer */
 		char *pbuf;		/* Printable buffer */
 	} o;
-	int32_t offset;
+	uint32_t offset;
 	int error;
 	int flags;			/* Control magic tests. */
 	int event_flags;		/* Note things that happened. */

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.252 2017/11/03 00:18:55 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.253 2017/11/03 02:20:12 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -47,8 +47,11 @@ private int match(struct magic_set *, struct magic *, uint32_t,
     const struct buffer *, size_t, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *);
 private int mget(struct magic_set *, struct magic *, const struct buffer *,
+    const unsigned char *, size_t, 
     size_t, unsigned int, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *);
+private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
+    const struct buffer *, size_t, unsigned int);
 private int magiccheck(struct magic_set *, struct magic *);
 private int32_t mprint(struct magic_set *, struct magic *);
 private int moffset(struct magic_set *, struct magic *, const struct buffer *,
@@ -170,6 +173,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	unsigned int cont_level = 0;
 	int returnvalv = 0, e; /* if a match is found it is set to 1*/
 	int firstline = 1; /* a flag to print X\n  X\n- X */
+	struct buffer bb;
 	int print = (ms->flags & MAGIC_NODESC) == 0;
 
 	if (returnval == NULL)
@@ -197,12 +201,13 @@ flush:
 			continue; /* Skip to next top-level test*/
 		}
 
-		ms->offset = m->offset;
+		if (msetoffset(ms, m, &bb, b, offset, cont_level) == -1)
+			goto flush;
 		ms->line = m->lineno;
 
 		/* if main entry matches, print it... */
-		switch (mget(ms, m, b, offset, cont_level, mode, text,
-		    flip, indir_count, name_count,
+		switch (mget(ms, m, b, bb.fbuf, bb.flen, offset, cont_level,
+		    mode, text, flip, indir_count, name_count,
 		    printed_something, need_separator, returnval)) {
 		case -1:
 			return -1;
@@ -255,7 +260,7 @@ flush:
 		if (print && mprint(ms, m) == -1)
 			return -1;
 
-		switch (moffset(ms, m, b, &ms->c.li[cont_level].off)) {
+		switch (moffset(ms, m, &bb, &ms->c.li[cont_level].off)) {
 		case -1:
 		case 0:
 			goto flush;
@@ -281,7 +286,8 @@ flush:
 				 */
 				cont_level = m->cont_level;
 			}
-			ms->offset = m->offset;
+			if (msetoffset(ms, m, &bb, b, offset, cont_level) == -1)
+				goto flush;
 			if (m->flag & OFFADD) {
 				ms->offset +=
 				    ms->c.li[cont_level - 1].off;
@@ -294,9 +300,10 @@ flush:
 					continue;
 			}
 #endif
-			switch (mget(ms, m, b, offset, cont_level, mode,
-			    text, flip, indir_count, name_count,
-			    printed_something, need_separator, returnval)) {
+			switch (mget(ms, m, b, bb.fbuf, bb.flen, offset,
+			    cont_level, mode, text, flip, indir_count,
+			    name_count, printed_something, need_separator,
+			    returnval)) {
 			case -1:
 				return -1;
 			case 0:
@@ -367,7 +374,7 @@ flush:
 				if (print && mprint(ms, m) == -1)
 					return -1;
 
-				switch (moffset(ms, m, b,
+				switch (moffset(ms, m, &bb,
 				    &ms->c.li[cont_level].off)) {
 				case -1:
 				case 0:
@@ -1340,14 +1347,57 @@ do_ops(struct magic *m, intmax_t lhs, intmax_t off)
 }
 
 private int
+msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
+    const struct buffer *b, size_t o, unsigned int cont_level)
+{
+	if (m->offset < 0) {
+		if (cont_level > 0) {
+			file_error(ms, 0, "negative offset %d at continuation"
+			    "level %u", m->offset, cont_level);
+			return -1;
+		}
+		if (buffer_fill(b) == -1)
+			return -1;
+		if (o != 0) {
+			// Not yet!
+			file_magerror(ms, "non zero offset %zu at"
+			    " level %u", o, cont_level);
+			return -1;
+		}
+		if ((size_t)-m->offset > b->elen)
+			return -1;
+		buffer_init(bb, -1, b->ebuf, bb->elen);
+		ms->offset = b->elen + m->offset;
+		// XXX: where to keep this info? not dangerous because
+		// bb has always fd == -1
+		bb->elen = ms->offset;
+	} else {
+		if (cont_level == 0) {
+			// XXX: Pass real fd, then who frees bb?
+			buffer_init(bb, -1, b->fbuf, b->flen);
+			ms->offset = m->offset;
+		} else {
+			if (bb->fbuf == b->ebuf)
+				ms->offset = bb->elen + m->offset;
+			else
+				ms->offset = m->offset;
+		}
+	}
+	if ((ms->flags & MAGIC_DEBUG) != 0) {
+		fprintf(stderr, "bb=[%p,%zu], %d [b=%p,%zu], [o=%#x, c=%d]\n",
+		    bb->fbuf, bb->flen, ms->offset, b->fbuf, b->flen,
+		    m->offset, cont_level);
+	}
+	return 0;
+}
+
+private int
 mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
-    size_t o, unsigned int cont_level, int mode, int text,
-    int flip, uint16_t *indir_count, uint16_t *name_count,
+    const unsigned char *s, size_t nbytes, size_t o, unsigned int cont_level,
+    int mode, int text, int flip, uint16_t *indir_count, uint16_t *name_count,
     int *printed_something, int *need_separator, int *returnval)
 {
-	const unsigned char *s;
-	size_t nbytes;
-	uint32_t offset;
+	uint32_t offset = ms->offset;
 	struct buffer bb;
 	intmax_t lhs;
 	file_pushbuf_t *pb;
@@ -1368,30 +1418,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		return -1;
 	}
 
-	if (ms->offset < 0) {
-		if (cont_level > 0) {
-			file_error(ms, 0, "negative offset %d at continuation"
-			    "level %u", ms->offset, cont_level);
-			return -1;
-		}
-		if (buffer_fill(b) == -1)
-			return -1;
-		if (o != 0) {
-			// Not yet!
-			file_magerror(ms, "non zero offset %zu at"
-			    " level %u", o, cont_level);
-			return -1;
-		}
-		if ((size_t)-ms->offset > b->elen)
-			return -1;
-		s = b->ebuf;
-		nbytes = b->elen;
-		offset = b->elen + ms->offset;
-	} else {
-		s = b->fbuf;
-		nbytes = b->flen;
-		offset = ms->offset;
-	}
+
 
 	if (mcopy(ms, p, m->type, m->flag & INDIR, s, (uint32_t)(offset + o),
 	    (uint32_t)nbytes, m) == -1)
@@ -1618,11 +1645,6 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		return rv;
 
 	case FILE_USE:
-		if (ms->offset < 0) {
-			file_magerror(ms, "negative offset not supported yet"
-			    " for USE magic");
-			return -1;
-		}
 		if (nbytes < offset)
 			return 0;
 		rbuf = m->value.s;
