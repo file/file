@@ -42,6 +42,8 @@ could require structural changes to the matching code :-(
   For example we don't always pass the fd in the child. This is not
   important yet as we don't have yet cases where use/indirect magic
   needs negative offsets.
+- Really the whole thing just needs here's an (offset, buffer, size)
+  you have (filebuffer, filebuffersize &&|| fd), fill the buffer with
+  data from offset. The buffer API should be changed to just do that.
 
 christos
-
