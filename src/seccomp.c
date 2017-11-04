@@ -182,6 +182,7 @@ enable_sandbox_full(void)
 	ALLOW_RULE(openat);
 	ALLOW_RULE(pread64);
 	ALLOW_RULE(read);
+	ALLOW_RULE(readlink);
 	ALLOW_RULE(rt_sigaction);
 	ALLOW_RULE(rt_sigprocmask);
 	ALLOW_RULE(rt_sigreturn);
@@ -196,7 +197,6 @@ enable_sandbox_full(void)
 	// needed by valgrind
 	ALLOW_RULE(gettid);
 	ALLOW_RULE(getpid);
-	ALLOW_RULE(readlink);
 	ALLOW_RULE(rt_sigtimedwait);
 #endif
 
