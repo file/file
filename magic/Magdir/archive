@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.111 2017/11/03 23:36:35 christos Exp $
+# $File: archive,v 1.112 2017/11/10 03:42:09 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -406,15 +406,115 @@
 # PPMZ
 0	string	PPMZ PPMZ archive data
 # MS Compress
-4	string	\x88\xf0\x27 MS Compress archive data
-# updated by Joerg Jenderek
->9	string	\0
->>0	string	KWAJ
->>>7	string	\321\003	MS Compress archive data
->>>>14	ulong	>0		\b, original size: %d bytes
->>>>18		ubyte	>0x65
->>>>>18		string	x       \b, was %.8s
->>>>>(10.b-4)	string	x       \b.%.3s
+# Update: Joerg Jenderek
+# URL: http://fileformats.archiveteam.org/wiki/MS-DOS_installation_compression
+# Reference: https://hwiegman.home.xs4all.nl/fileformats/compress/szdd_kwaj_format.html
+# Note: use correct version of extracting tool like EXPAND, UNPACK, DECOMP or 7Z  
+4	string	\x88\xf0\x27
+#		KWAJ variant
+>0	string	KWAJ		MS Compress archive data, KWAJ variant
+!:mime	application/x-ms-compress-kwaj
+# extension not working in version 5.32
+# magic/Magdir/archive, 284: Warning: EXTENSION type ` ??_' has bad char '?'
+# file: line 284: Bad magic entry '   ??_'
+!:ext	??_
+# compression method (0-4)
+>>8	uleshort	x	\b, %u method
+# offset of compressed data
+>>10	uleshort	x	\b, 0x%x offset
+#>>(10.s)	uleshort	x
+#>>>&-6		string	x	\b, TEST extension %-.3s
+# header flags to mark header extensions
+>>12	uleshort	>0	\b, 0x%x flags
+# 4 bytes: decompressed length of file
+>>12	uleshort	&0x01
+>>>14	ulelong		x	\b, original size: %u bytes
+# 2 bytes: unknown purpose
+# 2 bytes: length of unknown data + mentioned bytes
+# 1-9 bytes: null-terminated file name
+# 1-4 bytes: null-terminated file extension
+>>12	uleshort	&0x08
+>>>12	uleshort				^0x01
+>>>>12		uleshort			^0x02
+>>>>>12			uleshort		^0x04
+>>>>>>12			uleshort	^0x10	
+>>>>>>>14				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>14				string	x	\b, %-.8s
+>>>>>>>>&1				string	x	\b.%-.3s
+>>>>>12			uleshort		&0x04
+>>>>>>12			uleshort	^0x10	
+>>>>>>>(14.s)			uleshort	x
+>>>>>>>>&14				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>(14.s)			uleshort	x
+>>>>>>>>&14				string	x	\b, %-.8s
+>>>>>>>>>&1				string	x	\b.%-.3s
+>>>>12		uleshort			&0x02
+>>>>>12			uleshort		^0x04
+>>>>>>12			uleshort	^0x10	
+>>>>>>>16				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>16				string	x	\b, %-.8s
+>>>>>>>>&1				string	x	\b.%-.3s
+>>>>>12			uleshort		&0x04
+>>>>>>12			uleshort	^0x10	
+>>>>>>>(16.s)			uleshort	x
+>>>>>>>>&16				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>(16.s)			uleshort	x
+>>>>>>>&16				string	x	%-.8s
+>>>>>>>>&1				string	x	\b.%-.3s
+>>>12	uleshort				&0x01
+>>>>12		uleshort			^0x02
+>>>>>12			uleshort		^0x04
+>>>>>>12			uleshort	^0x10
+>>>>>>>18				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>18				string	x	\b, %-.8s
+>>>>>>>>&1				string	x	\b.%-.3s
+>>>>>12			uleshort		&0x04
+>>>>>>12			uleshort	^0x10	
+>>>>>>>(18.s)			uleshort	x
+>>>>>>>>&18				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>(18.s)			uleshort	x
+>>>>>>>>&18				string	x	\b, %-.8s
+>>>>>>>>>&1				string	x	\b.%-.3s
+>>>>12		uleshort			&0x02
+>>>>>12			uleshort		^0x04
+>>>>>>12			uleshort	^0x10	
+>>>>>>>20				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>20				string	x	\b, %-.8s
+>>>>>>>>&1				string	x	\b.%-.3s
+>>>>>12			uleshort		&0x04
+>>>>>>12			uleshort	^0x10	
+>>>>>>>(20.s)			uleshort	x
+>>>>>>>>&20				string	x	\b, %-.8s
+>>>>>>12			uleshort	&0x10	
+>>>>>>>(20.s)			uleshort	x
+>>>>>>>>&20				string	x	\b, %-.8s
+>>>>>>>>>&1				string	x	\b.%-.3s
+# 2 bytes: length of data + mentioned bytes
+#
+#		SZDD variant Haruhiko Okumura's LZSS or 7z type MsLZ
+>0	string	SZDD		MS Compress archive data, SZDD variant
+!:mime	application/x-ms-compress-szdd
+!:ext	??_
+# The character missing from the end of the filename (0=unknown)
+>>9	string	>\0		\b, %-.1s is last character of original name
+# https://www.betaarchive.com/forum/viewtopic.php?t=26161
+# Compression mode: "A" (0x41) found but sometimes "B" in Windows 3.1 builds 026 and 034e
+>>8	string	!A		\b, %-.1s method
+>>10	ulelong	>0		\b, original size: %u bytes
+#		QBasic SZDD variant
+3	string	\x88\xf0\x27
+>0	string	SZ\x20		MS Compress archive data, QBasic variant
+!:mime	application/x-ms-compress-sz
+!:ext	??$
+>>8	ulelong	>0		\b, original size: %u bytes
+
 # MP3 (archiver, not lossy audio compression)
 0	string	MP3\x1a MP3-Archiver archive data
 # ZET
