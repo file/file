@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.268 2017/11/10 03:44:05 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.269 2017/11/14 15:19:45 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1916,6 +1916,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 			file_magwarn(ms, "offset `%s' invalid", l);
 		return -1;
 	}
+#if 0
         if (m->offset < 0 && cont_level != 0 &&
 	    (m->flag & (OFFADD | INDIROFFADD)) == 0) {
 		if (ms->flags & MAGIC_CHECK) {
@@ -1925,6 +1926,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 		}
 		return -1;
 	}
+#endif
         l = t;
 
 	if (m->flag & INDIR) {
