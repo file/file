@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.19 2017/10/25 23:44:38 christos Exp $
+# $File: windows,v 1.20 2017/11/17 12:44:45 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -290,11 +290,41 @@
 
 
 # Summary: Windows Registry text
-# Extension: .reg
+# URL: https://en.wikipedia.org/wiki/Windows_Registry#.REG_files
+# Reference: http://fileformats.archiveteam.org/wiki/Windows_Registry
 # Submitted by: Abel Cheung <abelcheung@gmail.com>
-0	string		REGEDIT4\r\n\r\n	Windows Registry text (Win95 or above)
-0	string		Windows\ Registry\ Editor\040
+# Update: Joerg Jenderek
+#		Windows 3-9X variant
+0	string		REGEDIT
+# skip ASCII text like "REGEDITor.txt" but match
+# L1WMAP.REG with only 1 CRNL or org.gnome.gnumeric.reg with 2 NL
+>7	search/3	\n			Windows Registry text
+!:mime	text/x-ms-regedit
+!:ext	reg
+#		Windows 9X variant
+>>0	string		REGEDIT4		(Win95 or above)
+#		Windows 2K ANSI variant
+0	string		Windows\ Registry\ Editor\ 
 >&0	string		Version\ 5.00\r\n\r\n	Windows Registry text (Win2K or above)
+!:mime	text/x-ms-regedit
+!:ext	reg
+#		Windows 2K UTF-16 variant
+2	lestring16	Windows\ Registry\ Editor\ 
+>0x32	lestring16	Version\ 5.00\r\n\r\n	Windows Registry little-endian text (Win2K or above)
+# relative offset not working
+#>&0	lestring16	Version\ 5.00\r\n\r\n	Windows Registry little-endian text (Win2K or above)
+!:mime	text/x-ms-regedit
+!:ext	reg
+#		WINE variant
+# URL: https://en.wikipedia.org/wiki/Wine_(software)
+# Reference: https://www.winehq.org/pipermail/wine-cvs/2005-October/018763.html
+# Note:	WINE use text based registry (system.reg,user.reg,userdef.reg)
+#	instead binary hiv structure like Windows
+0	string	WINE\ REGISTRY\ Version\ 	WINE registry text
+# version 2
+>&0	string	x				\b, version %s
+!:mime	text/x-wine-extension-reg
+!:ext	reg
 
 # Windows *.INF *.INI files updated by Joerg Jenderek at Apr 2013
 # empty ,comment , section
