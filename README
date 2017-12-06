@@ -1,6 +1,6 @@
 ## README for file(1) Command ##
 
-    @(#) $File: README,v 1.51 2017/11/04 01:19:45 christos Exp $
+    @(#) $File: README,v 1.52 2017/12/06 01:04:53 christos Exp $
 
 Mailing List: file@mx.gw.com  [currently down]
 Mailing List archives: http://mx.gw.com/pipermail/file/  [currently down]
@@ -135,6 +135,19 @@ guidelines:
   * Further reference, such as documentation of format
 
 ------------------------------------------------------------------------------
+
+gpg for dummies:
+
+$ gpg --verify file-X.YY.tar.gz.asc file-X.YY.tar.gz
+gpg: assuming signed data in `file-X.YY.tar.gz'
+gpg: Signature made WWW MMM DD HH:MM:SS YYYY ZZZ using DSA key ID KKKKKKKK
+
+To download the key:
+
+$ gpg --keyserver hkp://keys.gnupg.net --recv-keys KKKKKKKK
+
+------------------------------------------------------------------------------
+
 
 Parts of this software were developed at SoftQuad Inc., developers
 of SGML/HTML/XML publishing software, in Toronto, Canada.
