@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.108 2017/09/18 20:39:33 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.109 2017/12/14 01:43:29 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -439,7 +439,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 		if (h->h_master_sat[i] == CDF_SECID_FREE)
 			break;
 
-#define CDF_SEC_LIMIT (UINT32_MAX / (8 * ss))
+#define CDF_SEC_LIMIT (UINT32_MAX / (64 * ss))
 	if ((nsatpersec > 0 &&
 	    h->h_num_sectors_in_master_sat > CDF_SEC_LIMIT / nsatpersec) ||
 	    i > CDF_SEC_LIMIT) {
