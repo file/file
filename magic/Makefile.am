@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.129 2017/11/28 14:01:14 christos Exp $
+# $File: Makefile.am,v 1.130 2017/12/14 05:37:06 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -260,6 +260,7 @@ $(MAGIC_FRAGMENT_DIR)/tex \
 $(MAGIC_FRAGMENT_DIR)/tgif \
 $(MAGIC_FRAGMENT_DIR)/ti-8x \
 $(MAGIC_FRAGMENT_DIR)/timezone \
+$(MAGIC_FRAGMENT_DIR)/tplink \
 $(MAGIC_FRAGMENT_DIR)/troff \
 $(MAGIC_FRAGMENT_DIR)/tuxedo \
 $(MAGIC_FRAGMENT_DIR)/typeset \
