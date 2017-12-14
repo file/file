@@ -1,6 +1,7 @@
 
 #------------------------------------------------------------------------------
-# openwrt: File magic for openwrt firmware files
+# $File: tplink,v 1.2 2017/12/14 05:52:56 christos Exp $
+# tplink: File magic for openwrt firmware files
 
 # URL: https://wiki.openwrt.org/doc/techref/header
 # Reference: http://git.openwrt.org/?p=openwrt.git;a=blob;f=tools/firmware-utils/src/mktplinkfw.c
