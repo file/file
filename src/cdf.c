@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.109 2017/12/14 01:43:29 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.110 2017/12/19 00:21:21 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -849,8 +849,8 @@ cdf_find_stream(const cdf_dir_t *dir, const char *name, int type)
 	return 0;
 }
 
-#define CDF_SHLEN_LIMIT (UINT32_MAX / 8)
-#define CDF_PROP_LIMIT (UINT32_MAX / (8 * sizeof(cdf_property_info_t)))
+#define CDF_SHLEN_LIMIT (UINT32_MAX / 64)
+#define CDF_PROP_LIMIT (UINT32_MAX / (64 * sizeof(cdf_property_info_t)))
 
 static const void *
 cdf_offset(const void *p, size_t l)
