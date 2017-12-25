@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.126 2017/10/13 15:37:03 christos Exp $
-.Dd October 13, 2017
+.\" $File: file.man,v 1.127 2017/12/25 15:08:44 christos Exp $
+.Dd December 25, 2017
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -375,6 +375,25 @@ prints just the filename followed by a NUL followed by the description
 .It Fl -help
 Print a help message and exit.
 .El
+.Sh EXIT STATUS
+.Nm
+will exit with
+.Dv 0
+if the operation was successful or
+.Dv >0
+if an error was encountered.
+The following errors cause diagnostic messages, but don't affect the program
+exit code (as POSIX requires), unless
+.Fl E
+is specified:
+.Bl -bullet -compact -offset indent
+.It
+A file cannot be found
+.It
+There is no permission to read a file
+.It
+The file type cannot be determined
+.El
 .Sh FILES
 .Bl -tag -width __MAGIC__.mgc -compact
 .It Pa __MAGIC__.mgc
@@ -394,11 +413,6 @@ will not attempt to open
 adds
 .Dq Pa .mgc
 to the value of this variable as appropriate.
-However,
-.Pa file
-has to exist in order for
-.Pa file.mime
-to be considered.
 The environment variable
 .Ev POSIXLY_CORRECT
 controls (on systems that support symbolic links), whether
