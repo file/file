@@ -1,5 +1,5 @@
 .\" $File: file.man,v 1.127 2017/12/25 15:08:44 christos Exp $
-.Dd December 25, 2017
+.Dd December 28, 2017
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -598,9 +598,6 @@ and
 were written by John Gilmore from his public-domain
 .Xr tar 1
 program, and are not covered by the above license.
-.Sh RETURN CODE
-.Nm
-returns 0 on success, and non-zero on error.
 .Sh BUGS
 Please report bugs and send patches to the bug tracker at
 .Pa http://bugs.gw.com/
