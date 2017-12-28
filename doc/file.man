@@ -168,7 +168,8 @@ in any of the character sets listed above is simply said to be
 .Bl -tag -width indent
 .It Fl Fl apple
 Causes the file command to output the file type and creator code as
-used by older MacOS versions. The code consists of eight letters,
+used by older MacOS versions.
+The code consists of eight letters,
 the first describing the file type, the latter the creator.
 .It Fl b , Fl Fl brief
 Do not prepend filenames to output lines (brief mode).
