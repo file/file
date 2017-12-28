@@ -223,7 +223,7 @@ the soft magic method.
 A synonym for
 .Sq ascii .
 .El
-.It Fl Fl extension 
+.It Fl Fl extension
 Print a slash-separated list of valid extensions for the file type found.
 .It Fl F , Fl Fl separator Ar separator
 Use the specified string as the separator between the filename and the
@@ -369,7 +369,7 @@ Nice to
 the output.
 This does not affect the separator, which is still printed.
 .Pp
-If this option is repeated more than once, then 
+If this option is repeated more than once, then
 .Nm
 prints just the filename followed by a NUL followed by the description
 (or ERROR: text) followed by a second NUL for each entry.
@@ -549,7 +549,7 @@ Geoff Collyer found several inadequacies
 and provided some magic file entries.
 Contributions of the
 .Sq \*[Am]
-operator by Rob McMahon, 
+operator by Rob McMahon,
 .Aq cudcv@warwick.ac.uk ,
 1989.
 .Pp
