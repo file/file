@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.127 2017/12/25 15:08:44 christos Exp $
-.Dd December 25, 2017
+.\" $File: file.man,v 1.128 2017/12/28 14:51:55 christos Exp $
+.Dd December 28, 2017
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -168,7 +168,8 @@ in any of the character sets listed above is simply said to be
 .Bl -tag -width indent
 .It Fl Fl apple
 Causes the file command to output the file type and creator code as
-used by older MacOS versions. The code consists of eight letters,
+used by older MacOS versions.
+The code consists of eight letters,
 the first describing the file type, the latter the creator.
 .It Fl b , Fl Fl brief
 Do not prepend filenames to output lines (brief mode).
@@ -222,7 +223,7 @@ the soft magic method.
 A synonym for
 .Sq ascii .
 .El
-.It Fl Fl extension 
+.It Fl Fl extension
 Print a slash-separated list of valid extensions for the file type found.
 .It Fl F , Fl Fl separator Ar separator
 Use the specified string as the separator between the filename and the
@@ -368,38 +369,12 @@ Nice to
 the output.
 This does not affect the separator, which is still printed.
 .Pp
-If this option is repeated more than once, then 
+If this option is repeated more than once, then
 .Nm
 prints just the filename followed by a NUL followed by the description
 (or ERROR: text) followed by a second NUL for each entry.
 .It Fl -help
 Print a help message and exit.
-.El
-.Sh EXIT STATUS
-.Nm
-will exit with
-.Dv 0
-if the operation was successful or
-.Dv >0
-if an error was encountered.
-The following errors cause diagnostic messages, but don't affect the program
-exit code (as POSIX requires), unless
-.Fl E
-is specified:
-.Bl -bullet -compact -offset indent
-.It
-A file cannot be found
-.It
-There is no permission to read a file
-.It
-The file type cannot be determined
-.El
-.Sh FILES
-.Bl -tag -width __MAGIC__.mgc -compact
-.It Pa __MAGIC__.mgc
-Default compiled list of magic.
-.It Pa __MAGIC__
-Directory containing default magic files.
 .El
 .Sh ENVIRONMENT
 The environment variable
@@ -426,6 +401,65 @@ This is also controlled by the
 and
 .Fl h
 options.
+.Sh FILES
+.Bl -tag -width __MAGIC__.mgc -compact
+.It Pa __MAGIC__.mgc
+Default compiled list of magic.
+.It Pa __MAGIC__
+Directory containing default magic files.
+.El
+.Sh EXIT STATUS
+.Nm
+will exit with
+.Dv 0
+if the operation was successful or
+.Dv >0
+if an error was encountered.
+The following errors cause diagnostic messages, but don't affect the program
+exit code (as POSIX requires), unless
+.Fl E
+is specified:
+.Bl -bullet -compact -offset indent
+.It
+A file cannot be found
+.It
+There is no permission to read a file
+.It
+The file type cannot be determined
+.El
+.Sh EXAMPLES
+.Bd -literal -offset indent
+$ file file.c file /dev/{wd0a,hda}
+file.c:   C program text
+file:     ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
+          dynamically linked (uses shared libs), stripped
+/dev/wd0a: block special (0/0)
+/dev/hda: block special (3/0)
+
+$ file -s /dev/wd0{b,d}
+/dev/wd0b: data
+/dev/wd0d: x86 boot sector
+
+$ file -s /dev/hda{,1,2,3,4,5,6,7,8,9,10}
+/dev/hda:   x86 boot sector
+/dev/hda1:  Linux/i386 ext2 filesystem
+/dev/hda2:  x86 boot sector
+/dev/hda3:  x86 boot sector, extended partition table
+/dev/hda4:  Linux/i386 ext2 filesystem
+/dev/hda5:  Linux/i386 swap file
+/dev/hda6:  Linux/i386 swap file
+/dev/hda7:  Linux/i386 swap file
+/dev/hda8:  Linux/i386 swap file
+/dev/hda9:  empty
+/dev/hda10: empty
+
+$ file -i file.c file /dev/{wd0a,hda}
+file.c:      text/x-c
+file:        application/x-executable
+/dev/hda:    application/x-not-regular-file
+/dev/wd0a:   application/x-not-regular-file
+
+.Ed
 .Sh SEE ALSO
 .Xr hexdump 1 ,
 .Xr od 1 ,
@@ -494,39 +528,6 @@ command uses a magic file,
 keep the old magic file around for comparison purposes
 (rename it to
 .Pa __MAGIC__.orig ) .
-.Sh EXAMPLES
-.Bd -literal -offset indent
-$ file file.c file /dev/{wd0a,hda}
-file.c:   C program text
-file:     ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
-          dynamically linked (uses shared libs), stripped
-/dev/wd0a: block special (0/0)
-/dev/hda: block special (3/0)
-
-$ file -s /dev/wd0{b,d}
-/dev/wd0b: data
-/dev/wd0d: x86 boot sector
-
-$ file -s /dev/hda{,1,2,3,4,5,6,7,8,9,10}
-/dev/hda:   x86 boot sector
-/dev/hda1:  Linux/i386 ext2 filesystem
-/dev/hda2:  x86 boot sector
-/dev/hda3:  x86 boot sector, extended partition table
-/dev/hda4:  Linux/i386 ext2 filesystem
-/dev/hda5:  Linux/i386 swap file
-/dev/hda6:  Linux/i386 swap file
-/dev/hda7:  Linux/i386 swap file
-/dev/hda8:  Linux/i386 swap file
-/dev/hda9:  empty
-/dev/hda10: empty
-
-$ file -i file.c file /dev/{wd0a,hda}
-file.c:      text/x-c
-file:        application/x-executable
-/dev/hda:    application/x-not-regular-file
-/dev/wd0a:   application/x-not-regular-file
-
-.Ed
 .Sh HISTORY
 There has been a
 .Nm
@@ -548,7 +549,7 @@ Geoff Collyer found several inadequacies
 and provided some magic file entries.
 Contributions of the
 .Sq \*[Am]
-operator by Rob McMahon, 
+operator by Rob McMahon,
 .Aq cudcv@warwick.ac.uk ,
 1989.
 .Pp
@@ -598,9 +599,6 @@ and
 were written by John Gilmore from his public-domain
 .Xr tar 1
 program, and are not covered by the above license.
-.Sh RETURN CODE
-.Nm
-returns 0 on success, and non-zero on error.
 .Sh BUGS
 Please report bugs and send patches to the bug tracker at
 .Pa http://bugs.gw.com/
