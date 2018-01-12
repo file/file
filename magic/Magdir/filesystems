@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.123 2017/10/29 18:39:46 christos Exp $
+# $File: filesystems,v 1.124 2018/01/12 12:35:30 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1731,6 +1731,16 @@
 #>0x464	lelong          &0x0000010      (gdt checksum)
 #>0x464	lelong          &0x0000020      (many subdirs)
 #>0x463	lelong          &0x0000040      (extra isize)
+
+# f2fs filesystem - Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+0x400	lelong		0xF2F52010	F2FS filesystem
+>0x46c	belong		x		\b, UUID=%08x
+>0x470	beshort		x		\b-%04x
+>0x472	beshort		x		\b-%04x
+>0x474	beshort		x		\b-%04x
+>0x476	belong		x		\b-%08x
+>0x47a	beshort		x		\b%04x
+>0x147c	lestring16	x		\b, volume name "%s"
 
 # Minix filesystems - Juan Cespedes <cespedes@debian.org>
 0x410	leshort		0x137f
