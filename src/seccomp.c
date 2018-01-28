@@ -177,6 +177,7 @@ enable_sandbox_full(void)
 	ALLOW_RULE(mmap);
 	ALLOW_RULE(mprotect);
 	ALLOW_RULE(mremap);
+	ALLOW_RULE(msgget);
 	ALLOW_RULE(munmap);
 	ALLOW_RULE(open);
 	ALLOW_RULE(openat);
