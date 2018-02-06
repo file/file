@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.20 2017/11/17 12:44:45 christos Exp $
+# $File: windows,v 1.21 2018/02/06 12:57:16 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -326,29 +326,50 @@
 !:mime	text/x-wine-extension-reg
 !:ext	reg
 
-# Windows *.INF *.INI files updated by Joerg Jenderek at Apr 2013
+# Windows *.INF *.INI files updated by Joerg Jenderek at Apr 2013, Feb 2018
 # empty ,comment , section
 # PR/383: remove unicode BOM because it is not portable across regex impls
-0	regex/s		\\`(\\r\\n|;|[[])
-# left bracket in section line
->&0	search/8192	[
+#0	regex/s		\\`(\\r\\n|;|[[])
+# empty line CRLF
+0	ubeshort	0x0D0A
+>0	use		ini-file
+# comment line
+0	string		;
+>0	use		ini-file
+# section line
+0	string		[
+>0	use		ini-file
+# check and then display Windows INItialization configuration
+0	name		ini-file
+# look for left bracket in section line
+>0	search/8192	[
 # http://en.wikipedia.org/wiki/Autorun.inf
 # http://msdn.microsoft.com/en-us/library/windows/desktop/cc144200.aspx
->>&0	regex/c		\^(autorun)]\r\n
->>>&0	ubyte		=0x5b						INItialization configuration
-!:mime application/x-wine-extension-ini
+# space after right bracket
+# or AutoRun.Amd64 for 64 bit systems
+# or only NL separator
+>>&0	regex/c		\^(autorun)
+# but sometimes total commander directory tree file "treeinfo.wc" with lines like
+# [AUTORUN]
+# [boot]
+>>>&0	string		=]\r\n\[					Total commander directory treeinfo.wc
+!:mime text/plain
+!:ext	wc
 # From: Pal Tamas <folti@balabit.hu>
 # Autorun File
->>>&0	ubyte		!0x5b						Microsoft Windows Autorun file
+>>>&0	string		!]\r\n\[					Microsoft Windows Autorun file
 !:mime application/x-setupscript
+!:ext	inf
 # http://msdn.microsoft.com/en-us/library/windows/hardware/ff549520(v=vs.85).aspx
 # version strings ASCII coded case-independent for Windows setup information script file
 >>&0	regex/c		\^(version|strings)]				Windows setup INFormation
 !:mime	application/x-setupscript
-#!:mime application/inf
 #!:mime application/x-wine-extension-inf
+!:ext	inf
+# NETCRC.INF OEMCPL.INF
 >>&0	regex/c		\^(WinsockCRCList|OEMCPL)]			Windows setup INFormation
-!:mime	text/inf
+!:mime	application/x-setupscript
+!:ext	inf
 # http://www.winfaq.de/faq_html/Content/tip2500/onlinefaq.php?h=tip2653.htm
 # http://msdn.microsoft.com/en-us/library/windows/desktop/cc144102.aspx
 # .ShellClassInfo DeleteOnCopy LocalizedFileNames ASCII coded case-independent
@@ -358,50 +379,82 @@
 # http://support.microsoft.com/kb/84709/
 >>&0	regex/c		\^(don't\ load)]				Windows CONTROL.INI
 !:mime application/x-wine-extension-ini
+!:ext	ini
 >>&0	regex/c		\^(ndishlp\\$|protman\\$|NETBEUI\\$)]		Windows PROTOCOL.INI
 !:mime application/x-wine-extension-ini
+!:ext	ini
 # http://technet.microsoft.com/en-us/library/cc722567.aspx
 # http://www.winfaq.de/faq_html/Content/tip0000/onlinefaq.php?h=tip0137.htm
 >>&0	regex/c		\^(windows|Compatibility|embedding)]		Windows WIN.INI
 !:mime application/x-wine-extension-ini
+!:ext	ini
 # http://en.wikipedia.org/wiki/SYSTEM.INI
 >>&0	regex/c		\^(boot|386enh|drivers)]			Windows SYSTEM.INI
 !:mime application/x-wine-extension-ini
+!:ext	ini
 # http://www.mdgx.com/newtip6.htm
 >>&0	regex/c		\^(SafeList)]					Windows IOS.INI
 !:mime application/x-wine-extension-ini
+!:ext	ini
 # http://en.wikipedia.org/wiki/NTLDR	Windows Boot Loader information
 >>&0	regex/c		\^(boot\x20loader)]				Windows boot.ini
 !:mime application/x-wine-extension-ini
->>>&0	ubyte		x
+!:ext	ini
 # http://en.wikipedia.org/wiki/CONFIG.SYS
->>&0	regex/c		\^(menu)]\r\n					MS-DOS CONFIG.SYS
+>>&0	regex/c		\^(menu)]					MS-DOS CONFIG.SYS
+# @CONFIG.UI configuration file of previous DOS version saved by Caldera OPENDOS INSTALL.EXE
+# CONFIG.PSS saved version of file CONFIG.SYS created by %WINDIR%\SYTEM\MSCONFIG.EXE
+# CONFIG.TSH renamed file CONFIG.SYS.BAT by %WINDIR%\SYTEM\MSCONFIG.EXE
+# dos and w40 used in dual booting scene
+!:ext	sys/dos/w40
 # http://support.microsoft.com/kb/118579/
 >>&0	regex/c		\^(Paths)]\r\n					MS-DOS MSDOS.SYS
-# VERS string unicoded case-independent
->>&0	ubequad&0xFFdfFFdfFFdfFFdf	0x0056004500520053
-# ION] string unicoded case-independent
->>>&0	ubequad&0xFFdfFFdfFFdfFFff	0x0049004f004e005d		Windows setup INFormation
-!:mime application/x-setupscript
-# STRI string unicoded case-independent
->>&0	ubequad&0xFFdfFFdfFFdfFFdf	0x0053005400520049
-# NGS] string unicoded case-independent
->>>&0	ubequad&0xFFdfFFdfFFdfFFff	0x004e00470053005D		Windows setup INFormation
-!:mime application/x-setupscript
+!:ext	sys/dos
+# http://chmspec.nongnu.org/latest/INI.html#HHP
+>>&0	regex/c		\^(options)]\r\n				Microsoft HTML Help Project
+!:mime text/plain
+!:ext	hhp
 # unknown keyword after opening bracket
 >>&0	default				x
+#>>>&0	string/c			x	UNKNOWN [%s
+# look for left bracket of second section
 >>>&0	search/8192			[
 # version Strings FileIdentification
 >>>>&0	string/c			version				Windows setup INFormation
 !:mime application/x-setupscript
-# VERS string unicoded case-independent
->>>>&0	ubequad&0xFFdfFFdfFFdfFFdf	0x0056004500520053
-# ION] string unicoded case-independent
->>>>>&0	ubequad&0xFFdfFFdfFFdfFFff	0x0049004f004e005d		Windows setup INFormation
-!:mime application/x-setupscript
+!:ext	inf
 # http://en.wikipedia.org/wiki/Initialization_file	Windows Initialization File or other
-#>>>>&0	default				x				Generic INItialization configuration
-#!:mime application/x-wine-extension-ini
+>>>>&0	default				x
+>>>>>&0	ubyte				x
+# characters, digits, underscore and white space followed by right bracket
+# terminated by CR implies section line to skip BOOTLOG.TXT DETLOG.TXT
+>>>>>>&-1	regex			\^([A-Za-z0-9_\(\)\ ]+)\]\r	Generic INItialization configuration [%-.40s
+# NETDEF.INF multiarc.ini 
+#!:mime	application/x-setupscript
+!:mime	application/x-wine-extension-ini
+#!:mime	text/plain
+!:ext	ini/inf
+# UTF-16 BOM followed by CR~0D00 , comment~semicolon~3B00 , section~bracket~5B00
+0	ubelong&0xFFff89FF	=0xFFFE0900
+# look for left bracket in section line
+>2	search/8192		[
+# keyword without 1st letter which is maybe up-/down-case
+>>&3	lestring16		ersion]			Windows setup INFormation
+!:mime	application/x-setupscript
+!:ext	inf
+>>&3	lestring16		trings]			Windows setup INFormation
+!:mime	application/x-setupscript
+!:ext	inf
+>>&3	lestring16		ourceDisksNames]	Windows setup INFormation
+!:mime	application/x-setupscript
+!:ext	inf
+# netnwcli.inf start with ;---[ NetNWCli.INX ]
+>>&3	default			x
+# look for NL followed by left bracket
+>>>&0	search/8192		\x0A\x00\x5b
+>>>>&3	lestring16		ersion]			Windows setup INFormation
+!:mime	application/x-setupscript
+!:ext	inf
 
 # Windows Precompiled INF files *.PNF added by Joerg Jenderek at Mar 2013 of _PNF_HEADER inf.h
 # http://read.pudn.com/downloads3/sourcecode/windows/248345/win2k/private/windows/setup/setupapi/inf.h__.htm
