@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.130 2018/01/12 18:46:20 christos Exp $
+# $File: images,v 1.131 2018/02/16 15:44:28 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1484,3 +1484,30 @@
 >4	belong	0x0D0A1A0A
 >12	belong	0x00000000	Lytro Light Field Picture
 >8	belong	x		\b, version %d
+
+# Type: Vision Research Phantom CINE Format
+# URL: https://www.phantomhighspeed.com/
+# URL2: http://phantomhighspeed.force.com/vriknowledge/servlet/fileField?id=0BEU0000000Cfyk
+# From: Harry Mallon <hjmallon at gmail.com>
+#
+# This has a short "CI" code but the 44 is the size of the struct which is
+# stable
+0	string	CI
+>2	leshort 44		Vision Research CINE Video,
+>>4	leshort	0		Grayscale,
+>>4	leshort 1		JPEG Compressed,
+>>4	leshort 2		RAW,
+>>6	leshort x		version %d,
+>>20	lelong	x		%d frames,
+>>48	lelong	x		%dx
+>>52	lelong	x		\b%d
+
+# Type: ARRI Raw Image
+# Info: SMPTE RDD30:2014
+# From: Harry Mallon <hjmallon at gmail.com>
+0	string ARRI		ARRI ARI image data,
+>4	lelong 0x78563412	little-endian,
+>4 	lelong 0x12345678	big-endian,
+>12	lelong x		version %d,
+>20	lelong x 		%dx
+>24	lelong x		\b%d
