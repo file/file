@@ -171,12 +171,16 @@ enable_sandbox_full(void)
 	ALLOW_RULE(fcntl);  
 	ALLOW_RULE(fstat);
 	ALLOW_RULE(getdents);
+	ALLOW_RULE(getpid);
 	ALLOW_RULE(ioctl);
 	ALLOW_RULE(lseek);
 	ALLOW_RULE(lstat);
 	ALLOW_RULE(mmap);
 	ALLOW_RULE(mprotect);
 	ALLOW_RULE(mremap);
+	ALLOW_RULE(msgget);
+	ALLOW_RULE(msgsnd);
+	ALLOW_RULE(msgrcv);
 	ALLOW_RULE(munmap);
 	ALLOW_RULE(open);
 	ALLOW_RULE(openat);
@@ -187,6 +191,8 @@ enable_sandbox_full(void)
 	ALLOW_RULE(rt_sigprocmask);
 	ALLOW_RULE(rt_sigreturn);
 	ALLOW_RULE(select);
+	ALLOW_RULE(semget);
+	ALLOW_RULE(semop);
 	ALLOW_RULE(stat);
 	ALLOW_RULE(sysinfo);
 	ALLOW_RULE(unlink);
