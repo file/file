@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.21 2018/02/06 12:57:16 christos Exp $
+# $File: windows,v 1.22 2018/02/16 15:44:00 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -352,12 +352,12 @@
 # but sometimes total commander directory tree file "treeinfo.wc" with lines like
 # [AUTORUN]
 # [boot]
->>>&0	string		=]\r\n\[					Total commander directory treeinfo.wc
+>>>&0	string		=]\r\n[					Total commander directory treeinfo.wc
 !:mime text/plain
 !:ext	wc
 # From: Pal Tamas <folti@balabit.hu>
 # Autorun File
->>>&0	string		!]\r\n\[					Microsoft Windows Autorun file
+>>>&0	string		!]\r\n[					Microsoft Windows Autorun file
 !:mime application/x-setupscript
 !:ext	inf
 # http://msdn.microsoft.com/en-us/library/windows/hardware/ff549520(v=vs.85).aspx
