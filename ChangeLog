@@ -1,3 +1,8 @@
+2018-02-21  16:25  Christos Zoulas <christos@zoulas.com> 
+
+	* add support for ${x?:} in mime types to handle
+	  pie binaries.
+
 2017-11-03   9:23  Christos Zoulas <christos@zoulas.com>
 
 	* add support for negative offsets (offsets from the end of file)

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.256 2017/11/14 15:19:45 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.257 2018/02/21 21:26:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -61,7 +61,8 @@ private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, struct magic *);
 private int mconvert(struct magic_set *, struct magic *, int);
 private int print_sep(struct magic_set *, int);
-private int handle_annotation(struct magic_set *, struct magic *, int);
+private int handle_annotation(struct magic_set *, struct magic *,
+    const struct buffer *, int);
 private int cvt_8(union VALUETYPE *, const struct magic *);
 private int cvt_16(union VALUETYPE *, const struct magic *);
 private int cvt_32(union VALUETYPE *, const struct magic *);
@@ -238,7 +239,7 @@ flush:
 			goto flush;
 		}
 
-		if ((e = handle_annotation(ms, m, firstline)) != 0) {
+		if ((e = handle_annotation(ms, m, b, firstline)) != 0) {
 			*need_separator = 1;
 			*printed_something = 1;
 			*returnval = 1;
@@ -338,7 +339,8 @@ flush:
 				} else
 					ms->c.li[cont_level].got_match = 1;
 
-				if ((e = handle_annotation(ms, m, firstline)) != 0) {
+				if ((e = handle_annotation(ms, m, b, firstline))
+				    != 0) {
 					*need_separator = 1;
 					*printed_something = 1;
 					*returnval = 1;
@@ -2095,8 +2097,64 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	return matched;
 }
 
+
+static int
+varexpand(char *buf, size_t len, const struct buffer *b, const char *str)
+{
+	const char *ptr, *sptr, *e, *t, *ee, *et;
+	size_t l;
+
+	for (sptr = str; (ptr = strstr(sptr, "${")) != NULL;) {
+		l = (size_t)(ptr - sptr);
+		if (l >= len)
+			return -1;
+		memcpy(buf, sptr, l);
+		buf += l;
+		len -= l;
+		ptr += 2;
+		if (!*ptr || ptr[1] != '?')
+			return -1;
+		for (et = t = ptr + 2; *et && *et != ':'; et++)
+			continue;
+		if (*et != ':')
+			return -1;
+		for (ee = e = et + 1; *ee && *ee != '}'; ee++)
+			continue;
+		if (*ee != '}')
+			return -1;
+		switch (*ptr) {
+		case 'x':
+			if (b->st.st_mode & 0111) {
+				ptr = t;
+				l = et - t;
+			} else {
+				ptr = e;
+				l = ee - e;
+			}
+			break;
+		default:
+			return -1;
+		}
+		if (l >= len)
+			return -1;
+		memcpy(buf, ptr, l);
+		buf += l;
+		len -= l;
+		sptr = ee + 1;
+	}
+
+	l = strlen(sptr);
+	if (l >= len)
+		return -1;
+
+	memcpy(buf, sptr, l);
+	buf[l] = '\0';
+	return 0;
+}
+
 private int
-handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
+handle_annotation(struct magic_set *ms, struct magic *m, const struct buffer *b,
+    int firstline)
 {
 	if ((ms->flags & MAGIC_APPLE) && m->apple[0]) {
 		if (!firstline && file_printf(ms, "\n- ") == -1)
@@ -2113,9 +2171,15 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 		return 1;
 	}
 	if ((ms->flags & MAGIC_MIME_TYPE) && m->mimetype[0]) {
+		char buf[1024];
+		const char *p;
 		if (!firstline && file_printf(ms, "\n- ") == -1)
 			return -1;
-		if (file_printf(ms, "%s", m->mimetype) == -1)
+		if (varexpand(buf, sizeof(buf), b, m->mimetype) == -1)
+			p = m->mimetype;
+		else
+			p = buf;
+		if (file_printf(ms, "%s", p) == -1)
 			return -1;
 		return 1;
 	}
