@@ -27,11 +27,12 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: buffer.c,v 1.3 2017/11/03 23:28:04 christos Exp $")
+FILE_RCSID("@(#)$File: buffer.c,v 1.4 2018/02/21 21:26:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
 #include <unistd.h>
+#include <string.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 
@@ -39,6 +40,8 @@ void
 buffer_init(struct buffer *b, int fd, const void *data, size_t len)
 {
 	b->fd = fd;
+	if (b->fd == -1 || fstat(b->fd, &b->st) == -1)
+		memset(&b->st, 0, sizeof(b->st));
 	b->fbuf = data;
 	b->flen = len;
 	b->eoff = 0;
@@ -55,21 +58,20 @@ buffer_fini(struct buffer *b)
 int
 buffer_fill(const struct buffer *bb)
 {
-	// XXX: should be cached?
-	struct stat st;
 	struct buffer *b = CCAST(struct buffer *, bb);
 
 	if (b->elen != 0)
 		return b->elen == (size_t)~0 ? -1 : 0;
 
-	if (b->fd == -1 || fstat(b->fd, &st) == -1 || !S_ISREG(st.st_mode))
+	if (!S_ISREG(b->st.st_mode))
 		goto out;
 
-	b->elen =  (size_t)st.st_size < b->flen ? (size_t)st.st_size : b->flen;
+	b->elen =  (size_t)b->st.st_size < b->flen ?
+	    (size_t)b->st.st_size : b->flen;
 	if ((b->ebuf = malloc(b->elen)) == NULL)
 		goto out;
 
-	b->eoff = st.st_size - b->elen;
+	b->eoff = b->st.st_size - b->elen;
 	if (pread(b->fd, b->ebuf, b->elen, b->eoff) == -1) {
 		free(b->ebuf);
 		goto out;
