@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.113 2018/02/23 15:19:07 christos Exp $
+# $File: archive,v 1.114 2018/02/24 15:10:23 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1421,4 +1421,4 @@
 
 # EGG archive http://sdn.altools.co.kr/etc/EGG_Specification.zip
 0	string	EGGA	EGG archive
-4	beshort	x	version %d
+>4	beshort	x	version %d
