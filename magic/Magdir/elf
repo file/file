@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.71 2018/02/21 21:26:48 christos Exp $
+# $File: elf,v 1.72 2018/02/24 19:50:04 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -48,7 +48,8 @@
 !:mime	application/x-object
 >16	leshort		2		executable,
 !:mime	application/x-executable
->16	leshort		3		shared object,
+>16	leshort		3		${x?pie executable:shared object}
+
 !:mime	application/x-${x?pie-executable:sharedlib}
 >16	leshort		4		core file
 !:mime	application/x-coredump
