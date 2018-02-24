@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.69 2017/11/14 15:20:13 christos Exp $
+# $File: compress,v 1.70 2018/02/24 14:53:10 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -78,6 +78,12 @@
 !:mime	application/x-bzip2
 >3	byte		>47		\b, block size = %c00k
 
+# bzip	a block-sorting file compressor
+#	by Julian Seward <sewardj@cs.man.ac.uk> and others
+0	string		BZ0		bzip compressed data
+!:mime	application/x-bzip
+>3	byte		>47		\b, block size = %c00k
+
 # lzip
 0	string		LZIP		lzip compressed data
 !:mime application/x-lzip
@@ -113,21 +119,6 @@
 #>66	byte&0xF0	0xd0
 #>99	byte&0xF0	0xd0
 #>132	byte&0xF0	0xd0		GSM 06.10 compressed audio
-
-# bzip	a block-sorting file compressor
-#	by Julian Seward <sewardj@cs.man.ac.uk> and others
-#
-#0	string		BZ		bzip compressed data
-#>2	byte		x		\b, version: %c
-#>3	string		=1		\b, compression block size 100k
-#>3	string		=2		\b, compression block size 200k
-#>3	string		=3		\b, compression block size 300k
-#>3	string		=4		\b, compression block size 400k
-#>3	string		=5		\b, compression block size 500k
-#>3	string		=6		\b, compression block size 600k
-#>3	string		=7		\b, compression block size 700k
-#>3	string		=8		\b, compression block size 800k
-#>3	string		=9		\b, compression block size 900k
 
 # lzop from <markus.oberhumer@jk.uni-linz.ac.at>
 0	string		\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a	lzop compressed data
