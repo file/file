@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: gnu,v 1.19 2018/01/04 01:21:32 christos Exp $
+# $File: gnu,v 1.20 2018/02/24 16:11:23 christos Exp $
 # gnu:  file(1) magic for various GNU tools
 #
 # GNU nlsutils message catalog file format
@@ -122,13 +122,15 @@
 0	beshort		0x8502			GPG encrypted data
 !:mime	text/PGP # encoding: data
 
+# Update: Joerg Jenderek
+# Note:	PGP and GPG use same data structure.
+#	So recognition is now done by ./pgp with start test for byte 0x99
 # This magic is not particularly good, as the keyrings don't have true
 # magic. Nevertheless, it covers many keyrings.
-0	ubeshort-0x9901	<2
->3	byte		4
->>4	bedate		x		GPG key public ring, created %s
-!:mime application/x-gnupg-keyring
-
+# 0	ubeshort-0x9901	<2
+# >3	byte		4
+# >>4	bedate		x		GPG key public ring, created %s
+# !:mime application/x-gnupg-keyring
 
 # Symmetric encryption
 0	leshort		0x0d8c
