@@ -185,16 +185,6 @@ main(int argc, char *argv[])
 		progname = argv[0];
 
 	file_setprogname(progname);
-
-#ifdef HAVE_LIBSECCOMP
-#if 0
-	if (enable_sandbox_basic() == -1)
-#else
-	if (enable_sandbox_full() == -1)
-#endif
-		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
-#endif /* HAVE_LIBSECCOMP */
-
 #ifdef S_IFLNK
 	posixly = getenv("POSIXLY_CORRECT") != NULL;
 	flags |=  posixly ? MAGIC_SYMLINK : 0;
@@ -325,6 +315,21 @@ main(int argc, char *argv[])
 	}
 	if (e)
 		return e;
+
+	/*
+	* Don't try to restrict the process when using -z option. 
+	* Decompression should only be used on trusted files to begin with
+	*/
+	if ((flags & MAGIC_COMPRESS) == 0 ){
+#ifdef HAVE_LIBSECCOMP
+#if 0
+		if (enable_sandbox_basic() == -1)
+#else
+		if (enable_sandbox_full() == -1)
+#endif
+		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
+#endif /* HAVE_LIBSECCOMP */
+	}
 
 	if (MAGIC_VERSION != magic_version())
 		file_warnx("Compiled magic version [%d] "
