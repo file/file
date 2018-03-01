@@ -1,0 +1,7 @@
+# magic for LAS format files
+# http://www.asprs.org/wp-content/uploads/2010/12/LAS_1_3_r11.pdf
+0       string<>LASF    LIDAR point data records
+>24     byte    >0      \b, version %u.
+>25     byte    >0      \b %u
+>26     string  >\0     \b SYSID %s
+>58     string  >\0     \b Generating Software %s
