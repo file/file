@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.174 2017/09/24 16:04:56 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.175 2018/03/02 16:11:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -59,25 +59,37 @@ FILE_RCSID("@(#)$File: file.c,v 1.174 2017/09/24 16:04:56 christos Exp $")
 #endif
 
 #if defined(HAVE_GETOPT_H) && defined(HAVE_STRUCT_OPTION)
-#include <getopt.h>
-#ifndef HAVE_GETOPT_LONG
-int getopt_long(int argc, char * const *argv, const char *optstring, const struct option *longopts, int *longindex);
-#endif
-#else
-#include "mygetopt.h"
+# include <getopt.h>
+# ifndef HAVE_GETOPT_LONG
+int getopt_long(int, char * const *, const char *,
+    const struct option *, int *);
+# endif
+# else
+#  include "mygetopt.h"
 #endif
 
 #ifdef S_IFLNK
-#define FILE_FLAGS "-bcEhikLlNnprsvzZ0"
+# define IFLNK_h "h"
+# define IFLNK_L "L"
 #else
-#define FILE_FLAGS "-bcEiklNnprsvzZ0"
+# define IFLNK_h ""
+# define IFLNK_L ""
 #endif
 
+#ifdef HAVE_LIBSECCOMP
+# define SECCOMP_S "S"
+#else
+# define SECCOMP_S ""
+#endif
+
+#define FILE_FLAGS	"bcCdE" IFLNK_h "ik" IFLNK_L "lNnprs" SECCOMP_S "vzZ0"
+#define OPTSTRING	"bcCde:Ef:F:hiklLm:nNpP:rsSvzZ0"
+
 # define USAGE  \
-    "Usage: %s [" FILE_FLAGS "] [--apple] [--extension] [--mime-encoding]\n" \
+    "Usage: %s [-" FILE_FLAGS "] [--apple] [--extension] [--mime-encoding]\n" \
     "            [--mime-type] [-e <testname>] [-F <separator>] " \
     " [-f <namefile>]\n" \
-    "            [-m <magicfiles>] <file> ...\n" \
+    "            [-m <magicfiles>] [-P <parameter=value>] <file> ...\n" \
     "       %s -C [-m <magicfiles>]\n" \
     "       %s [--help]\n"
 
@@ -103,7 +115,6 @@ private const struct option long_options[] = {
 #undef OPT_LONGONLY
     {0, 0, NULL, 0}
     };
-#define OPTSTRING	"bcCde:Ef:F:hiklLm:nNpP:rsvzZ0"
 
 private const struct {
 	const char *name;
@@ -164,6 +175,9 @@ main(int argc, char *argv[])
 	size_t i;
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0, e = 0;
+#ifdef HAVE_LIBSECCOMP
+	int sandbox = 1;
+#endif
 	struct magic_set *magic = NULL;
 	int longindex;
 	const char *magicfile = NULL;		/* where the magic is	*/
@@ -186,14 +200,6 @@ main(int argc, char *argv[])
 
 	file_setprogname(progname);
 
-#ifdef HAVE_LIBSECCOMP
-#if 0
-	if (enable_sandbox_basic() == -1)
-#else
-	if (enable_sandbox_full() == -1)
-#endif
-		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
-#endif /* HAVE_LIBSECCOMP */
 
 #ifdef S_IFLNK
 	posixly = getenv("POSIXLY_CORRECT") != NULL;
@@ -291,6 +297,11 @@ main(int argc, char *argv[])
 		case 's':
 			flags |= MAGIC_DEVICES;
 			break;
+#ifdef HAVE_LIBSECCOMP
+		case 'S':
+			sandbox = 0;
+			break;
+#endif
 		case 'v':
 			if (magicfile == NULL)
 				magicfile = magic_getpath(magicfile, action);
@@ -325,6 +336,15 @@ main(int argc, char *argv[])
 	}
 	if (e)
 		return e;
+
+#ifdef HAVE_LIBSECCOMP
+#if 0
+	if (sandbox && enable_sandbox_basic() == -1)
+#else
+	if (sandbox && enable_sandbox_full() == -1)
+#endif
+		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
+#endif /* HAVE_LIBSECCOMP */
 
 	if (MAGIC_VERSION != magic_version())
 		file_warnx("Compiled magic version [%d] "
