@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.70 2018/02/24 14:53:10 christos Exp $
+# $File: compress,v 1.71 2018/03/02 15:28:10 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -306,3 +306,15 @@
 >>0	byte&0xf	=8
 >>>0	byte&0x80 	=0	zlib compressed data
 !:mime	application/zlib
+
+# BWC compression
+0	string		BWC
+>3	byte		0	BWC compressed data
+
+# UCL compression
+0	bequad		0x00e955434cff011a	UCL compressed data
+
+# Softlib archive
+0	string		SLIB	Softlib archive
+>4	leshort		x	\b, version %d
+>6	leshort		x	(contains %d files)
