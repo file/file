@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.114 2018/02/24 15:10:23 christos Exp $
+# $File: archive,v 1.115 2018/03/02 15:29:23 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1419,6 +1419,5 @@
 0	string	SBx	SeqBox,
 >3	byte	x	version %d
 
-# EGG archive http://sdn.altools.co.kr/etc/EGG_Specification.zip
-0	string	EGGA	EGG archive
->4	beshort	x	version %d
+# LyNX archive
+56	string	USE\040LYNX\040TO\040DISSOLVE\040THIS\040FILE	 LyNX archive
