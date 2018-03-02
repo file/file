@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.128 2017/12/28 14:51:55 christos Exp $
-.Dd December 28, 2017
+.\" $File: file.man,v 1.129 2018/03/02 16:17:54 christos Exp $
+.Dd March 2, 2018
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -8,7 +8,7 @@
 .Sh SYNOPSIS
 .Nm
 .Bk -words
-.Op Fl bcdEhiklLNnprsvzZ0
+.Op Fl bcdEhiklLNnprsSvzZ0
 .Op Fl Fl apple
 .Op Fl Fl extension
 .Op Fl Fl mime-encoding
@@ -353,6 +353,16 @@ This option also causes
 to disregard the file size as reported by
 .Xr stat 2
 since on some systems it reports a zero size for raw disk partitions.
+.If Fl S , Fl Fl no-sandbox
+On systems where libseccomp
+.Pa ( https://github.com/seccomp/libseccomp )
+is available, the
+.Fl S
+flag disables sandboxing which is enabled by default.
+This option is needed for file to execute external descompressing programs,
+i.e. when the
+.Fl z
+flag is specified and the built-in decompressors are not available.
 .It Fl v , Fl Fl version
 Print the version of the program and exit.
 .It Fl z , Fl Fl uncompress
@@ -511,6 +521,23 @@ for example,
 .Bd -literal -offset indent
 \*[Gt]16	long\*[Am]0x7fffffff	\*[Gt]0		not stripped
 .Ed
+.Sh SECURITY
+On systems where libseccomp
+.Pa ( https://github.com/seccomp/libseccomp )
+is available,
+.Nm
+is enforces limiting system calls to only the ones necessary for the
+operation of the program.
+This enforcement does not provide any security benefit when
+.Nm
+is asked to decompress input files running external programs with
+the
+.Fl z
+option.
+To enable execution of external decompressors, one needs to disable
+sandboxing using the
+.Fl S
+flag.
 .Sh MAGIC DIRECTORY
 The magic file entries have been collected from various sources,
 mainly USENET, and contributed by various authors.
