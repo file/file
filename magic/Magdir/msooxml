@@ -33,4 +33,13 @@
 !:mime application/vnd.openxmlformats-officedocument.presentationml.presentation
 >>>>&26		string		xl/		Microsoft Excel 2007+
 !:mime application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
->>>>&26		default		x		Microsoft OOXML
+>>>>&26		default		x
+# OpenOffice/Libreoffice orders ZIP entry differently, so check the 4th file for them
+>>>>>&26	search/1000	PK\003\004
+>>>>>>&26	string		word/		Microsoft Word 2007+
+!:mime application/vnd.openxmlformats-officedocument.wordprocessingml.document
+>>>>>>&26	string		ppt/		Microsoft PowerPoint 2007+
+!:mime application/vnd.openxmlformats-officedocument.presentationml.presentation
+>>>>>>&26	string		xl/		Microsoft Excel 2007+
+!:mime application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+>>>>>>&26	default		x		Microsoft OOXML
