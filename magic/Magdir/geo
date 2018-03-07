@@ -125,5 +125,6 @@
 >58	string		>\0	\b, Generating Software %s
 
 # magic for PCD format files
+# alex myczko <alex@aiei.ch>
 # http://pointclouds.org/documentation/tutorials/pcd_file_format.php
 0	string	#\ .PCD	Point Cloud Data
