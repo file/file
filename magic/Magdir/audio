@@ -839,3 +839,22 @@
 >>149	pstring	x		\b, title %s
 
 0	string	cyd!inst	Klystrack instrument
+
+# magic for WOPL instrument files, https://github.com/Wohlstand/OPL3BankEditor
+# see Specifications/WOPL-and-OPLI-Specification.txt
+
+0	string	WOPL3-INST\0	WOPL instrument
+>11	leshort	x	\b, version %u
+0	string	WOPL3-BANK\0	WOPL instrument bank
+>11	leshort	x	\b, version %u
+
+# AdLib/OPL instrument files. Format specifications on
+#  http://www.shikadi.net/moddingwiki
+0	string	Junglevision\ Patch\ File	Junglevision instrument data
+0	string	#OPL_II#	DMX OP2 instrument data
+0	string	IBK\x1a	IBK instrument data
+0	string	2OP\x1a	IBK instrument data, 2 operators
+0	string	4OP\x1a	IBK instrument data, 4 operators
+2	string	ADLIB-	AdLib instrument data
+>0	byte	x	\b, version %u
+>1	byte	x	\b.%u
