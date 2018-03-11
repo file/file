@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.258 2018/02/24 19:49:43 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.259 2018/03/11 01:23:52 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1728,7 +1728,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		    printed_something, need_separator, returnval);
 		if (rv != 1)
 		    *need_separator = oneed_separator;
-		return 1;
+		return rv;
 
 	case FILE_NAME:
 		if (ms->flags & MAGIC_NODESC)
