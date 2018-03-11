@@ -1,13 +1,12 @@
 ## README for file(1) Command ##
 
-    @(#) $File: README,v 1.52 2017/12/06 01:04:53 christos Exp $
+    @(#) $File: README,v 1.53 2018/03/11 13:06:47 glen Exp $
 
 Mailing List: file@mx.gw.com  [currently down]
 Mailing List archives: http://mx.gw.com/pipermail/file/  [currently down]
 Bug tracker: http://bugs.gw.com/  [currently down]
 E-mail: christos@astron.com
-
-[![Build Status](https://travis-ci.org/file/file.png?branch=master)](https://travis-ci.org/file/file)
+Build Status: https://travis-ci.org/file/file
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
 
