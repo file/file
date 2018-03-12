@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msooxml,v 1.6 2018/03/11 01:25:11 christos Exp $
+# $File: msooxml,v 1.7 2018/03/12 12:38:59 christos Exp $
 # msooxml:  file(1) magic for Microsoft Office XML
 # From: Ralf Brown <ralf.brown@gmail.com>
 
@@ -38,6 +38,6 @@
 >>>>&26		use		msooxml	
 >>>>&26		default		x
 # OpenOffice/Libreoffice orders ZIP entry differently, so check the 4th file
->>>>>&26	search/1000	PK\003\004	got
+>>>>>&26	search/1000	PK\003\004
 >>>>>>&26	use		msooxml	
 >>>>>>&26	default		x		Microsoft OOXML
