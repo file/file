@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.116 2018/03/05 22:48:20 christos Exp $
+# $File: archive,v 1.117 2018/03/17 02:11:04 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1101,6 +1101,9 @@
 !:mime	application/vnd.oasis.opendocument.formula-template
 >>>73	string	database		Database
 !:mime	application/vnd.oasis.opendocument.database
+# Valid for LibreOffice Base 6.0.1.1 at least
+>>>73	string	base 			Database
+!:mime	application/vnd.oasis.opendocument.base
 >>>73	string	image
 >>>>78	byte	!0x2d			Image
 !:mime	application/vnd.oasis.opendocument.image
