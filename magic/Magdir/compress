@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.71 2018/03/02 15:28:10 christos Exp $
+# $File: compress,v 1.72 2018/03/27 23:26:41 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -318,3 +318,10 @@
 0	string		SLIB	Softlib archive
 >4	leshort		x	\b, version %d
 >6	leshort		x	(contains %d files)
+
+# URL:  https://github.com/lzfse/lzfse/blob/master/src/lzfse_internal.h#L276
+# From: Eric Hall <eric.hall@darkart.com>
+0	string	bvx-	lzfse encoded, no compression
+0	string	bvx1	lzfse compressed, uncompressed tables
+0	string	bvx2	lzfse compressed, compressed tables
+0	string	bvxn	lzfse encoded, lzvn compressed
