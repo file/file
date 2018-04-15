@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.270 2018/02/21 21:26:48 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.271 2018/04/15 19:57:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3335,7 +3335,7 @@ private void
 bs1(struct magic *m)
 {
 	m->cont_level = swap2(m->cont_level);
-	m->offset = swap4((int32_t)m->offset);
+	m->offset = swap4((uint32_t)m->offset);
 	m->in_offset = swap4((uint32_t)m->in_offset);
 	m->lineno = swap4((uint32_t)m->lineno);
 	if (IS_STRING(m->type)) {
