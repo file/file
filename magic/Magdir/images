@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.131 2018/02/16 15:44:28 christos Exp $
+# $File: images,v 1.132 2018/04/17 12:09:20 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -464,7 +464,9 @@
 !:mime	image/x-unknown
 
 # GIF
+# Strength set up to beat 0x55AA DOS/MBR signature word lookups (+65)
 0	string		GIF8		GIF image data
+!:strength +80
 !:mime	image/gif
 !:apple	8BIMGIFf
 >4	string		7a		\b, version 8%s,
