@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.259 2018/03/11 01:23:52 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.260 2018/04/18 01:16:13 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -433,8 +433,11 @@ check_fmt(struct magic_set *ms, const char *fmt)
 	return rv;
 }
 
-#ifndef HAVE_STRNDUP
-char * strndup(const char *, size_t);
+#if !defined(HAVE_STRNDUP) || defined(__aiws__)
+# ifdef __aiws__
+#  define strndup aix_strndup	/* aix is broken */
+# endif
+char *strndup(const char *, size_t);
 
 char *
 strndup(const char *str, size_t n)
