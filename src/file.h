@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.191 2018/02/21 21:26:00 christos Exp $
+ * @(#)$File: file.h,v 1.192 2018/04/18 01:15:49 christos Exp $
  */
 
 #ifndef __file_h__
@@ -618,9 +618,9 @@ int enable_sandbox_full(void);
 protected const char *file_getprogname(void);
 protected void file_setprogname(const char *);
 protected void file_err(int, const char *, ...)
-    __attribute__((__format__(__printf__, 2, 3)));
+    __attribute__((__format__(__printf__, 2, 3), __noreturn__));
 protected void file_errx(int, const char *, ...)
-    __attribute__((__format__(__printf__, 2, 3)));
+    __attribute__((__format__(__printf__, 2, 3), __noreturn__));
 protected void file_warn(const char *, ...)
     __attribute__((__format__(__printf__, 1, 2)));
 protected void file_warnx(const char *, ...)
