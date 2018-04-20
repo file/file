@@ -261,7 +261,7 @@
 #
 # BSD/SVR2-and-later portable archive formats.
 #
-0	string		=!<arch>		current ar archive
+0	string		=!<arch>\n		current ar archive
 !:mime	application/x-archive
 >8	string		__.SYMDEF	random library
 >68	string		__.SYMDEF\ SORTED	random library
