@@ -682,6 +682,8 @@
 # data and image transfer, storage, etc., for the astronomical community.
 # (FITS floating point formats are big-endian.)
 0	string	SIMPLE\ \ =	FITS image data
+!:mime	image/fits
+!:ext	fits/fts
 >109	string	8		\b, 8-bit, character or unsigned binary integer
 >108	string	16		\b, 16-bit, two's complement binary integer
 >107	string	\ 32		\b, 32-bit, two's complement binary integer
