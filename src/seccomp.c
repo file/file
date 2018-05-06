@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.2 2017/11/04 01:14:25 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.3 2018/05/06 16:36:41 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -59,12 +59,7 @@ enable_sandbox_basic(void)
 	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) == -1)
 		return -1;
 
-#if 0
-	// prevent escape via ptrace
-	prctl(PR_SET_DUMPABLE, 0);
-#endif
-
-	if (prctl (PR_SET_DUMPABLE, 0, 0, 0, 0) == -1)
+	if (prctl(PR_SET_DUMPABLE, 0, 0, 0, 0) == -1)
 		return -1;
 
 	// initialize the filter
@@ -171,6 +166,9 @@ enable_sandbox_full(void)
 	ALLOW_RULE(fcntl);  
 	ALLOW_RULE(fstat);
 	ALLOW_RULE(getdents);
+#ifdef __NR_getdents64
+	ALLOW_RULE(getdents64);
+#endif
 	ALLOW_RULE(ioctl);
 	ALLOW_RULE(lseek);
 	ALLOW_RULE(lstat);
@@ -178,6 +176,9 @@ enable_sandbox_full(void)
 	ALLOW_RULE(mprotect);
 	ALLOW_RULE(mremap);
 	ALLOW_RULE(munmap);
+#ifdef __NR_newfstatat
+	ALLOW_RULE(newfstatat);
+#endif
 	ALLOW_RULE(open);
 	ALLOW_RULE(openat);
 	ALLOW_RULE(pread64);
