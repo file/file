@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.67 2018/05/05 14:53:13 christos Exp $
+# $File: animation,v 1.68 2018/05/06 16:08:07 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1059,7 +1059,7 @@
 !:mime	application/mxf
 
 # Recognize LucasArts Smush video files (cf.
-https://wiki.multimedia.cx/index.php/Smush)
+# https://wiki.multimedia.cx/index.php/Smush)
 0	string	ANIM
 >8	string	AHDR	LucasArts Smush Animation Format (SAN) video
 0	string	SANM
