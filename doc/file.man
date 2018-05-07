@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.129 2018/03/02 16:17:54 christos Exp $
+.\" $File: file.man,v 1.130 2018/05/07 02:07:31 christos Exp $
 .Dd March 2, 2018
 .Dt FILE __CSECTION__
 .Os
@@ -353,7 +353,7 @@ This option also causes
 to disregard the file size as reported by
 .Xr stat 2
 since on some systems it reports a zero size for raw disk partitions.
-.If Fl S , Fl Fl no-sandbox
+.It Fl S , Fl Fl no-sandbox
 On systems where libseccomp
 .Pa ( https://github.com/seccomp/libseccomp )
 is available, the
