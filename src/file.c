@@ -337,15 +337,18 @@ main(int argc, char *argv[])
 	if (e)
 		return e;
 
+
+    if ((flags & MAGIC_COMPRESS) == 0 ){
 #ifdef HAVE_LIBSECCOMP
 #if 0
-	if (sandbox && enable_sandbox_basic() == -1)
+	    if (sandbox && enable_sandbox_basic() == -1)
 #else
-	if (sandbox && enable_sandbox_full() == -1)
+	    if (sandbox && enable_sandbox_full() == -1)
 #endif
-		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
+		    file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
 #endif /* HAVE_LIBSECCOMP */
 
+    }
 	if (MAGIC_VERSION != magic_version())
 		file_warnx("Compiled magic version [%d] "
 		    "does not match with shared library magic version [%d]\n",
