@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.142 2018/05/24 18:08:01 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.143 2018/06/09 16:00:06 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -842,7 +842,8 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 
 				cname = (unsigned char *)
 				    &nbuf[doff + prpsoffsets(i)];
-				for (cp = cname; *cp && isprint(*cp); cp++)
+				for (cp = cname; cp < nbuf + size && *cp
+				    && isprint(*cp); cp++)
 					continue;
 				/*
 				 * Linux apparently appends a space at the end
