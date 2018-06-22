@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.261 2018/05/24 18:09:17 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.262 2018/06/22 20:39:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1535,6 +1535,14 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			case FILE_MELONG:
 				off = SEXT(sgn,32,ME32(q));
 				break;
+			case FILE_BEQUAD:
+				off = SEXT(sgn,64,BE64(q));
+				break;
+			case FILE_LEQUAD:
+				off = SEXT(sgn,64,LE64(q));
+				break;
+			default:
+				abort();
 			}
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				fprintf(stderr, "indirect offs=%jd\n", off);
@@ -1588,8 +1596,18 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 				return 0;
 			offset = do_ops(m, SEXT(sgn,32,p->l), off);
 			break;
-		default:
+		case FILE_LEQUAD:
+			if (OFFSET_OOB(nbytes, offset, 8))
+				return 0;
+			offset = do_ops(m, SEXT(sgn,64,LE64(p)), off);
 			break;
+		case FILE_BEQUAD:
+			if (OFFSET_OOB(nbytes, offset, 8))
+				return 0;
+			offset = do_ops(m, SEXT(sgn,64,BE64(p)), off);
+			break;
+		default:
+			abort();
 		}
 
 		if (m->flag & INDIROFFADD) {

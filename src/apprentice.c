@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.271 2018/04/15 19:57:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.272 2018/06/22 20:39:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1979,6 +1979,12 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 				break;
 			case 'I':
 				m->in_type = FILE_BEID3;
+				break;
+			case 'q':
+				m->in_type = FILE_LEQUAD;
+				break;
+			case 'Q':
+				m->in_type = FILE_BEQUAD;
 				break;
 			default:
 				if (ms->flags & MAGIC_CHECK)
