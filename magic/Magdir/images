@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.141 2018/06/23 16:39:21 christos Exp $
+# $File: images,v 1.142 2018/06/23 16:41:10 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1397,6 +1397,14 @@
 0		string		farbfeld	farbfeld image data,
 >8		ubelong		x		%dx
 >12		ubelong		x		\b%d
+
+# Type: Microsoft DirectDraw Surface
+# URL:	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/graphics/reference/DDSFileReference/ddsfileformat.asp
+# From: Morten Hustveit <morten@debian.org>
+0	string/b	DDS\040\174\000\000\000 Microsoft DirectDraw Surface (DDS),
+>16	lelong	>0			%d x
+>12	lelong	>0			%d,
+>84	string	x			%.4s
 
 # Type: Sega PVR image.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
