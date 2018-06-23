@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.136 2018/06/23 16:37:13 christos Exp $
+# $File: images,v 1.137 2018/06/23 16:38:01 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1523,3 +1523,82 @@
 >12	lelong x		version %d,
 >20	lelong x 		%dx
 >24	lelong x		\b%d
+
+# Type: Khronos KTX texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+
+# glEnum decoding.
+# NOTE: Only the most common formats are listed here.
+0	name	khronos-ktx-glEnum
+>0	lelong	0x1907	\b, RGB
+>0	lelong	0x1908	\b, RGBA
+>0	lelong	0x1909	\b, LUMINANCE
+>0	lelong	0x190A	\b, LUMINANCE_ALPHA
+>0	lelong	0x80E1	\b, BGR
+>0	lelong	0x80E2	\b, BGRA
+>0	lelong	0x83A0	\b, RGB_S3TC
+>0	lelong	0x83A1	\b, RGB4_S3TC
+>0	lelong	0x83A2	\b, RGBA_S3TC
+>0	lelong	0x83A3	\b, RGBA4_S3TC
+>0	lelong	0x83A4	\b, RGBA_DXT5_S3TC
+>0	lelong	0x83A5	\b, RGBA4_DXT5_S3TC
+>0	lelong	0x8D64	\b, ETC1_RGB8_OES
+>0	lelong	0x9270	\b, COMPRESSED_R11_EAC
+>0	lelong	0x9271	\b, COMPRESSED_SIGNED_R11_EAC
+>0	lelong	0x9272	\b, COMPRESSED_RG11_EAC
+>0	lelong	0x9273	\b, COMPRESSED_SIGNED_RG11_EAC
+>0	lelong	0x9274	\b, COMPRESSED_RGB8_ETC2
+>0	lelong	0x9275	\b, COMPRESSED_SRGB8_ETC2
+>0	lelong	0x9276	\b, COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2
+>0	lelong	0x9277	\b, COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2
+>0	lelong	0x9278	\b, COMPRESSED_RGBA2_ETC2_EAC
+>0	lelong	0x9279	\b, COMPRESSED_SRGB8_ALPHA8_ETC2_EAC
+>0	lelong	0x93B0	\b, COMPRESSED_RGBA_ASTC_4x4_KHR
+>0	lelong	0x93B1	\b, COMPRESSED_RGBA_ASTC_5x4_KHR
+>0	lelong	0x93B2	\b, COMPRESSED_RGBA_ASTC_5x5_KHR
+>0	lelong	0x93B3	\b, COMPRESSED_RGBA_ASTC_6x5_KHR
+>0	lelong	0x93B4	\b, COMPRESSED_RGBA_ASTC_6x6_KHR
+>0	lelong	0x93B5	\b, COMPRESSED_RGBA_ASTC_8x5_KHR
+>0	lelong	0x93B6	\b, COMPRESSED_RGBA_ASTC_8x6_KHR
+>0	lelong	0x93B7	\b, COMPRESSED_RGBA_ASTC_8x8_KHR
+>0	lelong	0x93B8	\b, COMPRESSED_RGBA_ASTC_10x5_KHR
+>0	lelong	0x93B9	\b, COMPRESSED_RGBA_ASTC_10x6_KHR
+>0	lelong	0x93BA	\b, COMPRESSED_RGBA_ASTC_10x8_KHR
+>0	lelong	0x93BB	\b, COMPRESSED_RGBA_ASTC_10x10_KHR
+>0	lelong	0x93BC	\b, COMPRESSED_RGBA_ASTC_12x10_KHR
+>0	lelong	0x93BD	\b, COMPRESSED_RGBA_ASTC_12x12_KHR
+>0	lelong	0x93D0	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR
+>0	lelong	0x93D1	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR
+>0	lelong	0x93D2	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR
+>0	lelong	0x93D3	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR
+>0	lelong	0x93D4	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR
+>0	lelong	0x93D5	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR
+>0	lelong	0x93D6	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR
+>0	lelong	0x93D7	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR
+>0	lelong	0x93D8	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR
+>0	lelong	0x93D9	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR
+>0	lelong	0x93DA	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR
+>0	lelong	0x93DB	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR
+>0	lelong	0x93DC	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR
+>0	lelong	0x93DD	\b, COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR
+
+# Endian-specific KTX header.
+# TODO: glType (all textures I've seen so far are GL_UNSIGNED_BYTE)
+0	name	khronos-ktx-endian-header
+>20	lelong	x	\b, %u
+>24	lelong	>0	x %u
+>28	lelong	>0	x %u
+>8	lelong	>0
+>>8	use	khronos-ktx-glEnum
+>8	lelong	0
+>>12	use	khronos-ktx-glEnum
+
+# Main KTX header.
+# Determine endianness, then check the rest of the header.
+0	string	\xABKTX\ 11\xBB\r\n\x1A\n	Khronos KTX texture
+>12	lelong	0x04030201			(little-endian)
+>>16	use	khronos-ktx-endian-header
+>12	belong	0x04030201			(big-endian)
+>>16	use	^khronos-ktx-endian-header
