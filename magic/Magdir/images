@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.142 2018/06/23 16:41:10 christos Exp $
+# $File: images,v 1.143 2018/06/23 16:41:47 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1402,9 +1402,102 @@
 # URL:	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/graphics/reference/DDSFileReference/ddsfileformat.asp
 # From: Morten Hustveit <morten@debian.org>
 0	string/b	DDS\040\174\000\000\000 Microsoft DirectDraw Surface (DDS),
->16	lelong	>0			%d x
->12	lelong	>0			%d,
->84	string	x			%.4s
+>0x10	ulelong	>0			%u x
+>0x0C	ulelong	>0			%u
+# Color depth.
+>0x58	ulelong	>0			\b, %u-bit color
+# Determine the pixel format.
+>0x50	ulelong&0x4	4
+# FIXME: Handle DX10 and XBOX formats.
+>>0x54	string	x			\b, compressed using %.4s
+>0x50	ulelong&0x2	0x2		\b, alpha only
+>0x50	ulelong&0x200	0x200		\b, YUV
+>0x50	ulelong&0x20000	0x20000		\b, luminance
+# RGB pixel format
+>0x50	ulelong&0x40	0x40
+
+# Determine the RGB format using the color masks.
+# ulequad order: 0xGGGGGGGGRRRRRRRR, 0xAAAAAAAABBBBBBBB
+
+>>0x58		ulelong	16
+
+# NOTE: 15-bit color formats usually have 16-bit listed as the color depth.
+>>>0x5C		ulequad	0x000003E000007C00
+>>>>0x64	ulequad 0x000000000000001F	\b, RGB555
+>>>0x5C		ulequad	0x000003E000001F00
+>>>>0x64	ulequad 0x000000000000007C	\b, BGR555
+
+>>>0x5C		ulequad	0x000007E00000F800
+>>>>0x64	ulequad 0x000000000000001F	\b, RGB565
+>>>0x5C		ulequad	0x000007E000001F00
+>>>>0x64	ulequad 0x00000000000000F8	\b, BGR565
+
+>>>0x5C		ulequad	0x000000F000000F00
+>>>>0x64	ulequad 0x0000F0000000000F	\b, ARGB4444
+>>>0x5C		ulequad	0x000000F00000000F
+>>>>0x64	ulequad 0x0000F00000000F00	\b, ABGR4444
+
+>>>0x5C		ulequad	0x00000F000000F000
+>>>>0x64	ulequad 0x0000000F000000F0	\b, RGBA4444
+>>>0x5C		ulequad	0x00000F00000000F0
+>>>>0x64	ulequad 0x0000000F0000F000	\b, BGRA4444
+
+>>>0x5C		ulequad	0x000000F000000F00
+>>>>0x64	ulequad 0x000000000000000F	\b, xRGB4444
+>>>0x5C		ulequad	0x000000F00000000F
+>>>>0x64	ulequad 0x0000000000000F00	\b, xBGR4444
+
+>>>0x5C		ulequad	0x00000F000000F000
+>>>>0x64	ulequad 0x00000000000000F0	\b, RGBx4444
+>>>0x5C		ulequad	0x00000F00000000F0
+>>>>0x64	ulequad 0x000000000000F000	\b, BGRx4444
+
+>>>0x5C		ulequad	0x000003E000007C00
+>>>>0x64	ulequad 0x000080000000001F	\b, ARGB1555
+>>>0x5C		ulequad	0x000003E000001F00
+>>>>0x64	ulequad 0x000080000000007C	\b, ABGR1555
+>>>0x5C		ulequad	0x000007C00000F800
+>>>>0x64	ulequad 0x000000010000003E	\b, RGBA5551
+>>>0x5C		ulequad	0x000007C00000003E
+>>>>0x64	ulequad 0x000000010000F800	\b, BGRA5551
+
+>>88		ulelong 24
+>>>0x5C		ulequad	0x0000FF0000FF0000
+>>>>0x64	ulequad 0x00000000000000FF	\b, RGB888
+>>>0x5C		ulequad	0x0000FF00000000FF
+>>>>0x64	ulequad 0x0000000000FF0000	\b, BGR888
+
+>>88		ulelong 32
+>>>0x5C		ulequad	0x0000FF0000FF0000
+>>>>0x64	ulequad 0xFF000000000000FF	\b, ARGB8888
+>>>0x5C		ulequad	0x0000FF00000000FF
+>>>>0x64	ulequad 0xFF00000000FF0000	\b, ABGR8888
+
+>>>0x5C		ulequad	0x00FF0000FF000000
+>>>>0x64	ulequad 0x000000FF0000FF00	\b, RGBA8888
+>>>0x5C		ulequad	0x00FF00000000FF00
+>>>>0x64	ulequad 0x000000FFFF000000	\b, BGBA8888
+
+>>>0x5C		ulequad	0x0000FF0000FF0000
+>>>>0x64	ulequad 0x00000000000000FF	\b, xRGB8888
+>>>0x5C		ulequad	0x0000FF00000000FF
+>>>>0x64	ulequad 0x0000000000FF0000	\b, xBGR8888
+
+>>>0x5C		ulequad	0x00FF0000FF000000
+>>>>0x64	ulequad 0x000000000000FF00	\b, RGBx8888
+>>>0x5C		ulequad	0x00FF00000000FF00
+>>>>0x64	ulequad 0x00000000FF000000	\b, BGBx8888
+
+# Less common 32-bit color formats.
+>>>0x5C		ulequad	0xFFFF00000000FFFF
+>>>>0x64	ulequad 0x0000000000000000	\b, G16R16
+>>>0x5C		ulequad	0x0000FFFFFFFF0000
+>>>>0x64	ulequad 0x0000000000000000	\b, R16G16
+
+>>>0x5C		ulequad	0x000FFC003FF00000
+>>>>0x64	ulequad 0xC0000000000003FF	\b, A2R10G10B10
+>>>0x5C		ulequad	0x000FFC00000003FF
+>>>>0x64	ulequad 0xC00000003FF00000	\b, A2B10G10R10
 
 # Type: Sega PVR image.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
