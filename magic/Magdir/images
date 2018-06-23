@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.137 2018/06/23 16:38:01 christos Exp $
+# $File: images,v 1.138 2018/06/23 16:38:10 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1588,8 +1588,8 @@
 # TODO: glType (all textures I've seen so far are GL_UNSIGNED_BYTE)
 0	name	khronos-ktx-endian-header
 >20	lelong	x	\b, %u
->24	lelong	>0	x %u
->28	lelong	>0	x %u
+>24	lelong	>1	x %u
+>28	lelong	>1	x %u
 >8	lelong	>0
 >>8	use	khronos-ktx-glEnum
 >8	lelong	0
