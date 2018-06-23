@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.139 2018/06/23 16:38:43 christos Exp $
+# $File: images,v 1.140 2018/06/23 16:38:52 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1650,3 +1650,11 @@
 >0x38	byte	x				\b, mipmaps: %u
 >0x34	lelong	>-1				\b,
 >>0x34	use	vtf-image-format
+
+# Type: Valve VTF3 (PS3) texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+0	string		VTF3	Valve Texture Format (PS3)
+>0x14	beshort		x	\b, %u
+>0x16	beshort		x	\b x %u
+>0x10	belong&0x2000	0	\b, DXT1
+>0x10	belong&0x2000	0x2000	\b, DXT5
