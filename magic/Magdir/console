@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.38 2018/06/23 16:40:11 christos Exp $
+# $File: console,v 1.39 2018/06/23 16:40:22 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -663,6 +663,8 @@
 >>0x06	byte	2	\b, Disc 3
 >>0x06	byte	3	\b, Disc 4
 >0x07	byte	x	\b, Rev.%02u)
+>0x18	belong	0x5D1C9EA3
+>>0x60	beshort	0x0101	\b (Unencrypted)
 
 # Type: Nintendo GameCube disc image
 # From: David Korth <gerbilsoft@gerbilsoft.com>
