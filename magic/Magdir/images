@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.135 2018/06/23 16:36:47 christos Exp $
+# $File: images,v 1.136 2018/06/23 16:37:13 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1407,8 +1407,8 @@
 
 # Sega PVR header.
 0	name	sega-pvr-image-header
->0x0C	leshort	x	%d x
->0x0E	leshort	x	%d
+>0x0C	leshort	x	%u x
+>0x0E	leshort	x	%u
 # Image format.
 >0x08	byte	0	\b, ARGB1555
 >0x08	byte	1	\b, RGB565
@@ -1436,8 +1436,8 @@
 # Sega PVR (Xbox) image header.
 # Contains an embedded DirectDraw surface instead of PVR data.
 0	name	sega-pvr-xbox-dds-header
->16	lelong	x	%d x
->12	lelong	x	%d,
+>16	lelong	x	%u x
+>12	lelong	x	%u,
 >84	string	x	%.4s
 
 # Sega PVR image.
@@ -1458,8 +1458,8 @@
 
 # Sega GVR header.
 0	name	sega-gvr-image-header
->0x0C	beshort	x	%d x
->0x0E	beshort	x	%d
+>0x0C	beshort	x	%u x
+>0x0E	beshort	x	%u
 # Image data format.
 >0x0B	byte	0	\b, I4
 >0x0B	byte	1	\b, I8
