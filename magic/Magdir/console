@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.39 2018/06/23 16:40:22 christos Exp $
+# $File: console,v 1.40 2018/06/23 16:40:40 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -751,6 +751,17 @@
 >0x48	default	x	GameCube/Wii
 >0x48	belong	x	disc image (WIA format):
 >>0x58	use	nintendo-gcn-disc-common
+
+# Type: Nintendo GameCube/Wii disc image (with SDK header)
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# Reference: http://wiibrew.org/wiki/Wii_Disc
+0		belong	0xFFFF0000
+>0x18		belong	0x00000000
+>>0x1C		belong	0x00000000
+>>>0x8018	belong	0x5D1C9EA3	Nintendo Wii SDK disc image:
+>>>>0x8000	use	nintendo-gcn-disc-common
+>>>0x801C	belong	0xC2339F3D	Nintendo GameCube SDK disc image:
+>>>>0x8000	use	nintendo-gcn-disc-common
 
 #------------------------------------------------------------------------------
 # Nintendo 3DS file formats.
