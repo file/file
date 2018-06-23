@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.143 2018/06/23 16:41:47 christos Exp $
+# $File: images,v 1.144 2018/06/23 16:41:55 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1398,11 +1398,12 @@
 >8		ubelong		x		%dx
 >12		ubelong		x		\b%d
 
-# Type: Microsoft DirectDraw Surface
+# Type: Microsoft DirectDraw Surface (common data)
 # URL:	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/graphics/reference/DDSFileReference/ddsfileformat.asp
 # From: Morten Hustveit <morten@debian.org>
-0	string/b	DDS\040\174\000\000\000 Microsoft DirectDraw Surface (DDS),
->0x10	ulelong	>0			%u x
+# Updated by: David Korth <gerbilsoft@gerbilsoft.com>
+0	name	ms-directdraw-surface
+>0x10	ulelong	>0			\b, %u x
 >0x0C	ulelong	>0			%u
 # Color depth.
 >0x58	ulelong	>0			\b, %u-bit color
@@ -1499,6 +1500,13 @@
 >>>0x5C		ulequad	0x000FFC00000003FF
 >>>>0x64	ulequad 0xC00000003FF00000	\b, A2B10G10R10
 
+# Type: Microsoft DirectDraw Surface
+# URL:	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/graphics/reference/DDSFileReference/ddsfileformat.asp
+# From: Morten Hustveit <morten@debian.org>
+# Updated by: David Korth <gerbilsoft@gerbilsoft.com>
+0	string/b	DDS\040\174\000\000\000 Microsoft DirectDraw Surface (DDS)
+>0	use	ms-directdraw-surface
+
 # Type: Sega PVR image.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 # References:
@@ -1534,17 +1542,10 @@
 >0x09	byte	0x11	\b, small VQ & mipmap
 >0x09	byte	0x12	\b, square twiddled & mipmap
 
-# Sega PVR (Xbox) image header.
-# Contains an embedded DirectDraw surface instead of PVR data.
-0	name	sega-pvr-xbox-dds-header
->16	lelong	x	%u x
->12	lelong	x	%u,
->84	string	x	%.4s
-
 # Sega PVR image.
 0	string	PVRT
 >0x10	string	DDS\040\174\000\000\000 Sega PVR (Xbox) image:
->>0x20	use	sega-pvr-xbox-dds-header
+>>0x20	use	ms-directdraw-surface
 >0x10	belong	!0x44445320		Sega PVR image:
 >>0	use	sega-pvr-image-header
 
@@ -1552,7 +1553,7 @@
 0	string	GBIX
 >0x10	string	PVRT
 >>0x10	string	DDS\040\174\000\000\000 Sega PVR (Xbox) image:
->>>0x20	use	sega-pvr-xbox-dds-header
+>>0x20	use	ms-directdraw-surface
 >>0x10	belong	!0x44445320		Sega PVR image:
 >>>0x10	use	sega-pvr-image-header
 >>0x08	lelong	x	\b, global index = %u
