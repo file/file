@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.144 2018/06/23 16:41:55 christos Exp $
+# $File: images,v 1.145 2018/06/23 16:42:02 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1403,8 +1403,8 @@
 # From: Morten Hustveit <morten@debian.org>
 # Updated by: David Korth <gerbilsoft@gerbilsoft.com>
 0	name	ms-directdraw-surface
->0x10	ulelong	>0			\b, %u x
->0x0C	ulelong	>0			%u
+>0x10	ulelong	x			%u x
+>0x0C	ulelong	x			%u
 # Color depth.
 >0x58	ulelong	>0			\b, %u-bit color
 # Determine the pixel format.
@@ -1504,7 +1504,7 @@
 # URL:	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/directx9_c/directx/graphics/reference/DDSFileReference/ddsfileformat.asp
 # From: Morten Hustveit <morten@debian.org>
 # Updated by: David Korth <gerbilsoft@gerbilsoft.com>
-0	string/b	DDS\040\174\000\000\000 Microsoft DirectDraw Surface (DDS)
+0	string/b	DDS\040\174\000\000\000 Microsoft DirectDraw Surface (DDS):
 >0	use	ms-directdraw-surface
 
 # Type: Sega PVR image.
