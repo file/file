@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.138 2018/06/23 16:38:10 christos Exp $
+# $File: images,v 1.139 2018/06/23 16:38:43 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1602,3 +1602,51 @@
 >>16	use	khronos-ktx-endian-header
 >12	belong	0x04030201			(big-endian)
 >>16	use	^khronos-ktx-endian-header
+
+# Type: Valve VTF texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://developer.valvesoftware.com/wiki/Valve_Texture_Format
+
+# VTF image formats.
+0	name	vtf-image-format
+>0	lelong	0	RGBA8888
+>0	lelong	1	ABGR8888
+>0	lelong	2	RGB888
+>0	lelong	3	BGR888
+>0	lelong	4	RGB565
+>0	lelong	5	I8
+>0	lelong	6	IA88
+>0	lelong	7	P8
+>0	lelong	8	A8
+>0	lelong	9	RGB888 (bluescreen)
+>0	lelong	10	BGR888 (bluescreen)
+>0	lelong	11	ARGB8888
+>0	lelong	12	BGRA8888
+>0	lelong	13	DXT1
+>0	lelong	14	DXT3
+>0	lelong	15	DXT5
+>0	lelong	16	BGRx8888
+>0	lelong	17	BGR565
+>0	lelong	18	BGRx5551
+>0	lelong	19	BGRA4444
+>0	lelong	20	DXT1+A1
+>0	lelong	21	BGRA5551
+>0	lelong	22	UV88
+>0	lelong	23	UVWQ8888
+>0	lelong	24	RGBA16161616F
+>0	lelong	25	RGBA16161616
+>0	lelong	26	UVLX8888
+
+# Main VTF header.
+0	string	VTF\0				Valve Texture Format
+>4	lelong	x				v%u
+>8	lelong	x				\b.%u
+>0x10	leshort	x				\b, %u
+>0x12	leshort	>1				x %u
+>4	lequad	0x0000000700000002
+>>0x3F	leshort	>1				x %u
+>0x18	leshort	>1				\b, %u frames
+>0x38	byte	x				\b, mipmaps: %u
+>0x34	lelong	>-1				\b,
+>>0x34	use	vtf-image-format
