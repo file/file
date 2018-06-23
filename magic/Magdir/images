@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.140 2018/06/23 16:38:52 christos Exp $
+# $File: images,v 1.141 2018/06/23 16:39:21 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1658,3 +1658,18 @@
 >0x16	beshort		x	\b x %u
 >0x10	belong&0x2000	0	\b, DXT1
 >0x10	belong&0x2000	0x2000	\b, DXT5
+
+# Type: ASTC texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://stackoverflow.com/questions/22600678/determine-internal-format-of-given-astc-compressed-image-through-its-header
+# - https://stackoverflow.com/a/22682244
+0	lelong	0x5ca1ab13			ASTC
+>4	byte	x				%u
+>5	byte	x				\bx%u
+>6	byte	>1				\bx%u
+# X, Y, and Z dimensions are stored as 24-bit LE.
+# Pretend it's 32-bit and mask off the high byte.
+>7	lelong&0x00FFFFFF	x		texture, %u
+>10	lelong&0x00FFFFFF	x		x %u
+>13	lelong&0x00FFFFFF	>1		x %u
