@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.145 2018/06/23 16:42:02 christos Exp $
+# $File: images,v 1.146 2018/07/03 20:55:37 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1775,3 +1775,21 @@
 >7	lelong&0x00FFFFFF	x		texture, %u
 >10	lelong&0x00FFFFFF	x		x %u
 >13	lelong&0x00FFFFFF	>1		x %u
+
+# Zebra Metafile graphic
+# http://www.fileformat.info/format/zbr/egff.htm
+0	beshort	0x9a02	Zebra Metafile graphic
+>2	leshort 1	(version 1.x)
+>2	leshort	2	(version 1.1x or 1.2x)
+>2	leshort	3	(version 1.49)
+>2	leshort	4	(version 1.50)
+>4	string	x	(comment = %s)
+
+# Microsoft Paint graphic
+# http://www.fileformat.info/format/mspaint/egff.htm
+0	string	DanM 	icrosoft Paint image data (version 1.x)
+>4	leshort	x	(%d
+>>6	leshort	x	x %d)
+0	string	LinS 	Microsoft Paint image data (version 2.0)
+>4	leshort	x	(%d
+>>6	leshort	x	x %d)
