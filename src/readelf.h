@@ -356,6 +356,15 @@ typedef struct {
 #define NT_NETBSD_CMODEL	6
 
 /*
+ * Golang-specific note type
+ * name: Go\0\0
+ * namesz: 4
+ * desc: base-64 build id.
+ * descsz: < 128
+ */
+#define NT_GO_BUILD_ID	4
+
+/*
  * FreeBSD specific notes
  */
 #define NT_FREEBSD_PROCSTAT_AUXV	16
