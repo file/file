@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.123 2018/06/23 16:41:10 christos Exp $
+# $File: msdos,v 1.124 2018/07/10 04:05:50 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -792,10 +792,16 @@
 #0	string	Nullsoft\ AVS\ Preset\ \060\056\061\032 A plug in for Winamp ms-windows Freeware media player
 0	string/b	Nullsoft\ AVS\ Preset\ 	Winamp plug in
 
-# Windows Metafont .WMF
-0	string/b	\327\315\306\232	ms-windows metafont .wmf
-0	string/b	\002\000\011\000	ms-windows metafont .wmf
-0	string/b	\001\000\011\000	ms-windows metafont .wmf
+# Windows Metafile .WMF
+0	string/b	\327\315\306\232	Windows metafile
+!:mime	image/wmf
+!:ext	wmf
+0	string/b	\002\000\011\000	Windows metafile
+!:mime	image/wmf
+!:ext	wmf
+0	string/b	\001\000\011\000	Windows metafile
+!:mime	image/wmf
+!:ext	wmf
 
 #tz3 files whatever that is (MS Works files)
 0	string/b	\003\001\001\004\070\001\000\000	tz3 ms-works file
