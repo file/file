@@ -1,3 +1,3 @@
 
-EXTRA_DIST = README example.py magic.py setup.py
+EXTRA_DIST = README.md example.py magic.py setup.py
 
