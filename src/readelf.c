@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.144 2018/07/08 23:37:33 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.145 2018/07/25 06:12:09 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -352,6 +352,11 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	off_t ph_off = off;
 	int ph_num = num;
 
+	if (num == 0) {
+		if (file_printf(ms, ", no program header") == -1)
+			return -1;
+		return 0;
+	}
 	if (size != xph_sizeof) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
 			return -1;
@@ -1278,6 +1283,11 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	char name[50];
 	ssize_t namesize;
 
+	if (num == 0) {
+		if (file_printf(ms, ", no section header") == -1)
+			return -1;
+		return 0;
+	}
 	if (size != xsh_sizeof) {
 		if (file_printf(ms, ", corrupted section header size") == -1)
 			return -1;
@@ -1549,6 +1559,11 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	ssize_t bufsize;
 	size_t offset, align, len;
 	
+	if (num == 0) {
+		if (file_printf(ms, ", no program header") == -1)
+			return -1;
+		return 0;
+	}
 	if (size != xph_sizeof) {
 		if (file_printf(ms, ", corrupted program header size") == -1)
 			return -1;
