@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.102 2017/08/28 13:39:18 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.103 2018/07/25 06:27:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -598,6 +598,8 @@ magic_version(void)
 public int
 magic_setparam(struct magic_set *ms, int param, const void *val)
 {
+	if (ms == NULL)
+		return -1;
 	switch (param) {
 	case MAGIC_PARAM_INDIR_MAX:
 		ms->indir_max = (uint16_t)*(const size_t *)val;
@@ -629,6 +631,8 @@ magic_setparam(struct magic_set *ms, int param, const void *val)
 public int
 magic_getparam(struct magic_set *ms, int param, void *val)
 {
+	if (ms == NULL)
+		return -1;
 	switch (param) {
 	case MAGIC_PARAM_INDIR_MAX:
 		*(size_t *)val = ms->indir_max;
