@@ -9,12 +9,16 @@
 0	string/t	@
 >1	string/cW	\ echo\ off	DOS batch file text
 !:mime	text/x-msdos-batch
+!:ext	bat
 >1	string/cW	echo\ off	DOS batch file text
 !:mime	text/x-msdos-batch
+!:ext	bat
 >1	string/cW	rem		DOS batch file text
 !:mime	text/x-msdos-batch
+!:ext	bat
 >1	string/cW	set\ 		DOS batch file text
 !:mime	text/x-msdos-batch
+!:ext	bat
 
 
 # OS/2 batch files are REXX. the second regex is a bit generic, oh well
@@ -49,6 +53,9 @@
 # All non-DOS EXE extensions have the relocation table more than 0x40 bytes into the file.
 >0x18	leshort <0x40 MS-DOS executable
 !:mime	application/x-dosexec
+# Windows and later versions of DOS will allow .EXEs to be named with a .COM
+# extension, mostly for compatibility's sake.
+!:ext	exe/com
 # These traditional tests usually work but not always.  When test quality support is
 # implemented these can be turned on.
 #>>0x18	leshort	0x1c	(Borland compiler)
@@ -67,9 +74,33 @@
 >>>(0x3c.l+24)	default		x	Unknown PE signature
 >>>>&0 		leshort		x	0x%x
 >>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
->>>(0x3c.l+92)	leshort		1	(native)
->>>(0x3c.l+92)	leshort		2	(GUI)
->>>(0x3c.l+92)	leshort		3	(console)
+>>>(0x3c.l+92)	leshort		1
+# Native PEs include ntoskrnl.exe, hal.dll, smss.exe, autochk.exe, and all the
+# drivers in Windows/System32/drivers/*.sys.
+>>>>(0x3c.l+22)	leshort&0x2000	>0	(native)
+!:ext	dll/sys
+>>>>(0x3c.l+22)	leshort&0x2000	0	(native)
+!:ext	exe/sys
+>>>(0x3c.l+92)	leshort		2
+>>>>(0x3c.l+22)	leshort&0x2000	>0	(GUI)
+# These could probably be at least partially distinguished from one another by
+# looking for specific exported functions.
+# CPL: Control Panel item
+# TLB: Type library
+# OCX: OLE/ActiveX control
+# ACM: Audio compression manager codec
+# AX: DirectShow source filter
+# IME: Input method editor
+!:ext	dll/cpl/tlb/ocx/acm/ax/ime
+>>>>(0x3c.l+22)	leshort&0x2000	0	(GUI)
+# Screen savers typically include code from the scrnsave.lib static library, but
+# that's not guaranteed.
+!:ext	exe/scr
+>>>(0x3c.l+92)	leshort		3
+>>>>(0x3c.l+22)	leshort&0x2000	>0	(console)
+!:ext	dll/cpl/tlb/ocx/acm/ax/ime
+>>>>(0x3c.l+22)	leshort&0x2000	0	(console)
+!:ext	exe/com
 >>>(0x3c.l+92)	leshort		7	(POSIX)
 >>>(0x3c.l+92)	leshort		9	(Windows CE)
 >>>(0x3c.l+92)	leshort		10	(EFI application)
@@ -151,8 +182,16 @@
 >>>(0x3c.l+0x36)	default		x
 >>>>(0x3c.l+0x36)	byte		x (unknown OS %x)
 >>>(0x3c.l+0x36)	byte		0x81 for MS-DOS, Phar Lap DOS extender
->>>(0x3c.l+0x0c)	leshort&0x8003	0x8002 (DLL)
->>>(0x3c.l+0x0c)	leshort&0x8003	0x8001 (driver)
+>>>(0x3c.l+0x0c)	leshort&0x8000	0x8000 (DLL or font)
+# DRV: Driver
+# 3GR: Grabber device driver
+# CPL: Control Panel Item
+# VBX: Visual Basic Extension
+# FON: Bitmap font
+# FOT: Font resource file
+!:ext	dll/drv/3gr/cpl/vbx/fon/fot
+>>>(0x3c.l+0x0c)	leshort&0x8000	0 (EXE)
+!:ext	exe/scr
 >>>&(&0x24.s-1)		string		ARJSFX \b, ARJ self-extracting archive
 >>>(0x3c.l+0x70)	search/0x80	WinZip(R)\ Self-Extractor \b, ZIP self-extracting archive (WinZip)
 
@@ -199,6 +238,11 @@
 >>>(0x3c.l+0x0a)	leshort		2 for MS Windows
 >>>(0x3c.l+0x0a)	leshort		3 for DOS
 >>>(0x3c.l+0x0a)	leshort		4 for MS Windows (VxD)
+# VXD: VxD for Windows 95/98/Me
+# 386: VxD for Windows 2.10, 3.0, 3.1x
+# PDR: Port driver
+# MPD: Miniport driver (?)
+!:ext	vxd/386/pdr/mpd
 >>>(&0x7c.l+0x26)	string		UPX \b, UPX compressed
 >>>&(&0x54.l-3)		string		UNACE \b, ACE self-extracting archive
 
@@ -207,6 +251,7 @@
 >>0x3c		lelong	>0x20000000
 >>>(4.s*512)	leshort !0x014c \b, MZ for MS-DOS
 !:mime	application/x-dosexec
+!:ext	exe/com
 # header data too small for extended executable
 >2		long	!0
 >>0x18		leshort <0x40
@@ -448,6 +493,8 @@
 
 0       name    msdos-com
 >0  byte        x               DOS executable (COM)
+!:mime	application/x-dosexec
+!:ext	com
 >6	string		SFX\ of\ LHarc	\b, %s
 >0x1FE leshort	0xAA55		    \b, boot code
 >85	string		UPX		        \b, UPX compressed
@@ -514,41 +561,75 @@
 0	string/b	\x81\xfc
 >4	string	\x77\x02\xcd\x20\xb9
 >>36	string	UPX!			FREE-DOS executable (COM), UPX compressed
+!:mime	application/x-dosexec
+!:ext	com
 252	string Must\ have\ DOS\ version DR-DOS executable (COM)
+!:mime	application/x-dosexec
+!:ext	com
 # added by Joerg Jenderek at Oct 2008
 # GRR search is not working
 #34	search/2	UPX!		FREE-DOS executable (COM), UPX compressed
 34	string	UPX!			FREE-DOS executable (COM), UPX compressed
+!:mime	application/x-dosexec
+!:ext	com
 35	string	UPX!			FREE-DOS executable (COM), UPX compressed
+!:mime	application/x-dosexec
+!:ext	com
 # GRR search is not working
 #2	search/28	\xcd\x21	COM executable for MS-DOS
 #WHICHFAT.cOM
 2	string	\xcd\x21		COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 #DELTREE.cOM DELTREE2.cOM
 4	string	\xcd\x21		COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 #IFMEMDSK.cOM ASSIGN.cOM COMP.cOM
 5	string	\xcd\x21		COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 #DELTMP.COm HASFAT32.cOM
 7	string	\xcd\x21
 >0	byte	!0xb8			COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 #COMP.cOM MORE.COm
 10	string	\xcd\x21
 >5	string	!\xcd\x21		COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 #comecho.com
 13	string	\xcd\x21		COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 #HELP.COm EDIT.coM
 18	string	\xcd\x21		COM executable for MS-DOS
+!:mime	application/x-dosexec
+!:ext	com
 #NWRPLTRM.COm
 23	string	\xcd\x21		COM executable for MS-DOS
+!:mime	application/x-dosexec
+!:ext	com
 #LOADFIX.cOm LOADFIX.cOm
 30	string	\xcd\x21		COM executable for MS-DOS
+!:mime	application/x-dosexec
+!:ext	com
 #syslinux.com 3.11
 70	string	\xcd\x21		COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 # many compressed/converted COMs start with a copy loop instead of a jump
 0x6	search/0xa	\xfc\x57\xf3\xa5\xc3	COM executable for MS-DOS
+!:mime	application/x-dosexec
+!:ext	com
 0x6	search/0xa	\xfc\x57\xf3\xa4\xc3	COM executable for DOS
+!:mime	application/x-dosexec
+!:ext	com
 >0x18	search/0x10	\x50\xa4\xff\xd5\x73	\b, aPack compressed
 0x3c	string		W\ Collis\0\0		COM executable for MS-DOS, Compack compressed
+!:mime	application/x-dosexec
+!:ext	com
 # FIXME: missing diet .com compression
 
 # miscellaneous formats
@@ -963,6 +1044,7 @@
 # only for windows versions equal or greater 3.0
 0x171	string	MICROSOFT\ PIFEX\0	Windows Program Information File
 !:mime	application/x-dosexec
+!:ext	pif
 #>2	string	 	>\0		\b, Title:%.30s
 >0x24	string		>\0		\b for %.63s
 >0x65	string		>\0		\b, directory=%.64s
