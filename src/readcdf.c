@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.67 2018/04/15 19:57:07 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.68 2018/07/25 07:16:21 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -252,7 +252,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 			return -1;
 		}
 	}
-	if (!NOTMIME(ms)) {
+	if (ms->flags & MAGIC_MIME_TYPE) {
 		if (str == NULL)
 			return 0;
 		if (file_printf(ms, "application/%s", str) == -1)
@@ -285,7 +285,7 @@ cdf_file_catalog(struct magic_set *ms, const cdf_header_t *h,
 				return -1;
 			}
 		free(cat);
-	} else {
+	} else if (ms->flags & MAGIC_MIME_TYPE) {
 		if (file_printf(ms, "application/CDFV2") == -1)
 			return -1;
 	}
@@ -416,7 +416,7 @@ cdf_check_summary_info(struct magic_set *ms, const cdf_info_t *info,
 				return -1;
 			i = 1;
 		}
-	} else {
+	} else if (ms->flags & MAGIC_MIME_TYPE) {
 		if (str == NULL)
 			str = "vnd.ms-office";
 		if (file_printf(ms, "application/%s", str) == -1)
@@ -527,7 +527,7 @@ cdf_file_dir_info(struct magic_set *ms, const cdf_dir_t *dir)
 		if (NOTMIME(ms)) {
 			if (file_printf(ms, "CDFV2 %s", si->name) == -1)
 				return -1;
-		} else {
+		} else if (ms->flags & MAGIC_MIME_TYPE) {
 			if (file_printf(ms, "application/%s", si->mime) == -1)
 				return -1;
 		}
@@ -614,7 +614,7 @@ file_trycdf(struct magic_set *ms, const struct buffer *b)
 			if (file_printf(ms,
 			    "Hangul (Korean) Word Processor File 5.x") == -1)
 			    return -1;
-		    } else {
+		    } else if (ms->flags & MAGIC_MIME_TYPE) {
 			if (file_printf(ms, "application/x-hwp") == -1)
 			    return -1;
 		    }
@@ -661,19 +661,18 @@ out2:
 out1:
 	free(sat.sat_tab);
 out0:
-	if (i == -1) {
-	    if (NOTMIME(ms)) {
+	if (i == -1)
+		return i;
+	if (NOTMIME(ms)) {
 		if (file_printf(ms,
 		    "Composite Document File V2 Document") == -1)
-		    return -1;
-		if (*expn)
-		    if (file_printf(ms, ", %s", expn) == -1)
 			return -1;
-	    } else {
+		if (*expn)
+			if (file_printf(ms, ", %s", expn) == -1)
+				return -1;
+	} else if (ms->flags & MAGIC_MIME_TYPE) {
 		if (file_printf(ms, "application/CDFV2") == -1)
-		    return -1;
-	    }
-	    i = 1;
+			return -1;
 	}
-	return i;
+	return 1;
 }
