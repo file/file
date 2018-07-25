@@ -1,6 +1,6 @@
 # HOW TO RELEASE FILE
 
-@(#) $File: RELEASE-PROCEDURE,v 1.4 2015/02/15 22:10:33 christos Exp $
+@(#) $File: RELEASE-PROCEDURE,v 1.6 2018/07/25 06:17:15 christos Exp $
 
 1)  Update version number in configure.ac
 2)  Note the new version in ChangeLog
@@ -12,7 +12,7 @@
 7a) Sign the source tarball.
 	gpg --armor --detach-sign mysoftware-0.4.tar.gz
 8)  Make the source tarball available on ftp
-9)  Add the new version to bugs.gw.com:
+9)  Add the new version to bugs.astron.com:
     - Click: Manage > Manage Projects > file
     - Scroll down to "Versions"
     - Click on "Edit" next to the HEAD version
@@ -24,6 +24,6 @@
       click on "Add and Edit Version"
     - Set the "Date Order" to 2030-01-01 (i.e. far in the future)
     - Click on "Update Version"
-10) Mail an announcement to file@mx.gw.com containing a summary of the
+10) Mail an announcement to file@astron.com containing a summary of the
     ChangeLog changes. Historically we don't mention magic changes in the
     ChangeLog or the mail message, only source changes.
