@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.146 2018/07/03 20:55:37 christos Exp $
+# $File: images,v 1.147 2018/07/26 08:28:56 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1793,3 +1793,16 @@
 0	string	LinS 	Microsoft Paint image data (version 2.0)
 >4	leshort	x	(%d
 >>6	leshort	x	x %d)
+
+# reMarkable tablet internal file format (https://www.remarkable.com/)
+# https://github.com/ax3l/lines-are-beautiful
+# https://plasma.ninja/blog/devices/remarkable/binary/format/2017/12/26/\
+#	reMarkable-lines-file-format.html#what-to-do-next
+# from Alex Huebl
+0	string	reMarkable
+11	string	lines
+17	string	with
+22	string	selections
+33	string	and
+37	string	layers
+43	lelong	x		reMarkable tablet notebook lines, 1404 x 1872, %x page(s)
