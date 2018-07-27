@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.145 2018/07/25 06:12:09 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.146 2018/07/27 07:50:14 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -69,7 +69,7 @@ toomany(struct magic_set *ms, const char *name, uint16_t num)
 {
 	if (file_printf(ms, ", too many %s (%u)", name, num) == -1)
 		return -1;
-	return 0;
+	return 1;
 }
 
 private uint16_t
