@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.95 2018/05/24 18:09:17 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.96 2018/07/27 11:04:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -172,6 +172,12 @@ checkdone(struct magic_set *ms, int *rv)
 	return 0;
 }
 
+/*
+ * The magic detection functions return:
+ *	 1: found
+ *	 0: not found
+ *	-1: error
+ */
 /*ARGSUSED*/
 protected int
 file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__unused__)),
@@ -268,7 +274,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 
 		rv = file_tryelf(ms, &b);
 		rbuf = file_pop_buffer(ms, pb);
-		if (rv != 1) {
+		if (rv == -1) {
 			free(rbuf);
 			rbuf = NULL;
 		}
