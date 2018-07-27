@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.147 2018/07/26 08:28:56 christos Exp $
+# $File: images,v 1.148 2018/07/27 07:41:14 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1798,7 +1798,7 @@
 # https://github.com/ax3l/lines-are-beautiful
 # https://plasma.ninja/blog/devices/remarkable/binary/format/2017/12/26/\
 #	reMarkable-lines-file-format.html#what-to-do-next
-# from Alex Huebl
+# from Axel Huebl
 0	string	reMarkable
 11	string	lines
 17	string	with
