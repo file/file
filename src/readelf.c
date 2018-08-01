@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.147 2018/08/01 09:56:24 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.148 2018/08/01 10:02:20 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -921,7 +921,8 @@ get_string_on_virtaddr(struct magic_set *ms,
 
 	offset = get_offset_from_virtaddr(ms, swap, clazz, fd, ph_off, ph_num,
 	    fsize, virtaddr);
-	if ((buflen = pread(fd, buf, CAST(size_t, buflen), offset)) <= 0) {
+	if (offset < 0 ||
+	    (buflen = pread(fd, buf, CAST(size_t, buflen), offset)) <= 0) {
 		file_badread(ms);
 		return 0;
 	}
