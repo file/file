@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.274 2018/08/01 10:12:59 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.275 2018/08/01 10:14:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1868,7 +1868,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 				file_oomem(ms, sizeof(*nm) * cnt);
 				return -1;
 			}
-			me->mp = m = nm;
+			me->mp = nm;
 			me->max_count = CAST(uint32_t, cnt);
 		}
 		m = &me->mp[me->cont_count++];
