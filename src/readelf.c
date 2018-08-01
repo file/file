@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.146 2018/07/27 07:50:14 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.147 2018/08/01 09:56:24 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1716,7 +1716,7 @@ file_tryelf(struct magic_set *ms, const struct buffer *b)
 	    && (errno == ESPIPE))
 		fd = file_pipe2file(ms, fd, buf, nbytes);
 
-	if (fstat(fd, &st) == -1) {
+	if (fd == -1 || fstat(fd, &st) == -1) {
   		file_badread(ms);
 		return -1;
 	}
