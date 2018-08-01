@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.273 2018/08/01 09:53:18 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.274 2018/08/01 10:12:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -840,7 +840,7 @@ typesize(int type)
 private size_t
 apprentice_magic_strength(const struct magic *m)
 {
-#define MULT 10
+#define MULT 10U
 	size_t ts, v, val = 2 * MULT;	/* baseline strength */
 
 	switch (m->type) {
