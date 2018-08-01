@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.108 2018/08/01 09:59:45 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.109 2018/08/01 10:11:16 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -414,7 +414,9 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 #else
 	{
 		int te;
+		int ou = umask(0);
 		tfd = mkstemp(buf);
+		(void)umask(ou);
 		te = errno;
 		(void)unlink(buf);
 		errno = te;
