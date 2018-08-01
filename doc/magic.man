@@ -1,5 +1,4 @@
-.It S2
-.\" $File: magic.man,v 1.93 2018/06/22 20:39:49 christos Exp $
+.\" $File: magic.man,v 1.94 2018/08/01 10:31:07 christos Exp $
 .Dd June 22, 2018
 .Dt MAGIC __FSECTION__
 .Os
