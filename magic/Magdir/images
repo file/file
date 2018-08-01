@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.149 2018/08/01 10:32:40 christos Exp $
+# $File: images,v 1.150 2018/08/01 12:43:51 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1801,10 +1801,10 @@
 # https://plasma.ninja/blog/devices/remarkable/binary/format/2017/12/26/\
 #	reMarkable-lines-file-format.html#what-to-do-next
 # from Axel Huebl
-0	string	reMarkable
-11	string	lines
-17	string	with
-22	string	selections
-33	string	and
-37	string	layers
-43	lelong	x		reMarkable tablet notebook lines, 1404 x 1872, %x page(s)
+0		string	reMarkable
+>11		string	lines
+>>17		string	with
+>>>22		string	selections
+>>>>33		string	and
+>>>>>37		string	layers
+>>>>>>43	lelong	x	reMarkable tablet notebook lines, 1404 x 1872, %x page(s)
