@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.16 2018/05/07 23:26:31 christos Exp $
+# $File: cad,v 1.17 2018/08/01 12:05:00 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -167,3 +167,19 @@
 0	string	;;\020HSF\020V		OpenHSF (Hoops Stream Format)
 >7	regex/9 V[.0-9]{4,5}\020	%s
 !:ext hsf
+
+# AutoCAD Drawing Exchange Format
+0	regex		\^[\ \t]*0\r?\000$
+>1	regex		\^[\ \t]*SECTION\r?$
+>>2	regex		\^[\ \t]*2\r?$
+>>>3	regex		\^[\ \t]*HEADER\r?$	AutoCAD Drawing Exchange Format
+!:mime	application/x-dxf
+!:ext	dxf
+>>>>&1	search/8192	AC1006			\b, R10
+>>>>&1	search/8192	AC1009			\b, R11/R12
+>>>>&1	search/8192	AC1012			\b, R13
+>>>>&1	search/8192	AC1014			\b, R14
+>>>>&1	search/8192	AC1015			\b, version 2000
+>>>>&1	search/8192	AC1018			\b, version 2004
+>>>>&1	search/8192	AC1021			\b, version 2007
+>>>>&1	search/8192	AC1024			\b, version 2010
