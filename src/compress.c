@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.107 2018/04/28 18:48:22 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.108 2018/08/01 09:59:45 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -264,8 +264,11 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 			 * XXX: If file_buffer fails here, we overwrite
 			 * the compressed text. FIXME.
 			 */
-			if (file_buffer(ms, -1, NULL, buf, nbytes) == -1)
+			if (file_buffer(ms, -1, NULL, buf, nbytes) == -1) {
+				if (file_pop_buffer(ms, pb) != NULL)
+					abort();
 				goto error;
+			}
 			if ((rbuf = file_pop_buffer(ms, pb)) != NULL) {
 				if (file_printf(ms, "%s", rbuf) == -1) {
 					free(rbuf);
