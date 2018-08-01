@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.272 2018/06/22 20:39:50 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.273 2018/08/01 09:53:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -55,11 +55,6 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.272 2018/06/22 20:39:50 christos Exp $")
 #include <limits.h>
 #endif
 
-#ifndef SSIZE_MAX
-#define MAXMAGIC_SIZE        ((ssize_t)0x7fffffff)
-#else
-#define MAXMAGIC_SIZE        SSIZE_MAX
-#endif
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
 		      isspace((unsigned char) *l))  ++l;}
@@ -298,6 +293,15 @@ get_type(const struct type_tbl_s *tbl, const char *l, const char **t)
 		}
 	}
 	return p->type;
+}
+
+private off_t
+maxoff_t(void) {
+	if (sizeof(off_t) == sizeof(int))
+		return CAST(off_t, INT_MAX);
+	if (sizeof(off_t) == sizeof(long))
+		return CAST(off_t, LONG_MAX);
+	return 0x7fffffff;
 }
 
 private int
@@ -3052,7 +3056,7 @@ apprentice_map(struct magic_set *ms, const char *fn)
 		file_error(ms, errno, "cannot stat `%s'", dbname);
 		goto error;
 	}
-	if (st.st_size < 8 || st.st_size > MAXMAGIC_SIZE) {
+	if (st.st_size < 8 || st.st_size > maxoff_t()) {
 		file_error(ms, 0, "file `%s' is too %s", dbname,
 		    st.st_size < 8 ? "small" : "large");
 		goto error;
