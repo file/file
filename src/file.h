@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.193 2018/05/24 18:09:17 christos Exp $
+ * @(#)$File: file.h,v 1.194 2018/08/01 10:07:00 christos Exp $
  */
 
 #ifndef __file_h__
@@ -633,6 +633,9 @@ protected void file_warnx(const char *, ...)
 
 #ifndef O_BINARY
 #define O_BINARY	0
+#endif
+#ifndef O_NONBLOCK
+#define O_NONBLOCK	0
 #endif
 
 #ifndef __cplusplus
