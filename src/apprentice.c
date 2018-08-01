@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.275 2018/08/01 10:14:10 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.276 2018/08/01 10:18:02 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1391,12 +1391,14 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 			filearr[files++] = mfn;
 		}
 		closedir(dir);
-		qsort(filearr, files, sizeof(*filearr), cmpstrp);
-		for (i = 0; i < files; i++) {
-			load_1(ms, action, filearr[i], &errs, mset);
-			free(filearr[i]);
+		if (filearr) {
+			qsort(filearr, files, sizeof(*filearr), cmpstrp);
+			for (i = 0; i < files; i++) {
+				load_1(ms, action, filearr[i], &errs, mset);
+				free(filearr[i]);
+			}
+			free(filearr);
 		}
-		free(filearr);
 	} else
 		load_1(ms, action, fn, &errs, mset);
 	if (errs)
