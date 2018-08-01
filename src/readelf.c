@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.148 2018/08/01 10:02:20 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.149 2018/08/01 10:09:47 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -577,9 +577,11 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     size_t noff, size_t doff, int *flags)
 {
 	if (namesz == 5 && strcmp((char *)&nbuf[noff], "SuSE") == 0 &&
-	    type == NT_GNU_VERSION && descsz == 2) {
-	    *flags |= FLAGS_DID_OS_NOTE;
-	    file_printf(ms, ", for SuSE %d.%d", nbuf[doff], nbuf[doff + 1]);
+		type == NT_GNU_VERSION && descsz == 2) {
+		*flags |= FLAGS_DID_OS_NOTE;
+		if (file_printf(ms, ", for SuSE %d.%d", nbuf[doff],
+		    nbuf[doff + 1]) == -1)
+		    return -1;
 	    return 1;
 	}
 
