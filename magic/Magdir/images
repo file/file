@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.148 2018/07/27 07:41:14 christos Exp $
+# $File: images,v 1.149 2018/08/01 10:32:40 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -437,6 +437,7 @@
 # Standard PNG image.
 0	string		\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0DIHDR	PNG image data
 !:mime	image/png
+!:ext   png
 !:strength +10
 >16	use		png-ihdr
 
@@ -444,6 +445,7 @@
 0	string		\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x04CgBI
 >24	string  	\x00\x00\x00\x0DIHDR	PNG image data (CgBI)
 !:mime	image/png
+!:ext   png
 !:strength +10
 >>32	use		png-ihdr
 
