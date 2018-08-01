@@ -40,7 +40,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.41 2017/11/02 20:25:39 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.42 2018/08/01 08:50:20 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -78,9 +78,13 @@ file_is_tar(struct magic_set *ms, const struct buffer *b)
 	if (tar < 1 || tar > 3)
 		return 0;
 
+	if (mime == MAGIC_MIME_ENCODING)
+		return 1;
+
 	if (file_printf(ms, "%s", mime ? "application/x-tar" :
 	    tartype[tar - 1]) == -1)
 		return -1;
+
 	return 1;
 }
 
