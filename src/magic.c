@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.104 2018/08/01 10:07:00 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.105 2018/08/02 12:53:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -435,17 +435,11 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	if (fd == STDIN_FILENO)
 		_setmode(STDIN_FILENO, O_BINARY);
 #endif
-
-	if (inname == NULL) {
-		if (fstat(fd, &sb) == 0 && S_ISFIFO(sb.st_mode))
-			ispipe = 1;
-		else
-			pos = lseek(fd, (off_t)0, SEEK_CUR);
-	} else {
+	if (inname != NULL) {
 		int flags = O_RDONLY|O_BINARY|O_NONBLOCK;
 		errno = 0;
 		if ((fd = open(inname, flags)) < 0) {
-			int okstat = fstat(fd, &sb) == 0;
+			int okstat = stat(inname, &sb) == 0;
 			if (okstat && S_ISFIFO(sb.st_mode))
 				ispipe = 1;
 #ifdef WIN32
@@ -466,12 +460,13 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			rv = 0;
 			goto done;
 		}
-#ifdef O_NONBLOCK
-		if ((flags = fcntl(fd, F_GETFL)) != -1) {
-			flags &= ~O_NONBLOCK;
-			(void)fcntl(fd, F_SETFL, flags);
-		}
-#endif
+	}
+
+	if (fd != -1) {
+		if (fstat(fd, &sb) == 0 && S_ISFIFO(sb.st_mode))
+			ispipe = 1;
+		if (inname == NULL)
+			pos = lseek(fd, (off_t)0, SEEK_CUR);
 	}
 
 	/*
