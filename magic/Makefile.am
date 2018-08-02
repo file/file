@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.133 2018/06/06 01:16:40 christos Exp $
+# $File: Makefile.am,v 1.134 2018/08/02 06:33:05 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -115,6 +115,7 @@ $(MAGIC_FRAGMENT_DIR)/grace \
 $(MAGIC_FRAGMENT_DIR)/graphviz \
 $(MAGIC_FRAGMENT_DIR)/gringotts \
 $(MAGIC_FRAGMENT_DIR)/guile \
+$(MAGIC_FRAGMENT_DIR)/hardware \
 $(MAGIC_FRAGMENT_DIR)/hitachi-sh \
 $(MAGIC_FRAGMENT_DIR)/hp \
 $(MAGIC_FRAGMENT_DIR)/human68k \
