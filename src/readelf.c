@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.149 2018/08/01 10:09:47 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.150 2018/08/02 12:46:02 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -565,7 +565,7 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	    type == NT_GO_BUILD_ID && descsz < 128) {
 		if (file_printf(ms, ", Go BuildID=%s",
 		    (char *)&nbuf[doff]) == -1)
-			return 1;
+			return -1;
 		return 1;
 	}
 	return 0;
@@ -1118,14 +1118,16 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	}
 
 	if (namesz & 0x80000000) {
-	    file_printf(ms, ", bad note name size %#lx",
-		CAST(unsigned long, namesz));
+		if (((file_printf(ms, ", bad note name size %#lx",
+		    CAST(unsigned long, namesz)) == -1)
+			return -1;
 	    return 0;
 	}
 
 	if (descsz & 0x80000000) {
-	    file_printf(ms, ", bad note description size %#lx",
-		CAST(unsigned long, descsz));
+		if (file_printf(ms, ", bad note description size %#lx",
+		    CAST(unsigned long, descsz)) == -1)
+		    	return -1;
 	    return 0;
 	}
 
