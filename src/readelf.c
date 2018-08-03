@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.150 2018/08/02 12:46:02 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.151 2018/08/03 09:00:13 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1118,7 +1118,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	}
 
 	if (namesz & 0x80000000) {
-		if (((file_printf(ms, ", bad note name size %#lx",
+		if (file_printf(ms, ", bad note name size %#lx",
 		    CAST(unsigned long, namesz)) == -1)
 			return -1;
 	    return 0;
