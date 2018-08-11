@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.276 2018/08/01 10:18:02 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.277 2018/08/11 12:17:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -841,7 +841,8 @@ private size_t
 apprentice_magic_strength(const struct magic *m)
 {
 #define MULT 10U
-	size_t ts, v, val = 2 * MULT;	/* baseline strength */
+	size_t ts, v;
+	ssize_t val = 2 * MULT;	/* baseline strength */
 
 	switch (m->type) {
 	case FILE_DEFAULT:	/* make sure this sorts last */
@@ -947,9 +948,6 @@ apprentice_magic_strength(const struct magic *m)
 		abort();
 	}
 
-	if (val == 0)	/* ensure we only return 0 for FILE_DEFAULT */
-		val = 1;
-
 	switch (m->factor_op) {
 	case FILE_FACTOR_OP_NONE:
 		break;
@@ -968,6 +966,9 @@ apprentice_magic_strength(const struct magic *m)
 	default:
 		abort();
 	}
+
+	if (val <= 0)	/* ensure we only return 0 for FILE_DEFAULT */
+		val = 1;
 
 	/*
 	 * Magic entries with no description get a bonus because they depend
