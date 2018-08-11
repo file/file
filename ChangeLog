@@ -1,6 +1,10 @@
 
 2018-07-25  10:17  Christos Zoulas <christos@zoulas.com>
 
+	* PR/23: Recognize JSON files
+
+2018-07-25  10:17  Christos Zoulas <christos@zoulas.com>
+
 	* PR/18: file --mime-encoding should not print mime-type
 
 2018-07-25   8:50  Christos Zoulas <christos@zoulas.com>
