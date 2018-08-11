@@ -31,7 +31,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.1 2018/08/11 11:02:47 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.2 2018/08/11 11:06:19 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -327,6 +327,10 @@ file_is_json(struct magic_set *ms, const struct buffer *b)
 
 	if (!json_parse(&uc, ue))
 		return 0;
+
+	if (mime == MAGIC_MIME_ENCODING)
+		return 1;
+
 	if (file_printf(ms, "%s", mime ? "application/json" :
 	    "JSON data") == -1)
 		return -1;
