@@ -28,13 +28,15 @@
  * Parse JSON object serialization format (RFC-7159)
  */
 
+#ifndef TEST
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.2 2018/08/11 11:06:19 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.3 2018/08/11 12:05:24 christos Exp $")
 #endif
 
 #include "magic.h"
+#endif
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -44,7 +46,7 @@ FILE_RCSID("@(#)$File: is_json.c,v 1.2 2018/08/11 11:06:19 christos Exp $")
 #define DPRINTF(a, b, c)	(void)0
 #endif
 
-static int json_parse(const unsigned char **, const unsigned char *);
+static int json_parse(const unsigned char **, const unsigned char *, int);
 
 static int
 json_isspace(const unsigned char uc)
@@ -144,13 +146,13 @@ out:
 }
 
 static int
-json_parse_array(const unsigned char **ucp, const unsigned char *ue)
+json_parse_array(const unsigned char **ucp, const unsigned char *ue, int lvl)
 {
 	const unsigned char *uc = *ucp;
 
 	DPRINTF("Parse array: ", uc, *ucp);
 	while (uc < ue) {
-		if (!json_parse(&uc, ue))
+		if (!json_parse(&uc, ue, lvl + 1))
 			goto out;
 		switch (*uc) {
 		case ',':
@@ -170,7 +172,7 @@ out:
 }
 
 static int
-json_parse_object(const unsigned char **ucp, const unsigned char *ue)
+json_parse_object(const unsigned char **ucp, const unsigned char *ue, int lvl)
 {
 	const unsigned char *uc = *ucp;
 	DPRINTF("Parse object: ", uc, *ucp);
@@ -194,7 +196,7 @@ json_parse_object(const unsigned char **ucp, const unsigned char *ue)
 			DPRINTF("not colon", uc, *ucp);
 			goto out;
 		}
-		if (!json_parse(&uc, ue)) {
+		if (!json_parse(&uc, ue, lvl + 1)) {
 			DPRINTF("not json", uc, *ucp);
 			goto out;
 		}
@@ -221,6 +223,7 @@ static int
 json_parse_number(const unsigned char **ucp, const unsigned char *ue)
 {
 	const unsigned char *uc = *ucp;
+	int got = 0;
 
 	DPRINTF("Parse number: ", uc, *ucp);
 	if (uc == ue)
@@ -231,28 +234,34 @@ json_parse_number(const unsigned char **ucp, const unsigned char *ue)
 	for (; uc < ue; uc++) {
 		if (!json_isdigit(*uc))
 			break;
+		got = 1;
 	}
 	if (*uc == '.')
 		uc++;
 	for (; uc < ue; uc++) {
 		if (!json_isdigit(*uc))
 			break;
+		got = 1;
 	}
-	if (*uc == 'e' || *uc == 'E')
-		uc++;
-	if (*uc == '+' || *uc == '-')
-		uc++;
-	for (; uc < ue; uc++) {
-		if (!json_isdigit(*uc))
-			break;
+	if (got) {
+		got = 0;
+		if (*uc == 'e' || *uc == 'E')
+			uc++;
+		if (*uc == '+' || *uc == '-')
+			uc++;
+		for (; uc < ue; uc++) {
+			if (!json_isdigit(*uc))
+				break;
+			got = 1;
+		}
 	}
 	ue = *ucp;
-	if (uc == ue)
+	if (!got || uc == ue)
 		DPRINTF("Bad number: ", uc, *ucp);
 	else
 		DPRINTF("Good number: ", uc, *ucp);
 	*ucp = uc;
-	return uc != ue;
+	return uc != ue && got;
 }
 		
 static int
@@ -273,10 +282,10 @@ json_parse_const(const unsigned char **ucp, const unsigned char *ue,
 }
 
 static int
-json_parse(const unsigned char **ucp, const unsigned char *ue)
+json_parse(const unsigned char **ucp, const unsigned char *ue, int lvl)
 {
-	int rv = 0;
 	const unsigned char *uc;
+	int rv = 0, rec = 0;
 
 	uc = json_skip_space(*ucp, ue);
 	if (uc == ue)
@@ -288,10 +297,12 @@ json_parse(const unsigned char **ucp, const unsigned char *ue)
 		rv = json_parse_string(&uc, ue);
 		break;
 	case '[':
-		rv = json_parse_array(&uc, ue);
+		rv = json_parse_array(&uc, ue, lvl);
+		rec = 1;
 		break;
 	case '{': /* '}' */
-		rv = json_parse_object(&uc, ue);
+		rv = json_parse_object(&uc, ue, lvl);
+		rec = 1;
 		break;
 	case 't':
 		rv = json_parse_const(&uc, ue, "true", sizeof("true"));
@@ -311,6 +322,8 @@ json_parse(const unsigned char **ucp, const unsigned char *ue)
 out:
 	*ucp = uc;
 	DPRINTF("End general: ", uc, *ucp);
+	if (lvl == 0)
+		return rv && rec;
 	return rv;
 }
 
@@ -325,7 +338,7 @@ file_is_json(struct magic_set *ms, const struct buffer *b)
 	if ((ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION)) != 0)
 		return 0;
 
-	if (!json_parse(&uc, ue))
+	if (!json_parse(&uc, ue, 0))
 		return 0;
 
 	if (mime == MAGIC_MIME_ENCODING)
@@ -368,7 +381,7 @@ main(int argc, char *argv[])
 		err(EXIT_FAILURE, "Can't read %jd bytes",
 		    (intmax_t)st.st_size);
 	printf("is json %d\n", json_parse((const unsigned char **)&p,
-	    p + st.st_size));
+	    p + st.st_size, 0));
 	return 0;
 }
 #endif
