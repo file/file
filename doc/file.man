@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.131 2018/07/24 21:33:56 christos Exp $
-.Dd July 25, 2018
+.\" $File: file.man,v 1.132 2018/08/11 11:02:47 christos Exp $
+.Dd August 11, 2018
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -159,7 +159,7 @@ two groups, so they are performed last.
 The language test routines also test for some miscellany
 (such as
 .Xr tar 1
-archives).
+archives, JSON files).
 .Pp
 Any file that cannot be identified as having been written
 in any of the character sets listed above is simply said to be
@@ -213,6 +213,8 @@ Checks for, and looks inside, compressed files.
 .It elf
 Prints ELF file details, provided soft magic tests are enabled and the
 elf magic is found.
+.It json
+Examines JSON (RFC-7159) files by parsing them for compliance.
 .It soft
 Consults magic files.
 .It tar

@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.194 2018/08/01 10:07:00 christos Exp $
+ * @(#)$File: file.h,v 1.195 2018/08/11 11:02:47 christos Exp $
  */
 
 #ifndef __file_h__
@@ -473,6 +473,7 @@ protected int file_ascmagic_with_encoding(struct magic_set *,
     const struct buffer *, unichar *, size_t, const char *, const char *, int);
 protected int file_encoding(struct magic_set *, const struct buffer *,
     unichar **, size_t *, const char **, const char **, const char **);
+protected int file_is_json(struct magic_set *, const struct buffer *);
 protected int file_is_tar(struct magic_set *, const struct buffer *);
 protected int file_softmagic(struct magic_set *, const struct buffer *,
     uint16_t *, uint16_t *, int, int);

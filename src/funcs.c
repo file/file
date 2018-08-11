@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.97 2018/08/01 10:21:19 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.98 2018/08/11 11:02:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -240,6 +240,17 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 		m = file_is_tar(ms, &b);
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void)fprintf(stderr, "[try tar %d]\n", m);
+		if (m) {
+			if (checkdone(ms, &rv))
+				goto done;
+		}
+	}
+
+	/* Check if we have a JSON file */
+	if ((ms->flags & MAGIC_NO_CHECK_JSON) == 0) {
+		m = file_is_json(ms, &b);
+		if ((ms->flags & MAGIC_DEBUG) != 0)
+			(void)fprintf(stderr, "[try json %d]\n", m);
 		if (m) {
 			if (checkdone(ms, &rv))
 				goto done;

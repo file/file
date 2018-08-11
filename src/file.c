@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.175 2018/03/02 16:11:37 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.176 2018/08/11 11:02:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -128,6 +128,7 @@ private const struct {
 	{ "encoding",	MAGIC_NO_CHECK_ENCODING },
 	{ "soft",	MAGIC_NO_CHECK_SOFT },
 	{ "tar",	MAGIC_NO_CHECK_TAR },
+	{ "json",	MAGIC_NO_CHECK_JSON },
 	{ "text",	MAGIC_NO_CHECK_TEXT },	/* synonym for ascii */
 	{ "tokens",	MAGIC_NO_CHECK_TOKENS }, /* OBSOLETE: ignored for backwards compatibility */
 };
@@ -628,7 +629,7 @@ docprint(const char *opts, int def)
 	comma = 0;
 	for (i = 0; i < __arraycount(nv); i++) {
 		fprintf(stdout, "%s%s", comma++ ? ", " : "", nv[i].name);
-		if (i && i % 5 == 0) {
+		if (i && i % 5 == 0 && i != __arraycount(nv) - 1) {
 			fprintf(stdout, ",\n%*s", (int)(p - sp - 1), "");
 			comma = 0;
 		}
