@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.3 2018/08/11 12:05:24 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.4 2018/08/11 12:11:11 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -243,10 +243,9 @@ json_parse_number(const unsigned char **ucp, const unsigned char *ue)
 			break;
 		got = 1;
 	}
-	if (got) {
+	if (got && (*uc == 'e' || *uc == 'E')) {
+		uc++;
 		got = 0;
-		if (*uc == 'e' || *uc == 'E')
-			uc++;
 		if (*uc == '+' || *uc == '-')
 			uc++;
 		for (; uc < ue; uc++) {
