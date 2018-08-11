@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: java,v 1.17 2015/11/09 16:57:19 christos Exp $
+# $File: java,v 1.19 2018/08/11 11:32:15 christos Exp $
 # Java ByteCode and Mach-O binaries (e.g., Mac OS X) use the
 # same magic number, 0xcafebabe, so they are both handled
 # in the entry called "cafebabe".
@@ -22,6 +22,6 @@
 # Java HPROF dumps
 # https://java.net/downloads/heap-snapshot/hprof-binary-format.html
 0	string		JAVA\x20PROFILE\x201.0.
->0x12	short		0
->>0x11	ushort-0x31	<2      Java HPROF dump,
->>0x17	beqdate/1000	x       created %s
+>0x12	byte		0
+>>0x11	ubyte-0x31	<2      Java HPROF dump,
+>>>0x17	beqdate/1000	x       created %s
