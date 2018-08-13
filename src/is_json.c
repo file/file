@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.5 2018/08/11 14:43:43 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.6 2018/08/13 12:59:05 christos Exp $")
 #endif
 
 #include <string.h>
@@ -221,6 +221,8 @@ json_parse_object(const unsigned char **ucp, const unsigned char *ue,
 			DPRINTF("not json", uc, *ucp);
 			goto out;
 		}
+		if (uc == ue)
+			goto out;
 		switch (*uc++) {
 		case ',':
 			continue;
