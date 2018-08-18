@@ -1,6 +1,6 @@
 ## README for file(1) Command ##
 
-    @(#) $File: README,v 1.54 2018/05/30 03:06:56 christos Exp $
+    @(#) $File: README,v 1.55 2018/08/18 11:45:05 christos Exp $
 
 Mailing List: file@astron.com
 Mailing List archives: http://mailman.astron.com/pipermail/file/
@@ -91,6 +91,7 @@ src/funcs.c - utilility functions
 src/getline.c - replacement for OS's that don't have it.  
 src/getopt_long.c - replacement for OS's that don't have it.  
 src/gmtime_r.c - replacement for OS's that don't have it.  
+src/is_json.c - knows about JavaScript Object Notation format (RFC 8259).
 src/is_tar.c, tar.h - knows about Tape ARchive format (courtesy John Gilmore).  
 src/localtime_r.c - replacement for OS's that don't have it.  
 src/magic.h.in - source file for magic.h
@@ -99,7 +100,7 @@ src/magic.c - the libmagic api
 src/names.h - header file for ascmagic.c  
 src/pread.c - replacement for OS's that don't have it.  
 src/print.c - print results, errors, warnings.  
-src/readcdf.c - CDF wrapper.  
+src/readcdf.c - CDF wrapper.
 src/readelf.[ch] - Stand-alone elf parsing code.  
 src/softmagic.c - 2nd set of tests, based on /etc/magic  
 src/mygetopt.h - replacement for OS's that don't have it.  
