@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.42 2018/07/25 06:23:22 christos Exp $
+.\" $File: libmagic.man,v 1.43 2018/08/18 14:44:48 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003, 2018.
 .\" All Rights Reserved.
@@ -25,7 +25,7 @@
 .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 .\" SUCH DAMAGE.
 .\"
-.Dd July 25, 2018
+.Dd August 18, 2018
 .Dt LIBMAGIC 3
 .Os
 .Sh NAME
@@ -159,6 +159,8 @@ Don't examine tar files.
 Don't check for various types of text files.
 .It Dv MAGIC_NO_CHECK_TOKENS
 Don't look for known tokens inside ascii files.
+.It Dv MAGIC_NO_CHECK_JSON
+Don't example JSON files.
 .El
 .Pp
 The
