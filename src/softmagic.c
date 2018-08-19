@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.264 2018/08/19 09:14:39 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.265 2018/08/19 10:16:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -249,15 +249,14 @@ flush:
 		 * If we are going to print something, we'll need to print
 		 * a blank before we print something else.
 		 */
-		if (*m->desc) {
+		if (print && *m->desc) {
 			*need_separator = 1;
 			*printed_something = 1;
 			if (print_sep(ms, firstline) == -1)
 				return -1;
+			if (mprint(ms, m) == -1)
+				return -1;
 		}
-
-		if (print && mprint(ms, m) == -1)
-			return -1;
 
 		switch (moffset(ms, m, &bb, &ms->c.li[cont_level].off)) {
 		case -1:
@@ -344,35 +343,35 @@ flush:
 					*returnval = 1;
 					return e;
 				}
-				/*
-				 * If we are going to print something,
-				 * make sure that we have a separator first.
-				 */
-				if (*m->desc) {
+				if (print && *m->desc) {
+					/*
+					 * This continuation matched.  Print
+					 * its message, with a blank before it
+					 * if the previous item printed and
+					 * this item isn't empty.
+					 */
+					/*
+					 * If we are going to print something,
+					 * make sure that we have a separator
+					 * first.
+					 */
 					if (!*printed_something) {
 						*printed_something = 1;
 						if (print_sep(ms, firstline)
 						    == -1)
 							return -1;
 					}
-				}
-				/*
-				 * This continuation matched.  Print
-				 * its message, with a blank before it
-				 * if the previous item printed and
-				 * this item isn't empty.
-				 */
-				/* space if previous printed */
-				if (*need_separator
-				    && ((m->flag & NOSPACE) == 0)
-				    && *m->desc) {
-					if (print &&
-					    file_printf(ms, " ") == -1)
-						return -1;
+					/* space if previous printed */
+					if (*need_separator
+					    && (m->flag & NOSPACE) == 0) {
+						if (file_printf(ms, " ") == -1)
+							return -1;
+					}
 					*need_separator = 0;
+					if (mprint(ms, m) == -1)
+						return -1;
+					*need_separator = 1;
 				}
-				if (print && mprint(ms, m) == -1)
-					return -1;
 
 				switch (moffset(ms, m, &bb,
 				    &ms->c.li[cont_level].off)) {
@@ -384,9 +383,6 @@ flush:
 				default:
 					break;
 				}
-
-				if (*m->desc)
-					*need_separator = 1;
 
 				/*
 				 * If we see any continuations
@@ -1715,7 +1711,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 
 		if (rv == 1) {
 			if ((ms->flags & MAGIC_NODESC) == 0 &&
-			    file_printf(ms, F(ms, m->desc, "%u"), offset) == -1) {
+			    file_printf(ms, F(ms, m->desc, "%u"), offset) == -1)
+			{
 				free(rbuf);
 				return -1;
 			}
