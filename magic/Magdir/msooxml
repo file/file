@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msooxml,v 1.8 2018/05/24 18:11:17 christos Exp $
+# $File: msooxml,v 1.9 2018/08/19 09:30:50 christos Exp $
 # msooxml:  file(1) magic for Microsoft Office XML
 # From: Ralf Brown <ralf.brown@gmail.com>
 
@@ -42,3 +42,4 @@
 >>>>>&26	search/1000	PK\003\004
 >>>>>>&26	use		msooxml	
 >>>>>>&26	default		x		Microsoft OOXML
+>>>>>&26	default		x		Microsoft OOXML
