@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.68 2018/07/25 07:16:21 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.69 2018/08/19 10:38:21 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -661,8 +661,10 @@ out2:
 out1:
 	free(sat.sat_tab);
 out0:
-	if (i == -1)
+	/* If we handled it already, return */
+	if (i != -1)
 		return i;
+	/* Provide a default handler */
 	if (NOTMIME(ms)) {
 		if (file_printf(ms,
 		    "Composite Document File V2 Document") == -1)
