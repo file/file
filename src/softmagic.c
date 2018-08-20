@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.266 2018/08/20 10:08:18 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.267 2018/08/20 12:17:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -61,7 +61,8 @@ private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, struct magic *);
 private int mconvert(struct magic_set *, struct magic *, int);
 private int print_sep(struct magic_set *, int);
-private int handle_annotation(struct magic_set *, struct magic *, int);
+private int handle_annotation(struct magic_set *, struct magic *, int,
+    uint16_t);
 private int cvt_8(union VALUETYPE *, const struct magic *);
 private int cvt_16(union VALUETYPE *, const struct magic *);
 private int cvt_32(union VALUETYPE *, const struct magic *);
@@ -238,7 +239,8 @@ flush:
 			goto flush;
 		}
 
-		if ((e = handle_annotation(ms, m, firstline)) != 0) {
+		if ((e = handle_annotation(ms, m, firstline, *name_count)) != 0)
+		{
 			*need_separator = 1;
 			*printed_something = 1;
 			*returnval = 1;
@@ -336,8 +338,8 @@ flush:
 				} else
 					ms->c.li[cont_level].got_match = 1;
 
-				if ((e = handle_annotation(ms, m, firstline))
-				    != 0) {
+				if ((e = handle_annotation(ms, m, firstline,
+				    *name_count)) != 0) {
 					*need_separator = 1;
 					*printed_something = 1;
 					*returnval = 1;
@@ -1743,6 +1745,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		rv = match(ms, ml.magic, ml.nmagic, b, offset + o,
 		    mode, text, flip, indir_count, name_count,
 		    printed_something, need_separator, returnval);
+		(*name_count)--;
 		if (rv != 1)
 		    *need_separator = oneed_separator;
 		return rv;
@@ -2176,7 +2179,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 }
 
 private int
-handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
+handle_annotation(struct magic_set *ms, struct magic *m, int firstline,
+    uint16_t name_count)
 {
 	if ((ms->flags & MAGIC_APPLE) && m->apple[0]) {
 		if (print_sep(ms, firstline) == -1)
@@ -2205,8 +2209,9 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 			return -1;
 		return 1;
 	}
-	if (!*m->desc)
+	if (!*m->desc || name_count)
 		return 0;
+printf("doing default for [%s]\n", m->desc);
 	return file_default(ms, 1);
 }
 
