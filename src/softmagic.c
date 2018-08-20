@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.265 2018/08/19 10:16:47 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.266 2018/08/20 10:08:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2205,7 +2205,9 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 			return -1;
 		return 1;
 	}
-	return 0;
+	if (!*m->desc)
+		return 0;
+	return file_default(ms, 1);
 }
 
 private int

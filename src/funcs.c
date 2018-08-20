@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.98 2018/08/11 11:02:47 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.99 2018/08/20 10:08:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -172,6 +172,29 @@ checkdone(struct magic_set *ms, int *rv)
 	return 0;
 }
 
+protected int
+file_default(struct magic_set *ms, size_t nb)
+{
+	if (ms->flags & MAGIC_MIME) {
+		if ((ms->flags & MAGIC_MIME_TYPE) &&
+		    file_printf(ms, "application/%s",
+			nb ? "octet-stream" : "x-empty") == -1)
+			return -1;
+		return 1;
+	}
+	if (ms->flags & MAGIC_APPLE) {
+		if (file_printf(ms, "UNKNUNKN") == -1)
+			return -1;
+		return 1;
+	}
+	if (ms->flags & MAGIC_EXTENSION) {
+		if (file_printf(ms, "???") == -1)
+			return -1;
+		return 1;
+	}
+	return 0;
+}
+
 /*
  * The magic detection functions return:
  *	 1: found
@@ -186,7 +209,6 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 	int m = 0, rv = 0, looks_text = 0;
 	const char *code = NULL;
 	const char *code_mime = "binary";
-	const char *type = "application/octet-stream";
 	const char *def = "data";
 	const char *ftype = NULL;
 	char *rbuf = NULL;
@@ -197,7 +219,6 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 
 	if (nb == 0) {
 		def = "empty";
-		type = "application/x-empty";
 		goto simple;
 	} else if (nb == 1) {
 		def = "very short file (no magic)";
@@ -323,20 +344,12 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 
 simple:
 	/* give up */
-	m = 1;
-	if (ms->flags & MAGIC_MIME) {
-		if ((ms->flags & MAGIC_MIME_TYPE) &&
-		    file_printf(ms, "%s", type) == -1)
-			rv = -1;
-	} else if (ms->flags & MAGIC_APPLE) {
-		if (file_printf(ms, "UNKNUNKN") == -1)
-			rv = -1;
-	} else if (ms->flags & MAGIC_EXTENSION) {
-		if (file_printf(ms, "???") == -1)
-			rv = -1;
-	} else {
-		if (file_printf(ms, "%s", def) == -1)
-			rv = -1;
+	if (m == 0) {
+		m = 1;
+		rv = file_default(ms, nb);
+		if (rv == 0)
+			if (file_printf(ms, "%s", def) == -1)
+				rv = -1;
 	}
  done:
 	if ((ms->flags & MAGIC_MIME_ENCODING) != 0) {
