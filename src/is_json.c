@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.7 2018/08/17 09:12:33 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.8 2018/08/20 08:06:54 christos Exp $")
 #endif
 
 #include <string.h>
@@ -261,6 +261,8 @@ json_parse_number(const unsigned char **ucp, const unsigned char *ue)
 			break;
 		got = 1;
 	}
+	if (uc == ue)
+		goto out;
 	if (*uc == '.')
 		uc++;
 	for (; uc < ue; uc++) {
@@ -268,9 +270,13 @@ json_parse_number(const unsigned char **ucp, const unsigned char *ue)
 			break;
 		got = 1;
 	}
+	if (uc == ue)
+		goto out;
 	if (got && (*uc == 'e' || *uc == 'E')) {
 		uc++;
 		got = 0;
+		if (uc == ue)
+			goto out;
 		if (*uc == '+' || *uc == '-')
 			uc++;
 		for (; uc < ue; uc++) {
@@ -279,13 +285,13 @@ json_parse_number(const unsigned char **ucp, const unsigned char *ue)
 			got = 1;
 		}
 	}
-	ue = *ucp;
-	if (!got || uc == ue)
+out:
+	if (!got)
 		DPRINTF("Bad number: ", uc, *ucp);
 	else
 		DPRINTF("Good number: ", uc, *ucp);
 	*ucp = uc;
-	return uc != ue && got;
+	return got;
 }
 		
 static int
