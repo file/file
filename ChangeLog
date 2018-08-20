@@ -1,3 +1,8 @@
+2018-08-20  18:40  Christos Zoulas <christos@zoulas.com>
+	
+	* PR/30: Allow all parameter values to be set (don't treat 0 specially)
+	* handle default annotations on the softmagic match instead at the
+	  end.
 
 2018-07-25  10:17  Christos Zoulas <christos@zoulas.com>
 
