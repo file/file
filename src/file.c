@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.176 2018/08/11 11:02:47 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.177 2018/08/20 15:39:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -137,14 +137,15 @@ private struct {
 	const char *name;
 	int tag;
 	size_t value;
+	int set;
 } pm[] = {
-	{ "indir",	MAGIC_PARAM_INDIR_MAX, 0 },
-	{ "name",	MAGIC_PARAM_NAME_MAX, 0 },
-	{ "elf_phnum",	MAGIC_PARAM_ELF_PHNUM_MAX, 0 },
-	{ "elf_shnum",	MAGIC_PARAM_ELF_SHNUM_MAX, 0 },
-	{ "elf_notes",	MAGIC_PARAM_ELF_NOTES_MAX, 0 },
-	{ "regex",	MAGIC_PARAM_REGEX_MAX, 0 },
-	{ "bytes",	MAGIC_PARAM_BYTES_MAX, 0 },
+	{ "indir",	MAGIC_PARAM_INDIR_MAX, 0, 0 },
+	{ "name",	MAGIC_PARAM_NAME_MAX, 0, 0 },
+	{ "elf_phnum",	MAGIC_PARAM_ELF_PHNUM_MAX, 0, 0 },
+	{ "elf_shnum",	MAGIC_PARAM_ELF_SHNUM_MAX, 0, 0 },
+	{ "elf_notes",	MAGIC_PARAM_ELF_NOTES_MAX, 0, 0 },
+	{ "regex",	MAGIC_PARAM_REGEX_MAX, 0, 0 },
+	{ "bytes",	MAGIC_PARAM_BYTES_MAX, 0, 0 },
 };
 
 private int posixly;
@@ -427,7 +428,7 @@ applyparam(magic_t magic)
 	size_t i;
 
 	for (i = 0; i < __arraycount(pm); i++) {
-		if (pm[i].value == 0)
+		if (!pm[i].set)
 			continue;
 		if (magic_setparam(magic, pm[i].tag, &pm[i].value) == -1)
 			file_err(EXIT_FAILURE, "Can't set %s", pm[i].name);
@@ -447,6 +448,7 @@ setparam(const char *p)
 		if (strncmp(p, pm[i].name, s - p) != 0)
 			continue;
 		pm[i].value = atoi(s + 1);
+		pm[i].set = 1;
 		return;
 	}
 badparm:
