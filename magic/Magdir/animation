@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.68 2018/05/06 16:08:07 christos Exp $
+# $File: animation,v 1.69 2018/08/21 12:48:06 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -855,6 +855,7 @@
 # conti_count   4 bit	-
 0	belong&0xFF5FFF10	0x47400010
 >188	byte			0x47		MPEG transport stream data
+!:mime  video/MP2T
 
 # DIF digital video file format <mpruett@sgi.com>
 0	belong&0xffffff00	0x1f070000      DIF
