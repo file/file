@@ -128,6 +128,13 @@
 7	belong		0x00564944	DOS code page font data (from Linux?)
 4098	string		DOSFONT		DOSFONT2 encrypted font data
 
+# magic for VGA fonts, 8x8/8x14/8x15/8x16..8x32
+# https://en.wikipedia.org/wiki/VGA-compatible_text_mode#Fonts
+# from Alex Myczko <alex@aiei.ch>
+0       string          \x00\x00\x00\x00\x00\x00\x00\x00
+>-8     string          \x00\x00\x00\x00\x00\x00\x00\x00        VGA Font
+!:ext   fnt
+
 # downloadable fonts for browser (prints type) anthon@mnt.org
 # https://tools.ietf.org/html/rfc3073
 0	string		PFR1		Portable Font Resource font data (new)
