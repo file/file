@@ -550,6 +550,10 @@
 
 0	string		ofTAZ!		eXtra Simple Music
 
+0	string	GTS5	GoatTracker Song
+>4	string	>\0	name %s
+>36	string	>\0	by %s
+
 # Spectrum 128 tunes (.ay files).
 # From: Emanuel Haupt <ehaupt@critical.ch>
 0	string		ZXAYEMUL	Spectrum 128 tune
