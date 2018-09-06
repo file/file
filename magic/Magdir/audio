@@ -393,9 +393,15 @@
 0	string		MED		MED_Song
 0	string		SymM		Symphonie SymMOD music file
 #
+# Track Length (TRL), Tracks (TRK), Samples (SMP), Subsongs (SS)
+# http://lclevy.free.fr/exotica/ahx/ahxformat.txt
 0	string		THX		AHX version
 >3	byte		=0		1 module data
 >3	byte		=1		2 module data
+>10     byte            x               TRL: %u
+>11     byte            x               TRK: %u
+>12     byte            x               SMP: %u
+>13     byte            x               SS: %u
 #
 0	string		OKTASONG	Oktalyzer module data
 #
