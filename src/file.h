@@ -602,17 +602,17 @@ struct tm *gmtime_r(const time_t *, struct tm *);
 struct tm *localtime_r(const time_t *, struct tm *);
 #endif
 #ifndef HAVE_FMTCHECK
-const char *fmtcheck(const char *, const char *) 
+const char *fmtcheck(const char *, const char *)
      __attribute__((__format_arg__(2)));
 #endif
 
 #ifdef HAVE_LIBSECCOMP
-// basic filter 
+// basic filter
 // this mode should not interfere with normal operations
 // only some dangerous syscalls are blacklisted
 int enable_sandbox_basic(void);
 
-// enhanced filter 
+// enhanced filter
 // this mode allows only the necessary syscalls used during normal operation
 // extensive testing required !!!
 int enable_sandbox_full(void);

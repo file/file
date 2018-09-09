@@ -394,7 +394,7 @@ The compiled default magic database.
 .Xr file __CSECTION__ ,
 .Xr magic __FSECTION__
 .Sh BUGS
-The results from 
+The results from
 .Fn magic_buffer
 and
 .Fn magic_file

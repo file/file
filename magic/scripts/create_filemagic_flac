@@ -35,7 +35,7 @@ def_fs_n=512
 min_fs_n=4
 ## start at base_fs/(def_fs*min_fs)
 ## add each derived sample rate to the array
-for base_fs in "${a_ground_fs[@]}"; do 
+for base_fs in "${a_ground_fs[@]}"; do
     min_fs=$( echo "${base_fs} / ( ${def_fs_n} * ${min_fs_n} )" | bc)
     ## max multiplier: fs*n*min_fs
     max_fs_n=$(( 8 * min_fs_n ))

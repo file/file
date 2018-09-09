@@ -47,7 +47,7 @@ private int match(struct magic_set *, struct magic *, uint32_t,
     const struct buffer *, size_t, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *);
 private int mget(struct magic_set *, struct magic *, const struct buffer *,
-    const unsigned char *, size_t, 
+    const unsigned char *, size_t,
     size_t, unsigned int, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *);
 private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
@@ -611,7 +611,7 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_BESTRING16:
   	case FILE_LESTRING16:
 		if (m->reln == '=' || m->reln == '!') {
-			if (file_printf(ms, F(ms, desc, "%s"), 
+			if (file_printf(ms, F(ms, desc, "%s"),
 			    file_printable(sbuf, sizeof(sbuf), m->value.s))
 			    == -1)
 				return -1;
@@ -772,7 +772,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		t = ms->offset;
 		break;
 	case FILE_DER:
-		if (file_printf(ms, F(ms, desc, "%s"), 
+		if (file_printf(ms, F(ms, desc, "%s"),
 		    file_printable(sbuf, sizeof(sbuf), ms->ms_value.s)) == -1)
 			return -1;
 		t = ms->offset;
@@ -1132,7 +1132,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 			 * string by p->s, so we need to deduct sz.
 			 * Because we can use one of the bytes of the length
 			 * after we shifted as NUL termination.
-			 */ 
+			 */
 			len = sz;
 		}
 		while (len--)
@@ -1206,7 +1206,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 			goto out;
 		return 1;
 	case FILE_BEDOUBLE:
-		p->q = BE64(p); 
+		p->q = BE64(p);
 		if (cvt_double(p, m) == -1)
 			goto out;
 		return 1;

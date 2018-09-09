@@ -96,7 +96,7 @@ file_ascmagic(struct magic_set *ms, const struct buffer *b, int text)
 }
 
 protected int
-file_ascmagic_with_encoding(struct magic_set *ms, 
+file_ascmagic_with_encoding(struct magic_set *ms,
     const struct buffer *b, unichar *ubuf, size_t ulen, const char *code,
     const char *type, int text)
 {
