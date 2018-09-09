@@ -2,7 +2,7 @@
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
  * maintained 1995-present by Christos Zoulas and others.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -12,7 +12,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,13 +29,13 @@
  * compress routines:
  *	zmagic() - returns 0 if not recognized, uncompresses and prints
  *		   information if recognized
- *	uncompress(method, old, n, newch) - uncompress old into new, 
+ *	uncompress(method, old, n, newch) - uncompress old into new,
  *					    using method, return sizeof new
  */
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.109 2018/08/01 10:11:16 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.110 2018/09/09 20:33:28 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -52,7 +52,7 @@ FILE_RCSID("@(#)$File: compress.c,v 1.109 2018/08/01 10:11:16 christos Exp $")
 # ifndef HAVE_SIG_T
 typedef void (*sig_t)(int);
 # endif /* HAVE_SIG_T */
-#endif 
+#endif
 #if !defined(__MINGW32__) && !defined(WIN32)
 #include <sys/ioctl.h>
 #endif
@@ -62,10 +62,17 @@ typedef void (*sig_t)(int);
 #if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
 #endif
+
 #if defined(HAVE_ZLIB_H) && defined(ZLIBSUPPORT)
 #define BUILTIN_DECOMPRESS
 #include <zlib.h>
 #endif
+
+#if defined(HAVE_BZLIB_H)
+#define BUILTIN_BZLIB
+#include <bzlib.h>
+#endif
+
 #ifdef DEBUG
 int tty = -1;
 #define DPRINTF(...)	do { \
@@ -141,26 +148,27 @@ private const struct {
 	const void *magic;
 	size_t maglen;
 	const char **argv;
+
 } compr[] = {
-	{ "\037\235",	2, gzip_args },		/* compressed */
+	{ "\037\235",	2, gzip_args, NULL },		/* compressed */
 	/* Uncompress can get stuck; so use gzip first if we have it
 	 * Idea from Damien Clark, thanks! */
-	{ "\037\235",	2, uncompress_args },	/* compressed */
-	{ "\037\213",	2, gzip_args },		/* gzipped */
-	{ "\037\236",	2, gzip_args },		/* frozen */
-	{ "\037\240",	2, gzip_args },		/* SCO LZH */
+	{ "\037\235",	2, uncompress_args, NULL },	/* compressed */
+	{ "\037\213",	2, gzip_args, do_zlib },	/* gzipped */
+	{ "\037\236",	2, gzip_args, NULL },		/* frozen */
+	{ "\037\240",	2, gzip_args, NULL },		/* SCO LZH */
 	/* the standard pack utilities do not accept standard input */
-	{ "\037\036",	2, gzip_args },		/* packed */
-	{ "PK\3\4",	4, gzip_args },		/* pkzipped, */
+	{ "\037\036",	2, gzip_args, NULL },		/* packed */
+	{ "PK\3\4",	4, gzip_args, NULL },		/* pkzipped, */
 	/* ...only first file examined */
-	{ "BZh",	3, bzip2_args },	/* bzip2-ed */
-	{ "LZIP",	4, lzip_args },		/* lzip-ed */
- 	{ "\3757zXZ\0",	6, xz_args },		/* XZ Utils */
- 	{ "LRZI",	4, lrzip_args },	/* LRZIP */
- 	{ "\004\"M\030",4, lz4_args },		/* LZ4 */
- 	{ "\x28\xB5\x2F\xFD", 4, zstd_args },	/* zstd */
+	{ "BZh",	3, bzip2_args, do_bzlib },	/* bzip2-ed */
+	{ "LZIP",	4, lzip_args, NULL },		/* lzip-ed */
+ 	{ "\3757zXZ\0",	6, xz_args, NULL },		/* XZ Utils */
+ 	{ "LRZI",	4, lrzip_args, NULL },	/* LRZIP */
+ 	{ "\004\"M\030",4, lz4_args, NULL },		/* LZ4 */
+ 	{ "\x28\xB5\x2F\xFD", 4, zstd_args, NULL },	/* zstd */
 #ifdef ZLIBSUPPORT
-	{ RCAST(const void *, zlibcmp),	0, zlib_args },		/* zlib */
+	{ RCAST(const void *, zlibcmp),	0, zlib_args, NULL },	/* zlib */
 #endif
 };
 
@@ -179,6 +187,10 @@ private int uncompresszlib(const unsigned char *, unsigned char **, size_t,
 private int uncompressgzipped(const unsigned char *, unsigned char **, size_t,
     size_t *);
 #endif
+#ifdef BUILTIN_BZLIB
+private int uncompressbzlib(const unsigned char *, unsigned char **, size_t,
+    size_t *, int);
+
 static int makeerror(unsigned char **, size_t *, const char *, ...)
     __attribute__((__format__(__printf__, 3, 4)));
 private const char *methodname(size_t);
@@ -514,7 +526,7 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 	int rc;
 	z_stream z;
 
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL) 
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
 		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
 	z.next_in = CCAST(Bytef *, old);
@@ -538,7 +550,7 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 	rc = inflateEnd(&z);
 	if (rc != Z_OK)
 		goto err;
-	
+
 	/* let's keep the nul-terminate tradition */
 	(*newch)[*n] = '\0';
 
@@ -606,7 +618,7 @@ writechild(int fdp[3][2], const void *old, size_t n)
 	int status;
 
 	closefd(fdp[STDIN_FILENO], 0);
-	/* 
+	/*
 	 * fork again, to avoid blocking because both
 	 * pipes filled
 	 */
@@ -709,13 +721,13 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 			fdp[STDIN_FILENO][0] = fd;
 			(void) lseek(fd, (off_t)0, SEEK_SET);
 		}
-		
+
 		for (i = 0; i < __arraycount(fdp); i++)
 			copydesc(CAST(int, i), fdp[i]);
 
 		(void)execvp(compr[method].argv[0],
 		    (char *const *)(intptr_t)compr[method].argv);
-		dprintf(STDERR_FILENO, "exec `%s' failed, %s", 
+		dprintf(STDERR_FILENO, "exec `%s' failed, %s",
 		    compr[method].argv[0], strerror(errno));
 		exit(1);
 		/*NOTREACHED*/
@@ -778,7 +790,7 @@ err:
 
 	closefd(fdp[STDIN_FILENO], 0);
 	DPRINTF("Returning %p n=%zu rv=%d\n", *newch, *n, rv);
-    
+
 	return rv;
 }
 #endif

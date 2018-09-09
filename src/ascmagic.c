@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.98 2017/11/02 20:25:39 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.99 2018/09/09 20:33:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -96,7 +96,7 @@ file_ascmagic(struct magic_set *ms, const struct buffer *b, int text)
 }
 
 protected int
-file_ascmagic_with_encoding(struct magic_set *ms, 
+file_ascmagic_with_encoding(struct magic_set *ms,
     const struct buffer *b, unichar *ubuf, size_t ulen, const char *code,
     const char *type, int text)
 {

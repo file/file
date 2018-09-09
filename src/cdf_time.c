@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf_time.c,v 1.16 2017/03/29 15:57:48 christos Exp $")
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.17 2018/09/09 20:33:28 christos Exp $")
 #endif
 
 #include <time.h>
@@ -56,7 +56,7 @@ cdf_getdays(int year)
 
 	for (y = CDF_BASE_YEAR; y < year; y++)
 		days += isleap(y) + 365;
-		
+
 	return days;
 }
 
@@ -77,7 +77,7 @@ cdf_getday(int year, int days)
 	return days;
 }
 
-/* 
+/*
  * Return the 0...11 month number.
  */
 static int

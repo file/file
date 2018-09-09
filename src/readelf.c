@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Christos Zoulas 2003.
  * All Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -11,7 +11,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.151 2018/08/03 09:00:13 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.152 2018/09/09 20:33:28 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -85,7 +85,7 @@ getu16(int swap, uint16_t value)
 
 		retval.c[0] = tmpval.c[1];
 		retval.c[1] = tmpval.c[0];
-		
+
 		return retval.ui;
 	} else
 		return value;
@@ -106,7 +106,7 @@ getu32(int swap, uint32_t value)
 		retval.c[1] = tmpval.c[2];
 		retval.c[2] = tmpval.c[1];
 		retval.c[3] = tmpval.c[0];
-		
+
 		return retval.ui;
 	} else
 		return value;
@@ -131,7 +131,7 @@ getu64(int swap, uint64_t value)
 		retval.c[5] = tmpval.c[2];
 		retval.c[6] = tmpval.c[1];
 		retval.c[7] = tmpval.c[0];
-		
+
 		return retval.ui;
 	} else
 		return value;
@@ -466,25 +466,25 @@ do_note_freebsd_version(struct magic_set *ms, int swap, void *v)
 	 * Contents is __FreeBSD_version, whose relation to OS
 	 * versions is defined by a huge table in the Porter's
 	 * Handbook.  This is the general scheme:
-	 * 
+	 *
 	 * Releases:
 	 * 	Mmp000 (before 4.10)
 	 * 	Mmi0p0 (before 5.0)
 	 * 	Mmm0p0
-	 * 
+	 *
 	 * Development branches:
 	 * 	Mmpxxx (before 4.6)
 	 * 	Mmp1xx (before 4.10)
 	 * 	Mmi1xx (before 5.0)
 	 * 	M000xx (pre-M.0)
 	 * 	Mmm1xx
-	 * 
+	 *
 	 * M = major version
 	 * m = minor version
 	 * i = minor version increment (491000 -> 4.10)
 	 * p = patchlevel
 	 * x = revision
-	 * 
+	 *
 	 * The first release of FreeBSD to use ELF by default
 	 * was version 3.0.
 	 */
@@ -616,7 +616,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			break;
 		default:
 			if (file_printf(ms, "<unknown>") == -1)
-				return 1; 
+				return 1;
 		}
 		if (file_printf(ms, " %d.%d.%d", elf_getu32(swap, desc[1]),
 		    elf_getu32(swap, desc[2]), elf_getu32(swap, desc[3])) == -1)
@@ -727,7 +727,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	if ((namesz == 4 && strncmp((char *)&nbuf[noff], "CORE", 4) == 0) ||
 	    (namesz == 5 && strcmp((char *)&nbuf[noff], "CORE") == 0)) {
 		os_style = OS_STYLE_SVR4;
-	} 
+	}
 
 	if ((namesz == 8 && strcmp((char *)&nbuf[noff], "FreeBSD") == 0)) {
 		os_style = OS_STYLE_FREEBSD;
@@ -1035,7 +1035,7 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 
 			if (buflen == 0)
 				continue;
-			
+
 			if (file_printf(ms, ", %s: '%s'", tag, buf) == -1)
 				return 0;
 		} else {
@@ -1161,7 +1161,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 		    namesz, descsz, noff, doff, flags))
 			return offset;
 	}
-		
+
 	if ((*flags & FLAGS_DID_NETBSD_PAX) == 0) {
 		if (do_pax_note(ms, nbuf, xnh_type, swap,
 		    namesz, descsz, noff, doff, flags))
@@ -1358,7 +1358,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 				    CAST(uintmax_t, xsh_size),
 				    CAST(uintmax_t, fsize)) == -1)
 					return -1;
-				return 0; 
+				return 0;
 			}
 			if ((nbuf = malloc(xsh_size)) == NULL) {
 				file_error(ms, errno, "Cannot allocate memory"
@@ -1443,7 +1443,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 						return -1;
 					    break;
 					}
-					// gnu attributes 
+					// gnu attributes
 #endif
 					break;
 				}
@@ -1563,7 +1563,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	char interp[BUFSIZ];
 	ssize_t bufsize;
 	size_t offset, align, len;
-	
+
 	if (num == 0) {
 		if (file_printf(ms, ", no program header") == -1)
 			return -1;
@@ -1578,7 +1578,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	interp[0] = '\0';
   	for ( ; num; num--) {
 		int doread;
-		if (pread(fd, xph_addr, xph_sizeof, off) < 
+		if (pread(fd, xph_addr, xph_sizeof, off) <
 		    CAST(ssize_t, xph_sizeof)) {
 			file_badread(ms);
 			return -1;
@@ -1599,7 +1599,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				continue;
 			if (((align = xph_align) & 0x80000000UL) != 0 ||
 			    align < 4) {
-				if (file_printf(ms, 
+				if (file_printf(ms,
 				    ", invalid note alignment %#lx",
 				    CAST(unsigned long, align)) == -1)
 					return -1;

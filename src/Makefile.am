@@ -15,7 +15,7 @@ libmagic_la_LDFLAGS = -no-undefined -version-info 1:0:0
 if MINGW
 MINGWLIBS = -lgnurx -lshlwapi
 else
-MINGWLIBS = 
+MINGWLIBS =
 endif
 libmagic_la_LIBADD = $(LTLIBOBJS) $(MINGWLIBS)
 

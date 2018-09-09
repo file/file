@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.9 2018/08/27 06:17:23 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.10 2018/09/09 20:33:28 christos Exp $")
 #endif
 
 #include <string.h>
@@ -85,7 +85,7 @@ static int
 json_isdigit(unsigned char uc)
 {
 	switch (uc) {
-	case '0': case '1': case '2': case '3': case '4': 
+	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9':
 		return 1;
 	default:
@@ -167,7 +167,7 @@ out:
 }
 
 static int
-json_parse_array(const unsigned char **ucp, const unsigned char *ue, 
+json_parse_array(const unsigned char **ucp, const unsigned char *ue,
 	size_t *st, size_t lvl)
 {
 	const unsigned char *uc = *ucp;
@@ -196,7 +196,7 @@ out:
 }
 
 static int
-json_parse_object(const unsigned char **ucp, const unsigned char *ue, 
+json_parse_object(const unsigned char **ucp, const unsigned char *ue,
 	size_t *st, size_t lvl)
 {
 	const unsigned char *uc = *ucp;
@@ -295,7 +295,7 @@ out:
 	*ucp = uc;
 	return got;
 }
-		
+
 static int
 json_parse_const(const unsigned char **ucp, const unsigned char *ue,
     const char *str, size_t len)
@@ -314,7 +314,7 @@ json_parse_const(const unsigned char **ucp, const unsigned char *ue,
 }
 
 static int
-json_parse(const unsigned char **ucp, const unsigned char *ue, 
+json_parse(const unsigned char **ucp, const unsigned char *ue,
     size_t *st, size_t lvl)
 {
 	const unsigned char *uc;
@@ -325,7 +325,7 @@ json_parse(const unsigned char **ucp, const unsigned char *ue,
 	if (uc == ue)
 		goto out;
 
-	// Avoid recursion 
+	// Avoid recursion
 	if (lvl > 20)
 		return 0;
 #if JSON_COUNT
@@ -407,7 +407,7 @@ file_is_json(struct magic_set *ms, const struct buffer *b)
 #if JSON_COUNT
 #define P(n) st[n], st[n] > 1 ? "s" : ""
 	if (file_printf(ms, " (%zu object%s, %zu array%s, %zu string%s, "
-	    "%zu constant%s, %zu number%s)", P(JSON_OBJECT), P(JSON_ARRAY), 
+	    "%zu constant%s, %zu number%s)", P(JSON_OBJECT), P(JSON_ARRAY),
 	    P(JSON_STRING), P(JSON_CONSTANT), P(JSON_NUMBER)) == -1)
 		return -1;
 #endif

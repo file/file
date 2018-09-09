@@ -2,7 +2,7 @@
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
  * maintained 1995-present by Christos Zoulas and others.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -12,7 +12,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.77 2017/05/24 19:17:50 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.78 2018/09/09 20:33:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -77,7 +77,7 @@ bad_link(struct magic_set *ms, int err, char *buf)
 			file_error(ms, err,
 				   "broken symbolic link to %s", buf);
 			return -1;
-		} 
+		}
 		if (file_printf(ms, "broken symbolic link to %s", buf) == -1)
 			return -1;
 	}
@@ -174,17 +174,17 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 #endif
 #ifdef S_ISGID
-		if (sb->st_mode & S_ISGID) 
+		if (sb->st_mode & S_ISGID)
 			if (file_printf(ms, "%ssetgid", COMMA) == -1)
 				return -1;
 #endif
 #ifdef S_ISVTX
-		if (sb->st_mode & S_ISVTX) 
+		if (sb->st_mode & S_ISVTX)
 			if (file_printf(ms, "%ssticky", COMMA) == -1)
 				return -1;
 #endif
 	}
-	
+
 	switch (sb->st_mode & S_IFMT) {
 	case S_IFDIR:
 		if (mime) {
@@ -196,7 +196,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		break;
 #ifdef S_IFCHR
 	case S_IFCHR:
-		/* 
+		/*
 		 * If -s has been specified, treat character special files
 		 * like ordinary files.  Otherwise, just report that they
 		 * are block special files and go on to the next file.
@@ -231,7 +231,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 #endif
 #ifdef S_IFBLK
 	case S_IFBLK:
-		/* 
+		/*
 		 * If -s has been specified, treat block special files
 		 * like ordinary files.  Otherwise, just report that they
 		 * are block special files and go on to the next file.
@@ -320,7 +320,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			} else {
 				if (tmp - fn + 1 > BUFSIZ) {
 					if (ms->flags & MAGIC_ERROR) {
-						file_error(ms, 0, 
+						file_error(ms, 0,
 						    "path too long: `%s'", buf);
 						return -1;
 					}

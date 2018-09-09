@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.43 2018/08/18 14:44:48 christos Exp $
+.\" $File: libmagic.man,v 1.44 2018/09/09 20:33:28 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003, 2018.
 .\" All Rights Reserved.
@@ -394,7 +394,7 @@ The compiled default magic database.
 .Xr file __CSECTION__ ,
 .Xr magic __FSECTION__
 .Sh BUGS
-The results from 
+The results from
 .Fn magic_buffer
 and
 .Fn magic_file
