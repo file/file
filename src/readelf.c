@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.152 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.153 2018/09/11 00:37:33 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -770,6 +770,28 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			*flags |= FLAGS_DID_CORE;
 			return 1;
 		}
+		break;
+
+	case OS_STYLE_FREEBSD:
+		if (type == NT_PRPSINFO && *flags & FLAGS_IS_CORE) {
+			size_t argoff, pidoff;
+
+			if (clazz == ELFCLASS32)
+				argoff = 4 + 4 + 17;
+			else
+				argoff = 4 + 4 + 8 + 17;
+			if (file_printf(ms, ", from '%.80s'", nbuf + doff +
+			    argoff) == -1)
+				return 1;
+			pidoff = argoff + 81 + 2;
+			if (doff + pidoff + 4 <= size) {
+				if (file_printf(ms, ", pid=%u",
+				    elf_getu32(swap, *(uint32_t *)(nbuf +
+				    doff + pidoff))) == -1)
+					return 1;
+			}
+			*flags |= FLAGS_DID_CORE;
+		}			    
 		break;
 
 	default:
