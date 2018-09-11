@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.110 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.111 2018/09/11 16:33:21 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -144,6 +144,9 @@ static const char *zstd_args[] = {
 	"zstd", "-cd", NULL
 };
 
+#define	do_zlib		NULL
+#define	do_bzlib	NULL
+
 private const struct {
 	const void *magic;
 	size_t maglen;
@@ -190,6 +193,7 @@ private int uncompressgzipped(const unsigned char *, unsigned char **, size_t,
 #ifdef BUILTIN_BZLIB
 private int uncompressbzlib(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
+#endif
 
 static int makeerror(unsigned char **, size_t *, const char *, ...)
     __attribute__((__format__(__printf__, 3, 4)));
