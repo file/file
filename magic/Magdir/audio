@@ -550,6 +550,14 @@
 
 0	string		ofTAZ!		eXtra Simple Music
 
+0	string	FMK!	FM Kingtracker Song
+
+0	string	DFM	DFM Song
+
+0	string	<CUD-FM-File>	CFF Song
+
+0	string	_A2module	A2M Song
+
 # Spectrum 128 tunes (.ay files).
 # From: Emanuel Haupt <ehaupt@critical.ch>
 0	string		ZXAYEMUL	Spectrum 128 tune
