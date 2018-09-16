@@ -47,9 +47,7 @@ FILE_RCSID("@(#)$File: cdf.c,v 1.111 2018/09/09 20:33:28 christos Exp $")
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
-#endif
 
 #ifndef EFTYPE
 #define EFTYPE EINVAL

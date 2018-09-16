@@ -44,9 +44,7 @@ FILE_RCSID("@(#)$File: magic.c,v 1.105 2018/08/02 12:53:51 christos Exp $")
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
-#ifdef HAVE_LIMITS_H
 #include <limits.h>	/* for PIPE_BUF */
-#endif
 
 #if defined(HAVE_UTIMES)
 # include <sys/time.h>

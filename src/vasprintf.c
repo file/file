@@ -116,9 +116,7 @@ FILE_RCSID("@(#)$File: vasprintf.c,v 1.15 2018/09/09 20:33:28 christos Exp $")
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
-#endif
 #ifdef HAVE_STDDEF_H
 #include <stddef.h>
 #endif

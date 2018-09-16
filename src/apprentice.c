@@ -51,9 +51,7 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.279 2018/09/09 20:33:28 christos Exp $")
 #include <sys/mman.h>
 #endif
 #include <dirent.h>
-#if defined(HAVE_LIMITS_H)
 #include <limits.h>
-#endif
 
 
 #define	EATAB {while (isascii((unsigned char) *l) && \
