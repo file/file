@@ -119,9 +119,7 @@ FILE_RCSID("@(#)$File: vasprintf.c,v 1.15 2018/09/09 20:33:28 christos Exp $")
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#ifdef HAVE_STDDEF_H
 #include <stddef.h>
-#endif
 
 #define ALLOC_CHUNK 2048
 #define ALLOC_SECURITY_MARGIN 1024   /* big value because some platforms have very big 'G' exponent */

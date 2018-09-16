@@ -40,9 +40,7 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.279 2018/09/09 20:33:28 christos Exp $")
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_STDDEF_H
 #include <stddef.h>
-#endif
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
