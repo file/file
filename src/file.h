@@ -513,9 +513,7 @@ protected void buffer_init(struct buffer *, int, const void *, size_t);
 protected void buffer_fini(struct buffer *);
 protected int buffer_fill(const struct buffer *);
 
-#if defined(HAVE_LOCALE_H)
 #include <locale.h>
-#endif
 #if defined(HAVE_XLOCALE_H)
 #include <xlocale.h>
 #endif
