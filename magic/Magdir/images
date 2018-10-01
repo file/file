@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.151 2018/08/19 10:15:25 christos Exp $
+# $File: images,v 1.152 2018/10/01 19:10:56 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -248,6 +248,7 @@
 # URL: http://libopenraw.freedesktop.org/wiki/Canon_CR2
 0	string		II\x2a\0\x10\0\0\0CR	Canon CR2 raw image data
 !:mime	image/x-canon-cr2
+!:strength +80
 >10	byte		x	\b, version %d.
 >11	byte		x	\b%d
 
