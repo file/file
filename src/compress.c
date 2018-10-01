@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.111 2018/09/11 16:33:21 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.112 2018/10/01 18:43:01 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -47,12 +47,10 @@ FILE_RCSID("@(#)$File: compress.c,v 1.111 2018/09/11 16:33:21 christos Exp $")
 #include <errno.h>
 #include <ctype.h>
 #include <stdarg.h>
-#ifdef HAVE_SIGNAL_H
 #include <signal.h>
-# ifndef HAVE_SIG_T
+#ifndef HAVE_SIG_T
 typedef void (*sig_t)(int);
-# endif /* HAVE_SIG_T */
-#endif
+#endif /* HAVE_SIG_T */
 #if !defined(__MINGW32__) && !defined(WIN32)
 #include <sys/ioctl.h>
 #endif
@@ -228,16 +226,12 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 	int fd = b->fd;
 	const unsigned char *buf = b->fbuf;
 	size_t nbytes = b->flen;
-#ifdef HAVE_SIGNAL_H
 	sig_t osigpipe;
-#endif
 
 	if ((ms->flags & MAGIC_COMPRESS) == 0)
 		return 0;
 
-#ifdef HAVE_SIGNAL_H
 	osigpipe = signal(SIGPIPE, SIG_IGN);
-#endif
 	for (i = 0; i < ncompr; i++) {
 		int zm;
 		if (nbytes < compr[i].maglen)
@@ -308,9 +302,7 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 out:
 	DPRINTF("rv = %d\n", rv);
 
-#ifdef HAVE_SIGNAL_H
 	(void)signal(SIGPIPE, osigpipe);
-#endif
 	free(newbuf);
 	ms->flags |= MAGIC_COMPRESS;
 	DPRINTF("Zmagic returns %d\n", rv);
