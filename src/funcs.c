@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.99 2018/08/20 10:08:18 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.100 2018/10/01 18:45:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -42,9 +42,7 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.99 2018/08/20 10:08:18 christos Exp $")
 #if defined(HAVE_WCTYPE_H)
 #include <wctype.h>
 #endif
-#if defined(HAVE_LIMITS_H)
 #include <limits.h>
-#endif
 
 #ifndef SIZE_MAX
 #define SIZE_MAX	((size_t)~0)

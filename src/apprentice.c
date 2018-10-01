@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.279 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.280 2018/10/01 18:45:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -40,9 +40,7 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.279 2018/09/09 20:33:28 christos Exp $")
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_STDDEF_H
 #include <stddef.h>
-#endif
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
@@ -51,9 +49,7 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.279 2018/09/09 20:33:28 christos Exp $")
 #include <sys/mman.h>
 #endif
 #include <dirent.h>
-#if defined(HAVE_LIMITS_H)
 #include <limits.h>
-#endif
 
 
 #define	EATAB {while (isascii((unsigned char) *l) && \

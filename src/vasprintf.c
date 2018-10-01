@@ -108,7 +108,7 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.15 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.16 2018/10/01 18:45:39 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -116,12 +116,8 @@ FILE_RCSID("@(#)$File: vasprintf.c,v 1.15 2018/09/09 20:33:28 christos Exp $")
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
-#endif
-#ifdef HAVE_STDDEF_H
 #include <stddef.h>
-#endif
 
 #define ALLOC_CHUNK 2048
 #define ALLOC_SECURITY_MARGIN 1024   /* big value because some platforms have very big 'G' exponent */

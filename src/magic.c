@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.105 2018/08/02 12:53:51 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.106 2018/10/01 18:45:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -44,9 +44,7 @@ FILE_RCSID("@(#)$File: magic.c,v 1.105 2018/08/02 12:53:51 christos Exp $")
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
-#ifdef HAVE_LIMITS_H
 #include <limits.h>	/* for PIPE_BUF */
-#endif
 
 #if defined(HAVE_UTIMES)
 # include <sys/time.h>
