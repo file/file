@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.78 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.79 2018/10/02 00:38:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -308,6 +308,15 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 		buf[nch] = '\0';	/* readlink(2) does not do this */
 
 		/* If broken symlink, say so and quit early. */
+#ifdef __linux__
+		/*
+		 * linux procfs/devfs makes symlinks like pipe:[3515864880]
+		 * that we can't stat their readlink output, so stat the
+		 * original filename instead.
+		 */
+		if (stat(fn, &tstatbuf) < 0)
+			return bad_link(ms, errno, buf);
+#else
 		if (*buf == '/') {
 			if (stat(buf, &tstatbuf) < 0)
 				return bad_link(ms, errno, buf);
@@ -345,6 +354,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			if (stat(tmp, &tstatbuf) < 0)
 				return bad_link(ms, errno, buf);
 		}
+#endif
 
 		/* Otherwise, handle it. */
 		if ((ms->flags & MAGIC_SYMLINK) != 0) {
