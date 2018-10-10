@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.280 2018/10/01 18:45:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.281 2018/10/10 17:41:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -902,6 +902,8 @@ apprentice_magic_strength(const struct magic *m)
 		break;
 
 	case FILE_SEARCH:
+		if (m->vallen == 0)
+			break;
 		val += m->vallen * MAX(MULT / m->vallen, 1);
 		break;
 
