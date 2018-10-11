@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.136 2018/10/01 18:39:21 christos Exp $
+# $File: Makefile.am,v 1.137 2018/10/11 15:35:43 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -105,6 +105,7 @@ $(MAGIC_FRAGMENT_DIR)/gcc \
 $(MAGIC_FRAGMENT_DIR)/gconv \
 $(MAGIC_FRAGMENT_DIR)/geo \
 $(MAGIC_FRAGMENT_DIR)/geos \
+$(MAGIC_FRAGMENT_DIR)/glibc \
 $(MAGIC_FRAGMENT_DIR)/gimp \
 $(MAGIC_FRAGMENT_DIR)/gnome \
 $(MAGIC_FRAGMENT_DIR)/gnu \
