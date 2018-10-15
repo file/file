@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.153 2018/09/11 00:37:33 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.154 2018/10/15 16:29:16 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -757,7 +757,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			if (file_printf(ms, ", from '%.31s', pid=%u, uid=%u, "
 			    "gid=%u, nlwps=%u, lwp=%u (signal %u/code %u)",
 			    file_printable(sbuf, sizeof(sbuf),
-			    CAST(char *, pi.cpi_name)),
+			    RCAST(char *, pi.cpi_name)),
 			    elf_getu32(swap, (uint32_t)pi.cpi_pid),
 			    elf_getu32(swap, pi.cpi_euid),
 			    elf_getu32(swap, pi.cpi_egid),
@@ -1203,7 +1203,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 			return offset;
 	}
 
-	if (namesz == 7 && strcmp(CAST(char *, &nbuf[noff]), "NetBSD") == 0) {
+	if (namesz == 7 && strcmp(RCAST(char *, &nbuf[noff]), "NetBSD") == 0) {
 		int descw, flag;
 		const char *str, *tag;
 		if (descsz > 100)
@@ -1234,7 +1234,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 		if (*flags & flag)
 			return offset;
-		str = CAST(const char *, &nbuf[doff]);
+		str = RCAST(const char *, &nbuf[doff]);
 		descw = CAST(int, descsz);
 		*flags |= flag;
 		file_printf(ms, ", %s: %.*s", tag, descw, str);
@@ -1707,7 +1707,7 @@ protected int
 file_tryelf(struct magic_set *ms, const struct buffer *b)
 {
 	int fd = b->fd;
-	const unsigned char *buf = b->fbuf;
+	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
 	union {
 		int32_t l;
@@ -1729,7 +1729,8 @@ file_tryelf(struct magic_set *ms, const struct buffer *b)
 	 * file locations and thus file(1) cannot determine it from easily.
 	 * Instead we traverse thru all section headers until a symbol table
 	 * one is found or else the binary is stripped.
-	 * Return immediately if it's not ELF (so we avoid pipe2file unless needed).
+	 * Return immediately if it's not ELF (so we avoid pipe2file unless
+	 * needed).
 	 */
 	if (buf[EI_MAG0] != ELFMAG0
 	    || (buf[EI_MAG1] != ELFMAG1 && buf[EI_MAG1] != OLFMAG1)

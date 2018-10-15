@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.270 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.271 2018/10/15 16:29:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -206,7 +206,8 @@ flush:
 		ms->line = m->lineno;
 
 		/* if main entry matches, print it... */
-		switch (mget(ms, m, b, bb.fbuf, bb.flen, offset, cont_level,
+		switch (mget(ms, m, b, CAST(const unsigned char *, bb.fbuf),
+		    bb.flen, offset, cont_level,
 		    mode, text, flip, indir_count, name_count,
 		    printed_something, need_separator, returnval)) {
 		case -1:
@@ -299,7 +300,8 @@ flush:
 					continue;
 			}
 #endif
-			switch (mget(ms, m, b, bb.fbuf, bb.flen, offset,
+			switch (mget(ms, m, b, CAST(const unsigned char *,
+			    bb.fbuf), bb.flen, offset,
 			    cont_level, mode, text, flip, indir_count,
 			    name_count, printed_something, need_separator,
 			    returnval)) {
@@ -897,8 +899,8 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			if (o == -1 || (size_t)o > nbytes) {
 				if ((ms->flags & MAGIC_DEBUG) != 0) {
 					(void)fprintf(stderr,
-					    "Bad DER offset %d nbytes=%zu",
-					    o, nbytes);
+					    "Bad DER offset %d nbytes=%"
+					    SIZE_T_FORMAT "u", o, nbytes);
 				}
 				*op = 0;
 				return 0;
@@ -913,8 +915,8 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 
 	if ((size_t)o > nbytes) {
 #if 0
-		file_error(ms, 0, "Offset out of range %zu > %zu",
-		    (size_t)o, nbytes);
+		file_error(ms, 0, "Offset out of range %" SIZE_T_FORMAT
+		    "u > %" SIZE_T_FORMAT "u", (size_t)o, nbytes);
 #endif
 		return -1;
 	}
@@ -1426,8 +1428,8 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 			return -1;
 		if (o != 0) {
 			// Not yet!
-			file_magerror(ms, "non zero offset %zu at"
-			    " level %u", o, cont_level);
+			file_magerror(ms, "non zero offset %" SIZE_T_FORMAT
+			    "u at level %u", o, cont_level);
 			return -1;
 		}
 		if ((size_t)-m->offset > b->elen)
@@ -1446,7 +1448,8 @@ normal:
 		}
 	}
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
-		fprintf(stderr, "bb=[%p,%zu], %d [b=%p,%zu], [o=%#x, c=%d]\n",
+		fprintf(stderr, "bb=[%p,%" SIZE_T_FORMAT "u], %d [b=%p,%"
+		    SIZE_T_FORMAT "u], [o=%#x, c=%d]\n",
 		    bb->fbuf, bb->flen, ms->offset, b->fbuf, b->flen,
 		    m->offset, cont_level);
 	}

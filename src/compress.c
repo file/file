@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.112 2018/10/01 18:43:01 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.113 2018/10/15 16:29:16 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -149,7 +149,7 @@ private const struct {
 	const void *magic;
 	size_t maglen;
 	const char **argv;
-
+	void *unused;
 } compr[] = {
 	{ "\037\235",	2, gzip_args, NULL },		/* compressed */
 	/* Uncompress can get stuck; so use gzip first if we have it
@@ -224,7 +224,7 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 	int urv, prv, rv = 0;
 	int mime = ms->flags & MAGIC_MIME;
 	int fd = b->fd;
-	const unsigned char *buf = b->fbuf;
+	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
 	sig_t osigpipe;
 
@@ -248,8 +248,8 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 			continue;
 		nsz = nbytes;
 		urv = uncompressbuf(fd, ms->bytes_max, i, buf, &newbuf, &nsz);
-		DPRINTF("uncompressbuf = %d, %s, %zu\n", urv, (char *)newbuf,
-		    nsz);
+		DPRINTF("uncompressbuf = %d, %s, %" SIZE_T_FORMAT "u\n", urv,
+		    (char *)newbuf, nsz);
 		switch (urv) {
 		case OKDATA:
 		case ERRDATA:
@@ -785,7 +785,7 @@ err:
 	}
 
 	closefd(fdp[STDIN_FILENO], 0);
-	DPRINTF("Returning %p n=%zu rv=%d\n", *newch, *n, rv);
+	DPRINTF("Returning %p n=%" SIZE_T_FORMAT "u rv=%d\n", *newch, *n, rv);
 
 	return rv;
 }

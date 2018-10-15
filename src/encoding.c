@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.14 2017/11/02 20:25:39 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.15 2018/10/15 16:29:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -69,7 +69,7 @@ protected int
 file_encoding(struct magic_set *ms, const struct buffer *b, unichar **ubuf,
     size_t *ulen, const char **code, const char **code_mime, const char **type)
 {
-	const unsigned char *buf = b->fbuf;
+	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
 	size_t mlen;
 	int rv = 1, ucs_type;

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.10 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.11 2018/10/15 16:29:16 christos Exp $")
 #endif
 
 #include <string.h>
@@ -381,7 +381,7 @@ out:
 int
 file_is_json(struct magic_set *ms, const struct buffer *b)
 {
-	const unsigned char *uc = b->fbuf;
+	const unsigned char *uc = CAST(const unsigned char *, b->fbuf);
 	const unsigned char *ue = uc + b->flen;
 	size_t st[JSON_MAX];
 	int mime = ms->flags & MAGIC_MIME;
@@ -406,9 +406,11 @@ file_is_json(struct magic_set *ms, const struct buffer *b)
 		return -1;
 #if JSON_COUNT
 #define P(n) st[n], st[n] > 1 ? "s" : ""
-	if (file_printf(ms, " (%zu object%s, %zu array%s, %zu string%s, "
-	    "%zu constant%s, %zu number%s)", P(JSON_OBJECT), P(JSON_ARRAY),
-	    P(JSON_STRING), P(JSON_CONSTANT), P(JSON_NUMBER)) == -1)
+	if (file_printf(ms, " (%" SIZE_T_FORMAT "u object%s, %" SIZE_T_FORMAT
+	    "u array%s, %" SIZE_T_FORMAT "u string%s, %" SIZE_T_FORMAT
+	    "u constant%s, %" SIZE_T_FORMAT "u number%s)", P(JSON_OBJECT),
+	    P(JSON_ARRAY), P(JSON_STRING), P(JSON_CONSTANT), P(JSON_NUMBER))
+	    == -1)
 		return -1;
 #endif
 	return 1;

@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.198 2018/10/01 18:45:39 christos Exp $
+ * @(#)$File: file.h,v 1.199 2018/10/15 16:29:16 christos Exp $
  */
 
 #ifndef __file_h__
@@ -39,6 +39,9 @@
 #ifdef HAVE_STDINT_H
 #ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS
+#endif
+#ifndef __STDC_FORMAT_MACROS
+#define __STDC_FORMAT_MACROS
 #endif
 
 #ifdef WIN32

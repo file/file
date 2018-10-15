@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.70 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.71 2018/10/15 16:29:16 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -540,7 +540,7 @@ protected int
 file_trycdf(struct magic_set *ms, const struct buffer *b)
 {
 	int fd = b->fd;
-	const unsigned char *buf = b->fbuf;
+	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
 	cdf_info_t info;
 	cdf_header_t h;

@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.14 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.15 2018/10/15 16:29:16 christos Exp $")
 #endif
 #endif
 
@@ -245,18 +245,21 @@ der_offs(struct magic_set *ms, struct magic *m, size_t nbytes)
 
 	if (gettag(b, &offs, len) == DER_BAD)
 		return -1;
-	DPRINTF(("%s1: %d %zu %u\n", __func__, ms->offset, offs, m->offset));
+	DPRINTF(("%s1: %d %" SIZE_T_FORMAT "u %u\n", __func__, ms->offset,
+	    offs, m->offset));
 
 	uint32_t tlen = getlength(b, &offs, len);
 	if (tlen == DER_BAD)
 		return -1;
-	DPRINTF(("%s2: %d %zu %u\n", __func__, ms->offset, offs, tlen));
+	DPRINTF(("%s2: %d %" SIZE_T_FORMAT "u %u\n", __func__, ms->offset,
+	    offs, tlen));
 
 	offs += ms->offset + m->offset;
 	DPRINTF(("cont_level = %d\n", m->cont_level));
 #ifdef DEBUG_DER
 	for (size_t i = 0; i < m->cont_level; i++)
-		printf("cont_level[%zu] = %u\n", i, ms->c.li[i].off);
+		printf("cont_level[%" SIZE_T_FORMAT "u] = %u\n", i,
+		    ms->c.li[i].off);
 #endif
 	if (m->cont_level != 0) {
 		if (offs + tlen > nbytes)
@@ -312,14 +315,15 @@ again:
 			slen = slen * 10 + *s - '0';
 		while (isdigit((unsigned char)*++s));
 		if ((ms->flags & MAGIC_DEBUG) != 0)
-			fprintf(stderr, "%s: len %zu %u\n", __func__,
-			    slen, tlen);
+			fprintf(stderr, "%s: len %" SIZE_T_FORMAT "u %u\n",
+			    __func__, slen, tlen);
 		if (tlen != slen)
 			return 0;
 		goto again;
 	}
 val:
-	DPRINTF(("%s: before data %zu %u\n", __func__, offs, tlen));
+	DPRINTF(("%s: before data %" SIZE_T_FORMAT "u %u\n", __func__, offs,
+	    tlen));
 	der_data(buf, sizeof(buf), tag, b + offs, tlen);
 	if ((ms->flags & MAGIC_DEBUG) != 0)
 		fprintf(stderr, "%s: data %s %s\n", __func__, buf, s);
@@ -368,7 +372,8 @@ printdata(size_t level, const void *v, size_t x, size_t l)
 			break;
 		uint32_t len = getlength(p, &x, ep - p + x);
 
-		printf("%zu %zu-%zu %c,%c,%s,%u:", level, ox, x,
+		printf("%" SIZE_T_FORMAT "u %" SIZE_T_FORMAT "u-%"
+		    SIZE_T_FORMAT "u %c,%c,%s,%u:", level, ox, x,
 		    der_class[c], der_type[t],
 		    der_tag(buf, sizeof(buf), tag), len);
 		q = p + x;
