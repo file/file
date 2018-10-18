@@ -1,3 +1,7 @@
+2018-10-18  19:32  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.35
+
 2018-09-10  20:38  Christos Zoulas <christos@zoulas.com>
 
 	* Add FreeBSD ELF core file support (John Baldwin)
