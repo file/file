@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.18 2011/08/08 08:49:27 christos Exp $
+# $File: sniffer,v 1.20 2018/10/18 16:49:19 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -42,7 +42,7 @@
 # Sorry, make that "Network Associates Sniffer capture files."
 # Sorry, make that "Network General old DOS Sniffer capture files."
 #
-0	string		TRSNIFF\ data\ \ \ \ \032	Sniffer capture file
+0	string		TRSNIFF\040data\040\040\040\040\032	Sniffer capture file
 >33	byte		2		(compressed)
 >23	leshort		x		- version %d
 >25	leshort		x		\b.%d
@@ -77,6 +77,7 @@
 
 #
 # "libpcap" capture files.
+# https://www.tcpdump.org/manpages/pcap-savefile.5.html
 # (We call them "tcpdump capture file(s)" for now, as "tcpdump" is
 # the main program that uses that format, but there are other programs
 # that use "libpcap", or that use the same capture file format.)
@@ -187,22 +188,28 @@
 >20	belong		248		(SCTP
 >16	belong		x		\b, capture length %d)
 
-0	ubelong		0xa1b2c3d4	tcpdump capture file (big-endian)
+# packets time stamps in seconds and microseconds.
+0	ubelong		0xa1b2c3d4	pcap capture file, microseconds ts (big-endian)
 !:mime	application/vnd.tcpdump.pcap
 >0	use	pcap-be
-0	ulelong		0xa1b2c3d4	tcpdump capture file (little-endian)
+0	ulelong		0xa1b2c3d4	pcap capture file, microsecond ts (little-endian)
+!:mime	application/vnd.tcpdump.pcap
+>0	use	\^pcap-be
+
+# packets time stamps in seconds and nanoseconds.
+0	ubelong		0xa1b23c4d	pcap capture file, nanosecond ts (big-endian)
+!:mime	application/vnd.tcpdump.pcap
+>0	use	pcap-be
+0	ulelong		0xa1b23c4d	pcap capture file, nanosecond ts (little-endian)
 !:mime	application/vnd.tcpdump.pcap
 >0	use	\^pcap-be
 
 #
 # "libpcap"-with-Alexey-Kuznetsov's-patches capture files.
-# (We call them "tcpdump capture file(s)" for now, as "tcpdump" is
-# the main program that uses that format, but there are other programs
-# that use "libpcap", or that use the same capture file format.)
 #
-0	ubelong		0xa1b2cd34	extended tcpdump capture file (big-endian)
+0	ubelong		0xa1b2cd34	pcap capture file, microsecond ts, extensions (big-endian)
 >0	use	pcap-be
-0	ulelong		0xa1b2cd34	extended tcpdump capture file (little-endian)
+0	ulelong		0xa1b2cd34	pcap capture file, microsecond ts, extensions (little-endian)
 >0	use	\^pcap-be
 
 #
@@ -223,19 +230,19 @@
 #
 # AIX "iptrace" capture files.
 #
-0	string		iptrace\ 1.0	"iptrace" capture file
-0	string		iptrace\ 2.0	"iptrace" capture file
+0	string		iptrace\0401.0	AIX iptrace capture file
+0	string		iptrace\0402.0	AIX iptrace capture file
 
 #
 # Novell LANalyzer capture files.
 #
-0	leshort		0x1001		LANalyzer capture file
-0	leshort		0x1007		LANalyzer capture file
+0	leshort		0x1001		Novell LANalyzer capture file
+0	leshort		0x1007		Novell LANalyzer capture file
 
 #
 # HP-UX "nettl" capture files.
 #
-0	string		\x54\x52\x00\x64\x00	"nettl" capture file
+0	string		\x54\x52\x00\x64\x00	HP/UX nettl capture file
 
 #
 # RADCOM WAN/LAN Analyzer capture files.
