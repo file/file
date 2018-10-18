@@ -77,6 +77,7 @@
 
 #
 # "libpcap" capture files.
+# https://www.tcpdump.org/manpages/pcap-savefile.5.html
 # (We call them "tcpdump capture file(s)" for now, as "tcpdump" is
 # the main program that uses that format, but there are other programs
 # that use "libpcap", or that use the same capture file format.)
@@ -187,10 +188,19 @@
 >20	belong		248		(SCTP
 >16	belong		x		\b, capture length %d)
 
+# packets time stamps in seconds and microseconds.
 0	ubelong		0xa1b2c3d4	tcpdump capture file (big-endian)
 !:mime	application/vnd.tcpdump.pcap
 >0	use	pcap-be
 0	ulelong		0xa1b2c3d4	tcpdump capture file (little-endian)
+!:mime	application/vnd.tcpdump.pcap
+>0	use	\^pcap-be
+
+# packets time stamps in seconds and nanoseconds.
+0	ubelong		0xa1b23c4d	nanoseconds tcpdump capture file (big-endian)
+!:mime	application/vnd.tcpdump.pcap
+>0	use	pcap-be
+0	ulelong		0xa1b23c4d	nanoseconds tcpdump capture file (little-endian)
 !:mime	application/vnd.tcpdump.pcap
 >0	use	\^pcap-be
 
