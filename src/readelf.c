@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.154 2018/10/15 16:29:16 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.155 2018/10/19 00:26:08 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -786,8 +786,8 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			pidoff = argoff + 81 + 2;
 			if (doff + pidoff + 4 <= size) {
 				if (file_printf(ms, ", pid=%u",
-				    elf_getu32(swap, *(uint32_t *)(nbuf +
-				    doff + pidoff))) == -1)
+				    elf_getu32(swap, *RCAST(uint32 *, (nbuf +
+				    doff + pidoff)))) == -1)
 					return 1;
 			}
 			*flags |= FLAGS_DID_CORE;
@@ -1142,14 +1142,14 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	if (namesz & 0x80000000) {
 		if (file_printf(ms, ", bad note name size %#lx",
 		    CAST(unsigned long, namesz)) == -1)
-			return -1;
+			return 0;
 	    return 0;
 	}
 
 	if (descsz & 0x80000000) {
 		if (file_printf(ms, ", bad note description size %#lx",
 		    CAST(unsigned long, descsz)) == -1)
-		    	return -1;
+		    	return 0;
 	    return 0;
 	}
 
@@ -1668,7 +1668,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		case PT_INTERP:
 			if (bufsize && nbuf[0]) {
 				nbuf[bufsize - 1] = '\0';
-				memcpy(interp, nbuf, bufsize);
+				memcpy(interp, nbuf, (size_t)bufsize);
 			} else
 				strlcpy(interp, "*empty*", sizeof(interp));
 			break;
