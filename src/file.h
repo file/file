@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.199 2018/10/15 16:29:16 christos Exp $
+ * @(#)$File: file.h,v 1.200 2018/10/19 00:26:26 christos Exp $
  */
 
 #ifndef __file_h__
@@ -382,7 +382,7 @@ struct mlist {
 #define CCAST(T, b)	const_cast<T>(b)
 #else
 #define CAST(T, b)	((T)(b))
-#define RCAST(T, b)	((T)(b))
+#define RCAST(T, b)	((T)(void *)(b))
 #define CCAST(T, b)	((T)(uintptr_t)(b))
 #endif
 

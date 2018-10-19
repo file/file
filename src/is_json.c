@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.11 2018/10/15 16:29:16 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.12 2018/10/19 00:26:26 christos Exp $")
 #endif
 
 #include <string.h>
@@ -44,7 +44,7 @@ FILE_RCSID("@(#)$File: is_json.c,v 1.11 2018/10/15 16:29:16 christos Exp $")
 #define DPRINTF(a, b, c)	\
     printf("%s [%.2x/%c] %.20s\n", (a), *(b), *(b), (const char *)(c))
 #else
-#define DPRINTF(a, b, c)	(void)0
+#define DPRINTF(a, b, c)	do { } while (/*CONSTCOND*/0)
 #endif
 
 #define JSON_ARRAY	0

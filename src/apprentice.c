@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.281 2018/10/10 17:41:10 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.282 2018/10/19 00:26:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -293,9 +293,9 @@ get_type(const struct type_tbl_s *tbl, const char *l, const char **t)
 
 private off_t
 maxoff_t(void) {
-	if (sizeof(off_t) == sizeof(int))
+	if (/*CONSTCOND*/sizeof(off_t) == sizeof(int))
 		return CAST(off_t, INT_MAX);
-	if (sizeof(off_t) == sizeof(long))
+	if (/*CONSTCOND*/sizeof(off_t) == sizeof(long))
 		return CAST(off_t, LONG_MAX);
 	return 0x7fffffff;
 }
