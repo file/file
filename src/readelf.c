@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.155 2018/10/19 00:26:08 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.156 2018/10/19 00:33:04 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -786,7 +786,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			pidoff = argoff + 81 + 2;
 			if (doff + pidoff + 4 <= size) {
 				if (file_printf(ms, ", pid=%u",
-				    elf_getu32(swap, *RCAST(uint32 *, (nbuf +
+				    elf_getu32(swap, *RCAST(uint32_t *, (nbuf +
 				    doff + pidoff)))) == -1)
 					return 1;
 			}
