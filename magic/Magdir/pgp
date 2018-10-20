@@ -517,9 +517,9 @@
 
 # PGP RSA (e=65537) secret (sub-)key header
 
-0	byte	0x95			PGP	Secret Key -
+0	byte	0x95			PGP Secret Key -
 >1	use	pgpkey
-0	byte	0x97			PGP	Secret Sub-key -
+0	byte	0x97			PGP Secret Sub-key -
 >1	use	pgpkey
 0	byte	0x9d
 # Update: Joerg Jenderek
