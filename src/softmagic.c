@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.272 2018/10/19 00:33:04 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.273 2018/10/23 18:34:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -247,6 +247,8 @@ flush:
 			return e;
 		}
 
+		if (*m->desc)
+			*returnval = 1;
 		/*
 		 * If we are going to print something, we'll need to print
 		 * a blank before we print something else.
@@ -346,6 +348,8 @@ flush:
 					*returnval = 1;
 					return e;
 				}
+				if (*m->desc)
+					*returnval = 1;
 				if (print && *m->desc) {
 					/*
 					 * This continuation matched.  Print
@@ -401,7 +405,7 @@ flush:
 			firstline = 0;
 			*returnval = 1;
 		}
-		if ((ms->flags & MAGIC_CONTINUE) == 0 && *printed_something) {
+		if ((ms->flags & MAGIC_CONTINUE) == 0 && *returnval) {
 			return *returnval; /* don't keep searching */
 		}
 		cont_level = 0;
