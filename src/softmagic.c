@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.273 2018/10/23 18:34:46 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.274 2018/10/24 13:15:35 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -171,11 +171,16 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 {
 	uint32_t magindex = 0;
 	unsigned int cont_level = 0;
-	int returnvalv = 0, e; /* if a match is found it is set to 1*/
+	int found_match = 0; /* if a match is found it is set to 1*/
+	int returnvalv = 0, e;
 	int firstline = 1; /* a flag to print X\n  X\n- X */
 	struct buffer bb;
 	int print = (ms->flags & MAGIC_NODESC) == 0;
 
+	/*
+	 * returnval can be 0 if a match is found, but there was no
+	 * annotation to be printed.
+	 */
 	if (returnval == NULL)
 		returnval = &returnvalv;
 
@@ -216,8 +221,10 @@ flush:
 			flush = m->reln != '!';
 			break;
 		default:
-			if (m->type == FILE_INDIRECT)
+			if (m->type == FILE_INDIRECT) {
+				found_match = 1;
 				*returnval = 1;
+			}
 
 			switch (magiccheck(ms, m)) {
 			case -1:
@@ -239,6 +246,9 @@ flush:
 			goto flush;
 		}
 
+		if (*m->desc)
+			found_match = 1;
+
 		if ((e = handle_annotation(ms, m, firstline)) != 0)
 		{
 			*need_separator = 1;
@@ -247,8 +257,6 @@ flush:
 			return e;
 		}
 
-		if (*m->desc)
-			*returnval = 1;
 		/*
 		 * If we are going to print something, we'll need to print
 		 * a blank before we print something else.
@@ -256,6 +264,7 @@ flush:
 		if (print && *m->desc) {
 			*need_separator = 1;
 			*printed_something = 1;
+			*returnval = 1;
 			if (print_sep(ms, firstline) == -1)
 				return -1;
 			if (mprint(ms, m) == -1)
@@ -315,8 +324,10 @@ flush:
 				flush = 1;
 				break;
 			default:
-				if (m->type == FILE_INDIRECT)
+				if (m->type == FILE_INDIRECT) {
+					found_match = 1;
 					*returnval = 1;
+				}
 				flush = 0;
 				break;
 			}
@@ -341,6 +352,9 @@ flush:
 				} else
 					ms->c.li[cont_level].got_match = 1;
 
+				if (*m->desc)
+					found_match = 1;
+
 				if ((e = handle_annotation(ms, m, firstline))
 				    != 0) {
 					*need_separator = 1;
@@ -348,8 +362,6 @@ flush:
 					*returnval = 1;
 					return e;
 				}
-				if (*m->desc)
-					*returnval = 1;
 				if (print && *m->desc) {
 					/*
 					 * This continuation matched.  Print
@@ -374,6 +386,7 @@ flush:
 						if (file_printf(ms, " ") == -1)
 							return -1;
 					}
+					*returnval = 1;
 					*need_separator = 0;
 					if (mprint(ms, m) == -1)
 						return -1;
@@ -403,9 +416,8 @@ flush:
 		}
 		if (*printed_something) {
 			firstline = 0;
-			*returnval = 1;
 		}
-		if ((ms->flags & MAGIC_CONTINUE) == 0 && *returnval) {
+		if ((ms->flags & MAGIC_CONTINUE) == 0 && found_match) {
 			return *returnval; /* don't keep searching */
 		}
 		cont_level = 0;
