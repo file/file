@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.274 2018/10/24 13:15:35 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.275 2018/11/05 18:03:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -45,11 +45,11 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.274 2018/10/24 13:15:35 christos Exp $")
 
 private int match(struct magic_set *, struct magic *, uint32_t,
     const struct buffer *, size_t, int, int, int, uint16_t *,
-    uint16_t *, int *, int *, int *);
+    uint16_t *, int *, int *, int *, int *);
 private int mget(struct magic_set *, struct magic *, const struct buffer *,
     const unsigned char *, size_t,
     size_t, unsigned int, int, int, int, uint16_t *,
-    uint16_t *, int *, int *, int *);
+    uint16_t *, int *, int *, int *, int *);
 private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
     const struct buffer *, size_t, unsigned int);
 private int magiccheck(struct magic_set *, struct magic *);
@@ -111,7 +111,7 @@ file_softmagic(struct magic_set *ms, const struct buffer *b,
 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
 		if ((rv = match(ms, ml->magic, ml->nmagic, b, 0, mode,
 		    text, 0, indir_count, name_count,
-		    &printed_something, &need_separator, NULL)) != 0)
+		    &printed_something, &need_separator, NULL, NULL)) != 0)
 			return rv;
 
 	return 0;
@@ -167,11 +167,12 @@ private int
 match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
     const struct buffer *b, size_t offset, int mode, int text,
     int flip, uint16_t *indir_count, uint16_t *name_count,
-    int *printed_something, int *need_separator, int *returnval)
+    int *printed_something, int *need_separator, int *returnval,
+    int *found_match)
 {
 	uint32_t magindex = 0;
 	unsigned int cont_level = 0;
-	int found_match = 0; /* if a match is found it is set to 1*/
+	int found_matchv = 0; /* if a match is found it is set to 1*/
 	int returnvalv = 0, e;
 	int firstline = 1; /* a flag to print X\n  X\n- X */
 	struct buffer bb;
@@ -183,6 +184,8 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	 */
 	if (returnval == NULL)
 		returnval = &returnvalv;
+	if (found_match == NULL)
+		found_match = &found_matchv;
 
 	if (file_check_mem(ms, cont_level) == -1)
 		return -1;
@@ -214,7 +217,8 @@ flush:
 		switch (mget(ms, m, b, CAST(const unsigned char *, bb.fbuf),
 		    bb.flen, offset, cont_level,
 		    mode, text, flip, indir_count, name_count,
-		    printed_something, need_separator, returnval)) {
+		    printed_something, need_separator, returnval, found_match))
+		{
 		case -1:
 			return -1;
 		case 0:
@@ -222,7 +226,7 @@ flush:
 			break;
 		default:
 			if (m->type == FILE_INDIRECT) {
-				found_match = 1;
+				*found_match = 1;
 				*returnval = 1;
 			}
 
@@ -247,7 +251,7 @@ flush:
 		}
 
 		if (*m->desc)
-			found_match = 1;
+			*found_match = 1;
 
 		if ((e = handle_annotation(ms, m, firstline)) != 0)
 		{
@@ -315,7 +319,7 @@ flush:
 			    bb.fbuf), bb.flen, offset,
 			    cont_level, mode, text, flip, indir_count,
 			    name_count, printed_something, need_separator,
-			    returnval)) {
+			    returnval, found_match)) {
 			case -1:
 				return -1;
 			case 0:
@@ -325,7 +329,7 @@ flush:
 				break;
 			default:
 				if (m->type == FILE_INDIRECT) {
-					found_match = 1;
+					*found_match = 1;
 					*returnval = 1;
 				}
 				flush = 0;
@@ -353,7 +357,7 @@ flush:
 					ms->c.li[cont_level].got_match = 1;
 
 				if (*m->desc)
-					found_match = 1;
+					*found_match = 1;
 
 				if ((e = handle_annotation(ms, m, firstline))
 				    != 0) {
@@ -417,7 +421,7 @@ flush:
 		if (*printed_something) {
 			firstline = 0;
 		}
-		if ((ms->flags & MAGIC_CONTINUE) == 0 && found_match) {
+		if ((ms->flags & MAGIC_CONTINUE) == 0 && *found_match) {
 			return *returnval; /* don't keep searching */
 		}
 		cont_level = 0;
@@ -1476,7 +1480,8 @@ private int
 mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
     const unsigned char *s, size_t nbytes, size_t o, unsigned int cont_level,
     int mode, int text, int flip, uint16_t *indir_count, uint16_t *name_count,
-    int *printed_something, int *need_separator, int *returnval)
+    int *printed_something, int *need_separator, int *returnval,
+    int *found_match)
 {
 	uint32_t offset = ms->offset;
 	struct buffer bb;
@@ -1762,7 +1767,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			*need_separator = 0;
 		rv = match(ms, ml.magic, ml.nmagic, b, offset + o,
 		    mode, text, flip, indir_count, name_count,
-		    printed_something, need_separator, returnval);
+		    printed_something, need_separator, returnval, found_match);
 		(*name_count)--;
 		if (rv != 1)
 		    *need_separator = oneed_separator;
