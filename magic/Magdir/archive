@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.119 2018/04/24 23:19:45 christos Exp $
+# $File: archive,v 1.120 2018/11/09 17:58:28 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1427,3 +1427,10 @@
 
 # LyNX archive
 56	string	USE\040LYNX\040TO\040DISSOLVE\040THIS\040FILE	 LyNX archive
+
+
+# Gentoo XPAK binary package
+# by Michal Gorny <mgorny@gentoo.org>
+# https://gitweb.gentoo.org/proj/portage.git/tree/man/xpak.5
+-4	string	STOP
+>-16	string	XPAKSTOP	Gentoo binary package (XPAK)
