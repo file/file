@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.125 2018/07/25 06:05:34 christos Exp $
+# $File: msdos,v 1.126 2018/11/11 01:58:19 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -924,8 +924,9 @@
 # skip remaining worksheets, because valid only for DIB image (40) or PNG image (\x89PNG)
 >>(18.l)	ulelong		x		MS Windows
 >>>0		ubelong		0x00000100	icon resource
-#!:mime		image/vnd.microsoft.icon
-!:mime		image/x-icon
+# https://www.iana.org/assignments/media-types/image/vnd.microsoft.icon
+!:mime		image/vnd.microsoft.icon
+#!:mime		image/x-icon
 !:ext		ico
 >>>>4 		uleshort	x		- %d icon
 # plural s
@@ -971,7 +972,8 @@
 #>12		ulelong		x		\b, offset 0x%x
 # PNG header (\x89PNG)
 >(12.l)		ubelong		=0x89504e47
->>&-4		indirect	x	\b with
+# 1 space char after "with" to get phrase "with PNG image" by magic in ./images
+>>&-4		indirect	x	\b with 
 # DIB image
 >(12.l)		ubelong		!0x89504e47
 #>>&-4		use     	dib-image
