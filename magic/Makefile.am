@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.138 2018/10/16 12:07:08 christos Exp $
+# $File: Makefile.am,v 1.139 2018/11/20 18:57:17 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -89,6 +89,7 @@ $(MAGIC_FRAGMENT_DIR)/elf \
 $(MAGIC_FRAGMENT_DIR)/encore \
 $(MAGIC_FRAGMENT_DIR)/epoc \
 $(MAGIC_FRAGMENT_DIR)/erlang \
+$(MAGIC_FRAGMENT_DIR)/espressif \
 $(MAGIC_FRAGMENT_DIR)/esri \
 $(MAGIC_FRAGMENT_DIR)/fcs \
 $(MAGIC_FRAGMENT_DIR)/filesystems \
