@@ -1,13 +1,74 @@
 
 #------------------------------------------------------------------------------
-# $File: virtual,v 1.5 2014/04/30 21:41:02 christos Exp $
+# $File: virtual,v 1.7 2018/11/23 09:46:01 christos Exp $
 # From: James Nobis <quel@quelrod.net>
 # Microsoft hard disk images for:
 # Virtual Server
 # Virtual PC
-# http://technet.microsoft.com/en-us/virtualserver/bb676673.aspx
-# .vhd
+# VirtualBox
+# URL: http://fileformats.archiveteam.org/wiki/VHD_(Virtual_Hard_Disk)
+# Reference: https://download.microsoft.com/download/f/f/e/ffef50a5-07dd-4cf8-aaa3-442c0673a029/
+# Virtual%20Hard%20Disk%20Format%20Spec_10_18_06.doc
 0	string	conectix	Microsoft Disk Image, Virtual Server or Virtual PC
+# alternative shorter names
+#0	string	conectix	Microsoft Virtual Hard Disk image
+#0	string	conectix	Microsoft Virtual HD image
+!:mime	application/x-virtualbox-vhd
+!:ext   vhd
+# Features is a bit field used to indicate specific feature support
+#>8	ubelong		!0x00000002	\b, Features 0x%x
+# Reserved. This bit must always be set to 1.
+#>8	ubelong		&0x00000002	\b, Reserved 0x%x
+# File Format Version for the current specification 0x00010000
+#>12	ubelong		!0x00010000	\b, Version 0x%8.8x
+# Data Offset only found 0x200
+#>16	ubequad		!0x200		\b, Data Offset 0x%llx
+#>16	ubequad		x		\b, at 0x%llx
+# Dynamic Disk Header cookie like cxsparse
+#>(16.Q)	string		x		"%-.8s"
+# This field contains a Unicode string (UTF-16) of the parent hard disk filename
+#>(16.Q+64)	ubequad	x		\b, parent name 0x%llx
+# Creator Application
+# vpc~Microsoft Virtual PC, vs~Microsoft Virtual Server, vbox~VirtualBox, d2v~disk2vhd
+>28	string		x		\b, Creator %-4.4s
+# Creator Version: 0x00010000~Virtual Server 2004, 0x00050000~Virtual PC 2004
+# holds the major/minor version of the application that created the image
+>32	ubeshort	x		%x
+>34	ubeshort	x		\b.%x
+#>32	ubelong		x		\b, Version 0x%8.8x
+# Creator Host OS: 0x5769326B~Windows (Wi2k), 0x4D616320~Macintosh (Mac)
+>36	ubelong		x		(
+>>36	ubelong		0x5769326B	\bW2k
+>>36	ubelong		0x4D616320	\bMac
+>>36	default		x		\b0x
+>>>36	ubelong		x		\b%8.8x
+# creation Time in seconds since 1 Jan 2000 UTC~946684800 sec. since Unix Epoch
+>24	bedate+946684800	x	\b) %s
+# Original Size
+#>40	ubequad		x		\b, o.-Size 0x%llx
+# Current Size is same as original size, but change when disk is expanded
+#>48	ubequad		x		\b, Size 0x%llx
+>48	ubequad		x		\b, %llu bytes
+# Disk Geometry: cylinder, heads, and sectors/track for hard disk
+#>56	ubeshort	x		\b, Cylinder 0x%x
+>56	ubeshort	x		\b, CHS %u
+# Heads
+#>58	ubyte		x		\b, Heads 0x%x
+>58	ubyte		x		\b/%u
+# Sectors per track
+#>59	ubyte		x		\b, Sectors 0x%x
+>59	ubyte		x		\b/%u
+# Disk Type: 3~Dynamic hard disk
+>60	ubelong		!0x3		\b, type 0x%x
+# Checksum
+#>64	ubelong		x		\b, cksum 0x%x
+# universally unique identifier (UUID) to associate a parent with its differencing image
+#>68	ubequad		x		\b, id 0x%16.16llx
+#>76	ubequad		x		\b-%16.16llx
+# Saved State: 1~Saved State
+>84	ubyte		!0		\b, State 0x%x
+# Reserved 427 bytes with nils
+#>85	ubequad	!0			\b, Reserved 0x%16.16llx
 
 # libvirt
 # From: Philipp Hahn <hahn@univention.de>
