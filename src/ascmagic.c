@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.100 2018/10/15 16:29:16 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.101 2018/11/27 17:34:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -81,6 +81,12 @@ file_ascmagic(struct magic_set *ms, const struct buffer *b, int text)
 
 	bb = *b;
 	bb.flen = trim_nuls(CAST(const unsigned char *, b->fbuf), b->flen);
+	/*
+	 * Avoid trimming at an odd byte if the original buffer was evenly
+	 * sized; this avoids losing the last character on UTF-16 LE text
+	 */
+	if ((bb.flen & 1) && !(b->flen & 1))
+		bb.flen++;
 
 	/* If file doesn't look like any sort of text, give up. */
 	if (file_encoding(ms, &bb, &ubuf, &ulen, &code, &code_mime,
