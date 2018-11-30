@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.120 2018/11/09 17:58:28 christos Exp $
+# $File: archive,v 1.121 2018/11/30 12:44:59 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1427,6 +1427,31 @@
 
 # LyNX archive
 56	string	USE\040LYNX\040TO\040DISSOLVE\040THIS\040FILE	 LyNX archive
+
+# From: Joerg Jenderek
+# URL: http://www.acronis.com/
+# Reference: http://en.wikipedia.org/wiki/TIB_(file_format)
+# Note: only tested with True Image 2013 Build 5962 and 2019 Build 14110
+0	ubequad		0xce24b9a220000000	Acronis True Image backup
+!:mime	application/x-acronis-tib
+!:ext	tib
+# 01000000
+#>20	ubelong		x			\b, at 20 0x%x
+# 20000000
+#>28	ubelong		x			\b, at 28 0x%x
+# strings like "Generic- SD/MMC 1.00" "Unknown Disk" "Msft Virtual Disk 1.0"
+# ???
+# strings like "\Device\0000011e" "\Device\0000015a"
+#>0	search/0x6852300/cs	\\Device\\
+#>>&-1	pstring		x			\b, %s
+# "\Device\HarddiskVolume30" "\Device\HarddiskVolume39"
+#>>>&1	search/180/cs	\\Device\\
+#>>>>&-1	pstring		x			\b, %s
+#>>>>>&0	search/29/cs	\0\0\xc8\0
+# disk label
+#>>>>>>&10	lestring16	x		\b, disk label %11.11s
+#>>>>>>&9	plestring16	x		\b, disk label "%11.11s"
+#>>>>>>&10	ubequad	x			%16.16llx
 
 
 # Gentoo XPAK binary package
