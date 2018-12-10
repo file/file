@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.38 2017/11/14 15:48:36 christos Exp $
+# $File: fonts,v 1.39 2018/12/10 20:58:34 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -167,16 +167,14 @@
 >>12	regex/4l	\^[A-Za-z][A-Za-z][A-Za-z/][A-Za-z2\ ]	
 #>>>0	ubelong	x	\b, sfnt version 0x%x
 >>>0	ubelong	!0x4f54544f	TrueType
-!:mime	application/font-sfnt
-#!:mime	font/ttf
+!:mime	font/sfnt
 !:apple	????tfil
 # .ttf for TrueType font
 # EUDC.tte created by privat character editor %WINDIR%\system32\eudcedit.exe
 !:ext	ttf/tte
 # sfnt version 4F54544Fh~OTTO
 >>>0	ubelong	=0x4f54544f	OpenType
-!:mime	application/font-sfnt
-#!:mime	font/otf
+!:mime	font/otf
 !:apple	????OTTO
 !:ext	otf
 >>>0	ubelong	x		Font data
@@ -265,17 +263,16 @@
 >4	ubyte		0		
 # sfnt version often 0x00010000 of 1st table is TrueType
 >>(12.L)	ubelong	!0x4f54544f	TrueType
-#!:mime	font/ttf
+!:mime	font/ttf
 !:apple	????tfil
 !:ext	ttc
 # sfnt version 4F54544Fh~OTTO of 1st table is OpenType font 
 >>(12.L)	ubelong	=0x4f54544f	OpenType
-#!:mime	font/otf
+!:mime	font/otf
 !:apple	????OTTO
 # no example found for otc
 !:ext	ttc/otc
 >>4	ubyte		x		font collection data
-!:mime	application/font-sfnt
 #!:mime	font/collection
 # TCC version
 >>4	belong		0x00010000	\b, 1.0
