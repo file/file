@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.124 2018/01/12 12:35:30 christos Exp $
+# $File: filesystems,v 1.125 2018/12/10 21:06:53 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1996,10 +1996,13 @@
 # Other fields are used to determine what type of CISO this is:
 # - 0x04 == 0x00200000: GameCube/Wii CISO (block_size)
 # - 0x10 == 0x00000800: PSP CISO (ISO-9660 sector size)
+# - 0x10 == 0x00004000: For >2GB files using maxcso...
+# 			https://github.com/unknownbrackets/maxcso/issues/26
 # - None of the above: Compact ISO.
 >4	lelong	!0
 >>4	lelong	!0x200000
->>>0x10	lelong	!0x800		Compressed ISO CD image
+>>>16	lelong	!0x800
+>>>>16	lelong	!0x4000		Compressed ISO CD image
 
 # cramfs filesystem - russell@coker.com.au
 0       lelong    0x28cd3d45      Linux Compressed ROM File System data, little endian
