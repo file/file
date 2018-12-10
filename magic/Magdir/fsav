@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fsav,v 1.17 2018/12/02 22:35:34 christos Exp $
+# $File: fsav,v 1.18 2018/12/10 20:57:41 christos Exp $
 # fsav:  file(1) magic for datafellows fsav virus definition files
 # Anthon van der Neut (anthon@mnt.org)
 
@@ -78,8 +78,8 @@
 #>>>>>>&1	regex	\^[^:]{1,32}	\b, MD5 "%s"
 >>>>>>&1	regex	\^[^:]{1,32}
 # X for nothing or digital signature starting like AIzk/LYbX
-#>>>>>>>&1	regex	\^[^:]{1,256}	\b, signature "%s"
->>>>>>>&1	regex	\^[^:]{1,256}
+#>>>>>>>&1	regex	\^[^:]{1,255}	\b, signature "%s"
+>>>>>>>&1	regex	\^[^:]{1,255}
 # builder like neo
 >>>>>>>>&1	regex	\^[^:]{1,32}	\b, builder %s
 # buildTime like 1506611558
