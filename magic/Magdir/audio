@@ -541,6 +541,8 @@
 
 # adlib sound files
 # From: Alex Myczko <alex@aiei.ch>
+0     string    BambooTrackerMod  BambooTracker
+
 0    	string		RAWADATA	RdosPlay RAW
 
 1068	string		RoR		AMUSIC Adlib Tracker
