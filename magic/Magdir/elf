@@ -38,6 +38,8 @@
 >0	lelong&0x3		2		relaxed memory ordering,
 
 0	name		elf-pa-risc
+>2	leshort		0x020B		1.0
+>2	leshort		0x0210		1.1
 >2	leshort		0x0214		2.0
 >0	leshort		&0x0008		(LP64)
 
