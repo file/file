@@ -1,7 +1,7 @@
 
 
 #------------------------------------------------------------------------------
-# $File: map,v 1.3 2015/07/09 15:16:41 christos Exp $
+# $File: map,v 1.5 2018/12/28 00:22:34 christos Exp $
 # map:  file(1) magic for Map data
 #
 
@@ -25,6 +25,157 @@
 >>53	byte	4		\b (Activity)
 >>53	byte	8		\b (Elevations)
 >>53	byte	10		\b (Totals)
+
+# Summary: Garmin map
+# From:	Joerg Jenderek
+# URL: https://en.wikipedia.org/wiki/Garmin_.img
+# Reference: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/IMG_File_Format
+# sourceforge.net/projects/garmin-img/files/IMG%20File%20Format/1.0/imgformat-1.0.pdf
+# GRR: similar to MBR boot sector handled by ./filesystems
+0x1FE	leshort		=0xAA55
+# look for valid map signature
+>0x13	string		=IMG\0
+>>0	use		garmin-map
+0	name				garmin-map
+>0	ubyte		x		Garmin
+!:mime	application/x-garmin-map
+# If non-zero, every byte of the entire .img file is to be XORed with this value
+>0	ubyte		!0		\b, 0x%x XORed
+# goto block before FAT
+>(0x40.b*512)	ubyte	x
+# 1st fat name "DLLINFO TXT" only found for vpm
+>>&512 		string	=DLLINFO\ TXT 	map (Voice Processing)
+# there exist 2 other Garmin VPM formats; see ./audio
+!:ext	vpm
+# Deutsch__Yannick_D4481-00_0210.vpm
+#>>>512	search/0x0116da60/s	RIFF	\b; with
+# determine type voice type by ./riff
+#>>>>&0	indirect	x	\b
+>>&512 		string	!DLLINFO\ TXT 	map
+!:ext	img
+# 9 zeros
+>1 	ubelong		!0 		\b, zeroes 0x%x
+# Map's version major
+>8	ubyte		x		v%u
+# Map's version minor
+>9	ubyte		x		\b.%.2u
+# Map description[20], 0x20 padded
+>0x49	string		x		%.20s
+# Map name, continued (0x20 padded, \0 terminated)
+>0x65	string		>\ 		\b%.31s
+# Update year (+1900 for val >= 0x63, +2000 for val <= 0x62)
+>0xB	ubyte		x		\b, updated
+>>0xB	ubyte		>0x62
+>>>0xB	ubyte-100	x		20%.2u
+>>0xB	ubyte		<0x63
+>>>0xB	ubyte		x		20%.2u
+# Update month (0-11)
+>0xA	ubyte		x		\b-%.2u
+# All zeroes
+>0xc 	uleshort	!0 		\b, zeroes 0x%x
+# Mapsource flag, 1 - file created by Mapsource, 0 - Garmin map visible in Basecamp and Homeport 
+#>0xE	ubyte		!0		\b, Mapsource flag 0x%x
+>0xE	ubyte		1		\b, Mapsource
+# Checksum, sum of all bytes modulo 256 should be 0
+#>0xF	ubyte		x		\b, Checksum 0x%x
+# Signature: DSKIMG 0x00 or DSDIMG 0x00 for demo map 
+>0x10	string		!DSKIMG		\b, signature "%.7s"
+# Creation year
+>0x39 	uleshort	x 		\b, created %u
+# Creation month (0-11)
+>0x3b	ubyte		x		\b-%.2u
+# Creation day (1-31)
+>0x3c	ubyte		x		\b-%.2u
+# Creation hour (0-23)
+>0x3d	ubyte		x		%u
+# Creation minute (0-59)
+>0x3e	ubyte		x		\b:%.2u
+# Creation second (0-59)
+>0x3f	ubyte		x		\b:%.2u
+# Map file identifier like GARMIN\0
+>0x41	string		!GARMIN		\b, id "%.7s"
+# Block size exponent, E1; appears to always be 0x09; minimum block size 512 bytes
+>0x61	ubyte		!0x09		\b, E1=%u
+# Block size exponent, E2 ; file blocksize=2**(E1+E2)
+>>0x62	ubyte		x		\b, E2=%u
+>0x61	ubyte		=0x09		\b, blocksize
+>>0x62	ubyte		0		512
+>>0x62	ubyte		1		1024
+>>0x62	ubyte		2		2048
+>>0x62	ubyte		3		4096
+>>0x62	ubyte		4		8192
+>>0x62	ubyte		5		16384
+>>0x62	default		x
+>>>0x62	ubyte		x		E2=%u
+# MBR signature
+>0x1FE	leshort		!0xAA55		\b, invalid MBR
+# 512 zeros
+>0x200 	uquad		!0		\b, zeroes 0x%llx
+# First sub-file offset (absolute); sometimes NO/UNKNOWN sub file!
+>0x40C	ulelong		>0		\b, at 0x%x
+# sub-file Header length
+#>>(0x40C.l)	uleshort	x	\b, header len 0x%x
+>>(0x40C.l)	uleshort	x	%u bytes
+# sub-file Type[10] like "GARMIN RGN" "GARMIN TRE", "GARMIN TYP", etc.
+>>(0x40C.l+2)	ubyte	>0x1F
+>>>(0x40C.l+2)	ubyte	<0xFF
+>>>>(0x40C.l+2)	string	x		"%.10s"
+# 0x00 for most maps, 0x80 for locked maps (City Nav, City Select, etc.) 
+>>>>(0x40C.l+13)	ubyte	>0		\b, locked 0x%x
+# Block sequence numbers like 0000 0100 0200 ... FFFF
+# >0x420	ubequad		>0	\b, seq. 0x%16.16llx
+# >>0x428	ubequad		>0	\b%16.16llx
+# >>>0x430	ubequad	>0	\b%16.16llx
+# >>>>0x438	ubequad	>0	\b%16.16llx
+# >>>>>0x440	ubequad	>0	\b%16.16llx
+# >>>>>>0x448	ubequad	>0	\b%16.16llx
+# >>>>>>>0x450	ubequad	>0	\b%16.16llx
+# >>>>>>>>0x458	ubequad	>0	\b%16.16llx
+# >>>>>>>>>0x460	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>0x468	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>0x470	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>>0x478	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>>>0x480	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>>>>0x488	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>>>>>0x490	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>>>>>>0x498	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>>>>>>>0x4A0	ubequad	>0	\b%16.16llx
+# >>>>>>>>>>>>>>>>>>0x4A8	ubequad	>0	\b%16.16llx
+# look for end of FAT
+#>>0x420	search/512/s	\xff\xff	FAT END
+# Physical block number of FAT header
+#>0x40	ubyte		x		\b, FAT at phy. block %u
+>0x40	ubyte		x
+>>(0x40.b*512)	ubyte	x
+# 1st FAT block
+>>>&511 	use	garmin-fat
+# 2nd FAT block
+>>>&1023 	use	garmin-fat
+# 3th FAT block
+>>>&1535 	use	garmin-fat
+# 4th FAT block
+>>>&2047 	use	garmin-fat
+# ... xth FAT block
+#
+# 314 zeros but not in vpm and also gmaptz.img
+>0x84 	uquad		!0		\b, at 0x84 0x%llx
+# display FileAllocationTable block entry in garmin map
+0	name				garmin-fat
+>0	ubyte		x		\b;
+# sub file part; 0x0003 seems to be garbage
+>0x10	uleshort	!0		next 0x%4.4x
+>0x10	uleshort	=0
+# fat flag 0~dummy block 1~true sub file
+>>0	ubyte		!1		flag %u 
+>>0	ubyte		=1
+# sub-file name like MAKEGMAP 12345678
+>>>0x1	string		x		%.8s
+# sub-file typ like RGN TRE MDR LBL
+>>>0x9	string		x		\b.%.3s
+# size of sub file
+>>>0xC	ulelong		x		\b, %u bytes
+# 32-bit block sequence numbers
+#>>>0x20	ubequad		x		\b, seq. 0x%16.16llx
 
 # TOM TOM GPS watches ttbin files:
 # http://github.com/ryanbinns/ttwatch/tree/master/ttbin
