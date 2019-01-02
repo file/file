@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.156 2018/10/19 00:33:04 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.157 2019/01/02 19:44:14 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -752,7 +752,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			char sbuf[512];
 			struct NetBSD_elfcore_procinfo pi;
 			memset(&pi, 0, sizeof(pi));
-			memcpy(&pi, nbuf + doff, descsz);
+			memcpy(&pi, nbuf + doff, MIN(descsz, sizeof(pi)));
 
 			if (file_printf(ms, ", from '%.31s', pid=%u, uid=%u, "
 			    "gid=%u, nlwps=%u, lwp=%u (signal %u/code %u)",
