@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.22 2018/02/16 15:44:00 christos Exp $
+# $File: windows,v 1.23 2019/01/11 21:00:26 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -56,6 +56,17 @@
 >0x78	lelong		&1		\b, DIRTY
 >0x78	lelong		&2		\b, FULL
 
+# Summary:	Windows Error Report text files
+# URL:		https://en.wikipedia.org/wiki/Windows_Error_Reporting
+# Reference:	https://www.nirsoft.net/utils/app_crash_view.html
+# Created by:	Joerg Jenderek
+# Note:		in directories	%ProgramData%\Microsoft\Windows\WER\{ReportArchive,ReportQueue}
+#				%LOCALAPPDATA%\Microsoft\Windows\WER\{ReportArchive,ReportQueue}
+0	lestring16	Version=	
+>22	lestring16	EventType	Windows Error Report
+!:mime	text/plain
+# Report.wer
+!:ext	wer
 
 # Summary: Windows 3.1 group files
 # Extension: .grp
