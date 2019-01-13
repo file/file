@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.121 2018/11/30 12:44:59 christos Exp $
+# $File: archive,v 1.122 2019/01/13 00:33:19 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -257,15 +257,35 @@
 >19	string	B			and an EB hash table
 >22	string	X			-- out of date
 
-0	search/1	-h-		Software Tools format archive text
-
 #
 # BSD/SVR2-and-later portable archive formats.
 #
+# Update: Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/AR
+# Reference:	https://www.unix.com/man-page/opensolaris/3HEAD/ar.h/
+# Note:		Mach-O universal binary in ./cafebabe is dependent
+# TODO:		unify current ar archive, MIPS archive, Debian package
+#		distinguish BSD, SVR; 32, 64 bit; HP from other 32-bit SVR;
+#		*.ar packages from *.a libraries. handle empty archive
 0	string		=!<arch>\n		current ar archive
+# print first and possibly second ar_name[16] for debugging purpose
+#>8			string	x	\b, 1st "%.16s"
+#>68			string	x	\b, 2nd "%.16s"
 !:mime	application/x-archive
+# a in most case for libraries; lib for Microsoft libraries; ar else cases
+!:ext	a/lib/ar
 >8	string		__.SYMDEF	random library
+# first member with long marked name __.SYMDEF SORTED implies BSD library
 >68	string		__.SYMDEF\ SORTED	random library
+# Reference: https://parisc.wiki.kernel.org/images-parisc/b/b2/Rad_11_0_32.pdf
+# "archive file" entry moved from ./hp
+# LST header system_id 0210h~PA-RISC 1.1,... identifies the target architecture
+# LST header a_magic 0619h~relocatable library
+>68	belong 		0x020b0619	- PA-RISC1.0 relocatable library
+>68	belong	 	0x02100619	- PA-RISC1.1 relocatable library
+>68	belong 		0x02110619	- PA-RISC1.2 relocatable library
+>68	belong 		0x02140619	- PA-RISC2.0 relocatable library
+#EOF for common ar archives
 
 #
 # "Thin" archive, as can be produced by GNU ar.
@@ -274,6 +294,8 @@
 >68	belong		0		no symbol entries
 >68	belong		1		%d symbol entry
 >68	belong		>1		%d symbol entries
+
+0	search/1	-h-		Software Tools format archive text
 
 # ARC archiver, from Daniel Quinlan (quinlan@yggdrasil.com)
 #
