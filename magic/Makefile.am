@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.139 2018/11/20 18:57:17 christos Exp $
+# $File: Makefile.am,v 1.140 2019/01/16 19:31:06 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -58,6 +58,7 @@ $(MAGIC_FRAGMENT_DIR)/cisco \
 $(MAGIC_FRAGMENT_DIR)/citrus \
 $(MAGIC_FRAGMENT_DIR)/clarion \
 $(MAGIC_FRAGMENT_DIR)/claris \
+$(MAGIC_FRAGMENT_DIR)/clojure \
 $(MAGIC_FRAGMENT_DIR)/clipper \
 $(MAGIC_FRAGMENT_DIR)/coff \
 $(MAGIC_FRAGMENT_DIR)/commands \
