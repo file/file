@@ -23,7 +23,7 @@
 0	regex	\^\\\(ns[[:space:]]+[a-z]	Clojure module source text
 !:mime	text/x-clojure
 
-0	regex	\^\\\(ns[[:space:]]+\\\^{:	Clojure module source text
+0	regex	\^\\\(ns[[:space:]]+\\\^\\{:	Clojure module source text
 !:mime	text/x-clojure
 
 0	regex	\^\\\(defn-?[[:space:]]	Clojure module source text
