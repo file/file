@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.95 2018/10/01 19:59:53 christos Exp $
-.Dd October 1, 2018
+.\" $File: magic.man,v 1.96 2019/01/21 14:56:53 christos Exp $
+.Dd January 21, 2019
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -116,13 +116,13 @@ The following modifiers are supported:
 .It B
 A byte length (default).
 .It H
-A 4 byte big endian length.
+A 2 byte big endian length.
 .It h
 A 2 byte little endian length.
 .It L
 A 4 byte big endian length.
 .It l
-A 2 byte little endian length.
+A 4 byte little endian length.
 .It J
 The length includes itself in its count.
 .El
