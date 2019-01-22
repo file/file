@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.157 2019/01/02 19:44:14 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.158 2019/01/22 16:28:42 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -262,7 +262,10 @@ static const size_t	prpsoffsets32[] = {
 	84,		/* SunOS 5.x (short name) */
 
 	44,		/* Linux (command line) */
-	28,		/* Linux 2.0.36 (short name) */
+	28,		/* Linux (short name) */
+
+	48,		/* Linux PowerPC (command line) */
+	32,		/* Linux PowerPC (short name) */
 
 	8,		/* FreeBSD */
 };
