@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.158 2019/01/22 16:28:42 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.159 2019/02/01 17:58:48 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1095,7 +1095,7 @@ dodynamic(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 	switch (xdh_tag) {
 	case DT_FLAGS_1:
-		if (xdh_val == DF_1_PIE)
+		if (xdh_val & DF_1_PIE)
 			ms->mode |= 0111;
 		else
 			ms->mode &= ~0111;
@@ -1658,6 +1658,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		switch (xph_type) {
 		case PT_DYNAMIC:
 			offset = 0;
+			// Let DF_1 determine if we are PIE or not.
+			ms->mode &= ~0111;
 			for (;;) {
 				if (offset >= (size_t)bufsize)
 					break;
