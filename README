@@ -1,6 +1,6 @@
-## README for file(1) Command ##
+## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README,v 1.56 2018/09/09 20:33:28 christos Exp $
+    @(#) $File: README,v 1.57 2019/02/06 00:20:56 christos Exp $
 
 Mailing List: file@astron.com
 Mailing List archives: http://mailman.astron.com/pipermail/file/
