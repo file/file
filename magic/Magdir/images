@@ -1809,3 +1809,11 @@
 >>>>33		string	and
 >>>>>37		string	layers
 >>>>>>43	lelong	x	reMarkable tablet notebook lines, 1404 x 1872, %x page(s)
+
+# newer per-page files for the reMarkable
+0       string  reMarkable
+>11     string  .lines
+>>18    string  file,
+>>>24   string  version=
+>>>>32  byte    x       reMarkable tablet page (v%c), 1404 x 1872,
+>>>>>43 lelong  x       %d layer(s)
