@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.20 2018/10/18 16:49:19 christos Exp $
+# $File: sniffer,v 1.21 2019/02/09 17:52:18 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -213,17 +213,17 @@
 >0	use	\^pcap-be
 
 #
-# "pcap-ng" capture files.
-# http://www.winpcap.org/ntar/draft/PCAP-DumpFileFormat.html
-# Pcap-ng files can contain multiple sections. Printing the endianness,
+# "pcapng" capture files.
+# https://github.com/pcapng/pcapng
+# Pcapng files can contain multiple sections. Printing the endianness,
 # snaplen, or other information from the first SHB may be misleading.
 #
 0	ubelong		0x0a0d0d0a
->8	ubelong		0x1a2b3c4d	pcap-ng capture file
+>8	ubelong		0x1a2b3c4d	pcapng capture file
 >>12	beshort		x		- version %d
 >>14	beshort		x		\b.%d
 0	ulelong		0x0a0d0d0a
->8	ulelong		0x1a2b3c4d	pcap-ng capture file
+>8	ulelong		0x1a2b3c4d	pcapng capture file
 >>12	leshort		x		- version %d
 >>14	leshort		x		\b.%d
 
