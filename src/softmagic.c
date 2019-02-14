@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.275 2018/11/05 18:03:25 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.276 2019/02/14 00:25:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1528,39 +1528,57 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		if (m->in_op & FILE_OPINDIRECT) {
 			const union VALUETYPE *q = CAST(const union VALUETYPE *,
 			    ((const void *)(s + offset + off)));
-			if (OFFSET_OOB(nbytes, offset + off, sizeof(*q)))
-				return 0;
 			switch (cvt_flip(m->in_type, flip)) {
 			case FILE_BYTE:
+				if (OFFSET_OOB(nbytes, offset + off, 1))
+					return 0;
 				off = SEXT(sgn,8,q->b);
 				break;
 			case FILE_SHORT:
+				if (OFFSET_OOB(nbytes, offset + off, 2))
+					return 0;
 				off = SEXT(sgn,16,q->h);
 				break;
 			case FILE_BESHORT:
+				if (OFFSET_OOB(nbytes, offset + off, 2))
+					return 0;
 				off = SEXT(sgn,16,BE16(q));
 				break;
 			case FILE_LESHORT:
+				if (OFFSET_OOB(nbytes, offset + off, 2))
+					return 0;
 				off = SEXT(sgn,16,LE16(q));
 				break;
 			case FILE_LONG:
+				if (OFFSET_OOB(nbytes, offset + off, 4))
+					return 0;
 				off = SEXT(sgn,32,q->l);
 				break;
 			case FILE_BELONG:
 			case FILE_BEID3:
+				if (OFFSET_OOB(nbytes, offset + off, 4))
+					return 0;
 				off = SEXT(sgn,32,BE32(q));
 				break;
 			case FILE_LEID3:
 			case FILE_LELONG:
+				if (OFFSET_OOB(nbytes, offset + off, 4))
+					return 0;
 				off = SEXT(sgn,32,LE32(q));
 				break;
 			case FILE_MELONG:
+				if (OFFSET_OOB(nbytes, offset + off, 4))
+					return 0;
 				off = SEXT(sgn,32,ME32(q));
 				break;
 			case FILE_BEQUAD:
+				if (OFFSET_OOB(nbytes, offset + off, 8))
+					return 0;
 				off = SEXT(sgn,64,BE64(q));
 				break;
 			case FILE_LEQUAD:
+				if (OFFSET_OOB(nbytes, offset + off, 8))
+					return 0;
 				off = SEXT(sgn,64,LE64(q));
 				break;
 			default:
