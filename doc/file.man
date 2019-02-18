@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.133 2018/10/01 18:51:39 christos Exp $
-.Dd October 1, 2018
+.\" $File: file.man,v 1.134 2019/02/18 18:59:25 christos Exp $
+.Dd February 18, 2019
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -171,6 +171,9 @@ Causes the file command to output the file type and creator code as
 used by older MacOS versions.
 The code consists of eight letters,
 the first describing the file type, the latter the creator.
+the first describing the file type, the latter the creator.
+This option works properly only for file formats that have the
+apple-style output defined.
 .It Fl b , Fl Fl brief
 Do not prepend filenames to output lines (brief mode).
 .It Fl C , Fl Fl compile
