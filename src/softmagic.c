@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.276 2019/02/14 00:25:59 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.277 2019/02/18 17:46:56 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -634,8 +634,8 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_LESTRING16:
 		if (m->reln == '=' || m->reln == '!') {
 			if (file_printf(ms, F(ms, desc, "%s"),
-			    file_printable(sbuf, sizeof(sbuf), m->value.s))
-			    == -1)
+			    file_printable(sbuf, sizeof(sbuf), m->value.s,
+			    sizeof(m->value.s))) == -1)
 				return -1;
 			t = ms->offset + m->vallen;
 		}
@@ -662,7 +662,8 @@ mprint(struct magic_set *ms, struct magic *m)
 			}
 
 			if (file_printf(ms, F(ms, desc, "%s"),
-			    file_printable(sbuf, sizeof(sbuf), str)) == -1)
+			    file_printable(sbuf, sizeof(sbuf), str,
+				sizeof(p->s) - (str - p->s))) == -1)
 				return -1;
 
 			if (m->type == FILE_PSTRING)
@@ -768,7 +769,7 @@ mprint(struct magic_set *ms, struct magic *m)
 			return -1;
 		}
 		rval = file_printf(ms, F(ms, desc, "%s"),
-		    file_printable(sbuf, sizeof(sbuf), cp));
+		    file_printable(sbuf, sizeof(sbuf), cp, ms->search.rm_len));
 		free(cp);
 
 		if (rval == -1)
@@ -795,7 +796,8 @@ mprint(struct magic_set *ms, struct magic *m)
 		break;
 	case FILE_DER:
 		if (file_printf(ms, F(ms, desc, "%s"),
-		    file_printable(sbuf, sizeof(sbuf), ms->ms_value.s)) == -1)
+		    file_printable(sbuf, sizeof(sbuf), ms->ms_value.s,
+			sizeof(ms->ms_value.s))) == -1)
 			return -1;
 		t = ms->offset;
 		break;
