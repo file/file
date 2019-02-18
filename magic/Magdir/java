@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: java,v 1.20 2019/02/18 16:53:11 christos Exp $
+# $File: java,v 1.21 2019/02/18 17:58:50 christos Exp $
 # Java ByteCode and Mach-O binaries (e.g., Mac OS X) use the
 # same magic number, 0xcafebabe, so they are both handled
 # in the entry called "cafebabe".
@@ -29,7 +29,7 @@
 # Java jmod module
 # See https://hg.openjdk.java.net/jdk9/jdk9/jdk/file/tip/src/java.base/share/classes/jdk/internal/jmod/JmodFile.java
 # Grr. 2 byte magic "JM", really? In 2019?
-0	beshort		0x4a4d0100	Java jmod module version 1.0
+0	belong		0x4a4d0100	Java jmod module version 1.0
 !:mime	application/x-java-jmod
 
 # Java jlinked image
