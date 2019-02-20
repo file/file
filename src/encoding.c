@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.16 2019/02/19 20:30:35 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.17 2019/02/20 02:35:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -89,12 +89,12 @@ file_encoding(struct magic_set *ms, const struct buffer *b, unichar **ubuf,
 	*code_mime = "binary";
 
 	mlen = (nbytes + 1) * sizeof((*ubuf)[0]);
-	if ((*ubuf = CAST(unichar *, calloc((size_t)1, mlen))) == NULL) {
+	if ((*ubuf = CAST(unichar *, calloc(CAST(size_t, 1), mlen))) == NULL) {
 		file_oomem(ms, mlen);
 		goto done;
 	}
 	mlen = (nbytes + 1) * sizeof(nbuf[0]);
-	if ((nbuf = CAST(unsigned char *, calloc((size_t)1, mlen))) == NULL) {
+	if ((nbuf = CAST(unsigned char *, calloc(CAST(size_t, 1), mlen))) == NULL) {
 		file_oomem(ms, mlen);
 		goto done;
 	}
@@ -449,7 +449,7 @@ looks_ucs16(const unsigned char *bf, size_t nbytes, unichar *ubf,
 		if (ubf[*ulen - 1] == 0xfffe)
 			return 0;
 		if (ubf[*ulen - 1] < 128 &&
-		    text_chars[(size_t)ubf[*ulen - 1]] != T)
+		    text_chars[CAST(size_t, ubf[*ulen - 1])] != T)
 			return 0;
 	}
 
@@ -488,7 +488,7 @@ looks_ucs32(const unsigned char *bf, size_t nbytes, unichar *ubf,
 		if (ubf[*ulen - 1] == 0xfffe)
 			return 0;
 		if (ubf[*ulen - 1] < 128 &&
-		    text_chars[(size_t)ubf[*ulen - 1]] != T)
+		    text_chars[CAST(size_t, ubf[*ulen - 1])] != T)
 			return 0;
 	}
 

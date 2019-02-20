@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.101 2018/11/27 17:34:32 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.102 2019/02/20 02:35:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -127,7 +127,7 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 	int n_nel = 0;
 	int executable = 0;
 
-	size_t last_line_end = (size_t)-1;
+	size_t last_line_end = CAST(size_t, -1);
 	int has_long_lines = 0;
 
 	nbytes = trim_nuls(buf, nbytes);
@@ -151,7 +151,7 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 		    == NULL)
 			goto done;
 		buffer_init(&bb, b->fd, utf8_buf,
-		    (size_t)(utf8_end - utf8_buf));
+		    CAST(size_t, utf8_end - utf8_buf));
 
 		if ((rv = file_softmagic(ms, &bb, NULL, NULL,
 		    TEXTTEST, text)) == 0)
@@ -330,42 +330,42 @@ encode_utf8(unsigned char *buf, size_t len, unichar *ubuf, size_t ulen)
 		if (ubuf[i] <= 0x7f) {
 			if (end - buf < 1)
 				return NULL;
-			*buf++ = (unsigned char)ubuf[i];
+			*buf++ = CAST(unsigned char, ubuf[i]);
 		} else if (ubuf[i] <= 0x7ff) {
 			if (end - buf < 2)
 				return NULL;
-			*buf++ = (unsigned char)((ubuf[i] >> 6) + 0xc0);
-			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] >> 6) + 0xc0);
+			*buf++ = CAST(unsigned char, (ubuf[i] & 0x3f) + 0x80);
 		} else if (ubuf[i] <= 0xffff) {
 			if (end - buf < 3)
 				return NULL;
-			*buf++ = (unsigned char)((ubuf[i] >> 12) + 0xe0);
-			*buf++ = (unsigned char)(((ubuf[i] >> 6) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] >> 12) + 0xe0);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >> 6) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] & 0x3f) + 0x80);
 		} else if (ubuf[i] <= 0x1fffff) {
 			if (end - buf < 4)
 				return NULL;
-			*buf++ = (unsigned char)((ubuf[i] >> 18) + 0xf0);
-			*buf++ = (unsigned char)(((ubuf[i] >> 12) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)(((ubuf[i] >>  6) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] >> 18) + 0xf0);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >> 12) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >>  6) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] & 0x3f) + 0x80);
 		} else if (ubuf[i] <= 0x3ffffff) {
 			if (end - buf < 5)
 				return NULL;
-			*buf++ = (unsigned char)((ubuf[i] >> 24) + 0xf8);
-			*buf++ = (unsigned char)(((ubuf[i] >> 18) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)(((ubuf[i] >> 12) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)(((ubuf[i] >>  6) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] >> 24) + 0xf8);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >> 18) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >> 12) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >>  6) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] & 0x3f) + 0x80);
 		} else if (ubuf[i] <= 0x7fffffff) {
 			if (end - buf < 6)
 				return NULL;
-			*buf++ = (unsigned char)((ubuf[i] >> 30) + 0xfc);
-			*buf++ = (unsigned char)(((ubuf[i] >> 24) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)(((ubuf[i] >> 18) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)(((ubuf[i] >> 12) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)(((ubuf[i] >>  6) & 0x3f) + 0x80);
-			*buf++ = (unsigned char)((ubuf[i] & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] >> 30) + 0xfc);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >> 24) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >> 18) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >> 12) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, ((ubuf[i] >>  6) & 0x3f) + 0x80);
+			*buf++ = CAST(unsigned char, (ubuf[i] & 0x3f) + 0x80);
 		} else /* Invalid character */
 			return NULL;
 	}

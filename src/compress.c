@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.114 2018/10/19 00:26:26 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.115 2019/02/20 02:35:27 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -378,7 +378,7 @@ sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
 		(void)ioctl(fd, FIONREAD, &t);
 	}
 
-	if (t > 0 && (size_t)t < n) {
+	if (t > 0 && CAST(size_t, t) < n) {
 		n = t;
 		rn = n;
 	}
@@ -436,11 +436,11 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 		return -1;
 	}
 
-	if (swrite(tfd, startbuf, nbytes) != (ssize_t)nbytes)
+	if (swrite(tfd, startbuf, nbytes) != CAST(ssize_t, nbytes))
 		r = 1;
 	else {
 		while ((r = sread(fd, buf, sizeof(buf), 1)) > 0)
-			if (swrite(tfd, buf, (size_t)r) != r)
+			if (swrite(tfd, buf, CAST(size_t, r)) != r)
 				break;
 	}
 
@@ -465,7 +465,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 		return -1;
 	}
 	(void)close(tfd);
-	if (lseek(fd, (off_t)0, SEEK_SET) == (off_t)-1) {
+	if (lseek(fd, CAST(off_t, 0), SEEK_SET) == CAST(off_t, -1)) {
 		file_badseek(ms);
 		return -1;
 	}
@@ -542,7 +542,7 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 	if (rc != Z_OK && rc != Z_STREAM_END)
 		goto err;
 
-	*n = (size_t)z.total_out;
+	*n = CAST(size_t, z.total_out);
 	rc = inflateEnd(&z);
 	if (rc != Z_OK)
 		goto err;
@@ -552,8 +552,8 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	strlcpy((char *)*newch, z.msg ? z.msg : zError(rc), bytes_max);
-	*n = strlen((char *)*newch);
+	strlcpy(RCAST(char *, *newch), z.msg ? z.msg : zError(rc), bytes_max);
+	*n = strlen(RCAST(char *, *newch));
 	return ERRDATA;
 }
 #endif
@@ -573,7 +573,7 @@ makeerror(unsigned char **buf, size_t *len, const char *fmt, ...)
 		*len = 0;
 		return NODATA;
 	}
-	*buf = (unsigned char *)msg;
+	*buf = RCAST(unsigned char *, msg);
 	*len = strlen(msg);
 	return ERRDATA;
 }
@@ -621,7 +621,7 @@ writechild(int fdp[3][2], const void *old, size_t n)
 	switch (fork()) {
 	case 0: /* child */
 		closefd(fdp[STDOUT_FILENO], 0);
-		if (swrite(fdp[STDIN_FILENO][1], old, n) != (ssize_t)n) {
+		if (swrite(fdp[STDIN_FILENO][1], old, n) != CAST(ssize_t, n)) {
 			DPRINTF("Write failed (%s)\n", strerror(errno));
 			exit(1);
 		}
@@ -650,17 +650,17 @@ filter_error(unsigned char *ubuf, ssize_t n)
 	char *buf;
 
 	ubuf[n] = '\0';
-	buf = (char *)ubuf;
-	while (isspace((unsigned char)*buf))
+	buf = RCAST(char *, ubuf);
+	while (isspace(CAST(unsigned char, *buf)))
 		buf++;
 	DPRINTF("Filter error[[[%s]]]\n", buf);
-	if ((p = strchr((char *)buf, '\n')) != NULL)
+	if ((p = strchr(CAST(char *, buf), '\n')) != NULL)
 		*p = '\0';
-	if ((p = strchr((char *)buf, ';')) != NULL)
+	if ((p = strchr(CAST(char *, buf), ';')) != NULL)
 		*p = '\0';
-	if ((p = strrchr((char *)buf, ':')) != NULL) {
+	if ((p = strrchr(CAST(char *, buf), ':')) != NULL) {
 		++p;
-		while (isspace((unsigned char)*p))
+		while (isspace(CAST(unsigned char, *p)))
 			p++;
 		n = strlen(p);
 		memmove(ubuf, p, CAST(size_t, n + 1));
@@ -715,14 +715,14 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 	case 0:	/* child */
 		if (fd != -1) {
 			fdp[STDIN_FILENO][0] = fd;
-			(void) lseek(fd, (off_t)0, SEEK_SET);
+			(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
 		}
 
 		for (i = 0; i < __arraycount(fdp); i++)
 			copydesc(CAST(int, i), fdp[i]);
 
 		(void)execvp(compr[method].argv[0],
-		    (char *const *)(intptr_t)compr[method].argv);
+		    RCAST(char *const *, RCAST(intptr_t, compr[method].argv)));
 		dprintf(STDERR_FILENO, "exec `%s' failed, %s",
 		    compr[method].argv[0], strerror(errno));
 		exit(1);

@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.108 2018/12/11 21:10:33 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.109 2019/02/20 02:35:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -312,7 +312,8 @@ magic_load_buffers(struct magic_set *ms, void **bufs, size_t *sizes,
 {
 	if (ms == NULL)
 		return -1;
-	return buffer_apprentice(ms, (struct magic **)bufs, sizes, nbufs);
+	return buffer_apprentice(ms, RCAST(struct magic **, bufs),
+	    sizes, nbufs);
 }
 #endif
 
@@ -405,7 +406,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	struct stat	sb;
 	ssize_t nbytes = 0;	/* number of bytes read from a datafile */
 	int	ispipe = 0;
-	off_t	pos = (off_t)-1;
+	off_t	pos = CAST(off_t, -1);
 
 	if (file_reset(ms, 1) == -1)
 		goto out;
@@ -464,7 +465,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		if (fstat(fd, &sb) == 0 && S_ISFIFO(sb.st_mode))
 			ispipe = 1;
 		if (inname == NULL)
-			pos = lseek(fd, (off_t)0, SEEK_CUR);
+			pos = lseek(fd, CAST(off_t, 0), SEEK_CUR);
 	}
 
 	/*
@@ -473,8 +474,8 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	if (ispipe) {
 		ssize_t r = 0;
 
-		while ((r = sread(fd, (void *)&buf[nbytes],
-		    (size_t)(ms->bytes_max - nbytes), 1)) > 0) {
+		while ((r = sread(fd, RCAST(void *, &buf[nbytes]),
+		    CAST(size_t, ms->bytes_max - nbytes), 1)) > 0) {
 			nbytes += r;
 			if (r < PIPE_BUF) break;
 		}
@@ -494,7 +495,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 				_isatty(fd) ? 8 * 1024 :
 #endif
 				ms->bytes_max;
-		if ((nbytes = read(fd, (char *)buf, howmany)) == -1) {
+		if ((nbytes = read(fd, RCAST(void *, buf), howmany)) == -1) {
 			if (inname == NULL && fd != STDIN_FILENO)
 				file_error(ms, errno, "cannot read fd %d", fd);
 			else
@@ -505,13 +506,13 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	}
 
 	(void)memset(buf + nbytes, 0, SLOP); /* NUL terminate */
-	if (file_buffer(ms, fd, inname, buf, (size_t)nbytes) == -1)
+	if (file_buffer(ms, fd, inname, buf, CAST(size_t, nbytes)) == -1)
 		goto done;
 	rv = 0;
 done:
 	free(buf);
 	if (fd != -1) {
-		if (pos != (off_t)-1)
+		if (pos != CAST(off_t, -1))
 			(void)lseek(fd, pos, SEEK_SET);
 		close_and_restore(ms, inname, fd, &sb);
 	}
@@ -589,25 +590,25 @@ magic_setparam(struct magic_set *ms, int param, const void *val)
 		return -1;
 	switch (param) {
 	case MAGIC_PARAM_INDIR_MAX:
-		ms->indir_max = (uint16_t)*(const size_t *)val;
+		ms->indir_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
 	case MAGIC_PARAM_NAME_MAX:
-		ms->name_max = (uint16_t)*(const size_t *)val;
+		ms->name_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
 	case MAGIC_PARAM_ELF_PHNUM_MAX:
-		ms->elf_phnum_max = (uint16_t)*(const size_t *)val;
+		ms->elf_phnum_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
 	case MAGIC_PARAM_ELF_SHNUM_MAX:
-		ms->elf_shnum_max = (uint16_t)*(const size_t *)val;
+		ms->elf_shnum_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
 	case MAGIC_PARAM_ELF_NOTES_MAX:
-		ms->elf_notes_max = (uint16_t)*(const size_t *)val;
+		ms->elf_notes_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
 	case MAGIC_PARAM_REGEX_MAX:
-		ms->regex_max = (uint16_t)*(const size_t *)val;
+		ms->regex_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
 	case MAGIC_PARAM_BYTES_MAX:
-		ms->bytes_max = *(const size_t *)val;
+		ms->bytes_max = *CAST(const size_t *, val);
 		return 0;
 	default:
 		errno = EINVAL;
@@ -622,25 +623,25 @@ magic_getparam(struct magic_set *ms, int param, void *val)
 		return -1;
 	switch (param) {
 	case MAGIC_PARAM_INDIR_MAX:
-		*(size_t *)val = ms->indir_max;
+		*CAST(size_t *, val) = ms->indir_max;
 		return 0;
 	case MAGIC_PARAM_NAME_MAX:
-		*(size_t *)val = ms->name_max;
+		*CAST(size_t *, val) = ms->name_max;
 		return 0;
 	case MAGIC_PARAM_ELF_PHNUM_MAX:
-		*(size_t *)val = ms->elf_phnum_max;
+		*CAST(size_t *, val) = ms->elf_phnum_max;
 		return 0;
 	case MAGIC_PARAM_ELF_SHNUM_MAX:
-		*(size_t *)val = ms->elf_shnum_max;
+		*CAST(size_t *, val) = ms->elf_shnum_max;
 		return 0;
 	case MAGIC_PARAM_ELF_NOTES_MAX:
-		*(size_t *)val = ms->elf_notes_max;
+		*CAST(size_t *, val) = ms->elf_notes_max;
 		return 0;
 	case MAGIC_PARAM_REGEX_MAX:
-		*(size_t *)val = ms->regex_max;
+		*CAST(size_t *, val) = ms->regex_max;
 		return 0;
 	case MAGIC_PARAM_BYTES_MAX:
-		*(size_t *)val = ms->bytes_max;
+		*CAST(size_t *, val) = ms->bytes_max;
 		return 0;
 	default:
 		errno = EINVAL;

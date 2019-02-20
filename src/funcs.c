@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.101 2019/02/18 17:46:56 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.102 2019/02/20 02:35:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -392,9 +392,9 @@ file_reset(struct magic_set *ms, int checkloaded)
 #define OCTALIFY(n, o)	\
 	/*LINTED*/ \
 	(void)(*(n)++ = '\\', \
-	*(n)++ = (((uint32_t)*(o) >> 6) & 3) + '0', \
-	*(n)++ = (((uint32_t)*(o) >> 3) & 7) + '0', \
-	*(n)++ = (((uint32_t)*(o) >> 0) & 7) + '0', \
+	*(n)++ = ((CAST(uint32_t, *(o)) >> 6) & 3) + '0', \
+	*(n)++ = ((CAST(uint32_t, *(o)) >> 3) & 7) + '0', \
+	*(n)++ = ((CAST(uint32_t, *(o)) >> 0) & 7) + '0', \
 	(o)++)
 
 protected const char *
@@ -440,9 +440,9 @@ file_getbuffer(struct magic_set *ms)
 
 		while (op < eop) {
 			bytesconsumed = mbrtowc(&nextchar, op,
-			    (size_t)(eop - op), &state);
-			if (bytesconsumed == (size_t)(-1) ||
-			    bytesconsumed == (size_t)(-2)) {
+			    CAST(size_t, eop - op), &state);
+			if (bytesconsumed == CAST(size_t, -1) ||
+			    bytesconsumed == CAST(size_t, -2)) {
 				mb_conv = 0;
 				break;
 			}
@@ -465,7 +465,7 @@ file_getbuffer(struct magic_set *ms)
 #endif
 
 	for (np = ms->o.pbuf, op = ms->o.buf; *op;) {
-		if (isprint((unsigned char)*op)) {
+		if (isprint(CAST(unsigned char, *op))) {
 			*np++ = *op++;
 		} else {
 			OCTALIFY(np, op);
@@ -626,7 +626,7 @@ protected char *
 file_printable(char *buf, size_t bufsiz, const char *str, size_t slen)
 {
 	char *ptr, *eptr = buf + bufsiz - 1;
-	const unsigned char *s = (const unsigned char *)str;
+	const unsigned char *s = RCAST(const unsigned char *, str);
 	const unsigned char *es = s + slen;
 
 	for (ptr = buf;  ptr < eptr && s < es && *s; s++) {

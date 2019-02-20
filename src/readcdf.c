@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.71 2018/10/15 16:29:16 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.72 2019/02/20 02:35:27 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -204,7 +204,7 @@ cdf_file_property_info(struct magic_set *ms, const cdf_property_info_t *info,
 				    && len--; s += k) {
 					if (*s == '\0')
 						break;
-					if (isprint((unsigned char)*s))
+					if (isprint(CAST(unsigned char, *s)))
 						vbuf[j++] = *s;
 				}
 				if (j == sizeof(vbuf))
@@ -318,19 +318,19 @@ cdf_file_summary_info(struct magic_set *ms, const cdf_header_t *h,
 		case 2:
 			if (file_printf(ms, ", Os: Windows, Version %d.%d",
 			    si.si_os_version & 0xff,
-			    (uint32_t)si.si_os_version >> 8) == -1)
+			    CAST(uint32_t, si.si_os_version) >> 8) == -1)
 				return -2;
 			break;
 		case 1:
 			if (file_printf(ms, ", Os: MacOS, Version %d.%d",
-			    (uint32_t)si.si_os_version >> 8,
+			    CAST(uint32_t, si.si_os_version) >> 8,
 			    si.si_os_version & 0xff) == -1)
 				return -2;
 			break;
 		default:
 			if (file_printf(ms, ", Os %d, Version: %d.%d", si.si_os,
 			    si.si_os_version & 0xff,
-			    (uint32_t)si.si_os_version >> 8) == -1)
+			    CAST(uint32_t, si.si_os_version) >> 8) == -1)
 				return -2;
 			break;
 		}
@@ -406,7 +406,7 @@ cdf_check_summary_info(struct magic_set *ms, const cdf_info_t *info,
 	for (j = 0; str == NULL && j < dir->dir_len; j++) {
 		d = &dir->dir_tab[j];
 		for (k = 0; k < sizeof(name); k++)
-			name[k] = (char)cdf_tole2(d->d_name[k]);
+			name[k] = CAST(char, cdf_tole2(d->d_name[k]));
 		str = cdf_app_to_mime(name,
 				      NOTMIME(ms) ? name2desc : name2mime);
 	}

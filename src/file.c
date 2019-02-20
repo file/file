@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.178 2018/10/01 18:50:31 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.179 2019/02/20 02:35:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -400,7 +400,8 @@ main(int argc, char *argv[])
 	}
 	else {
 		size_t j, wid, nw;
-		for (wid = 0, j = (size_t)optind; j < (size_t)argc; j++) {
+		for (wid = 0, j = CAST(size_t, optind); j < CAST(size_t, argc);
+		    j++) {
 			nw = file_mbswidth(argv[j]);
 			if (nw > wid)
 				wid = nw;
@@ -537,9 +538,8 @@ process(struct magic_set *ms, const char *inname, int wid)
 			(void)putc('\0', stdout);
 		if (nulsep < 2) {
 			(void)printf("%s", separator);
-			(void)printf("%*s ",
-			    (int) (nopad ? 0 : (wid - file_mbswidth(inname))),
-			    "");
+			(void)printf("%*s ", CAST(int, nopad ? 0
+			    : (wid - file_mbswidth(inname))), "");
 		}
 	}
 
@@ -566,8 +566,8 @@ file_mbswidth(const char *s)
 
 	while (n > 0) {
 		bytesconsumed = mbrtowc(&nextchar, s, n, &state);
-		if (bytesconsumed == (size_t)(-1) ||
-		    bytesconsumed == (size_t)(-2)) {
+		if (bytesconsumed == CAST(size_t, -1) ||
+		    bytesconsumed == CAST(size_t, -2)) {
 			/* Something went wrong, return something reasonable */
 			return old_n;
 		}
@@ -626,13 +626,13 @@ docprint(const char *opts, int def)
 	for (sp = p - 1; sp > opts && *sp == ' '; sp--)
 		continue;
 
-	fprintf(stdout, "%.*s", (int)(p - opts), opts);
+	fprintf(stdout, "%.*s", CAST(int, p - opts), opts);
 
 	comma = 0;
 	for (i = 0; i < __arraycount(nv); i++) {
 		fprintf(stdout, "%s%s", comma++ ? ", " : "", nv[i].name);
 		if (i && i % 5 == 0 && i != __arraycount(nv) - 1) {
-			fprintf(stdout, ",\n%*s", (int)(p - sp - 1), "");
+			fprintf(stdout, ",\n%*s", CAST(int, p - sp - 1), "");
 			comma = 0;
 		}
 	}

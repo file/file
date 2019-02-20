@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.161 2019/02/18 17:46:56 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.162 2019/02/20 02:35:27 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -396,9 +396,9 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		}
 		offset = 0;
 		for (;;) {
-			if (offset >= (size_t)bufsize)
+			if (offset >= CAST(size_t, bufsize))
 				break;
-			offset = donote(ms, nbuf, offset, (size_t)bufsize,
+			offset = donote(ms, nbuf, offset, CAST(size_t, bufsize),
 			    clazz, swap, 4, flags, notecount, fd, ph_off,
 			    ph_num, fsize);
 			if (offset == 0)
@@ -536,7 +536,7 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     int swap __attribute__((__unused__)), uint32_t namesz, uint32_t descsz,
     size_t noff, size_t doff, int *flags)
 {
-	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
+	if (namesz == 4 && strcmp(RCAST(char *, &nbuf[noff]), "GNU") == 0 &&
 	    type == NT_GNU_BUILD_ID && (descsz >= 4 && descsz <= 20)) {
 		uint8_t desc[20];
 		const char *btype;
@@ -564,10 +564,10 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			return 1;
 		return 1;
 	}
-	if (namesz == 4 && strcmp((char *)&nbuf[noff], "Go") == 0 &&
+	if (namesz == 4 && strcmp(RCAST(char *, &nbuf[noff]), "Go") == 0 &&
 	    type == NT_GO_BUILD_ID && descsz < 128) {
 		if (file_printf(ms, ", Go BuildID=%.*s",
-		    CAST(int, descsz), CAST(char *, &nbuf[doff])) == -1)
+		    CAST(int, descsz), RCAST(char *, &nbuf[doff])) == -1)
 			return -1;
 		return 1;
 	}
@@ -579,7 +579,9 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     int swap, uint32_t namesz, uint32_t descsz,
     size_t noff, size_t doff, int *flags)
 {
-	if (namesz == 5 && strcmp((char *)&nbuf[noff], "SuSE") == 0 &&
+	const char *name = RCAST(const char *, &nbuf[noff]);
+
+	if (namesz == 5 && strcmp(name, "SuSE") == 0 &&
 		type == NT_GNU_VERSION && descsz == 2) {
 		*flags |= FLAGS_DID_OS_NOTE;
 		if (file_printf(ms, ", for SuSE %d.%d", nbuf[doff],
@@ -588,7 +590,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	    return 1;
 	}
 
-	if (namesz == 4 && strcmp((char *)&nbuf[noff], "GNU") == 0 &&
+	if (namesz == 4 && strcmp(name, "GNU") == 0 &&
 	    type == NT_GNU_VERSION && descsz == 16) {
 		uint32_t desc[4];
 		memcpy(desc, &nbuf[doff], sizeof(desc));
@@ -627,7 +629,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		return 1;
 	}
 
-	if (namesz == 7 && strcmp((char *)&nbuf[noff], "NetBSD") == 0) {
+	if (namesz == 7 && strcmp(name, "NetBSD") == 0) {
 	    	if (type == NT_NETBSD_VERSION && descsz == 4) {
 			*flags |= FLAGS_DID_OS_NOTE;
 			do_note_netbsd_version(ms, swap, &nbuf[doff]);
@@ -635,7 +637,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		}
 	}
 
-	if (namesz == 8 && strcmp((char *)&nbuf[noff], "FreeBSD") == 0) {
+	if (namesz == 8 && strcmp(name, "FreeBSD") == 0) {
 	    	if (type == NT_FREEBSD_VERSION && descsz == 4) {
 			*flags |= FLAGS_DID_OS_NOTE;
 			do_note_freebsd_version(ms, swap, &nbuf[doff]);
@@ -643,7 +645,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		}
 	}
 
-	if (namesz == 8 && strcmp((char *)&nbuf[noff], "OpenBSD") == 0 &&
+	if (namesz == 8 && strcmp(name, "OpenBSD") == 0 &&
 	    type == NT_OPENBSD_VERSION && descsz == 4) {
 		*flags |= FLAGS_DID_OS_NOTE;
 		if (file_printf(ms, ", for OpenBSD") == -1)
@@ -652,7 +654,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		return 1;
 	}
 
-	if (namesz == 10 && strcmp((char *)&nbuf[noff], "DragonFly") == 0 &&
+	if (namesz == 10 && strcmp(name, "DragonFly") == 0 &&
 	    type == NT_DRAGONFLY_VERSION && descsz == 4) {
 		uint32_t desc;
 		*flags |= FLAGS_DID_OS_NOTE;
@@ -673,7 +675,9 @@ do_pax_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     int swap, uint32_t namesz, uint32_t descsz,
     size_t noff, size_t doff, int *flags)
 {
-	if (namesz == 4 && strcmp((char *)&nbuf[noff], "PaX") == 0 &&
+	const char *name = RCAST(const char *, &nbuf[noff]);
+
+	if (namesz == 4 && strcmp(name, "PaX") == 0 &&
 	    type == NT_NETBSD_PAX && descsz == 4) {
 		static const char *pax[] = {
 		    "+mprotect",
@@ -695,7 +699,7 @@ do_pax_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			return 1;
 
 		for (i = 0; i < __arraycount(pax); i++) {
-			if (((1 << (int)i) & desc) == 0)
+			if (((1 << CAST(int, i)) & desc) == 0)
 				continue;
 			if (file_printf(ms, "%s%s", did++ ? "," : "",
 			    pax[i]) == -1)
@@ -712,6 +716,8 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     size_t noff, size_t doff, int *flags, size_t size, int clazz)
 {
 #ifdef ELFCORE
+	const char *name = RCAST(const char *, &nbuf[noff]);
+
 	int os_style = -1;
 	/*
 	 * Sigh.  The 2.0.36 kernel in Debian 2.1, at
@@ -727,16 +733,16 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	 * doesn't include the terminating null in the
 	 * name....
 	 */
-	if ((namesz == 4 && strncmp((char *)&nbuf[noff], "CORE", 4) == 0) ||
-	    (namesz == 5 && strcmp((char *)&nbuf[noff], "CORE") == 0)) {
+	if ((namesz == 4 && strncmp(name, "CORE", 4) == 0) ||
+	    (namesz == 5 && strcmp(name, "CORE") == 0)) {
 		os_style = OS_STYLE_SVR4;
 	}
 
-	if ((namesz == 8 && strcmp((char *)&nbuf[noff], "FreeBSD") == 0)) {
+	if ((namesz == 8 && strcmp(name, "FreeBSD") == 0)) {
 		os_style = OS_STYLE_FREEBSD;
 	}
 
-	if ((namesz >= 11 && strncmp((char *)&nbuf[noff], "NetBSD-CORE", 11)
+	if ((namesz >= 11 && strncmp(name, "NetBSD-CORE", 11)
 	    == 0)) {
 		os_style = OS_STYLE_NETBSD;
 	}
@@ -761,11 +767,11 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			    "gid=%u, nlwps=%u, lwp=%u (signal %u/code %u)",
 			    file_printable(sbuf, sizeof(sbuf),
 			    RCAST(char *, pi.cpi_name), sizeof(pi.cpi_name)),
-			    elf_getu32(swap, (uint32_t)pi.cpi_pid),
+			    elf_getu32(swap, CAST(uint32_t, pi.cpi_pid)),
 			    elf_getu32(swap, pi.cpi_euid),
 			    elf_getu32(swap, pi.cpi_egid),
 			    elf_getu32(swap, pi.cpi_nlwps),
-			    elf_getu32(swap, (uint32_t)pi.cpi_siglwp),
+			    elf_getu32(swap, CAST(uint32_t, pi.cpi_siglwp)),
 			    elf_getu32(swap, pi.cpi_signo),
 			    elf_getu32(swap, pi.cpi_sigcode)) == -1)
 				return 1;
@@ -879,8 +885,8 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 						i = k;
 				}
 
-				cname = (unsigned char *)
-				    &nbuf[doff + prpsoffsets(i)];
+				cname = CAST(unsigned char *,
+				    &nbuf[doff + prpsoffsets(i)]);
 				for (cp = cname; cp < nbuf + size && *cp
 				    && isprint(*cp); cp++)
 					continue;
@@ -891,7 +897,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 				while (cp > cname && isspace(cp[-1]))
 					cp--;
 				if (file_printf(ms, ", from '%.*s'",
-				    (int)(cp - cname), cname) == -1)
+				    CAST(int, cp - cname), cname) == -1)
 					return 1;
 				*flags |= FLAGS_DID_CORE;
 				return 1;
@@ -918,7 +924,8 @@ get_offset_from_virtaddr(struct magic_set *ms, int swap, int clazz, int fd,
 	 * virtual address in which the "virtaddr" belongs to.
 	 */
 	for ( ; num; num--) {
-		if (pread(fd, xph_addr, xph_sizeof, off) < (ssize_t)xph_sizeof) {
+		if (pread(fd, xph_addr, xph_sizeof, off) <
+		    CAST(ssize_t, xph_sizeof)) {
 			file_badread(ms);
 			return -1;
 		}
@@ -958,7 +965,7 @@ get_string_on_virtaddr(struct magic_set *ms,
 
 	/* We expect only printable characters, so return if buffer contains
 	 * non-printable character before the '\0' or just '\0'. */
-	for (bptr = buf; *bptr && isprint((unsigned char)*bptr); bptr++)
+	for (bptr = buf; *bptr && isprint(CAST(unsigned char, *bptr)); bptr++)
 		continue;
 	if (*bptr != '\0')
 		return 0;
@@ -1064,8 +1071,8 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			if (file_printf(ms, ", %s: '%s'", tag, buf) == -1)
 				return 0;
 		} else {
-			if (file_printf(ms, ", %s: %d", tag, (int) xauxv_val)
-			    == -1)
+			if (file_printf(ms, ", %s: %d", tag,
+			    CAST(int, xauxv_val)) == -1)
 				return 0;
 		}
 	}
@@ -1661,7 +1668,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			// Let DF_1 determine if we are PIE or not.
 			ms->mode &= ~0111;
 			for (;;) {
-				if (offset >= (size_t)bufsize)
+				if (offset >= CAST(size_t, bufsize))
 					break;
 				offset = dodynamic(ms, nbuf, offset,
 				    CAST(size_t, bufsize), clazz, swap);
@@ -1673,7 +1680,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		case PT_INTERP:
 			if (bufsize && nbuf[0]) {
 				nbuf[bufsize - 1] = '\0';
-				memcpy(interp, nbuf, (size_t)bufsize);
+				memcpy(interp, nbuf, CAST(size_t, bufsize));
 			} else
 				strlcpy(interp, "*empty*", sizeof(interp));
 			break;
@@ -1684,7 +1691,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			 */
 			offset = 0;
 			for (;;) {
-				if (offset >= (size_t)bufsize)
+				if (offset >= CAST(size_t, bufsize))
 					break;
 				offset = donote(ms, nbuf, offset,
 				    CAST(size_t, bufsize), clazz, swap, align,
