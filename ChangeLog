@@ -1,5 +1,10 @@
+2019-02-20  10:16  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.36
+
 2019-02-19  15:30  Christos Zoulas <christos@zoulas.com>
 
+	* Fix cast to use cast macros
 	* Add UCS-32 builtin detection (PR/61) reported by tmc
 
 2019-02-18  18:24  Christos Zoulas <christos@zoulas.com>
