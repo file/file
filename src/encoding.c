@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.17 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.18 2019/02/20 16:15:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -442,9 +442,9 @@ looks_ucs16(const unsigned char *bf, size_t nbytes, unichar *ubf,
 		/* XXX fix to properly handle chars > 65536 */
 
 		if (bigend)
-			ubf[(*ulen)++] = bf[i + 1] + 256 * bf[i];
+			ubf[(*ulen)++] = bf[i + 1] + (bf[i] << 8);
 		else
-			ubf[(*ulen)++] = bf[i] + 256 * bf[i + 1];
+			ubf[(*ulen)++] = bf[i] + (bf[i + 1] << 8);
 
 		if (ubf[*ulen - 1] == 0xfffe)
 			return 0;
@@ -475,15 +475,17 @@ looks_ucs32(const unsigned char *bf, size_t nbytes, unichar *ubf,
 
 	*ulen = 0;
 
-	for (i = 4; i + 1 < nbytes; i += 4) {
+	for (i = 4; i + 3 < nbytes; i += 4) {
 		/* XXX fix to properly handle chars > 65536 */
 
 		if (bigend)
 			ubf[(*ulen)++] = bf[i + 3] | (bf[i + 2] << 8)
-			    | (bf[i + 1] << 16) | bf[i] << 24;
+			    | (bf[i + 1] << 16)
+			    | CAST(unichar, bf[i] << 24);
 		else
 			ubf[(*ulen)++] = bf[i] | (bf[i + 1] << 8) 
-			    | (bf[i + 2] << 16) | (bf[i + 3] << 24);
+			    | (bf[i + 2] << 16)
+			    | CAST(unichar, bf[i + 3] << 24);
 
 		if (ubf[*ulen - 1] == 0xfffe)
 			return 0;
