@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.42 2019/02/23 01:16:35 christos Exp $
+# $File: console,v 1.43 2019/02/23 01:16:36 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -509,19 +509,19 @@
 # Microsoft Xbox executables .xbe (Esa Hyytia <ehyytia@cc.hut.fi>)
 0	string	XBEH	Microsoft Xbox executable
 # expect base address of 0x10000
->0x0104               ulelong =0x10000
->>(0x0118-0x0FFF4)    lestring16 x       \b: "%.40s"
->>(0x0118-0x0FFF5)    byte     x         (%c
->>(0x0118-0x0FFF6)    byte     x         \b%c-
->>(0x0118-0x0FFF8)    uleshort x         \b%03u)
->>(0x0118-0x0FF60)    ulelong&0x80000007  0x80000007 \b, all regions
->>(0x0118-0x0FF60)    ulelong&0x80000007  !0x80000007
->>>(0x0118-0x0FF60)   ulelong >0           (regions:
->>>>(0x0118-0x0FF60)  ulelong &0x00000001  NA
->>>>(0x0118-0x0FF60)  ulelong &0x00000002  Japan
->>>>(0x0118-0x0FF60)  ulelong &0x00000004  Rest_of_World
->>>>(0x0118-0x0FF60)  ulelong &0x80000000  Manufacturer
->>>(0x0118-0x0FF60)   ulelong >0           \b)
+>0x0104                 ulelong =0x10000
+>>(0x0118.l-0x0FFF4)    lestring16 x       \b: "%.40s"
+>>(0x0118.l-0x0FFF5)    byte     x         (%c
+>>(0x0118.l-0x0FFF6)    byte     x         \b%c-
+>>(0x0118.l-0x0FFF8)    uleshort x         \b%03u)
+>>(0x0118.l-0x0FF60)    ulelong&0x80000007  0x80000007 \b, all regions
+>>(0x0118.l-0x0FF60)    ulelong&0x80000007  !0x80000007
+>>>(0x0118.l-0x0FF60)   ulelong >0           (regions:
+>>>>(0x0118.l-0x0FF60)  ulelong &0x00000001  NA
+>>>>(0x0118.l-0x0FF60)  ulelong &0x00000002  Japan
+>>>>(0x0118.l-0x0FF60)  ulelong &0x00000004  Rest_of_World
+>>>>(0x0118.l-0x0FF60)  ulelong &0x80000000  Manufacturer
+>>>(0x0118.l-0x0FF60)   ulelong >0           \b)
 # probabilistic checks whether signed or not
 >0x0004 ulelong =0x0
 >>&2    ulelong =0x0
