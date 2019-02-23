@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: audio,v 1.98 2019/02/23 01:16:18 christos Exp $
+# $File: audio,v 1.99 2019/02/23 01:16:22 christos Exp $
 # audio:  file(1) magic for sound formats (see also "iff")
 #
 # Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
@@ -733,6 +733,54 @@
 >>>>0x78 ubyte		0x03	AY-3-8930,
 >>>>0x78 ubyte		0x10	YM2149,
 >>>>0x78 ubyte		0x11	YM3439,
+# VGM 1.61
+>>0x34	ulelong		>0x4C
+>>>0x80	ulelong		>0	DMG,
+>>0x34	ulelong		>0x50
+>>>0x84	lelong		>0	NES APU,
+>>>0x84	lelong		<0	NES APU with FDS,
+>>0x34	ulelong		>0x54
+>>>0x88	ulelong		>0	MultiPCM,
+>>0x34	ulelong		>0x58
+>>>0x8C	ulelong		>0	uPD7759,
+>>0x34	ulelong		>0x5C
+>>>0x90	ulelong		>0	OKIM6258,
+>>0x34	ulelong		>0x64
+>>>0x98	ulelong		>0	OKIM6295,
+>>0x34	ulelong		>0x68
+>>>0x9C	ulelong		>0	K051649,
+>>0x34	ulelong		>0x6C
+>>>0xA0	ulelong		>0	K054539,
+>>0x34	ulelong		>0x70
+>>>0xA4	ulelong		>0	HuC6280,
+>>0x34	ulelong		>0x74
+>>>0xA8	ulelong		>0	C140,
+>>0x34	ulelong		>0x78
+>>>0xAC	ulelong		>0	K053260,
+>>0x34	ulelong		>0x7C
+>>>0xB0	ulelong		>0	Pokey,
+>>0x34	ulelong		>0x80
+>>>0xB4	ulelong		>0	QSound,
+# VGM 1.71
+>>0x34	ulelong		>0x84
+>>>0xB8	ulelong		>0	SCSP,
+>>0x34	ulelong		>0x8C
+>>>0xC0	ulelong		>0	WonderSwan,
+>>0x34	ulelong		>0x90
+>>>0xC4	ulelong		>0	VSU,
+>>0x34	ulelong		>0x94
+>>>0xC8	ulelong		>0	SAA1099,
+>>0x34	ulelong		>0x98
+>>>0xCC	ulelong		>0	ES5503,
+>>0x34	ulelong		>0x9C
+>>>0xD0	lelong		>0	ES5505,
+>>>0xD0	lelong		<0	ES5506,
+>>0x34	ulelong		>0xA4
+>>>0xD8	ulelong		>0	X1-010,
+>>0x34	ulelong		>0xA8
+>>>0xDC	ulelong		>0	C352,
+>>0x34	ulelong		>0xAC
+>>>0xE0	ulelong		>0	GA20,
 
 # GVOX Encore file format
 # Since this is a proprietary file format and there is no publicly available
