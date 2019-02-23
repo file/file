@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.157 2019/02/23 01:16:21 christos Exp $
+# $File: images,v 1.158 2019/02/23 01:16:32 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1708,7 +1708,7 @@
 >12	lelong	0x04030201			(little-endian)
 >>16	use	khronos-ktx-endian-header
 >12	belong	0x04030201			(big-endian)
->>16	use	^khronos-ktx-endian-header
+>>16	use	\^khronos-ktx-endian-header
 
 # Type: Valve VTF texture.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
