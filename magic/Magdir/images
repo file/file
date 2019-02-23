@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.154 2019/02/09 17:56:01 christos Exp $
+# $File: images,v 1.155 2019/02/23 01:16:18 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -27,23 +27,25 @@
 # and Image Type 1 2 3 9 10 11 32 33
 # and Color Map Entry Size 0 15 16 24 32
 0	ubequad&0x00FeC400000000C0	0
+# Prevent conflicts with CRI ADX.
+>(2.S-2) belong	!0x28632943
 # skip more garbage like *.iso by looking for positive image type
->2	ubyte			>0
+>>2	ubyte			>0
 # skip some compiled terminfo like xterm+tmux by looking for image type less equal 33
->>2	ubyte			<34
+>>>2	ubyte			<34
 # skip arches.3200 , Finder.Root , Slp.1 by looking for low pixel depth 1 8 15 16 24 32
->>>16	ubyte			1
->>>>0		use		tga-image
->>>16	ubyte			8
->>>>0		use		tga-image
->>>16	ubyte			15
->>>>0		use		tga-image
->>>16	ubyte			16
->>>>0		use		tga-image
->>>16	ubyte			24
->>>>0		use		tga-image
->>>16	ubyte			32
->>>>0		use		tga-image
+>>>>16	ubyte			1
+>>>>>0		use		tga-image
+>>>>16	ubyte			8
+>>>>>0		use		tga-image
+>>>>16	ubyte			15
+>>>>>0		use		tga-image
+>>>>16	ubyte			16
+>>>>>0		use		tga-image
+>>>>16	ubyte			24
+>>>>>0		use		tga-image
+>>>>16	ubyte			32
+>>>>>0		use		tga-image
 #	display tga bitmap image information
 0	name				tga-image
 >2	ubyte		<34		Targa image data
