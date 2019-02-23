@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.158 2019/02/23 01:16:32 christos Exp $
+# $File: images,v 1.159 2019/02/23 01:16:34 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1893,3 +1893,70 @@
 >0x08	use	pvr3-pixel-format
 >0x10	ulelong		1	\b, sRGB
 >0x04	ulelong&0x02	0x02	\b, premultiplied alpha
+
+# Type: Microsoft Xbox XPR0 texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://github.com/Cxbx-Reloaded/Cxbx-Reloaded/blob/develop/src/core/hle/D3D8/XbD3D8Types.h
+
+# XPR pixel formats.
+0	name	xbox-xpr-pixel-format
+>0	byte	0x00	L8
+>0	byte	0x01	AL8
+>0	byte	0x02	ARGB1555
+>0	byte	0x03	RGB555
+>0	byte	0x04	ARGB4444
+>0	byte	0x05	RGB565
+>0	byte	0x06	ARGB8888
+>0	byte	0x07	xRGB8888
+>0	byte	0x0B	P8
+>0	byte	0x0C	DXT1
+>0	byte	0x0E	DXT2
+>0	byte	0x0F	DXT4
+>0	byte	0x10	Linear ARGB1555
+>0	byte	0x11	Linear RGB565
+>0	byte	0x12	Linear ARGB8888
+>0	byte	0x13	Linear L8
+>0	byte	0x16	Linear R8B8
+>0	byte	0x17	Linear G8B8
+>0	byte	0x19	A8
+>0	byte	0x1A	A8L8
+>0	byte	0x1B	Linear AL8
+>0	byte	0x1C	Linear RGB555
+>0	byte	0x1D	Linear ARGB4444
+>0	byte	0x1E	Linear xRGB8888
+>0	byte	0x1F	Linear A8
+>0	byte	0x20	Linear A8L8
+>0	byte	0x24	YUY2
+>0	byte	0x25	UYVY
+>0	byte	0x27	L6V5U5
+>0	byte	0x28	V8U8
+>0	byte	0x29	R8B8
+>0	byte	0x2A	D24S8
+>0	byte	0x2B	F24S8
+>0	byte	0x2C	D16
+>0	byte	0x2D	F16
+>0	byte	0x2E	Linear D24S8
+>0	byte	0x2F	Linear F24S8
+>0	byte	0x30	Linear D16
+>0	byte	0x31	Linear F16
+>0	byte	0x32	L16
+>0	byte	0x33	V16U16
+>0	byte	0x35	Linear L16
+>0	byte	0x36	Linear V16U16
+>0	byte	0x37	Linear L6V5U5
+>0	byte	0x38	RGBA5551
+>0	byte	0x39	RGBA4444
+>0	byte	0x3A	QWVU8888
+>0	byte	0x3B	BGRA8888
+>0	byte	0x3C	RGBA8888
+>0	byte	0x3D	Linear RGBA5551
+>0	byte	0x3E	Linear RGBA4444
+>0	byte	0x3F	Linear ABGR8888
+>0	byte	0x40	Linear BGRA8888
+>0	byte	0x41	Linear RGBA8888
+>0	byte	0x64	Vertex Data
+
+0	string		XPR0	Microsoft Xbox XPR0 texture
+>0x19	byte	x	\b, format:
+>>0x19	use	xbox-xpr-pixel-format
