@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: audio,v 1.104 2019/02/23 01:16:27 christos Exp $
+# $File: audio,v 1.105 2019/02/23 01:16:28 christos Exp $
 # audio:  file(1) magic for sound formats (see also "iff")
 #
 # Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
@@ -1007,3 +1007,32 @@
 >>&1	string		x	\b: %s
 >>5	search/1024	AUTHOR
 >>>&1	string		x	by %s
+
+# Nintendo Wii BRSTM audio format (fields)
+# NOTE: Assuming HEAD starts at 0x40.
+# FIXME: Replace 0x48 with HEAD offset plus 8.
+0	name	nintendo-wii-brstm-fields
+>(0x10.L)	belong	0x48454144	\b:
+>>(0x10.L+0x0C)	belong	x
+>>>(&-4.L+0x48)	belong	x
+>>>>&-4		byte	0	PCM, signed 8-bit,
+>>>>&-4		byte	1	PCM, signed 16-bit,
+>>>>&-4		byte	2	THP ADPCM,
+>>>>&-3		byte	!0	looping,
+>>>>&-2		byte	1	mono
+>>>>&-2		byte	2	stereo
+>>>>&-2		byte	3	3 channels
+>>>>&-2		byte	4	quad
+>>>>&-2		byte	>4	%u channels
+>>>>&0		beshort	!0	%u Hz
+
+# Nintendo Wii BRSTM audio format
+# http://wiibrew.org/wiki/BRSTM_file
+# Added by David Korth <gerbilsoft@gerbilsoft.com>
+0	string		RSTM	Nintendo Wii BRSTM audio file
+!:mime	audio/x-brstm
+!:ext	brstm
+>4	beshort		0xFEFF
+>>0	use		nintendo-wii-brstm-fields
+>4	beshort		0xFFFE
+>>0	use		^nintendo-wii-brstm-fields
