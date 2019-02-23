@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.18 2019/02/20 16:15:47 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.19 2019/02/23 21:54:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -481,11 +481,11 @@ looks_ucs32(const unsigned char *bf, size_t nbytes, unichar *ubf,
 		if (bigend)
 			ubf[(*ulen)++] = bf[i + 3] | (bf[i + 2] << 8)
 			    | (bf[i + 1] << 16)
-			    | CAST(unichar, bf[i] << 24);
+			    | (CAST(unichar, bf[i]) << 24);
 		else
 			ubf[(*ulen)++] = bf[i] | (bf[i + 1] << 8) 
 			    | (bf[i + 2] << 16)
-			    | CAST(unichar, bf[i + 3] << 24);
+			    | (CAST(unichar, bf[i + 3]) << 24);
 
 		if (ubf[*ulen - 1] == 0xfffe)
 			return 0;
