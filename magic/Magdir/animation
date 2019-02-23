@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.69 2018/08/21 12:48:06 christos Exp $
+# $File: animation,v 1.70 2019/02/23 01:16:16 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1065,3 +1065,10 @@
 >8	string	AHDR	LucasArts Smush Animation Format (SAN) video
 0	string	SANM
 >8	string	SHDR	LucasArts Smush v2 (SANM) video
+
+# Type: Scaleform video
+# Extension: .usm
+# URL:  https://wiki.multimedia.cx/index.php/USM
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+0	string	CRID
+>32	string	@UTF	Scaleform video
