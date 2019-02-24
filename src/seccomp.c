@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.7 2018/09/09 20:33:28 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.8 2019/02/24 18:12:04 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -176,6 +176,7 @@ enable_sandbox_full(void)
  	ALLOW_RULE(_llseek);
 	ALLOW_RULE(lstat);
  	ALLOW_RULE(lstat64);
+	ALLOW_RULE(madvise);
 	ALLOW_RULE(mmap);
  	ALLOW_RULE(mmap2);
 	ALLOW_RULE(mprotect);
