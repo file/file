@@ -1,3 +1,10 @@
+2019-02-27  11:54  Christos Zoulas <christos@zoulas.com>
+
+	* Improve regex efficiency (Michael Schroeder) by:
+		1. Prefixing regex searches with regular search
+		   for keywords where possible
+		2. Using memmem(3) where available
+
 2019-02-20  10:16  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.36
