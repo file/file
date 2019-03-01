@@ -171,7 +171,6 @@ Causes the file command to output the file type and creator code as
 used by older MacOS versions.
 The code consists of eight letters,
 the first describing the file type, the latter the creator.
-the first describing the file type, the latter the creator.
 This option works properly only for file formats that have the
 apple-style output defined.
 .It Fl b , Fl Fl brief
