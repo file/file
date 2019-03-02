@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.12 2018/10/19 00:26:26 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.13 2019/03/02 01:08:10 christos Exp $")
 #endif
 
 #include <string.h>
@@ -52,7 +52,8 @@ FILE_RCSID("@(#)$File: is_json.c,v 1.12 2018/10/19 00:26:26 christos Exp $")
 #define JSON_NUMBER	2
 #define JSON_OBJECT	3
 #define JSON_STRING	4
-#define JSON_MAX	5
+#define JSON_ARRAYN	5
+#define JSON_MAX	6
 
 /*
  * if JSON_COUNT != 0:
@@ -171,6 +172,7 @@ json_parse_array(const unsigned char **ucp, const unsigned char *ue,
 	size_t *st, size_t lvl)
 {
 	const unsigned char *uc = *ucp;
+	int more = 0;	/* Array has more than 1 element */
 
 	DPRINTF("Parse array: ", uc, *ucp);
 	while (uc < ue) {
@@ -180,9 +182,12 @@ json_parse_array(const unsigned char **ucp, const unsigned char *ue,
 			goto out;
 		switch (*uc) {
 		case ',':
+			more++;
 			uc++;
 			continue;
 		case ']':
+			if (more)
+				st[JSON_ARRAYN]++;
 			*ucp = uc + 1;
 			return 1;
 		default:
@@ -330,7 +335,7 @@ json_parse(const unsigned char **ucp, const unsigned char *ue,
 		return 0;
 #if JSON_COUNT
 	/* bail quickly if not counting */
-	if (lvl > 1 && (st[JSON_OBJECT] || st[JSON_ARRAY]))
+	if (lvl > 1 && (st[JSON_OBJECT] || st[JSON_ARRAYN]))
 		return 1;
 #endif
 
@@ -373,7 +378,7 @@ out:
 	*ucp = uc;
 	DPRINTF("End general: ", uc, *ucp);
 	if (lvl == 0)
-		return rv && (st[JSON_ARRAY] || st[JSON_OBJECT]);
+		return rv && (st[JSON_ARRAYN] || st[JSON_OBJECT]);
 	return rv;
 }
 
@@ -408,8 +413,10 @@ file_is_json(struct magic_set *ms, const struct buffer *b)
 #define P(n) st[n], st[n] > 1 ? "s" : ""
 	if (file_printf(ms, " (%" SIZE_T_FORMAT "u object%s, %" SIZE_T_FORMAT
 	    "u array%s, %" SIZE_T_FORMAT "u string%s, %" SIZE_T_FORMAT
-	    "u constant%s, %" SIZE_T_FORMAT "u number%s)", P(JSON_OBJECT),
-	    P(JSON_ARRAY), P(JSON_STRING), P(JSON_CONSTANT), P(JSON_NUMBER))
+	    "u constant%s, %" SIZE_T_FORMAT "u number%s, %" SIZE_T_FORMAT
+	    "u >1array%s)",
+	    P(JSON_OBJECT), P(JSON_ARRAY), P(JSON_STRING), P(JSON_CONSTANT),
+	    P(JSON_NUMBER), P(JSON_ARRAYN))
 	    == -1)
 		return -1;
 #endif
