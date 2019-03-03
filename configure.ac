@@ -105,7 +105,7 @@ AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 AC_CHECK_MEMBERS([struct stat.st_rdev])
 
-AC_CHECK_MEMBERS([struct tm.tm_gmtoff])
+AC_CHECK_MEMBERS([struct tm.tm_gmtoff],,,[#include <time.h>])
 AC_STRUCT_TIMEZONE
 AC_STRUCT_TIMEZONE_DAYLIGHT
 AC_SYS_LARGEFILE
