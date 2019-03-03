@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.124 2019/02/20 15:07:44 christos Exp $
+# $File: archive,v 1.125 2019/03/03 17:11:28 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -226,21 +226,48 @@
 # a portable archive whose first member has a name beginning with
 # "debian".
 #
+# Update: Joerg Jenderek
+# URL: https://en.wikipedia.org/wiki/Deb_(file_format)
 0	string		=!<arch>\ndebian
->8	string		debian-split	part of multipart Debian package
+# https://manpages.debian.org/testing/dpkg/dpkg-split.1.en.html
+>14	string		-split	part of multipart Debian package
 !:mime	application/vnd.debian.binary-package
->8	string		debian-binary	Debian binary package
+# udeb is used for stripped down deb file
+!:ext	deb/udeb
+>14	string		-binary	Debian binary package
 !:mime	application/vnd.debian.binary-package
->8	string		!debian
+!:ext	deb/udeb
+# This should not happen
+>14	default		x	Unknown Debian package
+# NL terminated version; for most Debian cases this is 2.0 or 2.1 for splitted
 >68	string		>\0		(format %s)
-# These next two lines do not work, because a bzip2 Debian archive
-# still uses gzip for the control.tar (first in the archive).  Only
-# data.tar varies, and the location of its filename varies too.
-# file/libmagic does not current have support for ascii-string based
-# (offsets) as of 2005-09-15.
-#>81	string		bz2		\b, uses bzip2 compression
-#>84	string		gz		\b, uses gzip compression
-#>136	ledate		x		created: %s
+#>68	string		!2.0\n
+#>>68	string		x		(format %.3s)
+>68	string		=2.0\n
+# 2nd archive name=control archive name like control.tar.gz or control.tar.xz
+>>72	string		>\0		\b, with %.14s
+# look for 3rd archive name=data archive name like data.tar.{gz,xz,bz2,lzma}
+>>0	search/0x93e4f	data.tar.	\b, data compression
+# the above line only works if FILE_BYTES_MAX in ../../src/file.h is raised
+# for example like libreoffice-dev-doc_1%3a5.2.7-1+rpi1+deb9u3_all.deb
+>>>&0	string		x		%.4s
+# splitted debian package case
+>68	string		=2.1\n
+# dpkg-1.18.25/dpkg-split/info.c
+# NL terminated ASCII package name like ckermit
+>>&0	string		x		\b, %s
+# NL terminated package version like 302-5.3
+>>>&1	string		x		%s
+# NL terminated MD5 checksum
+>>>>&1	string		x		\b, MD5 %s
+# NL terminated original package length
+>>>>>&1	string		x		\b, unsplitted size %s
+# NL terminated part length
+>>>>>>&1	string	x		\b, part lenght %s
+# NL terminated package part like n/m
+>>>>>>>&1	string	x		\b, part %s
+# NL terminated package architecture like armhf since dpkg 1.16.1 or later
+>>>>>>>>&1	string	x		\b, %s
 
 #
 # MIPS archive; they're in the portable archive format, and need to go
