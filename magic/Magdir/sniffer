@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.22 2019/03/03 02:35:32 christos Exp $
+# $File: sniffer,v 1.23 2019/03/03 14:59:41 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -189,6 +189,7 @@
 >20	belong		247		(Infiniband
 >20	belong		248		(SCTP
 # print default match
+>20	default		x		
 >>20	belong		x		(linktype#%u
 >16	belong		x		\b, capture length %u)
 
