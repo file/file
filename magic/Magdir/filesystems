@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.125 2018/12/10 21:06:53 christos Exp $
+# $File: filesystems,v 1.126 2019/03/08 13:38:15 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1884,7 +1884,7 @@
 #>>512		ubyte			=0xfa			320k
 #>>512		ubyte			=0xfb			640k
 #>>512		ubyte			=0xfc			180k
-# look like an an old DOS directory entry
+# look like an old DOS directory entry
 #>>>0xA0E	ubequad			0
 #>>>>0xA00	ubequad			!0
 #!:mime application/x-ima
