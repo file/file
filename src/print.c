@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.84 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.85 2019/03/12 20:43:05 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -42,8 +42,6 @@ FILE_RCSID("@(#)$File: print.c,v 1.84 2019/02/20 02:35:27 christos Exp $")
 #include <unistd.h>
 #endif
 #include <time.h>
-
-#define SZOF(a)	(sizeof(a) / sizeof(a[0]))
 
 #include "cdf.h"
 
@@ -66,8 +64,8 @@ file_mdump(struct magic *m)
 			(void) fputc('~', stderr);
 		(void) fprintf(stderr, "%c%u),",
 		    (CAST(size_t, m->in_op & FILE_OPS_MASK) <
-		    SZOF(optyp)) ? optyp[m->in_op & FILE_OPS_MASK] : '?',
-		    m->in_offset);
+		    __arraycount(optyp)) ?
+		    optyp[m->in_op & FILE_OPS_MASK] : '?', m->in_offset);
 	}
 	(void) fprintf(stderr, " %s%s", (m->flag & UNSIGNED) ? "u" : "",
 	    /* Note: type is unsigned */
@@ -112,7 +110,8 @@ file_mdump(struct magic *m)
 			(void) fprintf(stderr, "/%u", m->str_range);
 	}
 	else {
-		if (CAST(size_t, m->mask_op & FILE_OPS_MASK) < SZOF(optyp))
+		if (CAST(size_t, m->mask_op & FILE_OPS_MASK) <
+		    __arraycount(optyp))
 			(void) fputc(optyp[m->mask_op & FILE_OPS_MASK], stderr);
 		else
 			(void) fputc('?', stderr);

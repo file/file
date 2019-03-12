@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf_time.c,v 1.18 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.19 2019/03/12 20:43:05 christos Exp $")
 #endif
 
 #include <time.h>
@@ -68,7 +68,7 @@ cdf_getday(int year, int days)
 {
 	size_t m;
 
-	for (m = 0; m < sizeof(mdays) / sizeof(mdays[0]); m++) {
+	for (m = 0; m < __arraycount(mdays); m++) {
 		int sub = mdays[m] + (m == 1 && isleap(year));
 		if (days < sub)
 			return days;
@@ -85,7 +85,7 @@ cdf_getmonth(int year, int days)
 {
 	size_t m;
 
-	for (m = 0; m < sizeof(mdays) / sizeof(mdays[0]); m++) {
+	for (m = 0; m < __arraycount(mdays); m++) {
 		days -= mdays[m];
 		if (m == 1 && isleap(year))
 			days--;

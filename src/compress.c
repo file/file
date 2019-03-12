@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.115 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.116 2019/03/12 20:43:05 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -179,7 +179,7 @@ private const struct {
 
 private ssize_t swrite(int, const void *, size_t);
 #if HAVE_FORK
-private size_t ncompr = sizeof(compr) / sizeof(compr[0]);
+private size_t ncompr = __arraycount(compr);
 private int uncompressbuf(int, size_t, size_t, const unsigned char *,
     unsigned char **, size_t *);
 #ifdef BUILTIN_DECOMPRESS

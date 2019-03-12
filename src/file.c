@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.179 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.180 2019/03/12 20:43:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -244,11 +244,11 @@ main(int argc, char *argv[])
 			flags |= MAGIC_ERROR;
 			break;
 		case 'e':
-			for (i = 0; i < sizeof(nv) / sizeof(nv[0]); i++)
+			for (i = 0; i < __arraycount(nv); i++)
 				if (strcmp(nv[i].name, optarg) == 0)
 					break;
 
-			if (i == sizeof(nv) / sizeof(nv[0]))
+			if (i == __arraycount(nv))
 				errflg++;
 			else
 				flags |= nv[i].value;

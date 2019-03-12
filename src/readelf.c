@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.162 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.163 2019/03/12 20:43:05 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -285,8 +285,8 @@ static const size_t	prpsoffsets64[] = {
 	16,		/* FreeBSD, 64-bit */
 };
 
-#define	NOFFSETS32	(sizeof(prpsoffsets32) / sizeof(prpsoffsets32[0]))
-#define NOFFSETS64	(sizeof(prpsoffsets64) / sizeof(prpsoffsets64[0]))
+#define	NOFFSETS32	__arraycount(prpsoffsets32)
+#define NOFFSETS64	__arraycount(prpsoffsets64)
 
 #define NOFFSETS	(clazz == ELFCLASS32 ? NOFFSETS32 : NOFFSETS64)
 
