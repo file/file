@@ -186,9 +186,7 @@ main(int argc, char *argv[])
 	char *progname;
 
 	/* makes islower etc work for other langs */
-#ifdef HAVE_SETLOCALE
 	(void)setlocale(LC_CTYPE, "");
-#endif
 
 #ifdef __EMX__
 	/* sh-like wildcard expansion! Shouldn't hurt at least ... */
