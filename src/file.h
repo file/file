@@ -560,10 +560,6 @@ extern char *sys_errlist[];
 	(((e) >= 0 && (e) < sys_nerr) ? sys_errlist[(e)] : "Unknown error")
 #endif
 
-#ifndef HAVE_STRTOUL
-#define strtoul(a, b, c)	strtol(a, b, c)
-#endif
-
 #ifndef HAVE_PREAD
 ssize_t pread(int, void *, size_t, off_t);
 #endif
