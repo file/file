@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.23 2019/01/11 21:00:26 christos Exp $
+# $File: windows,v 1.24 2019/03/13 02:57:20 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -726,4 +726,93 @@
 >>>&0	search/43	\xFF\xFF\xFF			
 # directory like C:\Program Files\GIMP 2
 >>>>&0	lestring16	x				\b, %-.42s
+
+# Windows Imaging (WIM) Image
+# Update: Joerg Jenderek at Mar 2019
+# URL: https://en.wikipedia.org/wiki/Windows_Imaging_Format
+# Reference: http://download.microsoft.com/download/f/e/f/
+# fefdc36e-392d-4678-9e4e-771ffa2692ab/Windows%20Imaging%20File%20Format.rtf
+# Note: verified by like `7z t boot.wim` `wiminfo install.esd --header`
+0	string		MSWIM\000\000\000
+>0	use		wim-archive
+# https://wimlib.net/man1/wimoptimize.html
+0	string		WLPWM\000\000\000
+>0	use		wim-archive
+0	name		wim-archive
+# _WIMHEADER_V1_PACKED ImageTag[8]
+>0	string		x			Windows imaging
+!:mime	application/x-ms-wim
+# TO avoid in file version 5.36 error like
+# Magdir/windows, 760: Warning: Current entry does not yet have a description
+# file: could not find any valid magic files! (No error)
+# splitted WIM
+>16	ulelong		&0x00000008		(SWM
+!:ext	swm
+# usPartNumber; 1, unless the file was split into multiple parts
+>>40	uleshort	x			\b %u
+# usTotalParts; The total number of WIM file parts in a spanned set
+>>42	uleshort	x			\b of %u) image
+# non splitted WIM
+>16	ulelong		^0x00000008
+# https://wimlib.net/man1/wimmount.html
+# solid WIMs; version 3584; usually contain LZMS-compressed and the .esd extension
+>>12	ulelong		3584			(ESD) image
+!:ext	esd
+>>12	ulelong		!3584			(WIM) image
+!:ext	wim
+>0	string/b	WLPWM\000\000\000	\b, wimlib pipable format
+# cbSize size of the WIM header in bytes like 208
+#>8	ulelong		x			\b, headersize %u
+# dwVersion version of the WIM file 00010d00h~1.13 00000e00h~0.14
+>14	uleshort	x			v%u
+>13	ubyte		x			\b.%u
+# dwImageCount; The number of images contained in the WIM file
+>44	ulelong		>1			\b, %u images
+# dwBootIndex
+# 1-based index of the bootable image of the WIM, or 0 if no image is bootable
+>0x78	ulelong		>0			\b, bootable no. %u
+# dwFlags
+#>16	ulelong		x			\b, flags 0x%8.8x
+#define FLAG_HEADER_COMPRESSION		0x00000002
+#define FLAG_HEADER_READONLY            0x00000004
+#define FLAG_HEADER_SPANNED		0x00000008
+#define FLAG_HEADER_RESOURCE_ONLY       0x00000010
+#define FLAG_HEADER_METADATA_ONLY       0x00000020
+#define FLAG_HEADER_WRITE_IN_PROGRESS   0x00000040
+#define FLAG_HEADER_RP_FIX		0x00000080 reparse point fixup
+#define FLAG_HEADER_COMPRESS_RESERVED   0x00010000
+#define FLAG_HEADER_COMPRESS_XPRESS     0x00020000
+#define FLAG_HEADER_COMPRESS_LZX	0x00040000
+#define FLAG_HEADER_COMPRESS_LZMS	0x00080000
+#define FLAG_HEADER_COMPRESS_XPRESS2    0x00100000 wimlib-1.13.0\include\wimlib\header.h 
+# XPRESS, with small chunk size
+>16	ulelong		&0x00100000		\b, XPRESS2
+>16	ulelong		&0x00080000		\b, LZMS
+>16	ulelong		&0x00040000		\b, LZX
+>16	ulelong		&0x00020000		\b, XPRESS
+>16	ulelong		&0x00000002		compressed
+>16	ulelong		&0x00000004		\b, read only
+>16	ulelong		&0x00000010		\b, resource only
+>16	ulelong		&0x00000020		\b, metadata only
+>16	ulelong		&0x00000080		\b, reparse point fixup
+#>16	ulelong		&0x00010000		\b, RESERVED
+# dwCompressionSize; Uncompressed chunk size for resources or 0 if uncompressed
+#>20	ulelong		>0			\b, chunk size %u bytes
+# gWIMGuid
+#>24	ubequad		x			\b, GUID 0x%16.16llx
+#>>32	ubequad		x			\b%16.16llx
+# rhOffsetTable; the location of the resource lookup table
+# wim_reshdr_disk[24]= u8 size_in_wim[7] + u8 flags + le64 offset_in_wim + le64 uncompressed_size
+#>48	ubequad		x			\b, rhOffsetTable 0x%16.16llx
+# rhXmlData; the location of the XML data
+#>0x50	ulelong		x			\b, at 0x%8.8x
+# NOT WORKING \xff\xfe<\0W\0I\0M\0
+#>(0x50.l)	ubequad	x			\b, xml=%16.16llx
+# rhBootMetadata; the location of the metadata resource
+#>0x60	ubequad		x			\b, rhBootMetadata 0x%16.16llx
+# rhIntegrity; the location of integrity table used to verify files
+#>0x7c	ubequad		x			\b, rhIntegrity 0x%16.16llx
+# Unused[60]
+#>148	ubequad		!0			\b,unused 0x%16.16llx
+#
 

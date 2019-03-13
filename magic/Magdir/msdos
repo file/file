@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.126 2018/11/11 01:58:19 christos Exp $
+# $File: msdos,v 1.127 2019/03/13 02:57:20 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1426,10 +1426,6 @@
 # Windows CE Binary Image Data Format
 # From: Dr. Jesus <j@hug.gs>
 0	string/b	B000FF\n	Windows Embedded CE binary image
-
-# Windows Imaging (WIM) Image
-0	string/b	MSWIM\000\000\000	Windows imaging (WIM) image
-0	string/b	WLPWM\000\000\000	Windows imaging (WIM) image, wimlib pipable format
 
 # The second byte of these signatures is a file version; I don't know what,
 # if anything, produced files with version numbers 0-2.
