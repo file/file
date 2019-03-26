@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.280 2019/02/28 12:52:56 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.281 2019/03/26 12:46:35 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -147,7 +147,12 @@ private const char * __attribute__((__format_arg__(3)))
 file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
 	const char *file, size_t line)
 {
-	const char *ptr = fmtcheck(desc, def);
+	const char *ptr;
+
+	if (strchr(m->desc, '%') == NULL)
+		return m->desc;
+
+	ptr = fmtcheck(desc, def);
 	if (ptr == def)
 		file_magerror(ms,
 		    "%s, %" SIZE_T_FORMAT "u: format `%s' does not match"
