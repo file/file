@@ -151,7 +151,7 @@ else
 fi])
 
 dnl Checks for functions
-AC_CHECK_FUNCS(strerror strndup strtoul mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale setlocale memmem)
+AC_CHECK_FUNCS(strndup strtoul mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale setlocale memmem)
 
 dnl Provide implementation of some required functions if necessary
 AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline ctime_r asctime_r localtime_r gmtime_r pread strcasestr fmtcheck dprintf)
