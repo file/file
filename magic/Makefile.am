@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.140 2019/01/16 19:31:06 christos Exp $
+# $File: Makefile.am,v 1.141 2019/03/28 12:36:01 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -85,6 +85,7 @@ $(MAGIC_FRAGMENT_DIR)/dump \
 $(MAGIC_FRAGMENT_DIR)/dyadic \
 $(MAGIC_FRAGMENT_DIR)/ebml \
 $(MAGIC_FRAGMENT_DIR)/editors \
+$(MAGIC_FRAGMENT_DIR)/edid \
 $(MAGIC_FRAGMENT_DIR)/efi \
 $(MAGIC_FRAGMENT_DIR)/elf \
 $(MAGIC_FRAGMENT_DIR)/encore \
