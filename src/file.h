@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.203 2019/03/28 20:52:43 christos Exp $
+ * @(#)$File: file.h,v 1.204 2019/03/28 20:54:57 christos Exp $
  */
 
 #ifndef __file_h__
@@ -551,10 +551,6 @@ protected char  *file_pop_buffer(struct magic_set *, file_pushbuf_t *);
 #ifndef COMPILE_ONLY
 extern const char *file_names[];
 extern const size_t file_nnames;
-#endif
-
-#ifndef HAVE_STRTOUL
-#define strtoul(a, b, c)	strtol(a, b, c)
 #endif
 
 #ifndef HAVE_PREAD
