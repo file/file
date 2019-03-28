@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.180 2019/03/12 20:43:05 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.181 2019/03/28 20:54:03 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -186,9 +186,7 @@ main(int argc, char *argv[])
 	char *progname;
 
 	/* makes islower etc work for other langs */
-#ifdef HAVE_SETLOCALE
 	(void)setlocale(LC_CTYPE, "");
-#endif
 
 #ifdef __EMX__
 	/* sh-like wildcard expansion! Shouldn't hurt at least ... */
