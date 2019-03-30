@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.125 2019/03/03 17:11:28 christos Exp $
+# $File: archive,v 1.126 2019/03/30 02:08:03 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1394,17 +1394,67 @@
 >10	string x		with compression level %.1s
 
 # xar (eXtensible ARchiver) archive
+# URL: https://en.wikipedia.org/wiki/Xar_(archiver)
 # xar archive format: http://code.google.com/p/xar/
 # From: "David Remahl" <dremahl@apple.com>
+# Update: Joerg Jenderek
+# TODO: lzma compression; X509Data for pkg and xip
+# Note: verified by `xar --dump-header -f FullBundleUpdate.xar` or
+# 7z t -txar Xcode_10.2_beta_4.xip`
 0	string	xar!		xar archive
 !:mime	application/x-xar
-#>4	beshort	x		header size %d
->6	beshort	x		version %d,
-#>8	quad	x		compressed TOC: %d,
-#>16	quad	x		uncompressed TOC: %d,
+# pkg for Mac OSX installer package like FullBundleUpdate.pkg
+# xip for signed Apple software like Xcode_10.2_beta_4.xip
+!:ext	xar/pkg/xip
+# always 28 in older archives
+>4	ubeshort >28		\b, header size %u
+# currently there exit only version 1 since about 2014
+>6	ubeshort >1		version %u,
+>8	ubequad	x		compressed TOC: %llu,
+#>16	ubequad	x		uncompressed TOC: %llu,
+# cksum_alg 0-2 in older and also 3-4 in newer
 >24	belong	0		no checksum
 >24	belong	1		SHA-1 checksum
 >24	belong	2		MD5 checksum
+>24	belong	3		SHA-256 checksum
+>24	belong	4		SHA-512 checksum
+>24	belong	>4		unknown 0x%x checksum
+#>24	belong	>4		checksum
+#			For no compression jump 0 bytes
+>24	belong	0
+>>0		ubyte	x
+# jump more bytes forward by header size
+>>>&(4.S)	ubyte	x
+# jump more bytes forward by compressed table of contents size
+#>>>>&(8.Q)	ubequad	x	\b, heap data 0x%llx
+>>>>&(8.Q)	ubyte	x
+# look for data by ./compress after message with 1 space at end
+>>>>>&-3	indirect x	\b, contains 
+#			For SHA-1 jump 20 minus 2 bytes
+>24	belong	1
+>>18		ubyte	x
+# jump more bytes forward by header size
+>>>&(4.S)	ubyte	x
+# jump more bytes forward by compressed table of contents size
+>>>>&(8.Q)	ubyte	x
+# data compressed by gzip, bzip, lzma or none
+>>>>>&-1	indirect x	\b, contains 
+#			For SHA-256 jump 32 minus 2 bytes
+>24	belong	3
+>>30		ubyte	x
+# jump more bytes forward by header size
+>>>&(4.S)	ubyte	x
+# jump more bytes forward by compressed table of contents size
+>>>>&(8.Q)	ubyte	x
+>>>>>&-1	indirect x	\b, contains 
+#			For SHA-512 jump 64 minus 2 bytes
+>24	belong	4
+>>62		ubyte	x
+# jump more bytes forward by header size
+>>>&(4.S)	ubyte	x
+# jump more bytes forward by compressed table of contents size
+>>>>&(8.Q)	ubyte	x
+>>>>>&-1	indirect x	\b, contains 
 
 # Type: Parity Archive
 # From: Daniel van Eeden <daniel_e@dds.nl>
