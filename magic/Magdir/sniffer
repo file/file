@@ -234,6 +234,7 @@
 >20	belong		249		(USB with USBPcap header
 >20	belong		250		(Schweitzer Engineering Laboratories RTAC packets
 >20	belong		251		(Bluetooth Low Energy air interface
+>20	belong		252		(Wireshark Upper PDU export
 >20	belong		253		(Linux netlink
 >20	belong		254		(Bluetooth Linux Monitor
 >20	belong		255		(Bluetooth Basic Rate/Enhanced Data Rate baseband packets
