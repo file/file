@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.281 2019/03/26 12:46:35 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.282 2019/04/03 11:34:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -149,8 +149,8 @@ file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
 {
 	const char *ptr;
 
-	if (strchr(m->desc, '%') == NULL)
-		return m->desc;
+	if (strchr(desc, '%') == NULL)
+		return desc;
 
 	ptr = fmtcheck(desc, def);
 	if (ptr == def)
