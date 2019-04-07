@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.41 2019/02/28 00:53:41 christos Exp $
+# $File: apple,v 1.42 2019/04/07 18:26:17 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1/t	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -163,7 +163,7 @@
 # http://home.earthlink.net/~hughhood/appleiiworksenvoy/
 # ('p' + 1-byte ProDOS File Type + 2-byte ProDOS Aux Type')
 # $70 $1A $F8 $FF is this the apple type ?
-#:apple pdospøÿ
+#:apple pdosp^Z\xf8\xff
 !:ext awp
 # minimum version needed to read this files. SFMinVers (0 , 30~3.0 )
 >>>183	ubyte		30	3.0
