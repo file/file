@@ -35,13 +35,13 @@ fi], [
 ])
 
 AC_MSG_CHECKING(for zlib support)
-AC_ARG_ENABLE(zlib,
-[AS_HELP_STRING([--disable-zlib], [disable zlib compression support @<:@default=auto@:>@])])
+AC_ARG_ENABLE([zlib],
+[AS_HELP_STRING([--disable-zlib], [disable zlib compression support @<:@default=auto@:>@])], [], [enable_zlib=yes])
 AC_MSG_RESULT($enable_zlib)
 
 AC_MSG_CHECKING(for libseccomp support)
-AC_ARG_ENABLE(libseccomp,
-[AS_HELP_STRING([--disable-libseccomp], [disable libseccomp sandboxing @<:@default=auto@:>@])])
+AC_ARG_ENABLE([libseccomp],
+[AS_HELP_STRING([--disable-libseccomp], [disable libseccomp sandboxing @<:@default=auto@:>@])], [], [enable_seccomp=yes])
 AC_MSG_RESULT($enable_libseccomp)
 
 AC_MSG_CHECKING(for file formats in man section 5)
