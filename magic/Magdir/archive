@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.126 2019/03/30 02:08:03 christos Exp $
+# $File: archive,v 1.127 2019/04/08 05:56:48 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1569,3 +1569,23 @@
 # https://gitweb.gentoo.org/proj/portage.git/tree/man/xpak.5
 -4	string	STOP
 >-16	string	XPAKSTOP	Gentoo binary package (XPAK)
+
+# From:		Joerg Jenderek
+# URL:		https://kodi.wiki/view/TexturePacker
+# Reference:	http://mirrors.kodi.tv/releases/source/17.3-Krypton.tar.gz
+# /xbmc-Krypton/xbmc/guilib/XBTF.h
+# /xbmc-Krypton/xbmc/guilib/XBTF.cpp 
+0	string	XBTF
+# skip ASCII text by looking for terminating \0 of path
+>264	ubyte	0		XBMC texture package
+!:mime	application/x-xbmc-xbt
+!:ext	xbt
+# XBTF_VERSION 2
+>>4	string	!2		\b, version %-.1s
+# nofFiles /xbmc-Krypton/xbmc/guilib/XBTFReader.cpp
+>>5	ulelong	x		\b, %u file
+# plural s
+>>5	ulelong	>1		\bs
+# path[CXBTFFile[MaximumPathLength=256]
+>>9	string	x		\b, 1st %s
+
