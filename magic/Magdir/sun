@@ -93,7 +93,7 @@
 0	string		#SUNPC_CONFIG	SunPC 4.0 Properties Values
 # Sun snoop (see RFC 1761, which describes the capture file format,
 # RFC 3827, which describes some additional datalink types, and
-# http://www.iana.org/assignments/snoop-datalink-types/snoop-datalink-types.xml,
+# https://www.iana.org/assignments/snoop-datalink-types/snoop-datalink-types.xml,
 # which is the IANA registry of Snoop datalink types)
 #
 0	string		snoop		Snoop capture file

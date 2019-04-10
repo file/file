@@ -108,7 +108,7 @@
 0	string		#LyX		LyX document text
 
 # ConTeXt documents
-#	http://wiki.contextgarden.net/
+#	https://wiki.contextgarden.net/
 0	search/4096	\\setupcolors[		ConTeXt document text
 !:strength + 15
 0	search/4096	\\definecolor[		ConTeXt document text

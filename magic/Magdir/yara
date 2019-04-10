@@ -2,7 +2,7 @@
 
 #------------------------------------------------------------------------------
 # $File: yara,v 1.2 2017/05/25 20:07:23 christos Exp $
-# yara:  file(1) magic for http://virustotal.github.io/yara/
+# yara:  file(1) magic for https://virustotal.github.io/yara/
 #
 
 0	string	YARA

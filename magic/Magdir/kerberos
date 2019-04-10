@@ -24,7 +24,7 @@
 #		can refer to ${name}
 #	- Provide a way to format strings as hex values
 #
-# http://www.gnu.org/software/shishi/manual/html_node/\
+# https://www.gnu.org/software/shishi/manual/html_node/\
 #	The-Keytab-Binary-File-Format.html
 #
 

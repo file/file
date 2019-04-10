@@ -5,12 +5,12 @@
 # map:  file(1) magic for Map data
 #
 
-# Garmin .FIT files http://pub.ks-and-ks.ne.jp/cycling/edge500_fit.shtml
+# Garmin .FIT files https://pub.ks-and-ks.ne.jp/cycling/edge500_fit.shtml
 8	string	.FIT		FIT Map data
 >15	byte	0
 >>35	belong	x		\b, unit id %d
 >>39	lelong	x		\b, serial %u
-# http://pub.ks-and-ks.ne.jp/cycling/edge500_fit.shtml
+# https://pub.ks-and-ks.ne.jp/cycling/edge500_fit.shtml
 # 20 years after unix epoch
 # TZ=GMT date -d '1989-12-31 0:00' +%s
 >>43	leldate+631065600	x	\b, %s
@@ -178,7 +178,7 @@
 #>>>0x20	ubequad		x		\b, seq. 0x%16.16llx
 
 # TOM TOM GPS watches ttbin files:
-# http://github.com/ryanbinns/ttwatch/tree/master/ttbin
+# https://github.com/ryanbinns/ttwatch/tree/master/ttbin
 # From: Daniel Lenski
 0	byte	0x20
 >1	leshort	0x0007

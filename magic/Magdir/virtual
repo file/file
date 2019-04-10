@@ -161,7 +161,7 @@
 >>0x40000	ulelong		!0x69676572	\b, 2nd region INVALID
 # check in vhdx images for known id and show names instead hexadecimal
 0	name		vhdx-id
-# http://www.windowstricks.in/online-windows-guid-converter
+# https://www.windowstricks.in/online-windows-guid-converter
 # 2DC27766-F623-4200-9D64-115E9BFD4A08		BAT GUID
 # 6677C22D23F600429D64115E9BFD4A08		BAT ID
 >0	ubequad		=0x6677C22D23F60042
@@ -226,7 +226,7 @@
 #>0	string/b	x	, Magic: %s
 
 # There are currently 2 Versions: "1" and "2".
-# http://www.gnome.org/~markmc/qcow-image-format-version-1.html
+# https://www.gnome.org/~markmc/qcow-image-format-version-1.html
 >4	belong		!1	QEMU QCOW2 Image
 >4	belong		1	QEMU QCOW Image (v1)
 
@@ -250,7 +250,7 @@
 # 1 for AES encryption, 0 for none.
 >>36	belong	1	\b, AES-encrypted
 
-# http://www.gnome.org/~markmc/qcow-image-format.html
+# https://www.gnome.org/~markmc/qcow-image-format.html
 >4	belong	2	(v2)
 # Using the existence of the Backing File Offset to determine whether
 # to read Backing File Information
@@ -286,7 +286,7 @@
 0	string/b	QEVM		QEMU suspend to disk image
 
 # QEMU QED Image
-# http://wiki.qemu.org/Features/QED/Specification
+# https://wiki.qemu.org/Features/QED/Specification
 0	string/b	QED\0		QEMU QED Image
 
 # VDI Image

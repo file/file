@@ -40,7 +40,7 @@
 
 # Summary: Adobe's PostScript Printer Description File
 # Extension: .ppd
-# Reference: http://partners.adobe.com/public/developer/en/ps/5003.PPD_Spec_v4.3.pdf, Section 3.8
+# Reference: https://partners.adobe.com/public/developer/en/ps/5003.PPD_Spec_v4.3.pdf, Section 3.8
 # Submitted by: Yves Arrouye <arrouye@marin.fdn.fr>
 #
 0	string		*PPD-Adobe:\x20	PPD file

@@ -148,7 +148,7 @@
 
 
 # GnuPG Keybox file
-# <http://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob;f=kbx/keybox-blob.c;hb=HEAD>
+# <https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob;f=kbx/keybox-blob.c;hb=HEAD>
 # From: Philipp Hahn <hahn@univention.de>
 0	belong	32
 >4	byte	1

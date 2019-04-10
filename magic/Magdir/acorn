@@ -83,7 +83,7 @@
 # compression mode y (0 - 4) for GIF LZW with a maximum n bits
 # (y~n,0~12,1~13,2~14,3~15,4~16)
 >>>5	ulelong+12 x	\b, LZW %u-bits compression
-# http://www.filebase.org.uk/filetypes
+# https://www.filebase.org.uk/filetypes
 # !Packdir compressed archive has three hexadecimal digits code 68E
 !:mime	application/x-acorn-68E
 !:ext	pkd/bin

@@ -27,7 +27,7 @@
 !:mime	text/x-lisp
 
 # URL: https://en.wikipedia.org/wiki/Emacs_Lisp
-# Reference: http://ftp.gnu.org/old-gnu/emacs/elisp-manual-18-1.03.tar.gz
+# Reference: https://ftp.gnu.org/old-gnu/emacs/elisp-manual-18-1.03.tar.gz
 # Update: Joerg Jenderek
 # Emacs 18 - this is always correct, but not very magical.
 0	string	\012(

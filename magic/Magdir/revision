@@ -60,7 +60,7 @@
 >28	string	>\0				(version: %s)
 
 # Type:	Bazaar revision bundles and merge requests
-# URL:	http://www.bazaar-vcs.org/
+# URL:	https://www.bazaar-vcs.org/
 # From:	Jelmer Vernooij <jelmer@samba.org>
 0	string	#\ Bazaar\ revision\ bundle\ v Bazaar Bundle
 0	string	#\ Bazaar\ merge\ directive\ format Bazaar merge directive

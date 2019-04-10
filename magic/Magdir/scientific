@@ -75,8 +75,8 @@
 # PDB: Protein Data Bank files
 # Adam Buchbinder <adam.buchbinder@gmail.com>
 #
-# http://www.wwpdb.org/documentation/format32/sect2.html
-# http://www.ch.ic.ac.uk/chemime/
+# https://www.wwpdb.org/documentation/format32/sect2.html
+# https://www.ch.ic.ac.uk/chemime/
 #
 # The PDB file format is fixed-field, 80 columns. From the spec:
 #

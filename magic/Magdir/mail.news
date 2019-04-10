@@ -57,7 +57,7 @@
 #0	string		\<!--\ MHonArc		text/html; x-type=mhonarc
 
 # Cyrus: file(1) magic for compiled Cyrus sieve scripts
-# URL: http://www.cyrusimap.org/docs/cyrus-imapd/2.4.6/internal/bytecode.php
+# URL: https://www.cyrusimap.org/docs/cyrus-imapd/2.4.6/internal/bytecode.php
 # URL: http://git.cyrusimap.org/cyrus-imapd/tree/sieve/bytecode.h?h=master
 # From: Philipp Hahn <hahn@univention.de>
 

@@ -96,7 +96,7 @@
 0	search/1/w	#!\ /usr/bin/php	PHP script text executable
 !:strength + 10
 !:mime	text/x-php
-# Smarty compiled template, http://www.smarty.net/
+# Smarty compiled template, https://www.smarty.net/
 # Elan Ruusamae <glen@delfi.ee>
 0	string	=<?php
 >5	regex	[\ \n]
@@ -109,7 +109,7 @@
 0	string/t	$!			DCL command file
 
 # Type: Pdmenu
-# URL:  http://packages.debian.org/pdmenu
+# URL:  https://packages.debian.org/pdmenu
 # From: Edward Betts <edward@debian.org>
 0	string		#!/usr/bin/pdmenu	Pdmenu configuration file text
 

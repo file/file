@@ -4,8 +4,8 @@
 # Dyadic: file(1) magic for Dyalog APL.
 #
 # updated by Joerg Jenderek at Oct 2013
-# http://en.wikipedia.org/wiki/Dyalog_APL
-# http://www.dyalog.com/
+# https://en.wikipedia.org/wiki/Dyalog_APL
+# https://www.dyalog.com/
 # .DXV Dyalog APL External Variable
 # .DIN Dyalog APL Input Table
 # .DOT Dyalog APL Output Table

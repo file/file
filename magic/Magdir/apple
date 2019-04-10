@@ -429,7 +429,7 @@
 >>6	ubeshort	x		\b, type 0x%x
 
 # URL: https://en.wikipedia.org/wiki/Apple_Partition_Map
-# Reference: http://opensource.apple.com/source/IOStorageFamily/IOStorageFamily-116/IOApplePartitionScheme.h
+# Reference: https://opensource.apple.com/source/IOStorageFamily/IOStorageFamily-116/IOApplePartitionScheme.h
 # Update: Joerg Jenderek
 # Yes, the 3rd and 4th bytes pmSigPad are reserved, but we use them to make the
 # magic stronger.
@@ -471,8 +471,8 @@
 # is the startup partition APPLE_PS_STARTUP
 >>88	ubelong	&0x80000000		\b, is the startup partition
 
-#http://wiki.mozilla.org/DS_Store_File_Format
-#http://en.wikipedia.org/wiki/.DS_Store
+#https://wiki.mozilla.org/DS_Store_File_Format
+#https://en.wikipedia.org/wiki/.DS_Store
 0	string	\0\0\0\1Bud1\0		Apple Desktop Services Store
 
 # HFS/HFS+ Resource fork files (andrew.roazen@nau.edu Apr 13 2015)

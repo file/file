@@ -3,7 +3,7 @@
 # $File$
 # basis: file(1) magic for BBx/Pro5-files
 #      Oliver Dammer <dammer@olida.de>	 2005/11/07
-# http://www.basis.com business-basic-files.
+# https://www.basis.com business-basic-files.
 #
 0	string		\074\074bbx\076\076	BBx
 >7	string		\000			indexed file

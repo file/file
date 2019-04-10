@@ -3,7 +3,7 @@
 # $File: qt,v 1.1 2014/12/12 16:48:39 christos Exp $
 # qt:  file(1) magic for Qt
 
-# http://doc.qt.io/qt-5/resources.html
+# https://doc.qt.io/qt-5/resources.html
 0	string		\<!DOCTYPE\040RCC\>	Qt Resource Collection file
 
 # https://qt.gitorious.org/qt/qtbase/source/\

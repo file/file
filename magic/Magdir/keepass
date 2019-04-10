@@ -4,9 +4,9 @@
 # keepass: file(1) magic for KeePass file
 #
 # Keepass Password Safe:
-#  * original one: http://keepass.info/
-#  * *nix port:    http://www.keepassx.org/
-#  * android port: http://code.google.com/p/keepassdroid/
+#  * original one: https://keepass.info/
+#  * *nix port:    https://www.keepassx.org/
+#  * android port: https://code.google.com/p/keepassdroid/
 
 0	lelong		0x9AA2D903	Keepass password database
 >4	lelong		0xB54BFB65	1.x KDB
