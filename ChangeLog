@@ -1,3 +1,7 @@
+2019-04-07  14:05  Christos Zoulas <christos@zoulas.com>
+
+	* PR/75: --enable-zlib, did not work.
+
 2019-02-27  11:54  Christos Zoulas <christos@zoulas.com>
 
 	* Improve regex efficiency (Michael Schroeder) by:
