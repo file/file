@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.109 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.110 2019/04/15 16:49:29 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -472,12 +472,14 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	 * try looking at the first ms->bytes_max bytes
 	 */
 	if (ispipe) {
-		ssize_t r = 0;
+		if (fd != -1) {
+			ssize_t r = 0;
 
-		while ((r = sread(fd, RCAST(void *, &buf[nbytes]),
-		    CAST(size_t, ms->bytes_max - nbytes), 1)) > 0) {
-			nbytes += r;
-			if (r < PIPE_BUF) break;
+			while ((r = sread(fd, RCAST(void *, &buf[nbytes]),
+			    CAST(size_t, ms->bytes_max - nbytes), 1)) > 0) {
+				nbytes += r;
+				if (r < PIPE_BUF) break;
+			}
 		}
 
 		if (nbytes == 0 && inname) {
@@ -488,13 +490,13 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			goto done;
 		}
 
-	} else {
+	} else if (fd != -1) {
 		/* Windows refuses to read from a big console buffer. */
 		size_t howmany =
 #if defined(WIN32)
-				_isatty(fd) ? 8 * 1024 :
+		    _isatty(fd) ? 8 * 1024 :
 #endif
-				ms->bytes_max;
+		    ms->bytes_max;
 		if ((nbytes = read(fd, RCAST(void *, buf), howmany)) == -1) {
 			if (inname == NULL && fd != STDIN_FILENO)
 				file_error(ms, errno, "cannot read fd %d", fd);
