@@ -1,8 +1,8 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: mercurial,v 1.5 2019/04/19 00:42:27 christos Exp $
 # mercurial:  file(1) magic for Mercurial changeset bundles
-# http://www.selenic.com/mercurial/wiki/
+# https://www.selenic.com/mercurial/wiki/
 #
 # Jesse Glick (jesse.glick@sun.com)
 #

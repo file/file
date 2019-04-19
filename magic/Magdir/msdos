@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.127 2019/03/13 02:57:20 christos Exp $
+# $File: msdos,v 1.128 2019/04/19 00:42:27 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -350,8 +350,8 @@
 >>49824 leshort		=1			\b, 1 file
 >>49824 leshort		>1			\b, %u files
 
-# added by Joerg Jenderek of http://www.freedos.org/software/?prog=kc
-# and http://www.freedos.org/software/?prog=kpdos
+# added by Joerg Jenderek of https://www.freedos.org/software/?prog=kc
+# and https://www.freedos.org/software/?prog=kpdos
 # for FreeDOS files like KEYBOARD.SYS, KEYBRD2.SYS, KEYBRD3.SYS, *.KBD
 0	string/b	KCF		FreeDOS KEYBoard Layout collection
 # only version=0x100 found
@@ -531,11 +531,11 @@
 # modified by Joerg Jenderek
 # syslinux COM32 or COM32R executable
 >>1	lelong&0xFFFFFFFe 0x21CD4CFe	COM executable (32-bit COMBOOT
-# http://www.syslinux.org/wiki/index.php/Comboot_API
+# https://www.syslinux.org/wiki/index.php/Comboot_API
 # Since version 5.00 c32 modules switched from the COM32 object format to ELF
 !:mime	application/x-c32-comboot-syslinux-exec
 !:ext c32
-# http://syslinux.zytor.com/comboot.php
+# https://syslinux.zytor.com/comboot.php
 # older syslinux version ( <4 )
 # (32-bit COMBOOT) programs *.C32 contain 32-bit code and run in flat-memory 32-bit protected mode
 # start with assembler instructions mov eax,21cd4cffh
@@ -1042,7 +1042,7 @@
 0	lelong		0x4C
 >4	lelong		0x00021401	Windows shortcut file
 
-# .PIF files added by Joerg Jenderek from http://smsoft.ru/en/pifdoc.htm
+# .PIF files added by Joerg Jenderek from https://smsoft.ru/en/pifdoc.htm
 # only for windows versions equal or greater 3.0
 0x171	string	MICROSOFT\ PIFEX\0	Windows Program Information File
 !:mime	application/x-dosexec
@@ -1094,7 +1094,7 @@
 
 # Norton Guide (.NG , .HLP) files added by Joerg Jenderek from source NG2HTML.C
 # of http://www.davep.org/norton-guides/ng2h-105.tgz
-# http://en.wikipedia.org/wiki/Norton_Guides
+# https://en.wikipedia.org/wiki/Norton_Guides
 0	string		NG\0\001
 # only value 0x100 found at offset 2
 >2	ulelong		0x00000100	Norton Guide
@@ -1106,7 +1106,7 @@
 >>114	string		>\0		%-.66s
 
 # 4DOS help (.HLP) files added by Joerg Jenderek from source TPHELP.PAS
-# of http://www.4dos.info/
+# of https://www.4dos.info/
 # pointer,HelpID[8]=4DHnnnmm
 0	ulelong	0x48443408		4DOS help file
 >4	string	x			\b, version %-4.4s
@@ -1182,7 +1182,7 @@
 !:mime	application/vnd.ms-cab-compressed
 !:ext	cab
 
-# http://support.microsoft.com/kb/934307/en-US
+# https://support.microsoft.com/kb/934307/en-US
 # All inspected MSU contain a file with name WSUSSCAN.cab
 # that is called "Windows Update meta data" by Microsoft
 >>>&-1	string/c 	wsusscan.cab	\b, Microsoft Standalone Update
@@ -1203,7 +1203,7 @@
 # or Windows 8 Desktop Theme Pack like in PanoramicGlaciers.deskthemepack
 >>>>>&0	string/c	theme		\b, Windows
 !:mime	application/x-windows-themepack
-# http://www.drewkeller.com/content/using-theme-both-windows-7-and-windows-8
+# https://www.drewkeller.com/content/using-theme-both-windows-7-and-windows-8
 # 1st member Panoramic.theme or Panoramas.theme implies Windows 8-10 Theme Pack
 # with MTSM=RJSPBS in [MasterThemeSelector] inside *.theme
 >>>>>>(16.l+16)	string	=Panoram	8
@@ -1413,7 +1413,7 @@
 >>48	string x			version %.3s
 
 # Type: Microsoft Document Imaging Format (.mdi)
-# URL:	http://en.wikipedia.org/wiki/Microsoft_Document_Imaging_Format
+# URL:	https://en.wikipedia.org/wiki/Microsoft_Document_Imaging_Format
 # From: Daniele Sempione <scrows@oziosi.org>
 # Too weak (EP)
 #0	short	0x5045			Microsoft Document Imaging Format

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fsav,v 1.18 2018/12/10 20:57:41 christos Exp $
+# $File: fsav,v 1.19 2019/04/19 00:42:27 christos Exp $
 # fsav:  file(1) magic for datafellows fsav virus definition files
 # Anthon van der Neut (anthon@mnt.org)
 
@@ -107,7 +107,7 @@
 >33	string	-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*	EICAR virus test files
 
 # From: Joerg Jenderek
-# URL: http://www.avira.com/
+# URL: https://www.avira.com/
 # Note: found in directory %ProgramData%\Avira\Antivirus\INFECTED (Windows)
 # tested with version 15.0.43.23 at November 2019
 0	string		AntiVir\ Qua	Avira AntiVir quarantined

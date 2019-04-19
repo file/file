@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msooxml,v 1.11 2019/01/18 15:39:18 christos Exp $
+# $File: msooxml,v 1.12 2019/04/19 00:42:27 christos Exp $
 # msooxml:  file(1) magic for Microsoft Office XML
 # From: Ralf Brown <ralf.brown@gmail.com>
 
@@ -35,7 +35,7 @@
 >>>&26		search/6000	PK\003\004
 # and check the subdirectory name to determine which type of OOXML
 # file we have.  Correct the mimetype with the registered ones:
-# http://technet.microsoft.com/en-us/library/cc179224.aspx
+# https://technet.microsoft.com/en-us/library/cc179224.aspx
 >>>>&26		use		msooxml	
 >>>>&26		default		x
 # OpenOffice/Libreoffice orders ZIP entry differently, so check the 4th file

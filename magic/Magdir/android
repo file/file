@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.11 2018/12/04 14:24:01 christos Exp $
+# $File: android,v 1.12 2019/04/19 00:42:27 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -36,7 +36,7 @@
 # URL: https://github.com/android/platform_frameworks_base/blob/\
 # 0bacfd2ba68d21a68a3df345b830bc2a1e515b5a/services/java/com/\
 # android/server/BackupManagerService.java#L2367
-# Reference: http://sourceforge.net/projects/adbextractor/
+# Reference: https://sourceforge.net/projects/adbextractor/
 #            android-backup-extractor/perl/backupencrypt.pl 
 # Note:	only unix line feeds "\n" found
 # After the header comes a tar file
@@ -92,8 +92,8 @@
 #>>>>&1		ubequad	x	\b, Content magic %16.16llx
 
 # *.pit files by Joerg Jenderek
-# http://forum.xda-developers.com/showthread.php?p=9122369
-# http://forum.xda-developers.com/showthread.php?t=816449
+# https://forum.xda-developers.com/showthread.php?p=9122369
+# https://forum.xda-developers.com/showthread.php?t=816449
 # Partition Information Table for Samsung's smartphone with Android
 # used by flash software Odin
 0		ulelong			0x12349876

@@ -1,10 +1,10 @@
 
 #------------------------------------------------------------------------------
-# $File: tplink,v 1.3 2018/12/21 17:37:33 christos Exp $
+# $File: tplink,v 1.4 2019/04/19 00:42:27 christos Exp $
 # tplink: File magic for openwrt firmware files
 
 # URL: https://wiki.openwrt.org/doc/techref/header
-# Reference: http://git.openwrt.org/?p=openwrt.git;a=blob;f=tools/firmware-utils/src/mktplinkfw.c
+# Reference: https://git.openwrt.org/?p=openwrt.git;a=blob;f=tools/firmware-utils/src/mktplinkfw.c
 # From: Joerg Jenderek
 # check for valid header version 1 or 2
 0		ulelong		<3

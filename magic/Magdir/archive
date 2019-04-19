@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.127 2019/04/08 05:56:48 christos Exp $
+# $File: archive,v 1.128 2019/04/19 00:42:27 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -148,7 +148,7 @@
 >>>257	string		>\0		\b, comment: %-.40s
 
 # Incremental snapshot gnu-tar format from:
-# http://www.gnu.org/software/tar/manual/html_node/Snapshot-Files.html
+# https://www.gnu.org/software/tar/manual/html_node/Snapshot-Files.html
 0	string		GNU\ tar-	GNU tar incremental snapshot data
 >&0	regex		[0-9]\.[0-9]+-[0-9]+	version %s
 
@@ -848,7 +848,7 @@
 # LHARC/LHA archiver (Greg Roelofs, newt@uchicago.edu)
 # Update: Joerg Jenderek
 # URL: https://en.wikipedia.org/wiki/LHA_(file_format)
-# Reference: http://web.archive.org/web/20021005080911/http://www.osirusoft.com/joejared/lzhformat.html
+# Reference: https://web.archive.org/web/20021005080911/http://www.osirusoft.com/joejared/lzhformat.html
 #
 #	check and display information of lharc (LHa,PMarc) file
 0	name				lharc-file
@@ -1048,7 +1048,7 @@
 !:ext	rar
 
 # Very old RAR archive
-# http://jasonblanks.com/wp-includes/images/papers/KnowyourarchiveRAR.pdf
+# https://jasonblanks.com/wp-includes/images/papers/KnowyourarchiveRAR.pdf
 0	string		RE\x7e\x5e  RAR archive data (<v1.5)
 !:mime	application/x-rar
 !:ext	rar/cbr
@@ -1113,7 +1113,7 @@
 >>>62	string	base			Database file
 
 #   OpenDocument formats (for OpenOffice 2.x / StarOffice >= 8)
-#    http://lists.oasis-open.org/archives/office/200505/msg00006.html
+#    https://lists.oasis-open.org/archives/office/200505/msg00006.html
 #    (mimetype contains "application/vnd.oasis.opendocument.<SUBTYPE>")
 >>50	string	vnd.oasis.opendocument.	OpenDocument
 >>>73	string	text
@@ -1162,7 +1162,7 @@
 !:mime	application/vnd.oasis.opendocument.image-template
 
 #  EPUB (OEBPS) books using OCF (OEBPS Container Format)
-#    http://www.idpf.org/ocf/ocf1.0/download/ocf10.htm, section 4.
+#    https://www.idpf.org/ocf/ocf1.0/download/ocf10.htm, section 4.
 #    From: Ralf Brown <ralf.brown@gmail.com>
 >>50	string	epub+zip	EPUB document
 !:mime application/epub+zip
@@ -1376,7 +1376,7 @@
 >14	beshort	0x4e53		multi-part, with -S
 
 # Symbian installation files
-#  http://www.thouky.co.uk/software/psifs/sis.html
+#  https://www.thouky.co.uk/software/psifs/sis.html
 #  http://developer.symbian.com/main/downloads/papers/SymbianOSv91/softwareinstallsis.pdf
 8	lelong	0x10000419	Symbian installation file
 !:mime	application/vnd.symbian.install
@@ -1395,7 +1395,7 @@
 
 # xar (eXtensible ARchiver) archive
 # URL: https://en.wikipedia.org/wiki/Xar_(archiver)
-# xar archive format: http://code.google.com/p/xar/
+# xar archive format: https://code.google.com/p/xar/
 # From: "David Remahl" <dremahl@apple.com>
 # Update: Joerg Jenderek
 # TODO: lzma compression; X509Data for pkg and xip
@@ -1461,7 +1461,7 @@
 0	string	PAR2		Parity Archive Volume Set
 
 # Bacula volume format. (Volumes always start with a block header.)
-# URL: http://bacula.org/3.0.x-manuals/en/developers/developers/Block_Header.html
+# URL: https://bacula.org/3.0.x-manuals/en/developers/developers/Block_Header.html
 # From: Adam Buchbinder <adam.buchbinder@gmail.com>
 12	string	BB02		Bacula volume
 >20	bedate	x		\b, started %s
@@ -1476,11 +1476,11 @@
 0	string	zPQ	ZPAQ stream
 >3	byte	x	\b, level %d
 # From: Barry Carter <carter.barry@gmail.com>
-# http://encode.ru/threads/456-zpaq-updates/page32
+# https://encode.ru/threads/456-zpaq-updates/page32
 0	string	7kSt	ZPAQ file
 
 # BBeB ebook, unencrypted (LRF format)
-# URL: http://www.sven.de/librie/Librie/LrfFormat
+# URL: https://www.sven.de/librie/Librie/LrfFormat
 # From: Adam Buchbinder <adam.buchbinder@gmail.com>
 0	string	L\0R\0F\0\0\0	BBeB ebook data, unencrypted
 >8	beshort	x		\b, version %d
@@ -1490,8 +1490,8 @@
 >44	beshort	x		%d)
 
 # Symantec GHOST image by Joerg Jenderek at May 2014
-# http://us.norton.com/ghost/
-# http://www.garykessler.net/library/file_sigs.html
+# https://us.norton.com/ghost/
+# https://www.garykessler.net/library/file_sigs.html
 0		ubelong&0xFFFFf7f0	0xFEEF0100	Norton GHost image
 # *.GHO
 >2		ubyte&0x08		0x00		\b, first file
@@ -1539,8 +1539,8 @@
 56	string	USE\040LYNX\040TO\040DISSOLVE\040THIS\040FILE	 LyNX archive
 
 # From: Joerg Jenderek
-# URL: http://www.acronis.com/
-# Reference: http://en.wikipedia.org/wiki/TIB_(file_format)
+# URL: https://www.acronis.com/
+# Reference: https://en.wikipedia.org/wiki/TIB_(file_format)
 # Note: only tested with True Image 2013 Build 5962 and 2019 Build 14110
 0	ubequad		0xce24b9a220000000	Acronis True Image backup
 !:mime	application/x-acronis-tib
@@ -1572,7 +1572,7 @@
 
 # From:		Joerg Jenderek
 # URL:		https://kodi.wiki/view/TexturePacker
-# Reference:	http://mirrors.kodi.tv/releases/source/17.3-Krypton.tar.gz
+# Reference:	https://mirrors.kodi.tv/releases/source/17.3-Krypton.tar.gz
 # /xbmc-Krypton/xbmc/guilib/XBTF.h
 # /xbmc-Krypton/xbmc/guilib/XBTF.cpp 
 0	string	XBTF

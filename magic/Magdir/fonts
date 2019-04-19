@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.39 2018/12/10 20:58:34 christos Exp $
+# $File: fonts,v 1.40 2019/04/19 00:42:27 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -17,7 +17,7 @@
 
 # Summary:	PostScript Type 1 Printer Font Metrics
 # URL:		https://en.wikipedia.org/wiki/PostScript_fonts
-# Reference:	http://partners.adobe.com/public/developer/en/font/5178.PFM.pdf
+# Reference:	https://partners.adobe.com/public/developer/en/font/5178.PFM.pdf
 # Modified by:	Joerg Jenderek
 # Note:		moved from ./msdos magic
 # dfVersion 256=0100h
@@ -80,7 +80,7 @@
 0	search/1	STARTFONT\ 		X11 BDF font text
 
 # From: Joerg Jenderek
-# URL: http://grub.gibibit.com/New_font_format
+# URL: https://grub.gibibit.com/New_font_format
 # Reference: util/grub-mkfont.c
 #		include/grub/fontformat.h
 # FONT_FORMAT_SECTION_NAMES_FILE
@@ -255,7 +255,7 @@
 
 # TrueType/OpenType font collections (.ttc)
 # URL: https://en.wikipedia.org/wiki/OpenType
-# http://www.microsoft.com/typography/otspec/otff.htm
+# https://www.microsoft.com/typography/otspec/otff.htm
 # Modified by: Joerg Jenderek
 # Note:	container for TrueType, OpenType font
 0	string		ttcf
@@ -317,12 +317,12 @@
 #>14	beshort		x		\b, reserved %d
 #>16	belong		x		\b, totalSfntSize %d
 
-# http://www.w3.org/TR/WOFF/
+# https://www.w3.org/TR/WOFF/
 0	string		wOFF	Web Open Font Format
 >0	use		woff
 >20	beshort		x	\b, version %d
 >22	beshort		x	\b.%d
-# http://www.w3.org/TR/WOFF2/
+# https://www.w3.org/TR/WOFF2/
 0	string		wOF2	Web Open Font Format (Version 2)
 >0	use		woff
 #>20	belong		x	\b, totalCompressedSize %d
