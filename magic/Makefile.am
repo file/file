@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.141 2019/03/28 12:36:01 christos Exp $
+# $File: Makefile.am,v 1.142 2019/04/19 00:40:47 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -235,6 +235,7 @@ $(MAGIC_FRAGMENT_DIR)/revision \
 $(MAGIC_FRAGMENT_DIR)/riff \
 $(MAGIC_FRAGMENT_DIR)/rpi \
 $(MAGIC_FRAGMENT_DIR)/rpm \
+$(MAGIC_FRAGMENT_DIR)/rpmsg \
 $(MAGIC_FRAGMENT_DIR)/rtf \
 $(MAGIC_FRAGMENT_DIR)/ruby \
 $(MAGIC_FRAGMENT_DIR)/sc \
