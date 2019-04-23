@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.127 2019/04/19 00:42:27 christos Exp $
+# $File: filesystems,v 1.128 2019/04/23 15:43:27 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1539,18 +1539,39 @@
 >>>>>>>>>72	ulequad		x		\b, serial number 0%llx
 >>>>>>>>>80	ulelong		>0		\b, checksum 0x%x
 #>>>>>>>>>80	ulelong		=0		\b, checksum 0x%x=0 (usual)
->>>>>>>>>0x258	ulelong&0x00009090	=0x00009090
->>>>>>>>>>&-92		indirect	x	\b; contains
-# For 2nd NTFS sector added by Joerg Jenderek at Jan 2013
+# unicode loadername size jump
+>>>>>>>>>(0x200.s*2)	ubyte				x
+# in next sector loadername terminated by unicode CTRL-D and $
+>>>>>>>>>>&0x1FF	ulequad&0x0000FFffFFffFF00	0x0000002400040000 \b; contains
+# if 2nd NTFS sectors is found then assume whole filesystem
+#!:mime		application/x-raw-disk-image
+!:ext		img/bin/ntfs
+>>>>>>>>>>>0x200	use				ntfs-sector2
+
+# For 2nd NTFS sector added by Joerg Jenderek at Jan 2013, Mar 2019
 # https://thestarman.pcministry.com/asm/mbr/NTFSbrHexEd.htm
-# unused assembler instructions JMP y2;NOP;NOP
-0x056		ulelong&0xFFFF0FFF	0x909002EB
-# unicode loadername terminated by CTRL-D
->(0.s*2)	ulelong&0xFFFFFF00	0x00040000
+# unused assembler instructions short JMP y2;NOP;NOP
+0x056		ulelong&0xFFFF0FFF	0x909002EB	NTFS
+#!:mime		application/octet-stream
+!:ext		bin
+>0		use		ntfs-sector2
+# https://memory.dataram.com/products-and-services/software/ramdisk
+# assembler instructions JMP C000;NOP
+0x056		ulelong			0x9000c0e9	NTFS
+#!:mime		application/octet-stream
+!:ext		bin
+>0		use		ntfs-sector2
+# check for characteristics of second NTFS sector and then display loader name
+0		name		ntfs-sector2
+# number of utf16 characters of loadername
+>0		uleshort	<8
+# unused assembler instructions JMP y2;NOP;NOP or JMP C000;NOP
+>>0x056		ulelong&0xFF0000FD	0x900000E9
 # loadernames are NTLDR,CMLDR,PELDR,$LDR$ or BOOTMGR
->>0x002		lestring16	x	Microsoft Windows XP/VISTA bootloader %-5.5s
->>0x12		string		$
->>>0x0c		lestring16	x	\b%-2.2s
+>>>0x002		lestring16	x	bootstrap %-5.5s
+# check for 7 character length of loader name like BOOTMGR
+>>>0		uleshort	7
+>>>>0x0c	lestring16	x	\b%-2.2s
 ### DOS,NTFS boot sectors end
 
 # ntfsclone-image is a special save format for NTFS volumes,
