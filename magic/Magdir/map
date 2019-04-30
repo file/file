@@ -1,7 +1,7 @@
 
 
 #------------------------------------------------------------------------------
-# $File: map,v 1.6 2019/04/19 00:42:27 christos Exp $
+# $File: map,v 1.7 2019/04/30 04:02:04 christos Exp $
 # map:  file(1) magic for Map data
 #
 
@@ -80,18 +80,7 @@
 #>0xF	ubyte		x		\b, Checksum 0x%x
 # Signature: DSKIMG 0x00 or DSDIMG 0x00 for demo map 
 >0x10	string		!DSKIMG		\b, signature "%.7s"
-# Creation year
->0x39 	uleshort	x 		\b, created %u
-# Creation month (0-11)
->0x3b	ubyte		x		\b-%.2u
-# Creation day (1-31)
->0x3c	ubyte		x		\b-%.2u
-# Creation hour (0-23)
->0x3d	ubyte		x		%u
-# Creation minute (0-59)
->0x3e	ubyte		x		\b:%.2u
-# Creation second (0-59)
->0x3f	ubyte		x		\b:%.2u
+>0x39	use		garmin-date
 # Map file identifier like GARMIN\0
 >0x41	string		!GARMIN		\b, id "%.7s"
 # Block size exponent, E1; appears to always be 0x09; minimum block size 512 bytes
@@ -176,6 +165,156 @@
 >>>0xC	ulelong		x		\b, %u bytes
 # 32-bit block sequence numbers
 #>>>0x20	ubequad		x		\b, seq. 0x%16.16llx
+
+#	display date stored inside Garmin maps like yyyy-mm-dd h:mm:ss
+0	name				garmin-date
+# year like 2018
+>0 	uleshort	x 		\b, created %u
+# month (0-11)
+>2	ubyte		x		\b-%.2u
+# day (1-31)
+>3	ubyte		x		\b-%.2u
+# hour (0-23)
+>4	ubyte		x		%u
+# minute (0-59)
+>5	ubyte		x		\b:%.2u
+# second (0-59)
+>6	ubyte		x		\b:%.2u
+
+# Summary: Garmin Map subfiles
+# From:	Joerg Jenderek
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/IMG_File_Format
+# Garmin Common Header
+2	string	GARMIN\ 
+# skip ASCII text by checking for low header length
+>0	uleshort <0x1000	Garmin map,
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/GMP_Subfile_Format
+>>9	string	GMP				subtile
+!:mime			application/x-garmin-gpm
+!:ext			gmp
+# copyright message
+>>>(0.s)		string		x	%s
+>>>0x0E 		use		garmin-date
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/MDR_Subfile_Format
+# This contains the searchable address table used for finding routing destinations
+>>9	string	MDR				address table
+!:mime			application/x-garmin-mdr
+!:ext			mdr
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/NOD_Subfile_Format
+# http://svn.parabola.me.uk/display/trunk/doc/nod.txt
+# This contains the routing information
+>>9	string	NOD				routing
+!:mime			application/x-garmin-nod
+!:ext			nod
+>>>0x0E 		use		garmin-date
+#>>>0x15			ulelong		x	\b, at 0x%x
+#>>>0x19			ulelong		x	0x%x bytes NOD1
+#>>>0x25			ulelong		x	\b, at 0x%x
+#>>>0x29			ulelong		x	0x%x bytes NOD2
+#>>>0x31			ulelong		x	\b, at 0x%x
+#>>>0x35			ulelong		x	0x%x bytes NOD3
+# URL: http://www.pinns.co.uk/osm/net.html
+# routable highways (length, direction, allowed speed,house address information)
+>>9	string	NET				highways
+!:mime			application/x-garmin-net
+!:ext			net
+#>>>0x15			ulelong		x	\b, at 0x%x
+#>>>0x19			ulelong		x	0x%x bytes NET1
+#>>>0x22			ulelong		>0
+#>>>>0x1E		ulelong		x	\b, at 0x%x
+#>>>>0x22		ulelong		x	0x%x bytes NET2
+#>>>0x2B			ulelong		>0
+#>>>>0x27		ulelong		x	\b, at 0x%x
+#>>>>0x2B		ulelong		x	0x%x bytes NET3
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/LBL_Subfile_Format
+>>9	string	LBL				labels
+!:mime			application/x-garmin-lbl
+!:ext			lbl
+>>>(0.s)		string	x	%s
+# Label coding type 6h 9h and ah
+>>>0x1E			ubyte		x	\b, coding type 0x%x
+#>>>0x15			ulelong		x	\b, at 0x%x
+#>>>0x19			ulelong		x	0x%x bytes LBL1
+#>>>0x1F			ulelong		x	\b, at 0x%x
+#>>>0x23			ulelong		x	0x%x bytes LBL2
+#>>>0x2D			ulelong		x	\b, at 0x%x
+#>>>0x31			ulelong		x	0x%x bytes LBL3
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/SRT_Subfile_Format
+# A lookup table of the chars in the map's codepage, and their collating sequence
+>>9	string	SRT				sort table
+!:mime			application/x-garmin-srt
+!:ext			srt
+>>>0x0E 		use		garmin-date
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/TRE_Subfile_Format
+>>9	string	TRE				tree
+!:mime			application/x-garmin-tre
+!:ext			tre
+# title like City Nav Europe NTU 2019.2 Basemap
+# or OSM Street map
+>>>(0.s)		string		x	%s
+# 2nd title like Copyright 1995-2018 by GARMIN Corporation.
+# or http://www.openstreetmap.org/
+>>>>&1			string		x	%s
+>>>0x0E 		use		garmin-date
+#>>>0x21			ulelong		x	\b, at 0x%x
+#>>>0x25			ulelong		x	0x%x bytes TRE1
+#>>>0x29			ulelong		x	\b, at 0x%x
+#>>>0x2D			ulelong		x	0x%x bytes TRE2
+#>>>0x31			ulelong		x	\b, at 0x%x
+#>>>0x35			ulelong		x	0x%x bytes TRE3
+# Copyright record size
+#>>>0x39			uleshort	x	\b, copyright record size %u
+# Map ID
+>>>0x74			ulelong		x	\b, ID 0x%x
+# URL: https://www.gpspower.net/garmin-tutorials/353310-basecamp-installing-free-desktop-map.html
+# For road traffic information service (RDS/TMS/TMC). Commonly seen in City Navigator maps
+>>9	string	TRF				traffic,
+!:mime			application/x-garmin-trf
+!:ext			trf
+# city/region like Preitenegg
+>>>(0.s+1) 		string		x	1st %s
+# highway part like L606/L148
+>>>>&1			string		x	%s
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/Format
+# Reference: http://www.pinns.co.uk/osm/typformat.html
+# customize the appearance of objects. For GPS and MapSource/Qlandkarte better looking maps
+>>9	string	TYP				types
+!:mime			application/x-garmin-typ
+!:ext			typ
+>>>0x0E 		use		garmin-date
+# character set 1252 65001~UTF8
+>>>0x15			uleshort	x	\b, code page %u
+# POIs
+#>>>0x17			ulelong		x	\b, at 0x%x
+#>>>0x1B			ulelong		x	0x%x bytes TYP1
+# extra pois
+#>>>0x5B			ulelong		x	\b, at 0x%x
+#>>>0x5F			ulelong		x	0x%x bytes TYP8
+# URL: https://wiki.openstreetmap.org/wiki/OSM_Map_On_Garmin/RGN_Subfile_Format
+# http://www.pinns.co.uk/osm/RGN.html
+# region data used by the Garmin software
+>>9	string	RGN				region
+!:mime			application/x-garmin-rgn
+!:ext			rgn
+# POIs,Indexed POIs,Polylines or Polygons or first map level
+#>>>0x15			ulelong	       x	\b, at 0x%x
+#>>>0x19			ulelong	       x	0x%x bytes RGN1
+# polygons with extended types
+#>>>0x21			ulelong	       >0
+#>>>>0x1D		ulelong	       x	\b, at 0x%x
+#>>>>0x21		ulelong	       x	0x%x bytes RGN2
+# polylines with extended types
+#>>>0x3D			ulelong	       >0
+#>>>>0x39		ulelong	       x	\b, at 0x%x
+#>>>>0x3D		ulelong	       x	0x%x bytes RGN3
+# extended POIs
+#>>>0x59			ulelong	       >0
+#>>>>0x55		ulelong	       x	\b, at 0x%x
+#>>>>0x59		ulelong	       x	0x%x bytes RGN3
+#>>9	default		x		unknown map type
+# Header length; GMP:31h 35h 3Dh,MDR:11Eh 238h 2C4h 310h,NOD:3Fh 7Fh,NET:64h,
+# LBL:2A9h,SRT:1Dh 25h 27h,TRE:CFh 135h,TRF:5Ah,TYP:5Bh 6Eh 7Ch AEh,RGN:7Dh
+>>0	uleshort	x		\b, header length 0x%x
 
 # TOM TOM GPS watches ttbin files:
 # https://github.com/ryanbinns/ttwatch/tree/master/ttbin
