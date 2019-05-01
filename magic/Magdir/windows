@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.25 2019/04/19 00:42:27 christos Exp $
+# $File: windows,v 1.26 2019/05/01 17:55:25 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -55,6 +55,69 @@
 >0x18	lelong		=1		\b, empty
 >0x78	lelong		&1		\b, DIRTY
 >0x78	lelong		&2		\b, FULL
+
+# Summary: Windows System Deployment Image
+# Created by: Joerg Jenderek
+# URL: http://en.wikipedia.org/wiki/System_Deployment_Image
+# Reference: http://skolk.livejournal.com/1320.html
+0	string			$SDI
+>4	string			0001		System Deployment Image
+!:mime	application/x-ms-sdi
+#!:mime	application/octet-stream
+# \Boot\boot.sdi
+!:ext	sdi
+# MDBtype: 0~Unspecified 1~RAM 2~ROM
+>>8	ulequad			!0		\b, MDBtype 0x%llx
+# BootCodeOffset
+>>16	ulequad			!0		\b, BootCodeOffset 0x%llx
+# BootCodeSize
+>>24	ulequad			!0		\b, BootCodeSize 0x%llx
+# VendorID
+>>32	ulequad			!0		\b, VendorID 0x%llx
+# DeviceID
+>>40	ulequad			!0		\b, DeviceID 0x%llx
+# DeviceModel
+>>48	ulequad			!0		\b, DeviceModel 0x%llx
+>>>56	ulequad			!0		\b%llx
+# DeviceRole
+>>64	ulequad			!0		\b, DeviceRole 0x%llx
+# Reserved1; reserved fields and gaps between BLOBs are padded with \0
+#>>72	ulequad			!0		\b, Reserved1 0x%llx
+# RuntimeGUID
+>>80	ulequad			!0		\b, RuntimeGUID 0x%llx
+>>>88	ulequad			!0		\b%llx
+# RuntimeOEMrev
+>>96	ulequad			!0		\b, RuntimeOEMrev 0x%llx
+# Reserved2
+#>>104	ulequad			!0		\b, Reserved2 0x%llx
+# BLOB alignment value in pages, as specified in sdimgr /pack: 1~4K 2~8k
+>>112	ulequad			!0		\b, PageAlignment %llu
+# Reserved3[48]
+#>>120	ulequad			!0		\b, Reserved3 0x%llx
+# SDI checksum 39h
+>>0x1f8	ulequad			x		\b, checksum 0x%llx
+# BLOBtype[8] \0-padded: PART, WIM , BOOT, LOAD, DISK
+>>0x400	string			>\0		\b, type %-3.8s
+# 0~non-filesystem 7~NTFS 6~BIGFAT
+>>>0x420	ulequad		!0		(0x%llx)
+# ATTRibutes
+>>>0x408	ulequad		!0		0x%llx attributes
+# Offset
+>>>0x410	ulequad		x		at 0x%llx
+# print 1 space after size and then handles NTFS boot sector by ./filesystems
+>>>0x418	ulequad		>0		%llu bytes 
+>>>>(0x410.l)	indirect	x
+# 2nd BLOB: WIM
+>>0x440		string		>\0		\b, type %-3.8s
+>>>0x428	ulequad		!0		(0x%llx)
+# ATTRibutes
+>>>0x448	ulequad		!0		0x%llx attributes
+# Offset
+>>>0x450	ulequad		x		at 0x%llx
+>>>0x458	ulequad		>0		%llu bytes 
+>>>>(0x450.l)	indirect	x
+# 3rd BLOB
+>>0x480		string		>\0		\b, type %-3.8s
 
 # Summary:	Windows Error Report text files
 # URL:		https://en.wikipedia.org/wiki/Windows_Error_Reporting
