@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.118 2019/05/05 19:22:36 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.119 2019/05/05 19:25:23 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -607,11 +607,10 @@ copydesc(int i, int fd)
 	return 1;
 }
 
-static void
+static pid_t
 writechild(int fd, const void *old, size_t n)
 {
 	pid_t pid;
-	int status;
 
 	/*
 	 * fork again, to avoid blocking because both
@@ -631,11 +630,7 @@ writechild(int fd, const void *old, size_t n)
 		exit(0);
 	}
 	/* parent */
-	if (wait(&status) == -1) {
-		DPRINTF("Wait failed (%s)\n", strerror(errno));
-		exit(1);
-	}
-	DPRINTF("Grandchild wait return %#x\n", status);
+	return pid;
 }
 
 static ssize_t
@@ -682,8 +677,9 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
     unsigned char **newch, size_t* n)
 {
 	int fdp[3][2];
-	int status, rv;
+	int status, rv, w;
 	pid_t pid;
+	pid_t writepid = -1;
 	size_t i;
 	ssize_t r;
 
@@ -707,30 +703,47 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		return makeerror(newch, n, "Cannot create pipe, %s",
 		    strerror(errno));
 	}
-	pid = fork();
+
+	/* For processes with large mapped virtual sizes, vfork
+	 * may be _much_ faster (10-100 times) than fork.
+	 */
+	pid = vfork();
 	if (pid == -1) {
-		return makeerror(newch, n, "Cannot fork, %s",
+		return makeerror(newch, n, "Cannot vfork, %s",
 		    strerror(errno));
 	}
 	if (pid == 0) {
 		/* child */
-
+		/* Note: we are after vfork, do not modify memory
+		 * in a way which confuses parent. In particular,
+		 * do not modify fdp[i][j].
+		 */
 		if (fd != -1) {
 			(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
 			if (copydesc(STDIN_FILENO, fd))
-				close(fd);
+				(void) close(fd);
 		} else {
-			copydesc(STDIN_FILENO, fdp[STDIN_FILENO][0]); closep(fdp[STDIN_FILENO]);
+			if (copydesc(STDIN_FILENO, fdp[STDIN_FILENO][0]))
+				(void) close(fdp[STDIN_FILENO][0]);
+			if (fdp[STDIN_FILENO][1] > 2)
+				(void) close(fdp[STDIN_FILENO][1]);
 		}
-///FIXME: if one of the fdp[i][j] is 0, 1, or 2, this can bomb spectacularly
-		copydesc(STDOUT_FILENO, fdp[STDOUT_FILENO][1]); closep(fdp[STDOUT_FILENO]);
-		copydesc(STDERR_FILENO, fdp[STDERR_FILENO][1]); closep(fdp[STDERR_FILENO]);
+///FIXME: if one of the fdp[i][j] is 0 or 1, this can bomb spectacularly
+		if (copydesc(STDOUT_FILENO, fdp[STDOUT_FILENO][1]))
+			(void) close(fdp[STDOUT_FILENO][1]);
+		if (fdp[STDOUT_FILENO][0] > 2)
+			(void) close(fdp[STDOUT_FILENO][0]);
+
+		if (copydesc(STDERR_FILENO, fdp[STDERR_FILENO][1]))
+			(void) close(fdp[STDERR_FILENO][1]);
+		if (fdp[STDERR_FILENO][0] > 2)
+			(void) close(fdp[STDERR_FILENO][0]);
 
 		(void)execvp(compr[method].argv[0],
 		    RCAST(char *const *, RCAST(intptr_t, compr[method].argv)));
 		dprintf(STDERR_FILENO, "exec `%s' failed, %s",
 		    compr[method].argv[0], strerror(errno));
-		exit(1);
+		_exit(1); /* _exit(), not exit(), because of vfork */
 	}
 	/* parent */
 	/* Close write sides of child stdout/err pipes */
@@ -739,8 +752,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 	/* Write the buffer data to child stdin, if we don't have fd */
 	if (fd == -1) {
 		closefd(fdp[STDIN_FILENO], 0);
-///BUG: can block in wait()
-		writechild(fdp[STDIN_FILENO][1], old, *n);
+		writepid = writechild(fdp[STDIN_FILENO][1], old, *n);
 		closefd(fdp[STDIN_FILENO], 1);
 	}
 
@@ -779,8 +791,10 @@ err:
 	closefd(fdp[STDIN_FILENO], 1);
 	closefd(fdp[STDOUT_FILENO], 0);
 	closefd(fdp[STDERR_FILENO], 0);
-///BUG: can wait for a wrong child
-	if (wait(&status) == -1) {
+
+	w = waitpid(pid, &status, 0);
+wait_err:
+	if (w == -1) {
 		free(*newch);
 		rv = makeerror(newch, n, "Wait failed, %s", strerror(errno));
 		DPRINTF("Child wait return %#x\n", status);
@@ -789,8 +803,17 @@ err:
 	} else if (WEXITSTATUS(status) != 0) {
 		DPRINTF("Child exited (%#x)\n", WEXITSTATUS(status));
 	}
+	if (writepid > 0) {
+		/* _After_ we know decompressor has exited, our input writer
+		 * definitely will exit now (at worst, writing fails in it,
+		 * since output fd is closed now on the reading size).
+		 */
+		w = waitpid(writepid, &status, 0);
+		writepid = -1;
+		goto wait_err;
+	}
 
-	closefd(fdp[STDIN_FILENO], 0);
+	closefd(fdp[STDIN_FILENO], 0); //why? it is already closed here!
 	DPRINTF("Returning %p n=%" SIZE_T_FORMAT "u rv=%d\n", *newch, *n, rv);
 
 	return rv;
