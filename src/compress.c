@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.116 2019/03/12 20:43:05 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.117 2019/05/05 19:20:23 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -611,6 +611,7 @@ copydesc(int i, int *fd)
 static void
 writechild(int fdp[3][2], const void *old, size_t n)
 {
+	pid_t pid;
 	int status;
 
 	closefd(fdp[STDIN_FILENO], 0);
@@ -618,28 +619,26 @@ writechild(int fdp[3][2], const void *old, size_t n)
 	 * fork again, to avoid blocking because both
 	 * pipes filled
 	 */
-	switch (fork()) {
-	case 0: /* child */
+	pid = fork();
+	if (pid == -1) {
+		DPRINTF("Fork failed (%s)\n", strerror(errno));
+		exit(1);
+	}
+	if (pid == 0) {
+		/* child */
 		closefd(fdp[STDOUT_FILENO], 0);
 		if (swrite(fdp[STDIN_FILENO][1], old, n) != CAST(ssize_t, n)) {
 			DPRINTF("Write failed (%s)\n", strerror(errno));
 			exit(1);
 		}
 		exit(0);
-		/*NOTREACHED*/
-
-	case -1:
-		DPRINTF("Fork failed (%s)\n", strerror(errno));
-		exit(1);
-		/*NOTREACHED*/
-
-	default:  /* parent */
-		if (wait(&status) == -1) {
-			DPRINTF("Wait failed (%s)\n", strerror(errno));
-			exit(1);
-		}
-		DPRINTF("Grandchild wait return %#x\n", status);
 	}
+	/* parent */
+	if (wait(&status) == -1) {
+		DPRINTF("Wait failed (%s)\n", strerror(errno));
+		exit(1);
+	}
+	DPRINTF("Grandchild wait return %#x\n", status);
 	closefd(fdp[STDIN_FILENO], 1);
 }
 
@@ -688,6 +687,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 {
 	int fdp[3][2];
 	int status, rv;
+	pid_t pid;
 	size_t i;
 	ssize_t r;
 
@@ -711,8 +711,13 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		return makeerror(newch, n, "Cannot create pipe, %s",
 		    strerror(errno));
 	}
-	switch (fork()) {
-	case 0:	/* child */
+	pid = fork();
+	if (pid == -1) {
+		return makeerror(newch, n, "Cannot fork, %s",
+		    strerror(errno));
+	}
+	if (pid == 0) {
+		/* child */
 		if (fd != -1) {
 			fdp[STDIN_FILENO][0] = fd;
 			(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
@@ -726,28 +731,24 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		dprintf(STDERR_FILENO, "exec `%s' failed, %s",
 		    compr[method].argv[0], strerror(errno));
 		exit(1);
-		/*NOTREACHED*/
-	case -1:
-		return makeerror(newch, n, "Cannot fork, %s",
+	}
+	/* parent */
+	for (i = 1; i < __arraycount(fdp); i++)
+		closefd(fdp[i], 1);
+
+	/* Write the buffer data to the child, if we don't have fd */
+	if (fd == -1)
+		writechild(fdp, old, *n);
+
+	*newch = CAST(unsigned char *, malloc(bytes_max + 1));
+	if (*newch == NULL) {
+		rv = makeerror(newch, n, "No buffer, %s",
 		    strerror(errno));
-
-	default: /* parent */
-		for (i = 1; i < __arraycount(fdp); i++)
-			closefd(fdp[i], 1);
-
-		/* Write the buffer data to the child, if we don't have fd */
-		if (fd == -1)
-			writechild(fdp, old, *n);
-
-		*newch = CAST(unsigned char *, malloc(bytes_max + 1));
-		if (*newch == NULL) {
-			rv = makeerror(newch, n, "No buffer, %s",
-			    strerror(errno));
-			goto err;
-		}
-		rv = OKDATA;
-		if ((r = sread(fdp[STDOUT_FILENO][0], *newch, bytes_max, 0)) > 0)
-			break;
+		goto err;
+	}
+	rv = OKDATA;
+	r = sread(fdp[STDOUT_FILENO][0], *newch, bytes_max, 0);
+	if (r <= 0) {
 		DPRINTF("Read stdout failed %d (%s)\n", fdp[STDOUT_FILENO][0],
 		    r != -1 ? strerror(errno) : "no data");
 
@@ -756,7 +757,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		    (r = sread(fdp[STDERR_FILENO][0], *newch, bytes_max, 0)) > 0)
 		{
 			r = filter_error(*newch, r);
-			break;
+			goto ok;
 		}
 		free(*newch);
 		if  (r == 0)
@@ -766,7 +767,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 			rv = makeerror(newch, n, "No data");
 		goto err;
 	}
-
+ok:
 	*n = r;
 	/* NUL terminate, as every buffer is handled here. */
 	(*newch)[*n] = '\0';
