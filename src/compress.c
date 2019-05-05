@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.117 2019/05/05 19:20:23 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.118 2019/05/05 19:22:36 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -595,26 +595,24 @@ closep(int *fd)
 		closefd(fd, i);
 }
 
-static void
-copydesc(int i, int *fd)
+static int
+copydesc(int i, int fd)
 {
-	int j = fd[i == STDIN_FILENO ? 0 : 1];
-	if (j == i)
-		return;
-	if (dup2(j, i) == -1) {
-		DPRINTF("dup(%d, %d) failed (%s)\n", j, i, strerror(errno));
+	if (fd == i)
+		return 0; /* "no dup was necessary" */
+	if (dup2(fd, i) == -1) {
+		DPRINTF("dup(%d, %d) failed (%s)\n", fd, i, strerror(errno));
 		exit(1);
 	}
-	closep(fd);
+	return 1;
 }
 
 static void
-writechild(int fdp[3][2], const void *old, size_t n)
+writechild(int fd, const void *old, size_t n)
 {
 	pid_t pid;
 	int status;
 
-	closefd(fdp[STDIN_FILENO], 0);
 	/*
 	 * fork again, to avoid blocking because both
 	 * pipes filled
@@ -626,8 +624,7 @@ writechild(int fdp[3][2], const void *old, size_t n)
 	}
 	if (pid == 0) {
 		/* child */
-		closefd(fdp[STDOUT_FILENO], 0);
-		if (swrite(fdp[STDIN_FILENO][1], old, n) != CAST(ssize_t, n)) {
+		if (swrite(fd, old, n) != CAST(ssize_t, n)) {
 			DPRINTF("Write failed (%s)\n", strerror(errno));
 			exit(1);
 		}
@@ -639,7 +636,6 @@ writechild(int fdp[3][2], const void *old, size_t n)
 		exit(1);
 	}
 	DPRINTF("Grandchild wait return %#x\n", status);
-	closefd(fdp[STDIN_FILENO], 1);
 }
 
 static ssize_t
@@ -718,13 +714,17 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 	}
 	if (pid == 0) {
 		/* child */
-		if (fd != -1) {
-			fdp[STDIN_FILENO][0] = fd;
-			(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
-		}
 
-		for (i = 0; i < __arraycount(fdp); i++)
-			copydesc(CAST(int, i), fdp[i]);
+		if (fd != -1) {
+			(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
+			if (copydesc(STDIN_FILENO, fd))
+				close(fd);
+		} else {
+			copydesc(STDIN_FILENO, fdp[STDIN_FILENO][0]); closep(fdp[STDIN_FILENO]);
+		}
+///FIXME: if one of the fdp[i][j] is 0, 1, or 2, this can bomb spectacularly
+		copydesc(STDOUT_FILENO, fdp[STDOUT_FILENO][1]); closep(fdp[STDOUT_FILENO]);
+		copydesc(STDERR_FILENO, fdp[STDERR_FILENO][1]); closep(fdp[STDERR_FILENO]);
 
 		(void)execvp(compr[method].argv[0],
 		    RCAST(char *const *, RCAST(intptr_t, compr[method].argv)));
@@ -733,12 +733,16 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		exit(1);
 	}
 	/* parent */
+	/* Close write sides of child stdout/err pipes */
 	for (i = 1; i < __arraycount(fdp); i++)
 		closefd(fdp[i], 1);
-
-	/* Write the buffer data to the child, if we don't have fd */
-	if (fd == -1)
-		writechild(fdp, old, *n);
+	/* Write the buffer data to child stdin, if we don't have fd */
+	if (fd == -1) {
+		closefd(fdp[STDIN_FILENO], 0);
+///BUG: can block in wait()
+		writechild(fdp[STDIN_FILENO][1], old, *n);
+		closefd(fdp[STDIN_FILENO], 1);
+	}
 
 	*newch = CAST(unsigned char *, malloc(bytes_max + 1));
 	if (*newch == NULL) {
@@ -775,6 +779,7 @@ err:
 	closefd(fdp[STDIN_FILENO], 1);
 	closefd(fdp[STDOUT_FILENO], 0);
 	closefd(fdp[STDERR_FILENO], 0);
+///BUG: can wait for a wrong child
 	if (wait(&status) == -1) {
 		free(*newch);
 		rv = makeerror(newch, n, "Wait failed, %s", strerror(errno));
