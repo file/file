@@ -1,3 +1,9 @@
+2019-05-03  15:26  Christos Zoulas <christos@zoulas.com>
+
+	* Switch decompression code to use vfork() because
+	  tools like rpmdiff and rpmbuild call libmagic
+	  with large process footprints (Denys Vlasenko)
+
 2019-04-07  14:05  Christos Zoulas <christos@zoulas.com>
 
 	* PR/75: --enable-zlib, did not work.
