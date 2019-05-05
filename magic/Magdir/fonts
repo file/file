@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.40 2019/04/19 00:42:27 christos Exp $
+# $File: fonts,v 1.41 2019/05/05 16:44:04 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -127,6 +127,58 @@
 7	belong		0x00454741	DOS code page font data
 7	belong		0x00564944	DOS code page font data (from Linux?)
 4098	string		DOSFONT		DOSFONT2 encrypted font data
+
+# From: Joerg Jenderek
+# URL: http://fileformats.archiveteam.org/wiki/GEM_bitmap_font
+# Reference: http://cd.textfiles.com/ataricompendium/BOOK/HTML/APPENDC.HTM#cnt
+#
+# usual case with lightening mask and skewing mask 5555h~UU
+62	ulelong		0x55555555
+>0	use		gdos-font
+# BOX18.GFT COWBOY30.GFT ROYALK30.GFT
+62	ulelong		0
+# skip ISO 9660 CD-ROM ./filesystem by looking for low positive face size
+>2	uleshort	>2
+# skip DOS 2.0 backup id file ./msdos by looking for face size lower/equal 48
+>>2	uleshort	<49
+# skip MS Windows ICO ./msdos by looking for valid face name
+>>>4	ubeshort	>0x1F00
+# skip DOS executable BACKM212.COM by looking for horizontal offset table after header
+#>>>>68	ulelong		>87		OFFSET_OK
+>>>>0	use		gdos-font
+0	name		gdos-font
+>0	uleshort	x		GEM GDOS font
+!:mime	application/x-font-gdos
+# also .eps found like AA070GEP.EPS AI360GEP.EPS
+!:ext	fnt/gtf
+# font name like University Bold
+>4	string		x		%.32s
+# face size in points 3-48
+>2	uleshort	x		%u
+# face ID (must be unique)
+>0	uleshort	x		\b, ID 0x%4.4x
+# lowest character index in face (usually 32 for disk-loaded fonts).
+#>36	uleshort	x		\b, low character index %u
+# width of the widest character
+#>50	uleshort	x		\b, %u char width
+# width of the widest character cell
+#>52	uleshort	x		\b, %u cell width
+# thickening size
+#>58	uleshort	x		\b, %u thick
+# lightening mask to eliminate pixels, usually 5555h
+>62	uleshort	!0x5555		\b, lightening mask 0x%x
+# skewing mask to determine when to perform additional rotation when skewing, usually 5555h
+>64	uleshort	!0x5555		\b, skewing mask 0x%x
+# offset to horizontal offset table 58h~88 5eh
+#>68	ulelong		>88		\b, 0x%x horizontal table offset
+# offset character offset table
+#>72	ulelong		x		\b, 0x%x coffset
+# offset to font data
+#>72	ulelong		x		\b, 0x%x foffset
+# form width in bytes
+#>80	uleshort	x		\b, %u fwidth
+# pointer to the next font, set by GDOS after loading
+#>84	ulelong		x		\b, 0x%x noffset
 
 # downloadable fonts for browser (prints type) anthon@mnt.org
 # https://tools.ietf.org/html/rfc3073
