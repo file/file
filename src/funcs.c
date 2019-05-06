@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.102 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.103 2019/05/06 21:22:13 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -160,12 +160,18 @@ file_badread(struct magic_set *ms)
 
 #ifndef COMPILE_ONLY
 
+protected int
+file_separator(struct magic_set *ms)
+{
+	return file_printf(ms, "\n- ");
+}
+
 static int
 checkdone(struct magic_set *ms, int *rv)
 {
 	if ((ms->flags & MAGIC_CONTINUE) == 0)
 		return 1;
-	if (file_printf(ms, "\n- ") == -1)
+	if (file_separator(ms) == -1)
 		*rv = -1;
 	return 0;
 }
@@ -335,8 +341,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void)fprintf(stderr, "[try ascmagic %d]\n", m);
 		if (m) {
-			if (checkdone(ms, &rv))
-				goto done;
+			goto done;
 		}
 	}
 
