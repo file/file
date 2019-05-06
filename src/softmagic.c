@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.282 2019/04/03 11:34:01 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.283 2019/05/06 21:22:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2311,13 +2311,11 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 private int
 print_sep(struct magic_set *ms, int firstline)
 {
-//	if (ms->flags & MAGIC_NODESC)
-//		return 0;
 	if (firstline)
 		return 0;
 	/*
 	 * we found another match
 	 * put a newline and '-' to do some simple formatting
 	 */
-	return file_printf(ms, "\n- ");
+	return file_separator(ms);
 }
