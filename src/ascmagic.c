@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.102 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.103 2019/05/06 21:23:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -110,9 +110,10 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
 	unsigned char *utf8_buf = NULL, *utf8_end;
-	size_t mlen, i;
+	size_t mlen, i, len;
 	int rv = -1;
 	int mime = ms->flags & MAGIC_MIME;
+	int need_separator = 0;
 
 	const char *subtype = NULL;
 	const char *subtype_mime = NULL;
@@ -156,6 +157,8 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 		if ((rv = file_softmagic(ms, &bb, NULL, NULL,
 		    TEXTTEST, text)) == 0)
 			rv = -1;
+		else
+			need_separator = 1;
 		buffer_fini(&bb);
 		if ((ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION))) {
 			rv = rv == -1 ? 0 : 1;
@@ -206,8 +209,21 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 		rv = 0;
 		goto done;
 	}
+	len = file_printedlen(ms);
 	if (mime) {
-		if (!file_printedlen(ms) && (mime & MAGIC_MIME_TYPE) != 0) {
+		if ((mime & MAGIC_MIME_TYPE) != 0) {
+			if (len) {
+				/*
+				 * Softmagic printed something, we
+				 * are either done, or we need a separator
+				 */
+				if ((ms->flags & MAGIC_CONTINUE) == 0) {
+					rv = 1;
+					goto done;
+				}
+				if (need_separator && file_separator(ms) == -1)
+					goto done;
+			}
 			if (subtype_mime) {
 				if (file_printf(ms, "%s", subtype_mime) == -1)
 					goto done;
@@ -217,7 +233,7 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 			}
 		}
 	} else {
-		if (file_printedlen(ms)) {
+		if (len) {
 			switch (file_replace(ms, " text$", ", ")) {
 			case 0:
 				switch (file_replace(ms, " text executable$",
