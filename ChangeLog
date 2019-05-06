@@ -1,3 +1,7 @@
+2019-05-06  17:25  Christos Zoulas <christos@zoulas.com>
+
+	* PR/77: Handle --mime-type and -k correctly.
+
 2019-05-03  15:26  Christos Zoulas <christos@zoulas.com>
 
 	* Switch decompression code to use vfork() because
