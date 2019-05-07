@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.119 2019/05/05 19:25:23 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.120 2019/05/07 02:20:27 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -226,12 +226,12 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 	int fd = b->fd;
 	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
-	sig_t osigpipe;
+	int sa_saved = 0;
+	struct sigaction sig_act;
 
 	if ((ms->flags & MAGIC_COMPRESS) == 0)
 		return 0;
 
-	osigpipe = signal(SIGPIPE, SIG_IGN);
 	for (i = 0; i < ncompr; i++) {
 		int zm;
 		if (nbytes < compr[i].maglen)
@@ -246,6 +246,16 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 
 		if (!zm)
 			continue;
+
+		/* Prevent SIGPIPE death if child dies unexpectedly */
+		if (!sa_saved) {
+			//We can use sig_act for both new and old, but
+			struct sigaction new_act;
+			memset(&new_act, 0, sizeof(new_act));
+			new_act.sa_handler = SIG_IGN;
+			sa_saved = sigaction(SIGPIPE, &new_act, &sig_act) != -1;
+		}
+
 		nsz = nbytes;
 		urv = uncompressbuf(fd, ms->bytes_max, i, buf, &newbuf, &nsz);
 		DPRINTF("uncompressbuf = %d, %s, %" SIZE_T_FORMAT "u\n", urv,
@@ -302,7 +312,9 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 out:
 	DPRINTF("rv = %d\n", rv);
 
-	(void)signal(SIGPIPE, osigpipe);
+	if (sa_saved && sig_act.sa_handler != SIG_IGN)
+		(void)sigaction(SIGPIPE, &sig_act, NULL);
+
 	free(newbuf);
 	ms->flags |= MAGIC_COMPRESS;
 	DPRINTF("Zmagic returns %d\n", rv);
