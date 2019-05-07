@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.110 2019/04/15 16:49:29 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.111 2019/05/07 02:27:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -406,6 +406,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	struct stat	sb;
 	ssize_t nbytes = 0;	/* number of bytes read from a datafile */
 	int	ispipe = 0;
+	int	okstat = 0;
 	off_t	pos = CAST(off_t, -1);
 
 	if (file_reset(ms, 1) == -1)
@@ -438,7 +439,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		int flags = O_RDONLY|O_BINARY|O_NONBLOCK;
 		errno = 0;
 		if ((fd = open(inname, flags)) < 0) {
-			int okstat = stat(inname, &sb) == 0;
+			okstat = stat(inname, &sb) == 0;
 			if (okstat && S_ISFIFO(sb.st_mode))
 				ispipe = 1;
 #ifdef WIN32
@@ -462,7 +463,9 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	}
 
 	if (fd != -1) {
-		if (fstat(fd, &sb) == 0 && S_ISFIFO(sb.st_mode))
+		if (!okstat)
+			okstat = fstat(fd, &sb) == 0;
+		if (okstat && S_ISFIFO(sb.st_mode))
 			ispipe = 1;
 		if (inname == NULL)
 			pos = lseek(fd, CAST(off_t, 0), SEEK_CUR);
@@ -508,7 +511,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	}
 
 	(void)memset(buf + nbytes, 0, SLOP); /* NUL terminate */
-	if (file_buffer(ms, fd, inname, buf, CAST(size_t, nbytes)) == -1)
+	if (file_buffer(ms, fd, okstat ? &sb : NULL, inname, buf, CAST(size_t, nbytes)) == -1)
 		goto done;
 	rv = 0;
 done:
@@ -534,7 +537,7 @@ magic_buffer(struct magic_set *ms, const void *buf, size_t nb)
 	 * The main work is done here!
 	 * We have the file name and/or the data buffer to be identified.
 	 */
-	if (file_buffer(ms, -1, NULL, buf, nb) == -1) {
+	if (file_buffer(ms, -1, NULL, NULL, buf, nb) == -1) {
 		return NULL;
 	}
 	return file_getbuffer(ms);

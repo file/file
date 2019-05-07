@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.283 2019/05/06 21:22:40 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.284 2019/05/07 02:27:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1487,13 +1487,13 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 		}
 		if (CAST(size_t, -m->offset) > b->elen)
 			return -1;
-		buffer_init(bb, -1, b->ebuf, b->elen);
+		buffer_init(bb, -1, NULL, b->ebuf, b->elen);
 		ms->eoffset = ms->offset = CAST(int32_t, b->elen + m->offset);
 	} else {
 		if (cont_level == 0) {
 normal:
 			// XXX: Pass real fd, then who frees bb?
-			buffer_init(bb, -1, b->fbuf, b->flen);
+			buffer_init(bb, -1, NULL, b->fbuf, b->flen);
 			ms->offset = m->offset;
 			ms->eoffset = 0;
 		} else {

@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.103 2019/05/06 21:22:13 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.104 2019/05/07 02:27:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -207,7 +207,8 @@ file_default(struct magic_set *ms, size_t nb)
  */
 /*ARGSUSED*/
 protected int
-file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__unused__)),
+file_buffer(struct magic_set *ms, int fd, struct stat *st,
+    const char *inname __attribute__ ((__unused__)),
     const void *buf, size_t nb)
 {
 	int m = 0, rv = 0, looks_text = 0;
@@ -218,7 +219,7 @@ file_buffer(struct magic_set *ms, int fd, const char *inname __attribute__ ((__u
 	char *rbuf = NULL;
 	struct buffer b;
 
-	buffer_init(&b, fd, buf, nb);
+	buffer_init(&b, fd, st, buf, nb);
 	ms->mode = b.st.st_mode;
 
 	if (nb == 0) {

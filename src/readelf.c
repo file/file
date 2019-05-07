@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.164 2019/04/15 16:49:53 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.165 2019/05/07 02:27:11 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1734,6 +1734,7 @@ file_tryelf(struct magic_set *ms, const struct buffer *b)
 	int clazz;
 	int swap;
 	struct stat st;
+	const struct stat *stp;
 	off_t fsize;
 	int flags = 0;
 	Elf32_Ehdr elf32hdr;
@@ -1762,12 +1763,25 @@ file_tryelf(struct magic_set *ms, const struct buffer *b)
 	    && (errno == ESPIPE))
 		fd = file_pipe2file(ms, fd, buf, nbytes);
 
-	if (fd == -1 || fstat(fd, &st) == -1) {
-  		file_badread(ms);
+	if (fd == -1) {
+		file_badread(ms);
 		return -1;
 	}
-	if (S_ISREG(st.st_mode) || st.st_size != 0)
-		fsize = st.st_size;
+
+	stp = &b->st;
+	/*
+	 * b->st.st_size != 0 if previous fstat() succeeded,
+	 * which is likely, we can avoid extra stat() call.
+	 */
+	if (b->st.st_size == 0) {
+		stp = &st;
+		if (fstat(fd, &st) == -1) {
+			file_badread(ms);
+			return -1;
+		}
+	}
+	if (S_ISREG(stp->st_mode) || stp->st_size != 0)
+		fsize = stp->st_size;
 	else
 		fsize = SIZE_UNKNOWN;
 

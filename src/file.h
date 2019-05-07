@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.205 2019/05/06 21:22:13 christos Exp $
+ * @(#)$File: file.h,v 1.206 2019/05/07 02:27:11 christos Exp $
  */
 
 #ifndef __file_h__
@@ -454,8 +454,8 @@ protected const char *file_fmttime(uint64_t, int, char *);
 protected struct magic_set *file_ms_alloc(int);
 protected void file_ms_free(struct magic_set *);
 protected int file_default(struct magic_set *, size_t);
-protected int file_buffer(struct magic_set *, int, const char *, const void *,
-    size_t);
+protected int file_buffer(struct magic_set *, int, struct stat *, const char *,
+    const void *, size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_vprintf(struct magic_set *, const char *, va_list)
@@ -513,7 +513,8 @@ protected int file_os2_apptype(struct magic_set *, const char *, const void *,
     size_t);
 #endif /* __EMX__ */
 
-protected void buffer_init(struct buffer *, int, const void *, size_t);
+protected void buffer_init(struct buffer *, int, const struct stat *,
+    const void *, size_t);
 protected void buffer_fini(struct buffer *);
 protected int buffer_fill(const struct buffer *);
 

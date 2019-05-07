@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: buffer.c,v 1.5 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: buffer.c,v 1.6 2019/05/07 02:27:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -37,10 +37,13 @@ FILE_RCSID("@(#)$File: buffer.c,v 1.5 2019/02/20 02:35:27 christos Exp $")
 #include <sys/stat.h>
 
 void
-buffer_init(struct buffer *b, int fd, const void *data, size_t len)
+buffer_init(struct buffer *b, int fd, const struct stat *st, const void *data,
+    size_t len)
 {
 	b->fd = fd;
-	if (b->fd == -1 || fstat(b->fd, &b->st) == -1)
+	if (st)
+		memcpy(&b->st, st, sizeof(b->st));
+	else if (b->fd == -1 || fstat(b->fd, &b->st) == -1)
 		memset(&b->st, 0, sizeof(b->st));
 	b->fbuf = data;
 	b->flen = len;
