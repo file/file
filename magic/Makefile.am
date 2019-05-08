@@ -196,6 +196,7 @@ $(MAGIC_FRAGMENT_DIR)/netscape \
 $(MAGIC_FRAGMENT_DIR)/netware \
 $(MAGIC_FRAGMENT_DIR)/news \
 $(MAGIC_FRAGMENT_DIR)/nitpicker \
+$(MAGIC_FRAGMENT_DIR)/numpy \
 $(MAGIC_FRAGMENT_DIR)/oasis \
 $(MAGIC_FRAGMENT_DIR)/ocaml \
 $(MAGIC_FRAGMENT_DIR)/octave \
