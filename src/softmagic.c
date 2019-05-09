@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.284 2019/05/07 02:27:11 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.285 2019/05/09 18:58:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -448,8 +448,12 @@ flush:
 		if (*printed_something) {
 			firstline = 0;
 		}
-		if ((ms->flags & MAGIC_CONTINUE) == 0 && *found_match) {
+		if (*found_match) {
+		    if ((ms->flags & MAGIC_CONTINUE) == 0)
 			return *returnval; /* don't keep searching */
+		    // So that we print a separator
+		    *printed_something = 0;
+		    firstline = 0;
 		}
 		cont_level = 0;
 	}
