@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.128 2019/04/19 00:42:27 christos Exp $
+# $File: archive,v 1.129 2019/05/09 18:58:02 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1071,6 +1071,7 @@
 !:ext zip/cbz
 !:strength +1
 0	string		PK\003\004
+!:strength +1
 
 # Specialised zip formats which start with a member named 'mimetype'
 # (stored uncompressed, with no 'extra field') containing the file's MIME type.
