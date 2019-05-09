@@ -1,3 +1,8 @@
+2019-05-09  22:27  Christos Zoulas <christos@zoulas.com>
+	
+	* Make sure that continuation separators are printed
+	  with -k within softmagic
+
 2019-05-06  22:27  Christos Zoulas <christos@zoulas.com>
 
 	* Change SIGPIPE saving and restoring during compression to use
