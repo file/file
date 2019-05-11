@@ -40,7 +40,6 @@ FILE_RCSID("@(#)$File: encoding.c,v 1.20 2019/04/15 16:48:41 christos Exp $")
 
 #include "magic.h"
 #include <string.h>
-#include <memory.h>
 #include <stdlib.h>
 
 

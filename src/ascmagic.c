@@ -40,7 +40,6 @@ FILE_RCSID("@(#)$File: ascmagic.c,v 1.104 2019/05/07 02:27:11 christos Exp $")
 
 #include "magic.h"
 #include <string.h>
-#include <memory.h>
 #include <ctype.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
