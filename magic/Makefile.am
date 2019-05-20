@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.143 2019/05/09 16:24:36 christos Exp $
+# $File: Makefile.am,v 1.144 2019/05/20 17:25:09 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -257,6 +257,7 @@ $(MAGIC_FRAGMENT_DIR)/smalltalk \
 $(MAGIC_FRAGMENT_DIR)/smile \
 $(MAGIC_FRAGMENT_DIR)/sniffer \
 $(MAGIC_FRAGMENT_DIR)/softquad \
+$(MAGIC_FRAGMENT_DIR)/sosi \
 $(MAGIC_FRAGMENT_DIR)/spec \
 $(MAGIC_FRAGMENT_DIR)/spectrum \
 $(MAGIC_FRAGMENT_DIR)/sql \
