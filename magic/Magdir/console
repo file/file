@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.48 2019/05/27 01:32:41 christos Exp $
+# $File: console,v 1.49 2019/05/27 01:33:32 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -579,6 +579,59 @@
 >0x18	search/0x100	\x00\x04\x00\x06
 >>&0	use	xbox-360-xex-execution-id
 >(0x010.L+0x154)	use	xbox-360-xex-region-code
+
+#------------------------------------------------------------------------------
+# Microsoft Xbox 360 packages
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://free60project.github.io/wiki/STFS.html
+# - https://github.com/xenia-project/xenia/blob/HEAD/src/xenia/kernel/util/xex2_info.h
+
+# TODO: More information for console-signed packages.
+
+0	name	xbox-360-package
+>0x360	byte	x	(%c
+>0x361	byte	x	\b%c
+>0x362	beshort	x	\b-%04u, media ID:
+>0x354	belong	x	%08X)
+>0x344	belong	x	\b, content type:
+>>0x344	belong	0x1		Saved Game
+>>0x344	belong	0x2		Marketplace Content
+>>0x344	belong	0x3		Publisher
+>>0x344	belong	0x1000		Xbox 360 Title
+>>0x344	belong	0x2000		IPTV Pause Buffer
+>>0x344	belong	0x4000		Installed Game
+>>0x344	belong	0x5000		Original Xbox Game
+>>0x344	belong	0x9000		Avatar Item
+>>0x344	belong	0x10000		Profile
+>>0x344	belong	0x20000		Gamer Picture
+>>0x344	belong	0x30000		Theme
+>>0x344	belong	0x40000		Cache File
+>>0x344	belong	0x50000		Storage Download
+>>0x344	belong	0x60000		Xbox Saved Game
+>>0x344	belong	0x70000		Xbox Download
+>>0x344	belong	0x80000		Game Demo
+>>0x344	belong	0x90000		Video
+>>0x344	belong	0xA0000		Game
+>>0x344	belong	0xB0000		Installer
+>>0x344	belong	0xC0000		Game Trailer
+>>0x344	belong	0xD0000		Arcade Title
+>>0x344	belong	0xE0000		XNA
+>>0x344	belong	0xF0000		License Store
+>>0x344	belong	0x100000	Movie
+>>0x344	belong	0x200000	TV
+>>0x344	belong	0x300000	Music Video
+>>0x344	belong	0x400000	Game Video
+>>0x344	belong	0x500000	Podcast Video
+>>0x344	belong	0x600000	Viral Video
+>>0x344	belong	0x2000000	Community Game
+
+0	string	CON\x20	Microsoft Xbox 360 package (console-signed)
+>0	use	xbox-360-package
+0	string	PIRS	Microsoft Xbox 360 package (non-Xbox Live)
+>0	use	xbox-360-package
+0	string	LIVE	Microsoft Xbox 360 package (Xbox Live)
+>0	use	xbox-360-package
 
 # Atari Lynx cartridge dump (EXE/BLL header)
 # From: "Stefan A. Haubenthal" <polluks@web.de>
