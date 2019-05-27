@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.46 2019/05/27 01:30:28 christos Exp $
+# $File: console,v 1.47 2019/05/27 01:32:08 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -548,27 +548,30 @@
 0		name	xbox-360-xex-execution-id
 >(0.L+0xC)	byte	x	(%c
 >(0.L+0xD)	byte	x	\b%c
->(0.L+0xE)	beshort	x	\b-%04u)
+>(0.L+0xE)	beshort	x	\b-%04u, media ID:
+>(0.L)		belong	x	%08X)
+
+# Region code (part of Security Info)
+0	name	xbox-360-xex-region-code
+>0	ubelong	0xFFFFFFFF	\b, all regions
+>0	ubelong	!0xFFFFFFFF
+>>0	ubelong	>0		(regions:
+>>0	ubelong&0x000000FF	0x000000FF	USA
+>>0	ubelong&0x00000100	0x00000100	Japan
+>>0	ubelong&0x00000200	0x00000200	China
+>>0	ubelong&0x0000FC00	0x0000FC00	Asia
+>>0	ubelong&0x00FF0000	0x00FF0000	PAL
+>>0	ubelong&0x00FF0000	0x00FE0000	PAL [except AU/NZ]
+>>0	ubelong&0x00FF0000	0x00010000	AU/NZ
+>>0	ubelong&0xFF000000	0xFF000000	Other
+>>0	ubelong	>0		\b)
 
 0	string	XEX2	Microsoft Xbox 360 executable
 !:mime	audio/x-xbox360-executable
 !:ext	xex
 >0x18	search/0x100	\x00\x04\x00\x06
 >>&0	use	xbox-360-xex-execution-id
->(0x010.L+0x178)	ubelong	0xFFFFFFFF	\b, all regions
->(0x010.L+0x178)	ubelong	!0xFFFFFFFF
->>(0x010.L+0x178)	ubelong	>0		(regions:
->>(0x010.L+0x178)	ubelong&0x000000FF	0x000000FF	USA
->>(0x010.L+0x178)	ubelong&0x00000100	0x00000100	Japan
->>(0x010.L+0x178)	ubelong&0x00000200	0x00000200	China
->>(0x010.L+0x178)	ubelong&0x0000FC00	0x0000FC00	Asia
->>(0x010.L+0x178)	ubelong&0x00FF0000	0x00FF0000	PAL
->>(0x010.L+0x178)	ubelong&0x00FF0000	0x00FE0000	PAL [except AU/NZ]
->>(0x010.L+0x178)	ubelong&0x00FF0000	0x00010000	AU/NZ
->>(0x010.L+0x178)	ubelong&0xFF000000	0xFF000000	Other
->>(0x010.L+0x178)	ubelong	>0		\b)
-
-
+>(0x010.L+0x178)	use	xbox-360-xex-region-code
 
 # Atari Lynx cartridge dump (EXE/BLL header)
 # From: "Stefan A. Haubenthal" <polluks@web.de>
