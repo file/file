@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.45 2019/04/19 00:42:27 christos Exp $
+# $File: console,v 1.46 2019/05/27 01:30:28 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -508,6 +508,8 @@
 #------------------------------------------------------------------------------
 # Microsoft Xbox executables .xbe (Esa Hyytia <ehyytia@cc.hut.fi>)
 0	string	XBEH	Microsoft Xbox executable
+!:mime	audio/x-xbox-executable
+!:ext	xbe
 # expect base address of 0x10000
 >0x0104                 ulelong =0x10000
 >>(0x0118.l-0x0FFF4)    lestring16 x       \b: "%.40s"
@@ -549,6 +551,8 @@
 >(0.L+0xE)	beshort	x	\b-%04u)
 
 0	string	XEX2	Microsoft Xbox 360 executable
+!:mime	audio/x-xbox360-executable
+!:ext	xex
 >0x18	search/0x100	\x00\x04\x00\x06
 >>&0	use	xbox-360-xex-execution-id
 >(0x010.L+0x178)	ubelong	0xFFFFFFFF	\b, all regions
