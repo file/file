@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.128 2019/04/19 00:42:27 christos Exp $
+# $File: msdos,v 1.129 2019/06/02 15:25:40 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -655,8 +655,83 @@
 2112	string	MSWordDoc			Microsoft Word document data
 !:mime	application/msword
 #
-0	belong	0x31be0000			Microsoft Word Document
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/DOC
+# Reference:	https://web.archive.org/web/20170206041048/
+#		http://www.msxnet.org/word2rtf/formats/ffh-dosword5
+# wIdent+dty
+0	belong	0x31be0000
+# skip droid skeleton like x-fmt-274-signature-id-488.doc
+>128	ubyte		>0  			Microsoft
+>>96	uleshort	=0			Word
 !:mime	application/msword
+!:apple	MSWDWDBN
+# DCX is used in the Unix version.
+!:ext	doc/dcx
+>>>0x6E	ulequad		=0			1.0-4.0
+>>>0x6E	ulequad		!0			5.0-6.0
+>>>0x6E	ulequad		x			(DOS) Document
+# https://web.archive.org/web/20130831064118/http://msxnet.org/word2rtf/formats/write.txt
+>>96	uleshort	!0			Write 3.0 (Windows) Document
+!:mime	application/x-mswrite
+!:apple	MSWDWDBN
+# sometimes also doc like in splitter.doc srchtest.doc
+!:ext	wri/doc
+# wTool must be 0125400 octal
+#>>4	uleshort	!0xAB00			\b, wTool %o
+# reserved; must be zero
+#>>6	ulelong		!0			\b, reserved %u
+# block pointer to the block containing optional file manager information
+#>>0x1C	uleshort	x			\b, at 0x%x info block
+# jump to File manager information block
+>>(0x1C.s*128)	uleshort x
+# test for valid information start; maybe also 0012h
+>>>&-2		uleshort	=0x0014
+# Document ASCIIZ name
+>>>>&0x12	string		x		%s
+# author name
+>>>>>&1		string		x		\b, author %s
+# reviser name
+>>>>>>&1	string		x		\b, reviser %s
+# keywords
+>>>>>>>&1	string		x		\b, keywords %s
+# comment
+>>>>>>>>&1	string		x		\b, comment %s
+# version number
+>>>>>>>>>&1	string		x		\b, version %s
+# date of last change MM/DD/YY
+>>>>>>>>>>&1	string		x		\b, %-.8s
+# creation date MM/DD/YY
+>>>>>>>>>>&9	string		x		created %-.8s
+# file name of print format like NORMAL.STY
+>>0x1E	string		>0			\b, formatted by %-.66s
+# count of pages in whole file for write variant; maybe some times wrong
+>>96	uleshort	>0			\b, %u pages
+# name of the printer driver like HPLASMS
+>>0x62	string		>0			\b, %-.8s printer
+# number of blocks used in the file; seems to be 0 for Word 4.0 and Write 3.0
+>>0x6A	uleshort	>0			\b, %u blocks
+# bit field for corrected text areas
+#>>0x6C	uleshort	x			\b, 0x%x bit field
+# text of document; some times start with 4 non printable characters like CR LF
+>>128	ubyte		x			\b,
+>>>128		ubyte	>0x1F
+>>>>128		string	x			%s
+>>>128		ubyte	<0x20
+>>>>129		ubyte	>0x1F
+>>>>>129	string	x			%s
+>>>>129		ubyte	<0x20
+>>>>>130	ubyte	>0x1F
+>>>>>>130	string	x			%s
+>>>>>130	ubyte	<0x20
+>>>>>>131	ubyte	>0x1F
+>>>>>>>131	string	x			%s
+>>>>>>131	ubyte	<0x20
+>>>>>>>132	ubyte	>0x1F
+>>>>>>>>132	string	x			%s
+>>>>>>>132	ubyte	<0x20
+>>>>>>>>133	ubyte	>0x1F
+>>>>>>>>>133	string	x			%s
 #
 0	string/b	PO^Q`				Microsoft Word 6.0 Document
 !:mime	application/msword
