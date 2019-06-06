@@ -262,6 +262,8 @@
 >20	belong		279		(Elektrobit High Speed Capture and Replay (EBHSCR)
 >20	belong		281		(Broadcom tag
 >20	belong		282		(Broadcom tag (prepended)
+>20	belong		284		(Marvell DSA
+>20	belong		285		(Marvell EDSA
 # print default match
 >20	default		x
 >>20	belong		x		(linktype#%u
