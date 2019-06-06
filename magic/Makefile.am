@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.145 2019/05/27 01:27:31 christos Exp $
+# $File: Makefile.am,v 1.146 2019/06/06 19:14:20 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -99,6 +99,7 @@ $(MAGIC_FRAGMENT_DIR)/finger \
 $(MAGIC_FRAGMENT_DIR)/flash \
 $(MAGIC_FRAGMENT_DIR)/flif \
 $(MAGIC_FRAGMENT_DIR)/fonts \
+$(MAGIC_FRAGMENT_DIR)/forth \
 $(MAGIC_FRAGMENT_DIR)/fortran \
 $(MAGIC_FRAGMENT_DIR)/frame \
 $(MAGIC_FRAGMENT_DIR)/freebsd \
