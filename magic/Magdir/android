@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.12 2019/04/19 00:42:27 christos Exp $
+# $File: android,v 1.13 2019/06/06 19:18:16 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -19,7 +19,9 @@
 # From https://android.googlesource.com/\
 # platform/system/core/+/master/mkbootimg/bootimg.h
 0		string	ANDROID!	Android bootimg
->1024	string	LOKI\01		\b, LOKI'd
+>1024	string	LOKI		\b, LOKI'd
+>>1028	lelong	0			\b (boot)
+>>1028	lelong	1			\b (recovery)
 >8		lelong	>0			\b, kernel
 >>12	lelong	>0			\b (0x%x)
 >16		lelong	>0			\b, ramdisk
