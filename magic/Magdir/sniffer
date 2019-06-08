@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.25 2019/05/05 17:03:41 christos Exp $
+# $File: sniffer,v 1.26 2019/06/08 20:50:51 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -262,6 +262,8 @@
 >20	belong		279		(Elektrobit High Speed Capture and Replay (EBHSCR)
 >20	belong		281		(Broadcom tag
 >20	belong		282		(Broadcom tag (prepended)
+>20	belong		284		(Marvell DSA
+>20	belong		285		(Marvell EDSA
 # print default match
 >20	default		x
 >>20	belong		x		(linktype#%u
