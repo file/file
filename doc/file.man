@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.135 2019/03/03 02:32:40 christos Exp $
-.Dd February 18, 2019
+.\" $File: file.man,v 1.136 2019/06/08 22:16:24 christos Exp $
+.Dd June 8, 2019
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -212,6 +212,8 @@ Ignored for backwards compatibility.
 Prints details of Compound Document Files.
 .It compress
 Checks for, and looks inside, compressed files.
+.It csv
+Checks Comma Separated Value files.
 .It elf
 Prints ELF file details, provided soft magic tests are enabled and the
 elf magic is found.

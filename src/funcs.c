@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.104 2019/05/07 02:27:11 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.105 2019/06/08 22:16:24 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -277,6 +277,17 @@ file_buffer(struct magic_set *ms, int fd, struct stat *st,
 		m = file_is_json(ms, &b);
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void)fprintf(stderr, "[try json %d]\n", m);
+		if (m) {
+			if (checkdone(ms, &rv))
+				goto done;
+		}
+	}
+
+	/* Check if we have a CSV file */
+	if ((ms->flags & MAGIC_NO_CHECK_CSV) == 0) {
+		m = file_is_csv(ms, &b);
+		if ((ms->flags & MAGIC_DEBUG) != 0)
+			(void)fprintf(stderr, "[try csv %d]\n", m);
 		if (m) {
 			if (checkdone(ms, &rv))
 				goto done;

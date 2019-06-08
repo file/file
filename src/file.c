@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.181 2019/03/28 20:54:03 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.182 2019/06/08 22:16:24 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -124,6 +124,7 @@ private const struct {
 	{ "ascii",	MAGIC_NO_CHECK_ASCII },
 	{ "cdf",	MAGIC_NO_CHECK_CDF },
 	{ "compress",	MAGIC_NO_CHECK_COMPRESS },
+	{ "csv",	MAGIC_NO_CHECK_CSV },
 	{ "elf",	MAGIC_NO_CHECK_ELF },
 	{ "encoding",	MAGIC_NO_CHECK_ENCODING },
 	{ "soft",	MAGIC_NO_CHECK_SOFT },
