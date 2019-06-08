@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.146 2019/06/06 19:14:20 christos Exp $
+# $File: Makefile.am,v 1.147 2019/06/08 20:53:32 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -224,6 +224,7 @@ $(MAGIC_FRAGMENT_DIR)/pgp \
 $(MAGIC_FRAGMENT_DIR)/pkgadd \
 $(MAGIC_FRAGMENT_DIR)/plan9 \
 $(MAGIC_FRAGMENT_DIR)/plus5 \
+$(MAGIC_FRAGMENT_DIR)/pmem \
 $(MAGIC_FRAGMENT_DIR)/polyml \
 $(MAGIC_FRAGMENT_DIR)/printer \
 $(MAGIC_FRAGMENT_DIR)/project \
