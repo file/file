@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pmem,v 1.1 2019/06/08 20:53:32 christos Exp $
+# $File: pmem,v 1.2 2019/06/10 22:52:31 christos Exp $
 # pmem: file(1) magic for Persistent Memory Development Kit pool files
 #
 0	string		PMEM
@@ -16,12 +16,12 @@
 >>120	leqldate	x		crtime: %s,
 >>128	lequad		x		alignment_desc: 0x%016llx,
 
->>136	clear
+>>136	clear		x
 >>136	byte		2		machine_class: 64-bit,
 >>136	default		x		machine_class: unknown
 >>>136	byte		x		(0x%d),
 
->>137	clear
+>>137	clear		x
 >>137	byte		1		data: little-endian,
 >>137	byte		2		data: big-endian,
 >>137	default		x		data: unknown
@@ -32,7 +32,7 @@
 >>140	byte		!0		reserved[2]: %d,
 >>141	byte		!0		reserved[3]: %d,
 
->>142	clear
+>>142	clear		x
 >>142	leshort		62		machine: x86_64
 >>142	leshort		183		machine: aarch64
 >>142	default		x		machine: unknown
