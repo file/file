@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pmem,v 1.2 2019/06/10 22:52:31 christos Exp $
+# $File: pmem,v 1.3 2019/06/13 11:45:44 christos Exp $
 # pmem: file(1) magic for Persistent Memory Development Kit pool files
 #
 0	string		PMEM
@@ -44,4 +44,3 @@
 >4	string		OBJ
 >>4096	string		>0		\b, obj.layout: '%s'
 >>4096	string		<0		\b, obj.layout: NULL
-  1  magic/Makefile.am 
