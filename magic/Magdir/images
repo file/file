@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.160 2019/04/19 00:42:27 christos Exp $
+# $File: images,v 1.161 2019/06/16 14:59:35 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -601,8 +601,26 @@
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
 >>28	leshort		x		%d
-# Too simple - MPi
-#0	string		IC		PC icon data
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/OS/2_Icon
+# Reference:	http://www.fileformat.info
+#		/format/os2bmp/spec/902d5c253f2a43ada39c2b81034f27fd/view.htm
+# Note: verified by command like `deark -l -d3 OS2MEMU.ICO`
+0	string			IC
+# skip Lotus smart icon *.smi by looking for valid hotspot coordinates
+>6	ulelong&0xFF00FF00	=0	OS/2 icon
+# jump 4 bytes before end of header/file and test for accessibility
+#>>(2.l-4) ubelong		x	End of header is OK!
+!:mime	image/x-os2-ico
+!:ext	ico
+# cbSize; size of header or file in bytes like 1ah 120h 420h
+>>2	ulelong			x	\b, cbSize %u
+# xHotspot, yHotspot; coordinates of the hotspot for icons like 16 32
+>>6	uleshort		x	\b, hotspot %ux
+>>8	uleshort		x	\b%u
+# offBits; offset in bytes to the beginning of the bit-map pel data like 20h
+>>10	ulelong			x	\b, bits offset %u
+#>>(10.l) ubequad		x	\b, bits 0x%16.16llx
 #0	string		PI		PC pointer image data
 #0	string		CI		PC color icon data
 #0	string		CP		PC color pointer image data
