@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.161 2019/06/16 14:59:35 christos Exp $
+# $File: images,v 1.162 2019/06/19 15:19:09 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -623,6 +623,45 @@
 #>>(10.l) ubequad		x	\b, bits 0x%16.16llx
 #0	string		PI		PC pointer image data
 #0	string		CI		PC color icon data
+0	string		CI
+# test also for valid dib header sizes 12 or 64
+>14	ulelong		<65		OS/2
+# test also for valid hotspot coordinates
+#>>6	ulelong&0xFE00FE00	=0	OS/2
+!:mime	image/x-os2-ico
+!:ext	ico
+>>14	ulelong		12		1.x color icon
+# image width and height fields are unsigned integers for OS/2
+>>>18	uleshort	x		%u x
+# stored height = 2 * real height
+>>>20	uleshort/2	x		%u
+# number of bits per pixel (color depth). Typical 32 24 16 8 4 but only 1 found
+>>>24	uleshort	>1		x %u
+# color planes; must be 1
+#>>>22	uleshort	>1		\b, %u color planes
+>>14	ulelong		64		2.x color icon
+# image width and height
+>>>18	ulelong		x		%u x
+# stored height = 2 * real height
+>>>22	ulelong/2	x		%u
+# number of bits per pixel (color depth). only 1 found
+>>>28	uleshort	>1		x %u
+#>>>26	uleshort	>1		\b, %u color planes
+# compression method: 0~no 3~Huffman 1D
+>>>30	ulelong		3		\b, Huffman 1D compression
+#>>>30	ulelong		>0		\b, %u compression
+# xHotspot, yHotspot; coordinates of the hotspot like 0 1 16 20 32 33 63 64
+>>6	uleshort		x	\b, hotspot %ux
+>>8	uleshort		x	\b%u
+# cbSize; size of header or maybe file in bytes like 1Ah 4Eh 84Eh
+>>2	ulelong			x	\b, cbSize %u
+#>>2	ulelong			x	\b, cbSize %x
+# offBits; offset to bitmap data (pixel array) like E4h 3Ah 66h 6Ah 33Ah 4A4h
+>>10	ulelong			x	\b, bits offset %u
+#>>10	ulelong			x	\b, bits offset 0x%x
+#>>(10.l) ubequad		!0	\b, bits 0x%16.16llx
+# dib header size: 12~Ch~OS/2 1.x 64~40h~OS/2 2.x
+#>>14	ulelong		x		\b, dib header size %u
 #0	string		CP		PC color pointer image data
 # Conflicts with other entries [BABYL]
 #0	string		BA		PC bitmap array data
