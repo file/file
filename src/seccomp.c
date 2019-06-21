@@ -27,12 +27,13 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.8 2019/02/24 18:12:04 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.9 2019/06/21 16:44:23 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
 #include <seccomp.h> /* libseccomp */
 #include <sys/prctl.h> /* prctl */
+#include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -49,8 +50,14 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.8 2019/02/24 18:12:04 christos Exp $")
 	    goto out; \
     while (/*CONSTCOND*/0)
 
-static scmp_filter_ctx ctx;
+#define ALLOW_IOCTL_RULE(param) \
+    do \
+	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(ioctl), 1, \
+	    SCMP_CMP(1, SCMP_CMP_EQ, param)) == -1) \
+		goto out; \
+    while (/*CONSTCOND*/0)
 
+static scmp_filter_ctx ctx;
 
 int
 enable_sandbox_basic(void)
@@ -171,7 +178,14 @@ enable_sandbox_full(void)
 #ifdef __NR_getdents64
 	ALLOW_RULE(getdents64);
 #endif
-	ALLOW_RULE(ioctl);
+#ifdef FIONREAD
+	// called in src/compress.c under sread
+	ALLOW_IOCTL_RULE(FIONREAD);
+#endif
+#ifdef TIOCGWINSZ
+	// musl libc may call ioctl TIOCGWINSZ when calling stdout
+	ALLOW_IOCTL_RULE(TIOCGWINSZ);
+#endif
 	ALLOW_RULE(lseek);
  	ALLOW_RULE(_llseek);
 	ALLOW_RULE(lstat);
