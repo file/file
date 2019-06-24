@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.163 2019/06/24 23:50:11 christos Exp $
+# $File: images,v 1.164 2019/06/24 23:56:24 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -704,7 +704,40 @@
 # dib header size: 12~Ch~OS/2 1.x 64~40h~OS/2 2.x
 #>>14	ulelong		x		\b, dib header size %u
 # Conflicts with other entries [BABYL]
+# URL:	http://fileformats.archiveteam.org/wiki/BMP#OS.2F2_Bitmap_Array
+# Note:	container for OS/2 icon "IC", color icon "CI", color pointer "CP" or bitmap "BM"
 #0	string		BA		PC bitmap array data
+0	string		BA
+# skip old Emacs RMAIL BABYL ./mail.news by checking for low header size
+>2	ulelong		<0x004c5942	OS/2 graphic array
+!:mime	image/x-os2-graphics
+#!:apple	????BMPf
+# cbSize; size of header like 28h 5Ch
+>>2	ulelong			x	\b, cbSize %u
+#>>2	ulelong			x	\b, cbSize 0x%x
+# offNext; offset to data like 0 48h F2h 4Eh 64h C6h D2h D6h DAh E6h EAh 348h
+>>6	ulelong			>0	\b, data offset %u
+#>>6	ulelong			>0	\b, data offset 0x%x
+#>>(6.l) ubequad		!0	\b, data 0x%16.16llx
+# dimensions of the intended device like 640 x 480 for VGA or 1024 x 768
+>>10	uleshort	>0		\b, display %u
+>>>12	uleshort	>0		x %u
+# usType of first array element
+#>>14	string		x		\b, usType %2.2s
+# 1 space char after "1st"
+# no *.bga examples found https://www.openwith.org/file-extensions/bga/1342
+>>14	string		BM	\b; 1st 
+!:ext	bmp/bga
+>>14	string		CI	\b; 1st 
+!:ext	ico
+>>14	string		CP	\b; 1st 
+!:ext	ico
+>>14	string		IC	\b; 1st 
+!:ext	ico
+# no white-black pointer found
+#>>14	string		PT	\b; 1st 
+#!:ext	
+>>14	indirect	x	
 
 # XPM icons (Greg Roelofs, newt@uchicago.edu)
 0	search/1	/*\ XPM\ */	X pixmap image text

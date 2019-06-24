@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.129 2019/06/02 15:25:40 christos Exp $
+# $File: msdos,v 1.130 2019/06/24 23:56:24 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -975,10 +975,6 @@
 
 # windows zips files .dmf
 0	string/b	MDIF\032\000\010\000\000\000\372\046\100\175\001\000\001\036\001\000 MS Windows special zipped file
-
-
-#ico files
-0	string/b	\102\101\050\000\000\000\056\000\000\000\000\000\000\000	Icon for MS Windows
 
 # Windows icons
 # Update: Joerg Jenderek
