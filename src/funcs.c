@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.105 2019/06/08 22:16:24 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.106 2019/06/26 20:31:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -285,7 +285,7 @@ file_buffer(struct magic_set *ms, int fd, struct stat *st,
 
 	/* Check if we have a CSV file */
 	if ((ms->flags & MAGIC_NO_CHECK_CSV) == 0) {
-		m = file_is_csv(ms, &b);
+		m = file_is_csv(ms, &b, looks_text);
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void)fprintf(stderr, "[try csv %d]\n", m);
 		if (m) {
