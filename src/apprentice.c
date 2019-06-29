@@ -1926,17 +1926,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 			file_magwarn(ms, "offset `%s' invalid", l);
 		return -1;
 	}
-#if 0
-        if (m->offset < 0 && cont_level != 0 &&
-	    (m->flag & (OFFADD | INDIROFFADD)) == 0) {
-		if (ms->flags & MAGIC_CHECK) {
-			file_magwarn(ms,
-			    "negative direct offset `%s' at level %u",
-			    l, cont_level);
-		}
-		return -1;
-	}
-#endif
+
         l = t;
 
 	if (m->flag & INDIR) {
