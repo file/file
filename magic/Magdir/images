@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.165 2019/06/29 22:34:22 christos Exp $
+# $File: images,v 1.166 2019/06/30 21:37:40 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -578,9 +578,25 @@
 >>18	leshort		x		\b, %d x
 >>20	leshort		x		%d
 >14	leshort		64		PC bitmap, OS/2 2.x format
-!:mime	image/x-ms-bmp
->>18	leshort		x		\b, %d x
->>20	leshort		x		%d
+!:mime	image/bmp
+!:apple	????BMPp
+!:ext	bmp
+# image width and height fields are unsigned integers for OS/2
+>>18	ulelong		x		\b, %u x
+>>22	ulelong		x		%u
+# number of bits per pixel (color depth); found 1 4 8
+>>28	uleshort	>1		x %u
+# x, y coordinates of the hotspot
+>>6	uleshort	>0		\b, hotspot %ux
+>>>8	uleshort	x		\b%u
+>>26	uleshort	>1		\b, %u color planes
+# cbSize; size of file or headers
+>>2	ulelong		x		\b, cbSize %u
+#>>2	ulelong		x		\b, cbSize 0x%x
+# offBits; offset to bitmap data like 56h 5Eh 8Eh 43Eh
+>>10	ulelong			x	\b, bits offset %u
+#>>10	ulelong			x	\b, bits offset 0x%x
+#>>(10.l) ubequad		!0	\b, bits 0x%16.16llx
 # BITMAPV2INFOHEADER	adds RGB bit masks
 >14	leshort		52		PC bitmap, Adobe Photoshop
 !:mime	image/bmp
