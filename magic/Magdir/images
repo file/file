@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.166 2019/06/30 21:37:40 christos Exp $
+# $File: images,v 1.167 2019/07/03 15:37:08 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -572,6 +572,32 @@
 # PC bitmaps (OS/2, Windows BMP files)  (Greg Roelofs, newt@uchicago.edu)
 # https://en.wikipedia.org/wiki/BMP_file_format#DIB_header_.\
 # 28bitmap_information_header.29
+# Note:	variant starting direct with DIB header see
+#	http://fileformats.archiveteam.org/wiki/BMP
+#	verified by ImageMagick version 6.8.9-8 command `identify *.dib`
+0	leshort		40
+# skip bad samples like GAME by looking for valid number of color planes
+>12	uleshort	1		Device independent bitmap graphic
+!:mime	image/bmp
+!:apple	????BMPp
+!:ext	dib
+>>4	lelong		x		\b, %d x
+>>8	lelong		x		%d x
+>>14	leshort		x		%d
+# number of color planes (must be 1) 
+#>>12	uleshort	>1		\b, %u color planes
+# compression method: 0~no 1~RLE 8-bit/pixel 3~Huffman 1D
+#>>16	ulelong		3		\b, Huffman 1D compression
+>>16	ulelong		>0		\b, %u compression
+# image size is the size of raw bitmap; a dummy 0 can be given for BI_RGB bitmaps
+>>20	ulelong		x		\b, image size %u
+# horizontal and vertical resolution of the image (pixel per metre, signed integer) 
+>>24	lelong		>0		\b, resolution %d x
+>>>28	lelong		x		%d px/m
+# number of colors in palette, or 0 to default to 2**n
+#>>32	ulelong		>0		\b, %u colors
+# number of important colors used, or 0 when every color is important
+>>36	ulelong		>0		\b, %u important colors
 0	string		BM
 >14	leshort		12		PC bitmap, OS/2 1.x format
 !:mime	image/x-ms-bmp
