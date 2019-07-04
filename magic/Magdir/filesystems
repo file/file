@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.128 2019/04/23 15:43:27 christos Exp $
+# $File: filesystems,v 1.129 2019/07/04 14:02:41 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2122,6 +2122,7 @@
 >29	byte	23		\bDesignWare ARC,
 >29	byte	24		\bx86_64,
 >29	byte	25		\bXtensa,
+>29	byte	26		\bRISC-V,
 >30	byte	0		Invalid Image
 >30	byte	1		Standalone Program
 >30	byte	2		OS Kernel Image
