@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.72 2019/06/16 00:15:32 christos Exp $
+# $File: animation,v 1.73 2019/07/05 19:20:38 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -445,52 +445,43 @@
 # modified by Joerg Jenderek
 # GRR the original test are too common for many DOS files
 # so don't accept as MP3 until we've tested the rate
+# But also beat GEMDOS fonts
 0       beshort&0xFFFE  0xFFFA
 # rates
->2      byte&0xF0       0x10           MPEG ADTS, layer III, v1,  32 kbps
+>2	byte&0xF0	!0	
+>>2	byte&0xF0	!0xF0		MPEG ADTS, layer III, v1
+!:strength +20
 !:mime	audio/mpeg
->2      byte&0xF0       0x20           MPEG ADTS, layer III, v1,  40 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0x30           MPEG ADTS, layer III, v1,  48 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0x40           MPEG ADTS, layer III, v1,  56 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0x50           MPEG ADTS, layer III, v1,  64 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0x60           MPEG ADTS, layer III, v1,  80 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0x70           MPEG ADTS, layer III, v1,  96 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0x80           MPEG ADTS, layer III, v1, 112 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0x90           MPEG ADTS, layer III, v1, 128 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0xA0           MPEG ADTS, layer III, v1, 160 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0xB0           MPEG ADTS, layer III, v1, 192 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0xC0           MPEG ADTS, layer III, v1, 224 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0xD0           MPEG ADTS, layer III, v1, 256 kbps
-!:mime	audio/mpeg
->2      byte&0xF0       0xE0           MPEG ADTS, layer III, v1, 320 kbps
-!:mime	audio/mpeg
+>2	byte&0xF0	0x10		\b, 32 kbps
+>2	byte&0xF0	0x20		\b, 40 kbps
+>2	byte&0xF0	0x30		\b, 48 kbps
+>2	byte&0xF0	0x40		\b, 56 kbps
+>2	byte&0xF0	0x50		\b, 64 kbps
+>2	byte&0xF0	0x60		\b, 80 kbps
+>2	byte&0xF0	0x70		\b, 96 kbps
+>2	byte&0xF0	0x80		\b, 112 kbps
+>2	byte&0xF0	0x90		\b, 128 kbps
+>2	byte&0xF0	0xA0		\b, 160 kbps
+>2	byte&0xF0	0xB0		\b, 192 kbps
+>2	byte&0xF0	0xC0		\b, 224 kbps
+>2	byte&0xF0	0xD0		\b, 256 kbps
+>2	byte&0xF0	0xE0		\b, 320 kbps
 # timing
->2      byte&0x0C       0x00           \b, 44.1 kHz
->2      byte&0x0C       0x04           \b, 48 kHz
->2      byte&0x0C       0x08           \b, 32 kHz
+>2	byte&0x0C	0x00		\b, 44.1 kHz
+>2	byte&0x0C	0x04		\b, 48 kHz
+>2	byte&0x0C	0x08		\b, 32 kHz
 # channels/options
->3      byte&0xC0       0x00           \b, Stereo
->3      byte&0xC0       0x40           \b, JntStereo
->3      byte&0xC0       0x80           \b, 2x Monaural
->3      byte&0xC0       0xC0           \b, Monaural
-#>1     byte            ^0x01          \b, Data Verify
-#>2     byte            &0x02          \b, Packet Pad
-#>2     byte            &0x01          \b, Custom Flag
-#>3     byte            &0x08          \b, Copyrighted
-#>3     byte            &0x04          \b, Original Source
-#>3     byte&0x03       1              \b, NR: 50/15 ms
-#>3     byte&0x03       3              \b, NR: CCIT J.17
+>3	byte&0xC0	0x00		\b, Stereo
+>3	byte&0xC0	0x40		\b, JntStereo
+>3	byte&0xC0	0x80		\b, 2x Monaural
+>3	byte&0xC0	0xC0		\b, Monaural
+#>1	byte		^0x01		\b, Data Verify
+#>2	byte		&0x02		\b, Packet Pad
+#>2	byte		&0x01		\b, Custom Flag
+#>3	byte		&0x08		\b, Copyrighted
+#>3	byte		&0x04		\b, Original Source
+#>3	byte&0x03	1		\b, NR: 50/15 ms
+#>3	byte&0x03	3		\b, NR: CCIT J.17
 
 # MP2, M1A
 0       beshort&0xFFFE  0xFFFC         MPEG ADTS, layer II, v1
