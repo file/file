@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.167 2019/07/03 15:37:08 christos Exp $
+# $File: images,v 1.168 2019/07/06 19:49:00 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -639,11 +639,48 @@
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
 >>28	leshort		x		%d
->14	leshort		40		PC bitmap, Windows 3.x format
-!:mime	image/x-ms-bmp
->>18	lelong		x		\b, %d x
->>22	lelong		x		%d x
->>28	leshort		x		%d
+>14	leshort		40
+# jump 4 bytes before end of file/header to skip fmt-116-signature-id-118.dib
+>>(2.l-4)	ulong	x		PC bitmap, Windows 3.x format
+!:mime	image/bmp
+!:apple	????BMPp
+>>>18	lelong		x		\b, %d x
+>>>22	lelong		x		%d
+# 320 x 400		https://en.wikipedia.org/wiki/LOGO.SYS
+>>>18	ulequad		=0x0000019000000140	x
+!:ext	bmp/sys
+>>>18	ulequad		!0x0000019000000140
+# compression method 2~RLE 4-bit/pixel implies also extension rle
+>>>>30	ulelong		2		x
+!:ext	bmp/rle
+>>>>30	default		x		x
+!:ext	bmp
+# number of bits per pixel (color depth); found 1 2 4 8 16 24 32
+>>>28	leshort		x		%d
+# x, y coordinates of the hotspot; there is no hotspot in bitmaps, so values 0
+#>>>6	uleshort	>0		\b, hotspot %ux
+#>>>>8	uleshort	x		\b%u
+# number of color planes (must be 1), except badplanes.bmp for testing
+#>>>26	uleshort	>1		\b, %u color planes
+# compression method: 0~no 1~RLE 8-bit/pixel 2~RLE 4-bit/pixel 3~Huffman 1D 6~RGBA bit field masks
+#>>>30	ulelong		3		\b, Huffman 1D compression
+>>>30	ulelong		>0		\b, %u compression
+# image size is the size of raw bitmap; a dummy 0 can be given for BI_RGB bitmaps
+>>>34	ulelong		>0		\b, image size %u
+# horizontal and vertical resolution of the image (pixel per metre, signed integer) 
+>>>38	lelong		>0		\b, resolution %d x
+>>>>42	lelong		x		%d px/m
+# number of colors in palette 16 256, or 0 to default to 2**n
+#>>>46	ulelong		>0		\b, %u colors
+# number of important colors used, or 0 when every color is important
+>>>50	ulelong		>0		\b, %u important colors
+# cbSize; often size of file
+>>>2	ulelong		x		\b, cbSize %u
+#>>>2	ulelong		x		\b, cbSize 0x%x
+# offBits; offset to bitmap data like 36h 76h BEh 236h 406h 436h 4E6h
+>>>10	ulelong			x	\b, bits offset %u
+#>>>10	ulelong			x	\b, bits offset 0x%x
+#>>>(10.l) ubequad		!0	\b, bits 0x%16.16llxd
 >14	leshort		124		PC bitmap, Windows 98/2000 and newer format
 !:mime	image/x-ms-bmp
 >>18	lelong		x		\b, %d x
