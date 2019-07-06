@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.41 2019/05/05 16:44:04 christos Exp $
+# $File: fonts,v 1.42 2019/07/06 19:31:36 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -133,19 +133,19 @@
 # Reference: http://cd.textfiles.com/ataricompendium/BOOK/HTML/APPENDC.HTM#cnt
 #
 # usual case with lightening mask and skewing mask 5555h~UU
-62	ulelong		0x55555555
->0	use		gdos-font
+#62	ulelong		0x55555555
+#>0	use		gdos-font
 # BOX18.GFT COWBOY30.GFT ROYALK30.GFT
-62	ulelong		0
+#62	ulelong		0
 # skip ISO 9660 CD-ROM ./filesystem by looking for low positive face size
->2	uleshort	>2
+#>2	uleshort	>2
 # skip DOS 2.0 backup id file ./msdos by looking for face size lower/equal 48
->>2	uleshort	<49
+#>>2	uleshort	<49
 # skip MS Windows ICO ./msdos by looking for valid face name
->>>4	ubeshort	>0x1F00
+#>>>4	ubeshort	>0x1F00
 # skip DOS executable BACKM212.COM by looking for horizontal offset table after header
 #>>>>68	ulelong		>87		OFFSET_OK
->>>>0	use		gdos-font
+#>>>>0	use		gdos-font
 0	name		gdos-font
 >0	uleshort	x		GEM GDOS font
 !:mime	application/x-font-gdos
