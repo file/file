@@ -181,3 +181,10 @@
 # RES_XML_TYPE = 0x0003 followed by the size of the header (ResXMLTree_header),
 # which is 8 bytes (2 bytes type + 2 bytes header size + 4 bytes size).
 0	lelong	0x00080003	Android binary XML
+
+# Android cryptfs footer
+# From https://android.googlesource.com/\
+# platform/system/vold/+/refs/heads/master/cryptfs.h
+0	lelong	0xd0b5b1c4	Android cryptfs footer
+>4	leshort	x	\b, version: %d
+>6	leshort	x	\b.%d
