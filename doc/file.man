@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.136 2019/06/08 22:16:24 christos Exp $
-.Dd June 8, 2019
+.\" $File: file.man,v 1.137 2019/07/13 16:26:48 christos Exp $
+.Dd July 13, 2019
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -365,10 +365,11 @@ On systems where libseccomp
 is available, the
 .Fl S
 flag disables sandboxing which is enabled by default.
-This option is needed for file to execute external descompressing programs,
+This option is needed for file to execute external decompressing programs,
 i.e. when the
 .Fl z
 flag is specified and the built-in decompressors are not available.
+On systems where sandboxing is not available, this option has no effect.
 .It Fl v , Fl Fl version
 Print the version of the program and exit.
 .It Fl z , Fl Fl uncompress
