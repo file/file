@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.182 2019/06/08 22:16:24 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.183 2019/07/13 16:23:58 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -298,11 +298,11 @@ main(int argc, char *argv[])
 		case 's':
 			flags |= MAGIC_DEVICES;
 			break;
-#ifdef HAVE_LIBSECCOMP
 		case 'S':
+#ifdef HAVE_LIBSECCOMP
 			sandbox = 0;
-			break;
 #endif
+			break;
 		case 'v':
 			if (magicfile == NULL)
 				magicfile = magic_getpath(magicfile, action);
@@ -310,6 +310,9 @@ main(int argc, char *argv[])
 			    VERSION);
 			(void)fprintf(stdout, "magic file from %s\n",
 			    magicfile);
+#ifdef HAVE_LIBSECCOMP
+			(void)fprintf(stdout, "seccomp support included\n");
+#endif
 			return 0;
 		case 'z':
 			flags |= MAGIC_COMPRESS;
