@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.121 2019/05/07 02:27:11 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.122 2019/07/18 15:43:54 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -113,6 +113,16 @@ zlibcmp(const unsigned char *buf)
 }
 #endif
 
+static int
+lzmacmp(const unsigned char *buf)
+{
+	if (buf[0] != 0x5d || buf[1] || buf[2])
+		return 0;
+	if (buf[12] && buf[12] != 0xff)
+		return 0;
+	return 1;
+}
+
 #define gzip_flags "-cd"
 #define lrzip_flags "-do"
 #define lzip_flags gzip_flags
@@ -147,29 +157,30 @@ static const char *zstd_args[] = {
 
 private const struct {
 	const void *magic;
-	size_t maglen;
+	int maglen;
 	const char **argv;
 	void *unused;
 } compr[] = {
-	{ "\037\235",	2, gzip_args, NULL },		/* compressed */
+	{ "\037\235",	2, gzip_args, NULL },		/* 0, compressed */
 	/* Uncompress can get stuck; so use gzip first if we have it
 	 * Idea from Damien Clark, thanks! */
-	{ "\037\235",	2, uncompress_args, NULL },	/* compressed */
-	{ "\037\213",	2, gzip_args, do_zlib },	/* gzipped */
-	{ "\037\236",	2, gzip_args, NULL },		/* frozen */
-	{ "\037\240",	2, gzip_args, NULL },		/* SCO LZH */
+	{ "\037\235",	2, uncompress_args, NULL },	/* 1, compressed */
+	{ "\037\213",	2, gzip_args, do_zlib },	/* 2, gzipped */
+	{ "\037\236",	2, gzip_args, NULL },		/* 3, frozen */
+	{ "\037\240",	2, gzip_args, NULL },		/* 4, SCO LZH */
 	/* the standard pack utilities do not accept standard input */
-	{ "\037\036",	2, gzip_args, NULL },		/* packed */
-	{ "PK\3\4",	4, gzip_args, NULL },		/* pkzipped, */
+	{ "\037\036",	2, gzip_args, NULL },		/* 5, packed */
+	{ "PK\3\4",	4, gzip_args, NULL },		/* 6, pkzipped, */
 	/* ...only first file examined */
-	{ "BZh",	3, bzip2_args, do_bzlib },	/* bzip2-ed */
-	{ "LZIP",	4, lzip_args, NULL },		/* lzip-ed */
- 	{ "\3757zXZ\0",	6, xz_args, NULL },		/* XZ Utils */
- 	{ "LRZI",	4, lrzip_args, NULL },	/* LRZIP */
- 	{ "\004\"M\030",4, lz4_args, NULL },		/* LZ4 */
- 	{ "\x28\xB5\x2F\xFD", 4, zstd_args, NULL },	/* zstd */
+	{ "BZh",	3, bzip2_args, do_bzlib },	/* 7, bzip2-ed */
+	{ "LZIP",	4, lzip_args, NULL },		/* 8, lzip-ed */
+ 	{ "\3757zXZ\0",	6, xz_args, NULL },		/* 9, XZ Utils */
+ 	{ "LRZI",	4, lrzip_args, NULL },	/* 10, LRZIP */
+ 	{ "\004\"M\030",4, lz4_args, NULL },		/* 11, LZ4 */
+ 	{ "\x28\xB5\x2F\xFD", 4, zstd_args, NULL },	/* 12, zstd */
+	{ RCAST(const void *, lzmacmp),	-13, xz_args, NULL },	/* 13, lzma */
 #ifdef ZLIBSUPPORT
-	{ RCAST(const void *, zlibcmp),	0, zlib_args, NULL },	/* zlib */
+	{ RCAST(const void *, zlibcmp),	-2, zlib_args, NULL },	/* 14, zlib */
 #endif
 };
 
@@ -234,15 +245,15 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 
 	for (i = 0; i < ncompr; i++) {
 		int zm;
-		if (nbytes < compr[i].maglen)
+		if (nbytes < CAST(size_t, abs(compr[i].maglen)))
 			continue;
-#ifdef ZLIBSUPPORT
-		if (compr[i].maglen == 0)
+		if (compr[i].maglen < 0) {
 			zm = (RCAST(int (*)(const unsigned char *),
 			    CCAST(void *, compr[i].magic)))(buf);
-		else
-#endif
-			zm = memcmp(buf, compr[i].magic, compr[i].maglen) == 0;
+		} else {
+			zm = memcmp(buf, compr[i].magic,
+			    CAST(size_t, compr[i].maglen)) == 0;
+		}
 
 		if (!zm)
 			continue;
