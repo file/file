@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.122 2019/07/18 15:43:54 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.123 2019/07/18 20:32:06 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -66,9 +66,14 @@ typedef void (*sig_t)(int);
 #include <zlib.h>
 #endif
 
-#if defined(HAVE_BZLIB_H)
+#if defined(HAVE_BZLIB_H) || defined(BZLIBSUPPORT)
 #define BUILTIN_BZLIB
 #include <bzlib.h>
+#endif
+
+#if defined(HAVE_XZLIB_H) || defined(XZLIBSUPPORT)
+#define BUILTIN_XZLIB
+#include <lzma.h>
 #endif
 
 #ifdef DEBUG
@@ -201,7 +206,11 @@ private int uncompressgzipped(const unsigned char *, unsigned char **, size_t,
 #endif
 #ifdef BUILTIN_BZLIB
 private int uncompressbzlib(const unsigned char *, unsigned char **, size_t,
-    size_t *, int);
+    size_t *);
+#endif
+#ifdef BUILTIN_XZLIB
+private int uncompressxzlib(const unsigned char *, unsigned char **, size_t,
+    size_t *);
 #endif
 
 static int makeerror(unsigned char **, size_t *, const char *, ...)
@@ -581,6 +590,90 @@ err:
 }
 #endif
 
+#ifdef BUILTIN_BZLIB
+private int
+uncompressbzlib(const unsigned char *old, unsigned char **newch,
+    size_t bytes_max, size_t *n)
+{
+	int rc;
+	bz_stream bz;
+
+	memset(&bz, 0, sizeof(bz));
+	rc = BZ2_bzDecompressInit(&bz, 0, 0);
+	if (rc != BZ_OK)
+		goto err;
+
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
+		return makeerror(newch, n, "No buffer, %s", strerror(errno));
+
+	bz.next_in = CCAST(char *, RCAST(const char *, old));
+	bz.avail_in = CAST(uint32_t, *n);
+	bz.next_out = RCAST(char *, *newch);
+	bz.avail_out = CAST(unsigned int, bytes_max);
+
+	rc = BZ2_bzDecompress(&bz);
+	if (rc != BZ_OK && rc != BZ_STREAM_END)
+		goto err;
+
+	/* Assume byte_max is within 32bit */
+	/* assert(bz.total_out_hi32 == 0); */
+	*n = CAST(size_t, bz.total_out_lo32);
+	rc = BZ2_bzDecompressEnd(&bz);
+	if (rc != BZ_OK)
+		goto err;
+
+	/* let's keep the nul-terminate tradition */
+	(*newch)[*n] = '\0';
+
+	return OKDATA;
+err:
+	snprintf(RCAST(char *, *newch), bytes_max, "bunzip error %d", rc);
+	*n = strlen(RCAST(char *, *newch));
+	return ERRDATA;
+}
+#endif
+
+#ifdef BUILTIN_XZLIB
+private int
+uncompressxzlib(const unsigned char *old, unsigned char **newch,
+    size_t bytes_max, size_t *n)
+{
+	int rc;
+	lzma_stream xz;
+
+	memset(&xz, 0, sizeof(xz));
+	rc = lzma_auto_decoder(&xz, UINT64_MAX, 0);
+	if (rc != LZMA_OK)
+		goto err;
+
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
+		return makeerror(newch, n, "No buffer, %s", strerror(errno));
+
+	xz.next_in = CCAST(const uint8_t *, old);
+	xz.avail_in = CAST(uint32_t, *n);
+	xz.next_out = RCAST(uint8_t *, *newch);
+	xz.avail_out = CAST(unsigned int, bytes_max);
+
+	rc = lzma_code(&xz, LZMA_RUN);
+	if (rc != LZMA_OK && rc != LZMA_STREAM_END)
+		goto err;
+
+	*n = CAST(size_t, xz.total_out);
+
+	lzma_end(&xz);
+
+	/* let's keep the nul-terminate tradition */
+	(*newch)[*n] = '\0';
+
+	return OKDATA;
+err:
+	snprintf(RCAST(char *, *newch), bytes_max, "unxz error %d", rc);
+	*n = strlen(RCAST(char *, *newch));
+	return ERRDATA;
+}
+#endif
+
+
 static int
 makeerror(unsigned char **buf, size_t *len, const char *fmt, ...)
 {
@@ -713,6 +806,15 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 	if (compr[method].maglen == 0)
 		return uncompresszlib(old, newch, bytes_max, n, 1);
 #endif
+#ifdef BUILTIN_BZLIB
+	if (method == 7)
+		return uncompressbzlib(old, newch, bytes_max, n);
+#endif
+#ifdef BUILTIN_XZLIB
+	if (method == 9 || method == 13)
+		return uncompressxzlib(old, newch, bytes_max, n);
+#endif
+
 	(void)fflush(stdout);
 	(void)fflush(stderr);
 
