@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.123 2019/07/18 20:32:06 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.124 2019/07/21 11:42:09 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -166,6 +166,11 @@ private const struct {
 	const char **argv;
 	void *unused;
 } compr[] = {
+#define METH_FROZEN	2
+#define METH_BZIP	7
+#define METH_XZ		9
+#define METH_LZMA	13
+#define METH_ZLIB	14
 	{ "\037\235",	2, gzip_args, NULL },		/* 0, compressed */
 	/* Uncompress can get stuck; so use gzip first if we have it
 	 * Idea from Damien Clark, thanks! */
@@ -780,12 +785,24 @@ filter_error(unsigned char *ubuf, ssize_t n)
 private const char *
 methodname(size_t method)
 {
+	switch (method) {
 #ifdef BUILTIN_DECOMPRESS
-        /* FIXME: This doesn't cope with bzip2 */
-	if (method == 2 || compr[method].maglen == 0)
-	    return "zlib";
+	case METH_FROZEN:
+	case METH_ZLIB:
+		return "zlib";
 #endif
-	return compr[method].argv[0];
+#ifdef BUILTIN_BZLIB
+	case METH_BZIP:
+		return "bzlib";
+#endif
+#ifdef BUILTIN_XZLIB
+	case METH_XZ:
+	case METH_LZMA:
+		return "xzlib";
+#endif
+	default:
+		return compr[method].argv[0];
+	}
 }
 
 private int
@@ -799,21 +816,25 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 	size_t i;
 	ssize_t r;
 
+	switch (method) {
 #ifdef BUILTIN_DECOMPRESS
-        /* FIXME: This doesn't cope with bzip2 */
-	if (method == 2)
+	case METH_FROZEN:
 		return uncompressgzipped(old, newch, bytes_max, n);
-	if (compr[method].maglen == 0)
+	case METH_ZLIB:
 		return uncompresszlib(old, newch, bytes_max, n, 1);
 #endif
 #ifdef BUILTIN_BZLIB
-	if (method == 7)
+	case METH_BZIP:
 		return uncompressbzlib(old, newch, bytes_max, n);
 #endif
 #ifdef BUILTIN_XZLIB
-	if (method == 9 || method == 13)
+	case METH_XZ:
+	case METH_LZMA:
 		return uncompressxzlib(old, newch, bytes_max, n);
 #endif
+	default:
+		break;
+	}
 
 	(void)fflush(stdout);
 	(void)fflush(stderr);
