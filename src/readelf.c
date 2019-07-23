@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.165 2019/05/07 02:27:11 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.166 2019/07/23 21:33:45 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1628,7 +1628,6 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		/* Things we can determine before we seek */
 		switch (xph_type) {
 		case PT_DYNAMIC:
-			linking_style = "dynamically";
 			doread = 1;
 			break;
 		case PT_NOTE:
@@ -1644,6 +1643,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			}
 			/*FALLTHROUGH*/
 		case PT_INTERP:
+			linking_style = "dynamically";
 			doread = 1;
 			break;
 		default:
