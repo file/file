@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.130 2019/06/24 23:56:24 christos Exp $
+# $File: msdos,v 1.131 2019/08/02 18:08:18 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -647,13 +647,6 @@
 >30	byte	12		(4kB sectors)
 
 # Popular applications
-2080	string	Microsoft\ Word\ 6.0\ Document	%s
-!:mime	application/msword
-2080	string	Documento\ Microsoft\ Word\ 6 Spanish Microsoft Word 6 document data
-!:mime	application/msword
-# Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Word)
-2112	string	MSWordDoc			Microsoft Word document data
-!:mime	application/msword
 #
 # Update:	Joerg Jenderek
 # URL:		http://fileformats.archiveteam.org/wiki/DOC
@@ -761,23 +754,15 @@
 0	string/b	\xDB\xA5\x2D\x00		Microsoft WinWord 2.0 Document
 !:mime application/msword
 #
-2080	string	Microsoft\ Excel\ 5.0\ Worksheet	%s
-!:mime	application/vnd.ms-excel
-#
 0	string/b	\xDB\xA5\x2D\x00		Microsoft WinWord 2.0 Document
 !:mime application/msword
 
-2080	string	Foglio\ di\ lavoro\ Microsoft\ Exce	%s
-!:mime	application/vnd.ms-excel
 #
-# Pawel Wiecek <coven@i17linuxb.ists.pwr.wroc.pl> (for polish Excel)
-2114	string	Biff5		Microsoft Excel 5.0 Worksheet
-!:mime	application/vnd.ms-excel
-# Italian MS-Excel
-2121	string	Biff5		Microsoft Excel 5.0 Worksheet
-!:mime	application/vnd.ms-excel
 0	string/b	\x09\x04\x06\x00\x00\x00\x10\x00	Microsoft Excel Worksheet
 !:mime	application/vnd.ms-excel
+# https://www.macdisk.com/macsigen.php
+!:apple	XCELXLS4
+!:ext	xls
 #
 # Update: Joerg Jenderek
 # URL: https://en.wikipedia.org/wiki/Lotus_1-2-3
@@ -1466,9 +1451,6 @@
 
 
 0	string/b	\224\246\056		Microsoft Word Document
-!:mime	application/msword
-
-512	string	R\0o\0o\0t\0\ \0E\0n\0t\0r\0y	Microsoft Word Document
 !:mime	application/msword
 
 # From: "Nelson A. de Oliveira" <naoliv@gmail.com>
