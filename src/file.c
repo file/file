@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.183 2019/07/13 16:23:58 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.184 2019/08/03 11:51:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -76,13 +76,7 @@ int getopt_long(int, char * const *, const char *,
 # define IFLNK_L ""
 #endif
 
-#ifdef HAVE_LIBSECCOMP
-# define SECCOMP_S "S"
-#else
-# define SECCOMP_S ""
-#endif
-
-#define FILE_FLAGS	"bcCdE" IFLNK_h "ik" IFLNK_L "lNnprs" SECCOMP_S "vzZ0"
+#define FILE_FLAGS	"bcCdE" IFLNK_h "ik" IFLNK_L "lNnprsSvzZ0"
 #define OPTSTRING	"bcCde:Ef:F:hiklLm:nNpP:rsSvzZ0"
 
 # define USAGE  \
