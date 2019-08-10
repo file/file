@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.131 2019/05/29 02:03:02 christos Exp $
+# $File: archive,v 1.132 2019/08/10 13:39:44 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1196,17 +1196,31 @@
 >>50	string	epub+zip	EPUB document
 !:mime application/epub+zip
 
+# From:	Joerg Jenderek
+# URL:	http://en.wikipedia.org/wiki/CorelDRAW
+# NOTE:	version; til 2 WL-based; from 3 til 13 by ./riff; from 14 zip based
+>>50	string	x-vnd.corel.	 Corel
+>>>62	string	draw.document+zip	Draw drawing, version 14-16
+!:mime	application/x-vnd.corel.draw.document+zip
+!:ext	cdr
+>>>62	string	draw.template+zip	Draw template, version 14-16
+!:mime	application/x-vnd.corel.draw.template+zip
+!:ext	cdrt
+>>>62	string	zcf.draw.document+zip	Draw drawing, version 17-21
+!:mime	application/x-vnd.corel.zcf.draw.document+zip
+!:ext	cdr
+>>>62	string	zcf.draw.template+zip	Draw template, version 17-21
+!:mime	application/x-vnd.corel.zcf.draw.template+zip
+!:ext	cdt/cdrt
+
 #  Catch other ZIP-with-mimetype formats
 #	In a ZIP file, the bytes immediately after a member's contents are
 #	always "PK". The 2 regex rules here print the "mimetype" member's
 #	contents up to the first 'P'. Luckily, most MIME types don't contain
 #	any capital 'P's. This is a kludge.
 #    (mimetype contains "application/<OTHER>")
->>50		string	!epub+zip
->>>50		string	!vnd.oasis.opendocument.
->>>>50		string	!vnd.sun.xml.
->>>>>50		string	!vnd.kde.
->>>>>>38	regex	[!-OQ-~]+		Zip data (MIME type "%s"?)
+>>50		default	x			Zip data
+>>>38		regex	[!-OQ-~]+		(MIME type "%s"?)
 !:mime	application/zip
 #    (mimetype contents other than "application/*")
 >26		string	\x8\0\0\0mimetype
