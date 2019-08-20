@@ -180,6 +180,7 @@ $(MAGIC_FRAGMENT_DIR)/mkid \
 $(MAGIC_FRAGMENT_DIR)/mlssa \
 $(MAGIC_FRAGMENT_DIR)/mmdf \
 $(MAGIC_FRAGMENT_DIR)/modem \
+$(MAGIC_FRAGMENT_DIR)/modulefile \
 $(MAGIC_FRAGMENT_DIR)/motorola \
 $(MAGIC_FRAGMENT_DIR)/mozilla \
 $(MAGIC_FRAGMENT_DIR)/msdos \
