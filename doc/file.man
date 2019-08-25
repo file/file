@@ -291,7 +291,7 @@ The magic pattern with the highest strength (see the
 option) comes first.
 .It Fl l , Fl Fl list
 Shows a list of patterns and their strength sorted descending by
-.Xr magic 4
+.Xr magic __FSECTION__
 strength
 which is used for the matching (see also the
 .Fl k
