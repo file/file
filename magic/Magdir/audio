@@ -140,6 +140,10 @@
 0x2c	string		SCRM		ScreamTracker III Module sound data
 >0	string		>\0		Title: "%s"
 
+# .stm before it got above .s3m extension
+0x16  string   !Scream!    ScreamTracker Module sound data
+>0  string    >\0   Title: "%s"
+
 # Gravis UltraSound patches
 # From <ache@nagual.ru>
 
