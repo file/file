@@ -553,6 +553,8 @@
 >21	byte	x	\b.%u
 >20	byte	x	\b.%u
 
+0     string    CC2   CheeseCutter 2 song
+
 0    	string		RAWADATA	RdosPlay RAW
 
 1068	string		RoR		AMUSIC Adlib Tracker
