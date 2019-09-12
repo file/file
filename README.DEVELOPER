@@ -1,6 +1,6 @@
 # How to get started developing
 
-@(#) $File: README.DEVELOPER,v 1.5 2014/03/10 12:38:08 kim Exp $
+@(#) $File: README.DEVELOPER,v 1.7 2019/09/12 16:03:37 christos Exp $
 
 ## Auto files
 
@@ -38,3 +38,11 @@ See also `.travis.yml`.
 	    automake \
 	    libtool \
 
+### Mac OS X (HomeBrew)
+
+	brew install autoconf automake libtool
+
+Tested with:
+	autoconf 2.69
+	automake 1.16.1
+	libtool 2.4.6
