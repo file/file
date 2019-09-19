@@ -1,6 +1,6 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README,v 1.58 2019/09/19 00:35:52 christos Exp $
+    @(#) $File: README,v 1.59 2019/09/19 01:04:01 christos Exp $
 
 Mailing List: file@astron.com
 Mailing List archives: http://mailman.astron.com/pipermail/file/
@@ -25,7 +25,8 @@ A public read-only git repository of the same sources is available at:
 	https://github.com/file/file
 
 We are continuously being fuzzed by OSS-FUZZ:
-[![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/file.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:file)
+
+	https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:file
 
 The major changes for 5.x are CDF file parsing, indirect magic, name/use
 (recursion) and overhaul in mime and ascii encoding handling.
