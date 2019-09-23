@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.168 2019/07/06 19:49:00 christos Exp $
+# $File: images,v 1.169 2019/09/23 13:04:02 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2185,3 +2185,21 @@
 0	string		XPR0	Microsoft Xbox XPR0 texture
 >0x19	byte	x	\b, format:
 >>0x19	use	xbox-xpr-pixel-format
+
+# ILDA Image Data Transfer Format
+# https://www.ilda.com/resources/StandardsDocs/ILDA_IDTF14_rev011.pdf
+#
+# Updated by Chuck Hein (laser@geekdude.com)
+#
+0	string	ILDA	ILDA Image Data Transfer Format
+>7	byte	0x00	3D Coordinates with Indexed Color
+>7	byte	0x01	2D Coordinates with Indexed Color
+>7	byte	0x02	Color Palette
+>7	byte	0x04	3D Coordinates with True Color
+>7	byte	0x05	2D Coordinates with True Color
+>8	string	>0	\b, palette %s
+>16	string	>0	\b, company %s
+>24	beshort	>0	\b, number of records %d
+>>26	beshort	x	\b, palette number %d
+>>28	beshort	>0	\b, number of frames %d
+>>30	byte	>0	\b, projector number %d
