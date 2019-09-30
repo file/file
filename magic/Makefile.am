@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.147 2019/06/08 20:53:32 christos Exp $
+# $File: Makefile.am,v 1.148 2019/09/30 15:58:24 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -203,6 +203,7 @@ $(MAGIC_FRAGMENT_DIR)/ocaml \
 $(MAGIC_FRAGMENT_DIR)/octave \
 $(MAGIC_FRAGMENT_DIR)/ole2compounddocs \
 $(MAGIC_FRAGMENT_DIR)/olf \
+$(MAGIC_FRAGMENT_DIR)/openfst \
 $(MAGIC_FRAGMENT_DIR)/opentimestamps \
 $(MAGIC_FRAGMENT_DIR)/os2 \
 $(MAGIC_FRAGMENT_DIR)/os400 \
