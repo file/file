@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.129 2019/07/04 14:02:41 christos Exp $
+# $File: filesystems,v 1.130 2019/09/30 15:50:51 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2148,52 +2148,43 @@
 0	leshort	0x1985		Linux jffs2 filesystem data little endian
 
 # Squashfs
-0	string	sqsh	Squashfs filesystem, big endian,
+0	name	squashfs
 >28	beshort	x	version %d.
->30	beshort x	\b%d,
+>30	beshort	x	\b%d,
+>20	beshort 0	uncompressed,
+>20	beshort 1	zlib
+>20	beshort 2	lzma
+>20	beshort 3	lzo
+>20	beshort 4	xz
+>20	beshort 5	lz4
+>20	beshort 6	zstd
+>20	beshort >0	compressed,
 >28	beshort <3
 >>8	belong	x	%d bytes,
 >28	beshort >2
->>28 beshort <4
+>>28	beshort <4
 >>>63	bequad x	%lld bytes,
->>28 beshort >3
+>>28	beshort >3
 >>>40	bequad x	%lld bytes,
 #>>67	belong	x	%d bytes,
 >4	belong	x	%d inodes,
 >28	beshort <2
 >>32	beshort	x	blocksize: %d bytes,
 >28	beshort >1
->>28 beshort <4
+>>28	beshort <4
 >>>51	belong	x	blocksize: %d bytes,
->>28 beshort >3
+>>28	beshort >3
 >>>12	belong	x	blocksize: %d bytes,
->28 beshort <4
+>28	beshort <4
 >>39	bedate	x	created: %s
->28 beshort >3
+>28	beshort >3
 >>8	bedate	x	created: %s
+
+0	string	sqsh	Squashfs filesystem, big endian,
+>0	use	squashfs
+
 0	string	hsqs	Squashfs filesystem, little endian,
->28	leshort	x	version %d.
->30	leshort	x	\b%d,
->28	leshort <3
->>8	lelong	x	%d bytes,
->28	leshort >2
->>28 leshort <4
->>>63	lequad x	%lld bytes,
->>28 leshort >3
->>>40	lequad x	%lld bytes,
-#>>63	lelong	x	%d bytes,
->4	lelong	x	%d inodes,
->28	leshort <2
->>32	leshort	x	blocksize: %d bytes,
->28	leshort >1
->>28 leshort <4
->>>51	lelong	x	blocksize: %d bytes,
->>28 leshort >3
->>>12	lelong	x	blocksize: %d bytes,
->28 leshort <4
->>39	ledate	x	created: %s
->28 leshort >3
->>8	ledate	x	created: %s
+>0	use	^squashfs
 
 # AFS Dump Magic
 # From: Ty Sarna <tsarna@sarna.org>
