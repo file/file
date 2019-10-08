@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.76 2019/09/11 15:20:12 christos Exp $
+# $File: compress,v 1.77 2019/10/08 20:25:13 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -58,11 +58,11 @@
 >>>13	string		09			\b, version 9
 # other gzipped binary like gzipped tar, VirtualBox extension package,...
 >>10	default		x		gzip compressed data
+!:mime	application/gzip
 >>>0	use	gzip-info
 # size of the original (uncompressed) input data modulo 2^32
 >>>-4	ulelong		x		\b, original size modulo 2^32 %u
 # gzipped TAR or VirtualBox extension package
-!:mime	application/gzip
 #!:mime	application/x-compressed-tar
 #!:mime	application/x-virtualbox-vbox-extpack
 # https://www.w3.org/TR/SVG/mimereg.html
