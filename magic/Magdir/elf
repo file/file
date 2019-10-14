@@ -39,6 +39,7 @@
 
 0	name		elf-pa-risc
 >2	leshort		0x0208		1.0
+>2	leshort		0x020b		1.0
 >2	leshort		0x0210		1.1
 >2	leshort		0x0214		2.0
 >0	leshort		&0x0008		(LP64)
