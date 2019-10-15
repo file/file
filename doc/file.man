@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.137 2019/07/13 16:26:48 christos Exp $
+.\" $File: file.man,v 1.138 2019/10/15 18:00:40 christos Exp $
 .Dd July 13, 2019
 .Dt FILE __CSECTION__
 .Os
@@ -291,7 +291,7 @@ The magic pattern with the highest strength (see the
 option) comes first.
 .It Fl l , Fl Fl list
 Shows a list of patterns and their strength sorted descending by
-.Xr magic 4
+.Xr magic __FSECTION__
 strength
 which is used for the matching (see also the
 .Fl k
