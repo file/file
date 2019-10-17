@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.132 2019/10/17 15:38:20 christos Exp $
+# $File: msdos,v 1.133 2019/10/17 17:56:57 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -116,7 +116,8 @@
 >>>(0x3c.l+4)	leshort		0x166	MIPS R4000
 >>>(0x3c.l+4)	leshort		0x168	MIPS R10000
 >>>(0x3c.l+4)	leshort		0x184	Alpha
->>>(0x3c.l+4)	leshort		0x1a2	Hitachi SH3 DSP
+>>>(0x3c.l+4)	leshort		0x1a2	Hitachi SH3
+>>>(0x3c.l+4)	leshort		0x1a3	Hitachi SH3 DSP
 >>>(0x3c.l+4)	leshort		0x1a8	Hitachi SH5
 >>>(0x3c.l+4)	leshort		0x169	MIPS WCE v2
 >>>(0x3c.l+4)	leshort		0x1a6	Hitachi SH4
@@ -138,6 +139,7 @@
 >>>(0x3c.l+4)	leshort		0x5128	RISC-V 128-bit
 >>>(0x3c.l+4)	leshort		0x9041	Mitsubishi M32R
 >>>(0x3c.l+4)	leshort		0x8664	x86-64
+>>>(0x3c.l+4)	leshort		0xaa64	Aarch64
 >>>(0x3c.l+4)	leshort		0xc0ee	MSIL
 >>>(0x3c.l+4)	default		x	Unknown processor type
 >>>>&0		leshort		x	0x%x
