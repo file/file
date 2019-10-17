@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.131 2019/08/02 18:08:18 christos Exp $
+# $File: msdos,v 1.132 2019/10/17 15:38:20 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -101,6 +101,7 @@
 !:ext	dll/cpl/tlb/ocx/acm/ax/ime
 >>>>(0x3c.l+22)	leshort&0x2000	0	(console)
 !:ext	exe/com
+# https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
 >>>(0x3c.l+92)	leshort		7	(POSIX)
 >>>(0x3c.l+92)	leshort		9	(Windows CE)
 >>>(0x3c.l+92)	leshort		10	(EFI application)
@@ -115,12 +116,16 @@
 >>>(0x3c.l+4)	leshort		0x166	MIPS R4000
 >>>(0x3c.l+4)	leshort		0x168	MIPS R10000
 >>>(0x3c.l+4)	leshort		0x184	Alpha
->>>(0x3c.l+4)	leshort		0x1a2	Hitachi SH3
+>>>(0x3c.l+4)	leshort		0x1a2	Hitachi SH3 DSP
+>>>(0x3c.l+4)	leshort		0x1a8	Hitachi SH5
+>>>(0x3c.l+4)	leshort		0x169	MIPS WCE v2
 >>>(0x3c.l+4)	leshort		0x1a6	Hitachi SH4
 >>>(0x3c.l+4)	leshort		0x1c0	ARM
 >>>(0x3c.l+4)	leshort		0x1c2	ARM Thumb
 >>>(0x3c.l+4)	leshort		0x1c4	ARMv7 Thumb
+>>>(0x3c.l+4)	leshort		0x1d3	Matsushita AM33
 >>>(0x3c.l+4)	leshort		0x1f0	PowerPC
+>>>(0x3c.l+4)	leshort		0x1f1	PowerPC with FPU
 >>>(0x3c.l+4)	leshort		0x200	Intel Itanium
 >>>(0x3c.l+4)	leshort		0x266	MIPS16
 >>>(0x3c.l+4)	leshort		0x268	Motorola 68000
@@ -128,6 +133,10 @@
 >>>(0x3c.l+4)	leshort		0x366	MIPSIV
 >>>(0x3c.l+4)	leshort		0x466	MIPS16 with FPU
 >>>(0x3c.l+4)	leshort		0xebc	EFI byte code
+>>>(0x3c.l+4)	leshort		0x5032	RISC-V 32-bit
+>>>(0x3c.l+4)	leshort		0x5064	RISC-V 64-bit
+>>>(0x3c.l+4)	leshort		0x5128	RISC-V 128-bit
+>>>(0x3c.l+4)	leshort		0x9041	Mitsubishi M32R
 >>>(0x3c.l+4)	leshort		0x8664	x86-64
 >>>(0x3c.l+4)	leshort		0xc0ee	MSIL
 >>>(0x3c.l+4)	default		x	Unknown processor type
