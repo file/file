@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.133 2019/10/17 17:56:57 christos Exp $
+# $File: msdos,v 1.134 2019/10/18 15:16:18 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -61,28 +61,24 @@
 #>>0x18	leshort	0x1c	(Borland compiler)
 #>>0x18	leshort	0x1e	(MS compiler)
 
-# If the relocation table is 0x40 or more bytes into the file, it's definitely
-# not a DOS EXE.
->0x18  leshort >0x3f
-
 # Maybe it's a PE?
->>(0x3c.l) string PE\0\0 PE
+>(0x3c.l)	string		PE\0\0	PE
 !:mime	application/x-dosexec
->>>(0x3c.l+24)	leshort		0x010b	\b32 executable
->>>(0x3c.l+24)	leshort		0x020b	\b32+ executable
->>>(0x3c.l+24)	leshort		0x0107	ROM image
->>>(0x3c.l+24)	default		x	Unknown PE signature
->>>>&0 		leshort		x	0x%x
->>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
->>>(0x3c.l+92)	leshort		1
+>>(0x3c.l+24)	leshort		0x010b	\b32 executable
+>>(0x3c.l+24)	leshort		0x020b	\b32+ executable
+>>(0x3c.l+24)	leshort		0x0107	ROM image
+>>(0x3c.l+24)	default		x	Unknown PE signature
+>>>&0 		leshort		x	0x%x
+>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
+>>(0x3c.l+92)	leshort		1
 # Native PEs include ntoskrnl.exe, hal.dll, smss.exe, autochk.exe, and all the
 # drivers in Windows/System32/drivers/*.sys.
->>>>(0x3c.l+22)	leshort&0x2000	>0	(native)
+>>>(0x3c.l+22)	leshort&0x2000	>0	(native)
 !:ext	dll/sys
->>>>(0x3c.l+22)	leshort&0x2000	0	(native)
+>>>(0x3c.l+22)	leshort&0x2000	0	(native)
 !:ext	exe/sys
->>>(0x3c.l+92)	leshort		2
->>>>(0x3c.l+22)	leshort&0x2000	>0	(GUI)
+>>(0x3c.l+92)	leshort		2
+>>>(0x3c.l+22)	leshort&0x2000	>0	(GUI)
 # These could probably be at least partially distinguished from one another by
 # looking for specific exported functions.
 # CPL: Control Panel item
@@ -92,91 +88,95 @@
 # AX: DirectShow source filter
 # IME: Input method editor
 !:ext	dll/cpl/tlb/ocx/acm/ax/ime
->>>>(0x3c.l+22)	leshort&0x2000	0	(GUI)
+>>>(0x3c.l+22)	leshort&0x2000	0	(GUI)
 # Screen savers typically include code from the scrnsave.lib static library, but
 # that's not guaranteed.
 !:ext	exe/scr
->>>(0x3c.l+92)	leshort		3
->>>>(0x3c.l+22)	leshort&0x2000	>0	(console)
+>>(0x3c.l+92)	leshort		3
+>>>(0x3c.l+22)	leshort&0x2000	>0	(console)
 !:ext	dll/cpl/tlb/ocx/acm/ax/ime
->>>>(0x3c.l+22)	leshort&0x2000	0	(console)
+>>>(0x3c.l+22)	leshort&0x2000	0	(console)
 !:ext	exe/com
 # https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
->>>(0x3c.l+92)	leshort		7	(POSIX)
->>>(0x3c.l+92)	leshort		9	(Windows CE)
->>>(0x3c.l+92)	leshort		10	(EFI application)
->>>(0x3c.l+92)	leshort		11	(EFI boot service driver)
->>>(0x3c.l+92)	leshort		12	(EFI runtime driver)
->>>(0x3c.l+92)	leshort		13	(EFI ROM)
->>>(0x3c.l+92)	leshort		14	(XBOX)
->>>(0x3c.l+92)	leshort		15	(Windows boot application)
->>>(0x3c.l+92)	default		x	(Unknown subsystem
->>>>&0		leshort		x	0x%x)
->>>(0x3c.l+4)	leshort		0x14c	Intel 80386
->>>(0x3c.l+4)	leshort		0x166	MIPS R4000
->>>(0x3c.l+4)	leshort		0x168	MIPS R10000
->>>(0x3c.l+4)	leshort		0x184	Alpha
->>>(0x3c.l+4)	leshort		0x1a2	Hitachi SH3
->>>(0x3c.l+4)	leshort		0x1a3	Hitachi SH3 DSP
->>>(0x3c.l+4)	leshort		0x1a8	Hitachi SH5
->>>(0x3c.l+4)	leshort		0x169	MIPS WCE v2
->>>(0x3c.l+4)	leshort		0x1a6	Hitachi SH4
->>>(0x3c.l+4)	leshort		0x1c0	ARM
->>>(0x3c.l+4)	leshort		0x1c2	ARM Thumb
->>>(0x3c.l+4)	leshort		0x1c4	ARMv7 Thumb
->>>(0x3c.l+4)	leshort		0x1d3	Matsushita AM33
->>>(0x3c.l+4)	leshort		0x1f0	PowerPC
->>>(0x3c.l+4)	leshort		0x1f1	PowerPC with FPU
->>>(0x3c.l+4)	leshort		0x200	Intel Itanium
->>>(0x3c.l+4)	leshort		0x266	MIPS16
->>>(0x3c.l+4)	leshort		0x268	Motorola 68000
->>>(0x3c.l+4)	leshort		0x290	PA-RISC
->>>(0x3c.l+4)	leshort		0x366	MIPSIV
->>>(0x3c.l+4)	leshort		0x466	MIPS16 with FPU
->>>(0x3c.l+4)	leshort		0xebc	EFI byte code
->>>(0x3c.l+4)	leshort		0x5032	RISC-V 32-bit
->>>(0x3c.l+4)	leshort		0x5064	RISC-V 64-bit
->>>(0x3c.l+4)	leshort		0x5128	RISC-V 128-bit
->>>(0x3c.l+4)	leshort		0x9041	Mitsubishi M32R
->>>(0x3c.l+4)	leshort		0x8664	x86-64
->>>(0x3c.l+4)	leshort		0xaa64	Aarch64
->>>(0x3c.l+4)	leshort		0xc0ee	MSIL
->>>(0x3c.l+4)	default		x	Unknown processor type
->>>>&0		leshort		x	0x%x
->>>(0x3c.l+22)	leshort&0x0200	>0	(stripped to external PDB)
->>>(0x3c.l+22)	leshort&0x1000	>0	system file
->>>(0x3c.l+24)	leshort		0x010b
->>>>(0x3c.l+232) lelong	>0	Mono/.Net assembly
->>>(0x3c.l+24)	leshort		0x020b
->>>>(0x3c.l+248) lelong	>0	Mono/.Net assembly
+>>(0x3c.l+92)	leshort		7	(POSIX)
+>>(0x3c.l+92)	leshort		9	(Windows CE)
+>>(0x3c.l+92)	leshort		10	(EFI application)
+>>(0x3c.l+92)	leshort		11	(EFI boot service driver)
+>>(0x3c.l+92)	leshort		12	(EFI runtime driver)
+>>(0x3c.l+92)	leshort		13	(EFI ROM)
+>>(0x3c.l+92)	leshort		14	(XBOX)
+>>(0x3c.l+92)	leshort		15	(Windows boot application)
+>>(0x3c.l+92)	default		x	(Unknown subsystem
+>>>&0		leshort		x	0x%x)
+>>(0x3c.l+4)	leshort		0x14c	Intel 80386
+>>(0x3c.l+4)	leshort		0x166	MIPS R4000
+>>(0x3c.l+4)	leshort		0x168	MIPS R10000
+>>(0x3c.l+4)	leshort		0x184	Alpha
+>>(0x3c.l+4)	leshort		0x1a2	Hitachi SH3
+>>(0x3c.l+4)	leshort		0x1a3	Hitachi SH3 DSP
+>>(0x3c.l+4)	leshort		0x1a8	Hitachi SH5
+>>(0x3c.l+4)	leshort		0x169	MIPS WCE v2
+>>(0x3c.l+4)	leshort		0x1a6	Hitachi SH4
+>>(0x3c.l+4)	leshort		0x1c0	ARM
+>>(0x3c.l+4)	leshort		0x1c2	ARM Thumb
+>>(0x3c.l+4)	leshort		0x1c4	ARMv7 Thumb
+>>(0x3c.l+4)	leshort		0x1d3	Matsushita AM33
+>>(0x3c.l+4)	leshort		0x1f0	PowerPC
+>>(0x3c.l+4)	leshort		0x1f1	PowerPC with FPU
+>>(0x3c.l+4)	leshort		0x200	Intel Itanium
+>>(0x3c.l+4)	leshort		0x266	MIPS16
+>>(0x3c.l+4)	leshort		0x268	Motorola 68000
+>>(0x3c.l+4)	leshort		0x290	PA-RISC
+>>(0x3c.l+4)	leshort		0x366	MIPSIV
+>>(0x3c.l+4)	leshort		0x466	MIPS16 with FPU
+>>(0x3c.l+4)	leshort		0xebc	EFI byte code
+>>(0x3c.l+4)	leshort		0x5032	RISC-V 32-bit
+>>(0x3c.l+4)	leshort		0x5064	RISC-V 64-bit
+>>(0x3c.l+4)	leshort		0x5128	RISC-V 128-bit
+>>(0x3c.l+4)	leshort		0x9041	Mitsubishi M32R
+>>(0x3c.l+4)	leshort		0x8664	x86-64
+>>(0x3c.l+4)	leshort		0xaa64	Aarch64
+>>(0x3c.l+4)	leshort		0xc0ee	MSIL
+>>(0x3c.l+4)	default		x	Unknown processor type
+>>>&0		leshort		x	0x%x
+>>(0x3c.l+22)	leshort&0x0200	>0	(stripped to external PDB)
+>>(0x3c.l+22)	leshort&0x1000	>0	system file
+>>(0x3c.l+24)	leshort		0x010b
+>>>(0x3c.l+232) lelong	>0	Mono/.Net assembly
+>>(0x3c.l+24)	leshort		0x020b
+>>>(0x3c.l+248) lelong	>0	Mono/.Net assembly
 
 # hooray, there's a DOS extender using the PE format, with a valid PE
 # executable inside (which just prints a message and exits if run in win)
->>>(8.s*16)		string		32STUB	\b, 32rtm DOS extender
->>>(8.s*16)		string		!32STUB	\b, for MS Windows
->>>(0x3c.l+0xf8)	string		UPX0 \b, UPX compressed
->>>(0x3c.l+0xf8)	search/0x140	PEC2 \b, PECompact2 compressed
->>>(0x3c.l+0xf8)	search/0x140	UPX2
->>>>(&0x10.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
->>>(0x3c.l+0xf8)	search/0x140	.idata
->>>>(&0xe.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
->>>>(&0xe.l+(-4))	string		ZZ0 \b, ZZip self-extracting archive
->>>>(&0xe.l+(-4))	string		ZZ1 \b, ZZip self-extracting archive
->>>(0x3c.l+0xf8)	search/0x140	.rsrc
->>>>(&0x0f.l+(-4))	string		a\\\4\5 \b, WinHKI self-extracting archive
->>>>(&0x0f.l+(-4))	string		Rar! \b, RAR self-extracting archive
->>>>(&0x0f.l+(-4))	search/0x3000	MSCF \b, InstallShield self-extracting archive
->>>>(&0x0f.l+(-4))	search/32	Nullsoft \b, Nullsoft Installer self-extracting archive
->>>(0x3c.l+0xf8)	search/0x140	.data
->>>>(&0x0f.l)		string		WEXTRACT \b, MS CAB-Installer self-extracting archive
->>>(0x3c.l+0xf8)	search/0x140	.petite\0 \b, Petite compressed
->>>>(0x3c.l+0xf7)	byte		x
->>>>>(&0x104.l+(-4))	string		=!sfx! \b, ACE self-extracting archive
->>>(0x3c.l+0xf8)	search/0x140	.WISE \b, WISE installer self-extracting archive
->>>(0x3c.l+0xf8)	search/0x140	.dz\0\0\0 \b, Dzip self-extracting archive
->>>&(0x3c.l+0xf8)	search/0x100	_winzip_ \b, ZIP self-extracting archive (WinZip)
->>>&(0x3c.l+0xf8)	search/0x100	SharedD \b, Microsoft Installer self-extracting archive
->>>0x30			string		Inno \b, InnoSetup self-extracting archive
+>>(8.s*16)		string		32STUB	\b, 32rtm DOS extender
+>>(8.s*16)		string		!32STUB	\b, for MS Windows
+>>(0x3c.l+0xf8)		string		UPX0 \b, UPX compressed
+>>(0x3c.l+0xf8)		search/0x140	PEC2 \b, PECompact2 compressed
+>>(0x3c.l+0xf8)		search/0x140	UPX2
+>>>(&0x10.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
+>>(0x3c.l+0xf8)		search/0x140	.idata
+>>>(&0xe.l+(-4))	string		PK\3\4 \b, ZIP self-extracting archive (Info-Zip)
+>>>(&0xe.l+(-4))	string		ZZ0 \b, ZZip self-extracting archive
+>>>(&0xe.l+(-4))	string		ZZ1 \b, ZZip self-extracting archive
+>>(0x3c.l+0xf8)		search/0x140	.rsrc
+>>>(&0x0f.l+(-4))	string		a\\\4\5 \b, WinHKI self-extracting archive
+>>>(&0x0f.l+(-4))	string		Rar! \b, RAR self-extracting archive
+>>>(&0x0f.l+(-4))	search/0x3000	MSCF \b, InstallShield self-extracting archive
+>>>(&0x0f.l+(-4))	search/32	Nullsoft \b, Nullsoft Installer self-extracting archive
+>>(0x3c.l+0xf8)		search/0x140	.data
+>>>(&0x0f.l)		string		WEXTRACT \b, MS CAB-Installer self-extracting archive
+>>(0x3c.l+0xf8)		search/0x140	.petite\0 \b, Petite compressed
+>>>(0x3c.l+0xf7)	byte		x
+>>>>(&0x104.l+(-4))	string		=!sfx! \b, ACE self-extracting archive
+>>(0x3c.l+0xf8)		search/0x140	.WISE \b, WISE installer self-extracting archive
+>>(0x3c.l+0xf8)		search/0x140	.dz\0\0\0 \b, Dzip self-extracting archive
+>>&(0x3c.l+0xf8)	search/0x100	_winzip_ \b, ZIP self-extracting archive (WinZip)
+>>&(0x3c.l+0xf8)	search/0x100	SharedD \b, Microsoft Installer self-extracting archive
+>>0x30			string		Inno \b, InnoSetup self-extracting archive
+
+# If the relocation table is 0x40 or more bytes into the file, it's definitely
+# not a DOS EXE.
+>0x18  leshort >0x3f
 
 # Hmm, not a PE but the relocation table is too high for a traditional DOS exe,
 # must be one of the unusual subformats.
