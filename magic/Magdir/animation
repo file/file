@@ -878,6 +878,9 @@
 # Vivo video (Wolfram Kleff)
 3	string		\x0D\x0AVersion:Vivo	Vivo video data
 
+# ABC (alembic.io 3d models)
+0 string    0gawa    ABC 3d model,
+
 # VRML (Virtual Reality Modelling Language)
 0       string/w        #VRML\ V1.0\ ascii	VRML 1 file
 !:mime	model/vrml
