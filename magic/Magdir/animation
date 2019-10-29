@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.73 2019/07/05 19:20:38 christos Exp $
+# $File: animation,v 1.74 2019/10/29 01:06:20 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -877,6 +877,9 @@
 
 # Vivo video (Wolfram Kleff)
 3	string		\x0D\x0AVersion:Vivo	Vivo video data
+
+# ABC (alembic.io 3d models)
+0	string	0gawa		ABC 3d model
 
 # VRML (Virtual Reality Modelling Language)
 0       string/w        #VRML\ V1.0\ ascii	VRML 1 file
