@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.169 2019/09/23 13:04:02 christos Exp $
+# $File: images,v 1.170 2019/11/02 18:14:30 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2203,3 +2203,8 @@
 >>26	beshort	x	\b, palette number %d
 >>28	beshort	>0	\b, number of frames %d
 >>30	byte	>0	\b, projector number %d
+
+# Dropbox "lepton" compressed jpeg format
+# https://github.com/dropbox/lepton
+0	belong&0xfffff0ff	0xcf84005a	Lepton image file
+>2	byte			x		(version %d)
