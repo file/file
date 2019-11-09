@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.166 2019/07/23 21:33:45 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.167 2019/11/09 00:30:44 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1344,6 +1344,13 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 		return 0;
 	}
 	name_off = xsh_offset;
+
+	if (fsize != SIZE_UNKNOWN && fsize < name_off) {
+		if (file_printf(ms, ", too large section header offset %td",
+		    name_off) == -1)
+			return -1;
+		return 0;
+	}
 
 	for ( ; num; num--) {
 		/* Read the name of this section. */
