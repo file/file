@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.107 2019/09/11 15:46:30 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.108 2019/11/09 00:35:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -573,7 +573,8 @@ file_regexec(file_regex_t *rx, const char *str, size_t nmatch,
 {
 	assert(rx->rc == 0);
 	/* XXX: force initialization because glibc does not always do this */
-	memset(pmatch, 0, nmatch * sizeof(*pmatch));
+	if (nmatch != 0)
+		memset(pmatch, 0, nmatch * sizeof(*pmatch));
 	return regexec(&rx->rx, str, nmatch, pmatch, eflags);
 }
 
