@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.26 2019/05/01 17:55:25 christos Exp $
+# $File: windows,v 1.27 2019/11/10 19:20:34 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -878,4 +878,28 @@
 # Unused[60]
 #>148	ubequad		!0			\b,unused 0x%16.16llx
 #
+
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Windows_Easy_Transfer
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/m/mig.trid.xml
+# Note:		called "Windows Easy Transfer migration data" by TrID,
+#		"Migration Store" or "EasyTransfer file" by Microsoft
+0		string		1giM	Windows Easy Transfer migration data
+#!:mime		application/octet-stream
+!:mime		application/x-ms-mig
+!:ext		mig
+>0x18		string		=MRTS	without password
+# data offset with 1 space at end
+>>0x1c		ulelong+0x38	x	\b, at 0x%x 
+# look for zlib compressed data by ./compress
+>>(0x1c.l+0x38)	ubyte		x
+>>>&-1	indirect	x
+# in password protected examples MRTS comes some bytes further
+>0x18		string		!MRTS	with password
+# look for first MRTS tag
+>0x18		search/29/b	MRTS
+# probably first file name length like 178, ...
+#>>&0		ulelong		x	\b, 1st length %u
+# URL like File\C:\Users\nutzer\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\desktop.ini
+>>&20		lestring16	x	\b, 1st %-s
 
