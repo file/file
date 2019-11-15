@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.130 2019/09/30 15:50:51 christos Exp $
+# $File: filesystems,v 1.131 2019/11/15 23:49:38 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2057,10 +2057,6 @@
 >0x10040	lelong	2		yura hash
 >0x10040	lelong	3		r5 hash
 
-# JFFS - russell@coker.com.au
-0	lelong	0x34383931	Linux Journalled Flash File system, little endian
-0	belong	0x34383931	Linux Journalled Flash File system, big endian
-
 # EST flat binary format (which isn't, but anyway)
 # From: Mark Brown <broonie@sirena.org.uk>
 0	string	ESTFBINR	EST flat binary
@@ -2145,7 +2141,9 @@
 
 # JFFS2 file system
 0	leshort	0x1984		Linux old jffs2 filesystem data little endian
+0	beshort	0x1984		Linux old jffs2 filesystem data big endian
 0	leshort	0x1985		Linux jffs2 filesystem data little endian
+0	beshort	0x1985		Linux jffs2 filesystem data big endian
 
 # Squashfs
 0	name	squashfs
