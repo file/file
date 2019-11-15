@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.132 2019/08/10 13:39:44 christos Exp $
+# $File: archive,v 1.133 2019/11/15 21:03:14 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -263,7 +263,7 @@
 # NL terminated original package length
 >>>>>&1	string		x		\b, unsplitted size %s
 # NL terminated part length
->>>>>>&1	string	x		\b, part lenght %s
+>>>>>>&1	string	x		\b, part length %s
 # NL terminated package part like n/m
 >>>>>>>&1	string	x		\b, part %s
 # NL terminated package architecture like armhf since dpkg 1.16.1 or later

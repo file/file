@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.15 2019/07/07 22:39:36 christos Exp $
+# $File: android,v 1.16 2019/11/15 21:03:14 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -50,7 +50,7 @@
 0	string/b	ANDROID\ BACKUP\n	Android Backup
 # maybe look for some more characteristics like linefeed '\n' or version
 #>16	string		\n			
-# No mime-type defined offically
+# No mime-type defined officially
 !:mime	application/x-google-ab
 !:ext	ab
 # on 2nd line version (often 1, 2 on kitkat 4.4.3+, 4 on 7.1.2)

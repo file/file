@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.27 2019/11/10 19:20:34 christos Exp $
+# $File: windows,v 1.28 2019/11/15 21:03:14 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -275,7 +275,7 @@
 !:apple	????TEXT
 !:ext	cnt
 #
-# Windows creates an full text search from hlp file, if the user clicks the "Find" tab and enables keyword indexing
+# Windows creates a full text search from hlp file, if the user clicks the "Find" tab and enables keyword indexing
 0	string		tfMR			MS Windows help Full Text Search index
 !:mime application/x-winhelp-fts
 !:ext	fts
@@ -477,8 +477,8 @@
 # https://en.wikipedia.org/wiki/CONFIG.SYS
 >>&0	regex/c		\^(menu)]					MS-DOS CONFIG.SYS
 # @CONFIG.UI configuration file of previous DOS version saved by Caldera OPENDOS INSTALL.EXE
-# CONFIG.PSS saved version of file CONFIG.SYS created by %WINDIR%\SYTEM\MSCONFIG.EXE
-# CONFIG.TSH renamed file CONFIG.SYS.BAT by %WINDIR%\SYTEM\MSCONFIG.EXE
+# CONFIG.PSS saved version of file CONFIG.SYS created by %WINDIR%\SYSTEM\MSCONFIG.EXE
+# CONFIG.TSH renamed file CONFIG.SYS.BAT by %WINDIR%\SYSTEM\MSCONFIG.EXE
 # dos and w40 used in dual booting scene
 !:ext	sys/dos/w40
 # https://support.microsoft.com/kb/118579/
@@ -757,7 +757,7 @@
 >0x1c	string		>\0				\b%.7s
 # AppName[0x80] like "Minimal SYStem", ClamWin Free Antivirus , ...
 >0xc0	string		x				%s
-# AppId[0x80] is simliar to AppName or
+# AppId[0x80] is similar to AppName or
 # GUID like {4BB0DCDC-BC24-49EC-8937-72956C33A470} start with left brace
 >0x40	ubyte		0x7b
 >>0x40	string		x				%-.38s

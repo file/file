@@ -53,7 +53,7 @@ for samplerate in "${samplerates[@]}"; do
     ## use bc with sed to convert and format Hz to kHz
     stripped_rate="$(LANG=C bc <<< "scale=5; ${samplerate} / 1000" | \
 			      sed 's#[0\.]*$##g')"
-    ## only add uniq sample rates (should be neccessary
+    ## only add uniq sample rates (should be necessary
     if [[ ! "${stripped_rates[@]}" =~ ${stripped_rate} ]]; then
 	printf -v line ">>17\tbelong&%#-15x\t%#08x\t%s, %s kHz\n" \
 	       "16777200" \
