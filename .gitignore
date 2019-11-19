@@ -35,3 +35,5 @@ Makefile.in
 
 /src/file
 /src/magic.h
+
+/tests/test
