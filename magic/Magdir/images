@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.170 2019/11/02 18:14:30 christos Exp $
+# $File: images,v 1.171 2019/11/23 16:19:47 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -498,7 +498,31 @@
 >12	lelong		>0		%d-bit
 
 # Magick Image File Format
-0	string		id=ImageMagick	MIFF image data
+# URL:		https://imagemagick.org/script/miff.php
+# Reference:	http://fileformats.archiveteam.org/wiki/MIFF
+# Update:	Joerg Jenderek
+# http://www.nationalarchives.gov.uk/pronom/fmt/930
+0	search/256/bc	id=imagemagick
+# skip bad ASCII text by following new line~0x0A or space~0x20 character
+#>&0	ubyte		x		\b, next character 0x%x
+# called by TriD ImageMagick Machine independent File Format bitmap
+>&0	ubyte&0xD5	0		MIFF image data
+# https://reposcope.com/mimetype/image/miff
+#!:mime	image/miff
+!:mime	image/x-miff
+!:ext	miff/mif
+# examples with standard file(1) magic
+#>>0	string		=id=ImageMagick	with standard magic
+# examples with unusual file(1) magic like 
+>>0	string		!id=ImageMagick	starting with
+# start with comment (brace) like http://samples.fileformat.info/.../AQUARIUM.MIF
+>>>0	ubyte		=0x7b		comment
+# skip second character which is often a newline and show comment
+>>>>2	string		x		"%s"
+# does not start with comment, probably letters with other case like Id=ImageMagick
+# ImageMagick-7.0.9-2/Magick++/demo/smile_anim.miff
+>>>0	ubyte		!0x7b
+>>>>0	string		>\0		'%-.14s'
 
 # Artisan
 0	long		1123028772	Artisan image data
