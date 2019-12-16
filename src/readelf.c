@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.167 2019/11/09 00:30:44 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.168 2019/12/16 03:49:19 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1140,6 +1140,9 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 		 */
 		return xnh_sizeof + offset;
 	}
+	/*XXX: GCC */
+	memset(&nh32, 0, sizeof(nh32));
+	memset(&nh64, 0, sizeof(nh64));
 
 	memcpy(xnh_addr, &nbuf[offset], xnh_sizeof);
 	offset += xnh_sizeof;
