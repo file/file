@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.17 2019/04/19 00:42:27 christos Exp $
+# $File: pgp,v 1.18 2019/12/21 16:33:28 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 # see https://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
@@ -58,16 +58,36 @@
 #>15	string	SIGNED\040MESSAGE-	signed message
 #>15	string	PGP\040SIGNATURE-	signature
 
+# Update:	Joerg Jenderek
+# URL:		http://en.wikipedia.org/wiki/Pretty_Good_Privacy
+# Reference:	https://reposcope.com/mimetype/application/pgp-keys
+2	string	---BEGIN\040PGP\040PRIVATE\040KEY\040BLOCK-	PGP private key block
+#!:mime	text/PGP
+!:mime	application/pgp-keys
+!:ext	asc
 2	string	---BEGIN\040PGP\040PUBLIC\040KEY\040BLOCK-	PGP public key block
 !:mime	application/pgp-keys
+!:ext	asc
 >10	search/100	\n\n
 >>&0	use		pgp
 0	string	-----BEGIN\040PGP\040MESSAGE-		PGP message
-!:mime	application/pgp
+# https://reposcope.com/mimetype/application/pgp-encrypted
+#!:mime	application/pgp
+!:mime	application/pgp-encrypted
+!:ext	asc
+#!:ext	asc/pgp/gpg
 >10	search/100	\n\n
 >>&0	use		pgp
+# Reference:	https://www.gnupg.org/gph/en/manual/x135.html
+0	string	-----BEGIN\040PGP\040SIGNED\040MESSAGE-	PGP signed message
+#!:mime	text/plain
+!:mime	text/PGP
+#!:mime	application/pgp
+!:ext	asc
 0	string	-----BEGIN\040PGP\040SIGNATURE-		PGP signature
+# https://reposcope.com/mimetype/application/pgp-signature
 !:mime	application/pgp-signature
+!:ext	asc
 >10	search/100	\n\n
 >>&0	use		pgp
 
