@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.286 2019/05/17 02:24:59 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.287 2019/12/24 19:18:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -835,6 +835,12 @@ mprint(struct magic_set *ms, struct magic *m)
 			return -1;
 		t = ms->offset;
 		break;
+	case FILE_GUID:
+		(void) file_print_guid(buf, sizeof(buf), ms->ms_value.guid);
+		if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
+			return -1;
+		t = ms->offset;
+		break;
 	default:
 		file_magerror(ms, "invalid m->type (%d) in mprint()", m->type);
 		return -1;
@@ -951,19 +957,21 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		break;
 
 	case FILE_DER:
-		{
-			o = der_offs(ms, m, nbytes);
-			if (o == -1 || CAST(size_t, o) > nbytes) {
-				if ((ms->flags & MAGIC_DEBUG) != 0) {
-					(void)fprintf(stderr,
-					    "Bad DER offset %d nbytes=%"
-					    SIZE_T_FORMAT "u", o, nbytes);
-				}
-				*op = 0;
-				return 0;
+		o = der_offs(ms, m, nbytes);
+		if (o == -1 || CAST(size_t, o) > nbytes) {
+			if ((ms->flags & MAGIC_DEBUG) != 0) {
+				(void)fprintf(stderr,
+				    "Bad DER offset %d nbytes=%"
+				    SIZE_T_FORMAT "u", o, nbytes);
 			}
-			break;
+			*op = 0;
+			return 0;
 		}
+		break;
+
+	case FILE_GUID:
+		o = CAST(int32_t, (ms->offset + 2 * sizeof(uint64_t)));
+		break;
 
 	default:
 		o = 0;
@@ -1281,6 +1289,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_NAME:
 	case FILE_USE:
 	case FILE_DER:
+	case FILE_GUID:
 		return 1;
 	default:
 		file_magerror(ms, "invalid type %d in mconvert()", m->type);
@@ -1752,6 +1761,11 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			return 0;
 		break;
 
+	case FILE_GUID:
+		if (OFFSET_OOB(nbytes, offset, 16))
+			return 0;
+		break;
+
 	case FILE_STRING:
 	case FILE_PSTRING:
 	case FILE_SEARCH:
@@ -2179,6 +2193,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			return 0;
 		}
 		return matched;
+	case FILE_GUID:
+		return memcmp(m->value.guid, p->guid, sizeof(p->guid)) == 0;
 	default:
 		file_magerror(ms, "invalid type %d in magiccheck()", m->type);
 		return -1;

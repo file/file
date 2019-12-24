@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.85 2019/03/12 20:43:05 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.86 2019/12/24 19:18:41 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -50,7 +50,7 @@ protected void
 file_mdump(struct magic *m)
 {
 	static const char optyp[] = { FILE_OPS };
-	char tbuf[26];
+	char tbuf[256];
 
 	(void) fprintf(stderr, "%u: %.*s %u", m->lineno,
 	    (m->cont_level & 7) + 1, ">>>>>>>>", m->offset);
@@ -201,6 +201,12 @@ file_mdump(struct magic *m)
 		case FILE_DER:
 			(void) fprintf(stderr, "'%s'", m->value.s);
 			break;
+		case FILE_GUID:
+			(void) file_print_guid(tbuf, sizeof(tbuf),
+			    m->value.guid);
+			(void) fprintf(stderr, "%s", tbuf);
+			break;
+			
 		default:
 			(void) fprintf(stderr, "*bad type %d*", m->type);
 			break;

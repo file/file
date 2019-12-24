@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.108 2019/11/09 00:35:46 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.109 2019/12/24 19:18:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -666,4 +666,34 @@ file_printable(char *buf, size_t bufsiz, const char *str, size_t slen)
 	}
 	*ptr = '\0';
 	return buf;
+}
+
+struct guid {
+	uint32_t data1;
+	uint16_t data2;
+	uint16_t data3;
+	uint8_t data4[8];
+};
+
+protected int
+file_parse_guid(const char *s, uint64_t *guid)
+{
+	struct guid *g = CAST(struct guid *, guid);
+	return sscanf(s,
+	    "%8x-%4hx-%4hx-%2hhx%2hhx-%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx",
+	    &g->data1, &g->data2, &g->data3, &g->data4[0], &g->data4[1],
+	    &g->data4[2], &g->data4[3], &g->data4[4], &g->data4[5],
+	    &g->data4[6], &g->data4[7]) == 11 ? 0 : -1;
+}
+
+protected int
+file_print_guid(char *str, size_t len, const uint64_t *guid)
+{
+	const struct guid *g = CAST(const struct guid *, guid);
+
+	return snprintf(str, len, "%.8X-%.4hX-%.4hX-%.2hhX%.2hhX-"
+	    "%.2hhX%.2hhX%.2hhX%.2hhX%.2hhX%.2hhX",
+	    g->data1, g->data2, g->data3, g->data4[0], g->data4[1],
+	    g->data4[2], g->data4[3], g->data4[4], g->data4[5],
+	    g->data4[6], g->data4[7]);
 }

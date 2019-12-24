@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.284 2019/06/29 22:31:04 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.285 2019/12/24 19:18:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -260,6 +260,7 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("use"),		FILE_USE,		FILE_FMT_NONE },
 	{ XX("clear"),		FILE_CLEAR,		FILE_FMT_NONE },
 	{ XX("der"),		FILE_DER,		FILE_FMT_STR },
+	{ XX("guid"),		FILE_GUID,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -830,6 +831,10 @@ typesize(int type)
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
 		return 8;
+
+	case FILE_GUID:
+		return 16;
+
 	default:
 		return CAST(size_t, ~0);
 	}
@@ -885,6 +890,7 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
+	case FILE_GUID:
 		ts = typesize(m->type);
 		if (ts == CAST(size_t, ~0))
 			abort();
@@ -1077,6 +1083,7 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
 	case FILE_DER:
+	case FILE_GUID:
 		mstart->flag |= BINTEST;
 		break;
 	case FILE_STRING:
@@ -2683,6 +2690,11 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		m->value.d = strtod(*p, &ep);
 		if (errno == 0)
 			*p = ep;
+		return 0;
+	case FILE_GUID:
+		if (file_parse_guid(*p, m->value.guid) == -1)
+			return -1;
+		*p += FILE_GUID_SIZE - 1;
 		return 0;
 	default:
 		errno = 0;

@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.208 2019/06/26 20:31:31 christos Exp $
+ * @(#)$File: file.h,v 1.209 2019/12/24 19:18:41 christos Exp $
  */
 
 #ifndef __file_h__
@@ -137,11 +137,13 @@
 				   or directory */
 #define MAXDESC	64		/* max len of text description/MIME type */
 #define MAXMIME	80		/* max len of text MIME type */
-#define MAXstring 96		/* max len of "string" types */
+#define MAXstring 128		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	14
-#define FILE_MAGICSIZE	344
+#define VERSIONNO	15
+#define FILE_MAGICSIZE	376
+
+#define FILE_GUID_SIZE	sizeof("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
 
 #define	FILE_LOAD	0
 #define FILE_CHECK	1
@@ -168,6 +170,7 @@ union VALUETYPE {
 	uint8_t hq[8];	/* 8 bytes of a fixed-endian "quad" */
 	char s[MAXstring];	/* the search string or regex pattern */
 	unsigned char us[MAXstring];
+	uint64_t guid[2];
 	float f;
 	double d;
 };
@@ -241,7 +244,8 @@ struct magic {
 #define				FILE_USE	46
 #define				FILE_CLEAR	47
 #define				FILE_DER	48
-#define				FILE_NAMES_SIZE	49 /* size of array to contain all names */
+#define				FILE_GUID	49
+#define				FILE_NAMES_SIZE	50 /* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
@@ -462,6 +466,8 @@ protected int file_vprintf(struct magic_set *, const char *, va_list)
     __attribute__((__format__(__printf__, 2, 0)));
 protected int file_separator(struct magic_set *);
 protected size_t file_printedlen(const struct magic_set *);
+protected int file_print_guid(char *, size_t, const uint64_t *);
+protected int file_parse_guid(const char *, uint64_t *);
 protected int file_replace(struct magic_set *, const char *, const char *);
 protected int file_printf(struct magic_set *, const char *, ...)
     __attribute__((__format__(__printf__, 2, 3)));

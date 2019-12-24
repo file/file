@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.74 2019/10/29 01:06:20 christos Exp $
+# $File: animation,v 1.75 2019/12/24 19:18:41 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -856,7 +856,7 @@
 >3	byte			^0x80		(NTSC)
 
 # Microsoft Advanced Streaming Format (ASF) <mpruett@sgi.com>
-0	belong			0x3026b275	Microsoft ASF
+0	guid	75B22630-668E-11CF-A6D9-00AA0062CE6C	Microsoft ASF
 !:mime  video/x-ms-asf
 
 # MNG Video Format, <URL:http://www.libpng.org/pub/mng/spec/>
