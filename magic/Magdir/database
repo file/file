@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.56 2019/06/14 20:12:00 christos Exp $
+# $File: database,v 1.57 2020/01/04 19:38:07 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -645,3 +645,14 @@
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 0	string	//\ <!--\ <mdb:mork:z\ v="	Mozilla Mork database
 >23	string	x		\b, version %.3s
+
+# URL:		https://en.wikipedia.org/wiki/Management_Information_Format
+# Reference:	https://www.dmtf.org/sites/default/files/standards/documents/DSP0005.pdf
+# From:		Joerg Jenderek
+# Note:		only tested with monitor asset reports of Dell Display Manager
+#		skip start like Language=fr|CA|iso8859-1
+0	search/27/C	Start\040Component	DMI Management Information Format
+#!:mime	text/plain
+!:mime	text/x-dmtf-mif
+!:ext	mif
+
