@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.12 2020/01/08 15:36:25 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.13 2020/01/08 15:37:52 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -207,7 +207,9 @@ enable_sandbox_full(void)
 	ALLOW_RULE(pread64);
 	ALLOW_RULE(read);
 	ALLOW_RULE(readlink);
+#ifdef __NR_readlinkat
 	ALLOW_RULE(readlinkat);
+#endif
 	ALLOW_RULE(rt_sigaction);
 	ALLOW_RULE(rt_sigprocmask);
 	ALLOW_RULE(rt_sigreturn);
