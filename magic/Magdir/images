@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.171 2019/11/23 16:19:47 christos Exp $
+# $File: images,v 1.172 2020/01/11 16:35:56 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -523,6 +523,17 @@
 # ImageMagick-7.0.9-2/Magick++/demo/smile_anim.miff
 >>>0	ubyte		!0x7b
 >>>>0	string		>\0		'%-.14s'
+# URL:		https://imagemagick.org/
+# Reference:	https://imagemagick.org/script/magick-vector-graphics.php
+# From:		Joerg Jenderek
+# Note:		all white-spaces between commands are ignored
+0	string		push
+# skip some white spaces
+>5	search/3	graphic-context	ImageMagick Vector Graphic
+# TODO: look for dangerous commands like CVE-2016-3715
+#!:mime	text/plain
+!:mime	image/x-mvg
+!:ext	mvg
 
 # Artisan
 0	long		1123028772	Artisan image data
