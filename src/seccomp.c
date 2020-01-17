@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.13 2020/01/08 15:37:52 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.14 2020/01/17 17:12:58 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -186,8 +186,12 @@ enable_sandbox_full(void)
 	ALLOW_IOCTL_RULE(FIONREAD);
 #endif
 #ifdef TIOCGWINSZ
-	// musl libc may call ioctl TIOCGWINSZ when calling stdout
+	// musl libc may call ioctl TIOCGWINSZ on stdout
 	ALLOW_IOCTL_RULE(TIOCGWINSZ);
+#endif
+#ifdef TCGETS
+	// glibc may call ioctl TCGETS on stdout on physical terminal
+	ALLOW_IOCTL_RULE(TCGETS);
 #endif
 	ALLOW_RULE(lseek);
  	ALLOW_RULE(_llseek);
