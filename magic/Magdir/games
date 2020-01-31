@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.18 2019/11/10 19:19:58 christos Exp $
+# $File: games,v 1.19 2020/01/31 00:15:54 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -303,3 +303,17 @@
 0	string		ESVG
 >4	lelong		0x00160000
 >10	string		TOC\020		Empire Deluxe for DOS saved game
+
+# Sid Meier's Civilization V/VI
+# From: Benjamin Lowry <ben@ben.gmbh>
+0	string	CIV5
+>4	byte	0x08		Sid Meier's Civilization V saved game,
+>>12	regex	[0-9a-z.]+	saved by game version %s
+>4	byte	0x01		Sid Meier's Civilization V replay data,
+>>12	regex	[0-9a-z.]+	saved by game version %s
+
+0	string	CIV6
+>8	byte	0x20		Sid Meier's Civilization VI singleplayer saved game
+>8	byte	0x16		Sid Meier's Civilization VI singleplayer saved configuration
+>8	byte	0x1F		Sid Meier's Civilization VI multiplayer saved game
+>8	byte	0x11		Sid Meier's Civilization VI multiplayer saved configuration
