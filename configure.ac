@@ -217,5 +217,5 @@ if  test "$ac_cv_header_lzma_h$ac_cv_lib_lzma_lzma_stream_decoder" = "yesyes"; t
   AC_DEFINE([XZLIBSUPPORT], 1, [Enable xzlib compression support])
 fi
 
-AC_CONFIG_FILES([Makefile src/Makefile magic/Makefile tests/Makefile doc/Makefile python/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile magic/Makefile tests/Makefile doc/Makefile python/Makefile libmagic.pc])
 AC_OUTPUT

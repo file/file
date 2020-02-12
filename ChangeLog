@@ -1,3 +1,7 @@
+2020-02-12  17:30  Christos Zoulas <christos@zoulas.com>
+
+	* PR/136: Fix static build by adding a libmagic.pc (Fabrice Fontaine)
+
 2019-12-24  14:16  Christos Zoulas <christos@zoulas.com>
 
 	* add guid support
