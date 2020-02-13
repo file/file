@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.288 2020/02/13 17:07:28 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.289 2020/02/13 17:20:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1582,7 +1582,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		if (m->in_op & FILE_OPINDIRECT) {
 			const union VALUETYPE *q = CAST(const union VALUETYPE *,
 			    RCAST(const void *, s + offset + off));
-			switch (cvt_flip(m->in_type, flip)) {
+			int op;
+			switch (op = cvt_flip(m->in_type, flip)) {
 			case FILE_BYTE:
 				if (OFFSET_OOB(nbytes, offset + off, 1))
 					return 0;
@@ -1636,7 +1637,9 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 				off = SEXT(sgn,64,LE64(q));
 				break;
 			default:
-				abort();
+				if ((ms->flags & MAGIC_DEBUG) != 0)
+					fprintf(stderr, "bad op=%d\n", op);
+				return 0;
 			}
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				fprintf(stderr, "indirect offs=%jd\n", off);
@@ -1701,7 +1704,9 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			offset = do_ops(m, SEXT(sgn,64,BE64(p)), off);
 			break;
 		default:
-			abort();
+			if ((ms->flags & MAGIC_DEBUG) != 0)
+				fprintf(stderr, "bad in_type=%d\n", in_type);
+			return 0;
 		}
 
 		if (m->flag & INDIROFFADD) {
