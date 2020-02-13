@@ -1,3 +1,7 @@
+2020-02-13  12:10  Christos Zoulas <christos@zoulas.com>
+
+	* PR/138: Avoid crash with hand-crafted magic file (gockelhahn)
+
 2020-02-12  17:30  Christos Zoulas <christos@zoulas.com>
 
 	* PR/136: Fix static build by adding a libmagic.pc (Fabrice Fontaine)
