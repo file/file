@@ -1,6 +1,7 @@
-2020-02-13  12:20  Christos Zoulas <christos@zoulas.com>
+2020-02-13  13:10  Christos Zoulas <christos@zoulas.com>
 
 	* PR/140: Avoid abort with hand-crafted magic file (gockelhahn)
+	* PR/139  Avoid DoS in printf with hand-crafted magic file (gockelhahn)
 	* PR/138: Avoid crash with hand-crafted magic file (gockelhahn)
 
 2020-02-12  17:30  Christos Zoulas <christos@zoulas.com>
