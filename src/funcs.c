@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.109 2019/12/24 19:18:41 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.110 2020/02/13 18:08:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -48,6 +48,39 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.109 2019/12/24 19:18:41 christos Exp $")
 #define SIZE_MAX	((size_t)~0)
 #endif
 
+protected int
+file_checkfmt(char *msg, size_t mlen, const char *fmt)
+{
+	for (const char *p = fmt; *p; p++) {
+		if (*p != '%')
+			continue;
+		if (*++p == '%')
+			continue;
+		// Skip uninteresting.
+		while (strchr("0.'+- ", *p) != NULL)
+			p++;
+		if (*p == '*') {
+			if (msg)
+				snprintf(msg, mlen, "* not allowed in format");
+			return -1;
+		}
+		int fw = 0;
+		while (*p && isdigit((unsigned char)*p))
+			fw = fw * 10 + (*p++ - '0');
+		if (fw > 1024) {
+			if (msg)
+				snprintf(msg, mlen, "field too wide: %d", fw);
+			return -1;
+		}
+		if (!isalpha((unsigned char)*p)) {
+			if (msg)
+				snprintf(msg, mlen, "bad format char: %c", *p);
+			return -1;
+		}
+	}
+	return 0;
+}
+
 /*
  * Like printf, only we append to a buffer.
  */
@@ -56,12 +89,25 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 {
 	int len;
 	char *buf, *newstr;
+	char tbuf[1024];
 
 	if (ms->event_flags & EVENT_HAD_ERR)
 		return 0;
+
+	if (file_checkfmt(tbuf, sizeof(tbuf), fmt)) {
+		ms->event_flags |= EVENT_HAD_ERR;
+		fprintf(stderr, "Bad magic format (%s)\n", tbuf);
+		return -1;
+	}
+
 	len = vasprintf(&buf, fmt, ap);
-	if (len < 0)
-		goto out;
+	if (len < 0 || (size_t)len > sizeof(tbuf) ||
+	    len + ms->o.blen > 1024 * 1024)
+	{
+		ms->event_flags |= EVENT_HAD_ERR;
+		fprintf(stderr, "Output buffer space exceeded\n");
+		return -1;
+	}
 
 	if (ms->o.buf != NULL) {
 		len = asprintf(&newstr, "%s%s", ms->o.buf, buf);
@@ -72,9 +118,10 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 		buf = newstr;
 	}
 	ms->o.buf = buf;
+	ms->o.blen = len;
 	return 0;
 out:
-	fprintf(stderr, "vasprintf failed (%s)", strerror(errno));
+	fprintf(stderr, "vasprintf failed (%s)\n", strerror(errno));
 	return -1;
 }
 
@@ -105,6 +152,7 @@ file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
 	if (lineno != 0) {
 		free(ms->o.buf);
 		ms->o.buf = NULL;
+		ms->o.blen = 0;
 		(void)file_printf(ms, "line %" SIZE_T_FORMAT "u:", lineno);
 	}
 	if (ms->o.buf && *ms->o.buf)
@@ -396,6 +444,7 @@ file_reset(struct magic_set *ms, int checkloaded)
 	if (ms->o.buf) {
 		free(ms->o.buf);
 		ms->o.buf = NULL;
+		ms->o.blen = 0;
 	}
 	if (ms->o.pbuf) {
 		free(ms->o.pbuf);
@@ -518,7 +567,7 @@ file_check_mem(struct magic_set *ms, unsigned int level)
 protected size_t
 file_printedlen(const struct magic_set *ms)
 {
-	return ms->o.buf == NULL ? 0 : strlen(ms->o.buf);
+	return ms->o.blen;
 }
 
 protected int
@@ -617,6 +666,7 @@ file_push_buffer(struct magic_set *ms)
 	pb->offset = ms->offset;
 
 	ms->o.buf = NULL;
+	ms->o.blen = 0;
 	ms->offset = 0;
 
 	return pb;
@@ -636,6 +686,7 @@ file_pop_buffer(struct magic_set *ms, file_pushbuf_t *pb)
 	rbuf = ms->o.buf;
 
 	ms->o.buf = pb->buf;
+	ms->o.blen = pb->blen;
 	ms->offset = pb->offset;
 
 	free(pb);

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.285 2019/12/24 19:18:41 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.286 2020/02/13 18:08:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -514,6 +514,7 @@ file_ms_alloc(int flags)
 	}
 
 	ms->o.buf = ms->o.pbuf = NULL;
+	ms->o.blen = 0;
 	len = (ms->c.len = 10) * sizeof(*ms->c.li);
 
 	if ((ms->c.li = CAST(struct level_info *, malloc(len))) == NULL)

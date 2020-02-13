@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.209 2019/12/24 19:18:41 christos Exp $
+ * @(#)$File: file.h,v 1.210 2020/02/13 18:08:49 christos Exp $
  */
 
 #ifndef __file_h__
@@ -409,6 +409,7 @@ struct magic_set {
 	} c;
 	struct out {
 		char *buf;		/* Accumulation buffer */
+		size_t blen;		/* Length of buffer */
 		char *pbuf;		/* Printable buffer */
 	} o;
 	uint32_t offset;		/* a copy of m->offset while we */
@@ -465,6 +466,7 @@ protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_vprintf(struct magic_set *, const char *, va_list)
     __attribute__((__format__(__printf__, 2, 0)));
 protected int file_separator(struct magic_set *);
+protected int file_checkfmt(char *, size_t, const char *);
 protected size_t file_printedlen(const struct magic_set *);
 protected int file_print_guid(char *, size_t, const uint64_t *);
 protected int file_parse_guid(const char *, uint64_t *);
@@ -551,6 +553,7 @@ protected void file_regerror(file_regex_t *, int, struct magic_set *);
 
 typedef struct {
 	char *buf;
+	size_t blen;
 	uint32_t offset;
 } file_pushbuf_t;
 
