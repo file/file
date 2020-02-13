@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.184 2019/08/03 11:51:59 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.185 2020/02/13 17:19:53 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -680,7 +680,10 @@ file_err(int e, const char *fmt, ...)
 	fprintf(stderr, "%s: ", file_progname);
 	vfprintf(stderr, fmt, ap);
 	va_end(ap);
-	fprintf(stderr, " (%s)\n", strerror(se));
+	if (se)
+		fprintf(stderr, " (%s)\n", strerror(se));
+	else
+		fputc('\n', stderr);
 	exit(e);
 }
 
@@ -707,7 +710,10 @@ file_warn(const char *fmt, ...)
 	fprintf(stderr, "%s: ", file_progname);
 	vfprintf(stderr, fmt, ap);
 	va_end(ap);
-	fprintf(stderr, " (%s)\n", strerror(se));
+	if (se)
+		fprintf(stderr, " (%s)\n", strerror(se));
+	else
+		fputc('\n', stderr);
 	errno = se;
 }
 
