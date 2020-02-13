@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.287 2019/12/24 19:18:41 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.288 2020/02/13 17:07:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -331,6 +331,13 @@ flush:
 			if (msetoffset(ms, m, &bb, b, offset, cont_level) == -1)
 				goto flush;
 			if (m->flag & OFFADD) {
+				if (cont_level == 0) {
+					if ((ms->flags & MAGIC_DEBUG) != 0)
+						fprintf(stderr,
+						    "direct *zero*"
+						    " cont_level\n");
+					return 0;
+				}
 				ms->offset +=
 				    ms->c.li[cont_level - 1].off;
 			}
@@ -1698,7 +1705,13 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		}
 
 		if (m->flag & INDIROFFADD) {
-			offset += ms->c.li[cont_level-1].off;
+			if (cont_level == 0) {
+				if ((ms->flags & MAGIC_DEBUG) != 0)
+					fprintf(stderr,
+					    "indirect *zero* cont_level\n");
+				return 0;
+			}
+			offset += ms->c.li[cont_level - 1].off;
 			if (offset == 0) {
 				if ((ms->flags & MAGIC_DEBUG) != 0)
 					fprintf(stderr,
