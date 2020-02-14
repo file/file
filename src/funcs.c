@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.110 2020/02/13 18:08:49 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.111 2020/02/14 13:50:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -101,9 +101,7 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 	}
 
 	len = vasprintf(&buf, fmt, ap);
-	if (len < 0 || (size_t)len > sizeof(tbuf) ||
-	    len + ms->o.blen > 1024 * 1024)
-	{
+	if (len < 0 || (size_t)len > 1024 || len + ms->o.blen > 1024 * 1024) {
 		ms->event_flags |= EVENT_HAD_ERR;
 		fprintf(stderr, "Output buffer space exceeded\n");
 		return -1;
