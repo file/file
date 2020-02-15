@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.133 2019/11/15 21:03:14 christos Exp $
+# $File: archive,v 1.134 2020/02/15 19:14:35 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -236,7 +236,8 @@
 !:ext	deb/udeb
 >14	string		-binary	Debian binary package
 !:mime	application/vnd.debian.binary-package
-!:ext	deb/udeb
+# For ipk packager see also https://en.wikipedia.org/wiki/Opkg
+!:ext	deb/udeb/ipk
 # This should not happen
 >14	default		x	Unknown Debian package
 # NL terminated version; for most Debian cases this is 2.0 or 2.1 for splitted
@@ -250,7 +251,16 @@
 >>0	search/0x93e4f	data.tar.	\b, data compression
 # the above line only works if FILE_BYTES_MAX in ../../src/file.h is raised
 # for example like libreoffice-dev-doc_1%3a5.2.7-1+rpi1+deb9u3_all.deb
->>>&0	string		x		%.4s
+>>>&0	string		x		%.2s
+# skip space (0x20 BSD) and slash (0x2f System V) character marking end of name
+>>>&2	ubyte		!0x20
+>>>>&-1	ubyte		!0x2f
+# display 3rd character of file name extension like 2 of bz2 or m of lzma
+>>>>>&-1	ubyte	x		\b%c
+>>>>>>&0	ubyte	!0x20
+>>>>>>>&-1	ubyte	!0x2f
+# display 4th character of file name extension like a of lzma
+>>>>>>>>&-1	ubyte	x		\b%c
 # splitted debian package case
 >68	string		=2.1\n
 # dpkg-1.18.25/dpkg-split/info.c
