@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: virtual,v 1.10 2019/04/19 00:42:27 christos Exp $
+# $File: virtual,v 1.11 2020/02/15 01:19:37 christos Exp $
 # From: James Nobis <quel@quelrod.net>
 # Microsoft hard disk images for:
 # Virtual Server
@@ -63,8 +63,7 @@
 # Checksum
 #>64	ubelong		x		\b, cksum 0x%x
 # universally unique identifier (UUID) to associate a parent with its differencing image
-#>68	ubequad		x		\b, id 0x%16.16llx
-#>76	ubequad		x		\b-%16.16llx
+#>68	guid		x		\b, id %s
 # Saved State: 1~Saved State
 >84	ubyte		!0		\b, State 0x%x
 # Reserved 427 bytes with nils
@@ -161,26 +160,16 @@
 >>0x40000	ulelong		!0x69676572	\b, 2nd region INVALID
 # check in vhdx images for known id and show names instead hexadecimal
 0	name		vhdx-id
-# https://www.windowstricks.in/online-windows-guid-converter
-# 2DC27766-F623-4200-9D64-115E9BFD4A08		BAT GUID
-# 6677C22D23F600429D64115E9BFD4A08		BAT ID
->0	ubequad		=0x6677C22D23F60042
->>8	ubequad		=0x9D64115E9BFD4A08	\b, id BAT
+>0	guid		2DC27766-F623-4200-9D64-115E9BFD4A08	\b, id BAT
 # no BAT id
 >>8	default		x
 >>>0	use		vhdx-id-hex
-# 8B7CA206-4790-4B9A-B8FE-575F050F886E		Metadata region GUID
-# 06A27C8B90479A4BB8FE575F050F886E		Metadata region ID
->0	ubequad		=0x06A27C8B90479A4B
->>8	ubequad		=0xB8FE575F050F886E	\b, id Metadata
+>0	guid		8B7CA206-4790-4B9A-B8FE-575F050F886E	\b, id Metadata
 # no Metadata id
 >>8	default		x
 >>>0	use		vhdx-id-hex
-# 2FA54224-CD1B-4876-B211-5DBED83BF4B8		Virtual Disk Size GUID
-# 2442A52F1BCD7648B2115DBED83BF4B8		Virtual Disk Size ID
 # value "virtual size" can be verified by command `qemu-img info `
->0	ubequad		=0x2442A52F1BCD7648
->>8	ubequad		=0xB2115DBED83BF4B8	\b, id vsize
+>0	guid 		2FA54224-CD1B-4876-B211-5DBED83BF4B8	\b, id vsize
 # no Virtual Disk Size ID
 >>8	default		x
 >>>0	use		vhdx-id-hex
@@ -189,8 +178,7 @@
 >>0	use		vhdx-id-hex
 # in vhdx images show id as hexadecimal
 0	name		vhdx-id-hex
->0	ubequad		x			\b, ID 0x%16.16llx
->8	ubequad		x			\b-%16.16llx
+>0	guid		x			\n, %s
 #
 # libvirt
 # From: Philipp Hahn <hahn@univention.de>
