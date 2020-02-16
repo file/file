@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.210 2020/02/13 18:08:49 christos Exp $
+ * @(#)$File: file.h,v 1.211 2020/02/16 15:52:49 christos Exp $
  */
 
 #ifndef __file_h__
@@ -133,6 +133,7 @@
 #ifndef FILE_BYTES_MAX
 # define FILE_BYTES_MAX (1024 * 1024)	/* how much of the file to look at */
 #endif
+#define FILE_BADSIZE CAST(size_t, ~0ul)
 #define MAXMAGIS 8192		/* max entries in any one magic file
 				   or directory */
 #define MAXDESC	64		/* max len of text description/MIME type */
@@ -514,8 +515,10 @@ protected ssize_t sread(int, void *, size_t, int);
 protected int file_check_mem(struct magic_set *, unsigned int);
 protected int file_looks_utf8(const unsigned char *, size_t, unichar *,
     size_t *);
-protected size_t file_pstring_length_size(const struct magic *);
-protected size_t file_pstring_get_length(const struct magic *, const char *);
+protected size_t file_pstring_length_size(struct magic_set *,
+    const struct magic *);
+protected size_t file_pstring_get_length(struct magic_set *,
+    const struct magic *, const char *);
 protected char * file_printable(char *, size_t, const char *, size_t);
 #ifdef __EMX__
 protected int file_os2_apptype(struct magic_set *, const char *, const void *,

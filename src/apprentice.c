@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.286 2020/02/13 18:08:49 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.287 2020/02/16 15:52:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -837,7 +837,7 @@ typesize(int type)
 		return 16;
 
 	default:
-		return CAST(size_t, ~0);
+		return FILE_BADSIZE;
 	}
 }
 
@@ -893,7 +893,7 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_LEDOUBLE:
 	case FILE_GUID:
 		ts = typesize(m->type);
-		if (ts == CAST(size_t, ~0))
+		if (ts == FILE_BADSIZE)
 			abort();
 		val += ts * MULT;
 		break;
@@ -1526,7 +1526,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 			if (ms->flags & MAGIC_CHECK)
 			    file_magwarn(ms, "cannot happen: m->type=%d\n",
 				    m->type);
-			return ~0U;
+			return FILE_BADSIZE;
 		}
 	}
 	return v;
@@ -2708,7 +2708,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			uint64_t x;
 			const char *q;
 
-			if (ts == CAST(size_t, ~0)) {
+			if (ts == FILE_BADSIZE) {
 				file_magwarn(ms,
 				    "Expected numeric type got `%s'",
 				    type_tbl[m->type].name);
@@ -2905,8 +2905,12 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 out:
 	*p = '\0';
 	m->vallen = CAST(unsigned char, (p - origp));
-	if (m->type == FILE_PSTRING)
-		m->vallen += CAST(unsigned char, file_pstring_length_size(m));
+	if (m->type == FILE_PSTRING) {
+		size_t l =  file_pstring_length_size(ms, m);
+		if (l == FILE_BADSIZE)
+			return NULL;
+		m->vallen += CAST(unsigned char, l);
+	}
 	return s;
 }
 
@@ -2936,7 +2940,7 @@ file_showstr(FILE *fp, const char *s, size_t len)
 	char	c;
 
 	for (;;) {
-		if (len == ~0U) {
+		if (len == FILE_BADSIZE) {
 			c = *s++;
 			if (c == '\0')
 				break;
@@ -3370,7 +3374,7 @@ bs1(struct magic *m)
 }
 
 protected size_t
-file_pstring_length_size(const struct magic *m)
+file_pstring_length_size(struct magic_set *ms, const struct magic *m)
 {
 	switch (m->str_flags & PSTRING_LEN) {
 	case PSTRING_1_LE:
@@ -3382,12 +3386,15 @@ file_pstring_length_size(const struct magic *m)
 	case PSTRING_4_BE:
 		return 4;
 	default:
-		abort();	/* Impossible */
-		return 1;
+		file_error(ms, 0, "corrupt magic file "
+		    "(bad pascal string length %d)",
+		    m->str_flags & PSTRING_LEN);
+		return FILE_BADSIZE;
 	}
 }
 protected size_t
-file_pstring_get_length(const struct magic *m, const char *ss)
+file_pstring_get_length(struct magic_set *ms, const struct magic *m,
+    const char *ss)
 {
 	size_t len = 0;
 	const unsigned char *s = RCAST(const unsigned char *, ss);
@@ -3422,11 +3429,18 @@ file_pstring_get_length(const struct magic *m, const char *ss)
 		len = (s0 << 24) | (s1 << 16) | (s2 << 8) | s3;
 		break;
 	default:
-		abort();	/* Impossible */
+		file_error(ms, 0, "corrupt magic file "
+		    "(bad pascal string length %d)",
+		    m->str_flags & PSTRING_LEN);
+		return FILE_BADSIZE;
 	}
 
-	if (m->str_flags & PSTRING_LENGTH_INCLUDES_ITSELF)
-		len -= file_pstring_length_size(m);
+	if (m->str_flags & PSTRING_LENGTH_INCLUDES_ITSELF) {
+		size_t l = file_pstring_length_size(ms, m);
+		if (l == FILE_BADSIZE)
+			return l;
+		len -= l;
+	}
 
 	return len;
 }

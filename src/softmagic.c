@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.289 2020/02/13 17:20:31 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.290 2020/02/16 15:52:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -706,8 +706,12 @@ mprint(struct magic_set *ms, struct magic *m)
 				sizeof(p->s) - (str - p->s))) == -1)
 				return -1;
 
-			if (m->type == FILE_PSTRING)
-				t += file_pstring_length_size(m);
+			if (m->type == FILE_PSTRING) {
+				size_t l = file_pstring_length_size(ms, m);
+				if (l == FILE_BADSIZE)
+					return -1;
+				t += l;
+			}
 		}
 		break;
 
@@ -898,9 +902,12 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			if (*m->value.s == '\0')
 				p->s[strcspn(p->s, "\r\n")] = '\0';
 			o = CAST(uint32_t, (ms->offset + strlen(p->s)));
-			if (m->type == FILE_PSTRING)
-				o += CAST(uint32_t,
-				    file_pstring_length_size(m));
+			if (m->type == FILE_PSTRING) {
+				size_t l = file_pstring_length_size(ms, m);
+				if (l == FILE_BADSIZE)
+					return -1;
+				o += CAST(uint32_t, l);
+			}
 		}
 		break;
 
@@ -1194,9 +1201,15 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		return 1;
 	}
 	case FILE_PSTRING: {
-		size_t sz = file_pstring_length_size(m);
-		char *ptr1 = p->s, *ptr2 = ptr1 + sz;
-		size_t len = file_pstring_get_length(m, ptr1);
+		char *ptr1, *ptr2;
+		size_t len, sz = file_pstring_length_size(ms, m);
+		if (sz == FILE_BADSIZE)
+			return 0;
+		ptr1 = p->s;
+		ptr2 = ptr1 + sz;
+		len = file_pstring_get_length(ms, m, ptr1);
+		if (len == FILE_BADSIZE)
+			return 0;
 		sz = sizeof(p->s) - sz; /* maximum length of string */
 		if (len >= sz) {
 			/*
