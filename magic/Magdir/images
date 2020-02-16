@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.172 2020/01/11 16:35:56 christos Exp $
+# $File: images,v 1.173 2020/02/16 16:08:44 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -27,6 +27,8 @@
 # and Image Type 1 2 3 9 10 11 32 33
 # and Color Map Entry Size 0 15 16 24 32
 0	ubequad&0x00FeC400000000C0	0
+# Conflict with MPEG sequences.
+!:strength -40
 # Prevent conflicts with CRI ADX.
 >(2.S-2) belong	!0x28632943
 # skip more garbage like *.iso by looking for positive image type
