@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.18 2020/02/17 15:05:06 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.19 2020/02/17 16:01:15 christos Exp $")
 #endif
 #else
 #define SIZE_T_FORMAT "z"
@@ -242,9 +242,12 @@ der_data(char *buf, size_t blen, uint32_t tag, const void *q, uint32_t len)
 	case DER_TAG_IA5_STRING:
 		return snprintf(buf, blen, "%.*s", len, RCAST(const char *, q));
 	case DER_TAG_UTCTIME:
+		if (len < 12)
+			break;
 		return snprintf(buf, blen,
 		    "20%c%c-%c%c-%c%c %c%c:%c%c:%c%c GMT", d[0], d[1], d[2],
 		    d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11]);
+		break;
 	default:
 		break;
 	}
@@ -375,6 +378,8 @@ printtag(uint32_t tag, const void *q, uint32_t len)
 	switch (tag) {
 	case DER_TAG_PRINTABLE_STRING:
 	case DER_TAG_UTF8_STRING:
+	case DER_TAG_IA5_STRING:
+	case DER_TAG_UTCTIME:
 		printf("%.*s\n", len, (const char *)q);
 		return;
 	default:
