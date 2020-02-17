@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.112 2020/02/15 00:59:43 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.113 2020/02/17 17:22:56 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -47,6 +47,14 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.112 2020/02/15 00:59:43 christos Exp $")
 #ifndef SIZE_MAX
 #define SIZE_MAX	((size_t)~0)
 #endif
+
+private void
+file_clearbuf(struct magic_set *ms)
+{
+	free(ms->o.buf);
+	ms->o.buf = NULL;
+	ms->o.blen = 0;
+}
 
 protected int
 file_checkfmt(char *msg, size_t mlen, const char *fmt)
@@ -95,16 +103,18 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 		return 0;
 
 	if (file_checkfmt(tbuf, sizeof(tbuf), fmt)) {
-		ms->event_flags |= EVENT_HAD_ERR;
-		fprintf(stderr, "Bad magic format (%s)\n", tbuf);
+		file_clearbuf(ms);
+		file_error(ms, 0, "Bad magic format (%s)", tbuf);
 		return -1;
 	}
 
 	len = vasprintf(&buf, fmt, ap);
 	if (len < 0 || (size_t)len > 1024 || len + ms->o.blen > 1024 * 1024) {
-		ms->event_flags |= EVENT_HAD_ERR;
-		fprintf(stderr, "Output buffer space exceeded %d+%zu\n", len,
-		    ms->o.blen);
+		size_t blen = ms->o.blen;
+		free(buf);
+		file_clearbuf(ms);
+		file_error(ms, 0, "Output buffer space exceeded %d+%zu", len,
+		    blen);
 		return -1;
 	}
 
@@ -120,7 +130,8 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 	ms->o.blen = len;
 	return 0;
 out:
-	fprintf(stderr, "vasprintf failed (%s)\n", strerror(errno));
+	file_clearbuf(ms);
+	file_error(ms, errno, "vasprintf failed");
 	return -1;
 }
 
@@ -149,9 +160,7 @@ file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
 	if (ms->event_flags & EVENT_HAD_ERR)
 		return;
 	if (lineno != 0) {
-		free(ms->o.buf);
-		ms->o.buf = NULL;
-		ms->o.blen = 0;
+		file_clearbuf(ms);
 		(void)file_printf(ms, "line %" SIZE_T_FORMAT "u:", lineno);
 	}
 	if (ms->o.buf && *ms->o.buf)
@@ -440,11 +449,7 @@ file_reset(struct magic_set *ms, int checkloaded)
 		file_error(ms, 0, "no magic files loaded");
 		return -1;
 	}
-	if (ms->o.buf) {
-		free(ms->o.buf);
-		ms->o.buf = NULL;
-		ms->o.blen = 0;
-	}
+	file_clearbuf(ms);
 	if (ms->o.pbuf) {
 		free(ms->o.pbuf);
 		ms->o.pbuf = NULL;
