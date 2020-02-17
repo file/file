@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.17 2020/02/16 20:45:06 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.18 2020/02/17 15:05:06 christos Exp $")
 #endif
 #else
 #define SIZE_T_FORMAT "z"
@@ -117,12 +117,12 @@ static const char der_type[] = "PC";
 static const char *der__tag[] = {
 	"eoc", "bool", "int", "bit_str", "octet_str",
 	"null", "obj_id", "obj_desc", "ext", "real",
-	"enum", "embed", "utf8_str", "oid", "time",
+	"enum", "embed", "utf8_str", "rel_oid", "time",
 	"res2", "seq", "set", "num_str", "prt_str",
-	"t61_str", "vid_str", "ia5_str", "utc_time",
-	"gen_time", "gr_str", "vis_str", "gen_str",
-	"char_str", "bmp_str", "date", "tod", "datetime",
-	"duration", "oid-iri", "rel-oid-iri",
+	"t61_str", "vid_str", "ia5_str", "utc_time", "gen_time",
+	"gr_str", "vis_str", "gen_str", "univ_str", "char_str",
+	"bmp_str", "date", "tod", "datetime", "duration",
+	"oid-iri", "rel-oid-iri",
 };
 
 #ifdef DEBUG_DER
