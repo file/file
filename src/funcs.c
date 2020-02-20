@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.114 2020/02/20 01:03:49 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.115 2020/02/20 15:50:20 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -48,6 +48,15 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.114 2020/02/20 01:03:49 christos Exp $")
 #define SIZE_MAX	((size_t)~0)
 #endif
 
+protected char *
+file_copystr(char *buf, size_t blen, size_t width, const char *str)
+{
+	if (++width > blen)
+		width = blen;
+	strlcpy(buf, str, width);
+	return buf;
+}
+
 private void
 file_clearbuf(struct magic_set *ms)
 {
@@ -56,7 +65,7 @@ file_clearbuf(struct magic_set *ms)
 	ms->o.blen = 0;
 }
 
-static int
+private int
 file_checkfield(char *msg, size_t mlen, const char *what, const char **pp)
 {
 	const char *p = *pp;

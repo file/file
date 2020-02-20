@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.211 2020/02/16 15:52:49 christos Exp $
+ * @(#)$File: file.h,v 1.212 2020/02/20 15:50:20 christos Exp $
  */
 
 #ifndef __file_h__
@@ -467,6 +467,7 @@ protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_vprintf(struct magic_set *, const char *, va_list)
     __attribute__((__format__(__printf__, 2, 0)));
 protected int file_separator(struct magic_set *);
+protected char *file_copystr(char *, size_t, size_t, const char *);
 protected int file_checkfmt(char *, size_t, const char *);
 protected size_t file_printedlen(const struct magic_set *);
 protected int file_print_guid(char *, size_t, const uint64_t *);

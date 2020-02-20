@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.169 2019/12/17 15:27:27 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.170 2020/02/20 15:50:20 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -568,8 +568,10 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	}
 	if (namesz == 4 && strcmp(RCAST(char *, &nbuf[noff]), "Go") == 0 &&
 	    type == NT_GO_BUILD_ID && descsz < 128) {
-		if (file_printf(ms, ", Go BuildID=%.*s",
-		    CAST(int, descsz), RCAST(char *, &nbuf[doff])) == -1)
+		char buf[256];
+		if (file_printf(ms, ", Go BuildID=%s",
+		    file_copystr(buf, sizeof(buf), descsz,
+		    RCAST(const char *, &nbuf[doff]))) == -1)
 			return -1;
 		return 1;
 	}
@@ -721,6 +723,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     size_t noff, size_t doff, int *flags, size_t size, int clazz)
 {
 #ifdef ELFCORE
+	char buf[256];
 	const char *name = RCAST(const char *, &nbuf[noff]);
 
 	int os_style = -1;
@@ -901,8 +904,10 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 				 */
 				while (cp > cname && isspace(cp[-1]))
 					cp--;
-				if (file_printf(ms, ", from '%.*s'",
-				    CAST(int, cp - cname), cname) == -1)
+				if (file_printf(ms, ", from '%s'",
+				    file_copystr(buf, sizeof(buf),
+				    CAST(size_t, cp - cname),
+				    CAST(const char *, cname))) == -1)
 					return -1;
 				*flags |= FLAGS_DID_CORE;
 				return 1;
@@ -1128,6 +1133,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	Elf64_Nhdr nh64;
 	size_t noff, doff;
 	uint32_t namesz, descsz;
+	char buf[256];
 	unsigned char *nbuf = CAST(unsigned char *, vbuf);
 
 	if (*notecount == 0)
@@ -1255,7 +1261,8 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 		str = RCAST(const char *, &nbuf[doff]);
 		descw = CAST(int, descsz);
 		*flags |= flag;
-		file_printf(ms, ", %s: %.*s", tag, descw, str);
+		file_printf(ms, ", %s: %s", tag,
+		    file_copystr(buf, sizeof(buf), descw, str));
 		return offset;
 	}
 
