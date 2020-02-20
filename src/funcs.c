@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.113 2020/02/17 17:22:56 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.114 2020/02/20 01:03:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -56,6 +56,25 @@ file_clearbuf(struct magic_set *ms)
 	ms->o.blen = 0;
 }
 
+static int
+file_checkfield(char *msg, size_t mlen, const char *what, const char **pp)
+{
+	const char *p = *pp;
+	int fw = 0;
+
+	while (*p && isdigit((unsigned char)*p))
+		fw = fw * 10 + (*p++ - '0');
+
+	*pp = p;
+
+	if (fw < 1024)
+		return 1;
+	if (msg)
+		snprintf(msg, mlen, "field %s too large: %d", what, fw);
+
+	return 0;
+}
+
 protected int
 file_checkfmt(char *msg, size_t mlen, const char *fmt)
 {
@@ -72,14 +91,16 @@ file_checkfmt(char *msg, size_t mlen, const char *fmt)
 				snprintf(msg, mlen, "* not allowed in format");
 			return -1;
 		}
-		int fw = 0;
-		while (*p && isdigit((unsigned char)*p))
-			fw = fw * 10 + (*p++ - '0');
-		if (fw > 1024) {
-			if (msg)
-				snprintf(msg, mlen, "field too wide: %d", fw);
+
+		if (!file_checkfield(msg, mlen, "width", &p))
 			return -1;
+
+		if (*p == '.') {
+			p++;
+			if (!file_checkfield(msg, mlen, "precision", &p))
+				return -1;
 		}
+
 		if (!isalpha((unsigned char)*p)) {
 			if (msg)
 				snprintf(msg, mlen, "bad format char: %c", *p);
@@ -104,7 +125,7 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 
 	if (file_checkfmt(tbuf, sizeof(tbuf), fmt)) {
 		file_clearbuf(ms);
-		file_error(ms, 0, "Bad magic format (%s)", tbuf);
+		file_error(ms, 0, "Bad magic format `%s' (%s)", fmt, tbuf);
 		return -1;
 	}
 
