@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.49 2019/05/27 01:33:32 christos Exp $
+# $File: console,v 1.50 2020/02/25 04:59:19 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -1015,3 +1015,28 @@
 >>>>>>0x5B	byte	0x02
 >>>>>>>0x54	belong	x	Nintendo amiibo NFC dump - amiibo ID: %08X-
 >>>>>>>0x58	belong	x	\b%08X
+
+#------------------------------------------------------------------------------
+# Type: Nintendo Switch XCI (Game Cartridge Image)
+# From: Benjamin Lowry <ben@ben.gmbh>
+# Reference: https://switchbrew.org/wiki/Gamecard_Format
+0x100		string	HEAD
+>0x10D		byte	0xFA	Nintendo Switch cartridge image (XCI), 1GB
+>0x10D		byte	0xF8	Nintendo Switch cartridge image (XCI), 2GB
+>0x10D		byte	0xF0	Nintendo Switch cartridge image (XCI), 4GB
+>0x10D		byte	0xE0	Nintendo Switch cartridge image (XCI), 8GB
+>0x10D		byte	0xE1	Nintendo Switch cartridge image (XCI), 16GB
+>0x10D		byte	0xE2	Nintendo Switch cartridge image (XCI), 32GB
+
+#------------------------------------------------------------------------------
+# Type: Nintendo Switch Executable
+# From: Benjamin Lowry <ben@ben.gmbh>
+# Reference: https://switchbrew.org/wiki/NSO
+0x00		string	NSO0	Nintendo Switch executable (NSO)
+
+#------------------------------------------------------------------------------
+# Type: Nintendo Switch PFS0
+# From: Benjamin Lowry <ben@ben.gmbh>
+# Reference: https://switchbrew.org/wiki/NCA_Format#PFS0
+0x00		string	PFS0	Nintendo Switch partition filesystem (PFS0)
+>0x04		ulelong	x	\b, %d files
