@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.38 2020/02/15 19:12:10 christos Exp $
+# $File: python,v 1.39 2020/03/03 13:45:05 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -90,7 +90,7 @@
 
 # from module.submodule import func1, func2
 0	search/8192	import
->0	regex		\^from[\040\t\f\r\n]+([A-Za-z0-9_]|\\.)+[\040\t\f\r\n]+import.*$	Python script text executable
+>0	regex		\^from[\040\t]+([A-Za-z0-9_]|\\.)+[\040\t]+import.*$	Python script text executable
 !:strength + 15
 !:mime text/x-script.python
 
