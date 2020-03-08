@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.290 2020/03/08 21:44:44 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.291 2020/03/08 21:55:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -137,10 +137,14 @@ private int apprentice_compile(struct magic_set *, struct magic_map *,
 private int check_format_type(const char *, int, const char **);
 private int check_format(struct magic_set *, struct magic *);
 private int get_op(char);
-private int parse_mime(struct magic_set *, struct magic_entry *, const char *);
-private int parse_strength(struct magic_set *, struct magic_entry *, const char *);
-private int parse_apple(struct magic_set *, struct magic_entry *, const char *);
-private int parse_ext(struct magic_set *, struct magic_entry *, const char *);
+private int parse_mime(struct magic_set *, struct magic_entry *, const char *,
+    size_t);
+private int parse_strength(struct magic_set *, struct magic_entry *,
+    const char *, size_t);
+private int parse_apple(struct magic_set *, struct magic_entry *, const char *,
+    size_t);
+private int parse_ext(struct magic_set *, struct magic_entry *, const char *,
+    size_t);
 
 
 private size_t magicsize = sizeof(struct magic);
@@ -150,7 +154,8 @@ private const char usg_hdr[] = "cont\toffset\ttype\topcode\tmask\tvalue\tdesc";
 private struct {
 	const char *name;
 	size_t len;
-	int (*fun)(struct magic_set *, struct magic_entry *, const char *);
+	int (*fun)(struct magic_set *, struct magic_entry *, const char *,
+	    size_t);
 } bang[] = {
 #define	DECLARE_FIELD(name) { # name, sizeof(# name) - 1, parse_ ## name }
 	DECLARE_FIELD(mime),
@@ -1208,7 +1213,8 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 					continue;
 				}
 				if ((*bang[i].fun)(ms, &me,
-				    line + bang[i].len + 2) != 0) {
+				    line + bang[i].len + 2, 
+				    len - bang[i].len - 2) != 0) {
 					(*errs)++;
 					continue;
 				}
@@ -2235,7 +2241,8 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
  * if valid
  */
 private int
-parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line)
+parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line,
+    size_t len __attribute__((__unused__)))
 {
 	const char *l = line;
 	char *el;
@@ -2297,7 +2304,8 @@ goodchar(unsigned char x, const char *extra)
 
 private int
 parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
-    off_t off, size_t len, const char *name, const char *extra, int nt)
+    size_t llen, off_t off, size_t len, const char *name, const char *extra,
+    int nt)
 {
 	size_t i;
 	const char *l = line;
@@ -2322,8 +2330,11 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
 		continue;
 
 	if (i == len && *l) {
-		if (nt)
+		if (nt) {
+			if (len > llen)
+				len = llen;
 			buf[len - 1] = '\0';
+		}
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "%s type `%s' truncated %"
 			    SIZE_T_FORMAT "u", name, line, i);
@@ -2347,11 +2358,12 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
  * magic[index - 1]
  */
 private int
-parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
+parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line,
+    size_t len)
 {
 	struct magic *m = &me->mp[0];
 
-	return parse_extra(ms, me, line,
+	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, apple)),
 	    sizeof(m->apple), "APPLE", "!+-./?", 0);
 }
@@ -2360,11 +2372,12 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line)
  * Parse a comma-separated list of extensions
  */
 private int
-parse_ext(struct magic_set *ms, struct magic_entry *me, const char *line)
+parse_ext(struct magic_set *ms, struct magic_entry *me, const char *line,
+    size_t len)
 {
 	struct magic *m = &me->mp[0];
 
-	return parse_extra(ms, me, line,
+	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, ext)),
 	    sizeof(m->ext), "EXTENSION", ",!+-/@?_$", 0);
 }
@@ -2374,11 +2387,12 @@ parse_ext(struct magic_set *ms, struct magic_entry *me, const char *line)
  * if valid
  */
 private int
-parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line)
+parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line,
+    size_t len)
 {
 	struct magic *m = &me->mp[0];
 
-	return parse_extra(ms, me, line,
+	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, mimetype)),
 	    sizeof(m->mimetype), "MIME", "+-/.$?:{}", 1);
 }
