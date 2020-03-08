@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.86 2019/12/24 19:18:41 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.87 2020/03/08 21:30:06 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -156,32 +156,35 @@ file_mdump(struct magic *m)
 		case FILE_BEDATE:
 		case FILE_MEDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.l, 0, tbuf));
+			    file_fmttime(tbuf, sizeof(tbuf), m->value.l, 0));
 			break;
 		case FILE_LDATE:
 		case FILE_LELDATE:
 		case FILE_BELDATE:
 		case FILE_MELDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.l, FILE_T_LOCAL, tbuf));
+			    file_fmttime(tbuf, sizeof(tbuf), m->value.l,
+			    FILE_T_LOCAL));
 			break;
 		case FILE_QDATE:
 		case FILE_LEQDATE:
 		case FILE_BEQDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.q, 0, tbuf));
+			    file_fmttime(tbuf, sizeof(tbuf), m->value.q, 0));
 			break;
 		case FILE_QLDATE:
 		case FILE_LEQLDATE:
 		case FILE_BEQLDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.q, FILE_T_LOCAL, tbuf));
+			    file_fmttime(tbuf, sizeof(tbuf), m->value.q,
+			    FILE_T_LOCAL));
 			break;
 		case FILE_QWDATE:
 		case FILE_LEQWDATE:
 		case FILE_BEQWDATE:
 			(void)fprintf(stderr, "%s,",
-			    file_fmttime(m->value.q, FILE_T_WINDOWS, tbuf));
+			    file_fmttime(tbuf, sizeof(tbuf), m->value.q,
+			    FILE_T_WINDOWS));
 			break;
 		case FILE_FLOAT:
 		case FILE_BEFLOAT:
@@ -236,7 +239,7 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 }
 
 protected const char *
-file_fmttime(uint64_t v, int flags, char *buf)
+file_fmttime(char *buf, size_t bsize, uint64_t v, int flags)
 {
 	char *pp;
 	time_t t;
@@ -266,5 +269,6 @@ file_fmttime(uint64_t v, int flags, char *buf)
 	pp[strcspn(pp, "\n")] = '\0';
 	return pp;
 out:
-	return strcpy(buf, "*Invalid time*");
+	strlcpy(buf, "*Invalid time*", bsize);
+	return buf;
 }

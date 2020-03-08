@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.212 2020/02/20 15:50:20 christos Exp $
+ * @(#)$File: file.h,v 1.213 2020/03/08 21:30:06 christos Exp $
  */
 
 #ifndef __file_h__
@@ -456,7 +456,7 @@ typedef unsigned long unichar;
 struct stat;
 #define FILE_T_LOCAL	1
 #define FILE_T_WINDOWS	2
-protected const char *file_fmttime(uint64_t, int, char *);
+protected const char *file_fmttime(char *, size_t, uint64_t, int);
 protected struct magic_set *file_ms_alloc(int);
 protected void file_ms_free(struct magic_set *);
 protected int file_default(struct magic_set *, size_t);
