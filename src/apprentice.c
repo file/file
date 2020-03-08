@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.289 2020/03/08 21:39:33 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.290 2020/03/08 21:44:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1388,9 +1388,10 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 			}
 			if (files >= maxfiles) {
 				size_t mlen;
+				char **nfilearr;
 				maxfiles = (maxfiles + 1) * 2;
 				mlen = maxfiles * sizeof(*filearr);
-				if ((filearr = CAST(char **,
+				if ((nfilearr = CAST(char **,
 				    realloc(filearr, mlen))) == NULL) {
 					file_oomem(ms, mlen);
 					free(mfn);
@@ -1398,6 +1399,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 					errs++;
 					goto out;
 				}
+				filearr = nfilearr;
 			}
 			filearr[files++] = mfn;
 		}
@@ -1409,6 +1411,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 				free(filearr[i]);
 			}
 			free(filearr);
+			filearr = NULL;
 		}
 	} else
 		load_1(ms, action, fn, &errs, mset);
@@ -1443,6 +1446,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 	}
 
 out:
+	free(filearr);
 	for (j = 0; j < MAGIC_SETS; j++)
 		magic_entry_free(mset[j].me, mset[j].count);
 
