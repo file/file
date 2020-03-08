@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.288 2020/03/08 21:33:26 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.289 2020/03/08 21:39:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -597,9 +597,10 @@ mlist_free(struct mlist *mlist)
 	if (mlist == NULL)
 		return;
 
-	for (ml = mlist->next; ml != mlist; ml = next) {
+	for (ml = mlist->next; ml != mlist;) {
 		next = ml->next;
 		mlist_free_one(ml);
+		ml = next;
 	}
 	mlist_free_one(mlist);
 }
@@ -658,7 +659,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
 	char *p, *mfn;
 	int fileerr, errs = -1;
-	size_t i;
+	size_t i, j;
 
 	(void)file_reset(ms, 0);
 
@@ -676,9 +677,9 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		mlist_free(ms->mlist[i]);
 		if ((ms->mlist[i] = mlist_alloc()) == NULL) {
 			file_oomem(ms, sizeof(*ms->mlist[i]));
-			while (i-- > 0) {
-				mlist_free(ms->mlist[i]);
-				ms->mlist[i] = NULL;
+			for (j = 0; j < i; j++) {
+				mlist_free(ms->mlist[j]);
+				ms->mlist[j] = NULL;
 			}
 			free(mfn);
 			return -1;
