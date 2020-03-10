@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.292 2020/03/10 00:55:11 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.293 2020/03/10 01:03:02 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2336,15 +2336,13 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
 	}
 
 	EATAB;
-	for (i = 0; *l && i < len && goodchar(*l, extra); buf[i++] = *l++)
+	for (i = 0; *l && i < llen && i < len && goodchar(*l, extra);
+	    buf[i++] = *l++)
 		continue;
 
 	if (i == len && *l) {
-		if (nt) {
-			if (len > llen)
-				len = llen;
+		if (nt)
 			buf[len - 1] = '\0';
-		}
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "%s type `%s' truncated %"
 			    SIZE_T_FORMAT "u", name, line, i);
