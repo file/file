@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.134 2020/02/15 19:14:35 christos Exp $
+# $File: archive,v 1.135 2020/03/10 01:19:13 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1152,53 +1152,75 @@
 >>>62	string	base			Database file
 
 #   OpenDocument formats (for OpenOffice 2.x / StarOffice >= 8)
+#   URL: http://fileformats.archiveteam.org/wiki/OpenDocument
 #    https://lists.oasis-open.org/archives/office/200505/msg00006.html
 #    (mimetype contains "application/vnd.oasis.opendocument.<SUBTYPE>")
 >>50	string	vnd.oasis.opendocument.	OpenDocument
 >>>73	string	text
 >>>>77	byte	!0x2d			Text
 !:mime	application/vnd.oasis.opendocument.text
+!:ext	odt
 >>>>77	string	-template		Text Template
 !:mime	application/vnd.oasis.opendocument.text-template
+!:ext	ott
 >>>>77	string	-web			HTML Document Template
 !:mime	application/vnd.oasis.opendocument.text-web
+!:ext	oth
 >>>>77	string	-master			Master Document
 !:mime	application/vnd.oasis.opendocument.text-master
+!:ext	odm
 >>>73	string	graphics
 >>>>81	byte	!0x2d			Drawing
 !:mime	application/vnd.oasis.opendocument.graphics
->>>>81	string	-template		Template
+!:ext	odg
+>>>>81	string	-template		Drawing Template
 !:mime	application/vnd.oasis.opendocument.graphics-template
+!:ext	otg
 >>>73	string	presentation
 >>>>85	byte	!0x2d			Presentation
 !:mime	application/vnd.oasis.opendocument.presentation
->>>>85	string	-template		Template
+!:ext	odp
+>>>>85	string	-template		Presentation Template
 !:mime	application/vnd.oasis.opendocument.presentation-template
+!:ext	otp
 >>>73	string	spreadsheet
 >>>>84	byte	!0x2d			Spreadsheet
 !:mime	application/vnd.oasis.opendocument.spreadsheet
->>>>84	string	-template		Template
+!:ext	ods
+>>>>84	string	-template		Spreadsheet Template
 !:mime	application/vnd.oasis.opendocument.spreadsheet-template
+!:ext	ots
 >>>73	string	chart
 >>>>78	byte	!0x2d			Chart
 !:mime	application/vnd.oasis.opendocument.chart
->>>>78	string	-template		Template
+!:ext	odc
+>>>>78	string	-template		Chart Template
 !:mime	application/vnd.oasis.opendocument.chart-template
+!:ext	otc
 >>>73	string	formula
 >>>>80	byte	!0x2d			Formula
 !:mime	application/vnd.oasis.opendocument.formula
->>>>80	string	-template		Template
+!:ext	odf
+>>>>80	string	-template		Formula Template
 !:mime	application/vnd.oasis.opendocument.formula-template
+!:ext	otf
+# https://www.loc.gov/preservation/digital/formats/fdd/fdd000441.shtml
 >>>73	string	database		Database
 !:mime	application/vnd.oasis.opendocument.database
+!:ext	odb
 # Valid for LibreOffice Base 6.0.1.1 at least
 >>>73	string	base 			Database
-!:mime	application/vnd.oasis.opendocument.base
+# https://bugs.documentfoundation.org/show_bug.cgi?id=45854
+!:mime	application/vnd.oasis.opendocument.database
+#!:mime	application/vnd.oasis.opendocument.base
+!:ext	odb
 >>>73	string	image
 >>>>78	byte	!0x2d			Image
 !:mime	application/vnd.oasis.opendocument.image
->>>>78	string	-template		Template
+!:ext	odi
+>>>>78	string	-template		Image Template
 !:mime	application/vnd.oasis.opendocument.image-template
+!:ext	oti
 
 #  EPUB (OEBPS) books using OCF (OEBPS Container Format)
 #    https://www.idpf.org/ocf/ocf1.0/download/ocf10.htm, section 4.
