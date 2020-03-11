@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.293 2020/03/10 01:03:02 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.294 2020/03/11 12:04:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -468,6 +468,9 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 
 	for (i = 0; i < MAGIC_SETS; i++) {
 		if (add_mlist(ms->mlist[i], map, i) == -1) {
+			/* failed to add to any list, free explicitly */
+			if (i == 0)
+				apprentice_unmap(map);
 			mlist_free_all(ms);
 			file_oomem(ms, sizeof(*ml));
 			return -1;
