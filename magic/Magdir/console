@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.52 2020/03/20 17:18:54 christos Exp $
+# $File: console,v 1.53 2020/03/20 17:19:41 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -1064,3 +1064,36 @@
 # Reference: https://switchbrew.org/wiki/NCA_Format#PFS0
 0x00		string	PFS0	Nintendo Switch partition filesystem (PFS0)
 >0x04		ulelong	x	\b, %d files
+
+#------------------------------------------------------------------------------
+# amiibo: file(1) magic for Nintendo Badge Arcade files.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://github.com/GerbilSoft/rom-properties/issues/92
+# - https://github.com/CaitSith2/BadgeArcadeTool
+# - https://github.com/TheMachinumps/Advanced-badge-editor
+
+# PRBS: Individual badge and/or mega badge.
+0		string	PRBS
+>0x44		byte	>0x20	Nintendo Badge Arcade
+>>0xB8		ulelong	<2
+>>>0xBC		ulelong	<2	badge:
+>>>0xBC		ulelong	>1	Mega Badge
+>>>>0xB8	ulelong	x	(%ux
+>>>>0xBC	ulelong	x	\b%u):
+>>0xB8		ulelong	>1	Mega Badge
+>>>0xB8		ulelong	x	(%ux
+>>>0xBC		ulelong	x	\b%u):
+>0x44		string	x	"%s"
+>0x3C		ulelong	x	\b, badge ID: %u
+>0x74		byte	>0x20
+>>0x74		string	x	\b, set: "%s"
+>0xA8		ulelong	!0xFFFFFFFF
+>>0xA8		ulelong	x	\b, launch title ID: %08X
+>>0xA4		ulelong	x	\b-%08X
+
+# CABS: Badge set.
+0	string	CABS
+>0x2C	byte	>0x20	Nintendo Badge Arcade badge set:
+>>0x2C	string	x	"%.48s"
+>>0x24	ulelong	x	\b, set ID: %u
