@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.178 2020/03/20 17:24:46 christos Exp $
+# $File: images,v 1.179 2020/03/20 17:27:31 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1975,17 +1975,15 @@
 >12	belong	0x04030201			(big-endian)
 >>16	use	\^khronos-ktx-endian-header
 
-# Type: Khronos KTX texture.
+# Type: Khronos KTX2 texture.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
-# Based on draft18.
+# Based on draft19.
 # Reference: http://github.khronos.org/KTX-Specification/
 
 # Supercompression enum.
 0	name	khronos-ktx2-supercompression
 >0	lelong	1	Basis Universal
->0	lelong	2	zlib
->0	lelong	3	zstd
->0	lelong	4	LZMA
+>0	lelong	2	Zstandard
 
 # Vulkan format identifier.
 # NOTE: Formats prohibited from KTX2 are commented out.
