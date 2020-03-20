@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.51 2020/03/20 17:18:01 christos Exp $
+# $File: console,v 1.52 2020/03/20 17:18:54 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -668,6 +668,29 @@
 # see https://zerosoft.zophar.net/ips.php
 0	string	PATCH			IPS patch file
 !:ext	ips
+
+# BPS Patch Files - from: David Korth <gerbilsoft@gerbilsoft.com>
+# Reference: https://www.romhacking.net/documents/746/
+0	string	BPS1			BPS patch file
+!:ext	bps
+
+# APS Patch Files - from: David Korth <gerbilsoft@gerbilsoft.com>
+# Reference: https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
+0	string	APS10			APS patch file
+!:ext	aps
+>5	byte	0			\b, simple patch
+>5	byte	1			\b, N64-specific patch for
+>>58	byte	x			N%c
+>>59	byte	x			\b%c
+>>60	byte	x			\b%c
+>7	byte	!0x20
+# FIXME: /T specifier isn't working with a fixed-length string.
+>>7	string	x			\b: "%.50s"
+
+# UPS Patch Files - from: David Korth <gerbilsoft@gerbilsoft.com>
+# Reference: http://fileformats.archiveteam.org/wiki/UPS_(binary_patch_format)
+0	string	UPS1			UPS patch file
+!:ext	ups
 
 # Playstations Patch Files from: From: Thomas Klausner <tk@giga.or.at>
 0	string	PPF30			Playstation Patch File version 3.0
