@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.173 2020/02/16 16:08:44 christos Exp $
+# $File: images,v 1.174 2020/03/20 17:22:41 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2089,72 +2089,87 @@
 
 # PVR3 pixel formats.
 0	name		pvr3-pixel-format
->4	ulelong	0
->>0	ulelong	0	PVRTC 2bpp RGB
->>0	ulelong	1	PVRTC 2bpp RGBA
->>0	ulelong	2	PVRTC 4bpp RGB
->>0	ulelong	3	PVRTC 4bpp RGBA
->>0	ulelong	4	PVRTC-II 2bpp
->>0	ulelong	5	PVRTC-II 4bpp
->>0	ulelong	6	ETC1
->>0	ulelong	7	DXT1
->>0	ulelong	8	DXT2
->>0	ulelong	9	DXT3
->>0	ulelong	10	DXT4
->>0	ulelong	11	DXT5
->>0	ulelong	12	BC4
->>0	ulelong	13	BC5
->>0	ulelong	14	BC6
->>0	ulelong	15	BC7
->>0	ulelong	16	UYVY
->>0	ulelong	17	YUY2
->>0	ulelong	18	BW1bpp
->>0	ulelong	19	R9G9B9E5 Shared Exponent
->>0	ulelong	20	RGBG8888
->>0	ulelong	21	GRGB8888
->>0	ulelong	22	ETC2 RGB
->>0	ulelong	23	ETC2 RGBA
->>0	ulelong	24	ETC2 RGB A1
->>0	ulelong	25	EAC R11
->>0	ulelong	26	EAC RG11
->>0	ulelong	27	ASTC_4x4
->>0	ulelong	28	ASTC_5x4
->>0	ulelong	29	ASTC_5x5
->>0	ulelong	30	ASTC_6x5
->>0	ulelong	31	ASTC_6x6
->>0	ulelong	32	ASTC_8x5
->>0	ulelong	33	ASTC_8x6
->>0	ulelong	34	ASTC_8x8
->>0	ulelong	35	ASTC_10x5
->>0	ulelong	36	ASTC_10x6
->>0	ulelong	37	ASTC_10x8
->>0	ulelong	38	ASTC_10x10
->>0	ulelong	39	ASTC_12x10
->>0	ulelong	40	ASTC_12x12
->>0	ulelong	41	ASTC_3x3x3
->>0	ulelong	42	ASTC_4x3x3
->>0	ulelong	43	ASTC_4x4x3
->>0	ulelong	44	ASTC_4x4x4
->>0	ulelong	45	ASTC_5x4x4
->>0	ulelong	46	ASTC_5x5x4
->>0	ulelong	47	ASTC_5x5x5
->>0	ulelong	48	ASTC_6x5x5
->>0	ulelong	49	ASTC_6x6x5
->>0	ulelong	50	ASTC_6x6x6
->4	ulelong	!0
->>0	byte	!0	%c
->>1	byte	!0	\b%c
->>2	byte	!0	\b%c
->>3	byte	!0	\b%c
+>0	ulelong	0	PVRTC 2bpp RGB
+>0	ulelong	1	PVRTC 2bpp RGBA
+>0	ulelong	2	PVRTC 4bpp RGB
+>0	ulelong	3	PVRTC 4bpp RGBA
+>0	ulelong	4	PVRTC-II 2bpp
+>0	ulelong	5	PVRTC-II 4bpp
+>0	ulelong	6	ETC1
+>0	ulelong	7	DXT1
+>0	ulelong	8	DXT2
+>0	ulelong	9	DXT3
+>0	ulelong	10	DXT4
+>0	ulelong	11	DXT5
+>0	ulelong	12	BC4
+>0	ulelong	13	BC5
+>0	ulelong	14	BC6
+>0	ulelong	15	BC7
+>0	ulelong	16	UYVY
+>0	ulelong	17	YUY2
+>0	ulelong	18	BW1bpp
+>0	ulelong	19	R9G9B9E5 Shared Exponent
+>0	ulelong	20	RGBG8888
+>0	ulelong	21	GRGB8888
+>0	ulelong	22	ETC2 RGB
+>0	ulelong	23	ETC2 RGBA
+>0	ulelong	24	ETC2 RGB A1
+>0	ulelong	25	EAC R11
+>0	ulelong	26	EAC RG11
+>0	ulelong	27	ASTC_4x4
+>0	ulelong	28	ASTC_5x4
+>0	ulelong	29	ASTC_5x5
+>0	ulelong	30	ASTC_6x5
+>0	ulelong	31	ASTC_6x6
+>0	ulelong	32	ASTC_8x5
+>0	ulelong	33	ASTC_8x6
+>0	ulelong	34	ASTC_8x8
+>0	ulelong	35	ASTC_10x5
+>0	ulelong	36	ASTC_10x6
+>0	ulelong	37	ASTC_10x8
+>0	ulelong	38	ASTC_10x10
+>0	ulelong	39	ASTC_12x10
+>0	ulelong	40	ASTC_12x12
+>0	ulelong	41	ASTC_3x3x3
+>0	ulelong	42	ASTC_4x3x3
+>0	ulelong	43	ASTC_4x4x3
+>0	ulelong	44	ASTC_4x4x4
+>0	ulelong	45	ASTC_5x4x4
+>0	ulelong	46	ASTC_5x5x4
+>0	ulelong	47	ASTC_5x5x5
+>0	ulelong	48	ASTC_6x5x5
+>0	ulelong	49	ASTC_6x6x5
+>0	ulelong	50	ASTC_6x6x6
 
-0	string		PVR\x03			PVR 3.0 texture:
+0	string		PVR\x03			PowerVR 3.0 texture:
 >0x18	ulelong		x	%u x
 >0x1C	ulelong		x	%u
 >0x20	ulelong		>1	x %u
 >0x08	byte		x	\b,
->0x08	use	pvr3-pixel-format
+>0x0C	ulelong		0
+>>0x08	use	pvr3-pixel-format
+>0x0C	ulelong		!0
+>>0x08	byte	!0	%c
+>>0x09	byte	!0	\b%c
+>>0x0A	byte	!0	\b%c
+>>0x0B	byte	!0	\b%c
 >0x10	ulelong		1	\b, sRGB
 >0x04	ulelong&0x02	0x02	\b, premultiplied alpha
+
+0	string		\x03RVP			PowerVR 3.0 texture: BE,
+>0x18	ubelong		x	%u x
+>0x1C	ubelong		x	%u
+>0x20	ubelong		>1	x %u
+>0x08	byte		x	\b,
+>0x0C	ubelong		0
+>>0x08	use	pvr3-pixel-format
+>0x0C	ubelong		!0
+>>0x0B	byte	!0	%c
+>>0x0A	byte	!0	\b%c
+>>0x09	byte	!0	\b%c
+>>0x08	byte	!0	\b%c
+>0x10	ubelong		1	\b, sRGB
+>0x04	ubelong&0x02	0x02	\b, premultiplied alpha
 
 # Type: Microsoft Xbox XPR0 texture.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
