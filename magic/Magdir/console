@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.50 2020/02/25 04:59:19 christos Exp $
+# $File: console,v 1.51 2020/03/20 17:18:01 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -667,6 +667,7 @@
 # IPS Patch Files from: From: Thomas Klausner <tk@giga.or.at>
 # see https://zerosoft.zophar.net/ips.php
 0	string	PATCH			IPS patch file
+!:ext	ips
 
 # Playstations Patch Files from: From: Thomas Klausner <tk@giga.or.at>
 0	string	PPF30			Playstation Patch File version 3.0
