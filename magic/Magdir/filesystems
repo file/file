@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.131 2019/11/15 23:49:38 christos Exp $
+# $File: filesystems,v 1.132 2020/03/20 17:25:19 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2182,7 +2182,7 @@
 >0	use	squashfs
 
 0	string	hsqs	Squashfs filesystem, little endian,
->0	use	^squashfs
+>0	use	\^squashfs
 
 # AFS Dump Magic
 # From: Ty Sarna <tsarna@sarna.org>
