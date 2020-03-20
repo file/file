@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.174 2020/03/20 17:22:41 christos Exp $
+# $File: images,v 1.175 2020/03/20 17:23:07 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2150,9 +2150,13 @@
 >>0x08	use	pvr3-pixel-format
 >0x0C	ulelong		!0
 >>0x08	byte	!0	%c
+>>>0x0C	byte	!0	\b%u
 >>0x09	byte	!0	\b%c
+>>>0x0D	byte	!0	\b%u
 >>0x0A	byte	!0	\b%c
+>>>0x0E	byte	!0	\b%u
 >>0x0B	byte	!0	\b%c
+>>>0x0F	byte	!0	\b%u
 >0x10	ulelong		1	\b, sRGB
 >0x04	ulelong&0x02	0x02	\b, premultiplied alpha
 
@@ -2165,9 +2169,13 @@
 >>0x08	use	pvr3-pixel-format
 >0x0C	ubelong		!0
 >>0x0B	byte	!0	%c
+>>>0x0F	byte	!0	\b%u
 >>0x0A	byte	!0	\b%c
+>>>0x0E	byte	!0	\b%u
 >>0x09	byte	!0	\b%c
+>>>0x0D	byte	!0	\b%u
 >>0x08	byte	!0	\b%c
+>>>0x0C	byte	!0	\b%u
 >0x10	ubelong		1	\b, sRGB
 >0x04	ubelong&0x02	0x02	\b, premultiplied alpha
 
