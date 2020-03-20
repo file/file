@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.175 2020/03/20 17:23:07 christos Exp $
+# $File: images,v 1.176 2020/03/20 17:23:50 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1907,12 +1907,10 @@
 >0	lelong	0x190A	\b, LUMINANCE_ALPHA
 >0	lelong	0x80E1	\b, BGR
 >0	lelong	0x80E2	\b, BGRA
->0	lelong	0x83A0	\b, RGB_S3TC
->0	lelong	0x83A1	\b, RGB4_S3TC
->0	lelong	0x83A2	\b, RGBA_S3TC
->0	lelong	0x83A3	\b, RGBA4_S3TC
->0	lelong	0x83A4	\b, RGBA_DXT5_S3TC
->0	lelong	0x83A5	\b, RGBA4_DXT5_S3TC
+>0	lelong	0x83F0	\b, COMPRESSED_RGB_S3TC_DXT1_EXT
+>0	lelong	0x83F1	\b, COMPRESSED_RGBA_S3TC_DXT1_EXT
+>0	lelong	0x83F2	\b, COMPRESSED_RGBA_S3TC_DXT3_EXT
+>0	lelong	0x83F3	\b, COMPRESSED_RGBA_S3TC_DXT5_EXT
 >0	lelong	0x8D64	\b, ETC1_RGB8_OES
 >0	lelong	0x9270	\b, COMPRESSED_R11_EAC
 >0	lelong	0x9271	\b, COMPRESSED_SIGNED_R11_EAC
