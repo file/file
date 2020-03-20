@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.19 2020/03/20 16:09:41 christos Exp $
+# $File: pgp,v 1.20 2020/03/20 16:15:05 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 # see https://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
@@ -195,7 +195,7 @@
 >13	string	\x0b\xf9
 >399	byte	0xd2			.
 
-# 3072b RSA encrypted data
+# 4096b RSA encrypted data
 
 0	string	\x85\x02\x0c\x03	PGP RSA encrypted session key -
 >4	belong	x			keyid: %08X
@@ -212,13 +212,13 @@
 >13	string	\x0f\xf9
 >527	byte	0xd2			.
 
-# 4096b RSA encrypted data
+# 8192b RSA encrypted data
 
 0	string	\x85\x04\x0c\x03	PGP RSA encrypted session key -
 >4	belong	x			keyid: %08X
 >8	belong	x			%08X
->12	byte	0x01			RSA (Encrypt or Sign) 8129b
->12	byte	0x02			RSA Encrypt-Only 8129b
+>12	byte	0x01			RSA (Encrypt or Sign) 8192b
+>12	byte	0x02			RSA Encrypt-Only 8192b
 >13	string	\x20\x00
 >13	string	\x1f\xff
 >13	string	\x1f\xfe
