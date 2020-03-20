@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.214 2020/03/19 20:41:11 christos Exp $
+ * @(#)$File: file.h,v 1.215 2020/03/20 17:33:29 christos Exp $
  */
 
 #ifndef __file_h__
@@ -131,8 +131,6 @@
 #endif
 
 #define FILE_BADSIZE CAST(size_t, ~0ul)
-#define MAXMAGIS 8192		/* max entries in any one magic file
-				   or directory */
 #define MAXDESC	64		/* max len of text description/MIME type */
 #define MAXMIME	80		/* max len of text MIME type */
 #define MAXstring 128		/* max len of "string" types */
