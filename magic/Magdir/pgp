@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.18 2019/12/21 16:33:28 christos Exp $
+# $File: pgp,v 1.19 2020/03/20 16:09:41 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 # see https://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
@@ -147,8 +147,8 @@
 # 1024b RSA encrypted data
 
 0	string	\x84\x8c\x03		PGP RSA encrypted session key -
->3	lelong	x			keyid: %X
->7	lelong	x			%X
+>3	belong	x			keyid: %08X
+>7	belong	x			%08X
 >11	byte	0x01			RSA (Encrypt or Sign) 1024b
 >11	byte	0x02			RSA Encrypt-Only 1024b
 >12	string	\x04\x00
@@ -164,8 +164,8 @@
 # 2048b RSA encrypted data
 
 0	string	\x85\x01\x0c\x03	PGP RSA encrypted session key -
->4	lelong	x			keyid: %X
->8	lelong	x			%X
+>4	belong	x			keyid: %08X
+>8	belong	x			%08X
 >12	byte	0x01			RSA (Encrypt or Sign) 2048b
 >12	byte	0x02			RSA Encrypt-Only 2048b
 >13	string	\x08\x00
@@ -181,8 +181,8 @@
 # 3072b RSA encrypted data
 
 0	string	\x85\x01\x8c\x03	PGP RSA encrypted session key -
->4	lelong	x			keyid: %X
->8	lelong	x			%X
+>4	belong	x			keyid: %08X
+>8	belong	x			%08X
 >12	byte	0x01			RSA (Encrypt or Sign) 3072b
 >12	byte	0x02			RSA Encrypt-Only 3072b
 >13	string	\x0c\x00
@@ -198,8 +198,8 @@
 # 3072b RSA encrypted data
 
 0	string	\x85\x02\x0c\x03	PGP RSA encrypted session key -
->4	lelong	x			keyid: %X
->8	lelong	x			%X
+>4	belong	x			keyid: %08X
+>8	belong	x			%08X
 >12	byte	0x01			RSA (Encrypt or Sign) 4096b
 >12	byte	0x02			RSA Encrypt-Only 4096b
 >13	string	\x10\x00
@@ -215,8 +215,8 @@
 # 4096b RSA encrypted data
 
 0	string	\x85\x04\x0c\x03	PGP RSA encrypted session key -
->4	lelong	x			keyid: %X
->8	lelong	x			%X
+>4	belong	x			keyid: %08X
+>8	belong	x			%08X
 >12	byte	0x01			RSA (Encrypt or Sign) 8129b
 >12	byte	0x02			RSA Encrypt-Only 8129b
 >13	string	\x20\x00
