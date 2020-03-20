@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.20 2020/03/20 16:15:05 christos Exp $
+# $File: pgp,v 1.21 2020/03/20 17:11:05 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 # see https://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
@@ -228,6 +228,51 @@
 >13	string	\x1f\xfa
 >13	string	\x1f\xf9
 >1039	byte	0xd2			.
+
+# 1024b Elgamal encrypted data
+
+0	string	\x85\x01\x0e\x03	PGP Elgamal encrypted session key -
+>4	belong	x			keyid: %08X
+>8	belong	x			%08X
+>12	byte	0x10			Elgamal Encrypt-Only 1024b.
+>13	string	\x04\x00
+>13	string	\x03\xff
+>13	string	\x03\xfe
+>13	string	\x03\xfd
+>13	string	\x03\xfc
+>13	string	\x03\xfb
+>13	string	\x03\xfa
+>13	string	\x03\xf9
+
+# 2048b Elgamal encrypted data
+
+0	string	\x85\x02\x0e\x03	PGP Elgamal encrypted session key -
+>4	belong	x			keyid: %08X
+>8	belong	x			%08X
+>12	byte	0x10			Elgamal Encrypt-Only 2048b.
+>13	string	\x08\x00
+>13	string	\x07\xff
+>13	string	\x07\xfe
+>13	string	\x07\xfd
+>13	string	\x07\xfc
+>13	string	\x07\xfb
+>13	string	\x07\xfa
+>13	string	\x07\xf9
+
+# 3072b Elgamal encrypted data
+
+0	string	\x85\x03\x0e\x03	PGP Elgamal encrypted session key -
+>4	belong	x			keyid: %08X
+>8	belong	x			%08X
+>12	byte	0x10			Elgamal Encrypt-Only 3072b.
+>13	string	\x0c\x00
+>13	string	\x0b\xff
+>13	string	\x0b\xfe
+>13	string	\x0b\xfd
+>13	string	\x0b\xfc
+>13	string	\x0b\xfb
+>13	string	\x0b\xfa
+>13	string	\x0b\xf9
 
 # crypto algo mapper
 
