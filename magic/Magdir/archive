@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.135 2020/03/10 01:19:13 christos Exp $
+# $File: archive,v 1.136 2020/03/21 20:18:11 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1134,22 +1134,49 @@
 
 #   OpenOffice formats (for OpenOffice 1.x / StarOffice 6/7)
 #    (mimetype contains "application/vnd.sun.xml.<SUBTYPE>")
+# URL:		https://en.wikipedia.org/wiki/OpenOffice.org_XML
+# reference:	http://fileformats.archiveteam.org/wiki/OpenOffice.org_XML
 >>50	string	vnd.sun.xml.		OpenOffice.org 1.x
 >>>62	string	writer			Writer
 >>>>68	byte	!0x2e			document
+!:mime	application/vnd.sun.xml.writer
+!:ext	sxw
 >>>>68	string	.template		template
+!:mime	application/vnd.sun.xml.writer.template
+!:ext	stw
+>>>>68	string	.web			Web template
+!:mime	application/vnd.sun.xml.writer.web
+!:ext	stw
 >>>>68	string	.global			global document
+!:mime	application/vnd.sun.xml.writer.global
+!:ext	sxg
 >>>62	string	calc			Calc
 >>>>66	byte	!0x2e			spreadsheet
+!:mime	application/vnd.sun.xml.calc
+!:ext	sxc
 >>>>66	string	.template		template
+!:mime	application/vnd.sun.xml.calc.template
+!:ext	stc
 >>>62	string	draw			Draw
 >>>>66	byte	!0x2e			document
+!:mime	application/vnd.sun.xml.draw
+!:ext	sxd
 >>>>66	string	.template		template
+!:mime	application/vnd.sun.xml.draw.template
+!:ext	std
 >>>62	string	impress			Impress
 >>>>69	byte	!0x2e			presentation
+!:mime	application/vnd.sun.xml.impress
+!:ext	sxi
 >>>>69	string	.template		template
+!:mime	application/vnd.sun.xml.impress.template
+!:ext	sti
 >>>62	string	math			Math document
+!:mime	application/vnd.sun.xml.math
+!:ext	sxm
 >>>62	string	base			Database file
+!:mime	application/vnd.sun.xml.base
+!:ext	sdb
 
 #   OpenDocument formats (for OpenOffice 2.x / StarOffice >= 8)
 #   URL: http://fileformats.archiveteam.org/wiki/OpenDocument
