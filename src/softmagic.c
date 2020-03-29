@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.291 2020/03/08 21:30:06 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.292 2020/03/29 21:35:15 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -803,6 +803,27 @@ mprint(struct magic_set *ms, struct magic *m)
 		t = ms->offset + sizeof(double);
   		break;
 
+	case FILE_BEVARINT:
+	case FILE_LEVARINT: {
+		size_t l;
+		uintmax_t uv = file_varint2uintmax_t(p->us, m->type, &l);
+		switch (check_fmt(ms, desc)) {
+		case -1:
+			return -1;
+		case 1:
+			(void)snprintf(buf, sizeof(buf), "%ju", uv);
+			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
+				return -1;
+			break;
+		default:
+			if (file_printf(ms, F(ms, desc, "%ju"), uv) == -1)
+				return -1;
+			break;
+		}
+		t = ms->offset + l;
+  		break;
+	}
+
 	case FILE_SEARCH:
 	case FILE_REGEX: {
 		char *cp;
@@ -949,6 +970,15 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
   	case FILE_LEDOUBLE:
 		o = CAST(int32_t, (ms->offset + sizeof(double)));
 		break;
+		
+  	case FILE_BEVARINT:
+  	case FILE_LEVARINT: {
+		union VALUETYPE *p = &ms->ms_value;
+		size_t l;
+		(void)file_varint2uintmax_t(p->us, m->type, &l);
+		o = CAST(int32_t, (ms->offset + l));
+		break;
+	}
 
 	case FILE_REGEX:
 		if ((m->str_flags & REGEX_OFFSET_START) != 0)
@@ -1062,6 +1092,10 @@ cvt_flip(int type, int flip)
 		return FILE_LEDOUBLE;
 	case FILE_LEDOUBLE:
 		return FILE_BEDOUBLE;
+	case FILE_BEVARINT:
+		return FILE_LEVARINT;
+	case FILE_LEVARINT:
+		return FILE_BEVARINT;
 	default:
 		return type;
 	}
@@ -1311,6 +1345,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_USE:
 	case FILE_DER:
 	case FILE_GUID:
+	case FILE_BEVARINT:
+	case FILE_LEVARINT:
 		return 1;
 	default:
 		file_magerror(ms, "invalid type %d in mconvert()", m->type);
@@ -1789,6 +1825,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
+	case FILE_BEVARINT:
+	case FILE_LEVARINT:
 		if (OFFSET_OOB(nbytes, offset, 8))
 			return 0;
 		break;
@@ -2023,6 +2061,11 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		v = p->q;
 		break;
 
+	case FILE_BEVARINT:
+	case FILE_LEVARINT:
+		v = file_varint2uintmax_t(p->us, m->type, NULL);
+		break;
+
 	case FILE_FLOAT:
 	case FILE_BEFLOAT:
 	case FILE_LEFLOAT:
@@ -2226,7 +2269,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		}
 		return matched;
 	case FILE_GUID:
-		return memcmp(m->value.guid, p->guid, sizeof(p->guid)) == 0;
+		v = memcmp(m->value.guid, p->guid, sizeof(p->guid));
+		break;
 	default:
 		file_magerror(ms, "invalid type %d in magiccheck()", m->type);
 		return -1;
