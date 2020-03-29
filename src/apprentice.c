@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.295 2020/03/11 21:53:27 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.296 2020/03/29 22:01:58 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1544,6 +1544,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_USE:
 		case FILE_CLEAR:
 		case FILE_DER:
+		case FILE_GUID:
 			break;
 		default:
 			if (ms->flags & MAGIC_CHECK)
