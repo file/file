@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.154 2020/04/09 19:05:44 christos Exp $
+# $File: Makefile.am,v 1.155 2020/04/09 19:14:01 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -79,6 +79,7 @@ $(MAGIC_FRAGMENT_DIR)/dataone \
 $(MAGIC_FRAGMENT_DIR)/dbpf \
 $(MAGIC_FRAGMENT_DIR)/der \
 $(MAGIC_FRAGMENT_DIR)/diamond \
+$(MAGIC_FRAGMENT_DIR)/dif \
 $(MAGIC_FRAGMENT_DIR)/diff \
 $(MAGIC_FRAGMENT_DIR)/digital \
 $(MAGIC_FRAGMENT_DIR)/dolby \
