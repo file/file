@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.153 2020/04/05 22:18:34 christos Exp $
+# $File: Makefile.am,v 1.154 2020/04/09 19:05:44 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -287,6 +287,7 @@ $(MAGIC_FRAGMENT_DIR)/troff \
 $(MAGIC_FRAGMENT_DIR)/tuxedo \
 $(MAGIC_FRAGMENT_DIR)/typeset \
 $(MAGIC_FRAGMENT_DIR)/unicode \
+$(MAGIC_FRAGMENT_DIR)/unisig \
 $(MAGIC_FRAGMENT_DIR)/unknown \
 $(MAGIC_FRAGMENT_DIR)/uterus \
 $(MAGIC_FRAGMENT_DIR)/uuencode \
