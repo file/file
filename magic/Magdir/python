@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.39 2020/03/03 13:45:05 christos Exp $
+# $File: python,v 1.40 2020/04/22 23:13:24 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -143,3 +143,11 @@
 >>&0	regex	 \\(([[:alpha:]*_,\ ]){0,255}\\):$ Python script text executable
 !:strength + 15
 !:mime text/x-script.python
+
+# https://numpy.org/devdocs/reference/generated/numpy.lib.format.html
+0	string	\223NUMPY		NumPy data file
+!:mime  application/x-numpy-data
+>6	byte	x			\b, version %d
+>7	byte	x			\b.%d
+#>8	leshort	x			\b, header length=%d
+>10	string	x			\b, description %s
