@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.76 2019/12/26 02:07:53 christos Exp $
+# $File: animation,v 1.77 2020/04/26 15:23:43 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -159,7 +159,7 @@
 >8	string		mqt		\b, Sony / Mobile QuickTime (.MQV) US Pat 7,477,830
 !:mime	video/quicktime
 >8	string		MSNV		\b, MPEG-4 (.MP4) for SonyPSP
-!:mime	audio/mp4
+!:mime	video/mp4
 >8	string		NDAS		\b, MP4 v2 [ISO 14496-14] Nero Digital AAC Audio
 !:mime	audio/mp4
 >8	string		NDSC		\b, MPEG-4 (.MP4) Nero Cinema Profile
