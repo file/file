@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.170 2020/02/20 15:50:20 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.171 2020/04/26 17:43:13 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1646,6 +1646,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		switch (xph_type) {
 		case PT_DYNAMIC:
 			doread = 1;
+			linking_style = "dynamically";
 			break;
 		case PT_NOTE:
 			if (sh_num)	/* Did this through section headers */
@@ -1660,7 +1661,6 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			}
 			/*FALLTHROUGH*/
 		case PT_INTERP:
-			linking_style = "dynamically";
 			doread = 1;
 			break;
 		default:
