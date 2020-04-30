@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.69 2019/12/21 16:29:16 christos Exp $
+# $File: linux,v 1.70 2020/04/30 00:33:36 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -241,6 +241,15 @@
 # raspian "kernel7.img", Vu+ Ultimo4K "kernel_auto.bin"
 !:ext	img/bin
 36	belong	0x016f2818	Linux kernel ARM boot executable zImage (big-endian)
+
+############################################################################
+# Linux AARCH64 kernel image
+0x38    lelong  0x644d5241  Linux kernel ARM64 boot executable Image
+>0x18   lelong  ^1          \b, little-endian
+>0x18   lelong  &1          \b, big-endian
+>0x18   lelong  &2          \b, 4K pages
+>0x18   lelong  &4          \b, 16K pages
+>0x18   lelong  &6          \b, 32K pages
 
 ############################################################################
 # Linux 8086 executable
