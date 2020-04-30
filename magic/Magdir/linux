@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.70 2020/04/30 00:33:36 christos Exp $
+# $File: linux,v 1.71 2020/04/30 00:35:53 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -234,13 +234,20 @@
 >>&0 string \x80\x00\x20\x00\x00\x00\x00\x00 Z990 32bit kernel
 >>&0 string \x80\x00\x00\x00\x00\x00\x00\x00 Z900 32bit kernel
 
+############################################################################
 # Linux ARM compressed kernel image
 # From: Kevin Cernekee <cernekee@gmail.com>
 # Update: Joerg Jenderek
-36	lelong	0x016f2818	Linux kernel ARM boot executable zImage (little-endian)
+0x24	lelong	0x016f2818	Linux kernel ARM boot executable zImage
+# There are three posible situations: LE, BE with LE bootloader and pure BE.
+# In order to aid telling these apart a new endian flag was added. In order
+# to support kernels before the flag and BE with LE bootloader was added we'll
+# do a negative check against the BE variant of the flag when we see a LE magic.
+>0x30	belong	!0x04030201	(little-endian)
+>0x30	belong	0x04030201	(big-endian)
 # raspian "kernel7.img", Vu+ Ultimo4K "kernel_auto.bin"
 !:ext	img/bin
-36	belong	0x016f2818	Linux kernel ARM boot executable zImage (big-endian)
+0x24	belong	0x016f2818	Linux kernel ARM boot executable zImage (big-endian)
 
 ############################################################################
 # Linux AARCH64 kernel image
