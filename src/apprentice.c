@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.296 2020/03/29 22:01:58 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.297 2020/05/09 18:57:15 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -267,6 +267,7 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("clear"),		FILE_CLEAR,		FILE_FMT_NONE },
 	{ XX("der"),		FILE_DER,		FILE_FMT_STR },
 	{ XX("guid"),		FILE_GUID,		FILE_FMT_STR },
+	{ XX("offset"),		FILE_OFFSET,		FILE_FMT_QUAD },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -849,6 +850,7 @@ typesize(int type)
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
+	case FILE_OFFSET:
 		return 8;
 
 	case FILE_GUID:
@@ -910,6 +912,7 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
 	case FILE_GUID:
+	case FILE_OFFSET:
 		ts = typesize(m->type);
 		if (ts == FILE_BADSIZE)
 			abort();
@@ -1103,6 +1106,7 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_LEDOUBLE:
 	case FILE_DER:
 	case FILE_GUID:
+	case FILE_OFFSET:
 		mstart->flag |= BINTEST;
 		break;
 	case FILE_STRING:
@@ -1530,6 +1534,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_DOUBLE:
 		case FILE_BEDOUBLE:
 		case FILE_LEDOUBLE:
+		case FILE_OFFSET:
 			v = CAST(int64_t, v);
 			break;
 		case FILE_STRING:
@@ -1952,6 +1957,10 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 	}
 
 	/* get offset, then skip over it */
+	if (*l == '-') {
+		++l;            /* step over */
+		m->flag |= OFFNEGATIVE;
+	}
 	m->offset = CAST(int32_t, strtol(l, &t, 0));
         if (l == t) {
 		if (ms->flags & MAGIC_CHECK)

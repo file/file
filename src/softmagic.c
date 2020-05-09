@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.293 2020/03/29 21:58:33 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.294 2020/05/09 18:57:15 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -649,6 +649,7 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_QUAD:
   	case FILE_BEQUAD:
   	case FILE_LEQUAD:
+	case FILE_OFFSET:
 		v = file_signextend(ms, m, p->q);
 		switch (check_fmt(ms, desc)) {
 		case -1:
@@ -968,6 +969,7 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	case FILE_CLEAR:
 	case FILE_DEFAULT:
 	case FILE_INDIRECT:
+	case FILE_OFFSET:
 		o = ms->offset;
 		break;
 
@@ -1191,6 +1193,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_QDATE:
 	case FILE_QLDATE:
 	case FILE_QWDATE:
+	case FILE_OFFSET:
 		if (cvt_64(p, m) == -1)
 			goto out;
 		return 1;
@@ -1437,6 +1440,12 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		}
 	}
 
+	if (type == FILE_OFFSET) {
+		(void)memset(p, '\0', sizeof(*p));
+		p->q = offset;
+		return 0;
+	}
+
 	if (offset >= nbytes) {
 		(void)memset(p, '\0', sizeof(*p));
 		return 0;
@@ -1501,7 +1510,7 @@ private int
 msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
     const struct buffer *b, size_t o, unsigned int cont_level)
 {
-	if (m->offset < 0) {
+	if (m->flag & OFFNEGATIVE) {
 		if (cont_level > 0) {
 			if (m->flag & (OFFADD|INDIROFFADD))
 				goto normal;
@@ -1519,7 +1528,7 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 			    "u at level %u", o, cont_level);
 			return -1;
 		}
-		if (CAST(size_t, -m->offset) > b->elen)
+		if (CAST(size_t, m->offset) > b->elen)
 			return -1;
 		buffer_init(bb, -1, NULL, b->ebuf, b->elen);
 		ms->eoffset = ms->offset = CAST(int32_t, b->elen + m->offset);
@@ -2020,6 +2029,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	case FILE_QWDATE:
 	case FILE_BEQWDATE:
 	case FILE_LEQWDATE:
+	case FILE_OFFSET:
 		v = p->q;
 		break;
 

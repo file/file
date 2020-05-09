@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.215 2020/03/20 17:33:29 christos Exp $
+ * @(#)$File: file.h,v 1.216 2020/05/09 18:57:15 christos Exp $
  */
 
 #ifndef __file_h__
@@ -136,7 +136,7 @@
 #define MAXstring 128		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	15
+#define VERSIONNO	16
 #define FILE_MAGICSIZE	376
 
 #define FILE_GUID_SIZE	sizeof("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
@@ -183,6 +183,7 @@ struct magic {
 #define BINTEST		0x20	/* test is for a binary type (set only
 				   for top-level tests) */
 #define TEXTTEST	0x40	/* for passing to file_softmagic */
+#define OFFNEGATIVE	0x80	/* relative to the end of file */
 
 	uint8_t factor;
 
@@ -241,7 +242,8 @@ struct magic {
 #define				FILE_CLEAR	47
 #define				FILE_DER	48
 #define				FILE_GUID	49
-#define				FILE_NAMES_SIZE	50 /* size of array to contain all names */
+#define				FILE_OFFSET	50
+#define				FILE_NAMES_SIZE	51 /* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
