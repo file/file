@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.77 2019/10/08 20:25:13 christos Exp $
+# $File: compress,v 1.78 2020/05/09 19:34:26 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -61,7 +61,9 @@
 !:mime	application/gzip
 >>>0	use	gzip-info
 # size of the original (uncompressed) input data modulo 2^32
+>>-0	offset		>48
 >>>-4	ulelong		x		\b, original size modulo 2^32 %u
+>>-0	offset		<48		\b, truncated
 # gzipped TAR or VirtualBox extension package
 #!:mime	application/x-compressed-tar
 #!:mime	application/x-virtualbox-vbox-extpack
@@ -84,7 +86,9 @@
 !:ext	gz/tgz/tpz/zabw/svgz
 >>0	use	gzip-info
 # size of the original (uncompressed) input data modulo 2^32
->>-4	ulelong		x		\b, original size modulo 2^32 %u
+>>-0	offset		>48
+>>>-4	ulelong		x		\b, original size modulo 2^32 %u
+>>-0	offset		<48		\b, truncated
 #	display information of gzip compressed files
 0	name				gzip-info
 #>2	byte		x		THIS iS GZIP
