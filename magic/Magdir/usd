@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: usd,v 1.1 2020/05/21 16:22:47 christos Exp $
+# $File: usd,v 1.2 2020/05/21 22:17:00 christos Exp $
 #
 # From Christian Schmidbauer
 #
@@ -15,7 +15,7 @@
 !:ext	usd
 
 # USD ASCII file
-0	string		\#usda\040	USD ASCII
+0	string		#usda\040	USD ASCII
 >6	string		x		\b, version %s
 !:mime	text/plain
 !:ext	usd
