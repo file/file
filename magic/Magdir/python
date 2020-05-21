@@ -7,7 +7,8 @@
 # From: David Necas <yeti@physics.muni.cz>
 # often the module starts with a multiline string
 0	string/t	"""	Python script text executable
-# MAGIC as specified in Python/import.c (1.0 to 3.7)
+# MAGIC as specified in Python/import.c (1.0 to 3.8)
+# recent versions specify in Lib/importlib/_bootstrap_external.py
 # two bytes of magic followed by "\r\n" in little endian order
 0	belong		0x02099900	python 1.0 byte-compiled
 !:mime text/x-bytecode.python
@@ -72,6 +73,8 @@
 0	belong		0x330d0d0a	python 3.6 byte-compiled
 !:mime text/x-bytecode.python
 0	belong		0x420d0d0a	python 3.7 byte-compiled
+!:mime text/x-bytecode.python
+0	belong		0x550d0d0a	python 3.8 byte-compiled
 !:mime text/x-bytecode.python
 
 0	search/1/w	#!\ /usr/bin/python	Python script text executable
