@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.179 2020/03/20 17:27:31 christos Exp $
+# $File: images,v 1.180 2020/05/29 22:25:35 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1385,6 +1385,8 @@
 # From: Tom Hilinski <tom.hilinski@comcast.net>
 # https://www.unidata.ucar.edu/packages/netcdf/
 0	string	CDF\001			NetCDF Data Format data
+# 64-bit offset netcdf Classic https://www.unidata.ucar.edu/software/netcdf/docs/file_format_specifications
+0	string	CDF\002			NetCDF Data Format data (64-bit offset)
 
 #-----------------------------------------------------------------------
 # Hierarchical Data Format, used to facilitate scientific data exchange
