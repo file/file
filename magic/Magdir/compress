@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.78 2020/05/09 19:34:26 christos Exp $
+# $File: compress,v 1.79 2020/05/30 23:53:04 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -396,3 +396,8 @@
 0	string	bvx1	lzfse compressed, uncompressed tables
 0	string	bvx2	lzfse compressed, compressed tables
 0	string	bvxn	lzfse encoded, lzvn compressed
+
+# pcxLib.exe compression program
+# http://www.shikadi.net/moddingwiki/PCX_Library
+0	string/b	pcxLib
+>0x0A	string/b	Copyright\020(c)\020Genus\020Microprogramming,\020Inc.	pcxLib compressed
