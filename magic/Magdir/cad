@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.22 2020/02/15 01:19:37 christos Exp $
+# $File: cad,v 1.23 2020/05/30 23:58:07 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -229,7 +229,11 @@
 !:mime image/vnd.dwg
 0	string	AC1024	DWG AutoDesk AutoCAD 2010/2011/2012
 !:mime image/vnd.dwg
-0	string	AC1027	DWG AutoDesk AutoCAD 2013/2014
+0	string	AC1027	DWG AutoDesk AutoCAD 2013-2017
+!:mime image/vnd.dwg
+
+# From GNU LibreDWG
+0	string	AC1032	DWG AutoDesk AutoCAD 2018/2019
 !:mime image/vnd.dwg
 
 # KOMPAS 2D drawing from ASCON
