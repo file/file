@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.180 2020/05/29 22:25:35 christos Exp $
+# $File: images,v 1.181 2020/05/30 23:49:03 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2548,3 +2548,22 @@
 # https://github.com/dropbox/lepton
 0	belong&0xfffff0ff	0xcf84005a	Lepton image file
 >2	byte			x		(version %d)
+
+# Apple QuickTake camera raw images
+# https://en.wikipedia.org/wiki/Apple_QuickTake
+# dcraw can decode them
+0	name quicktake
+>4	belong	8
+>>544	beshort	x	\b, %dx
+>>546	beshort	x	\b%d
+>4	belong	4
+>>546	beshort	x	\b, %dx
+>>544	beshort	x	\b%d
+
+0	string	qktk	Apple QuickTake 100 Raw Image
+>0	use quicktake
+
+0	string	qktn
+>4	byte	0	Apple QuickTake 150 Raw Image
+>4	byte	>0	Apple QuickTake 200 Raw Image
+>0	use quicktake
