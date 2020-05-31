@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.216 2020/05/09 18:57:15 christos Exp $
+ * @(#)$File: file.h,v 1.217 2020/05/31 00:11:06 christos Exp $
  */
 
 #ifndef __file_h__
@@ -36,7 +36,15 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+
 #ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS
 #endif
@@ -44,28 +52,33 @@
 #define __STDC_FORMAT_MACROS
 #endif
 
-#ifdef WIN32
-  #ifdef _WIN64
-    #define SIZE_T_FORMAT "I64"
-  #else
-    #define SIZE_T_FORMAT ""
-  #endif
-  #define INT64_T_FORMAT "I64"
-  #define INTMAX_T_FORMAT "I64"
+#ifdef _WIN32
+# ifdef PRIu32
+#  ifdef _WIN64
+#   define SIZE_T_FORMAT PRIu64
+#  else
+#   define SIZE_T_FORMAT PRiu32
+#  endif
+#  define INT64_T_FORMAT PRii64
+#  define INTMAX_T_FORMAT PRIiMAX
+# else
+#  ifdef _WIN64
+#   define SIZE_T_FORMAT "I64"
+#  else
+#   define SIZE_T_FORMAT ""
+#  endif
+#  define INT64_T_FORMAT "I64"
+#  define INTMAX_T_FORMAT "I64"
+# endif
 #else
-  #define SIZE_T_FORMAT "z"
-  #define INT64_T_FORMAT "ll"
-  #define INTMAX_T_FORMAT "j"
-#endif
-#include <stdint.h>
+# define SIZE_T_FORMAT "z"
+# define INT64_T_FORMAT "ll"
+# define INTMAX_T_FORMAT "j"
 #endif
 
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 #include <errno.h>
 #include <fcntl.h>	/* For open and flags */
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
 #include <regex.h>
 #include <time.h>
 #include <sys/types.h>

@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.126 2019/12/24 17:38:12 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.127 2020/05/31 00:11:06 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -51,7 +51,7 @@ FILE_RCSID("@(#)$File: compress.c,v 1.126 2019/12/24 17:38:12 christos Exp $")
 #ifndef HAVE_SIG_T
 typedef void (*sig_t)(int);
 #endif /* HAVE_SIG_T */
-#if !defined(__MINGW32__) && !defined(WIN32)
+#if !defined(__MINGW32__) && !defined(WIN32) && !defined(__MINGW64__)
 #include <sys/ioctl.h>
 #endif
 #ifdef HAVE_SYS_WAIT_H
