@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.217 2020/05/31 00:11:06 christos Exp $
+ * @(#)$File: file.h,v 1.218 2020/06/02 10:17:46 christos Exp $
  */
 
 #ifndef __file_h__
@@ -57,9 +57,9 @@
 #  ifdef _WIN64
 #   define SIZE_T_FORMAT PRIu64
 #  else
-#   define SIZE_T_FORMAT PRiu32
+#   define SIZE_T_FORMAT PRIu32
 #  endif
-#  define INT64_T_FORMAT PRii64
+#  define INT64_T_FORMAT PRIi64
 #  define INTMAX_T_FORMAT PRIiMAX
 # else
 #  ifdef _WIN64
