@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: python,v 1.41 2020/05/21 22:18:43 christos Exp $
+# $File: python,v 1.42 2020/06/04 00:22:50 christos Exp $
 # python:  file(1) magic for python
 #
 # Outlook puts """ too for urgent messages
@@ -216,16 +216,13 @@
 0	belong		0x610d0d0a	python 3.9 byte-compiled
 !:mime text/x-bytecode.python
 
-0	search/1/w	#!\ /usr/bin/python	Python script text executable
+0	search/1/w	#!\040/usr/bin/python	Python script text executable
 !:strength + 15
 !:mime text/x-script.python
-0	search/1/w	#!\ /usr/local/bin/python	Python script text executable
+0	search/1/w	#!\040/usr/local/bin/python	Python script text executable
 !:strength + 15
 !:mime text/x-script.python
-0	search/1	#!/usr/bin/env\ python	Python script text executable
-!:strength + 15
-!:mime text/x-script.python
-0	search/10	#!\ /usr/bin/env\ python	Python script text executable
+0	search/10/w	#!\040/usr/bin/env\040python	Python script text executable
 !:strength + 15
 !:mime text/x-script.python
 
