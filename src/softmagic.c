@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.296 2020/06/04 00:21:46 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.297 2020/06/04 23:18:45 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1902,7 +1902,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 }
 
 private uint64_t
-file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
+file_strncmp(const char *s1, const char *s2, size_t len, size_t maxlen,
+    uint32_t flags)
 {
 	/*
 	 * Convert the source args to unsigned here so that (1) the
@@ -1914,7 +1915,7 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 	const unsigned char *b = RCAST(const unsigned char *, s2);
 	uint32_t ws = flags & (STRING_COMPACT_WHITESPACE |
 	    STRING_COMPACT_OPTIONAL_WHITESPACE);
-	const unsigned char *eb = b + (ws ? strlen(s2) : len);
+	const unsigned char *eb = b + (ws ? maxlen : len);
 	uint64_t v;
 
 	/*
@@ -1972,7 +1973,8 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 }
 
 private uint64_t
-file_strncmp16(const char *a, const char *b, size_t len, uint32_t flags)
+file_strncmp16(const char *a, const char *b, size_t len, size_t maxlen,
+    uint32_t flags)
 {
 	/*
 	 * XXX - The 16-bit string compare probably needs to be done
@@ -1980,7 +1982,7 @@ file_strncmp16(const char *a, const char *b, size_t len, uint32_t flags)
 	 * At the moment, I am unsure.
 	 */
 	flags = 0;
-	return file_strncmp(a, b, len, flags);
+	return file_strncmp(a, b, len, maxlen, flags);
 }
 
 private int
@@ -2110,14 +2112,14 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	case FILE_PSTRING:
 		l = 0;
 		v = file_strncmp(m->value.s, p->s, CAST(size_t, m->vallen),
-		    m->str_flags);
+		    sizeof(p->s), m->str_flags);
 		break;
 
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
 		l = 0;
 		v = file_strncmp16(m->value.s, p->s, CAST(size_t, m->vallen),
-		    m->str_flags);
+		    sizeof(p->s), m->str_flags);
 		break;
 
 	case FILE_SEARCH: { /* search ms->search.s for the string m->value.s */
@@ -2152,7 +2154,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 				return 0;
 
 			v = file_strncmp(m->value.s, ms->search.s + idx, slen,
-			    m->str_flags);
+			    ms->search.s_len - idx, m->str_flags);
 			if (v == 0) {	/* found match */
 				ms->search.offset += idx;
 				ms->search.rm_len = ms->search.s_len - idx;
