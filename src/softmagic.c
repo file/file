@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.295 2020/05/09 19:31:29 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.296 2020/06/04 00:21:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1912,7 +1912,9 @@ file_strncmp(const char *s1, const char *s2, size_t len, uint32_t flags)
 	 */
 	const unsigned char *a = RCAST(const unsigned char *, s1);
 	const unsigned char *b = RCAST(const unsigned char *, s2);
-	const unsigned char *eb = b + len;
+	uint32_t ws = flags & (STRING_COMPACT_WHITESPACE |
+	    STRING_COMPACT_OPTIONAL_WHITESPACE);
+	const unsigned char *eb = b + (ws ? strlen(s2) : len);
 	uint64_t v;
 
 	/*
