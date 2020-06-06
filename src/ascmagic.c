@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.105 2019/06/08 20:49:14 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.106 2020/06/06 15:33:29 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -164,8 +164,11 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 			goto done;
 		}
 	}
-	if ((ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION)))
-		return 0;
+
+	if ((ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION))) {
+		rv = 0;
+		goto done;
+	}
 
 	/* Now try to discover other details about the file. */
 	for (i = 0; i < ulen; i++) {
