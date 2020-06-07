@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.186 2020/03/19 20:41:11 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.187 2020/06/07 17:38:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -83,7 +83,8 @@ int getopt_long(int, char * const *, const char *,
     "Usage: %s [-" FILE_FLAGS "] [--apple] [--extension] [--mime-encoding]\n" \
     "            [--mime-type] [-e <testname>] [-F <separator>] " \
     " [-f <namefile>]\n" \
-    "            [-m <magicfiles>] [-P <parameter=value>] <file> ...\n" \
+    "            [-m <magicfiles>] [-P <parameter=value>] [--exclude-quiet]\n" \
+    "            <file> ...\n" \
     "       %s -C [-m <magicfiles>]\n" \
     "       %s [--help]\n"
 
@@ -100,6 +101,7 @@ private const struct option long_options[] = {
 #define OPT_EXTENSIONS		3
 #define OPT_MIME_TYPE		4
 #define OPT_MIME_ENCODING	5
+#define OPT_EXCLUDE_QUIET	6
 #define OPT(shortname, longname, opt, def, doc)		\
     {longname, opt, NULL, shortname},
 #define OPT_LONGONLY(longname, opt, def, doc, id)	\
@@ -246,13 +248,15 @@ main(int argc, char *argv[])
 			flags |= MAGIC_ERROR;
 			break;
 		case 'e':
+		case OPT_EXCLUDE_QUIET:
 			for (i = 0; i < __arraycount(nv); i++)
 				if (strcmp(nv[i].name, optarg) == 0)
 					break;
 
-			if (i == __arraycount(nv))
-				errflg++;
-			else
+			if (i == __arraycount(nv)) {
+				if (c != OPT_EXCLUDE_QUIET)
+					errflg++;
+			} else
 				flags |= nv[i].value;
 			break;
 
