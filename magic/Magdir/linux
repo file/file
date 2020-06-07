@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.71 2020/04/30 00:35:53 christos Exp $
+# $File: linux,v 1.72 2020/06/07 21:56:13 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -311,11 +311,11 @@
 #
 # LVM1
 #
-0x0	string	HM\001		LVM1 (Linux Logical Volume Manager), version 1
->0x12c	string	>\0		, System ID: %s
+0x0	string/b	HM\001		LVM1 (Linux Logical Volume Manager), version 1
+>0x12c	string/b	>\0		, System ID: %s
 
-0x0	string	HM\002		LVM1 (Linux Logical Volume Manager), version 2
->0x12c	string	>\0		, System ID: %s
+0x0	string/b	HM\002		LVM1 (Linux Logical Volume Manager), version 2
+>0x12c	string/b	>\0		, System ID: %s
 
 #  LVM2
 #
@@ -323,56 +323,31 @@
 # of the disk... (from _find_labeller in lib/label/label.c of LVM2)
 #
 # 0x200 seems to be the common case
+0		name	lvm2
+# display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
+>0x0          string  >\x2f          \b, UUID: %.6s
+>0x6          string  >\x2f          \b-%.4s
+>0xa          string  >\x2f          \b-%.4s
+>0xe          string  >\x2f          \b-%.4s
+>0x12         string  >\x2f          \b-%.4s
+>0x16         string  >\x2f          \b-%.4s
+>0x1a         string  >\x2f          \b-%.6s
+>0x20         lequad  x              \b, size: %lld
 
-0x218           string  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
+
 # read the offset to add to the start of the header, and the header
 # start in 0x200
->&(&-12.l-0x21) byte    x
-# display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >\x2f          \b, UUID: %.6s
->>&0x6          string  >\x2f          \b-%.4s
->>&0xa          string  >\x2f          \b-%.4s
->>&0xe          string  >\x2f          \b-%.4s
->>&0x12         string  >\x2f          \b-%.4s
->>&0x16         string  >\x2f          \b-%.4s
->>&0x1a         string  >\x2f          \b-%.6s
->>&0x20         lequad  x              \b, size: %lld
+0x218           string/b  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
+>&(&-12.l-0x20) use	lvm2
 
-0x018           string  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
->&(&-12.l-0x21) byte    x
-# display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >\x2f          \b, UUID: %.6s
->>&0x6          string  >\x2f          \b-%.4s
->>&0xa          string  >\x2f          \b-%.4s
->>&0xe          string  >\x2f          \b-%.4s
->>&0x12         string  >\x2f          \b-%.4s
->>&0x16         string  >\x2f          \b-%.4s
->>&0x1a         string  >\x2f          \b-%.6s
->>&0x20         lequad  x              \b, size: %lld
+0x018           string/b  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
+>&(&-12.l-0x20) use	lvm2
 
-0x418           string  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
->&(&-12.l-0x21) byte    x
-# display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >\x2f          \b, UUID: %.6s
->>&0x6          string  >\x2f          \b-%.4s
->>&0xa          string  >\x2f          \b-%.4s
->>&0xe          string  >\x2f          \b-%.4s
->>&0x12         string  >\x2f          \b-%.4s
->>&0x16         string  >\x2f          \b-%.4s
->>&0x1a         string  >\x2f          \b-%.6s
->>&0x20         lequad  x              \b, size: %lld
+0x418           string/b  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
+>&(&-12.l-0x20) use	lvm2
 
-0x618           string  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
->&(&-12.l-0x21) byte    x
-# display UUID in LVM format + display all 32 bytes (instead of max string length: 31)
->>&0x0          string  >\x2f          \b, UUID: %.6s
->>&0x6          string  >\x2f          \b-%.4s
->>&0xa          string  >\x2f          \b-%.4s
->>&0xe          string  >\x2f          \b-%.4s
->>&0x12         string  >\x2f          \b-%.4s
->>&0x16         string  >\x2f          \b-%.4s
->>&0x1a         string  >\x2f          \b-%.6s
->>&0x20         lequad  x              \b, size: %lld
+0x618           string/b  LVM2\ 001      LVM2 PV (Linux Logical Volume Manager)
+>&(&-12.l-0x20) use	lvm2
 
 # LVM snapshot
 # from Jason Farrel
