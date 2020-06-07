@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.171 2020/04/26 17:43:13 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.172 2020/06/07 20:33:17 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1335,6 +1335,9 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	char name[50];
 	ssize_t namesize;
 
+	if (ms->flags & MAGIC_MIME)
+		return 0;
+
 	if (num == 0) {
 		if (file_printf(ms, ", no section header") == -1)
 			return -1;
@@ -1697,9 +1700,13 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				if (offset == 0)
 					break;
 			}
+			if (ms->flags & MAGIC_MIME)
+				continue;
 			break;
 
 		case PT_INTERP:
+			if (ms->flags & MAGIC_MIME)
+				continue;
 			if (bufsize && nbuf[0]) {
 				nbuf[bufsize - 1] = '\0';
 				memcpy(interp, nbuf, CAST(size_t, bufsize));
@@ -1707,6 +1714,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				strlcpy(interp, "*empty*", sizeof(interp));
 			break;
 		case PT_NOTE:
+			if (ms->flags & MAGIC_MIME)
+				return 0;
 			/*
 			 * This is a PT_NOTE section; loop through all the notes
 			 * in the section.
@@ -1723,9 +1732,13 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			}
 			break;
 		default:
+			if (ms->flags & MAGIC_MIME)
+				continue;
 			break;
 		}
 	}
+	if (ms->flags & MAGIC_MIME)
+		return 0;
 	if (file_printf(ms, ", %s linked", linking_style)
 	    == -1)
 		return -1;
@@ -1758,7 +1771,7 @@ file_tryelf(struct magic_set *ms, const struct buffer *b)
 	Elf64_Ehdr elf64hdr;
 	uint16_t type, phnum, shnum, notecount;
 
-	if (ms->flags & (MAGIC_MIME|MAGIC_APPLE|MAGIC_EXTENSION))
+	if (ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION))
 		return 0;
 	/*
 	 * ELF executables have multiple section headers in arbitrary
