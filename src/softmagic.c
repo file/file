@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.297 2020/06/04 23:18:45 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.298 2020/06/07 20:12:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2240,6 +2240,7 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		}
 		return matched;
 	case FILE_GUID:
+		l = 0;
 		v = memcmp(m->value.guid, p->guid, sizeof(p->guid));
 		break;
 	default:
