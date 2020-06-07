@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.136 2020/03/21 20:18:11 christos Exp $
+# $File: archive,v 1.137 2020/06/07 17:27:10 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1298,16 +1298,19 @@
 >>>>38		search/64       .app/   iOS App
 !:mime application/x-ios-app
 
+>30	search/100/b application/epub+zip	EPUB document
+!:mime application/epub+zip
 
 # Generic zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 #   Next line excludes specialized formats:
 >(26.s+30)	leshort	!0xcafe
->>26    string          !\x8\0\0\0mimetype	Zip archive data
+>>30	search/100/b !application/epub+zip
+>>>26    string          !\x8\0\0\0mimetype	Zip archive data
 !:mime	application/zip
->>>4	beshort		x			\b, at least
->>>4	use		zipversion
->>>4	beshort		x			to extract
->>>0x161	string		WINZIP		\b, WinZIP self-extracting
+>>>>4	beshort		x			\b, at least
+>>>>4	use		zipversion
+>>>>4	beshort		x			to extract
+>>>>0x161	string		WINZIP		\b, WinZIP self-extracting
 
 # StarView Metafile
 # From Pierre Ducroquet <pinaraf@pinaraf.info>
