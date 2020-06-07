@@ -32,14 +32,13 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.14 2020/06/07 18:49:27 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.15 2020/06/07 19:05:47 christos Exp $")
 #endif
 
 #include <string.h>
 #include "magic.h"
 #endif
 
-#define DEBUG
 #ifdef DEBUG
 #include <stdio.h>
 #define DPRINTF(a, b, c)	\
