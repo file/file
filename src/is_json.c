@@ -32,13 +32,14 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.13 2019/03/02 01:08:10 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.14 2020/06/07 18:49:27 christos Exp $")
 #endif
 
 #include <string.h>
 #include "magic.h"
 #endif
 
+#define DEBUG
 #ifdef DEBUG
 #include <stdio.h>
 #define DPRINTF(a, b, c)	\
@@ -156,6 +157,7 @@ json_parse_string(const unsigned char **ucp, const unsigned char *ue)
 			}
 		case '"':
 			*ucp = uc;
+			DPRINTF("Good string: ", uc, *ucp);
 			return 1;
 		default:
 			continue;
@@ -172,23 +174,24 @@ json_parse_array(const unsigned char **ucp, const unsigned char *ue,
 	size_t *st, size_t lvl)
 {
 	const unsigned char *uc = *ucp;
-	int more = 0;	/* Array has more than 1 element */
 
 	DPRINTF("Parse array: ", uc, *ucp);
 	while (uc < ue) {
+		if (*uc == ']')
+			goto done;
 		if (!json_parse(&uc, ue, st, lvl + 1))
 			goto out;
 		if (uc == ue)
 			goto out;
 		switch (*uc) {
 		case ',':
-			more++;
 			uc++;
 			continue;
 		case ']':
-			if (more)
-				st[JSON_ARRAYN]++;
+		done:
+			st[JSON_ARRAYN]++;
 			*ucp = uc + 1;
+			DPRINTF("Good array: ", uc, *ucp);
 			return 1;
 		default:
 			goto out;
@@ -210,6 +213,10 @@ json_parse_object(const unsigned char **ucp, const unsigned char *ue,
 		uc = json_skip_space(uc, ue);
 		if (uc == ue)
 			goto out;
+		if (*uc == '}') {
+			uc++;
+			goto done;
+		}
 		if (*uc++ != '"') {
 			DPRINTF("not string", uc, *ucp);
 			goto out;
@@ -236,6 +243,7 @@ json_parse_object(const unsigned char **ucp, const unsigned char *ue,
 		case ',':
 			continue;
 		case '}': /* { */
+		done:
 			*ucp = uc;
 			DPRINTF("Good object: ", uc, *ucp);
 			return 1;
