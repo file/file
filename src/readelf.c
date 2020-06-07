@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.172 2020/06/07 20:33:17 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.173 2020/06/07 22:12:54 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -67,6 +67,8 @@ private uint64_t getu64(int, uint64_t);
 private int
 toomany(struct magic_set *ms, const char *name, uint16_t num)
 {
+	if (ms->flags & MAGIC_MIME)
+		return 1;
 	if (file_printf(ms, ", too many %s (%u)", name, num) == -1)
 		return -1;
 	return 1;
@@ -354,6 +356,9 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	ssize_t bufsize;
 	off_t ph_off = off;
 	int ph_num = num;
+
+	if (ms->flags & MAGIC_MIME)
+		return 0;
 
 	if (num == 0) {
 		if (file_printf(ms, ", no program header") == -1)
