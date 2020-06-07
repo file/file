@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.298 2020/06/07 20:12:55 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.299 2020/06/07 21:58:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1510,7 +1510,9 @@ private int
 msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
     const struct buffer *b, size_t o, unsigned int cont_level)
 {
+	int32_t offset;
 	if (m->flag & OFFNEGATIVE) {
+		offset = -m->offset;
 		if (cont_level > 0) {
 			if (m->flag & (OFFADD|INDIROFFADD))
 				goto normal;
@@ -1533,21 +1535,23 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 		buffer_init(bb, -1, NULL, b->ebuf, b->elen);
 		ms->eoffset = ms->offset = CAST(int32_t, b->elen - m->offset);
 	} else {
+		offset = m->offset;
 		if (cont_level == 0) {
 normal:
 			// XXX: Pass real fd, then who frees bb?
 			buffer_init(bb, -1, NULL, b->fbuf, b->flen);
-			ms->offset = m->offset;
+			ms->offset = offset;
 			ms->eoffset = 0;
 		} else {
-			ms->offset = ms->eoffset + m->offset;
+			ms->offset = ms->eoffset + offset;
 		}
 	}
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
-		fprintf(stderr, "bb=[%p,%" SIZE_T_FORMAT "u], %d [b=%p,%"
-		    SIZE_T_FORMAT "u], [o=%#x, c=%d]\n",
-		    bb->fbuf, bb->flen, ms->offset, b->fbuf, b->flen,
-		    m->offset, cont_level);
+		fprintf(stderr, "bb=[%p,%" SIZE_T_FORMAT "u,%"
+		    SIZE_T_FORMAT "u], %d [b=%p,%"
+		    SIZE_T_FORMAT "u,%" SIZE_T_FORMAT "u], [o=%#x, c=%d]\n",
+		    bb->fbuf, bb->flen, bb->elen, ms->offset, b->fbuf,
+		    b->flen, b->elen, offset, cont_level);
 	}
 	return 0;
 }
