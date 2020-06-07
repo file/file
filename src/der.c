@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.19 2020/02/17 16:01:15 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.20 2020/06/07 19:10:37 christos Exp $")
 #endif
 #else
 #define SIZE_T_FORMAT "z"
@@ -65,13 +65,13 @@ FILE_RCSID("@(#)$File: der.c,v 1.19 2020/02/17 16:01:15 christos Exp $")
 #define	DER_CLASS_APPLICATION	1
 #define	DER_CLASS_CONTEXT	2
 #define	DER_CLASS_PRIVATE	3
-#ifdef DEBUG_DER
+#if defined(DEBUG_DER) || defined(TEST_DER)
 static const char der_class[] = "UACP";
 #endif
 
 #define DER_TYPE_PRIMITIVE	0
 #define DER_TYPE_CONSTRUCTED	1
-#ifdef DEBUG_DER
+#if defined(DEBUG_DER) || defined(TEST_DER)
 static const char der_type[] = "PC";
 #endif
 
