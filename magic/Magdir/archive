@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.137 2020/06/07 17:27:10 christos Exp $
+# $File: archive,v 1.138 2020/06/07 23:29:26 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1265,12 +1265,33 @@
 >>>62	string	draw.template+zip	Draw template, version 14-16
 !:mime	application/x-vnd.corel.draw.template+zip
 !:ext	cdrt
->>>62	string	zcf.draw.document+zip	Draw drawing, version 17-21
+>>>62	string	zcf.draw.document+zip	Draw drawing, version 17-22
 !:mime	application/x-vnd.corel.zcf.draw.document+zip
 !:ext	cdr
->>>62	string	zcf.draw.template+zip	Draw template, version 17-21
+>>>62	string	zcf.draw.template+zip	Draw template, version 17-22
 !:mime	application/x-vnd.corel.zcf.draw.template+zip
 !:ext	cdt/cdrt
+# URL:	http://product.corel.com/help/CorelDRAW/540240626/Main/EN/Doc/CorelDRAW-Other-file-formats.html
+>>>62	string	zcf.pattern+zip		Draw pattern, version 22
+!:mime	application/x-vnd.corel.zcf.pattern+zip
+!:ext	pat
+# URL:		https://en.wikipedia.org/wiki/Corel_Designer
+# Reference:	http://fileformats.archiveteam.org/wiki/Corel_Designer
+# Note:		called by TrID "Corel DESIGN graphics"
+>>>62	string	designer.document+zip		DESIGNER graphics, version 14-16
+!:mime	application/x-vnd.corel.designer.document+zip
+!:ext	des
+>>>62	string	zcf.designer.document+zip	DESIGNER graphics, version 17-21
+!:mime	application/x-vnd.corel.zcf.designer.document+zip
+!:ext	des
+# URL:	http://product.corel.com/help/CorelDRAW/540223850/Main/EN/Documentation/
+#	CorelDRAW-Corel-Symbol-Library-CSL.html
+>>>62	string	symbol.library+zip		Symbol Library, version 6-16.3
+!:mime	application/x-vnd.corel.symbol.library+zip
+!:ext	csl
+>>>62	string	zcf.symbol.library+zip		Symbol Library, version 17-22
+!:mime	application/x-vnd.corel.zcf.symbol.library+zip
+!:ext	csl
 
 #  Catch other ZIP-with-mimetype formats
 #	In a ZIP file, the bytes immediately after a member's contents are
