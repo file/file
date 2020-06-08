@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.106 2020/06/06 15:33:29 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.107 2020/06/08 19:58:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -115,7 +115,6 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 	int need_separator = 0;
 
 	const char *subtype = NULL;
-	const char *subtype_mime = NULL;
 
 	int has_escapes = 0;
 	int has_backspace = 0;
@@ -224,10 +223,6 @@ file_ascmagic_with_encoding(struct magic_set *ms,
 					goto done;
 				}
 				if (need_separator && file_separator(ms) == -1)
-					goto done;
-			}
-			if (subtype_mime) {
-				if (file_printf(ms, "%s", subtype_mime) == -1)
 					goto done;
 			} else {
 				if (file_printf(ms, "text/plain") == -1)
