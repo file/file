@@ -1,3 +1,7 @@
+2020-06-14  20:02  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.39
+
 2020-06-07  20:00  Christos Zoulas <christos@zoulas.com>
 
 	* Remove unused subtype_mime (Steve Grubb)
