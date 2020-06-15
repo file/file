@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.115 2020/02/20 15:50:20 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.116 2020/06/15 00:56:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -764,7 +764,7 @@ struct guid {
 protected int
 file_parse_guid(const char *s, uint64_t *guid)
 {
-	struct guid *g = CAST(struct guid *, guid);
+	struct guid *g = CAST(struct guid *, CAST(void *, guid));
 	return sscanf(s,
 	    "%8x-%4hx-%4hx-%2hhx%2hhx-%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx",
 	    &g->data1, &g->data2, &g->data3, &g->data4[0], &g->data4[1],
@@ -775,7 +775,8 @@ file_parse_guid(const char *s, uint64_t *guid)
 protected int
 file_print_guid(char *str, size_t len, const uint64_t *guid)
 {
-	const struct guid *g = CAST(const struct guid *, guid);
+	const struct guid *g = CAST(const struct guid *,
+	    CAST(const void *, guid));
 
 	return snprintf(str, len, "%.8X-%.4hX-%.4hX-%.2hhX%.2hhX-"
 	    "%.2hhX%.2hhX%.2hhX%.2hhX%.2hhX%.2hhX",
