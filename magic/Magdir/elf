@@ -43,6 +43,14 @@
 >2	leshort		0x0214		2.0
 >0	leshort		&0x0008		(LP64)
 
+0	name		elf-riscv
+>0	lelong&0x00000001	0x00000001	RVC,
+>0	lelong&0x00000008	0x00000008	RVE,
+>0	lelong&0x00000006	0x00000000	soft-float ABI,
+>0	lelong&0x00000006	0x00000002	single-float ABI,
+>0	lelong&0x00000006	0x00000004	double-float ABI,
+>0	lelong&0x00000006	0x00000006	quad-float ABI,
+
 0	name		elf-le
 >16	leshort		0		no file type,
 !:mime	application/octet-stream
@@ -265,6 +273,12 @@
 >18	leshort		217		iCelero CoolEngine,
 >18	leshort		218		Nanoradio Optimized RISC,
 >18	leshort		243		UCB RISC-V,
+# only for 32-bit
+>>4	byte		1
+>>>36	use		elf-riscv
+# only for 64-bit
+>>4	byte		2
+>>>48	use		elf-riscv
 >18	leshort		247		eBPF,
 >18	leshort		251             NEC VE,
 >18	leshort		0x1057		AVR (unofficial),
