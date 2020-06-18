@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.15 2020/05/30 23:56:26 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.16 2020/06/18 16:25:12 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -35,6 +35,7 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.15 2020/05/30 23:56:26 christos Exp $")
 #include <sys/prctl.h> /* prctl */
 #include <sys/ioctl.h>
 #include <sys/socket.h>
+#include <termios.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <errno.h>
