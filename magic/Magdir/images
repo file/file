@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.181 2020/05/30 23:49:03 christos Exp $
+# $File: images,v 1.182 2020/06/23 16:14:17 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -798,8 +798,16 @@
 # URL:		http://fileformats.archiveteam.org/wiki/OS/2_Pointer
 # Reference:	http://www.fileformat.info/format/os2bmp/egff.htm
 0	string		CP
+# skip many Corel Photo-Paint image "CPT9FILE" by checking for positive bits offset
+>10	ulelong		>0
 # skip CPU-Z Report by checking for valid dib header sizes 12 or 64
->14	ulelong		<65		OS/2
+>>14	ulelong		=12
+>>>0		use		os2-ptr
+>>14	ulelong		=64
+>>>0		use		os2-ptr
+#	display information of OS/2 pointer bitmaps
+0	name		os2-ptr
+>14	ulelong		x		OS/2
 # http://extension.nirsoft.net/PTR
 !:mime	image/x-ibm-pointer
 !:ext	ptr
@@ -2567,3 +2575,92 @@
 >4	byte	0	Apple QuickTake 150 Raw Image
 >4	byte	>0	Apple QuickTake 200 Raw Image
 >0	use quicktake
+
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Corel_Photo-Paint_image
+# Reference:	http://blog.argasinski.eu/wp-content/uploads/2011/08/cpt-specification-0.01.pdf
+0	string	CPT
+>4	string	FILE		Corel Photo-Paint image, version
+# version like 7, 9 or 8
+>>3	ubyte	x		%c,
+!:mime	image/x-corel-cpt
+!:ext	cpt
+# if blocks_array_offset available jump blockNumber*8 bytes 
+>>0x34	ulelong		>0
+>>>(0x28.l*8)	ubyte	x
+# jump addtional stored blocks_array_offset bytes forward to object block
+>>>>&(0x34.l-1) ulelong x	%u
+# object heigth in pixels
+>>>>>&0		ulelong	x	x %u
+# if no blocks_array_offset available jump blockNumber*8 bytes
+>>0x34	ulelong		=0
+>>>(0x28.l*8)	ubyte	x
+# jump addtional 0x13C bytes forward to object block
+>>>>&0x13B	ulelong x	%u
+>>>>>&0	ulelong		x	x %u
+# image color model used
+>>0x8	ulelong	x
+>>>0x8	ulelong	0x1		RGB 24 bits
+>>>0x8	ulelong	0x3		CMYK 24 bits
+>>>0x8	ulelong	0x5		greyscale 8 bits
+>>>0x8	ulelong	0x6		black and white 1 bit
+>>>0x8	ulelong	0xA		RGB 8 bits
+# palette_length  number of colors * 3 in case of 8-bit RGB paletted image
+# 0 otherwise. Allowed values: 0 or [1..256] * 3
+#>>0xC	ulelong	>0		\b, palette length %u
+>>>>0xC	ulelong/3	<256	\b, %u colors
+>>>0x8	ulelong	0xB		LAB
+>>>0x8	ulelong	0xC		RGB 48 bits
+>>>0x8	ulelong	0xE		greyscale 16 bits
+# this should not happen
+>>>0x8	default	x		color model
+>>>>0x8	ulelong	x		0x%x
+# bit 1 in CPT file flags: UCS-2 file comment present
+>>0x31	ubyte		&0x02
+# look for comment marker
+>>>0x100	search/0xc9d	\4\2\0\0
+# UCS-2 file comment
+>>>>&0		lestring16	x	"%s"
+# if no UCS-2 is present show ANSI file comment[112] if available
+>>0x31	ubyte&0x02	=0
+>>>0x3C string		>\0	"%-.112s"
+# reserved seems to be always 0
+#>>0x10	ulelong		>0	\b, reserved1 %u
+# horizontal real dpi = dpi_h * 25.4 / 10**6
+>>0x18	ulelong	x		\b, %u micro dots/mm
+# image vertical DPI in CPT DPI unit
+#>>0x1C	ulelong	x		\b, %u micro dots/mm
+# reserved seems to be always 0
+#>>0x20	ulelong		>0	\b, reserved2 %u
+#>>0x24	ulelong		>0	\b, reserved3 %u
+# blocks_count; number of CPT_Block blocks. Allowed values: > 0
+>>0x28	ulelong		x	\b, %u block
+# plural s
+>>0x28	ulelong		!1	\bs
+# CPT file flags
+# lower byte of CPT file flags: 0x94~CPT9FILE 0x01~often CPT7FILE 0x8C~CPT8FILE
+#>>0x30	ubyte		x	\b, lower flags 0x%x
+# upper byte of CPT file flags:
+#>>0x31	ubyte		>0	\b, upper flags 0x%x
+# bit 2 in CPT file flags: unknown
+#>>0x31	ubyte		&0x04	\b, with UNKNOWN
+# bits 3-7 in CPT file flags: unknown, seem to be often 0
+# show unusual flag combinations
+>>0x31	ubyte&0xFC	>0
+>>>0x30	uleshort	x	\b, flags 0x%4.4x
+# reserved seems to be always 0
+#>>0x32	uleshort	>0	\b, reserved4 0x%x
+# blocks_array_offset is always 0 for CPT7 and CPT8 files created by PP7-PP8
+# typical values like: 13Ch 154h 43Ch 4F0h DA8h 
+>>0x34	ulelong	x		\b, array offset 0x%x
+# reserved seems to be often 0
+>>0x38	ulelong		>0	\b, reserved5 0x%x
+# possible next master block
+#>>0x100	ubequad		!0	\b, next block=0x%llx...
+# bit 0: ICC profile block present
+>>0x31	ubyte		&0x01	\b, with ICC profile
+# check for characteristic string acsp of color profile for DEBUGGING
+#>>>0x178	string	x	icc=%.4s
+#	display ICC/ICM color profile by ./icc
+#>>>0x154	use		color-profile
+
