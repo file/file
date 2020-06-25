@@ -1,3 +1,7 @@
+2020-06-25  12:53  Christos Zoulas <christos@zoulas.com>
+	
+	* Include # to the list of ignored format chars (Werner Fink)
+
 2020-06-14  20:02  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.39
