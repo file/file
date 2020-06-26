@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.182 2020/06/23 16:14:17 christos Exp $
+# $File: images,v 1.183 2020/06/26 17:08:32 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -615,7 +615,7 @@
 0	leshort		40
 # skip bad samples like GAME by looking for valid number of color planes
 >12	uleshort	1		Device independent bitmap graphic
-!:mime	image/bmp
+!:mime	image/x-ms-bmp
 !:apple	????BMPp
 !:ext	dib
 >>4	lelong		x		\b, %d x
@@ -641,7 +641,7 @@
 >>18	leshort		x		\b, %d x
 >>20	leshort		x		%d
 >14	leshort		64		PC bitmap, OS/2 2.x format
-!:mime	image/bmp
+!:mime	image/x-ms-bmp
 !:apple	????BMPp
 !:ext	bmp
 # image width and height fields are unsigned integers for OS/2
@@ -662,7 +662,7 @@
 #>>(10.l) ubequad		!0	\b, bits 0x%16.16llx
 # BITMAPV2INFOHEADER	adds RGB bit masks
 >14	leshort		52		PC bitmap, Adobe Photoshop
-!:mime	image/bmp
+!:mime	image/x-ms-bmp
 !:apple	????BMPp
 !:ext	bmp
 >>18	lelong		x		\b, %d x
@@ -670,7 +670,7 @@
 >>28	leshort		x		%d
 # BITMAPV3INFOHEADER	adds alpha channel bit mask
 >14	leshort		56		PC bitmap, Adobe Photoshop with alpha channel mask
-!:mime	image/bmp
+!:mime	image/x-ms-bmp
 !:apple	????BMPp
 !:ext	bmp
 >>18	lelong		x		\b, %d x
@@ -678,8 +678,10 @@
 >>28	leshort		x		%d
 >14	leshort		40
 # jump 4 bytes before end of file/header to skip fmt-116-signature-id-118.dib
->>(2.l-4)	ulong	x		PC bitmap, Windows 3.x format
-!:mime	image/bmp
+# broken for large bitmaps
+#>>(2.l-4)	ulong	x		PC bitmap, Windows 3.x format
+>>14	leshort		40		PC bitmap, Windows 3.x format
+!:mime	image/x-ms-bmp
 !:apple	????BMPp
 >>>18	lelong		x		\b, %d x
 >>>22	lelong		x		%d
