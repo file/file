@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.35 2020/06/05 17:15:03 christos Exp $
+# $File: riff,v 1.36 2020/06/26 16:50:59 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -147,6 +147,17 @@
 # pattern created by newer software start with RIFF type PAT
 >8	string		PAT
 >>0	use		corel-draw
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Corel_Designer
+# Reference:	http://fileformats.archiveteam.org/wiki/Corel_Designer
+>8	string		DES
+>>8	string		!DESC
+>>>0	use		corel-des
+# Corel Draw templates with version 12.5 or Corel Designer illustration 12
+>>8	string		=DESC
+# MORE TESTS NEEDED HERE!
+#>>>0	use		corel-des
+#>>>0	use		corel-draw
 >8	string		NUNDROOT	\b, Steinberg CuBase
 # AVI == Audio Video Interleave
 >8	string		AVI\040		\b, AVI
@@ -358,6 +369,36 @@
 >16	ulelong		0x10
 >>34	ubyte		x		%u
 >>>33	ubyte		>0		\b.%u
+#	display information of RIFF based Corel Design formats
+0	name   	corel-des
+# display second chunk for debugging
+#>8	string		x		\b, [8]=%.8s
+>12	string		x		\b, Corel DESIGNER
+!:mime	image/x-corel-des
+#!:mime	application/x-vnd.corel.designer.document
+# used by Corel Designer with newer versions since 16
+>12	string		=fver		graphics (root.dat)
+!:ext	dat
+# used by Corel Designer templates with older versions with vrsn tag
+>12	string		!fver
+# used by Corel Designer with versions 14-15
+>>11	string		>D		graphics (riffData.cdr)
+!:ext	cdr
+# used by Corel Designer with versions 10-12
+>>11	string		<E		graphics
+!:ext	des
+# version indicated by last ASCII char of second chunk tag
+>11	string		x		\b, version '%-.1s'
+# but vrsn short content is not always version indicator
+# exceptions: 'A'~11.4 'B'~12 'C'~12.5
+>11	string		>D
+>>0	use		corel-version
+# for debugging purpose display next chunk like: DISP LIST
+#>>22	string		x		\b, 4th "%-4.4s"
+#>>26	ulelong		x		\b, 4th SIZE 0x%x
+# for debugging purpose display 5th chunk like: LIST osfp
+#>>(26.l+30)	string	x		\b, 5th "%-4.4s"
+>4	ulelong+8	x		\b, %u bytes
 #
 # XXX - some of the below may only appear in little-endian form.
 #
