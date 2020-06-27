@@ -1,3 +1,7 @@
+2020-06-27  11:58  Christos Zoulas <christos@zoulas.com>
+
+	* Exclude surrogate pairs from utf-8 detection (Michael Liu)
+
 2020-06-25  12:53  Christos Zoulas <christos@zoulas.com>
 	
 	* Include # to the list of ignored format chars (Werner Fink)
