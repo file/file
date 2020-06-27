@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.21 2019/06/08 20:49:14 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.22 2020/06/27 15:57:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -375,6 +375,10 @@ file_looks_utf8(const unsigned char *buf, size_t nbytes, unichar *ubuf, size_t *
 
 				c = (c << 6) + (buf[i] & 0x3f);
 			}
+
+			/* Surrogate pair characters are invalid */
+			if (c >= 0xd800 && c <=0xdfff)
+				return -1;
 
 			if (ubuf)
 				ubuf[(*ulen)++] = c;
