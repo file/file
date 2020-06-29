@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pdf,v 1.12 2020/01/30 01:48:44 christos Exp $
+# $File: pdf,v 1.13 2020/06/29 16:51:28 christos Exp $
 # pdf:  file(1) magic for Portable Document Format
 #
 
@@ -36,7 +36,7 @@
 >5      byte            x               \b, version %c
 >7      byte            x               \b.%c
 
-0	search/256	%PDF-		PDF document
+0	search/b/256	%PDF-		PDF document
 !:mime	application/pdf
 !:strength +60
 >&0	byte		x		\b, version %c
