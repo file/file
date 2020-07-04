@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.183 2020/06/26 17:08:32 christos Exp $
+# $File: images,v 1.184 2020/07/04 18:43:04 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1419,6 +1419,15 @@
 # Xara (for a while: Corel Xara) is a graphic package, see
 # http://www.xara.com/ for Windows and as GPL application for Linux
 0	string	XARA\243\243	Xara graphics file
+
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Corel_Gallery
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/b/bmf-corel.trid.xml 
+# Note:		called "Corel Binary Material Format" by TrID and
+# 		"Corel Flow" by XnView
+0	string	@CorelBMF\n\rCorel\040Corporation 	Corel GALLERY Clipart
+!:mime	image/x-corel-bmf
+!:ext	bmf
 
 # https://www.cartesianinc.com/Tech/
 0	string	CPC\262		Cartesian Perceptual Compression image
