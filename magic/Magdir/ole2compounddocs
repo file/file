@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.8 2020/03/28 23:10:30 christos Exp $
+# $File: ole2compounddocs,v 1.9 2020/07/04 18:49:53 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -210,6 +210,15 @@
 >>>>256 	lestring16	Thumbnail		: Corel PrintHouse image
 !:mime	application/x-corel-cph
 !:ext	cph
+# URL:	http://fileformats.archiveteam.org/wiki/Corel_Gallery
+# Note:	format since Gallery 2; sometimes called Corel Multimedia Manager Album
+# third directory entry name _INFO_
+>>>>256 	lestring16	_INFO_			: Corel Gallery
+# second directory entry name _ITEM_ or _DATA_
+# later directory entry names: _ALBUM_ _THUMBNAIL_
+#!:mime	application/x-ole-storage
+!:mime	application/x-corel-gal
+!:ext	gal
 #
 # URL:	https://en.wikipedia.org/wiki/Hangul_(word_processor)
 # Note:	"HWP Document File" signature found in FileHeader
@@ -251,6 +260,12 @@
 >>>>>>128 	lestring16	Pictures		with pictures
 #	remaining null clsid
 >>>>128 	default		x			: UNKNOWN
+# second directory entry name like VisioDocument Control000
+>>>>>128	lestring16	x with names %.20s
+# third directory entry like WordDocument
+>>>>>256	lestring16	x %.20s
+# forth
+>>>>>384	lestring16	x %.20s
 !:mime	application/x-ole-storage
 #	look for known clsid GUID
 # - Visio documents
