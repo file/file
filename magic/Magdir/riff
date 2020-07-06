@@ -1,28 +1,122 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.37 2020/07/06 22:27:54 christos Exp $
+# $File: riff,v 1.38 2020/07/06 22:29:15 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
 #	https://www.seanet.com/users/matts/riffmci/riffmci.htm
 #	http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf
+#	https://www.iana.org/assignments/wave-avi-codec-registry/wave-avi-codec-registry.xml
 #
 
 # audio format tag. Assume limits: max 1024 bit, 128 channels, 1 MHz
 0   name    riff-wave
->0	leshort		1		\b, Microsoft PCM
+>0	leshort		0x01		\b, Microsoft PCM
 >>14	leshort		>0
 >>>14	leshort		<1024	\b, %d bit
->0	leshort		2		\b, Microsoft ADPCM
->0	leshort		6		\b, ITU G.711 A-law
->0	leshort		7		\b, ITU G.711 mu-law
->0	leshort		8		\b, Microsoft DTS
->0	leshort		17		\b, IMA ADPCM
->0	leshort		20		\b, ITU G.723 ADPCM (Yamaha)
->0	leshort		49		\b, GSM 6.10
->0	leshort		64		\b, ITU G.721 ADPCM
->0	leshort		80		\b, MPEG
->0	leshort		85		\b, MPEG Layer 3
+>0	leshort		0x02		\b, Microsoft ADPCM
+>0	leshort		0x03		\b, IEEE Float
+>0	leshort		0x04		\b, Compaq VSELP
+>0	leshort		0x05		\b, IBM CVSD
+>0	leshort		0x06		\b, ITU G.711 A-law
+>0	leshort		0x07		\b, ITU G.711 mu-law
+>0	leshort		0x08		\b, Microsoft DTS
+>0	leshort		0x10		\b, OKI ADPCM
+>0	leshort		0x11		\b, IMA ADPCM
+>0	leshort		0x12		\b, MediaSpace ADPCM
+>0	leshort		0x13		\b, Sierra ADPCM
+>0	leshort		0x14		\b, ITU G.723 ADPCM (Yamaha)
+>0	leshort		0x15		\b, DSP Solutions DIGISTD
+>0	leshort		0x16		\b, DSP Solutions DIGIFIX
+>0	leshort		0x17		\b, Dialogic OKI ADPCM
+>0	leshort		0x18		\b, MediaVision ADPCM
+>0	leshort		0x19		\b, HP CU
+>0	leshort		0x20		\b, Yamaha ADPCM
+>0	leshort		0x21		\b, Speech Compression SONARC
+>0	leshort		0x22		\b, DSP Group True Speech
+>0	leshort		0x23		\b, Echo Speech EchoSC1
+>0	leshort		0x24		\b, AudioFile AF36
+>0	leshort		0x25		\b, APTX
+>0	leshort		0x26		\b, AudioFile AF10
+>0	leshort		0x27		\b, Prosody 1612
+>0	leshort		0x28		\b, LRC
+>0	leshort		0x30		\b, Dolby AC2
+>0	leshort		0x31		\b, GSM 6.10
+>0	leshort		0x32		\b, MSN Audio
+>0	leshort		0x33		\b, Antex ADPCME
+>0	leshort		0x34		\b, Control Res VQLPC
+>0	leshort		0x35		\b, Digireal
+>0	leshort		0x36		\b, DigiADPCM
+>0	leshort		0x37		\b, Control Res CR10
+>0	leshort		0x38		\b, NMS VBXADPCM
+>0	leshort		0x39		\b, Roland RDAC
+>0	leshort		0x3A		\b, Echo Speech EchoSC3
+>0	leshort		0x3B		\b, Rockwell ADPCM
+>0	leshort		0x3C		\b, Rockwell Digitalk
+>0	leshort		0x3D		\b, Xebec
+>0	leshort		0x40		\b, ITU G.721 ADPCM
+>0	leshort		0x41		\b, ITU G.728 CELP
+>0	leshort		0x42		\b, MSG723
+>0	leshort		0x50		\b, MPEG
+>0	leshort		0x52		\b, RT24
+>0	leshort		0x53		\b, PAC
+>0	leshort		0x55		\b, MPEG Layer 3
+>0	leshort		0x59		\b, Lucent G.723
+>0	leshort		0x60		\b, Cirrus
+>0	leshort		0x61		\b, ESPCM
+>0	leshort		0x62		\b, Voxware
+>0	leshort		0x63		\b, Canopus Atrac
+>0	leshort		0x64		\b, ITU G.726 ADPCM
+>0	leshort		0x65		\b, ITU G.722 ADPCM
+>0	leshort		0x66		\b, DSAT
+>0	leshort		0x67		\b, DSAT Display
+>0	leshort		0x69		\b, Voxware Byte Aligned
+>0	leshort		0x70		\b, Voxware AC8
+>0	leshort		0x71		\b, Voxware AC10
+>0	leshort		0x72		\b, Voxware AC16
+>0	leshort		0x73		\b, Voxware AC20
+>0	leshort		0x74		\b, Voxware MetaVoice
+>0	leshort		0x75		\b, Voxware MetaSound
+>0	leshort		0x76		\b, Voxware RT29HW
+>0	leshort		0x77		\b, Voxware VR12
+>0	leshort		0x78		\b, Voxware VR18
+>0	leshort		0x79		\b, Voxware TQ40
+>0	leshort		0x80		\b, Softsound
+>0	leshort		0x81		\b, Voxware TQ60
+>0	leshort		0x82		\b, MSRT24
+>0	leshort		0x83		\b, ITU G.729A
+>0	leshort		0x84		\b, MVI MV12
+>0	leshort		0x85		\b, DF G.726
+>0	leshort		0x86		\b, DF GSM610
+>0	leshort		0x88		\b, ISIAudio
+>0	leshort		0x89		\b, Onlive
+>0	leshort		0x91		\b, SBC24
+>0	leshort		0x92		\b, Dolby AC3 S/PDIF
+>0	leshort		0x97		\b, ZyXEL ADPCM
+>0	leshort		0x98		\b, Philips LPCBB
+>0	leshort		0x99		\b, Packed
+>0	leshort		0x100		\b, Rhetorex ADPCM
+>0	leshort		0x101		\b, BeCubed Software IRAT
+>0	leshort		0x111		\b, Vivo G.723
+>0	leshort		0x112		\b, Vivo Siren
+>0	leshort		0x123		\b, Digital G.723
+>0	leshort		0x200		\b, Creative ADPCM
+>0	leshort		0x202		\b, Creative FastSpeech8
+>0	leshort		0x203		\b, Creative FastSpeech10
+>0	leshort		0x220		\b, Quarterdeck
+>0	leshort		0x300		\b, FM Towns Snd
+>0	leshort		0x400		\b, BTV Digital
+>0	leshort		0x680		\b, VME VMPCM
+>0	leshort		0x1000		\b, OLIGSM
+>0	leshort		0x1001		\b, OLIADPCM
+>0	leshort		0x1002		\b, OLICELP
+>0	leshort		0x1003		\b, OLISBC
+>0	leshort		0x1004		\b, OLIOPR
+>0	leshort		0x1100		\b, LH Codec
+>0	leshort		0x1400		\b, Norris
+>0	leshort		0x1401		\b, ISIAudio
+>0	leshort		0x1500		\b, Soundspace Music Compression
+>0	leshort		0x2000		\b, AC3 DVM
 >0	leshort		0x2001		\b, DTS
 >2	leshort		=1		\b, mono
 >2	leshort		=2		\b, stereo
