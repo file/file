@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.38 2020/07/06 22:29:15 christos Exp $
+# $File: riff,v 1.39 2020/07/06 22:30:30 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -168,6 +168,7 @@
 # Update: Joerg Jenderek
 # URL: https://en.wikipedia.org/wiki/Resource_Interchange_File_Format
 # Reference: https://worms2d.info/Palette_file
+# WAVE/AVI codec registry: https://www.iana.org/assignments/wave-avi-codec-registry/wave-avi-codec-registry.xml
 >8	string		PAL\ 		\b, palette
 !:mime	application/x-riff
 # color palette by Microsoft Corporation
@@ -319,15 +320,126 @@
 # skip past vids strh
 >>>>>>(104.l+108)       string  strf
 >>>>>>>(104.l+132)      lelong          1       RLE 8bpp
+>>>>>>>(104.l+132)      string/c        anim    Intel RDX
+>>>>>>>(104.l+132)      string/c        aur2    AuraVision Aura 2
+>>>>>>>(104.l+132)      string/c        aura    AuraVision Aura
+>>>>>>>(104.l+132)      string/c        bt20    Brooktree MediaStream
+>>>>>>>(104.l+132)      string/c        btcv    Brooktree Composite Video
+>>>>>>>(104.l+132)      string/c        cc12    Intel YUV12
+>>>>>>>(104.l+132)      string/c        cdvc    Canopus DV
+>>>>>>>(104.l+132)      string/c        cham    Winnov Caviara Cham
+>>>>>>>(104.l+132)      string/c        cljr    Proprietary YUV 4 pixels
+>>>>>>>(104.l+132)      string/c        cmyk    Common Data Format in Printing
+>>>>>>>(104.l+132)      string/c        cpla    Weitek 4:2:0 YUV Planar
 >>>>>>>(104.l+132)      string/c        cvid    Cinepak
+>>>>>>>(104.l+132)      string/c        cwlt    Microsoft Color WLT DIB
+>>>>>>>(104.l+132)      string/c        cyuv    Creative Labs YUV
+>>>>>>>(104.l+132)      string/c        d261    H.261
+>>>>>>>(104.l+132)      string/c        d263    H.263
+>>>>>>>(104.l+132)      string/c        duck    TrueMotion 1.0
+>>>>>>>(104.l+132)      string/c        dve2    DVE-2 Videoconferencing
+>>>>>>>(104.l+132)      string/c        fljp    Field Encoded Motion JPEG
+>>>>>>>(104.l+132)      string/c        fvf1    Fractal Video Frame
+>>>>>>>(104.l+132)      string/c        gwlt    Microsoft Greyscale WLT DIB
+>>>>>>>(104.l+132)      string/c        h260    H.260
+>>>>>>>(104.l+132)      string/c        h261    H.261
+>>>>>>>(104.l+132)      string/c        h262    H.262
+>>>>>>>(104.l+132)      string/c        h263    H.263
+>>>>>>>(104.l+132)      string/c        h264    H.264
+>>>>>>>(104.l+132)      string/c        h265    H.265
+>>>>>>>(104.l+132)      string/c        h266    H.266
+>>>>>>>(104.l+132)      string/c        h267    H.267
+>>>>>>>(104.l+132)      string/c        h268    H.268
+>>>>>>>(104.l+132)      string/c        h269    H.269
 >>>>>>>(104.l+132)      string/c        i263    Intel I.263
->>>>>>>(104.l+132)      string/c        iv32    Indeo 3.2
->>>>>>>(104.l+132)      string/c        iv41    Indeo 4.1
->>>>>>>(104.l+132)      string/c        iv50    Indeo 5.0
+>>>>>>>(104.l+132)      string/c        i420    Intel Indeo 4
+>>>>>>>(104.l+132)      string/c        ian     Intel RDX
+>>>>>>>(104.l+132)      string/c        iclb    CellB Videoconferencing Codec
+>>>>>>>(104.l+132)      string/c        ilvc    Intel Layered Video
+>>>>>>>(104.l+132)      string/c        ilvr    ITU-T H.263+
+>>>>>>>(104.l+132)      string/c        iraw    Intel YUV Uncompressed
+>>>>>>>(104.l+132)      string/c        iv30    Intel Indeo 3
+>>>>>>>(104.l+132)      string/c        iv31    Intel Indeo 3.1
+>>>>>>>(104.l+132)      string/c        iv32    Intel Indeo 3.2
+>>>>>>>(104.l+132)      string/c        iv33    Intel Indeo 3.3
+>>>>>>>(104.l+132)      string/c        iv34    Intel Indeo 3.4
+>>>>>>>(104.l+132)      string/c        iv35    Intel Indeo 3.5
+>>>>>>>(104.l+132)      string/c        iv36    Intel Indeo 3.6
+>>>>>>>(104.l+132)      string/c        iv37    Intel Indeo 3.7
+>>>>>>>(104.l+132)      string/c        iv38    Intel Indeo 3.8
+>>>>>>>(104.l+132)      string/c        iv39    Intel Indeo 3.9
+>>>>>>>(104.l+132)      string/c        iv40    Intel Indeo 4.0
+>>>>>>>(104.l+132)      string/c        iv41    Intel Indeo 4.1
+>>>>>>>(104.l+132)      string/c        iv42    Intel Indeo 4.2
+>>>>>>>(104.l+132)      string/c        iv43    Intel Indeo 4.3
+>>>>>>>(104.l+132)      string/c        iv44    Intel Indeo 4.4
+>>>>>>>(104.l+132)      string/c        iv45    Intel Indeo 4.5
+>>>>>>>(104.l+132)      string/c        iv46    Intel Indeo 4.6
+>>>>>>>(104.l+132)      string/c        iv47    Intel Indeo 4.7
+>>>>>>>(104.l+132)      string/c        iv48    Intel Indeo 4.8
+>>>>>>>(104.l+132)      string/c        iv49    Intel Indeo 4.9
+>>>>>>>(104.l+132)      string/c        iv50    Intel Indeo 5.0
+>>>>>>>(104.l+132)      string/c        mpeg    MPEG 1 Video Frame
+>>>>>>>(104.l+132)      string/c        mjpg    Motion JPEG
 >>>>>>>(104.l+132)      string/c        mp42    Microsoft MPEG-4 v2
 >>>>>>>(104.l+132)      string/c        mp43    Microsoft MPEG-4 v3
+>>>>>>>(104.l+132)      string/c        mrca    MR Codec
+>>>>>>>(104.l+132)      string/c        mrle    Run Length Encoding
+>>>>>>>(104.l+132)      string/c        msvc    Microsoft Video 1
+>>>>>>>(104.l+132)      string/c        phmo    Photomotion
+>>>>>>>(104.l+132)      string/c        qpeq    QPEG 1.1 Format Video
+>>>>>>>(104.l+132)      string/c        rgbt    RGBT
+>>>>>>>(104.l+132)      string/c        rle4    Run Length Encoded 4
+>>>>>>>(104.l+132)      string/c        rle8    Run Length Encoded 8
+>>>>>>>(104.l+132)      string/c        rt21    Intel Indeo 2.1
+>>>>>>>(104.l+132)      string/c        rvx     Intel RDX
+>>>>>>>(104.l+132)      string/c        sdcc    Sun Digital Camera Codec
+>>>>>>>(104.l+132)      string/c        sfmc    Crystal Net SFM Codec
+>>>>>>>(104.l+132)      string/c        smsc    SMSC
+>>>>>>>(104.l+132)      string/c        smsd    SMSD
+>>>>>>>(104.l+132)      string/c        splc    Splash Studios ACM Audio Codec
+>>>>>>>(104.l+132)      string/c        sqz2    Microsoft VXtreme Video Codec
+>>>>>>>(104.l+132)      string/c        sv10    Sorenson Video R1
+>>>>>>>(104.l+132)      string/c        tlms    TeraLogic Motion Intraframe Codec A
+>>>>>>>(104.l+132)      string/c        tlst    TeraLogic Motion Intraframe Codec B
+>>>>>>>(104.l+132)      string/c        tm20    TrueMotion 2.0
+>>>>>>>(104.l+132)      string/c        tmic    TeraLogic Motion Intraframe Codec 2
+>>>>>>>(104.l+132)      string/c        tmot    TrueMotion Video Compression
+>>>>>>>(104.l+132)      string/c        tr20    TrueMotion RT 2.0
+>>>>>>>(104.l+132)      string/c        ulti    Ultimotion
+>>>>>>>(104.l+132)      string/c        uyvy    UYVY 4:2:2 byte ordering
+>>>>>>>(104.l+132)      string/c        v422    24-bit YUV 4:2:2 format
+>>>>>>>(104.l+132)      string/c        v655    16-bit YUV 4:2:2 format
+>>>>>>>(104.l+132)      string/c        vcr1    ATI VCR 1.0
+>>>>>>>(104.l+132)      string/c        vcr2    ATI VCR 2.0
+>>>>>>>(104.l+132)      string/c        vcr3    ATI VCR 3.0
+>>>>>>>(104.l+132)      string/c        vcr4    ATI VCR 4.0
+>>>>>>>(104.l+132)      string/c        vcr5    ATI VCR 5.0
+>>>>>>>(104.l+132)      string/c        vcr6    ATI VCR 6.0
+>>>>>>>(104.l+132)      string/c        vcr7    ATI VCR 7.0
+>>>>>>>(104.l+132)      string/c        vcr8    ATI VCR 8.0
+>>>>>>>(104.l+132)      string/c        vcr9    ATI VCR 9.0
+>>>>>>>(104.l+132)      string/c        vdct    Video Maker Pro DIB
+>>>>>>>(104.l+132)      string/c        vids    YUV 4:2:2 CCIR 601 for V422
+>>>>>>>(104.l+132)      string/c        vivo    Vivo H.263
+>>>>>>>(104.l+132)      string/c        vixl    VIXL
+>>>>>>>(104.l+132)      string/c        vlv1    VLCAP.DRV
+>>>>>>>(104.l+132)      string/c        wbvc    W9960
+>>>>>>>(104.l+132)      string/c        x263    mmioFOURCC('X','2','6','3')
+>>>>>>>(104.l+132)      string/c        xlv0    XL Video Decoder
+>>>>>>>(104.l+132)      string/c        y211    YUV 2:1:1 Packed
+>>>>>>>(104.l+132)      string/c        y411    YUV 4:1:1 Packed
+>>>>>>>(104.l+132)      string/c        y41b    YUV 4:1:1 Planar
+>>>>>>>(104.l+132)      string/c        y41p    PC1 4:1:1
+>>>>>>>(104.l+132)      string/c        y41t    PC1 4:1:1 with transparency
+>>>>>>>(104.l+132)      string/c        y42b    YUV 4:2:2 Planar
+>>>>>>>(104.l+132)      string/c        y42t    PC1 4:2:2 with transparency
+>>>>>>>(104.l+132)      string/c        yc12    Intel YUV12 Codec
+>>>>>>>(104.l+132)      string/c        yuv8    Winnov Caviar YUV8
+>>>>>>>(104.l+132)      string/c        yuv9    YUV9
+>>>>>>>(104.l+132)      string/c        yuy2    YUY2 4:2:2 byte ordering packed
+>>>>>>>(104.l+132)      string/c        yuyv    BI_YUYV, Canopus
 >>>>>>>(104.l+132)      string/c        fmp4    FFMpeg MPEG-4
->>>>>>>(104.l+132)      string/c        mjpg    Motion JPEG
 >>>>>>>(104.l+132)      string/c        div3    DivX 3
 >>>>>>>>112             string/c        div3    Low-Motion
 >>>>>>>>112             string/c        div4    Fast-Motion
