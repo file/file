@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.57 2020/07/06 22:32:32 christos Exp $
+# $File: console,v 1.58 2020/07/06 22:33:31 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -1107,14 +1107,14 @@
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 # References:
 # - https://problemkaputt.de/fullsnes.htm#snescartsufamiturbominicartridgeadaptor
-0	string	BANDAI\ SFC-ADX
->0x7FB0	ubelong	!0x42324139	Sufami Turbo ROM image:
->>0x10	string	x		"%.14s"
->>0x30	byte	x		\b, ID %02X
->>0x31	byte	x		\b%02X
->>0x32	byte	x		\b%02X
->>0x33	ubyte	>0		\b, series index %u
->>0x34	ubyte	0		[SlowROM]
->>0x34	ubyte	1		[FastROM]
->>0x35	ubyte	1		[SRAM]
->>0x35	ubyte	3		[Special]
+0	string		BANDAI\ SFC-ADX
+>0x10	string		!SFC-ADX\ BACKUP	Sufami Turbo ROM image:
+>>0x10	string/T	x	"%.14s"
+>>0x30	byte		x	\b, ID %02X
+>>0x31	byte		x	\b%02X
+>>0x32	byte		x	\b%02X
+>>0x33	ubyte		>0	\b, series index %u
+>>0x34	ubyte		0	[SlowROM]
+>>0x34	ubyte		1	[FastROM]
+>>0x35	ubyte		1	[SRAM]
+>>0x35	ubyte		3	[Special]
