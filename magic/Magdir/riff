@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.36 2020/06/26 16:50:59 christos Exp $
+# $File: riff,v 1.37 2020/07/06 22:27:54 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -34,7 +34,7 @@
 # try to find "fmt "
 0   name    riff-walk
 >0  string  fmt\x20
->>4 lelong  <0x80
+>>4 lelong  >15
 >>>8 use    riff-wave
 >0  string  LIST
 >>&(4.l+4)  use riff-walk
