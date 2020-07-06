@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.184 2020/07/04 18:43:04 christos Exp $
+# $File: images,v 1.185 2020/07/06 22:35:05 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2675,3 +2675,24 @@
 #	display ICC/ICM color profile by ./icc
 #>>>0x154	use		color-profile
 
+# Type: Crunch compressed texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://github.com/BinomialLLC/crunch/blob/44c8402e24441c7524ca364941fd224ab3b971e9/inc/crn_decomp.h#L267
+0	ubelong		0x4878004A	Crunch compressed texture:
+>0x0C	ubeshort	x	%u x
+>0x0E	ubeshort	x	%u
+>0x12	ubyte		0	\b, DXT1
+>0x12	ubyte		1	\b, DXT3
+>0x12	ubyte		2	\b, DXT5
+>0x12	ubyte		3	\b, DXT5 CCxY
+>0x12	ubyte		4	\b, DXT5 xGxR
+>0x12	ubyte		5	\b, DXT5 xGBR
+>0x12	ubyte		6	\b, DXT5 AGBR
+>0x12	ubyte		7	\b, DXn XY
+>0x12	ubyte		8	\b, DXn YX
+>0x12	ubyte		9	\b, DXT5 Alpha
+>0x12	ubyte		10	\b, ETC1
+>0x10	ubyte		>1	\b, %u mipmaps
+>0x11	ubyte		>1	\b, %u faces
+# TODO: Flags at 0x13? (ubeshort)
