@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.186 2020/07/06 22:35:42 christos Exp $
+# $File: images,v 1.187 2020/07/06 22:37:33 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2003,8 +2003,9 @@
 
 # Supercompression enum.
 0	name	khronos-ktx2-supercompression
->0	lelong	1	Basis Universal
+>0	lelong	1	BasisLZ
 >0	lelong	2	Zstandard
+>0	lelong	3	ZLIB
 
 # Vulkan format identifier.
 # NOTE: Formats prohibited from KTX2 are commented out.
