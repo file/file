@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.185 2020/07/06 22:35:05 christos Exp $
+# $File: images,v 1.186 2020/07/06 22:35:42 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2693,6 +2693,19 @@
 >0x12	ubyte		8	\b, DXn YX
 >0x12	ubyte		9	\b, DXT5 Alpha
 >0x12	ubyte		10	\b, ETC1
->0x10	ubyte		>1	\b, %u mipmaps
+>0x10	ubyte		>1	\b, %u images
 >0x11	ubyte		>1	\b, %u faces
 # TODO: Flags at 0x13? (ubeshort)
+
+# Type: BasisLZ compressed texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://github.com/BinomialLLC/basis_universal/blob/master/spec/basis_spec.txt
+0	uleshort		0x4273
+>0x04	uleshort		0x4D	BasisLZ
+>>0x02	uleshort		x	v%x compressed texture:
+>>0x14	ubyte			0	ETC1S
+>>0x14	ubyte			1	UASTC 4x4
+>>0x0E	ulelong&0xFFFFFF	>1	\b, %u slices
+>>0x11	ulelong&0xFFFFFF	>1	\b, %u images
+>>0x15	uleshort&0x02		2	\b, Y-flipped
