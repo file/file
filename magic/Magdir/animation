@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.77 2020/04/26 15:23:43 christos Exp $
+# $File: animation,v 1.78 2020/07/10 22:43:23 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -234,6 +234,9 @@
 0        belong&0xFFFFFF00  0x00000100
 >3       byte               0xBA           MPEG sequence
 !:mime  video/mpeg
+# http://fileformats.archiveteam.org/wiki/Enhanced_VOB
+# https://reposcope.com/mimetype/video/mpeg
+!:ext	vob/evo/mpg/mpeg
 >>4      byte               &0x40          \b, v2, program multiplex
 >>4      byte               ^0x40          \b, v1, system multiplex
 >3       byte               0xBB           MPEG sequence, v1/2, multiplex (missing pack header)
@@ -906,9 +909,15 @@
 >0x42	ubeshort	>0		%dHz audio
 
 # From: "Stefan A. Haubenthal" <polluks@web.de>
+# Update: Joerg Jenderek
+# URL: https://en.wikipedia.org/wiki/VOB
 0	string		DVDVIDEO-VTS	Video title set,
+!:mime	video/x-ifo
+!:ext	ifo/bup
 >0x21	byte		x		v%x
 0	string		DVDVIDEO-VMG	Video manager,
+!:mime	video/x-ifo
+!:ext	ifo/bup
 >0x21	byte		x		v%x
 
 # From: Behan Webster <behanw@websterwood.com>
