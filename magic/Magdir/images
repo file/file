@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.187 2020/07/06 22:37:33 christos Exp $
+# $File: images,v 1.188 2020/07/10 22:44:17 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -30,24 +30,29 @@
 # Conflict with MPEG sequences.
 !:strength -40
 # Prevent conflicts with CRI ADX.
->(2.S-2) belong	!0x28632943
+#>(2.S-2) belong	!0x28632943
+# above line does not work for rgb32_top_left_rle.tga
+# skip some MPEG sequence *.vob and some CRI ADX audio with improbable interleave bits
+>17	ubyte&0xC0		!0xC0
 # skip more garbage like *.iso by looking for positive image type
 >>2	ubyte			>0
 # skip some compiled terminfo like xterm+tmux by looking for image type less equal 33
 >>>2	ubyte			<34
+# skip some MPEG sequence *.vob HV001T01.EVO winnicki.mpg with unacceptable alpha channel depth 11
+>>>>17	ubyte&0x0F		!11
 # skip arches.3200 , Finder.Root , Slp.1 by looking for low pixel depth 1 8 15 16 24 32
->>>>16	ubyte			1
->>>>>0		use		tga-image
->>>>16	ubyte			8
->>>>>0		use		tga-image
->>>>16	ubyte			15
->>>>>0		use		tga-image
->>>>16	ubyte			16
->>>>>0		use		tga-image
->>>>16	ubyte			24
->>>>>0		use		tga-image
->>>>16	ubyte			32
->>>>>0		use		tga-image
+>>>>>16	ubyte			1
+>>>>>>0		use		tga-image
+>>>>>16	ubyte			8
+>>>>>>0		use		tga-image
+>>>>>16	ubyte			15
+>>>>>>0		use		tga-image
+>>>>>16	ubyte			16
+>>>>>>0		use		tga-image
+>>>>>16	ubyte			24
+>>>>>>0		use		tga-image
+>>>>>16	ubyte			32
+>>>>>>0		use		tga-image
 #	display tga bitmap image information
 0	name				tga-image
 >2	ubyte		<34		Targa image data
@@ -88,6 +93,7 @@
 # Y origin of image. 0 normal; positive for top
 >10	uleshort	>0		+%d
 # Image descriptor: bits 3-0 give the alpha channel depth, bits 5-4 give direction
+# alpha depth like: 1 8
 >17	ubyte&0x0F	>0		- %d-bit alpha
 # bits 5-4 give direction. normal bottom left
 >17	ubyte		&0x20		- top
