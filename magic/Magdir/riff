@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.39 2020/07/06 22:30:30 christos Exp $
+# $File: riff,v 1.40 2020/07/10 22:46:57 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -255,8 +255,13 @@
 #>>>0	use		corel-draw
 >8	string		NUNDROOT	\b, Steinberg CuBase
 # AVI == Audio Video Interleave
+# Reference:	http://fileformats.archiveteam.org/wiki/AVI
 >8	string		AVI\040		\b, AVI
+# https://reposcope.com/mimetype/video/x-msvideo
 !:mime	video/x-msvideo
+# https://www.iana.org/assignments/wave-avi-codec-registry/wave-avi-codec-registry.xml
+#!:mime	video/vnd.avi
+!:ext	avi/divx
 >>12    string          LIST
 >>>20   string          hdrlavih
 >>>>&36 lelong          x               \b, %u x
@@ -482,6 +487,17 @@
 >>>>>>>>(92.l+190)      leshort 2       (stereo,
 >>>>>>>>(92.l+190)      leshort >2      (%d channels,
 >>>>>>>>(92.l+192)      lelong  x       %d Hz)
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/VDR_(VirtualDub)
+# Reference:	http://sourceforge.net/projects/virtualdub/files/virtualdub-win/
+#		1.10.4.35491/VirtualDub-1.10.4-src.7z/src/vdremote/Main.cpp
+# VirtualDub link handler
+>8	string		VDRM		\b, VirtualDub link
+!:mime	video/x-vdr
+!:ext	vdr
+>>12	string		PATH		\b, PATH
+# remote-path to video file
+>>16	pstring/l	x		%s
 # Animated Cursor format
 >8	string		ACON		\b, animated cursor
 # SoundFont 2 <mpruett@sgi.com>
