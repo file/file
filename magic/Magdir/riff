@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.40 2020/07/10 22:46:57 christos Exp $
+# $File: riff,v 1.41 2020/07/11 19:01:27 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -499,7 +499,20 @@
 # remote-path to video file
 >>16	pstring/l	x		%s
 # Animated Cursor format
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Windows_Animated_Cursor
+# Reference:	https://www.gdgsoft.com/anituner/help/aniformat.htm
 >8	string		ACON		\b, animated cursor
+!:mime	application/x-navi-animation
+# http://extension.nirsoft.net/ani
+#!:mime	image/ani
+!:ext	ani
+# INAM tag followed by length of title
+>>24	string		INAM
+>>>28	pstring/l	x		"%s"
+# IART tag followed by length of author
+>>>(28.l+32)	ubelong	0x49415254
+>>>>&0	pstring/l	x		%s
 # SoundFont 2 <mpruett@sgi.com>
 >8	string		sfbk		SoundFont/Bank
 # MPEG-1 wrapped in a RIFF, apparently
