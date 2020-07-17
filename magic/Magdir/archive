@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.138 2020/06/07 23:29:26 christos Exp $
+# $File: archive,v 1.139 2020/07/17 19:26:18 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1472,8 +1472,17 @@
 >>0x2A	string	>\0		: %s
 
 # DR-DOS 7.03 Packed File *.??_
-0	string	Packed\ File\ 	Personal NetWare Packed File
->12	string	x		\b, was "%.12s"
+# Reference: http://www.antonis.de/dos/dos-tuts/mpdostip/html/nwdostip.htm
+# Note:	unpacked by PNUNPACK.EXE
+0	string	Packed\ File\ 
+# by looking for Control-Z skip ASCII text starting with Packed File 
+>0x18	ubyte	0x1a		Personal NetWare Packed File
+!:mime	application/x-novell-compress
+!:ext	??_
+>>12	string	x		\b, was "%.12s"
+# 1 or 2
+#>>0x19	ubyte	x		\b, at 0x19 %u
+>>0x1b	ulelong	x		with %u bytes
 
 # EET archive
 # From: Tilman Sauerbeck <tilman@code-monkey.de>
