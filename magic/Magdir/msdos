@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.137 2020/03/20 17:20:19 christos Exp $
+# $File: msdos,v 1.138 2020/07/17 19:23:16 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -570,21 +570,32 @@
 #!:mime	application/x-msdos-program
 !:ext com
 
+# URL:		https://en.wikipedia.org/wiki/UPX
+# Reference:	https://github.com/upx/upx/archive/v3.96.zip/upx-3.96/
+#		src/stub/src/i086-dos16.com.S 
+# Update:	Joerg Jenderek
+# assembler instructions: cmp sp, offset sp_limit
 0	string/b	\x81\xfc
+#>2	uleshort	x		\b, sp_limit=0x%x
+# assembler instructions: jump above +2; int 0x20; mov cx, offset bytes_to_copy
 >4	string	\x77\x02\xcd\x20\xb9
->>36	string	UPX!			FREE-DOS executable (COM), UPX compressed
+#>9	uleshort	x		\b, [bytes_to_copy]=0x%x
+# at different offsets assembler instructions: push di; jump decomp_start_n2b
+>0x1e	search/3	\x57\xe9
+#>>&0	uleshort	x		\b, decomp_start_n2b=0x%x
+# src/stub/src/include/header.S; UPX_MAGIC_LE32
+>>&2	string		UPX!		FREE-DOS executable (COM), UPX
 !:mime	application/x-dosexec
+# UPX compressed *.CPI; See ./fonts
+>>>&21	string		=FONT		compressed DOS code page font
+!:ext	cpx
+>>>&21	string		!FONT		compressed
 !:ext	com
+# compressed size?
+#>>>&14	uleshort+152	x		\b, %u bytes
+# uncompressed len
+>>>&12	uleshort	x		\b, uncompressed %u bytes
 252	string Must\ have\ DOS\ version DR-DOS executable (COM)
-!:mime	application/x-dosexec
-!:ext	com
-# added by Joerg Jenderek at Oct 2008
-# GRR search is not working
-#34	search/2	UPX!		FREE-DOS executable (COM), UPX compressed
-34	string	UPX!			FREE-DOS executable (COM), UPX compressed
-!:mime	application/x-dosexec
-!:ext	com
-35	string	UPX!			FREE-DOS executable (COM), UPX compressed
 !:mime	application/x-dosexec
 !:ext	com
 # GRR search is not working
