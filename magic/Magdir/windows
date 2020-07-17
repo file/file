@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.31 2020/03/15 16:44:37 christos Exp $
+# $File: windows,v 1.32 2020/07/17 19:26:24 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -576,6 +576,13 @@
 >>&0	regex/c		\^(options)]\r\n				Microsoft HTML Help Project
 !:mime text/plain
 !:ext	hhp
+# From:		Joerg Jenderek
+# URL:		https://documentation.basis.com/BASISHelp/WebHelp/b3odbc/obdcdriv_character_translation.htm
+# Reference:	https://www.garykessler.net/library/file_sigs.html
+# Note:		stored in directory %WINDIR%\SysWOW64 or %WINDIR%\system
+>>&0	regex/c		\^(Windows\ Latin)				Windows codepage translator
+!:mime	text/plain
+!:ext	cpx
 # unknown keyword after opening bracket
 >>&0	default				x
 #>>>&0	string/c			x	UNKNOWN [%s
