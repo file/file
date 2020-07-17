@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.188 2020/07/10 22:44:17 christos Exp $
+# $File: images,v 1.189 2020/07/17 19:25:42 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1436,8 +1436,10 @@
 !:ext	bmf
 
 # https://www.cartesianinc.com/Tech/
+# Reference:	http://fileformats.archiveteam.org/wiki/Cartesian_Perceptual_Compression
 0	string	CPC\262		Cartesian Perceptual Compression image
 !:mime	image/x-cpi
+!:ext	cpi/cpc
 
 # From Albert Cahalan <acahalan@gmail.com>
 # puredigital used it for the CVS disposable camcorder
