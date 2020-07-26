@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.23 2020/06/27 23:54:14 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.24 2020/07/26 17:00:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -102,7 +102,7 @@ file_encoding(struct magic_set *ms, const struct buffer *b, unichar **ubuf,
 	if (looks_ascii(buf, nbytes, *ubuf, ulen)) {
 		if (looks_utf7(buf, nbytes, *ubuf, ulen) > 0) {
 			DPRINTF(("utf-7 %" SIZE_T_FORMAT "u\n", *ulen));
-			*code = "UTF-7 Unicode";
+			*code = "Unicode text, UTF-7";
 			*code_mime = "utf-7";
 		} else {
 			DPRINTF(("ascii %" SIZE_T_FORMAT "u\n", *ulen));
@@ -111,27 +111,27 @@ file_encoding(struct magic_set *ms, const struct buffer *b, unichar **ubuf,
 		}
 	} else if (looks_utf8_with_BOM(buf, nbytes, *ubuf, ulen) > 0) {
 		DPRINTF(("utf8/bom %" SIZE_T_FORMAT "u\n", *ulen));
-		*code = "UTF-8 Unicode (with BOM)";
+		*code = "Unicode text, UTF-8 (with BOM)";
 		*code_mime = "utf-8";
 	} else if (file_looks_utf8(buf, nbytes, *ubuf, ulen) > 1) {
 		DPRINTF(("utf8 %" SIZE_T_FORMAT "u\n", *ulen));
-		*code = "UTF-8 Unicode";
+		*code = "Unicode text, UTF-8";
 		*code_mime = "utf-8";
 	} else if ((ucs_type = looks_ucs32(buf, nbytes, *ubuf, ulen)) != 0) {
 		if (ucs_type == 1) {
-			*code = "Little-endian UTF-32 Unicode";
+			*code = "Unicode text, UTF-32, little-endian";
 			*code_mime = "utf-32le";
 		} else {
-			*code = "Big-endian UTF-32 Unicode";
+			*code = "Unicode text, UTF-32, big-endian";
 			*code_mime = "utf-32be";
 		}
 		DPRINTF(("ucs32 %" SIZE_T_FORMAT "u\n", *ulen));
 	} else if ((ucs_type = looks_ucs16(buf, nbytes, *ubuf, ulen)) != 0) {
 		if (ucs_type == 1) {
-			*code = "Little-endian UTF-16 Unicode";
+			*code = "Unicode text, UTF-16, little-endian";
 			*code_mime = "utf-16le";
 		} else {
-			*code = "Big-endian UTF-16 Unicode";
+			*code = "Unicode text, UTF-16, big-endian";
 			*code_mime = "utf-16be";
 		}
 		DPRINTF(("ucs16 %" SIZE_T_FORMAT "u\n", *ulen));
