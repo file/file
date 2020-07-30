@@ -18,7 +18,7 @@
 >>10	use		zipcompression
 
 # URL:		https://en.wikipedia.org/wiki/Zip_(file_format)
-# reference:	https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.3.6.TXT
+# reference:	https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT (Version: 6.3.9)
 # Zip known compressions
 0	name		zipcompression
 >0	leshort		0		\bstore
@@ -33,11 +33,12 @@
 #>0	leshort		13 		\bReserved by PKWARE
 >0	leshort		14		\blzma
 #>0	leshort		15 		\bReserved by PKWARE
->0	leshort		16		\bCMPSC Compression
+>0	leshort		16		\bCMPSC (IBM z/OS)
 #>0	leshort		17 		\bReserved by PKWARE
 >0	leshort		18		\bIBM TERSE
->0	leshort		19		\bIBM LZ77
-# https://support.winzip.com/hc/en-us/articles/115012122828-Compression-method-used-for-this-file-is-94
+>0	leshort		19		\bIBM LZ77 (z/Architecture)
+>0	leshort		20		\bZstd (deprecated)
+>0	leshort		93		\bZstd
 >0	leshort		94		\bMP3
 >0	leshort		95		\bxz
 >0	leshort		96		\bJpeg
