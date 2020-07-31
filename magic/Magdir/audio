@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: audio,v 1.118 2019/11/19 05:30:07 christos Exp $
+# $File: audio,v 1.119 2020/07/31 18:22:10 christos Exp $
 # audio:  file(1) magic for sound formats (see also "iff")
 #
 # Jan Nicolai Langfeldt (janl@ifi.uio.no), Dan Quinlan (quinlan@yggdrasil.com),
@@ -716,36 +716,36 @@
 >>8	ubyte&0x0F	>0	\b%d
 #Get soundchips
 >>8	ubyte		x	\b, soundchip(s)=
->>0x0C	ulelong		>0	SN76489,
->>0x10	ulelong		>0	YM2413,
->>0x2C	ulelong		>0	YM2612,
->>0x30	ulelong		>0	YM2151,
+>>0x0C	ulelong		>0	SN76489 (PSG),
+>>0x10	ulelong		>0	YM2413 (OPLL),
+>>0x2C	ulelong		>0	YM2612 (OPN2),
+>>0x30	ulelong		>0	YM2151 (OPM),
 >>0x38	ulelong		>0	Sega PCM,
 >>0x34	ulelong		>0xC
->>>0x40	ulelong		>0	RF5C68,
+>>>0x40	ulelong		>0	RF5C68 (PCM),
 >>0x34	ulelong		>0x10
->>>0x44	ulelong		>0	YM2203,
+>>>0x44	ulelong		>0	YM2203 (OPN),
 >>0x34	ulelong		>0x14
->>>0x48	ulelong		>0	YM2608,
+>>>0x48	ulelong		>0	YM2608 (OPNA),
 >>0x34	ulelong		>0x18
->>>0x4C	lelong		>0	YM2610,
->>>0x4C	lelong		<0	YM2610B,
+>>>0x4C	lelong		>0	YM2610 (OPNB),
+>>>0x4C	lelong		<0	YM2610B (OPNB+2FM),
 >>0x34	ulelong		>0x1C
->>>0x50	ulelong		>0	YM3812,
+>>>0x50	ulelong		>0	YM3812 (OPL2),
 >>0x34	ulelong		>0x20
->>>0x54	ulelong		>0	YM3526,
+>>>0x54	ulelong		>0	YM3526 (OPL),
 >>0x34	ulelong		>0x24
->>>0x58	ulelong		>0	Y8950,
+>>>0x58	ulelong		>0	Y8950 (MSX-Audio),
 >>0x34	ulelong		>0x28
->>>0x5C	ulelong		>0	YMF262,
+>>>0x5C	ulelong		>0	YMF262 (OPL3),
 >>0x34	ulelong		>0x2C
->>>0x60	ulelong		>0	YMF278B,
+>>>0x60	ulelong		>0	YMF278B (OPL4),
 >>0x34	ulelong		>0x30
->>>0x64	ulelong		>0	YMF271,
+>>>0x64	ulelong		>0	YMF271 (OPX),
 >>0x34	ulelong		>0x34
->>>0x68	ulelong		>0	YMZ280B,
+>>>0x68	ulelong		>0	YMZ280B (PCMD8),
 >>0x34	ulelong		>0x38
->>>0x6C	ulelong		>0	RF5C164,
+>>>0x6C	ulelong		>0	RF5C164 (PCM),
 >>0x34	ulelong		>0x3C
 >>>0x70	ulelong		>0	PWM,
 >>0x34	ulelong		>0x40
@@ -767,11 +767,11 @@
 >>0x34	ulelong		>0x54
 >>>0x88	ulelong		>0	MultiPCM,
 >>0x34	ulelong		>0x58
->>>0x8C	ulelong		>0	uPD7759,
+>>>0x8C	ulelong		>0	uPD7759 (ADPCM Speech),
 >>0x34	ulelong		>0x5C
->>>0x90	ulelong		>0	OKIM6258,
+>>>0x90	ulelong		>0	OKIM6258 (ADPCM Speech),
 >>0x34	ulelong		>0x64
->>>0x98	ulelong		>0	OKIM6295,
+>>>0x98	ulelong		>0	OKIM6295 (ADPCM),
 >>0x34	ulelong		>0x68
 >>>0x9C	ulelong		>0	K051649,
 >>0x34	ulelong		>0x6C
@@ -796,10 +796,10 @@
 >>0x34	ulelong		>0x94
 >>>0xC8	ulelong		>0	SAA1099,
 >>0x34	ulelong		>0x98
->>>0xCC	ulelong		>0	ES5503,
+>>>0xCC	ulelong		>0	ES5503 (DOC),
 >>0x34	ulelong		>0x9C
->>>0xD0	lelong		>0	ES5505,
->>>0xD0	lelong		<0	ES5506,
+>>>0xD0	lelong		>0	ES5505 (OTIS),
+>>>0xD0	lelong		<0	ES5506 (OTTO),
 >>0x34	ulelong		>0xA4
 >>>0xD8	ulelong		>0	X1-010,
 >>0x34	ulelong		>0xA8
