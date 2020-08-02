@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.20 2020/02/01 16:32:33 christos Exp $
+# $File: games,v 1.21 2020/08/02 16:36:34 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -313,3 +313,10 @@
 >>12	regex	[0-9a-z.]+	saved by game version %s
 
 0	string	CIV6		Sid Meier's Civilization VI saved game
+
+# https://syzygy-tables.info/
+# From Michel Van den Bergh
+0	string	\327f\f\245	Syzygy DTZ tablebase
+!:mime	application/syzygy
+0	string	q\350#]		Syzygy WDL tablebase
+!:mime	application/syzygy
