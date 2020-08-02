@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.17 2018/10/16 18:57:19 christos Exp $
+# $File: amigaos,v 1.18 2020/08/02 16:42:00 christos Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -49,15 +49,91 @@
 0	string/c	@database	AmigaGuide file
 
 # Amiga disk types
+#	display information like volume name of root block on Amiga (floppy) disk
+0	name   	adf-rootblock
+# block primary type = T_HEADER (value 2)
+>0x000	ubelong		!2		\b, type %u
+# header_key; unused in rootblock (value 0)
+>0x004	ubelong		!0		\b, header_key %u
+# high_seq; unused (value 0)
+>0x008	ubelong		!0		\b, high_seq %u
+# ht_size; hash table size; 0x48 for flopies
+>0x00c	ubelong		!0x48		\b, hash table size 0x%x
+# bm_flag; bitmap flag, -1 means VALID
+>0x138	belong		!-1		\b, bitmap flag 0x%x
+# bm_ext; first bitmap extension block (Hard disks only)
+>0x1A0	ubelong		!0		\b, bitmap extension block 0x%x
+# name_len; volume name length; diskname[30]; volume name
+>0x1B0	pstring		>\0		\b, "%s"
+# first directory cache block for FFS; otherwise 0
+>0x1F8	ubelong		!0		\b, directory cache block 0x%x
+# block secondary type = ST_ROOT (value 1)
+>0x1FC	ubelong		!1		\b, sec_type 0x%x
 #
 0	string		RDSK		Rigid Disk Block
 >160	string		x		on %.24s
-0	string		DOS\0		Amiga DOS disk
-0	string		DOS\1		Amiga FFS disk
-0	string		DOS\2		Amiga Inter DOS disk
-0	string		DOS\3		Amiga Inter FFS disk
-0	string		DOS\4		Amiga Fastdir DOS disk
-0	string		DOS\5		Amiga Fastdir FFS disk
+# URL:		http://fileformats.archiveteam.org/wiki/ADF_(Amiga)
+#		https://en.wikipedia.org/wiki/Amiga_Fast_File_System
+# Reference:	http://lclevy.free.fr/adflib/adf_info.html
+# Update:	Joerg Jenderek
+# Note:		created by ADFOpus.exe
+# 		and verified by `unadf -l TURBO_SILVER_SV.ADF`
+0	string		DOS
+# skip DOS Client Message Files like IPXODI.MSG DOSRQSTR.MSG
+>3	ubyte		<8		Amiga
+# https://reposcope.com/mimetype/application/x-amiga-disk-format
+!:mime	application/x-amiga-disk-format
+!:ext	adf
+>>3	ubyte		0		DOS disk
+>>3	ubyte		1		FFS disk
+>>3	ubyte		2		Inter DOS disk
+>>3	ubyte		3		Inter FFS disk
+# For Fastdir mode the international mode is also enabled,
+>>3	ubyte		4		Fastdir DOS disk
+>>3	ubyte		5		Fastdir FFS dis
+# called by TrID "Amiga Disk image File (OFS+INTL+DIRC)"
+>>3	ubyte		6		Inter Fastdir DOS disk
+# called by TrID "Amiga Disk image File (FFS+INTL+DIRC)"
+>>3	ubyte		7		Inter Fastdir FFS disk
+# but according to Wikipedia variants with long name support
+#>>3	ubyte		6		long name DOS disk
+#>>3	ubyte		7		long name FFS disk
+# DOES NOT only work! Partly for file size  ~< FILE_BYTES_MAX=1 MiB defined in ../../src/file.h
+#>>-0		offset	x		\b, %lld bytes
+# Correct file size, but next lines are NOT executed
+#>>-0		offset	901120		(DD 880 KiB floppy)
+# 880 KiB Double Density floppy disk by characteristic hash table size 0x48 and T_HEADER=2
+>>0x6E00C	ubelong	0x48
+>>>0x6E000	ubelong	2		(DD 880 KiB)
+# 1760 KiB High Density floppy disk (1802240 bytes) by characteristic hash table size 0x48
+>>0xDC00C	ubelong	0x48
+>>>0xDC000	ubelong	2		(HD 1760 KiB)
+# Chksum; special block checksum like: 0 0x44ccf4c0 0x51f32cac 0xe33d0e7d ...
+#>>4	ubelong		x		\b, CRC 0x%x
+# Rootblock: 0 880 (often for DD and HD) 1146049280 (IMAGINE_1_0_DISK_01.ADF TURBO_SILVER_SV.ADF)
+>>8	ubelong		>0		\b, probably root block %d
+# bootblock code
+>>12	quad		!0		\b, bootable
+# assembler instructions: lea exp(pc),a1; moveq 25h,d0; jsr -552(a6)
+>>>12	ubequad	=0x43fa003e70254eae	AmigaDOS 3.0
+>>>12	default	x
+>>>>12	ubequad	!0x43fa003e70254eae	0x%llx..
+# 880 KiB Double Density floppy disk (901120 bytes)
+>>0x6E00C	ubelong	0x48
+>>>0x6E000	ubelong	2
+>>>>0x6E000	use			adf-rootblock
+# 1760 KiB High Density floppy disk (1802240 bytes)
+>>0xDC00C	ubelong	0x48
+>>>0xDC000	ubelong	2
+>>>>0xDC000	use			adf-rootblock
+# 1 MiB hard disc by test for T_HEADER=2 and header_key=0=high_seq 
+>>0x80000	ubelong	2
+>>>0x80004	quad	0
+>>>>0x80000	use			adf-rootblock
+# 2 MiB hard disc; only works if in ../../src/file.h FILE_BYTES_MAX is raised to 2 MiB 
+#>>0x100000	ubelong	x		2 MiB TEST
+#>>0x100000	ubelong	2		\b, 2 MiB hard disc rootblock
+#>>>0x100000	use			adf-rootblock
 0	string		KICK		Kickstart disk
 
 # From: Alex Beregszaszi <alex@fsn.hu>
