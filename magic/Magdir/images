@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.190 2020/08/09 16:34:24 christos Exp $
+# $File: images,v 1.191 2020/08/09 16:41:19 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2750,3 +2750,11 @@
 >>0x0E	ulelong&0xFFFFFF	>1	\b, %u slices
 >>0x11	ulelong&0xFFFFFF	>1	\b, %u images
 >>0x15	uleshort&0x02		2	\b, Y-flipped
+
+# MIME registration: https://www.iana.org/assignments/media-types/model/e57
+# Sample files: http://www.libe57.org/data.html
+# Reference implementation: http://www.libe57.org/
+# https://www.ri.cmu.edu/pub_files/2011/1/2011-huber-e57-v3.pdf
+0	string		ASTM-E57	ASTM E57 three-dimensional model
+!:mime model/e57
+!:ext e57
