@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.60 2020/07/08 14:17:20 christos Exp $
+# $File: console,v 1.61 2020/08/09 16:38:35 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -125,6 +125,7 @@
 >0x14c		byte		x			(Rev.%02u)
 
 # Machine type. (SGB, CGB, SGB+CGB)
+# Old licensee code 0x33 is required for SGB, but not CGB.
 >0x14b		byte		0x33
 >>0x146		byte		0x03
 >>>0x143	byte&0x80	0x80	[SGB+CGB]
@@ -133,6 +134,8 @@
 >>>0x143	byte&0xC0	0x80	[CGB]
 >>>0x143	byte&0xC0	0xC0	[CGB ONLY]
 >0x14b		byte		!0x33
+>>0x143		byte&0xC0	0x80	[CGB]
+>>0x143		byte&0xC0	0xC0	[CGB ONLY]
 
 # Mapper.
 >0x147 byte 0x00  [ROM ONLY]
