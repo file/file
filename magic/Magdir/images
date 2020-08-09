@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.189 2020/07/17 19:25:42 christos Exp $
+# $File: images,v 1.190 2020/08/09 16:34:24 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -174,57 +174,86 @@
 ## EndOfTGA
 
 # PBMPLUS images
+# URL: 		https://en.wikipedia.org/wiki/Netpbm
 # The next byte following the magic is always whitespace.
-# strength is changed to try these patterns before "x86 boot sector"
+# adding 65 to strength so that Netpbm images comes before "x86 boot sector" or
+# "DOS/MBR boot sector" identified by ./filesystems is probably not needed
+# because files are different
 0	name		netpbm
 >3	regex/s		=[0-9]{1,50}\ [0-9]{1,50}	Netpbm image data
 >>&0	regex		=[0-9]{1,50} 			\b, size = %s x
 >>>&0	regex		=[0-9]{1,50}			\b %s
 
 0	search/1	P1
->0	regex/4		P1[\040\t\f\r\n]
->>0	use		netpbm
->>0	string		x	\b, bitmap
-!:strength + 65
+# test for whitespace after 2 byte magic
+>2	regex/2		[\040\t\f\r\n]
+# skip DROID x-fmt-164-signature-id-583.pbm with ten 0 digits
+>>3	string		!000000000
+>>>0	use		netpbm
+>>>0	string		x	\b, bitmap
+#!:strength + 65
 !:mime	image/x-portable-bitmap
+!:ext	pbm
+# check for character # starting a comment line
+>>>3	ubyte		=0x23
+>>>>4	string		x	%s
 
 0	search/1	P2
 >0	regex/4		P2[\040\t\f\r\n]
 >>0	use		netpbm
 >>0	string		x	\b, greymap
-!:strength + 65
-!:mime	image/x-portable-greymap
+#!:strength + 65
+# american spelling gray
+!:mime	image/x-portable-graymap
+!:ext	pgm
 
 0	search/1	P3
 >0	regex/4		P3[\040\t\f\r\n]
 >>0	use		netpbm
 >>0	string		x	\b, pixmap
-!:strength + 65
+#!:strength + 65
 !:mime	image/x-portable-pixmap
+!:ext	ppm
 
 0	string		P4
 >0	regex/4		P4[\040\t\f\r\n]
 >>0	use		netpbm
 >>0	string		x	\b, rawbits, bitmap
-!:strength + 65
+#!:strength + 65
 !:mime	image/x-portable-bitmap
+!:ext	pbm
 
 0	string		P5
 >0	regex/4		P5[\040\t\f\r\n]
 >>0	use		netpbm
 >>0	string		x	\b, rawbits, greymap
-!:strength + 65
+#!:strength + 65
 !:mime	image/x-portable-greymap
+!:ext	pgm
 
 0	string		P6
 >0	regex/4		P6[\040\t\f\r\n]
 >>0	use		netpbm
 >>0	string		x	\b, rawbits, pixmap
-!:strength + 65
+#!:strength + 65
 !:mime	image/x-portable-pixmap
+!:ext	ppm/pnm
 
-0	string		P7		Netpbm PAM image file
-!:mime	image/x-portable-pixmap
+# URL: 		https://en.wikipedia.org/wiki/Netpbm#PAM_graphics_format
+# Reference:	http://fileformats.archiveteam.org/wiki/Portable_Arbitrary_Map
+# Update:	Joerg Jenderek
+0	string		P7
+# skip DROID fmt-405-signature-id-589.pam by looking for character like New Line 
+>2	ubyte		!0xAB
+#>2	ubyte		=0x0A
+>>3	search/256/b	WIDTH		Netpbm PAM image file, size =
+!:mime	image/x-portable-arbitrarymap
+!:ext	pam
+>>>&1	string		x		%s
+>>>3	search/256/b	HEIGHT		x
+>>>>&1	string		x		%s
+# at offset 2 a New Line character (0xA) should appear
+>>>2	ubyte		!0x0A		\b, 0x%x at offset 2 instead new line
 
 # From: bryanh@giraffe-data.com (Bryan Henderson)
 0	string		\117\072	Solitaire Image Recorder format
@@ -1121,7 +1150,14 @@
 >12  beshort > 1 \bs
 
 # XV thumbnail indicator (ThMO)
+# URL:		https://en.wikipedia.org/wiki/Xv_(software)
+# Reference:	http://fileformats.archiveteam.org/wiki/XV_thumbnail
+# Update:	Joerg Jenderek
 0	string		P7\ 332		XV thumbnail image data
+#0	string		P7\ 332		XV "thumbnail file" (icon) data
+!:mime	image/x-xv-thumbnail
+# thumbnail .xvpic/foo.bar for graphic foo.bar
+!:ext	p7/gif/tif/xpm/jpg
 
 # NITF is defined by United States MIL-STD-2500A
 0	string	NITF	National Imagery Transmission Format
@@ -1226,10 +1262,6 @@
 >>30	beshort	>0		%d)
 
 0	string	Paint\ Shop\ Pro\ Image\ File	Paint Shop Pro Image File
-
-# "thumbnail file" (icon)
-# descended from "xv", but in use by other applications as well (Wolfram Kleff)
-0       string          P7\ 332         XV "thumbnail file" (icon) data
 
 # taken from fkiss: (<yav@mte.biglobe.ne.jp> ?)
 0       string          KiSS            KISS/GS
