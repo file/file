@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.78 2020/07/10 22:43:23 christos Exp $
+# $File: animation,v 1.79 2020/08/09 16:53:53 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1078,3 +1078,8 @@
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 0	string	CRID
 >32	string	@UTF	Scaleform video
+
+# http://www.jerrysguide.com/tips/demystify-tvs-file-format.html
+0	string	TVS\015\012
+>&0	string	Version\040	TeamViewer Session File
+>>&0	string	x		\b, version %s
