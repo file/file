@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.220 2020/06/08 17:38:27 christos Exp $
+ * @(#)$File: file.h,v 1.221 2020/08/14 13:37:10 christos Exp $
  */
 
 #ifndef __file_h__
@@ -464,7 +464,7 @@ struct magic_set {
 };
 
 /* Type for Unicode characters */
-typedef unsigned long unichar;
+typedef unsigned long file_unichar_t;
 
 struct stat;
 #define FILE_T_LOCAL	1
@@ -498,9 +498,9 @@ protected int file_zmagic(struct magic_set *, const struct buffer *,
 protected int file_ascmagic(struct magic_set *, const struct buffer *,
     int);
 protected int file_ascmagic_with_encoding(struct magic_set *,
-    const struct buffer *, unichar *, size_t, const char *, const char *, int);
+    const struct buffer *, file_unichar_t *, size_t, const char *, const char *, int);
 protected int file_encoding(struct magic_set *, const struct buffer *,
-    unichar **, size_t *, const char **, const char **, const char **);
+    file_unichar_t **, size_t *, const char **, const char **, const char **);
 protected int file_is_json(struct magic_set *, const struct buffer *);
 protected int file_is_csv(struct magic_set *, const struct buffer *, int);
 protected int file_is_tar(struct magic_set *, const struct buffer *);
@@ -527,7 +527,7 @@ protected size_t file_mbswidth(const char *);
 protected const char *file_getbuffer(struct magic_set *);
 protected ssize_t sread(int, void *, size_t, int);
 protected int file_check_mem(struct magic_set *, unsigned int);
-protected int file_looks_utf8(const unsigned char *, size_t, unichar *,
+protected int file_looks_utf8(const unsigned char *, size_t, file_unichar_t *,
     size_t *);
 protected size_t file_pstring_length_size(struct magic_set *,
     const struct magic *);
