@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.25 2020/08/14 13:37:10 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.26 2020/08/15 12:06:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -257,65 +257,40 @@ private char text_chars[256] = {
 	I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I   /* 0xfX */
 };
 
-private int
-looks_ascii(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf,
-    size_t *ulen)
-{
-	size_t i;
-
-	*ulen = 0;
-
-	for (i = 0; i < nbytes; i++) {
-		int t = text_chars[buf[i]];
-
-		if (t != T)
-			return 0;
-
-		ubuf[(*ulen)++] = buf[i];
-	}
-
-	return 1;
+#define LOOKS(NAME, COND) \
+private int \
+looks_ ## NAME(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf, \
+    size_t *ulen) \
+{ \
+	size_t i, u; \
+	unsigned char dist[256]; \
+	memset(dist, 0, sizeof(dist)); \
+\
+	*ulen = 0; \
+\
+	for (i = 0; i < nbytes; i++) { \
+		int t = text_chars[buf[i]]; \
+\
+		if (COND) \
+			return 0; \
+\
+		ubuf[(*ulen)++] = buf[i]; \
+		dist[buf[i]]++; \
+	} \
+	u = 0; \
+	for (i = 0; i < __arraycount(dist); i++) { \
+		if (dist[i]) \
+			u++; \
+	} \
+	if (u < 3) \
+		return 0; \
+\
+	return 1; \
 }
 
-private int
-looks_latin1(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf,
-    size_t *ulen)
-{
-	size_t i;
-
-	*ulen = 0;
-
-	for (i = 0; i < nbytes; i++) {
-		int t = text_chars[buf[i]];
-
-		if (t != T && t != I)
-			return 0;
-
-		ubuf[(*ulen)++] = buf[i];
-	}
-
-	return 1;
-}
-
-private int
-looks_extended(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf,
-    size_t *ulen)
-{
-	size_t i;
-
-	*ulen = 0;
-
-	for (i = 0; i < nbytes; i++) {
-		int t = text_chars[buf[i]];
-
-		if (t != T && t != I && t != X)
-			return 0;
-
-		ubuf[(*ulen)++] = buf[i];
-	}
-
-	return 1;
-}
+LOOKS(ascii, t != T)
+LOOKS(latin1, t != T && t != I)
+LOOKS(extended, t != T && t != I && t != X)
 
 /*
  * Decide whether some text looks like UTF-8. Returns:
