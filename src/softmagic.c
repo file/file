@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.299 2020/06/07 21:58:01 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.300 2020/08/22 18:27:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -594,7 +594,7 @@ mprint(struct magic_set *ms, struct magic *m)
 			break;
 		default:
 			if (file_printf(ms, F(ms, desc, "%d"),
-			    CAST(unsigned char, v)) == -1)
+			    CAST(char, v)) == -1)
 				return -1;
 			break;
 		}
@@ -609,14 +609,14 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			(void)snprintf(buf, sizeof(buf), "%u",
-			    CAST(unsigned short, v));
+			(void)snprintf(buf, sizeof(buf), "%d",
+			    CAST(short, v));
 			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
 				return -1;
 			break;
 		default:
-			if (file_printf(ms, F(ms, desc, "%u"),
-			    CAST(unsigned short, v)) == -1)
+			if (file_printf(ms, F(ms, desc, "%d"),
+			    CAST(short, v)) == -1)
 				return -1;
 			break;
 		}
@@ -632,14 +632,14 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			(void)snprintf(buf, sizeof(buf), "%u",
-			    CAST(uint32_t, v));
+			(void)snprintf(buf, sizeof(buf), "%d",
+			    CAST(int32_t, v));
 			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
 				return -1;
 			break;
 		default:
-			if (file_printf(ms, F(ms, desc, "%u"),
-			    CAST(uint32_t, v)) == -1)
+			if (file_printf(ms, F(ms, desc, "%d"),
+			    CAST(int32_t, v)) == -1)
 				return -1;
 			break;
 		}
@@ -655,14 +655,14 @@ mprint(struct magic_set *ms, struct magic *m)
 		case -1:
 			return -1;
 		case 1:
-			(void)snprintf(buf, sizeof(buf), "%" INT64_T_FORMAT "u",
-			    CAST(unsigned long long, v));
+			(void)snprintf(buf, sizeof(buf), "%" INT64_T_FORMAT "d",
+			    CAST(long long, v));
 			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
 				return -1;
 			break;
 		default:
-			if (file_printf(ms, F(ms, desc, "%" INT64_T_FORMAT "u"),
-			    CAST(unsigned long long, v)) == -1)
+			if (file_printf(ms, F(ms, desc, "%" INT64_T_FORMAT "d"),
+			    CAST(long long, v)) == -1)
 				return -1;
 			break;
 		}
