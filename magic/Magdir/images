@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.191 2020/08/09 16:41:19 christos Exp $
+# $File: images,v 1.192 2020/08/22 18:46:08 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -297,10 +297,12 @@
 0	string		MM\x00\x2a	TIFF image data, big-endian
 !:strength +70
 !:mime	image/tiff
+!:ext	tif,tiff
 >(4.L)	use		\^tiff_ifd
 0	string		II\x2a\x00	TIFF image data, little-endian
 !:mime	image/tiff
 !:strength +70
+!:ext	tif,tiff
 >(4.l)	use		tiff_ifd
 
 0	name		tiff_ifd
@@ -513,6 +515,7 @@
 !:strength +80
 !:mime	image/gif
 !:apple	8BIMGIFf
+!:ext	gif
 >4	string		7a		\b, version 8%s,
 >4	string		9a		\b, version 8%s,
 >6	leshort		>0		%d x
@@ -1129,6 +1132,7 @@
 # From: Asbjoern Sloth Toennesen <asbjorn@lila.io>
 0	string		8BPS Adobe Photoshop Image
 !:mime	image/vnd.adobe.photoshop
+!:ext	psd
 >4   beshort 2 (PSB)
 >18  belong  x \b, %d x
 >14  belong  x %d,
