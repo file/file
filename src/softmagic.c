@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.300 2020/08/22 18:27:42 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.301 2020/08/22 19:43:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -580,93 +580,58 @@ mprint(struct magic_set *ms, struct magic *m)
 	else
 		desc = ebuf;
 
+#define	PRINTER(value, format, stype, utype)	\
+	v = file_signextend(ms, m, CAST(uint64_t, value)); \
+	switch (check_fmt(ms, desc)) { \
+	case -1: \
+		return -1; \
+	case 1: \
+		if (m->flag & UNSIGNED) { \
+			(void)snprintf(buf, sizeof(buf), "%" format "u", \
+			    CAST(utype, v)); \
+		} else { \
+			(void)snprintf(buf, sizeof(buf), "%" format "d", \
+			    CAST(stype, v)); \
+		} \
+		if (file_printf(ms, F(ms, desc, "%s"), buf) == -1) \
+			return -1; \
+		break; \
+	default: \
+		if (m->flag & UNSIGNED) { \
+		       if (file_printf(ms, F(ms, desc, "%" format "u"), \
+			   CAST(utype, v)) == -1) \
+			   return -1; \
+		} else { \
+		       if (file_printf(ms, F(ms, desc, "%" format "d"), \
+			   CAST(stype, v)) == -1) \
+			   return -1; \
+		} \
+		break; \
+	} \
+	t = ms->offset + sizeof(stype); \
+	break
+
   	switch (m->type) {
   	case FILE_BYTE:
-		v = file_signextend(ms, m, CAST(uint64_t, p->b));
-		switch (check_fmt(ms, desc)) {
-		case -1:
-			return -1;
-		case 1:
-			(void)snprintf(buf, sizeof(buf), "%d",
-			    CAST(unsigned char, v));
-			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
-				return -1;
-			break;
-		default:
-			if (file_printf(ms, F(ms, desc, "%d"),
-			    CAST(char, v)) == -1)
-				return -1;
-			break;
-		}
-		t = ms->offset + sizeof(char);
-		break;
+		PRINTER(p->b, "", int8_t, uint8_t);
 
   	case FILE_SHORT:
   	case FILE_BESHORT:
   	case FILE_LESHORT:
-		v = file_signextend(ms, m, CAST(uint64_t, p->h));
-		switch (check_fmt(ms, desc)) {
-		case -1:
-			return -1;
-		case 1:
-			(void)snprintf(buf, sizeof(buf), "%d",
-			    CAST(short, v));
-			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
-				return -1;
-			break;
-		default:
-			if (file_printf(ms, F(ms, desc, "%d"),
-			    CAST(short, v)) == -1)
-				return -1;
-			break;
-		}
-		t = ms->offset + sizeof(short);
-		break;
+		PRINTER(p->h, "", int16_t, uint16_t);
 
   	case FILE_LONG:
   	case FILE_BELONG:
   	case FILE_LELONG:
   	case FILE_MELONG:
-		v = file_signextend(ms, m, CAST(uint64_t, p->l));
-		switch (check_fmt(ms, desc)) {
-		case -1:
-			return -1;
-		case 1:
-			(void)snprintf(buf, sizeof(buf), "%d",
-			    CAST(int32_t, v));
-			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
-				return -1;
-			break;
-		default:
-			if (file_printf(ms, F(ms, desc, "%d"),
-			    CAST(int32_t, v)) == -1)
-				return -1;
-			break;
-		}
-		t = ms->offset + sizeof(int32_t);
+		PRINTER(p->l, "", int32_t, uint32_t);
   		break;
 
   	case FILE_QUAD:
   	case FILE_BEQUAD:
   	case FILE_LEQUAD:
 	case FILE_OFFSET:
-		v = file_signextend(ms, m, p->q);
-		switch (check_fmt(ms, desc)) {
-		case -1:
-			return -1;
-		case 1:
-			(void)snprintf(buf, sizeof(buf), "%" INT64_T_FORMAT "d",
-			    CAST(long long, v));
-			if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
-				return -1;
-			break;
-		default:
-			if (file_printf(ms, F(ms, desc, "%" INT64_T_FORMAT "d"),
-			    CAST(long long, v)) == -1)
-				return -1;
-			break;
-		}
-		t = ms->offset + sizeof(int64_t);
+		PRINTER(p->q, INT64_T_FORMAT, long long, unsigned long long);
   		break;
 
   	case FILE_STRING:
