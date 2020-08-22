@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.173 2020/06/07 22:12:54 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.174 2020/08/22 18:04:18 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1099,7 +1099,7 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 
 private size_t
 dodynamic(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
-    int clazz, int swap)
+    int clazz, int swap, int *pie, size_t *need)
 {
 	Elf32_Dyn dh32;
 	Elf64_Dyn dh64;
@@ -1117,10 +1117,14 @@ dodynamic(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 	switch (xdh_tag) {
 	case DT_FLAGS_1:
+		*pie = 1;
 		if (xdh_val & DF_1_PIE)
 			ms->mode |= 0111;
 		else
 			ms->mode &= ~0111;
+		break;
+	case DT_NEEDED:
+		(*need)++;
 		break;
 	default:
 		break;
@@ -1608,9 +1612,10 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 }
 
 /*
- * Look through the program headers of an executable image, searching
- * for a PT_INTERP section; if one is found, it's dynamically linked,
- * otherwise it's statically linked.
+ * Look through the program headers of an executable image, to determine
+ * if it is statically or dynamically linked. If it has a dynamic section,
+ * it is pie, and does not have an interpreter or needed libraries, we
+ * call it static pie.
  */
 private int
 dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
@@ -1619,12 +1624,13 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
-	const char *linking_style = "statically";
+	const char *linking_style;
 	unsigned char nbuf[BUFSIZ];
 	char ibuf[BUFSIZ];
 	char interp[BUFSIZ];
 	ssize_t bufsize;
-	size_t offset, align, len;
+	size_t offset, align, len, need = 0;
+	int pie = 0, dynamic = 0;
 
 	if (num == 0) {
 		if (file_printf(ms, ", no program header") == -1)
@@ -1654,7 +1660,6 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		switch (xph_type) {
 		case PT_DYNAMIC:
 			doread = 1;
-			linking_style = "dynamically";
 			break;
 		case PT_NOTE:
 			if (sh_num)	/* Did this through section headers */
@@ -1694,6 +1699,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		/* Things we can determine when we seek */
 		switch (xph_type) {
 		case PT_DYNAMIC:
+			dynamic = 1;
 			offset = 0;
 			// Let DF_1 determine if we are PIE or not.
 			ms->mode &= ~0111;
@@ -1701,7 +1707,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				if (offset >= CAST(size_t, bufsize))
 					break;
 				offset = dodynamic(ms, nbuf, offset,
-				    CAST(size_t, bufsize), clazz, swap);
+				    CAST(size_t, bufsize), clazz, swap,
+				    &pie, &need);
 				if (offset == 0)
 					break;
 			}
@@ -1710,6 +1717,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			break;
 
 		case PT_INTERP:
+			need++;
 			if (ms->flags & MAGIC_MIME)
 				continue;
 			if (bufsize && nbuf[0]) {
@@ -1744,8 +1752,15 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	}
 	if (ms->flags & MAGIC_MIME)
 		return 0;
-	if (file_printf(ms, ", %s linked", linking_style)
-	    == -1)
+	if (dynamic) {
+		if (pie && need == 0)
+			linking_style = "static-pie";
+		else
+			linking_style = "dynamically";
+	} else {
+		linking_style = "statically";
+	}
+	if (file_printf(ms, ", %s linked", linking_style) == -1)
 		return -1;
 	if (interp[0])
 		if (file_printf(ms, ", interpreter %s",
