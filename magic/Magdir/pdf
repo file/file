@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pdf,v 1.14 2020/08/22 16:37:01 christos Exp $
+# $File: pdf,v 1.15 2020/08/23 00:30:45 christos Exp $
 # pdf:  file(1) magic for Portable Document Format
 #
 
@@ -12,6 +12,7 @@
 0	string		%PDF-		PDF document
 !:mime	application/pdf
 !:strength +60
+!:ext	pdf
 >5	byte		x		\b, version %c
 >7	byte		x		\b.%c
 >0	use		pdf
@@ -19,6 +20,7 @@
 0	string		\012%PDF-	PDF document
 !:mime	application/pdf
 !:strength +60
+!:ext	pdf
 >6	byte		x		\b, version %c
 >8	byte		x		\b.%c
 >0	use		pdf
@@ -26,6 +28,7 @@
 0	string		\xef\xbb\xbf%PDF-	PDF document (UTF-8)
 !:mime	application/pdf
 !:strength +60
+!:ext	pdf
 >6	byte		x		\b, version %c
 >8	byte		x		\b.%c
 >0	use		pdf
@@ -35,12 +38,14 @@
 0       string          %FDF-           FDF document
 !:mime application/vnd.fdf
 !:strength +60
+!:ext	pdf
 >5      byte            x               \b, version %c
 >7      byte            x               \b.%c
 
 0	search/256	%PDF-		PDF document
 !:mime	application/pdf
 !:strength +60
+!:ext	pdf
 >&0	byte		x		\b, version %c
 >&2	byte		x		\b.%c
 >0	use		pdf
