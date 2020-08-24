@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.79 2020/08/09 16:53:53 christos Exp $
+# $File: animation,v 1.80 2020/08/24 16:31:30 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -32,6 +32,8 @@
 !:mime	application/x-quicktime-player
 4	string/W	jP		JPEG 2000 image
 !:mime	image/jp2
+
+#### MP4 ####
 # https://www.ftyps.com/ with local additions
 4	string		ftyp		ISO Media
 # https://aeroquartet.com/wordpress/2016/03/05/3-xavc-s/
@@ -159,7 +161,7 @@
 >8	string		mqt		\b, Sony / Mobile QuickTime (.MQV) US Pat 7,477,830
 !:mime	video/quicktime
 >8	string		MSNV		\b, MPEG-4 (.MP4) for SonyPSP
-!:mime	video/mp4
+!:mime	audio/mp4
 >8	string		NDAS		\b, MP4 v2 [ISO 14496-14] Nero Digital AAC Audio
 !:mime	audio/mp4
 >8	string		NDSC		\b, MPEG-4 (.MP4) Nero Cinema Profile
