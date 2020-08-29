@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.139 2020/07/17 19:26:18 christos Exp $
+# $File: archive,v 1.140 2020/08/29 18:43:28 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -453,30 +453,45 @@
 # URL:		https://wiki.68kmla.org/DiskCopy_4.2_format_specification
 # reference:	http://nulib.com/library/FTN.e00005.htm
 0x52	ubeshort	0x0100
-# test for disk size equal or above 400k
->0x40	ubelong		>409599	Apple DiskCopy 4.2 image
+# test for disk image size equal or above 400k
+>0x40	ubelong		>409599
+# test also for disk image size equal or below 1440k to skip
+# windows7en.mbr UNICODE.DAT
+>>0x40	ubelong		<1474561
+# To skip Flags$StringJoiner.class with size 00106A61h test also for only 4 disk image sizes
+# 00064000 for  400k GCR disks
+# 000c8000 for  800k GCR disks
+# 000b4000 for  720k MFM disks
+# 00168000 for 1440k MFM disks
+>>>0x40	ubelong&0xffE03fFF	0
+>>>>0	use	dc42-floppy
+#	display information of Apple DiskCopy 4.2 floppy image
+0	name		dc42-floppy
+# image pascal name padded with NULs like Microsoft Mail
+>00	pstring/B	x	Apple DiskCopy 4.2 image %s
 #!:mime	application/octet-stream
+!:mime	application/x-dc42-floppy-image
 !:apple	dCpydImg
 !:ext	image/dc42
-# image pascal name padded with NULs like Microsoft Mail
->>00	pstring/B	x	%s
 # data size in bytes like 409600
->>0x40	ubelong		x	\b, %u bytes
+>0x40	ubelong		x	\b, %u bytes
+# for debugging purpose size in hexadecimal
+#>0x40	ubelong		x	(0x%8.8x)
 # tag size in bytes
->>0x44	ubelong		>0	\b, 0x%x tag size
+>0x44	ubelong		>0	\b, 0x%x tag size
 # data checksum
-#>>0x48	ubelong		x	\b, 0x%x checksum
+#>0x48	ubelong		x	\b, 0x%x checksum
 # tag checksum
-#>>0x4c	ubelong		x	\b, 0x%x tag checksum
+#>0x4c	ubelong		x	\b, 0x%x tag checksum
 # disk encoding
->>0x50	ubyte		0	\b, GCR CLV ssdd (400k)
->>0x50	ubyte		1	\b, GCR CLV dsdd (800k)
->>0x50	ubyte		2	\b, MFM CAV dsdd (720k)
->>0x50	ubyte		3	\b, MFM CAV dshd (1440k)
->>0x50	ubyte		>3	\b, 0x%x encoding
+>0x50	ubyte		0	\b, GCR CLV ssdd (400k)
+>0x50	ubyte		1	\b, GCR CLV dsdd (800k)
+>0x50	ubyte		2	\b, MFM CAV dsdd (720k)
+>0x50	ubyte		3	\b, MFM CAV dshd (1440k)
+>0x50	ubyte		>3	\b, 0x%x encoding
 # format byte
->>0x51	ubyte		x	\b, 0x%x format
-#>>0x54	ubequad		x	\b, data 0x%16.16llx
+>0x51	ubyte		x	\b, 0x%x format
+#>0x54	ubequad		x	\b, data 0x%16.16llx
 # ESP, could this conflict with Easy Software Products' (e.g.ESP ghostscript) documentation?
 0	string	ESP ESP archive data
 # ZPack
