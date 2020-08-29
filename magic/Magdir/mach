@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: mach,v 1.22 2015/10/15 16:54:01 christos Exp $
+# $File: mach,v 1.24 2020/08/29 18:50:24 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -11,6 +11,9 @@
 # it's also separate from the "64-bit libraries" bit in the
 # upper 8 bits of the CPU subtype
 
+# Reference:	https://opensource.apple.com/source/cctools/cctools-949.0.1/
+#               include/mach-o/loader.h
+# display CPU type as string like: i386 x86_64 ... armv7 armv7k ...
 0	name	mach-o-cpu
 >0	belong&0x01000000	0
 #
@@ -198,13 +201,24 @@
 >0	byte		0xcf		64-bit
 >4	use		mach-o-cpu
 >12	belong		1		object
+# GRR: Does not work for Mach-O with 2 architectures; instead display oo
+#!:ext	o
+!:ext	o/
 >12	belong		2		executable
+# the executables normally have no file extension like perl,
+# but exceptions like perl5.18 perl5.16
+!:ext	16/18/
 >12	belong		3		fixed virtual memory shared library
 >12	belong		4		core
 >12	belong		5		preload executable
 >12	belong		6		dynamically linked shared library
+# GRR: Does not work for Mach-O with 2 architectures; instead display dylibdylib
+#!:ext	dylib
+!:ext	dylib/
 >12	belong		7		dynamic linker
 >12	belong		8		bundle
+# normally name extesion bundle; but exceptions like: AMDil_r700.dylib 
+!:ext	bundle/dylib/
 >12	belong		9		dynamically linked shared library stub
 >12	belong		10		dSYM companion file
 >12	belong		11		kext bundle
