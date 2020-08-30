@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.139 2020/07/26 16:48:58 christos Exp $
+# $File: msdos,v 1.140 2020/08/30 16:23:11 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -385,14 +385,19 @@
 0	string	\xffKEYB\ \ \ \0\0\0\0
 >12	string	\0\0\0\0`\004\360	MS-DOS KEYBoard Layout file
 
-# DOS device driver updated by Joerg Jenderek at May 2011,Mar 2017
+# DOS device driver updated by Joerg Jenderek at May 2011,Mar 2017,Aug 2020
+# URL:		http://fileformats.archiveteam.org/wiki/DOS_device_driver
+# Reference:	http://www.delorie.com/djgpp/doc/rbinter/it/46/16.html
 # https://amaus.net/static/S100/IBM/software/DOS/DOS%20techref/CHAPTER.009
 0	ulequad&0x07a0ffffffff		0xffffffff
->0	use				msdos-driver
+# skip OS/2 INI ./os2
+>4  ubelong   !0x14000000
+>>0	use				msdos-driver
 0       name    			msdos-driver		DOS executable (
 #!:mime	application/octet-stream
 !:mime	application/x-dosdriver
 # also found FreeDOS print driver SPOOL.DEV and disc compression driver STACLOAD.BIN
+# and IBM Token-Ring adapter IBMTOK.DOS. Why and when DOS instead SYS is used?
 # PROTMAN.DOS ELNKPL.DOS
 !:ext	sys/dev/bin/dos
 # 1 space char after "UPX compressed" to get phrase like "UPX compressed character device"
@@ -463,6 +468,7 @@
 >4	uleshort&0x8000			0x0000
 >>4	uleshort&0x4842			>0			\bsupport
 >0	ubyte				x			\b)
+>0	ulelong				!0xffffffff		with pointer 0x%x
 # DOS driver cmd640x.sys has 0x12 instead of 0xffffffff for pointer field to next device header
 0	ulequad				0x0513c00000000012
 >0	use				msdos-driver
@@ -471,12 +477,19 @@
 >0	use				msdos-driver
 0	ulequad				0x007f00000000ffff
 >0	use				msdos-driver
+# https://www.uwe-sieber.de/files/cfg_echo.zip
 0	ulequad				0x001600000000ffff
 >0	use				msdos-driver
 # DOS drivers LS120.SYS, MKELS120.SYS use reserved bits of attribute field
 0	ulequad				0x0bf708c2ffffffff
 >0	use				msdos-driver
 0	ulequad				0x07bd08c2ffffffff
+>0	use				msdos-driver
+# 3Com EtherLink 3C501 CID\SERVER\IBMLS\IBM500D1\DLSNETDR.ZIP\ELNK.DOS 
+0	ulequad				0x027ac0c0ffffffff
+>0	use				msdos-driver
+# IBM Streamer CID\SERVER\IBMLS\IBM500D1\DLSNETDR.ZIP\IBMMPC.DOS 
+0	ulequad				0x00228880ffffffff
 >0	use				msdos-driver
 
 # updated by Joerg Jenderek
