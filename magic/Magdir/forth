@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: forth,v 1.1 2019/06/06 19:14:20 christos Exp $
+# $File: forth,v 1.2 2020/08/30 16:25:50 christos Exp $
 # forth:  file(1) magic for various Forth environments
 # From: Lubomir Rintel <lkundrak@v3.sk>
 #
@@ -19,13 +19,15 @@
 # Various dictionary images used by OpenFirware FORTH environent
 
 0	lelong	0xe1a00000
->8	lelong	0xe1a00000	ARM OpenFirmware FORTH Dictionary,
->>24	lelong	x		Text length: %d bytes,
->>28	lelong	x		Data length: %d bytes,
->>32	lelong	x		Text Relocation Table length: %d bytes,
->>36	lelong	x		Data Relocation Table length: %d bytes,
->>40	lelong	x		Entry Point: 0x%08X,
->>44	lelong	x		BSS length: %d bytes
+>8	lelong	0xe1a00000
+# skip raspberry pi kernel image kernel7.img by checking for positive text length
+>>24	lelong	>0		ARM OpenFirmware FORTH Dictionary,
+>>>24	lelong	x		Text length: %d bytes,
+>>>28	lelong	x		Data length: %d bytes,
+>>>32	lelong	x		Text Relocation Table length: %d bytes,
+>>>36	lelong	x		Data Relocation Table length: %d bytes,
+>>>40	lelong	x		Entry Point: 0x%08X,
+>>>44	lelong	x		BSS length: %d bytes
 
 0	string	MP
 >28	lelong	1		x86 OpenFirmware FORTH Dictionary,

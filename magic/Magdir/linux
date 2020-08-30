@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.72 2020/06/07 21:56:13 christos Exp $
+# $File: linux,v 1.73 2020/08/30 16:25:50 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -244,9 +244,9 @@
 # to support kernels before the flag and BE with LE bootloader was added we'll
 # do a negative check against the BE variant of the flag when we see a LE magic.
 >0x30	belong	!0x04030201	(little-endian)
->0x30	belong	0x04030201	(big-endian)
 # raspian "kernel7.img", Vu+ Ultimo4K "kernel_auto.bin"
 !:ext	img/bin
+>0x30	belong	0x04030201	(big-endian)
 0x24	belong	0x016f2818	Linux kernel ARM boot executable zImage (big-endian)
 
 ############################################################################
