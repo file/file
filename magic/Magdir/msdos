@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.141 2020/09/04 16:29:17 christos Exp $
+# $File: msdos,v 1.142 2020/09/04 16:30:12 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -55,7 +55,9 @@
 !:mime	application/x-dosexec
 # Windows and later versions of DOS will allow .EXEs to be named with a .COM
 # extension, mostly for compatibility's sake.
-!:ext	exe/com
+# URL:		https://en.wikipedia.org/wiki/Personal_NetWare#VLM
+# Reference:	https://mark0.net/download/triddefs_xml.7z/defs/e/exe-vlm-msg.trid.xml
+!:ext	exe/com/vlm
 # These traditional tests usually work but not always.  When test quality support is
 # implemented these can be turned on.
 #>>0x18	leshort	0x1c	(Borland compiler)
@@ -1220,6 +1222,53 @@
 !:mime	application/x-norton-msg
 !:ext	msg
 
+# URL:		http://www.antonis.de/dos/dos-tuts/mpdostip/html/nwdostip.htm
+# Reference:	https://mark0.net/download/triddefs_xml.7z/defs/m/msg-netware-dos.trid.xml
+# From:		Joerg Jenderek
+0	string	DOS\ Client\ Message\ File:	Novell DOS client message
+#!:mime	application/octet-stream
+#!:mime	application/x-novell-msg
+!:ext	msg
+# look for second letter instead space character
+>26	ubyte		>0x20
+# digit 1 or often main or program name like: IPXODI.COM TASKID pnwtrap DOSRqstr
+>>25		ubyte	!0x20			%c
+>>>26		ubyte	!0x20			\b%c
+>>>>27		ubyte	!0x20			\b%c
+>>>>>28		ubyte	!0x20			\b%c
+>>>>>>29	ubyte	!0x20			\b%c
+>>>>>>>30	ubyte	!0x20			\b%c
+>>>>>>>>31	ubyte	!0x20			\b%c
+>>>>>>>>>32	ubyte	!0x20			\b%c
+>>>>>>>>>>33	ubyte	!0x20			\b%c
+>>>>>>>>>>>34	ubyte	!0x20			\b%c
+>>>>>>>>>>>>35	ubyte	!0x20			\b%c
+>>>>>>>>>>>>>36	ubyte	!0x20			\b%c
+# followed by string like: 0 v.10 V1.20
+#
+# followed by ,\040Tran\040
+>28	search/14	,\040Tran\040
+# probably translated version string like: 0 v1.00
+>>&0	string	x				\b, tran version %s
+# followed by Ctrl-J Ctrl-Z
+>>>&0	ubyte		!0xa			\b, terminated by 0x%2.2x
+>>>>&0	ubyte		x			\b%2.2x
+# Ctrl-Z
+>0x65	ubyte		!0x1A			\b, at 0x65 0x%x
+# one
+>0x66	ubyte		!0x01			\b, at 0x66 0x%x
+# URL:		https://en.wikipedia.org/wiki/NetWare
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/dat-novell-msg.trid.xml
+# ftp://ftp.iitb.ac.in/LDP/en/NLM-HOWTO/NLM-HOWTO-single.html
+# From:		Joerg Jenderek
+0	string	Novell\ Message\ Librarian\ Data\ File	Novell message librarian data
+#>35	string	Version\ 1.00
+#>49	string	COPYRIGHT\ (c)\ 1985\ by\ Novell,\ Inc.
+#>83	string	\ \ All\ Rights\ Reserved
+#!:mime	application/octet-stream
+#!:mime	application/x-novell-msg
+!:ext	msg
+#!:ext	msg/dat
 # 4DOS help (.HLP) files added by Joerg Jenderek from source TPHELP.PAS
 # of https://www.4dos.info/
 # pointer,HelpID[8]=4DHnnnmm
