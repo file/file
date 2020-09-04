@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.32 2020/07/17 19:26:24 christos Exp $
+# $File: windows,v 1.33 2020/09/04 16:34:22 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -924,6 +924,35 @@
 >>>&0	search/43	\xFF\xFF\xFF			
 # directory like C:\Program Files\GIMP 2
 >>>>&0	lestring16	x				\b, %-.42s
+
+# URL:      https://jrsoftware.org/ishelp/index.php?topic=setup_signeduninstaller
+# Reference:https://github.com/jrsoftware/issrc/blob/main/Projects/Struct.pas
+# From:     Joerg Jenderek
+0	string	Inno\ Setup\ Messages\ (
+# null padded til 0x40 boundary
+>0x38	quad		0				InnoSetup messages
+!:mime	application/x-innosetup-msg
+# unins000.msg, unins001.msg, ...
+!:ext	msg
+# version like 5.1.1 5.1.11 5.5.0 5.5.3 6.0.0
+>>0x15	string		x				\b, version %.5s
+# look for 6th char of version string or terminating right parentheses
+>>>0x1a	ubyte		!0x29				\b%c
+# NumMessages
+>>0x40	ulelong		x				\b, %u messages
+# TotalSize: Cardinal;
+#>>0x44	ulelong		x				\b, TotalSize %u
+# NotTotalSize: Cardinal;
+#>>0x48	ulelong		x				\b, NotTotalSize %u
+# CRCMessages: Longint;
+#>>0x4C	ulelong		x				\b, CRC 0x%x
+>>0x40	ulelong		x
+# (u) after version means unicoded messages
+>>>0x1c	search/2	(u)				(UTF-16),
+>>>>0x50 lestring16	x				%s
+# ASCII coded message
+>>>0x1c	default		x				(ASCII),
+>>>>0x50 string		x				%s
 
 # Windows Imaging (WIM) Image
 # Update: Joerg Jenderek at Mar 2019
