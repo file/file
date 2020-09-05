@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.304 2020/09/05 17:16:35 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.305 2020/09/05 17:38:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -292,14 +292,16 @@ flush:
 		 * If we are going to print something, we'll need to print
 		 * a blank before we print something else.
 		 */
-		if (print && *m->desc) {
-			*need_separator = 1;
-			*printed_something = 1;
+		if (*m->desc) {
 			*returnval = 1;
-			if (print_sep(ms, firstline) == -1)
-				return -1;
-			if (mprint(ms, m) == -1)
-				return -1;
+			if (print) {
+				*need_separator = 1;
+				*printed_something = 1;
+				if (print_sep(ms, firstline) == -1)
+					return -1;
+				if (mprint(ms, m) == -1)
+					return -1;
+			}
 		}
 
 		switch (moffset(ms, m, &bb, &ms->c.li[cont_level].off)) {
@@ -400,6 +402,9 @@ flush:
 					*returnval = 1;
 					return e;
 				}
+				if (*m->desc) {
+					*returnval = 1;
+				}
 				if (print && *m->desc) {
 					/*
 					 * This continuation matched.  Print
@@ -424,7 +429,6 @@ flush:
 						if (file_printf(ms, " ") == -1)
 							return -1;
 					}
-					*returnval = 1;
 					*need_separator = 0;
 					if (mprint(ms, m) == -1)
 						return -1;
