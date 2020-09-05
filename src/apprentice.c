@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.297 2020/05/09 18:57:15 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.298 2020/09/05 14:27:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2129,6 +2129,13 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 	if (m->type == FILE_INVALID) {
 		if (ms->flags & MAGIC_CHECK)
 			file_magwarn(ms, "type `%s' invalid", l);
+		return -1;
+	}
+
+	if (m->type == FILE_NAME && cont_level != 0) {
+		if (ms->flags & MAGIC_CHECK)
+			file_magwarn(ms, "`name%s' entries can only be "
+			    "declared at top level", l);
 		return -1;
 	}
 
