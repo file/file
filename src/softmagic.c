@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.301 2020/08/22 19:43:46 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.302 2020/09/05 14:15:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1522,6 +1522,26 @@ normal:
 }
 
 private int
+save_cont(struct magic_set *ms, struct cont *c)
+{
+	size_t len;
+	*c = ms->c;
+	len = c->len * sizeof(*c->li);
+	c->li = CAST(struct level_info *, malloc(len));
+	if (c->li == NULL)
+		return -1;
+	memcpy(c->li, ms->c.li, len);
+	return 0;
+}
+
+private void
+restore_cont(struct magic_set *ms, struct cont *c)
+{
+	free(ms->c.li);
+	ms->c = *c;
+}
+
+private int
 mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
     const unsigned char *s, size_t nbytes, size_t o, unsigned int cont_level,
     int mode, int text, int flip, uint16_t *indir_count, uint16_t *name_count,
@@ -1536,6 +1556,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	char *rbuf;
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml;
+	struct cont c;
 
 	if (*indir_count >= ms->indir_max) {
 		file_error(ms, 0, "indirect count (%hu) exceeded",
@@ -1841,14 +1862,23 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			file_error(ms, 0, "cannot find entry `%s'", rbuf);
 			return -1;
 		}
-		(*name_count)++;
+		if (save_cont(ms, &c) == -1) {
+			file_error(ms, errno, "can't allocate continuation");
+			return -1;
+		}
+
 		oneed_separator = *need_separator;
 		if (m->flag & NOSPACE)
 			*need_separator = 0;
+
+		(*name_count)++;
 		rv = match(ms, ml.magic, ml.nmagic, b, offset + o,
 		    mode, text, flip, indir_count, name_count,
 		    printed_something, need_separator, returnval, found_match);
 		(*name_count)--;
+
+		restore_cont(ms, &c);
+
 		if (rv != 1)
 		    *need_separator = oneed_separator;
 		return rv;

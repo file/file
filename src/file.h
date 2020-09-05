@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.221 2020/08/14 13:37:10 christos Exp $
+ * @(#)$File: file.h,v 1.222 2020/09/05 14:15:42 christos Exp $
  */
 
 #ifndef __file_h__
@@ -410,14 +410,16 @@ struct level_info {
 #endif
 };
 
+struct cont {
+	size_t len;
+	struct level_info *li;
+};
+
 #define MAGIC_SETS	2
 
 struct magic_set {
 	struct mlist *mlist[MAGIC_SETS];	/* list of regular entries */
-	struct cont {
-		size_t len;
-		struct level_info *li;
-	} c;
+	struct cont c;
 	struct out {
 		char *buf;		/* Accumulation buffer */
 		size_t blen;		/* Length of buffer */
