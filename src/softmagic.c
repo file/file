@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.302 2020/09/05 14:15:42 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.303 2020/09/05 14:57:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1552,7 +1552,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	struct buffer bb;
 	intmax_t lhs;
 	file_pushbuf_t *pb;
-	int rv, oneed_separator, in_type;
+	int rv, oneed_separator, in_type, nfound_match;
 	char *rbuf;
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml;
@@ -1868,14 +1868,18 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		}
 
 		oneed_separator = *need_separator;
+		nfound_match = 0;
 		if (m->flag & NOSPACE)
 			*need_separator = 0;
 
 		(*name_count)++;
 		rv = match(ms, ml.magic, ml.nmagic, b, offset + o,
 		    mode, text, flip, indir_count, name_count,
-		    printed_something, need_separator, returnval, found_match);
+		    printed_something, need_separator, returnval,
+		    &nfound_match);
+		ms->ms_value.q = nfound_match;
 		(*name_count)--;
+		*found_match |= nfound_match;
 
 		restore_cont(ms, &c);
 
@@ -2224,9 +2228,10 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			return -1;
 		break;
 	}
-	case FILE_INDIRECT:
 	case FILE_USE:
+		return ms->ms_value.q != 0;
 	case FILE_NAME:
+	case FILE_INDIRECT:
 		return 1;
 	case FILE_DER:
 		matched = der_cmp(ms, m);
