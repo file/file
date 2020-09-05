@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.21 2020/03/20 17:11:05 christos Exp $
+# $File: pgp,v 1.22 2020/09/05 21:05:12 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 # see https://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
@@ -404,7 +404,7 @@
 # we branch into the proper key size
 # signatures defined as x{keysize}
 
->0	name	pgpkey
+0	name	pgpkey
 >0	string	\x01\xd8	1024b
 >>2	use	x1024
 >0	string	\x01\xeb	1024b
