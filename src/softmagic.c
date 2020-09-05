@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.305 2020/09/05 17:38:57 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.306 2020/09/05 22:58:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -277,11 +277,9 @@ flush:
 			goto flush;
 		}
 
-		if (*m->desc)
-			*found_match = 1;
-
 		if ((e = handle_annotation(ms, m, firstline)) != 0)
 		{
+			*found_match = 1;
 			*need_separator = 1;
 			*printed_something = 1;
 			*returnval = 1;
@@ -293,6 +291,7 @@ flush:
 		 * a blank before we print something else.
 		 */
 		if (*m->desc) {
+			*found_match = 1;
 			*returnval = 1;
 			if (print) {
 				*need_separator = 1;
@@ -387,22 +386,22 @@ flush:
 				if (m->type == FILE_CLEAR)
 					ms->c.li[cont_level].got_match = 0;
 				else if (ms->c.li[cont_level].got_match) {
+fprintf(stderr, "cont_level=%d\n", cont_level);
 					if (m->type == FILE_DEFAULT)
 						break;
 				} else
 					ms->c.li[cont_level].got_match = 1;
 
-				if (*m->desc)
-					*found_match = 1;
-
 				if ((e = handle_annotation(ms, m, firstline))
 				    != 0) {
+					*found_match = 1;
 					*need_separator = 1;
 					*printed_something = 1;
 					*returnval = 1;
 					return e;
 				}
 				if (*m->desc) {
+					*found_match = 1;
 					*returnval = 1;
 				}
 				if (print && *m->desc) {
@@ -460,14 +459,23 @@ flush:
 			firstline = 0;
 		}
 		if (*found_match) {
-		    if ((ms->flags & MAGIC_CONTINUE) == 0)
-			return *returnval; /* don't keep searching */
-		    // So that we print a separator
-		    *printed_something = 0;
-		    firstline = 0;
+			if ((ms->flags & MAGIC_CONTINUE) == 0)
+				goto out;
+			// So that we print a separator
+			*printed_something = 0;
+			firstline = 0;
 		}
 		cont_level = 0;
 	}
+out:
+	/*
+	 * If we are not printing (we are doing mime etc.)
+	 * and we did not find a mime entry, and we are at 0 level
+	 * we want to return 0 so that the default mime printer
+	 * takes over and prints "application/octet-stream"
+	 */
+	if (! print && ! *printed_something && ! *name_count)
+		return 0;
 	return *returnval;  /* This is hit if -k is set or there is no match */
 }
 
