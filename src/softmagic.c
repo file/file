@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.303 2020/09/05 14:57:37 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.304 2020/09/05 17:16:35 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -935,6 +935,7 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	case FILE_DEFAULT:
 	case FILE_INDIRECT:
 	case FILE_OFFSET:
+	case FILE_USE:
 		o = ms->offset;
 		break;
 
@@ -1527,10 +1528,12 @@ save_cont(struct magic_set *ms, struct cont *c)
 	size_t len;
 	*c = ms->c;
 	len = c->len * sizeof(*c->li);
-	c->li = CAST(struct level_info *, malloc(len));
-	if (c->li == NULL)
+	ms->c.li = CAST(struct level_info *, malloc(len));
+	if (ms->c.li == NULL) {
+		ms->c = *c;
 		return -1;
-	memcpy(c->li, ms->c.li, len);
+	}
+	memcpy(ms->c.li, c->li, len);
 	return 0;
 }
 
@@ -1548,7 +1551,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
     int *printed_something, int *need_separator, int *returnval,
     int *found_match)
 {
-	uint32_t offset = ms->offset;
+	uint32_t eoffset, offset = ms->offset;
 	struct buffer bb;
 	intmax_t lhs;
 	file_pushbuf_t *pb;
@@ -1868,11 +1871,12 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		}
 
 		oneed_separator = *need_separator;
-		nfound_match = 0;
 		if (m->flag & NOSPACE)
 			*need_separator = 0;
 
+		nfound_match = 0;
 		(*name_count)++;
+		eoffset = ms->eoffset;
 		rv = match(ms, ml.magic, ml.nmagic, b, offset + o,
 		    mode, text, flip, indir_count, name_count,
 		    printed_something, need_separator, returnval,
@@ -1885,6 +1889,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 
 		if (rv != 1)
 		    *need_separator = oneed_separator;
+		ms->offset = offset;
+		ms->eoffset = eoffset;
 		return rv;
 
 	case FILE_NAME:
