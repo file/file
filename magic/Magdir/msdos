@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.142 2020/09/04 16:30:12 christos Exp $
+# $File: msdos,v 1.143 2020/09/06 15:14:36 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -580,17 +580,19 @@
 # syslinux version (4.x)
 # "COM executable (COM32R)" or "Syslinux COM32 module" by TrID
 >>>1	lelong		0x21CD4CFe	\b, relocatable)
-# remaining are DOS COM executables starting with assembler instruction MOV
-# like FreeDOS BANNER*.COM FINDDISK.COM GIF2RAW.COM WINCHK.COM
-# MS-DOS SYS.COM RESTART.COM
-# SYSLINUX.COM (version 1.40 - 2.13)
-# GFXBOOT.COM (version 3.75)
-# COPYBS.COM POWEROFF.COM INT18.COM
->>1	default	x			COM executable for DOS
-!:mime	application/x-dosexec
-#!:mime	application/x-ms-dos-executable
-#!:mime	application/x-msdos-program
-!:ext com
+# Hajin Jang <hajin_jang@worksmobile.com>:
+# Disable simplest COM signature to prevent false positive on some EUC-KR text files.
+## remaining are DOS COM executables starting with assembler instruction MOV
+## like FreeDOS BANNER*.COM FINDDISK.COM GIF2RAW.COM WINCHK.COM
+## MS-DOS SYS.COM RESTART.COM
+## SYSLINUX.COM (version 1.40 - 2.13)
+## GFXBOOT.COM (version 3.75)
+## COPYBS.COM POWEROFF.COM INT18.COM
+#>>1	default	x			COM executable for DOS
+#!:mime	application/x-dosexec
+##!:mime	application/x-ms-dos-executable
+##!:mime	application/x-msdos-program
+#!:ext com
 
 # URL:		https://en.wikipedia.org/wiki/UPX
 # Reference:	https://github.com/upx/upx/archive/v3.96.zip/upx-3.96/
