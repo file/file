@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.140 2020/08/29 18:43:28 christos Exp $
+# $File: archive,v 1.141 2020/09/06 15:17:18 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1743,3 +1743,19 @@
 # path[CXBTFFile[MaximumPathLength=256]
 >>9	string	x		\b, 1st %s
 
+# ALZIP archive
+# by Hyungjun Park <hyungjun.park@worksmobile.com>, Hajin Jang <hajin_jang@worksmobile.com>
+# http://kippler.com/win/unalz/
+# https://salsa.debian.org/l10n-korean-team/unalz
+0   string      ALZ\001     ALZ archive data
+!:ext   alz
+
+# https://cf-aldn.altools.co.kr/setup/EGG_Specification.zip
+0       string      EGGA    EGG archive data,
+!:ext   egg
+>5	    byte	    x       version %u
+>4	    byte	    x       \b.%u
+>>0x0E   ulelong     =0x08E28222 
+>>0x0E   ulelong     =0x24F5A262   \b, split
+>>0x0E   ulelong     =0x24E5A060   \b, solid
+>>0x0E   default     x             \b, unknown
