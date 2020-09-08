@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.141 2020/09/06 15:17:18 christos Exp $
+# $File: archive,v 1.142 2020/09/08 19:42:51 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1759,3 +1759,8 @@
 >>0x0E   ulelong     =0x24F5A262   \b, split
 >>0x0E   ulelong     =0x24E5A060   \b, solid
 >>0x0E   default     x             \b, unknown
+
+# PAQ9A archive
+# URL: http://mattmahoney.net/dc/#paq9a
+# Note: Line 1186 of paq9a.cpp gives the magic bytes
+0   string      pQ9\001     PAQ9A archive
