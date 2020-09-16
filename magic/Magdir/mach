@@ -15,7 +15,7 @@
 #               include/mach-o/loader.h
 # display CPU type as string like: i386 x86_64 ... armv7 armv7k ...
 0	name	mach-o-cpu
->0	belong&0x01000000	0
+>0	belong&0xff000000	0
 #
 # 32-bit ABIs.
 #
@@ -148,7 +148,7 @@
 >>>4		belong&0x00ffffff	100	\b_970
 >>>4		belong&0x00ffffff	>100	subarchitecture=%d
 >>0	belong&0x00ffffff	>18	architecture=%d
->0	belong&0x01000000	0x01000000
+>0	belong&0xff000000	0x01000000
 #
 # 64-bit ABIs.
 #
