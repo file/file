@@ -175,6 +175,13 @@
 >>>4		belong&0x00ffffff	0
 >>>4		belong&0x00ffffff	1	\bv8
 >>>4		belong&0x00ffffff	2	\be
+>>>>7		ubyte&0xff		>0	(caps:
+>>>>7		ubyte&0xff		<0x80	0x%02x
+>>>>7		ubyte&0xc0		0x80	PAC
+>>>>>7		ubyte&0x3f		x	\b%02d
+>>>>7		ubyte&0xc0		0xc0	PAK
+>>>>>7		ubyte&0x3f		x	\b%02d
+>>>>7		ubyte&0xff		x	\b)
 >>>4		belong&0x00ffffff	>2	subarchitecture=%d
 >>0	belong&0x00ffffff	13	64-bit architecture=%d
 >>0	belong&0x00ffffff	14	64-bit architecture=%d
