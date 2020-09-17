@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: mach,v 1.26 2020/09/14 12:01:48 christos Exp $
+# $File: mach,v 1.27 2020/09/17 21:58:14 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -15,7 +15,7 @@
 #               include/mach-o/loader.h
 # display CPU type as string like: i386 x86_64 ... armv7 armv7k ...
 0	name	mach-o-cpu
->0	belong&0x01000000	0
+>0	belong&0xff000000	0
 #
 # 32-bit ABIs.
 #
@@ -148,7 +148,7 @@
 >>>4		belong&0x00ffffff	100	\b_970
 >>>4		belong&0x00ffffff	>100	subarchitecture=%d
 >>0	belong&0x00ffffff	>18	architecture=%d
->0	belong&0x01000000	0x01000000
+>0	belong&0xff000000	0x01000000
 #
 # 64-bit ABIs.
 #
@@ -174,6 +174,15 @@
 >>0	belong&0x00ffffff	12	arm64
 >>>4		belong&0x00ffffff	0
 >>>4		belong&0x00ffffff	1	\bv8
+>>>4		belong&0x00ffffff	2	\be
+>>>>7		ubyte&0xff		>0	(caps:
+>>>>7		ubyte&0xff		<0x80	0x%02x
+>>>>7		ubyte&0xc0		0x80	PAC
+>>>>>7		ubyte&0x3f		x	\b%02d
+>>>>7		ubyte&0xc0		0xc0	PAK
+>>>>>7		ubyte&0x3f		x	\b%02d
+>>>>7		ubyte&0xff		x	\b)
+>>>4		belong&0x00ffffff	>2	subarchitecture=%d
 >>0	belong&0x00ffffff	13	64-bit architecture=%d
 >>0	belong&0x00ffffff	14	64-bit architecture=%d
 >>0	belong&0x00ffffff	15	64-bit architecture=%d
@@ -195,7 +204,33 @@
 >>>4		belong&0x00ffffff	100		\b_970
 >>>4		belong&0x00ffffff	>100		subarchitecture=%d
 >>0	belong&0x00ffffff	>18	64-bit architecture=%d
-
+>0	belong&0xff000000	0x02000000
+#
+# 64_32-bit ABIs.
+#
+>>0	belong&0x00ffffff	0	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	1	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	2	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	3	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	4	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	5	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	6	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	7	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	8	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	9	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	10	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	11	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	12	64_32-bit arm
+>>>4		belong&0x00ffffff	0
+>>>4		belong&0x00ffffff	1	\bv8
+>>>4		belong&0x00ffffff	>1	subarchitecture=%d
+>>0	belong&0x00ffffff	13	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	14	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	15	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	16	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	17	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	18	64_32-bit architecture=%d
+>>0	belong&0x00ffffff	>18	64_32-bit architecture=%d
 
 0	name		mach-o-be
 >0	byte		0xcf		64-bit
