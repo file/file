@@ -75,8 +75,6 @@ src/apptype.c - used for OS/2 specific application type magic
 src/ascmagic.c - third & last set of tests, based on hardwired assumptions.
 src/asctime_r.c - replacement for OS's that don't have it.
 src/asprintf.c - replacement for OS's that don't have it.
-src/asctime_r.c - replacement for OS's that don't have it.
-src/asprintf.c - replacement for OS's that don't have it.
 src/buffer.c - buffer handling functions.
 src/cdf.[ch] - parser for Microsoft Compound Document Files
 src/cdf_time.c - time converter for CDF.
