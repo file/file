@@ -1,8 +1,11 @@
 
 #------------------------------------------------------------------------------
-# $File: statistics,v 1.1 2020/10/08 17:50:06 christos Exp $
+# $File: statistics,v 1.2 2020/10/08 17:51:53 christos Exp $
 # statistics:  file(1) magic for statistics related software
 #
+
+# From Remy Rampin
+
 # Stata is a statistical software tool that was created in 1985. While I
 # don't personally use it, data files in its native (proprietary) format
 # are common (.dta files).
