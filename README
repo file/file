@@ -1,6 +1,6 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README,v 1.60 2020/07/16 22:02:59 christos Exp $
+    @(#) $File: README,v 1.61 2020/10/08 23:20:14 christos Exp $
 
 Mailing List: file@astron.com
 Mailing List archives: https://mailman.astron.com/pipermail/file/
@@ -73,8 +73,6 @@ INSTALL - read on how to install
 src/apprentice.c - parses /etc/magic to learn magic
 src/apptype.c - used for OS/2 specific application type magic
 src/ascmagic.c - third & last set of tests, based on hardwired assumptions.
-src/asctime_r.c - replacement for OS's that don't have it.
-src/asprintf.c - replacement for OS's that don't have it.
 src/asctime_r.c - replacement for OS's that don't have it.
 src/asprintf.c - replacement for OS's that don't have it.
 src/buffer.c - buffer handling functions.
