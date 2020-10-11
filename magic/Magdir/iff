@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: iff,v 1.13 2011/09/06 11:00:06 christos Exp $
+# $File: iff,v 1.15 2020/10/11 20:07:11 christos Exp $
 # iff:	file(1) magic for Interchange File Format (see also "audio" & "images")
 #
 # Daniel Quinlan (quinlan@yggdrasil.com) -- IFF was designed by Electronic
@@ -41,6 +41,7 @@
 >8	string		ANIM		\b, ANIM animation
 >8	string		YAFA		\b, YAFA animation
 >8	string		SSA\ 		\b, SSA super smooth animation
+>8	string		FANT		\b, Fantavision animation
 >8	string		ACBM		\b, ACBM continuous image
 >8	string		FAXX		\b, FAXX fax image
 # other formats
