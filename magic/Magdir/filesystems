@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.134 2020/07/06 22:34:18 christos Exp $
+# $File: filesystems,v 1.135 2020/10/11 20:26:26 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2436,3 +2436,14 @@
 >0x400	pstring	x			serial: %s
 #>0x500	pstring	x			unknown: %s
 !:ext	imgc
+
+# http://martin.hinner.info/fs/bfs/bfs-structure.html
+0	lelong	0x1BADFACE		SCO UnixWare BFS filesystem
+
+# https://arstechnica.com/information-technology/2018/07/the-beos-filesystem/
+32	lelong	0x42465331		BE/OS BFS1 filesystem
+>36	lelong	x			\b, byte order %d
+>40	lelong	x			\b, block size %d
+>44	lelong	x			\b, block shift %d
+>48	lequad	x			\b, total blocks %lld
+>56	lequad	x			\b, used blocks %lld
