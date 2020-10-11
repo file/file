@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.80 2020/08/24 16:31:30 christos Exp $
+# $File: animation,v 1.81 2020/10/11 20:12:21 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -910,7 +910,7 @@
 >0x42	ubeshort	0		no audio
 >0x42	ubeshort	>0		%dHz audio
 
-# From: "Stefan A. Haubenthal" <polluks@web.de>
+# From: Stefan A. Haubenthal <polluks@sdf.lonestar.org>
 # Update: Joerg Jenderek
 # URL: https://en.wikipedia.org/wiki/VOB
 0	string		DVDVIDEO-VTS	Video title set,
@@ -921,6 +921,10 @@
 !:mime	video/x-ifo
 !:ext	ifo/bup
 >0x21	byte		x		v%x
+
+# From: Stefan A. Haubenthal <polluks@sdf.lonestar.org>
+0 string xMovieSetter MovieSetter movie
+0 string xSceneEditor MovieSetter movie
 
 # From: Behan Webster <behanw@websterwood.com>
 # NuppelVideo used by Mythtv (*.nuv)
