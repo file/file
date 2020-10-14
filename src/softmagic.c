@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.306 2020/09/05 22:58:47 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.307 2020/10/14 21:09:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -386,7 +386,6 @@ flush:
 				if (m->type == FILE_CLEAR)
 					ms->c.li[cont_level].got_match = 0;
 				else if (ms->c.li[cont_level].got_match) {
-fprintf(stderr, "cont_level=%d\n", cont_level);
 					if (m->type == FILE_DEFAULT)
 						break;
 				} else
