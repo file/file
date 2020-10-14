@@ -1,8 +1,9 @@
-# Handling of binary PGP keys is in pgp-binary-keys.
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.23 2020/09/06 15:14:36 christos Exp $
+# $File: pgp,v 1.24 2020/10/14 21:07:29 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
+
+# Handling of binary PGP keys is in pgp-binary-keys.
 # see https://lists.gnupg.org/pipermail/gnupg-devel/1999-September/016052.html
 #
 0	beshort		0xa600			PGP encrypted data
