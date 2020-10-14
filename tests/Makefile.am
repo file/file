@@ -33,6 +33,14 @@ zstd-v0.8-22.testfile \
 zstd-v0.8-23.testfile \
 zstd-v0.8-F4.testfile \
 zstd-v0.8-FF.testfile \
+pgp-binary-key-v2-phil.testfile \
+pgp-binary-key-v3-lutz.testfile \
+pgp-binary-key-v4-dsa.testfile \
+pgp-binary-key-v4-ecc-no-userid-secret.testfile \
+pgp-binary-key-v4-ecc-secret-key.testfile \
+pgp-binary-key-v4-rsa-key.testfile \
+pgp-binary-key-v4-rsa-no-userid-secret.testfile \
+pgp-binary-key-v4-rsa-secret-key.testfile \
 CVE-2014-1943.result \
 JW07022A.mp3.result \
 escapevel.result \
@@ -71,7 +79,15 @@ zstd-v0.8-21.result \
 zstd-v0.8-22.result \
 zstd-v0.8-23.result \
 zstd-v0.8-F4.result \
-zstd-v0.8-FF.result
+zstd-v0.8-FF.result \
+pgp-binary-key-v2-phil.result \
+pgp-binary-key-v3-lutz.result \
+pgp-binary-key-v4-dsa.result \
+pgp-binary-key-v4-ecc-no-userid-secret.result \
+pgp-binary-key-v4-ecc-secret-key.result \
+pgp-binary-key-v4-rsa-key.result \
+pgp-binary-key-v4-rsa-no-userid-secret.result \
+pgp-binary-key-v4-rsa-secret-key.result
 
 T = $(top_srcdir)/tests
 check-local:

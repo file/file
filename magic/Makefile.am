@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.160 2020/10/08 17:50:41 christos Exp $
+# $File: Makefile.am,v 1.161 2020/10/14 21:10:30 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -228,6 +228,7 @@ $(MAGIC_FRAGMENT_DIR)/pdp \
 $(MAGIC_FRAGMENT_DIR)/perl \
 $(MAGIC_FRAGMENT_DIR)/pgf \
 $(MAGIC_FRAGMENT_DIR)/pgp \
+$(MAGIC_FRAGMENT_DIR)/pgp-binary-keys \
 $(MAGIC_FRAGMENT_DIR)/pkgadd \
 $(MAGIC_FRAGMENT_DIR)/plan9 \
 $(MAGIC_FRAGMENT_DIR)/plus5 \
