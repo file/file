@@ -71,7 +71,7 @@ typedef void (*sig_t)(int);
 #include <bzlib.h>
 #endif
 
-#if defined(HAVE_XZLIB_H) && defined(XZLIBSUPPORT)
+#if defined(HAVE_LZMA_H) && defined(XZLIBSUPPORT)
 #define BUILTIN_XZLIB
 #include <lzma.h>
 #endif
