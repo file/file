@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.127 2020/05/31 00:11:06 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.128 2020/10/18 22:00:13 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -71,7 +71,7 @@ typedef void (*sig_t)(int);
 #include <bzlib.h>
 #endif
 
-#if defined(HAVE_XZLIB_H) && defined(XZLIBSUPPORT)
+#if defined(HAVE_LZMA_H) && defined(XZLIBSUPPORT)
 #define BUILTIN_XZLIB
 #include <lzma.h>
 #endif
