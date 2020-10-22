@@ -30,7 +30,6 @@ We are continuously being fuzzed by OSS-FUZZ:
 
 The major changes for 5.x are CDF file parsing, indirect magic, name/use
 (recursion) and overhaul in mime and ascii encoding handling.
-
 The major feature of 4.x is the refactoring of the code into a library,
 and the re-write of the file command in terms of that library. The library
 itself, libmagic can be used by 3rd party programs that wish to identify
