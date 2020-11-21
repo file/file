@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.16 2019/11/15 21:03:14 christos Exp $
+# $File: android,v 1.17 2020/11/21 15:57:07 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -188,3 +188,22 @@
 0	lelong	0xd0b5b1c4	Android cryptfs footer
 >4	leshort	x	\b, version: %d
 >6	leshort	x	\b.%d
+
+# Android Vdex format
+# From https://android.googlesource.com/\
+# platform/art/+/master/runtime/vdex_file.h
+0	string	vdex	Android vdex file,
+>4	string	>000	verifier deps version: %s,
+>8	string	>000	dex section version: %s,
+>12	lelong	>0	number of dex files: %d,
+>16	lelong	>0	verifier deps size: %d
+
+# Android Vdex format, dexfile is currently being updated
+# by android system
+# From https://android.googlesource.com/\
+# platform/art/+/master/dex2oat/dex2oat.cc
+0	string	wdex	Android vdex file, being processed by dex2oat,
+>4	string	>000	verifier deps version: %s,
+>8	string	>000	dex section version: %s,
+>12	lelong	>0	number of dex files: %d,
+>16	lelong	>0	verifier deps size: %d
