@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.135 2020/10/11 20:26:26 christos Exp $
+# $File: filesystems,v 1.136 2020/11/26 14:14:08 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -260,6 +260,19 @@
 >>(11.s-2)	uleshort	0xAA55		DOS/MBR boot sector
 # for sector sizes with 512 or more Bytes
 >0x1FE		leshort		0xAA55		DOS/MBR boot sector
+
+# ExFAT
+3		string/w	=EXFAT
+!:strength +65
+>0x1FE		leshort		0xAA55
+>>0x6E		ubyte		1
+>>>0x6F		ubyte		0x80
+>>>0		ubyte		0xEB	DOS/MBR boot sector,
+>>>0x69		ubyte		x	ExFAT Filesystem version %d.
+>>>0x68		ubyte		x	\b%d
+>>>0x6d		ubyte		x	\b, (1<<%d) sectors per cluster
+>>>0x48		ulequad		x	\b, sectors %lld
+>>>0x64		ulelong		x	\b, serial number 0x%x
 
 # keep old DOS/MBR boot sector as dummy for mbr and bootloader displaying
 # only for sector sizes with 512 or more Bytes
