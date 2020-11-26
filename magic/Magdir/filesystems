@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.136 2020/11/26 14:14:08 christos Exp $
+# $File: filesystems,v 1.137 2020/11/26 14:16:00 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -263,7 +263,6 @@
 
 # ExFAT
 3		string/w	=EXFAT
-!:strength +65
 >0x1FE		leshort		0xAA55
 >>0x6E		ubyte		1
 >>>0x6F		ubyte		0x80
