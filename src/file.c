@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.187 2020/06/07 17:38:30 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.188 2020/12/06 14:58:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -523,8 +523,6 @@ unwrap(struct magic_set *ms, const char *fn)
 		if (line[len - 1] == '\n')
 			line[len - 1] = '\0';
 		e |= process(ms, line, wid);
-		if(nobuffer)
-			(void)fflush(stdout);
 	}
 
 	free(line);
@@ -556,11 +554,12 @@ process(struct magic_set *ms, const char *inname, int wid)
 
 	if (type == NULL) {
 		(void)printf("ERROR: %s%c", magic_error(ms), c);
-		return 1;
 	} else {
 		(void)printf("%s%c", type, c);
-		return 0;
 	}
+	if (nobuffer)
+		(void)fflush(stdout);
+	return type == NULL;
 }
 
 protected size_t
