@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.117 2020/06/25 16:52:48 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.118 2020/12/08 21:26:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -36,6 +36,9 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.117 2020/06/25 16:52:48 christos Exp $")
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>	/* for pipe2() */
+#endif
 #if defined(HAVE_WCHAR_H)
 #include <wchar.h>
 #endif
@@ -783,4 +786,23 @@ file_print_guid(char *str, size_t len, const uint64_t *guid)
 	    g->data1, g->data2, g->data3, g->data4[0], g->data4[1],
 	    g->data4[2], g->data4[3], g->data4[4], g->data4[5],
 	    g->data4[6], g->data4[7]);
+}
+
+protected int
+file_pipe_closexec(int *fds)
+{
+#ifdef HAVE_PIPE2
+	return pipe2(fds, O_CLOEXEC);
+#else
+	if (pipe(fds) == -1)
+		return -1;
+	(void)fcntl(fds[0], F_SETFD, FD_CLOEXEC);
+	(void)fcntl(fds[1], F_SETFD, FD_CLOEXEC);
+	return 0;
+#endif
+}
+
+protected int
+file_clear_closexec(int fd) {
+	return fcntl(fd, F_SETFD, 0);
 }

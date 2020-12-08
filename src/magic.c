@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.112 2020/06/08 19:44:10 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.113 2020/12/08 21:26:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -436,7 +436,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		_setmode(STDIN_FILENO, O_BINARY);
 #endif
 	if (inname != NULL) {
-		int flags = O_RDONLY|O_BINARY|O_NONBLOCK;
+		int flags = O_RDONLY|O_BINARY|O_NONBLOCK|O_CLOEXEC;
 		errno = 0;
 		if ((fd = open(inname, flags)) < 0) {
 			okstat = stat(inname, &sb) == 0;
@@ -460,6 +460,9 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			rv = 0;
 			goto done;
 		}
+#if O_CLOEXEC == 0
+		(void)fcntl(fd, F_SETFD, FD_CLOEXEC);
+#endif
 	}
 
 	if (fd != -1) {

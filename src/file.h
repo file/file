@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.222 2020/09/05 14:15:42 christos Exp $
+ * @(#)$File: file.h,v 1.223 2020/12/08 21:26:00 christos Exp $
  */
 
 #ifndef __file_h__
@@ -141,6 +141,14 @@
 
 #ifndef MAX
 #define	MAX(a,b)	(((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef O_CLOEXEC
+# define O_CLOEXEC 0
+#endif
+
+#ifndef FD_CLOEXEC
+# define FD_CLOEXEC 1
 #endif
 
 #define FILE_BADSIZE CAST(size_t, ~0ul)
@@ -540,6 +548,8 @@ protected char * file_printable(char *, size_t, const char *, size_t);
 protected int file_os2_apptype(struct magic_set *, const char *, const void *,
     size_t);
 #endif /* __EMX__ */
+protected int file_pipe_closexec(int *);
+protected int file_clear_closexec(int);
 
 protected void buffer_init(struct buffer *, int, const struct stat *,
     const void *, size_t);
