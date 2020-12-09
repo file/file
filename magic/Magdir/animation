@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.82 2020/11/21 16:57:09 christos Exp $
+# $File: animation,v 1.83 2020/12/09 22:15:20 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -290,6 +290,12 @@
 !:mime image/heif-sequence
 >8	string		avcs		\b, HEIF Image Sequence AVC
 !:mime image/heif-sequence
+# AVIF image format
+# see https://aomediacodec.github.io/av1-avif/
+>8	string		avif		\b, AVIF Image
+!:mime image/avif
+>8	string		avis		\b, AVIF Image Sequence
+!:mime image/avif
 >8	string		risx		\b, Representation Index Segment for MPEG-2 TS Segments
 >8	string		ROSS		\b, Ross Video
 >8	string		sdv		\b, SD Memory Card Video
