@@ -17,7 +17,7 @@
 0	search/2652/b	(This\ file\ 
 >&0	use		binhex
 0	name				binhex
-# keep splitted search string format similar like in version 5.37
+# keep split search string format similar like in version 5.37
 >0	string	must\ be\ converted\ with\ BinHex\ 	BinHex binary text, version
 # http://www.macdisk.com/binhexen.php3
 !:apple	BNHQTEXT

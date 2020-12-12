@@ -972,14 +972,14 @@
 # TO avoid in file version 5.36 error like
 # Magdir/windows, 760: Warning: Current entry does not yet have a description
 # file: could not find any valid magic files! (No error)
-# splitted WIM
+# split WIM
 >16	ulelong		&0x00000008		(SWM
 !:ext	swm
 # usPartNumber; 1, unless the file was split into multiple parts
 >>40	uleshort	x			\b %u
 # usTotalParts; The total number of WIM file parts in a spanned set
 >>42	uleshort	x			\b of %u) image
-# non splitted WIM
+# non split WIM
 >16	ulelong		^0x00000008
 # https://wimlib.net/man1/wimmount.html
 # solid WIMs; version 3584; usually contain LZMS-compressed and the .esd extension

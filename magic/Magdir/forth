@@ -16,7 +16,7 @@
 0       regex   \^:[[:space:]].*[[:space:]]\\(([[:space:]].*)?\ --\ (.*[[:space:]])?\\)[[:space:]].*[[:space:]];$	FORTH program
 !:mime  text/x-forth
 
-# Various dictionary images used by OpenFirware FORTH environent
+# Various dictionary images used by OpenFirware FORTH environment
 
 0	lelong	0xe1a00000
 >8	lelong	0xe1a00000

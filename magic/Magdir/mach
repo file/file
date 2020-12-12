@@ -252,7 +252,7 @@
 !:ext	dylib/
 >12	belong		7		dynamic linker
 >12	belong		8		bundle
-# normally name extesion bundle; but exceptions like: AMDil_r700.dylib 
+# normally name extension bundle; but exceptions like: AMDil_r700.dylib 
 !:ext	bundle/dylib/
 >12	belong		9		dynamically linked shared library stub
 >12	belong		10		dSYM companion file

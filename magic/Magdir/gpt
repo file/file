@@ -12,7 +12,7 @@
 # This is kept separate, so that MBR partitions are not reported as well.
 # (use -k if you do want them as well)
 
-# First, detect the MBR partiton table
+# First, detect the MBR partition table
 # If more than one GPT protective MBR partition exists, don't print anything
 # (the other MBR detection code will then just print the MBR partition table)
 0x1FE			leshort		0xAA55

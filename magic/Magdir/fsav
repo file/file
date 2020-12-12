@@ -59,7 +59,7 @@
 # file: could not find any valid magic files! (No error)
 >>10	default		x		(with buildtime)
 #>>10	default		x
-# clamtmp is used for temporily database like update process
+# clamtmp is used for temporarily database like update process
 # for pure tar database only cld extension found
 !:ext	cld/cvd/clamtmp/cud
 >511	default		x		file

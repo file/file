@@ -13,7 +13,7 @@
 !:ext mb
 
 # .ma
-# multiple possibilites:
+# multiple possibilities:
 
 0	string	(*^\n\n::[\011frontEndVersion\ =\ 	Mathematica notebook
 #>41	string	>\0	%s

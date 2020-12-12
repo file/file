@@ -404,7 +404,7 @@
 >0		lelong		x		dBase IV DBT
 !:mime	application/x-dbt
 !:ext dbt
-# 8 character shorted main name of coresponding dBASE IV DBF file
+# 8 character shorted main name of corresponding dBASE IV DBF file
 >8		ubelong		>0x20000000
 # skip unusual like for angest.dbt
 >>20		uleshort	>0

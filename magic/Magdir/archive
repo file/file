@@ -240,7 +240,7 @@
 !:ext	deb/udeb/ipk
 # This should not happen
 >14	default		x	Unknown Debian package
-# NL terminated version; for most Debian cases this is 2.0 or 2.1 for splitted
+# NL terminated version; for most Debian cases this is 2.0 or 2.1 for split
 >68	string		>\0		(format %s)
 #>68	string		!2.0\n
 #>>68	string		x		(format %.3s)
@@ -261,7 +261,7 @@
 >>>>>>>&-1	ubyte	!0x2f
 # display 4th character of file name extension like a of lzma
 >>>>>>>>&-1	ubyte	x		\b%c
-# splitted debian package case
+# split debian package case
 >68	string		=2.1\n
 # dpkg-1.18.25/dpkg-split/info.c
 # NL terminated ASCII package name like ckermit
@@ -938,7 +938,7 @@
 >>>>>>3	regex		\^lh[456]	LHa (2.x) archive data
 >>>>>>>2	string	-lh5		\b 
 # https://en.wikipedia.org/wiki/BIOS
-# Some mainboard BIOS like Award use LHa compression. So archives with unusal extension are found like
+# Some mainboard BIOS like Award use LHa compression. So archives with unusual extension are found like
 # bios.rom , kd7_v14.bin, 1010.004, ...
 !:ext lha/lzh/rom/bin
 # missing -lh?- variants (Joe Jared)

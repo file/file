@@ -37,7 +37,7 @@
 # ./intel (version 5.25) label labeled the next entry as "80386 COFF executable"
 # SGI labeled the next entry as "iAPX 386 executable" --Dan Quinlan
 0	leshort		=0514
-# use subroutine to display name+flags+variables for common object formated files
+# use subroutine to display name+flags+variables for common object formatted files
 >0	use				display-coff
 #>12	lelong		>0		not stripped
 # no hint found, that at offset 22 is version

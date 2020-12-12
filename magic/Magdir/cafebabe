@@ -24,7 +24,7 @@
 !:ext	class
 >>6	ubeshort	x	        version %d.
 >>4	ubeshort	x       	\b%d
-# for debugging purpose version as hexidecimal to compare with Mach-O universal binary
+# for debugging purpose version as hexadecimal to compare with Mach-O universal binary
 #>>4	ubelong		x       	(0x%8.8x)
 # Which is which?
 # https://docs.oracle.com/javase/specs/jvms/se6/html/ClassFile.doc.html
@@ -65,7 +65,7 @@
 # URL:		https://en.wikipedia.org/wiki/Mach-O
 
 0	name		mach-o		\b [
-# for debugging purpose CPU type as hexidecimal
+# for debugging purpose CPU type as hexadecimal
 #>0	ubequad		x		CPU=%16.16llx 
 # display CPU type as string like: i386 x86_64 ... armv7 armv7k ...
 >0	use		mach-o-cpu	\b

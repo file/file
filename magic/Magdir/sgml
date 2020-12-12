@@ -43,7 +43,7 @@
 # sgml:  file(1) magic for Standard Generalized Markup Language
 # HyperText Markup Language (HTML) is an SGML document type,
 # from Daniel Quinlan (quinlan@yggdrasil.com)
-# adapted to string extenstions by Anthon van der Neut <anthon@mnt.org)
+# adapted to string extensions by Anthon van der Neut <anthon@mnt.org)
 0	search/4096/cWt	\<!doctype\ html	HTML document text
 !:mime	text/html
 !:strength + 5

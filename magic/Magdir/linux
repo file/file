@@ -239,7 +239,7 @@
 # From: Kevin Cernekee <cernekee@gmail.com>
 # Update: Joerg Jenderek
 0x24	lelong	0x016f2818	Linux kernel ARM boot executable zImage
-# There are three posible situations: LE, BE with LE bootloader and pure BE.
+# There are three possible situations: LE, BE with LE bootloader and pure BE.
 # In order to aid telling these apart a new endian flag was added. In order
 # to support kernels before the flag and BE with LE bootloader was added we'll
 # do a negative check against the BE variant of the flag when we see a LE magic.
