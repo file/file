@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.143 2020/09/06 15:14:36 christos Exp $
+# $File: msdos,v 1.144 2020/12/12 20:01:47 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -291,7 +291,7 @@
 >>>&1		string		x for DOS, Win or OS/2, emx %s
 >>&(&0x42.l-3)	byte		x
 >>>&0x26	string		UPX \b, UPX compressed
-# and yet another guess: small .text, and after large .data is unusal, could be 32lite
+# and yet another guess: small .text, and after large .data is unusual, could be 32lite
 >>&0x2c		search/0xa0	.text
 >>>&0x0b	lelong		<0x2000
 >>>>&0		lelong		>0x6000 \b, 32lite compressed
@@ -1368,7 +1368,7 @@
 !:mime	application/vnd.ms-cab-compressed
 !:ext	msu
 >>>&-1	default		x
-# look at point charcter of 1st archive member name for file name extension
+# look at point character of 1st archive member name for file name extension
 >>>>&-1	search/255 	.
 # http://www.pptfaq.com/FAQ00164_What_is_a_PPZ_file-.htm
 # PPZ were created using Pack & Go feature of PowerPoint versions 97 - 2002

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.192 2020/08/22 18:46:08 christos Exp $
+# $File: images,v 1.193 2020/12/12 20:01:47 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2644,14 +2644,14 @@
 # if blocks_array_offset available jump blockNumber*8 bytes 
 >>0x34	ulelong		>0
 >>>(0x28.l*8)	ubyte	x
-# jump addtional stored blocks_array_offset bytes forward to object block
+# jump additional stored blocks_array_offset bytes forward to object block
 >>>>&(0x34.l-1) ulelong x	%u
-# object heigth in pixels
+# object height in pixels
 >>>>>&0		ulelong	x	x %u
 # if no blocks_array_offset available jump blockNumber*8 bytes
 >>0x34	ulelong		=0
 >>>(0x28.l*8)	ubyte	x
-# jump addtional 0x13C bytes forward to object block
+# jump additional 0x13C bytes forward to object block
 >>>>&0x13B	ulelong x	%u
 >>>>>&0	ulelong		x	x %u
 # image color model used

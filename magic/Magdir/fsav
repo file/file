@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fsav,v 1.19 2019/04/19 00:42:27 christos Exp $
+# $File: fsav,v 1.20 2020/12/12 20:01:47 christos Exp $
 # fsav:  file(1) magic for datafellows fsav virus definition files
 # Anthon van der Neut (anthon@mnt.org)
 
@@ -59,7 +59,7 @@
 # file: could not find any valid magic files! (No error)
 >>10	default		x		(with buildtime)
 #>>10	default		x
-# clamtmp is used for temporily database like update process
+# clamtmp is used for temporarily database like update process
 # for pure tar database only cld extension found
 !:ext	cld/cvd/clamtmp/cud
 >511	default		x		file

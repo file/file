@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: forth,v 1.2 2020/08/30 16:25:50 christos Exp $
+# $File: forth,v 1.3 2020/12/12 20:01:47 christos Exp $
 # forth:  file(1) magic for various Forth environments
 # From: Lubomir Rintel <lkundrak@v3.sk>
 #
@@ -16,7 +16,7 @@
 0       regex   \^:[[:space:]].*[[:space:]]\\(([[:space:]].*)?\ --\ (.*[[:space:]])?\\)[[:space:]].*[[:space:]];$	FORTH program
 !:mime  text/x-forth
 
-# Various dictionary images used by OpenFirware FORTH environent
+# Various dictionary images used by OpenFirware FORTH environment
 
 0	lelong	0xe1a00000
 >8	lelong	0xe1a00000

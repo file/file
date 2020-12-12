@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mathematica,v 1.9 2017/03/17 21:35:28 christos Exp $
+# $File: mathematica,v 1.10 2020/12/12 20:01:47 christos Exp $
 # mathematica:  file(1) magic for mathematica files
 # "H. Nanosecond" <aldomel@ix.netcom.com>
 # Mathematica a multi-purpose math program
@@ -13,7 +13,7 @@
 !:ext mb
 
 # .ma
-# multiple possibilites:
+# multiple possibilities:
 
 0	string	(*^\n\n::[\011frontEndVersion\ =\ 	Mathematica notebook
 #>41	string	>\0	%s

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: mach,v 1.27 2020/09/17 21:58:14 christos Exp $
+# $File: mach,v 1.28 2020/12/12 20:01:47 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -252,7 +252,7 @@
 !:ext	dylib/
 >12	belong		7		dynamic linker
 >12	belong		8		bundle
-# normally name extesion bundle; but exceptions like: AMDil_r700.dylib 
+# normally name extension bundle; but exceptions like: AMDil_r700.dylib 
 !:ext	bundle/dylib/
 >12	belong		9		dynamically linked shared library stub
 >12	belong		10		dSYM companion file
