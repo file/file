@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.298 2020/09/05 14:27:44 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.299 2020/12/16 23:38:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1461,7 +1461,10 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 		 */
 		set_last_default(ms, mset[j].me, mset[j].count);
 
-		/* coalesce per file arrays into a single one */
+		/* coalesce per file arrays into a single one, if needed */
+		if (mset[j].count == 0)
+			continue;
+		      
 		if (coalesce_entries(ms, mset[j].me, mset[j].count,
 		    &map->magic[j], &map->nmagic[j]) == -1) {
 			errs++;
