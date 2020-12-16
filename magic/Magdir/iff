@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: iff,v 1.15 2020/10/11 20:07:11 christos Exp $
+# $File: iff,v 1.16 2020/12/16 22:36:24 christos Exp $
 # iff:	file(1) magic for Interchange File Format (see also "audio" & "images")
 #
 # Daniel Quinlan (quinlan@yggdrasil.com) -- IFF was designed by Electronic
@@ -53,6 +53,9 @@
 >8	string		AMFF		\b, AMFF AmigaMetaFile format
 >8	string		WZRD		\b, WZRD StormWIZARD resource
 >8	string		DOC\ 		\b, DOC desktop publishing document
+>8	string		SWRT		\b, SWRT Final Copy/Writer document
+>8	string 		WTXT		\b, WTXT Wordworth document
+>8	string 		WOWO		\b, WOWO Wordworth document
 >8	string		WVQA 		\b, Westwood Studios VQA Multimedia,
 >>24	leshort		x		%d video frames,
 >>26	leshort		x		%d x
