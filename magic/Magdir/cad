@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.23 2020/05/30 23:58:07 christos Exp $
+# $File: cad,v 1.24 2020/12/16 23:53:50 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -213,9 +213,11 @@
 # AutoCAD DWG versions R12/R13/R14 (www.autodesk.com)
 0	string	AC1012	DWG AutoDesk AutoCAD Release 13
 !:mime image/vnd.dwg
+0	string	AC1013	DWG AutoDesk AutoCAD Release 13c3
+!:mime image/vnd.dwg
 0	string	AC1014	DWG AutoDesk AutoCAD Release 14
 !:mime image/vnd.dwg
-0	string	AC1015	DWG AutoDesk AutoCAD 2000/2002
+0	string	AC1015	DWG AutoDesk AutoCAD 2000
 !:mime image/vnd.dwg
 
 # A new version of AutoCAD DWG
@@ -233,7 +235,9 @@
 !:mime image/vnd.dwg
 
 # From GNU LibreDWG
-0	string	AC1032	DWG AutoDesk AutoCAD 2018/2019
+0	string	AC1032	DWG AutoDesk AutoCAD 2018/2019/2020
+!:mime image/vnd.dwg
+0	string	AC1035	DWG AutoDesk AutoCAD 2021
 !:mime image/vnd.dwg
 
 # KOMPAS 2D drawing from ASCON
@@ -309,11 +313,15 @@
 >>>>&1	search/8192	AC1006			\b, R10
 >>>>&1	search/8192	AC1009			\b, R11/R12
 >>>>&1	search/8192	AC1012			\b, R13
+>>>>&1	search/8192	AC1013			\b, R13c3
 >>>>&1	search/8192	AC1014			\b, R14
 >>>>&1	search/8192	AC1015			\b, version 2000
 >>>>&1	search/8192	AC1018			\b, version 2004
 >>>>&1	search/8192	AC1021			\b, version 2007
 >>>>&1	search/8192	AC1024			\b, version 2010
+>>>>&1	search/8192	AC1027			\b, version 2013
+>>>>&1	search/8192	AC1032			\b, version 2018
+>>>>&1	search/8192	AC1035			\b, version 2021
 
 # The Sketchup 3D model format https://www.sketchup.com/
 0	string	\xff\xfe\xff\x0e\x53\x00\x6b\x00\x65\x00\x74\x00\x63\x00\x68\x00\x55\x00\x70\x00\x20\x00\x4d\x00\x6f\x00\x64\x00\x65\x00\x6c\x00	SketchUp Model
