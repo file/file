@@ -1,3 +1,8 @@
+2020-12-17  15:44  Christos Zoulas <christos@zoulas.com>
+
+	* PR/211: Convert system read errors from corrupt ELF
+	  files into human readable error messages
+
 2020-12-08  16:24  Christos Zoulas <christos@zoulas.com>
 	
 	* fix multithreaded decompression file descriptor issue
