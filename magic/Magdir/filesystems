@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.138 2020/12/12 20:01:47 christos Exp $
+# $File: filesystems,v 1.139 2020/12/17 00:10:46 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2459,3 +2459,17 @@
 >44	lelong	x			\b, block shift %d
 >48	lequad	x			\b, total blocks %lld
 >56	lequad	x			\b, used blocks %lld
+
+
+0	name next
+>0	lelong	x			\b, size %d
+>4	string	x			\b, label %s
+
+# https://opensource.apple.com/source/IOStorageFamily/IOStorageFamily-44.3\
+# /IONeXTPartitionScheme.h
+0	string	NeXT			NeXT version 1 disklabel
+>12	use next
+0	string	dlV1			NeXT version 2 disklabel
+>12	use next
+0	string	dlV2			NeXT version 3 disklabel
+>12	use next
