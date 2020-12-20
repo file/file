@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: c64,v 1.7 2017/11/15 12:19:06 christos Exp $
+# $File: c64,v 1.8 2020/12/20 16:17:43 christos Exp $
 # c64:  file(1) magic for various commodore 64 related files
 #
 # From: Dirk Jagdmann <doj@cubic.org>
@@ -56,3 +56,8 @@
 >68	string		>\0		\b (C) %s
 >100	byte		>0		\b, %u subsong(s)
 
+# CBM BASIC (cc65 compiled)
+0	leshort		0x0801
+>2	leshort		0x080b
+>6	string		\x9e		CBM BASIC
+>7	string		>\0		\b, SYS %s
