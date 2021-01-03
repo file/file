@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.44 2020/07/17 19:25:05 christos Exp $
+# $File: fonts,v 1.45 2021/01/03 21:00:11 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -11,6 +11,7 @@
 0	string		%!PS-AdobeFont-1.	PostScript Type 1 font text
 >20	string		>\0			(%s)
 6	string		%!PS-AdobeFont-1.	PostScript Type 1 font program data
+>26	string		>\0			(%s)
 0	string		%!FontType1	PostScript Type 1 font program data
 6	string		%!FontType1	PostScript Type 1 font program data
 0	string		%!PS-Adobe-3.0\ Resource-Font	PostScript Type 1 font text
