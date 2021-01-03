@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.144 2020/12/12 20:01:47 christos Exp $
+# $File: archive,v 1.145 2021/01/03 20:58:47 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1346,6 +1346,8 @@
 >>>>4	beshort		x			\b, at least
 >>>>4	use		zipversion
 >>>>4	beshort		x			to extract
+>>>>8	beshort		x			\b, compression method=
+>>>>8	use		zipcompression
 >>>>0x161	string		WINZIP		\b, WinZIP self-extracting
 
 # StarView Metafile
