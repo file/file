@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.74 2020/12/12 20:01:47 christos Exp $
+# $File: linux,v 1.75 2021/01/03 20:53:52 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -518,3 +518,15 @@
 0		search/1024	/dts-v1/	Device Tree File (v1)
 # beat c code
 !:strength +14
+
+
+# e2fsck undo file
+# David Gilman <davidgilman1@gmail.com>
+0		string		E2UNDO02	e2fsck undo file, version 2
+>44		lelong		x		\b, undo file is
+>>44		lelong&1	0		not finished
+>>44		lelong&1	1		finished
+>48		lelong		x		\b, undo file features:
+>>48		lelong&1	0		lacks filesystem offset
+>>48		lelong&1	1		has filesystem offset
+>>>64		lequad		x		at 0x%llx
