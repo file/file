@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.162 2020/12/17 00:04:30 christos Exp $
+# $File: Makefile.am,v 1.163 2021/01/03 20:56:25 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -157,6 +157,7 @@ $(MAGIC_FRAGMENT_DIR)/lif \
 $(MAGIC_FRAGMENT_DIR)/linux \
 $(MAGIC_FRAGMENT_DIR)/lisp \
 $(MAGIC_FRAGMENT_DIR)/llvm \
+$(MAGIC_FRAGMENT_DIR)/locoscript \
 $(MAGIC_FRAGMENT_DIR)/lua \
 $(MAGIC_FRAGMENT_DIR)/luks \
 $(MAGIC_FRAGMENT_DIR)/m4 \
