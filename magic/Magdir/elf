@@ -289,6 +289,7 @@
 >>>48	use		elf-riscv
 >18	leshort		247		eBPF,
 >18	leshort		251             NEC VE,
+>18	leshort		258		LoongArch,
 >18	leshort		0x1057		AVR (unofficial),
 >18	leshort		0x1059		MSP430 (unofficial),
 >18	leshort		0x1223		Adapteva Epiphany (unofficial),
