@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.163 2021/01/03 20:56:25 christos Exp $
+# $File: Makefile.am,v 1.164 2021/01/09 15:09:58 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -225,6 +225,7 @@ $(MAGIC_FRAGMENT_DIR)/pbf \
 $(MAGIC_FRAGMENT_DIR)/pbm \
 $(MAGIC_FRAGMENT_DIR)/pc88 \
 $(MAGIC_FRAGMENT_DIR)/pc98 \
+$(MAGIC_FRAGMENT_DIR)/pcjr \
 $(MAGIC_FRAGMENT_DIR)/pdf \
 $(MAGIC_FRAGMENT_DIR)/pdp \
 $(MAGIC_FRAGMENT_DIR)/perl \
