@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.34 2020/12/12 20:01:47 christos Exp $
+# $File: windows,v 1.35 2021/01/26 18:45:00 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -955,8 +955,9 @@
 >>>>0x50 string		x				%s
 
 # Windows Imaging (WIM) Image
-# Update: Joerg Jenderek at Mar 2019
+# Update: Joerg Jenderek at Mar 2019, 2021
 # URL: https://en.wikipedia.org/wiki/Windows_Imaging_Format
+#      http://fileformats.archiveteam.org/wiki/Windows_Imaging_Format
 # Reference: https://download.microsoft.com/download/f/e/f/
 # fefdc36e-392d-4678-9e4e-771ffa2692ab/Windows%20Imaging%20File%20Format.rtf
 # Note: verified by like `7z t boot.wim` `wiminfo install.esd --header`
@@ -985,8 +986,14 @@
 # solid WIMs; version 3584; usually contain LZMS-compressed and the .esd extension
 >>12	ulelong		3584			(ESD) image
 !:ext	esd
->>12	ulelong		!3584			(WIM) image
-!:ext	wim
+>>12	ulelong		!3584			(
+# look for archive member RunTime.xml like in Microsoft.Windows.Cosa.Desktop.Client.ppkg
+>>>156	search/68233/s		RunTime.xml	\bWindows provisioning package)
+!:ext	ppkg
+# if is is not a Windows provisioning package, then it is a WIM
+>>>156	default			x		\bWIM) image
+# second disk image part created by Microsoft's RecoveryDrive.exe has name Reconstruct.WIM2
+!:ext	wim/wim2
 >0	string/b	WLPWM\000\000\000	\b, wimlib pipable format
 # cbSize size of the WIM header in bytes like 208
 #>8	ulelong		x			\b, headersize %u
