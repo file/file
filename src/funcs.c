@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.118 2020/12/08 21:26:00 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.119 2021/02/01 17:32:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -248,11 +248,24 @@ file_badread(struct magic_set *ms)
 }
 
 #ifndef COMPILE_ONLY
+#define FILE_SEPARATOR "\n- "
 
 protected int
 file_separator(struct magic_set *ms)
 {
-	return file_printf(ms, "\n- ");
+	return file_printf(ms, FILE_SEPARATOR);
+}
+
+static void
+trim_separator(struct magic_set *ms)
+{
+	size_t l = strlen(ms->o.buf);
+	if (l < sizeof(FILE_SEPARATOR))
+		return;
+	l -= sizeof(FILE_SEPARATOR) - 1;
+	if (strcmp(ms->o.buf + l, FILE_SEPARATOR) != 0)
+		return;
+	ms->o.buf[l] = '\0';
 }
 
 static int
@@ -456,6 +469,7 @@ simple:
 				rv = -1;
 	}
  done:
+	trim_separator(ms);
 	if ((ms->flags & MAGIC_MIME_ENCODING) != 0) {
 		if (ms->flags & MAGIC_MIME_TYPE)
 			if (file_printf(ms, "; charset=") == -1)
