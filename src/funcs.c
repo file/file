@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.119 2021/02/01 17:32:42 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.120 2021/02/03 19:56:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -259,12 +259,19 @@ file_separator(struct magic_set *ms)
 static void
 trim_separator(struct magic_set *ms)
 {
-	size_t l = strlen(ms->o.buf);
+	size_t l;
+
+	if (ms->o.buf == NULL)
+		return;
+
+	l = strlen(ms->o.buf);
 	if (l < sizeof(FILE_SEPARATOR))
 		return;
+
 	l -= sizeof(FILE_SEPARATOR) - 1;
 	if (strcmp(ms->o.buf + l, FILE_SEPARATOR) != 0)
 		return;
+
 	ms->o.buf[l] = '\0';
 }
 
