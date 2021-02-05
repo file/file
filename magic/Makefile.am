@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.164 2021/01/09 15:09:58 christos Exp $
+# $File: Makefile.am,v 1.165 2021/02/05 21:54:04 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -46,6 +46,7 @@ $(MAGIC_FRAGMENT_DIR)/blackberry \
 $(MAGIC_FRAGMENT_DIR)/blcr \
 $(MAGIC_FRAGMENT_DIR)/blender \
 $(MAGIC_FRAGMENT_DIR)/blit \
+$(MAGIC_FRAGMENT_DIR)/bm \
 $(MAGIC_FRAGMENT_DIR)/bout \
 $(MAGIC_FRAGMENT_DIR)/bsdi \
 $(MAGIC_FRAGMENT_DIR)/bsi \

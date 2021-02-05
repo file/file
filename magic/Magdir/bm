@@ -1,0 +1,11 @@
+
+#------------------------------------------------------------------------------
+# $File: bm,v 1.1 2021/02/05 21:54:04 christos Exp $
+# bm:  file(1) magic for "Birtual Machine", cf. https://github.com/tsoding/bm
+
+# marker is 'bm'
+0	string	bm	Birtual Machine
+>2	leshort	x	\b, version %d
+>4	lelong	x	\b, program size %u
+>12	lelong	x	\b, memory size %u
+>20	lelong	x	\b, memory capacity %u
