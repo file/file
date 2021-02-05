@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.61 2020/08/09 16:38:35 christos Exp $
+# $File: console,v 1.62 2021/02/05 21:51:06 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -181,7 +181,7 @@
 # RAM size.
 >0x149 byte 1     \b, RAM: 16Kbit
 >0x149 byte 2     \b, RAM: 64Kbit
->0x149 byte 3     \b, RAM: 128Kbit
+>0x149 byte 3     \b, RAM: 256Kbit
 >0x149 byte 4     \b, RAM: 1Mbit
 >0x149 byte 5     \b, RAM: 512Kbit
 
