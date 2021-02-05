@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.308 2020/12/16 23:41:38 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.309 2021/02/05 22:29:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -665,19 +665,9 @@ mprint(struct magic_set *ms, struct magic *m)
 			if (*m->value.s == '\0')
 				str[strcspn(str, "\r\n")] = '\0';
 
-			if (m->str_flags & STRING_TRIM) {
-				char *last;
-				while (isspace(CAST(unsigned char, *str)))
-					str++;
-				last = str;
-				while (*last)
-					last++;
-				--last;
-				while (isspace(CAST(unsigned char, *last)))
-					last--;
-				*++last = '\0';
-			}
-
+			if (m->str_flags & STRING_TRIM)
+				str = file_strtrim(str);
+					
 			if (file_printf(ms, F(ms, desc, "%s"),
 			    file_printable(sbuf, sizeof(sbuf), str,
 				sizeof(p->s) - (str - p->s))) == -1)
@@ -782,7 +772,7 @@ mprint(struct magic_set *ms, struct magic *m)
 
 	case FILE_SEARCH:
 	case FILE_REGEX: {
-		char *cp;
+		char *cp, *scp;
 		int rval;
 
 		cp = strndup(RCAST(const char *, ms->search.s),
@@ -791,8 +781,10 @@ mprint(struct magic_set *ms, struct magic *m)
 			file_oomem(ms, ms->search.rm_len);
 			return -1;
 		}
+		scp = (m->str_flags & STRING_TRIM) ? file_strtrim(cp) : cp;
+					
 		rval = file_printf(ms, F(ms, desc, "%s"),
-		    file_printable(sbuf, sizeof(sbuf), cp, ms->search.rm_len));
+		    file_printable(sbuf, sizeof(sbuf), scp, ms->search.rm_len));
 		free(cp);
 
 		if (rval == -1)
