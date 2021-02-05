@@ -1,4 +1,4 @@
-.\" $File: file.man,v 1.143 2021/02/05 21:33:49 christos Exp $
+.\" $File: file.man,v 1.144 2021/02/05 22:08:31 christos Exp $
 .Dd February 5, 2021
 .Dt FILE __CSECTION__
 .Os
@@ -98,7 +98,7 @@ near the beginning of the file that tells the
 operating system
 that the file is a binary executable, and which of several types thereof.
 The concept of a
-.Dq magic
+.Dq magic number
 has been applied by extension to data files.
 Any file with some invariant identifier at a small fixed
 offset into the file can usually be described in this way.
