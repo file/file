@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.75 2021/01/03 20:53:52 christos Exp $
+# $File: linux,v 1.76 2021/02/05 21:58:29 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -438,17 +438,16 @@
 # Documentation/devicetree/booting-without-of.txt
 # From Christoph Biedl
 0		belong		0xd00dfeed
-# structure and strings must be within blob
+# structure must be within blob, strings are omitted to handle devicetrees > 1M
 >&(8.L)		byte		x
->>&(12.L)	byte		x
->>>20		belong		>1	Device Tree Blob version %d
->>>>4		belong		x	\b, size=%d
->>>>20		belong		>1
->>>>>28		belong		x	\b, boot CPU=%d
->>>>20		belong		>2
->>>>>32		belong		x	\b, string block size=%d
->>>>20		belong		>16
->>>>>36		belong		x	\b, DT structure block size=%d
+>>20		belong		>1	Device Tree Blob version %d
+>>>4		belong		x	\b, size=%d
+>>>20		belong		>1
+>>>>28		belong		x	\b, boot CPU=%d
+>>>20		belong		>2
+>>>>32		belong		x	\b, string block size=%d
+>>>20		belong		>16
+>>>>36		belong		x	\b, DT structure block size=%d
 
 # glibc locale archive as defined in glibc locale/locarchive.h
 0		lelong		0xde020109	locale archive
