@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: zip,v 1.5 2020/07/31 18:25:25 christos Exp $
+# $File: zip,v 1.6 2021/02/05 22:55:36 christos Exp $
 # zip:  file(1) magic for zip files; this is not use
 # Note the version of magic in archive is currently stronger, this is
 # just an example until negative offsets are supported better
@@ -7,6 +7,7 @@
 # Zip Central Directory record
 0	name		zipcd
 >0	string		PK\001\002	Zip archive data
+!:mime	application/zip
 >>4	leshort		x		\b, made by
 >>4	use		zipversion
 >>4	use		ziphost
