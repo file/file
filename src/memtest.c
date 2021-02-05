@@ -66,8 +66,6 @@ calloc(size_t len, size_t nitems)
 	void *(*orig)(size_t, size_t) = dlsym(RTLD_NEXT, "calloc");
 	void *p = (*orig)(len, nitems);
 	size_t tot = len * nitems;
-	if (tot > 4 * 1024 * 1024)
-		abort();
 	int l = snprintf(buf, sizeof(buf), "calloc %zu %p\n", tot, p);
 	write(2, buf, l);
 	return p;
