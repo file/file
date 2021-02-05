@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.26 2020/08/15 12:06:07 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.27 2021/02/05 21:33:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -93,6 +93,9 @@ file_encoding(struct magic_set *ms, const struct buffer *b,
 	*ulen = 0;
 	*code = "unknown";
 	*code_mime = "binary";
+
+	if (nbytes > ms->encoding_max)
+		nbytes = ms->encoding_max;
 
 	mlen = (nbytes + 1) * sizeof((*ubuf)[0]);
 	*ubuf = CAST(file_unichar_t *, calloc(CAST(size_t, 1), mlen));

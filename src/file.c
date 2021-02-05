@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.188 2020/12/06 14:58:50 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.189 2021/02/05 21:33:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -146,6 +146,8 @@ private struct {
 	    "max ELF prog sections processed" },
 	{ "elf_shnum",	MAGIC_PARAM_ELF_SHNUM_MAX, 0, 0, FILE_ELF_SHNUM_MAX,
 	    "max ELF sections processed" },
+	{ "encoding",	MAGIC_PARAM_ENCODING_MAX, 0, 0, FILE_ENCODING_MAX,
+	    "max bytes to scan for encoding" },
 	{ "indir",	MAGIC_PARAM_INDIR_MAX, 0, 0, FILE_INDIR_MAX,
 	    "recursion limit for indirection" },
 	{ "name",	MAGIC_PARAM_NAME_MAX, 0, 0, FILE_NAME_MAX,
