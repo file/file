@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.108 2020/08/14 13:37:10 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.109 2021/02/05 23:01:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -128,7 +128,7 @@ file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
 	int executable = 0;
 
 	size_t last_line_end = CAST(size_t, -1);
-	int has_long_lines = 0;
+	size_t has_long_lines = 0;
 
 	nbytes = trim_nuls(buf, nbytes);
 
@@ -191,8 +191,11 @@ file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
 		}
 
 		/* If this line is _longer_ than MAXLINELEN, remember it. */
-		if (i > last_line_end + MAXLINELEN)
-			has_long_lines = 1;
+		if (i > last_line_end + MAXLINELEN) {
+			size_t ll = i - last_line_end;
+			if (ll > has_long_lines)
+				has_long_lines = ll;
+		}
 
 		if (ubuf[i] == '\033')
 			has_escapes = 1;
@@ -270,7 +273,8 @@ file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
 				goto done;
 
 		if (has_long_lines)
-			if (file_printf(ms, ", with very long lines") == -1)
+			if (file_printf(ms, ", with very long lines (%zu)",
+			    has_long_lines) == -1)
 				goto done;
 
 		/*
