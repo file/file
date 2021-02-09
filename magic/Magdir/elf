@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.83 2020/12/16 23:57:16 christos Exp $
+# $File: elf,v 1.84 2021/02/09 22:56:08 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -234,6 +234,7 @@
 >18	leshort		140		TI TMS320C6000 DSP family,
 >18	leshort		141		TI TMS320C2000 DSP family,
 >18	leshort		142		TI TMS320C55x DSP family,
+>18	leshort		144		TI Programmable Realtime Unit
 >18	leshort		160		STMicroelectronics 64bit VLIW DSP,
 >18	leshort		161		Cypress M8C,
 >18	leshort		162		Renesas R32C series,
@@ -287,8 +288,22 @@
 # only for 64-bit
 >>4	byte		2
 >>>48	use		elf-riscv
+>18	leshort		244		Lanai 32-bit processor,
+>18	leshort		245		CEVA Processor Architecture Family,
+>18	leshort		246		CEVA X2 Processor Family,
 >18	leshort		247		eBPF,
->18	leshort		251             NEC VE,
+>18	leshort		248		Graphcore Intelligent Processing Unit,
+>18	leshort		249		Imagination Technologies,
+>18	leshort		250		Netronome Flow Processor,
+>18	leshort		251             NEC Vector Engine,
+>18	leshort		252		C-SKY processor family,
+>18	leshort		253		Synopsys ARCv2.3 64-bit,
+>18	leshort		254		MOS Technology MCS 6502 processor,
+>18	leshort		255		Synopsys ARCv2.3 32-bit,
+>18	leshort		256		Kalray VLIW core of the MPPA family,
+>18	leshort		257		WDC 65816/65C816,
+>18	leshort		258		Loongson Loongarch,
+>18	leshort		259		ChipON KungFu32,
 >18	leshort		0x1057		AVR (unofficial),
 >18	leshort		0x1059		MSP430 (unofficial),
 >18	leshort		0x1223		Adapteva Epiphany (unofficial),
