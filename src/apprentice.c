@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.300 2021/02/05 21:33:49 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.301 2021/02/23 00:51:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2752,7 +2752,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		ull = CAST(uint64_t, strtoull(*p, &ep, 0));
 		m->value.q = file_signextend(ms, m, ull);
 		if (*p == ep) {
-			file_magwarn(ms, "Unparseable number `%s'", *p);
+			file_magwarn(ms, "Unparsable number `%s'", *p);
 		} else {
 			size_t ts = typesize(m->type);
 			uint64_t x;

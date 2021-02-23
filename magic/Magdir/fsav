@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fsav,v 1.20 2020/12/12 20:01:47 christos Exp $
+# $File: fsav,v 1.21 2021/02/23 00:51:10 christos Exp $
 # fsav:  file(1) magic for datafellows fsav virus definition files
 # Anthon van der Neut (anthon@mnt.org)
 
@@ -95,7 +95,7 @@
 >>>512	use		tar-file
 # not pure tar
 >>1012	quad		!0
-# one space at the end of text and then handles gziped archives by ./compress
+# one space at the end of text and then handles gzipped archives by ./compress
 >>>512	string		\037\213	\b, with 
 >>>>512	indirect	x
 

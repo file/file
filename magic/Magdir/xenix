@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: xenix,v 1.11 2017/03/17 21:35:28 christos Exp $
+# $File: xenix,v 1.12 2021/02/23 00:51:10 christos Exp $
 # xenix:  file(1) magic for Microsoft Xenix
 #
 # "Middle model" stuff, and "Xenix 8086 relocatable or 80286 small
@@ -20,9 +20,9 @@
 # GRR: line above is too general as it catches also Extensible storage engine DataBase
 # skip examples like GENA.SND Switch.Snd by looking for record length maximal 1024-3
 >1	uleshort	<1022
-# skip examples like GAME.PICTURE Strange.Pic by looking for positiv record length
+# skip examples like GAME.PICTURE Strange.Pic by looking for positive record length
 >>1	uleshort	>0
-# skip examples like Xtable.Data FRACTAL.GEN SHR.VIEW by looking for positiv string length
+# skip examples like Xtable.Data FRACTAL.GEN SHR.VIEW by looking for positive string length
 >>>3	ubyte		>0
 # skip examples like OMBRE.6 with "UUUUUU" by looking for filename like "hello.c"
 >>>>4	regex	[a-zA-Z_/]{1,8}[.]	8086 relocatable (Microsoft)

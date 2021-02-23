@@ -108,7 +108,7 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.18 2020/12/12 20:01:47 christos Exp $")
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.19 2021/02/23 00:51:11 christos Exp $")
 #endif	/* lint */
 
 #include <assert.h>
@@ -131,7 +131,7 @@ FILE_RCSID("@(#)$File: vasprintf.c,v 1.18 2020/12/12 20:01:47 christos Exp $")
  *  structure, which is passed among nearly every sub-functions.
  */
 typedef struct {
-  const char * src_string;        /* current position into intput string */
+  const char * src_string;        /* current position into input string */
   char *       buffer_base;       /* output buffer */
   char *       dest_string;       /* current position into output string */
   size_t       buffer_len;        /* length of output buffer */

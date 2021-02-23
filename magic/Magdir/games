@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.21 2020/08/02 16:36:34 christos Exp $
+# $File: games,v 1.22 2021/02/23 00:51:10 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -276,7 +276,7 @@
 # Summary: NetImmerse game engine file
 # Extension .nif
 # Created by: Abel Cheung <abelcheung@gmail.com>
-0		string		NetImmerse\ File\ Format,\ Versio
+0		string		NetImmerse\ File\ Format,\ Version
 >&0		string		n\ 					NetImmerse game engine file
 >>&0		regex		[0-9a-z.]+				\b, version %s
 

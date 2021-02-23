@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.144 2020/12/12 20:01:47 christos Exp $
+# $File: msdos,v 1.145 2021/02/23 00:51:10 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -47,7 +47,7 @@
 
 # Tests for various EXE types.
 #
-# Many of the compressed formats were extraced from IDARC 1.23 source code.
+# Many of the compressed formats were extracted from IDARC 1.23 source code.
 #
 0	string/b	MZ
 # All non-DOS EXE extensions have the relocation table more than 0x40 bytes into the file.
@@ -890,7 +890,7 @@
 !:strength -1
 # skip Windows cursors with image height <256 and keep Lotus with low opcode 0001-0083h
 >7	ubyte		0
-# skip Windows cursors with image width 256 and keep Lotus with positiv opcode
+# skip Windows cursors with image width 256 and keep Lotus with positive opcode
 >>6	ubyte		>0	Lotus
 # !:mime	application/x-123
 !:mime	application/vnd.lotus-1-2-3
@@ -949,7 +949,7 @@
 >>>>4	uleshort	x	\b, revision 0x%x
 # 2nd record for most worksheets describes cells range
 >>>6		use	lotus-cells
-# 3nd record for most japan worksheets describes cells range
+# 3rd record for most japan worksheets describes cells range
 >>>(8.s+10)	use	lotus-cells
 #	check and then display Lotus worksheet cells range
 0	name		lotus-cells

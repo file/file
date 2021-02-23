@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: gnu,v 1.22 2020/04/09 19:11:58 christos Exp $
+# $File: gnu,v 1.23 2021/02/23 00:51:10 christos Exp $
 # gnu:  file(1) magic for various GNU tools
 #
 # GNU nlsutils message catalog file format
@@ -34,7 +34,7 @@
 #>20	ulelong		x		\b, %u hash
 #>20	ulelong		>1		\bes
 #>24	ulelong		x		at 0x%x
-# for revsion x.0 offset of table with originals is 1Ch if directly after header
+# for revision x.0 offset of table with originals is 1Ch if directly after header
 >4	ulelong&0x0000FFff	=0
 >>12	ulelong		!0x1C		\b, at 0x%x string table
 # but for x.1 table offset i found is 30h. That means directly after bigger header
@@ -62,10 +62,10 @@
 # 0th string length seems to be always 0
 #>(12.l)	ulelong	x		\b, %u chars
 #>>&0		ulelong	x		at 0x%x
-# if 1st string length positiv inspect offset and string
+# if 1st string length positive inspect offset and string
 #>(12.l+8)	ulelong	>0		\b, %u chars
 #>>&0		ulelong	x		at 0x%x
-# if 2nd string length positiv inspect offset and string
+# if 2nd string length positive inspect offset and string
 # >(12.l+16)	ulelong	>0		\b, %u chars
 # >>&0		ulelong	x		at 0x%x
 # skip newline byte

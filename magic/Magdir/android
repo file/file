@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.17 2020/11/21 15:57:07 christos Exp $
+# $File: android,v 1.18 2021/02/23 00:51:10 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -155,7 +155,7 @@
 # flags
 >>>0x0C		ulelong&0x00000002		2			\b+RW
 # partition ID:
-# 0~IPL,MOVINAND,GANG;1~PIT,GPT;2~HIDDEN;3~SBL,HIDDEN;4~SBL2,HIDDEN;5~BOOT;6~KENREl,RECOVER,misc;7~RECOVER
+# 0~IPL,MOVINAND,GANG;1~PIT,GPT;2~HIDDEN;3~SBL,HIDDEN;4~SBL2,HIDDEN;5~BOOT;6~kernel,RECOVER,misc;7~RECOVER
 # ;11~MODEM;20~efs;21~PARAM;22~FACTORY,SYSTEM;23~DBDATAFS,USERDATA;24~CACHE;80~BOOTLOADER;81~TZSW
 >>>0x08	ulelong		x			(0x%x)
 # filename

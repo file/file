@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.139 2020/12/17 00:10:46 christos Exp $
+# $File: filesystems,v 1.140 2021/02/23 00:51:10 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -545,7 +545,7 @@
 # mbr partition table entries updated by Joerg Jenderek at Sep 2013
 # skip Norton Utilities disc image data
 >3		string		!IHISK
-# skip Linux style boot sector starting with assember instructions mov 0x7c0,ax;
+# skip Linux style boot sector starting with assembler instructions mov 0x7c0,ax;
 >>0		belong		!0xb8c0078e
 # not Linux kernel
 >>>514		string		!HdrS
@@ -560,7 +560,7 @@
 >>>>>0		ubelong&0xFD000000	!0xE9000000
 # skip FSInfosector
 >>>>>>0		string		!RRaA
-# skip 3rd sector of MS x86 bootloader with assember instructions cli;MOVZX EAX,BYTE PTR [BP+10];MOV ECX,
+# skip 3rd sector of MS x86 bootloader with assembler instructions cli;MOVZX EAX,BYTE PTR [BP+10];MOV ECX,
 # https://thestarman.pcministry.com/asm/mbr/MSWIN41.htm
 >>>>>>>0	ubequad		!0xfa660fb64610668b
 # skip 13rd sector of MS x86 bootloader
@@ -1433,7 +1433,7 @@
 # in Windows NT bit 0 is a dirty flag to request chkdsk at boot time. bit 1 requests surface scan too
 >>>>>>>>37	ubyte		>0		\b, reserved 0x%x
 #>>>>>>>>37	ubyte		=0		\b, reserved 0x%x
-# extended boot signatur value is 0x80 for NTFS, 0x28 or 0x29 for others
+# extended boot signature value is 0x80 for NTFS, 0x28 or 0x29 for others
 >>>>>>>>38	ubyte		!0x29		\b, dos < 4.0 BootSector (0x%x)
 >>>>>>>>38	ubyte&0xFE	=0x28
 >>>>>>>>>39	ulelong		x		\b, serial number 0x%x

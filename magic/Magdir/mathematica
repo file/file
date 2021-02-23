@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mathematica,v 1.10 2020/12/12 20:01:47 christos Exp $
+# $File: mathematica,v 1.11 2021/02/23 00:51:10 christos Exp $
 # mathematica:  file(1) magic for mathematica files
 # "H. Nanosecond" <aldomel@ix.netcom.com>
 # Mathematica a multi-purpose math program
@@ -24,7 +24,7 @@
 #0	string	(*^\n\n::[\011Information	Mathematica notebook version 2.x
 #>675	string	>\0	%s #doesn't work well
 
-# there may be 'cr' instread of 'nl' in some does this matter?
+# there may be 'cr' instead of 'nl' in some does this matter?
 
 # generic:
 0	string	(*^\r\r::[\011	Mathematica notebook version 2.x

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.9 2020/07/04 18:49:53 christos Exp $
+# $File: ole2compounddocs,v 1.10 2021/02/23 00:51:10 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -240,7 +240,7 @@
 >>>>128 	lestring16	Current\ User		: SoftMaker
 # third directory entry name SMNativeObjData
 >>>>>256	lestring16	SMNativeObjData		
-# 5th directory entry nane PowerPoint
+# 5th directory entry name PowerPoint
 >>>>>>512	lestring16	PowerPoint		PowerPoint presentation or template
 !:mime	application/vnd.ms-powerpoint
 !:ext	ppt/pps/pot
@@ -330,7 +330,7 @@
 !:mime	application/vnd.ms-excel
 # https://www.macdisk.com/macsigen.php	XLS5 for Excel 5
 !:apple	????XLS9
-# 3nd directory entry name
+# 3rd directory entry name
 >>>>256 	lestring16	_VBA_PROJECT_CUR	addin
 !:ext	xla/
 # 4th directory entry name

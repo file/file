@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.24 2020/12/16 23:53:50 christos Exp $
+# $File: cad,v 1.25 2021/02/23 00:51:10 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -32,7 +32,7 @@
 #>0	ubyte		&0x40			\b, reserved
 # type of element 9~TCB 8~Digitizer setup 5~Group Data Elements
 #>1	ubyte&0x7F	x			\b, type %u
-# words to follow in element: 17H~CEL libray 2FEh~DGN 9FEh,DFEh~CIT
+# words to follow in element: 17H~CEL library 2FEh~DGN 9FEh,DFEh~CIT
 #>2	uleshort	x			\b, words 0x%4.4x to follow
 # test for 3 reserved 0 bytes in CIT or "conversion" in ViewInfo structure (DGN CEL)
 #>508	ubelong		x			\b, RESERVED %8.8x
