@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.83 2020/12/09 22:15:20 christos Exp $
+# $File: animation,v 1.84 2021/02/24 22:35:22 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -172,7 +172,7 @@
 >8	string		iso6		\b, MP4 Base Media v6
 >8	string		isml		\b, MP4 Base Media v2 [ISO 14496-12:2005]
 !:mime	video/mp4
->8	string		isom		\b, MP4 Base Media v1 [IS0 14496-12:2003]
+>8	string		isom		\b, MP4 Base Media v1 [ISO 14496-12:2003]
 !:mime	video/mp4
 >8	string		J2P0		\b, JPEG2000 Profile 0
 >8	string		J2P1		\b, JPEG2000 Profile 1
