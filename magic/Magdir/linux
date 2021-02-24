@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.76 2021/02/05 21:58:29 christos Exp $
+# $File: linux,v 1.77 2021/02/24 23:05:02 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -529,3 +529,9 @@
 >>48		lelong&1	0		lacks filesystem offset
 >>48		lelong&1	1		has filesystem offset
 >>>64		lequad		x		at 0x%llx
+
+# ansible vault (does not really belong here)
+0		string		$ANSIBLE_VAULT;	Ansible Vault
+>&0		regex		[0-9]*\.[0-9]*	\b, version %s
+>>&0		string		;
+>>>&0		regex		[A-Z0-9]*	\b, encryption %s
