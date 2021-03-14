@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.165 2021/02/05 21:54:04 christos Exp $
+# $File: Makefile.am,v 1.166 2021/03/14 16:24:18 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -152,6 +152,7 @@ $(MAGIC_FRAGMENT_DIR)/keepass \
 $(MAGIC_FRAGMENT_DIR)/kerberos \
 $(MAGIC_FRAGMENT_DIR)/kicad \
 $(MAGIC_FRAGMENT_DIR)/kml \
+$(MAGIC_FRAGMENT_DIR)/lammps \
 $(MAGIC_FRAGMENT_DIR)/lecter \
 $(MAGIC_FRAGMENT_DIR)/lex \
 $(MAGIC_FRAGMENT_DIR)/lif \
