@@ -21,6 +21,7 @@ Makefile.in
 /configure
 /depcomp
 /install-sh
+/libmagic.pc
 /libtool
 /ltmain.sh
 /m4
