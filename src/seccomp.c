@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.17 2020/09/05 17:20:32 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.18 2021/03/14 17:01:58 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -175,9 +175,7 @@ enable_sandbox_full(void)
  	ALLOW_RULE(fcntl64);
 	ALLOW_RULE(fstat);
  	ALLOW_RULE(fstat64);
-#ifdef XZLIBSUPPORT
 	ALLOW_RULE(futex);
-#endif
 	ALLOW_RULE(getdents);
 #ifdef __NR_getdents64
 	ALLOW_RULE(getdents64);
