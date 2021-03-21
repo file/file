@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.32 2018/10/01 18:58:29 christos Exp $
+# $File: jpeg,v 1.33 2021/03/21 15:04:50 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -124,3 +124,14 @@
 >>4	lelong%2	0	JPEG-XR
 !:mime	image/jxr
 !:ext	jxr
+
+# JPEG XL
+# From: Ian Tester
+0	string	\xff\x0a				JPEG XL codestream
+!:mime  image/jxl
+!:ext jxl
+
+# JPEG XL (transcoded JPEG file)
+0	string	\x00\x00\x00\x0cJXL\x20\x0d\x0a\x87\x0a	JPEG XL container
+!:mime  image/jxl
+!:ext jxl
