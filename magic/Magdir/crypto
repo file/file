@@ -1,7 +1,5 @@
 
 #------------------------------------------------------------------------------
-# $File: crypto,v 1.1 2020/12/17 00:04:30 christos Exp $
+# $File: crypto,v 1.2 2021/03/27 20:15:53 christos Exp $
 # crypto:  file(1) magic for crypto formats
 #
-# https://www.bsi.bund.de/EN/Topics/OtherTopics/Chiasmus/Chiasmus_node.html
-0	string		XIA1\r		Chiasmus Encrypted file
