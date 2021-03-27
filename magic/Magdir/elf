@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.84 2021/02/09 22:56:08 christos Exp $
+# $File: elf,v 1.85 2021/03/27 20:18:38 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -195,7 +195,7 @@
 >18	leshort		90		Matsushita MN10200,
 >18	leshort		91		picoJava,
 >18	leshort		92		OpenRISC,
->18	leshort		93		ARC Cores Tangent-A5,
+>18	leshort		93		Synopsys ARCompact ARC700 cores,
 >18	leshort		94		Tensilica Xtensa,
 >18	leshort		95		Alphamosaic VideoCore,
 >18	leshort		96		Thompson Multimedia,
@@ -265,6 +265,7 @@
 >18	leshort		189		Xilinx MicroBlaze 32-bit RISC,
 >18	leshort		190		NVIDIA CUDA architecture,
 >18	leshort		191		Tilera TILE-Gx,
+>18	leshort		195		Synopsys ARCv2/HS3x/HS4x cores,
 >18	leshort		197		Renesas RL78 family,
 >18	leshort		199		Renesas 78K0R,
 >18	leshort		200		Freescale 56800EX,
@@ -297,9 +298,9 @@
 >18	leshort		250		Netronome Flow Processor,
 >18	leshort		251             NEC Vector Engine,
 >18	leshort		252		C-SKY processor family,
->18	leshort		253		Synopsys ARCv2.3 64-bit,
+>18	leshort		253		Synopsys ARCv3 64-bit ISA/HS6x cores,
 >18	leshort		254		MOS Technology MCS 6502 processor,
->18	leshort		255		Synopsys ARCv2.3 32-bit,
+>18	leshort		255		Synopsys ARCv3 32-bit,
 >18	leshort		256		Kalray VLIW core of the MPPA family,
 >18	leshort		257		WDC 65816/65C816,
 >18	leshort		258		Loongson Loongarch,
