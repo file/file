@@ -1,12 +1,13 @@
 # How to get started developing
 
-@(#) $File: README.DEVELOPER,v 1.7 2019/09/12 16:03:37 christos Exp $
+@(#) $File: README.DEVELOPER,v 1.8 2021/03/31 00:23:26 christos Exp $
 
 ## Auto files
 
 After checking out the source, run the following:
 
 	autoreconf -f -i
+	make distclean
 	./configure --disable-silent-rules
 	make -j4
 	make -C tests check
