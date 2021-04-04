@@ -1,3 +1,8 @@
+2021-04-04  17:02  Christos Zoulas <christos@zoulas.com>
+
+	* count the total bytes found not the total byte positions
+	  in order to determine encoding (Anatol Belski)
+
 2021-03-30  20:21  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.40
