@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.77 2021/02/24 23:05:02 christos Exp $
+# $File: linux,v 1.78 2021/04/04 17:46:17 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -83,20 +83,20 @@
 
 # format v1, supported since 1998
 0		name	linux-swap
->0x400	lelong	1	little endian, version %u,
->>0x404	lelong	x	size %u pages,
->>0x408	lelong	x	%u bad pages,
->0x400	belong	1	big endian, version %u,
->>0x404	belong	x	size %u pages,
->>0x408	belong	x	%u bad pages,
->0x41c	string	\0	no label,
->0x41c	string	>\0	LABEL=%s,
->0x40c	belong	x	UUID=%08x
->0x410	beshort	x	\b-%04x
->0x412	beshort	x	\b-%04x
->0x414	beshort	x	\b-%04x
->0x416	belong	x	\b-%08x
->0x41a	beshort	x	\b%04x
+>0x400	lelong		1	little endian, version %u,
+>>0x404	lelong		x	size %u pages,
+>>0x408	lelong		x	%u bad pages,
+>0x400	belong		1	big endian, version %u,
+>>0x404	belong		x	size %u pages,
+>>0x408	belong		x	%u bad pages,
+>0x41c	string		\0	no label,
+>0x41c	string		>\0	LABEL=%s,
+>0x40c	ubelong		x	UUID=%08x
+>0x410	ubeshort	x	\b-%04x
+>0x412	ubeshort	x	\b-%04x
+>0x414	ubeshort	x	\b-%04x
+>0x416	ubelong		x	\b-%08x
+>0x41a	ubeshort	x	\b%04x
 
 0xff6	string		SWAPSPACE2	Linux swap file, 4k page size,
 >0		use			linux-swap

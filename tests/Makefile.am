@@ -7,6 +7,7 @@ regex-eol.magic \
 CVE-2014-1943.testfile \
 JW07022A.mp3.testfile \
 escapevel.testfile \
+ext4.testfile \
 fit-map-data.testfile \
 gedcom.testfile \
 hddrawcopytool.testfile \
