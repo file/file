@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.4 2021/02/10 00:37:02 christos Exp $
+# $File: coff,v 1.5 2021/04/04 18:24:34 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -34,6 +34,11 @@
 # https://msdn.microsoft.com/en-us/library/windows/desktop/ms680313(v=vs.85).aspx
 >>>>0	uleshort	0x0200		Intel ia64
 >>>>0	uleshort	0x8664		Intel amd64
+# ARM COFF (./arm)
+>>>>0	uleshort	0xaa64		Aarch64
+>>>>0	uleshort	0x01c0		ARM
+>>>>0	uleshort	0x01c2		ARM Thumb
+>>>>0	uleshort	0x01c4		ARMv7 Thumb
 # TODO for other COFFs
 #>>>>0	uleshort	0xABCD		COFF_TEMPLATE
 >>>>0	default		x
