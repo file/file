@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.145 2021/02/23 00:51:10 christos Exp $
+# $File: msdos,v 1.146 2021/04/06 22:00:08 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -363,6 +363,87 @@
 >49801	string	\x79\xff\x80\xff\x76\xff	\b, CODEC archive v3.21
 >>49824 leshort		=1			\b, 1 file
 >>49824 leshort		>1			\b, %u files
+
+# Summary:	OS/2 LX Library and device driver (no DOS stub)
+# From:		Joerg Jenderek
+# URL:		http://en.wikipedia.org/wiki/EXE
+# Reference:	http://www.textfiles.com/programming/FORMATS/lxexe.txt
+#		https://github.com/open-watcom/open-watcom-v2/blob/master/bld/watcom/h/exeflat.h
+# Note:		by dll-os2-no-dos-stub.trid.xml called "OS/2 Dynamic Link Library (no DOS stub)"
+# TODO:		unify with DOS stub variant (MZ magic)
+0	string/b	LX
+>2	ushort		=0
+>>0	use			lx-executable
+# no examples found for big endian variant
+>2	ushort		=0x0101
+>>0	use			\^lx-executable
+0       name    	lx-executable
+# similar looking like variant with MS-DOS stub (MZ magic): "MS-DOS executable, LX"
+#>0x00	uleshort		x	executable,
+# signature OSF_FLAT_LX_SIGNATURE~0x584C~LX OSF_FLAT_SIGNATURE~0x454C~LE
+>0x00	uleshort		=0x584c	LX
+>0x00	uleshort		=0x454C	LE
+>0x00	uleshort		x	executable
+#!:mime	application/x-msdownload
+!:mime	application/x-lx-executable
+# byte order: 00h~little-endian non-zero=1~big-endian
+#>0x02	ubyte			=0		(little-endian)
+>0x02	ubyte			!0		(big-endian)
+# FOR DEBUGGING!
+# word order: 00h~little-endian non-zero=1~big-endian
+#>0x03	ubyte			=0		\b, little-endian word order
+#>0x03	ubyte			!0		\b, big-endian word order
+# cpu_type; CPU type like: 1~286 2~386 3~486 4 20h~i860 21h~Intel N11 40h~MIPS R2000,R3000 41h~MIPS R6000 42h~MIPS R4000
+#>0x08	uleshort		x		\b, CPU %u
+# os_type; target operating system like: 0~unknown 1~OS/2 2~Windows 3~DOS 4.x 4~Windows 386
+#>0x0A	leshort			x		\b, OS %u
+# flags; module type flags
+#>0x10	ulelong			x		\b, FLAGS 0x%8.8x
+# 00000002h				~Reserved for system use
+#>0x10	ulelong			&0x00000002	\b, 2h reserved
+# OSF_INIT_INSTANCE=00000004h		~Per-Process Library Initialization; setting this bit for EXE file is invalid
+#>0x10	ulelong			&0x00000004	\b, per-process library Initialization
+# OSF_INTERNAL_FIXUPS_DONE=00000010h	~Internal fixups for the module have been applied
+#>0x10	ulelong			&0x00000010	\b, int. fixup
+# OSF_EXTERNAL_FIXUPS_DONE=00000020h	~External fixups for the module have been applied
+#>0x10	ulelong			&0x00000020	\b, ext. fixup
+# OSF_NOT_PM_COMPATIBLE=00000100h	~Incompatible with PM windowing 
+#>0x10	ulelong&0x00000100	=0x00000100	\b, incompatible with PM windowing
+# OSF_PM_COMPATIBLE=00000200h		~Compatible with PM windowing
+#>0x10	ulelong&0x00000200	=0x00000200	\b, compatible with PM windowing
+# bit 17; device driver
+#>0x10	ulelong&0x00020000	>0		\b, device driver
+# Per-process Library Termination; setting this bit for EXE file is invalid
+#>0x10	ulelong&0x40000000	=0x40000000	\b, per-process library termination
+>0x0a	leshort			1		for OS/2
+# no example found
+>0x0a	leshort			3		for DOS
+# http://www.ctyme.com/intr/rb-2939.htm#Table1610
+# library by module type mask 00038000h (bits 15-17); 
+# 0h ~exectable Program module 
+>0x10	ulelong&0x00038000	=0x00000000	(program)
+#!:ext	exe
+# OSF_IS_DLL=8000h			~Library module (DLL)
+>0x10	ulelong&0x00038000	>0x00000000
+# OSF_PHYS_DEVICE=00020000h		~device driver
+>>0x10	ulelong&0x00020000	>0		(device driver)
+!:ext	sys
+# if not device driver it is library (DLL)
+>>0x10	ulelong&0x00020000	=0		(library)
+!:ext	dll
+# bits 8-10; OSF_PM_APP=300h in flags	~Uses PM windowing API; either it is GUI or console
+>0x10msd     	ulelong&0x00000300	=0x00000300	(GUI)
+>0x10	ulelong&0x00000300	!0x00000300	(console)
+# CPU type
+>0x08	uleshort		1		i80286
+# all inspected examples
+>0x08	uleshort		2		i80386
+>0x08	uleshort		3		i80486
+>0x08	uleshort		4		i80586
+# 21h 	Intel "N11" or compatible
+# 40h 	MIPS Mark I ( R2000, R3000) or compatible
+# 41h 	MIPS Mark II ( R6000 ) or compatible
+# 42h 	MIPS Mark III ( R4000 ) or compatible
 
 # added by Joerg Jenderek of https://www.freedos.org/software/?prog=kc
 # and https://www.freedos.org/software/?prog=kpdos
