@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.146 2021/04/06 22:00:08 christos Exp $
+# $File: msdos,v 1.147 2021/04/08 12:09:58 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -432,7 +432,7 @@
 >>0x10	ulelong&0x00020000	=0		(library)
 !:ext	dll
 # bits 8-10; OSF_PM_APP=300h in flags	~Uses PM windowing API; either it is GUI or console
->0x10msd     	ulelong&0x00000300	=0x00000300	(GUI)
+>0x10  	ulelong&0x00000300	=0x00000300	(GUI)
 >0x10	ulelong&0x00000300	!0x00000300	(console)
 # CPU type
 >0x08	uleshort		1		i80286
