@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.25 2021/02/23 00:51:10 christos Exp $
+# $File: cad,v 1.26 2021/04/08 22:50:22 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -330,3 +330,10 @@
 
 4	regex/b	P[0-9][0-9]\\.[0-9][0-9][0-9][0-9]\\.[0-9][0-9][0-9][0-9]\\.[0-9]	NAXOS CAD System file from version %s
 !:strength +40
+
+# glTF (GL Transmission Format). The specification is at
+# https://github.com/KhronosGroup/glTF
+0	string		glTF		glTF binary asset
+>4	lelong		x		\b, version %d
+>8	lelong		x		\b, length %d bytes.
+!:mime	model/gltf-binary
