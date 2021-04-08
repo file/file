@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.145 2021/01/03 20:58:47 christos Exp $
+# $File: archive,v 1.146 2021/04/08 23:54:36 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -617,6 +617,21 @@
 !:mime	application/x-ms-compress-sz
 !:ext	??$
 >>8	ulelong	>0		\b, original size: %u bytes
+
+# Summary:	FTCOMP compressed archive
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/FTCOMP
+# Reference:    http://mark0.net/download/triddefs_xml.7z/defs/a/ark-ftcomp.trid.xml
+# Note:		called by TrID "FTCOMP compressed archive"
+#		extracted by `unpack seahelp.hl_`
+24	string/b	FTCOMP		FTCOMP compressed archive
+#!:mime	application/octet-stream
+!:mime	application/x-compress-ftcomp
+!:ext	??_/??@/dll/drv/pk2/
+# probably A596FDFF magic at the beginning
+>0	ubelong		!0xA596FDFF	\b, at beginning 0x%x
+# probably orginal file name with directory like: \OS2\unpack.exe \SYSTEM\8514.DRV MAHJONGG.EXE
+>41	string		x		"%s"
 
 # MP3 (archiver, not lossy audio compression)
 0	string	MP3\x1a MP3-Archiver archive data
