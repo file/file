@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.309 2021/02/05 22:29:07 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.310 2021/04/09 19:15:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -636,14 +636,12 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_LELONG:
   	case FILE_MELONG:
 		PRINTER(p->l, "", int32_t, uint32_t);
-  		break;
 
   	case FILE_QUAD:
   	case FILE_BEQUAD:
   	case FILE_LEQUAD:
 	case FILE_OFFSET:
 		PRINTER(p->q, INT64_T_FORMAT, long long, unsigned long long);
-  		break;
 
   	case FILE_STRING:
   	case FILE_PSTRING:
