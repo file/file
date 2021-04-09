@@ -1,3 +1,5 @@
+/*	$NetBSD: encoding.c,v 1.1.1.13 2021/04/09 18:58:01 christos Exp $	*/
+
 /*
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
@@ -35,7 +37,11 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.28 2021/04/04 21:02:19 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: encoding.c,v 1.29 2021/04/09 19:16:19 christos Exp $")
+#else
+__RCSID("$NetBSD: encoding.c,v 1.1.1.13 2021/04/09 18:58:01 christos Exp $");
+#endif
 #endif	/* lint */
 
 #include "magic.h"
@@ -282,7 +288,8 @@ looks_ ## NAME(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf, \
 	} \
 	u = 0; \
 	for (i = 0; i < __arraycount(dist); i++) { \
-		u+= dist[i]; \
+		if (dist[i]) \
+			u++; \
 	} \
 	if (u < 3) \
 		return 0; \
@@ -386,7 +393,8 @@ file_looks_utf8(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf,
 		} else {			   /* 11xxxxxx begins UTF-8 */
 			int following;
 			uint8_t x = first[buf[i]];
-			const struct accept_range *ar = &accept_ranges[x >> 4];
+			const struct accept_range *ar =
+			    &accept_ranges[(unsigned int)x >> 4];
 			if (x == XX)
 				return -1;
 

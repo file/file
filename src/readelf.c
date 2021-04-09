@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.175 2020/12/17 20:43:37 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.176 2021/04/09 19:16:19 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -982,9 +982,8 @@ get_string_on_virtaddr(struct magic_set *ms,
 	    fsize, virtaddr);
 	if (offset < 0 ||
 	    (buflen = pread(fd, buf, CAST(size_t, buflen), offset)) <= 0) {
-		if (file_printf(ms, ", can't read elf string at %jd",
-		    (intmax_t)offset) == -1)
-			return -1;
+		(void)file_printf(ms, ", can't read elf string at %jd",
+		    (intmax_t)offset);
 		return 0;
 	}
 
@@ -1185,17 +1184,15 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 	}
 
 	if (namesz & 0x80000000) {
-		if (file_printf(ms, ", bad note name size %#lx",
-		    CAST(unsigned long, namesz)) == -1)
-			return -1;
+	    (void)file_printf(ms, ", bad note name size %#lx",
+		CAST(unsigned long, namesz);
 	    return 0;
 	}
 
 	if (descsz & 0x80000000) {
-		if (file_printf(ms, ", bad note description size %#lx",
-		    CAST(unsigned long, descsz)) == -1)
-		    	return -1;
-	    return 0;
+		(void)file_printf(ms, ", bad note description size %#lx",
+		    CAST(unsigned long, descsz);
+		return 0;
 	}
 
 	noff = offset;
