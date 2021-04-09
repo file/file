@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.176 2021/04/09 19:16:19 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.177 2021/04/09 20:40:56 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -918,7 +918,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 				if (file_printf(ms, ", from '%s'",
 				    file_copystr(buf, sizeof(buf),
 				    CAST(size_t, cp - cname),
-				    CAST(const char *, cname))) == -1)
+				    RCAST(char *, cname))) == -1)
 					return -1;
 				*flags |= FLAGS_DID_CORE;
 				return 1;
@@ -1185,13 +1185,13 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 	if (namesz & 0x80000000) {
 	    (void)file_printf(ms, ", bad note name size %#lx",
-		CAST(unsigned long, namesz);
+		CAST(unsigned long, namesz));
 	    return 0;
 	}
 
 	if (descsz & 0x80000000) {
 		(void)file_printf(ms, ", bad note description size %#lx",
-		    CAST(unsigned long, descsz);
+		    CAST(unsigned long, descsz));
 		return 0;
 	}
 
