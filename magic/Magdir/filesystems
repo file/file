@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.141 2021/04/04 17:46:17 christos Exp $
+# $File: filesystems,v 1.142 2021/04/11 21:06:21 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2473,3 +2473,15 @@
 >12	use next
 0	string	dlV2			NeXT version 3 disklabel
 >12	use next
+
+# bcachefs
+# From: Thomas Weiﬂschuh <thomas@t-8ch.de>
+0x1018		string		\xc6\x85\x73\xf6\x4e\x1a\x45\xca\x82\x65\xf5\x7f\x48\xba\x6d\x81	bcachefs
+>0x1068		lequad		8
+>>0x1038	guid		x	\b, UUID=%s
+>>0x1048	string		>0	\b, label "%.32s"
+>>0x1010	uleshort	x	\b, version %u
+>>0x1012	uleshort	x	\b, min version %u
+>>0x107a	byte		x	\b, device %d
+>>0x107b	byte		x	\b, %d devices
+>>0x1090	byte		^0x02	\b (unclean)
