@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.85 2021/03/14 16:36:53 christos Exp $
+# $File: animation,v 1.86 2021/04/11 20:46:12 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -966,21 +966,6 @@
 
 # ABC (alembic.io 3d models)
 0	string	0gawa		ABC 3d model
-
-# VRML (Virtual Reality Modelling Language)
-0       string/w        #VRML\ V1.0\ ascii	VRML 1 file
-!:mime	model/vrml
-0	string/w	#VRML\ V2.0\ utf8	ISO/IEC 14772 VRML 97 file
-!:mime	model/vrml
-
-# X3D (Extensible 3D) [https://www.web3d.org/specifications/x3d-3.0.dtd]
-# From Michel Briand <michelbriand@free.fr>
-# mimetype from https://www.iana.org/assignments/media-types/model/x3d+xml
-# Example https://www.web3d.org/x3d/content/examples/Basic/course/CreateX3DFromStringRandomSpheres.x3d
-0	string/w	\<?xml\ version=
-!:strength + 5
->20	search/1000/w	\<!DOCTYPE\ X3D		X3D (Extensible 3D) model xml text
-!:mime model/x3d+xml
 
 #---------------------------------------------------------------------------
 # HVQM4: compressed movie format designed by Hudson for Nintendo GameCube
