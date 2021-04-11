@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: os2,v 1.11 2020/08/30 16:22:20 christos Exp $
+# $File: os2,v 1.12 2021/04/11 17:24:01 christos Exp $
 # os2:  file(1) magic for OS/2 files
 #
 
@@ -164,4 +164,21 @@
 0  string   \xff\xff\xff\xff\x14\0\0\0  OS/2 INI
 !:mime	application/x-os2-ini
 !:ext	ini
+
+# From:		Joerg Jenderek
+# URL:		http://warpin.netlabs.org/
+# Reference:    http://mark0.net/download/triddefs_xml.7z/defs/a/ark-wpi.trid.xml
+# Note:		called by TrID "WarpIN Installer"
+# probably magic at the beginning
+0	ubelong		=0x770402BE	WarpIN Installer
+#>4	ubelong		=0x03000000
+#!:mime	application/octet-stream
+!:mime	application/x-os2-wpi
+!:ext	wpi
+# creator program name like: "reserved" or "WIC x.y.z"
+>0x106	string		x		\b, created by %s
+# name like: "reserved" or "OS/2 Netlabs"
+>0x146	string		x		\b, '%s'
+# name like: "N/A" "http://warpin.netlabs.org"
+>0x186	string		x		\b, URL %s
 
