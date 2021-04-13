@@ -2478,7 +2478,12 @@
 # From: Thomas Weiﬂschuh <thomas@t-8ch.de>
 0x1018		string		\xc6\x85\x73\xf6\x4e\x1a\x45\xca\x82\x65\xf5\x7f\x48\xba\x6d\x81	bcachefs
 >0x1068		lequad		8
->>0x1038	guid		x	\b, UUID=%s
+>>0x1038	ubelong		x	\b, UUID=%08x
+>>0x103c	ubeshort	x	\b-%04x
+>>0x103e	ubeshort	x	\b-%04x
+>>0x1040	ubeshort	x	\b-%04x
+>>0x1042	ubelong		x	\b-%08x
+>>0x1046	ubeshort	x	\b%04x
 >>0x1048	string		>0	\b, label "%.32s"
 >>0x1010	uleshort	x	\b, version %u
 >>0x1012	uleshort	x	\b, min version %u
