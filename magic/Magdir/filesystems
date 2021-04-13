@@ -2488,5 +2488,14 @@
 >>0x1010	uleshort	x	\b, version %u
 >>0x1012	uleshort	x	\b, min version %u
 >>0x107a	byte		x	\b, device %d
+# assumes the first field is the members field
+>>0x12f4	ulelong		0x01
+>>>0x12f0	default		x
+>>>&(0x107a.b*56)	ubelong	x	\b/UUID=%08x
+>>>>&0		ubeshort	x	\b-%04x
+>>>>&2		ubeshort	x	\b-%04x
+>>>>&4		ubeshort	x	\b-%04x
+>>>>&6		ubelong		x	\b-%08x
+>>>>&10		ubeshort	x	\b%04x
 >>0x107b	byte		x	\b, %d devices
 >>0x1090	byte		^0x02	\b (unclean)
