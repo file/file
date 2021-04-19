@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.30 2021/04/09 19:16:51 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.31 2021/04/19 18:38:04 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -285,7 +285,7 @@ looks_ ## NAME(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf, \
 		if (dist[i]) \
 			u++; \
 	} \
-	if (u < 3) \
+	if (u < MIN(nbytes, 3)) \
 		return 0; \
 \
 	return 1; \
