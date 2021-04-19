@@ -1,3 +1,10 @@
+2021-04-19  17:17  Christos Zoulas <christos@zoulas.com>
+
+	* PR/256: mutableVoid: If the file is less than 3 bytes, use the file
+	  length to determine type
+	* PR/259: aleksandr.v.novichkov: mime printing through indirect magic
+	  is not taken into account, use match directly so that it does.
+
 2021-04-04  17:02  Christos Zoulas <christos@zoulas.com>
 
 	* count the total bytes found not the total byte positions
