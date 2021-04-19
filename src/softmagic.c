@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.310 2021/04/09 19:15:49 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.311 2021/04/19 16:47:13 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1559,7 +1559,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	int rv, oneed_separator, in_type, nfound_match;
 	char *rbuf;
 	union VALUETYPE *p = &ms->ms_value;
-	struct mlist ml;
+	struct mlist ml, *mlp;
 	struct cont c;
 
 	if (*indir_count >= ms->indir_max) {
@@ -1829,8 +1829,15 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		bb = *b;
 		bb.fbuf = s + offset;
 		bb.flen = nbytes - offset;
-		rv = file_softmagic(ms, &bb,
-		    indir_count, name_count, BINTEST, text);
+		for (mlp = ms->mlist[0]->next; mlp != ms->mlist[0];
+		    mlp = mlp->next)
+		{
+			if ((rv = match(ms, mlp->magic, mlp->nmagic, &bb, 0,
+			    BINTEST, text, 0, indir_count, name_count,
+			    printed_something, need_separator, NULL,
+			    NULL)) != 0)
+				break;
+		}
 
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			fprintf(stderr, "indirect @offs=%u[%d]\n", offset, rv);
