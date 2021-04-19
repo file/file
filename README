@@ -1,12 +1,14 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README,v 1.61 2020/10/08 23:20:14 christos Exp $
+    @(#) $File: README,v 1.62 2021/04/19 15:56:44 christos Exp $
 
 Mailing List: file@astron.com
 Mailing List archives: https://mailman.astron.com/pipermail/file/
 Bug tracker: https://bugs.astron.com/
 E-mail: christos@astron.com
 Build Status: https://travis-ci.org/file/file
+Public repo: https://github.com/file/file
+Test framework: https://github.com/file/file-tests
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
 
