@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.33 2021/03/21 15:04:50 christos Exp $
+# $File: jpeg,v 1.34 2021/04/19 18:58:30 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -9,11 +9,18 @@
 #
 # both of which turn into "JPEG image data" here.
 #
-0	beshort		0xffd8		JPEG image data
+0	belong			0xffd8fff7	JPEG-LS image data
+!:mime	image/jls
+!:ext jls
+>0	use			jpeg
+
+0	belong&0xffffff00	0xffd8ff00	JPEG image data
 !:mime	image/jpeg
 !:apple	8BIMJPEG
-!:strength *3
 !:ext jpeg/jpg/jpe/jfif
+>0	use			jpeg
+
+0	name		jpeg
 >6	string		JFIF		\b, JFIF standard
 # The following added by Erik Rossen <rossen@freesurf.ch> 1999-09-06
 # in a vain attempt to add image size reporting for JFIF.  Note that these
