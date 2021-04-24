@@ -47,6 +47,8 @@ pgp-binary-key-v4-rsa-secret-key.testfile \
 regex-eol.magic \
 regex-eol.result \
 regex-eol.testfile \
+uf2.result \
+uf2.testfile \
 zstd-3-skippable-frames.result \
 zstd-dictionary-0.result \
 zstd-dictionary-1.result \
