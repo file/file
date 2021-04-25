@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: uf2,v 1.1 2021/04/24 19:58:24 christos Exp $
+# $File: uf2,v 1.2 2021/04/25 17:49:24 christos Exp $
 # uf2:  file(1) magic for UF2 firmware image files
 #
 # https://github.com/microsoft/uf2
@@ -15,6 +15,8 @@
 >8	lelong	&0x0001		\b, not main flash
 >8	lelong	&0x1000		\b, file container
 >8	lelong	&0x2000		\b, family
+# jq -r '.[] | ">>28\tlelong\t\(.id)\t\(.description)"' uf2families.json | \
+# sort -n -k 3
 >>28	lelong	0x00ff6919	ST STM32L4xx
 >>28	lelong	0x04240bdf	ST STM32L5xx
 >>28	lelong	0x16573617	Microchip (Atmel) ATmega32
