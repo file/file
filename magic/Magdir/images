@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.194 2021/02/09 22:59:38 christos Exp $
+# $File: images,v 1.195 2021/04/26 15:46:59 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1331,7 +1331,22 @@
 # DCX is multi-page PCX, using a simple header of up to 1024
 # offsets for the respective PCX components.
 # From: Joerg Wunsch <joerg_wunsch@uriah.heep.sax.de>
-0	lelong	987654321	DCX multi-page PCX image data
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/DCX
+0	lelong	987654321	DCX multi-page
+# http://www.nationalarchives.gov.uk/pronom/x-fmt/348
+!:mime	image/x-dcx
+!:ext	dcx
+# The first file offset usually starts at file offset 0x1004
+# print 1 space after 0x100? offset and then handles PCX images by ./images
+>4	lelong	x		\b, at 0x%x 
+>(4.l)	indirect		x
+# possible 2nd PCX image
+#>8	lelong	!0		\b, at 0x%x 
+#>>(8.l)	indirect		x
+# possible 3rd PCX image
+#>12	lelong	!0		\b, at 0x%x 
+#>>(12.l)	indirect		x
 
 # Simon Walton <simonw@matteworld.com>
 # Kodak Cineon format for scanned negatives
