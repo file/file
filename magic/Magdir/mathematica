@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mathematica,v 1.11 2021/02/23 00:51:10 christos Exp $
+# $File: mathematica,v 1.12 2021/04/26 15:56:00 christos Exp $
 # mathematica:  file(1) magic for mathematica files
 # "H. Nanosecond" <aldomel@ix.netcom.com>
 # Mathematica a multi-purpose math program
@@ -75,7 +75,7 @@
 # MatLab v5
 0       string  MATLAB  Matlab v5 mat-file
 >126    short   0x494d  (big endian)
->>124   beshort x       version 0x%04x
+>>124   beshort x       version %#04x
 >126    short   0x4d49  (little endian)
->>124   leshort x       version 0x%04x
+>>124   leshort x       version %#04x
 

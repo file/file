@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.195 2021/04/26 15:46:59 christos Exp $
+# $File: images,v 1.196 2021/04/26 15:56:00 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -152,7 +152,7 @@
 # VersionLetter
 >>>>>&42		ubyte			>0x20		\b%c
 # KeyColor
->>>>&468		ulelong			>0		- keycolor 0x%8.8x
+>>>>&468		ulelong			>0		- keycolor %#8.8x
 # Denominator of Pixel ratio. 0~no pixel aspect
 >>>>&474	uleshort			>0
 # Numerator
@@ -164,13 +164,13 @@
 >>>>>&-4		uleshort		>0		- gamma %d
 >>>>>&-2		uleshort		x		\b/%d
 # ColorOffset
-#>>>>&480	ulelong			x		- col offset 0x%8.8x
+#>>>>&480	ulelong			x		- col offset %#8.8x
 # StampOffset
-#>>>>&484	ulelong			x		- stamp offset 0x%8.8x
+#>>>>&484	ulelong			x		- stamp offset %#8.8x
 # ScanOffset
-#>>>>&488	ulelong			x		- scan offset 0x%8.8x
+#>>>>&488	ulelong			x		- scan offset %#8.8x
 # AttributesType
-#>>>>&492	ubyte			x		- Attributes 0x%x
+#>>>>&492	ubyte			x		- Attributes %#x
 ## EndOfTGA
 
 # PBMPLUS images
@@ -253,7 +253,7 @@
 >>>3	search/256/b	HEIGHT		x
 >>>>&1	string		x		%s
 # at offset 2 a New Line character (0xA) should appear
->>>2	ubyte		!0x0A		\b, 0x%x at offset 2 instead new line
+>>>2	ubyte		!0x0A		\b, %#x at offset 2 instead new line
 
 # From: bryanh@giraffe-data.com (Bryan Henderson)
 0	string		\117\072	Solitaire Image Recorder format
@@ -355,7 +355,7 @@
 >>>8	leshort		0x8798		\bJPEG2000
 >>>8	leshort		0x8799		\bNikon NEF Compressed
 >>>8	default		x
->>>>8	leshort		x		\b(unknown 0x%x)
+>>>>8	leshort		x		\b(unknown %#x)
 >>>12	use		tiff_entry
 >0	leshort		0x106		\b, PhotometricIntepretation=
 >>8	clear		x
@@ -368,7 +368,7 @@
 >>8	leshort		6		\bYCbCr
 >>8	leshort		8		\bCIELab
 >>8	default		x
->>>8	leshort		x		\b(unknown=0x%x)
+>>>8	leshort		x		\b(unknown=%#x)
 >>12	use		tiff_entry
 # FillOrder
 >0	leshort		0x10a
@@ -453,7 +453,7 @@
 >0	leshort		0x8825		\b, GPS-Data
 >>12	use		tiff_entry
 
-#>0	leshort		x		\b, unknown=0x%x
+#>0	leshort		x		\b, unknown=%#x
 #>>12	use		tiff_entry
 
 0	string		MM\x00\x2b	Big TIFF image data, big-endian
@@ -550,7 +550,7 @@
 # http://www.nationalarchives.gov.uk/pronom/fmt/930
 0	search/256/bc	id=imagemagick
 # skip bad ASCII text by following new line~0x0A or space~0x20 character
-#>&0	ubyte		x		\b, next character 0x%x
+#>&0	ubyte		x		\b, next character %#x
 # called by TriD ImageMagick Machine independent File Format bitmap
 >&0	ubyte&0xD5	0		MIFF image data
 # https://reposcope.com/mimetype/image/miff
@@ -699,11 +699,11 @@
 >>26	uleshort	>1		\b, %u color planes
 # cbSize; size of file or headers
 >>2	ulelong		x		\b, cbSize %u
-#>>2	ulelong		x		\b, cbSize 0x%x
+#>>2	ulelong		x		\b, cbSize %#x
 # offBits; offset to bitmap data like 56h 5Eh 8Eh 43Eh
 >>10	ulelong			x	\b, bits offset %u
-#>>10	ulelong			x	\b, bits offset 0x%x
-#>>(10.l) ubequad		!0	\b, bits 0x%16.16llx
+#>>10	ulelong			x	\b, bits offset %#x
+#>>(10.l) ubequad		!0	\b, bits %#16.16llx
 # BITMAPV2INFOHEADER	adds RGB bit masks
 >14	leshort		52		PC bitmap, Adobe Photoshop
 !:mime	image/x-ms-bmp
@@ -759,11 +759,11 @@
 >>>50	ulelong		>0		\b, %u important colors
 # cbSize; often size of file
 >>>2	ulelong		x		\b, cbSize %u
-#>>>2	ulelong		x		\b, cbSize 0x%x
+#>>>2	ulelong		x		\b, cbSize %#x
 # offBits; offset to bitmap data like 36h 76h BEh 236h 406h 436h 4E6h
 >>>10	ulelong			x	\b, bits offset %u
-#>>>10	ulelong			x	\b, bits offset 0x%x
-#>>>(10.l) ubequad		!0	\b, bits 0x%16.16llxd
+#>>>10	ulelong			x	\b, bits offset %#x
+#>>>(10.l) ubequad		!0	\b, bits %#16.16llxd
 >14	leshort		124		PC bitmap, Windows 98/2000 and newer format
 !:mime	image/x-ms-bmp
 >>18	lelong		x		\b, %d x
@@ -798,7 +798,7 @@
 >>8	uleshort		x	\b%u
 # offBits; offset in bytes to the beginning of the bit-map pel data like 20h
 >>10	ulelong			x	\b, bits offset %u
-#>>(10.l) ubequad		x	\b, bits 0x%16.16llx
+#>>(10.l) ubequad		x	\b, bits %#16.16llx
 #0	string		PI		PC pointer image data
 #0	string		CI		PC color icon data
 0	string		CI
@@ -836,8 +836,8 @@
 #>>2	ulelong			x	\b, cbSize %x
 # offBits; offset to bitmap data (pixel array) like E4h 3Ah 66h 6Ah 33Ah 4A4h
 >>10	ulelong			x	\b, bits offset %u
-#>>10	ulelong			x	\b, bits offset 0x%x
-#>>(10.l) ubequad		!0	\b, bits 0x%16.16llx
+#>>10	ulelong			x	\b, bits offset %#x
+#>>(10.l) ubequad		!0	\b, bits %#16.16llx
 # dib header size: 12~Ch~OS/2 1.x 64~40h~OS/2 2.x
 #>>14	ulelong		x		\b, dib header size %u
 #0	string		CP		PC color pointer image data
@@ -885,8 +885,8 @@
 #>>2	ulelong			x	\b, cbSize %x
 # offBits; offset to bitmap data (pixel array) like 6Ah A4h E4h 4A4h
 >>10	ulelong			x	\b, bits offset %u
-#>>10	ulelong			x	\b, bits offset 0x%x
-#>>(10.l) ubequad		!0	\b, bits 0x%16.16llx
+#>>10	ulelong			x	\b, bits offset %#x
+#>>(10.l) ubequad		!0	\b, bits %#16.16llx
 # dib header size: 12~Ch~OS/2 1.x 64~40h~OS/2 2.x
 #>>14	ulelong		x		\b, dib header size %u
 # Conflicts with other entries [BABYL]
@@ -900,11 +900,11 @@
 #!:apple	????BMPf
 # cbSize; size of header like 28h 5Ch
 >>2	ulelong			x	\b, cbSize %u
-#>>2	ulelong			x	\b, cbSize 0x%x
+#>>2	ulelong			x	\b, cbSize %#x
 # offNext; offset to data like 0 48h F2h 4Eh 64h C6h D2h D6h DAh E6h EAh 348h
 >>6	ulelong			>0	\b, data offset %u
-#>>6	ulelong			>0	\b, data offset 0x%x
-#>>(6.l) ubequad		!0	\b, data 0x%16.16llx
+#>>6	ulelong			>0	\b, data offset %#x
+#>>(6.l) ubequad		!0	\b, data %#16.16llx
 # dimensions of the intended device like 640 x 480 for VGA or 1024 x 768
 >>10	uleshort	>0		\b, display %u
 >>>12	uleshort	>0		x %u
@@ -1339,13 +1339,13 @@
 !:ext	dcx
 # The first file offset usually starts at file offset 0x1004
 # print 1 space after 0x100? offset and then handles PCX images by ./images
->4	lelong	x		\b, at 0x%x 
+>4	lelong	x		\b, at %#x 
 >(4.l)	indirect		x
 # possible 2nd PCX image
-#>8	lelong	!0		\b, at 0x%x 
+#>8	lelong	!0		\b, at %#x 
 #>>(8.l)	indirect		x
 # possible 3rd PCX image
-#>12	lelong	!0		\b, at 0x%x 
+#>12	lelong	!0		\b, at %#x 
 #>>(12.l)	indirect		x
 
 # Simon Walton <simonw@matteworld.com>
@@ -1684,7 +1684,7 @@
 >>101	beshort&0xf0	0x60			\bNCOMPONENT
 >>101	beshort&0xf0	0x70			\bRGB
 >>101	beshort&0xf0	0x80			\bRGBE
->>101	beshort&0xf0	>0x80			\b(reserved 0x%x)
+>>101	beshort&0xf0	>0x80			\b(reserved %#x)
 
 # From: Johan van der Knijff <johan.vanderknijff@kb.nl>
 #
@@ -2691,7 +2691,7 @@
 >>>0x8	ulelong	0xE		greyscale 16 bits
 # this should not happen
 >>>0x8	default	x		color model
->>>>0x8	ulelong	x		0x%x
+>>>>0x8	ulelong	x		%#x
 # bit 1 in CPT file flags: UCS-2 file comment present
 >>0x31	ubyte		&0x02
 # look for comment marker
@@ -2716,24 +2716,24 @@
 >>0x28	ulelong		!1	\bs
 # CPT file flags
 # lower byte of CPT file flags: 0x94~CPT9FILE 0x01~often CPT7FILE 0x8C~CPT8FILE
-#>>0x30	ubyte		x	\b, lower flags 0x%x
+#>>0x30	ubyte		x	\b, lower flags %#x
 # upper byte of CPT file flags:
-#>>0x31	ubyte		>0	\b, upper flags 0x%x
+#>>0x31	ubyte		>0	\b, upper flags %#x
 # bit 2 in CPT file flags: unknown
 #>>0x31	ubyte		&0x04	\b, with UNKNOWN
 # bits 3-7 in CPT file flags: unknown, seem to be often 0
 # show unusual flag combinations
 >>0x31	ubyte&0xFC	>0
->>>0x30	uleshort	x	\b, flags 0x%4.4x
+>>>0x30	uleshort	x	\b, flags %#4.4x
 # reserved seems to be always 0
-#>>0x32	uleshort	>0	\b, reserved4 0x%x
+#>>0x32	uleshort	>0	\b, reserved4 %#x
 # blocks_array_offset is always 0 for CPT7 and CPT8 files created by PP7-PP8
 # typical values like: 13Ch 154h 43Ch 4F0h DA8h 
->>0x34	ulelong	x		\b, array offset 0x%x
+>>0x34	ulelong	x		\b, array offset %#x
 # reserved seems to be often 0
->>0x38	ulelong		>0	\b, reserved5 0x%x
+>>0x38	ulelong		>0	\b, reserved5 %#x
 # possible next master block
-#>>0x100	ubequad		!0	\b, next block=0x%llx...
+#>>0x100	ubequad		!0	\b, next block=%#llx...
 # bit 0: ICC profile block present
 >>0x31	ubyte		&0x01	\b, with ICC profile
 # check for characteristic string acsp of color profile for DEBUGGING

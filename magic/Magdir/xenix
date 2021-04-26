@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: xenix,v 1.13 2021/03/31 19:51:14 christos Exp $
+# $File: xenix,v 1.14 2021/04/26 15:56:00 christos Exp $
 # xenix:  file(1) magic for Microsoft Xenix
 #
 # "Middle model" stuff, and "Xenix 8086 relocatable or 80286 small
@@ -38,9 +38,9 @@
 # data length probably lower 256 according to TrID obj_omf.trid.xml
 >>>>>1	uleshort	x		\b, 1st record data length %u
 # checksum
-#>>>>>(3.b+4)	ubyte	x		\b, checksum 0x%2.2x
+#>>>>>(3.b+4)	ubyte	x		\b, checksum %#2.2x
 # second recordtype: 96h~LNAMES 88h~COMENT 8CH~EXTDEF
->>>>>(1.s+3)	ubyte	x		\b, 2nd record type 0x%x
+>>>>>(1.s+3)	ubyte	x		\b, 2nd record type %#x
 >>>>>(1.s+4)	uleshort x		\b, 2nd record data length %u
 0	leshort		0xff65		x.out
 >2	string		__.SYMDEF	 randomized

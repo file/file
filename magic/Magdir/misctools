@@ -1,6 +1,6 @@
 
 #-----------------------------------------------------------------------------
-# $File: misctools,v 1.18 2019/04/19 00:42:27 christos Exp $
+# $File: misctools,v 1.19 2021/04/26 15:56:00 christos Exp $
 # misctools:  file(1) magic for miscellaneous UNIX tools.
 #
 0	search/1	%%!!			X-Post-It-Note text
@@ -41,18 +41,18 @@
 !:ext	dmp/mdmp
 # The high-order word is an internal value that is implementation specific.
 # The low-order word is MINIDUMP_VERSION 0xA793
->4	ulelong&0x0000FFFF	!0xA793				\b, version 0x%4.4x
+>4	ulelong&0x0000FFFF	!0xA793				\b, version %#4.4x
 # NumberOfStreams 8,9,10,13
 >8	ulelong			x				\b, %d streams
 # StreamDirectoryRva 0x20
->12	ulelong			!0x20				\b, 0x%8.8x RVA
+>12	ulelong			!0x20				\b, %#8.8x RVA
 # CheckSum 0
->16	ulelong			!0				\b, CheckSum 0x%8.8x
+>16	ulelong			!0				\b, CheckSum %#8.8x
 # Reserved or TimeDateStamp
 >20	ledate			x				\b, %s
 # https://msdn.microsoft.com/en-us/library/windows/desktop/ms680519%28v=vs.85%29.aspx
 # Flags MINIDUMP_TYPE enumeration type 0 0x121 0x800
->24	ulelong			x				\b, 0x%x type
+>24	ulelong			x				\b, %#x type
 # >24	ulelong			>0				\b; include
 # >>24	ulelong			&0x00000001			\b data sections,
 # >>24	ulelong			&0x00000020			\b list of unloaded modules,

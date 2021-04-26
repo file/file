@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: zip,v 1.6 2021/02/05 22:55:36 christos Exp $
+# $File: zip,v 1.7 2021/04/26 15:56:00 christos Exp $
 # zip:  file(1) magic for zip files; this is not use
 # Note the version of magic in archive is currently stronger, this is
 # just an example until negative offsets are supported better
@@ -99,7 +99,7 @@
 >1	ubyte		18		OS/400
 >1	ubyte		19		OS X
 # unused
-#>1	ubyte		>19		unused 0x%x
+#>1	ubyte		>19		unused %#x
 
 # Zip End Of Central Directory record
 -22	string		PK\005\006

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.147 2021/04/08 12:09:58 christos Exp $
+# $File: msdos,v 1.148 2021/04/26 15:56:00 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -70,7 +70,7 @@
 >>(0x3c.l+24)	leshort		0x020b	\b32+ executable
 >>(0x3c.l+24)	leshort		0x0107	ROM image
 >>(0x3c.l+24)	default		x	Unknown PE signature
->>>&0 		leshort		x	0x%x
+>>>&0 		leshort		x	%#x
 >>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
 >>(0x3c.l+92)	leshort		1
 # Native PEs include ntoskrnl.exe, hal.dll, smss.exe, autochk.exe, and all the
@@ -109,7 +109,7 @@
 >>(0x3c.l+92)	leshort		14	(XBOX)
 >>(0x3c.l+92)	leshort		15	(Windows boot application)
 >>(0x3c.l+92)	default		x	(Unknown subsystem
->>>&0		leshort		x	0x%x)
+>>>&0		leshort		x	%#x)
 >>(0x3c.l+4)	leshort		0x14c	Intel 80386
 >>(0x3c.l+4)	leshort		0x166	MIPS R4000
 >>(0x3c.l+4)	leshort		0x168	MIPS R10000
@@ -141,7 +141,7 @@
 >>(0x3c.l+4)	leshort		0xaa64	Aarch64
 >>(0x3c.l+4)	leshort		0xc0ee	MSIL
 >>(0x3c.l+4)	default		x	Unknown processor type
->>>&0		leshort		x	0x%x
+>>>&0		leshort		x	%#x
 >>(0x3c.l+22)	leshort&0x0200	>0	(stripped to external PDB)
 >>(0x3c.l+22)	leshort&0x1000	>0	system file
 >>(0x3c.l+24)	leshort		0x010b
@@ -398,7 +398,7 @@
 # os_type; target operating system like: 0~unknown 1~OS/2 2~Windows 3~DOS 4.x 4~Windows 386
 #>0x0A	leshort			x		\b, OS %u
 # flags; module type flags
-#>0x10	ulelong			x		\b, FLAGS 0x%8.8x
+#>0x10	ulelong			x		\b, FLAGS %#8.8x
 # 00000002h				~Reserved for system use
 #>0x10	ulelong			&0x00000002	\b, 2h reserved
 # OSF_INIT_INSTANCE=00000004h		~Per-Process Library Initialization; setting this bit for EXE file is invalid
@@ -450,7 +450,7 @@
 # for FreeDOS files like KEYBOARD.SYS, KEYBRD2.SYS, KEYBRD3.SYS, *.KBD
 0	string/b	KCF		FreeDOS KEYBoard Layout collection
 # only version=0x100 found
->3	uleshort	x		\b, version 0x%x
+>3	uleshort	x		\b, version %#x
 # length of string containing author,info and special characters
 >6	ubyte		>0
 #>>6	pstring		x		\b, name=%s
@@ -461,7 +461,7 @@
 # for FreeDOS *.KL files
 0	string/b	KLF		FreeDOS KEYBoard Layout file
 # only version=0x100 or 0x101 found
->3	uleshort	x		\b, version 0x%x
+>3	uleshort	x		\b, version %#x
 # stringlength
 >5	ubyte		>0
 >>8	string		x		\b, name=%-.2s
@@ -551,7 +551,7 @@
 >4	uleshort&0x8000			0x0000
 >>4	uleshort&0x4842			>0			\bsupport
 >0	ubyte				x			\b)
->0	ulelong				!0xffffffff		with pointer 0x%x
+>0	ulelong				!0xffffffff		with pointer %#x
 # DOS driver cmd640x.sys has 0x12 instead of 0xffffffff for pointer field to next device header
 0	ulequad				0x0513c00000000012
 >0	use				msdos-driver
@@ -681,13 +681,13 @@
 # Update:	Joerg Jenderek
 # assembler instructions: cmp sp, offset sp_limit
 0	string/b	\x81\xfc
-#>2	uleshort	x		\b, sp_limit=0x%x
+#>2	uleshort	x		\b, sp_limit=%#x
 # assembler instructions: jump above +2; int 0x20; mov cx, offset bytes_to_copy
 >4	string	\x77\x02\xcd\x20\xb9
-#>9	uleshort	x		\b, [bytes_to_copy]=0x%x
+#>9	uleshort	x		\b, [bytes_to_copy]=%#x
 # at different offsets assembler instructions: push di; jump decomp_start_n2b
 >0x1e	search/3	\x57\xe9
-#>>&0	uleshort	x		\b, decomp_start_n2b=0x%x
+#>>&0	uleshort	x		\b, decomp_start_n2b=%#x
 # src/stub/src/include/header.S; UPX_MAGIC_LE32
 >>&2	string		UPX!		FREE-DOS executable (COM), UPX
 !:mime	application/x-dosexec
@@ -803,7 +803,7 @@
 # reserved; must be zero
 #>>6	ulelong		!0			\b, reserved %u
 # block pointer to the block containing optional file manager information
-#>>0x1C	uleshort	x			\b, at 0x%x info block
+#>>0x1C	uleshort	x			\b, at %#x info block
 # jump to File manager information block
 >>(0x1C.s*128)	uleshort x
 # test for valid information start; maybe also 0012h
@@ -833,7 +833,7 @@
 # number of blocks used in the file; seems to be 0 for Word 4.0 and Write 3.0
 >>0x6A	uleshort	>0			\b, %u blocks
 # bit field for corrected text areas
-#>>0x6C	uleshort	x			\b, 0x%x bit field
+#>>0x6C	uleshort	x			\b, %#x bit field
 # text of document; some times start with 4 non printable characters like CR LF
 >>128	ubyte		x			\b,
 >>>128		ubyte	>0x1F
@@ -937,7 +937,7 @@
 >>>>6	uleshort	!0x0004	formatting data
 !:ext	fXX
 # main revision number
->>>>4	uleshort	x	\b, revision 0x%x
+>>>>4	uleshort	x	\b, revision %#x
 >>>6	uleshort	=0x0004	\b, cell range
 # active cellcoord range (start row, page,column ; end row, page, column)
 # start values normally 0~1st sheet A1
@@ -951,9 +951,9 @@
 >>>>12	uleshort	x	\b%d,
 >>>>15	ubyte		x	\b%d
 # Lotus Multi Byte Character Set (1~cp850,2~cp851,...,16~japan,...,31~??)
->>>>20	ubyte		>1	\b, character set 0x%x
+>>>>20	ubyte		>1	\b, character set %#x
 # flags
->>>>21	ubyte		x	\b, flags 0x%x
+>>>>21	ubyte		x	\b, flags %#x
 >>>6	uleshort	!0x0004
 # record type (FONTNAME=00AEh)
 >>>>30	search/29	\0\xAE
@@ -1027,7 +1027,7 @@
 # (version 5.26) labeled the entry as "Lotus 1-2-3"
 >>>4	default		x	unknown worksheet or configuration
 !:ext	cnf
->>>>4	uleshort	x	\b, revision 0x%x
+>>>>4	uleshort	x	\b, revision %#x
 # 2nd record for most worksheets describes cells range
 >>>6		use	lotus-cells
 # 3rd record for most japan worksheets describes cells range
@@ -1153,7 +1153,7 @@
 #>3		ubyte        	x		\b, reserved %x
 #>8		ulelong		x		\b, image size %d
 # offset of PNG or DIB image
-#>12		ulelong		x		\b, offset 0x%x
+#>12		ulelong		x		\b, offset %#x
 # PNG header (\x89PNG)
 >(12.l)		ubelong		=0x89504e47
 # 1 space char after "with" to get phrase "with PNG image" by magic in ./images
@@ -1334,12 +1334,12 @@
 # probably translated version string like: 0 v1.00
 >>&0	string	x				\b, tran version %s
 # followed by Ctrl-J Ctrl-Z
->>>&0	ubyte		!0xa			\b, terminated by 0x%2.2x
+>>>&0	ubyte		!0xa			\b, terminated by %#2.2x
 >>>>&0	ubyte		x			\b%2.2x
 # Ctrl-Z
->0x65	ubyte		!0x1A			\b, at 0x65 0x%x
+>0x65	ubyte		!0x1A			\b, at 0x65 %#x
 # one
->0x66	ubyte		!0x01			\b, at 0x66 0x%x
+>0x66	ubyte		!0x01			\b, at 0x66 %#x
 # URL:		https://en.wikipedia.org/wiki/NetWare
 # Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/dat-novell-msg.trid.xml
 # ftp://ftp.iitb.ac.in/LDP/en/NLM-HOWTO/NLM-HOWTO-single.html
@@ -1508,7 +1508,7 @@
 #>4	belong		!0		\b, reserved1 %x
 #>12	belong		!0		\b, reserved2 %x
 # offset of the first CFFILE entry coffFiles: minimal 2Ch
->16	ulelong		x		\b, at 0x%x
+>16	ulelong		x		\b, at %#x
 >(16.l)	use		cab-file
 # at least also 2nd member
 >28	uleshort		>1
@@ -1518,12 +1518,12 @@
 >>>>&0	use		cab-file
 #>20	belong		!0		\b, reserved %x
 # Cabinet file format version. Currently, versionMajor = 1 and versionMinor = 3
->24	ubeshort	!0x0301		\b version 0x%x
+>24	ubeshort	!0x0301		\b version %#x
 # number of CFFOLDER entries
 >26	uleshort	>1		\b, %u cffolders
 # cabinet file option indicators 1~PREVIOUS, 2~NEXT, 4~reserved fields
 # only found for flags 0 1 2 3 4 not 7
->30	uleshort	>0		\b, flags 0x%x
+>30	uleshort	>0		\b, flags %#x
 # Cabinet files have a 16-bit cabinet setID field that is designed for application use.
 # default is zero, however, the -i option of cabarc can be used to set this field
 >32	uleshort	>0		\b, ID %u
@@ -1574,30 +1574,30 @@
 #	display folder structure CFFOLDER information like compression of cabinet
 0       name    			cab-folder
 # offset of the CFDATA block in this folder
-#>0	ulelong		x		\b, coffCabStart 0x%x
+#>0	ulelong		x		\b, coffCabStart %#x
 # number of CFDATA blocks in folder
 >4	uleshort	x		\b, %u datablock
 # plural s
 >4	uleshort	>1		\bs
 # compression typeCompress: 0~None 1~MSZIP 0x1503~LZX:21 0x1003~LZX:16 0x0f03~LZX:15
->6	uleshort	x		\b, 0x%x compression
+>6	uleshort	x		\b, %#x compression
 # optional per-folder reserved area
-#>8	ubequad		x		\b, abReserve 0x%llx
+#>8	ubequad		x		\b, abReserve %#llx
 #	display member structure CFFILE information like member name of cabinet
 0       name    			cab-file
 # cbFile is uncompressed size of file in bytes
 #>0	ulelong		x		\b, cbFile %u
 # uoffFolderStart is uncompressed offset of file in folder
-#>4	ulelong		>0		\b, uoffFolderStart 0x%x
+#>4	ulelong		>0		\b, uoffFolderStart %#x
 # iFolder is index into the CFFOLDER area. 0 indicates first folder in cabinet
 # define ifoldCONTINUED_FROM_PREV      (0xFFFD)
 # define ifoldCONTINUED_TO_NEXT        (0xFFFE)
 # define ifoldCONTINUED_PREV_AND_NEXT  (0xFFFF)
->8	uleshort	>0		\b, iFolder 0x%x
+>8	uleshort	>0		\b, iFolder %#x
 # date stamp for file
-#>10	uleshort	x		\b, date 0x%x
+#>10	uleshort	x		\b, date %#x
 # time stamp for file
-#>12	uleshort	x		\b, time 0x%x
+#>12	uleshort	x		\b, time %#x
 # attribs is attribute flags for file
 # define  _A_RDONLY       (0x01)  file is read-only
 # define  _A_HIDDEN       (0x02)  file is hidden
@@ -1607,7 +1607,7 @@
 # define  _A_EXEC         (0x40)  run after extraction
 # define  _A_NAME_IS_UTF  (0x80)  szName[] contains UTF
 # define  UNKNOWN       (0x0100)  undocumented or accident
-#>14	uleshort	x		\b, attribs 0x%x
+#>14	uleshort	x		\b, attribs %#x
 >14	uleshort	>0		+
 >>14	uleshort	&0x0001		\bR
 >>14	uleshort	&0x0002		\bH
@@ -1650,7 +1650,7 @@
 # for further information.
 0	ulelong 1
 >40	string	\ EMF		Windows Enhanced Metafile (EMF) image data
->>44	ulelong x		version 0x%x
+>>44	ulelong x		version %#x
 
 
 0	string/b	\224\246\056		Microsoft Word Document

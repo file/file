@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.18 2020/08/02 16:42:00 christos Exp $
+# $File: amigaos,v 1.19 2021/04/26 15:56:00 christos Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -58,17 +58,17 @@
 # high_seq; unused (value 0)
 >0x008	ubelong		!0		\b, high_seq %u
 # ht_size; hash table size; 0x48 for flopies
->0x00c	ubelong		!0x48		\b, hash table size 0x%x
+>0x00c	ubelong		!0x48		\b, hash table size %#x
 # bm_flag; bitmap flag, -1 means VALID
->0x138	belong		!-1		\b, bitmap flag 0x%x
+>0x138	belong		!-1		\b, bitmap flag %#x
 # bm_ext; first bitmap extension block (Hard disks only)
->0x1A0	ubelong		!0		\b, bitmap extension block 0x%x
+>0x1A0	ubelong		!0		\b, bitmap extension block %#x
 # name_len; volume name length; diskname[30]; volume name
 >0x1B0	pstring		>\0		\b, "%s"
 # first directory cache block for FFS; otherwise 0
->0x1F8	ubelong		!0		\b, directory cache block 0x%x
+>0x1F8	ubelong		!0		\b, directory cache block %#x
 # block secondary type = ST_ROOT (value 1)
->0x1FC	ubelong		!1		\b, sec_type 0x%x
+>0x1FC	ubelong		!1		\b, sec_type %#x
 #
 0	string		RDSK		Rigid Disk Block
 >160	string		x		on %.24s
@@ -109,7 +109,7 @@
 >>0xDC00C	ubelong	0x48
 >>>0xDC000	ubelong	2		(HD 1760 KiB)
 # Chksum; special block checksum like: 0 0x44ccf4c0 0x51f32cac 0xe33d0e7d ...
-#>>4	ubelong		x		\b, CRC 0x%x
+#>>4	ubelong		x		\b, CRC %#x
 # Rootblock: 0 880 (often for DD and HD) 1146049280 (IMAGINE_1_0_DISK_01.ADF TURBO_SILVER_SV.ADF)
 >>8	ubelong		>0		\b, probably root block %d
 # bootblock code
@@ -117,7 +117,7 @@
 # assembler instructions: lea exp(pc),a1; moveq 25h,d0; jsr -552(a6)
 >>>12	ubequad	=0x43fa003e70254eae	AmigaDOS 3.0
 >>>12	default	x
->>>>12	ubequad	!0x43fa003e70254eae	0x%llx..
+>>>>12	ubequad	!0x43fa003e70254eae	%#llx..
 # 880 KiB Double Density floppy disk (901120 bytes)
 >>0x6E00C	ubelong	0x48
 >>>0x6E000	ubelong	2

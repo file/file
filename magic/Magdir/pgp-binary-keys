@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp-binary-keys,v 1.1 2020/10/14 21:07:29 christos Exp $
+# $File: pgp-binary-keys,v 1.2 2021/04/26 15:56:00 christos Exp $
 # pgp-binary-keys: This file handles pgp binary keys.
 #
 # An PGP certificate or message doesn't have a fixed header.  Instead,
@@ -257,7 +257,7 @@
 >>&0		ubeshort	x	\b %d bits)
 >&0		ubyte		=22	\b, EdDSA
 >&0		default         x
->>&0		ubyte		x	\b, Unknown Algorithm (0x%x)
+>>&0		ubyte		x	\b, Unknown Algorithm (%#x)
 
 # Match all possible second packets.
 0	name		sig_or_component_1

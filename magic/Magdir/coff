@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.5 2021/04/04 18:24:34 christos Exp $
+# $File: coff,v 1.6 2021/04/26 15:56:00 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -42,7 +42,7 @@
 # TODO for other COFFs
 #>>>>0	uleshort	0xABCD		COFF_TEMPLATE
 >>>>0	default		x
->>>>>0	uleshort	x		type 0x%04x
+>>>>>0	uleshort	x		type %#04x
 >>>>0	uleshort	x		COFF
 # F_EXEC flag bit
 >>>>18	leshort		^0x0002		object file
@@ -73,7 +73,7 @@
 >>>>2	uleshort	>1		\b, %u sections
 # f_symptr - symbol table pointer, only for not stripped
 # like: 0 0x7c 0xf4 0x104 0x182 0x1c2 0x1c6 0x468 0x948 0x416e 0x149a6 0x1c9d8 0x23a68 0x35120 0x7afa0
->>>>8	ulelong		>0		\b, symbol offset=0x%x
+>>>>8	ulelong		>0		\b, symbol offset=%#x
 # f_nsyms - number of symbols, only for not stripped
 # like: 0 2 7 9 10 11 20 35 41 63 71 80 105 146 153 158 170 208 294 572 831 1546
 >>>>12	ulelong		>0		\b, %d symbols

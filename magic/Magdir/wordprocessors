@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.24 2020/05/22 19:28:47 christos Exp $
+# $File: wordprocessors,v 1.25 2021/04/26 15:56:00 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -278,7 +278,7 @@
 # Note:		used in Star-, Open- and Libre-Office
 # named as soffice.StarConfigFile.6 or OpenOffice.org configuration by others
 0		ubeshort	0x0400
-#>(2.s+8)	ubequad		x		\b, gap 0x%16.16llx
+#>(2.s+8)	ubequad		x		\b, gap %#16.16llx
 # test for null value in gap after theme name maybe unreliable
 #>(2.s+9)	ubyte		0		\b, 0-byte
 # look for keyword GALRESRV near the end
@@ -309,7 +309,7 @@
 #	$HOME/.config/libreoffice/4/user/gallery
 0	string		SGA3	StarOffice Gallery thumbnails
 # Unknown like 0x04000?0001000142
-#>4	ubequad		x	\b, UNKNOWN 0x%16.16llx
+#>4	ubequad		x	\b, UNKNOWN %#16.16llx
 #!:mime	application/x-sdg
 !:mime	application/x-stargallery-sdg
 !:ext	sdg

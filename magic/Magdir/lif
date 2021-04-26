@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: lif,v 1.9 2021/02/26 03:13:48 christos Exp $
+# $File: lif,v 1.10 2021/04/26 15:56:00 christos Exp $
 # lif:  file(1) magic for lif
 #
 # (Daniel Quinlan <quinlan@yggdrasil.com>)
@@ -30,7 +30,7 @@
 # version number; 0 for systems without extensions or 1 for model 64000
 >20	ubeshort	x		\b, version %u
 # LIF identifier; 010000 for system 3000
->12	beshort		!0x1000		\b, LIF identifier 0x%x
+>12	beshort		!0x1000		\b, LIF identifier %#x
 # directory start address in units like: 2
 >8	ubelong		x		\b, directory
 >8	ubelong		!2		start address %u
@@ -38,11 +38,11 @@
 >16	ubelong		x		length %u
 # level 1 extensions
 >20	beshort		=0
->>24	ubequad		!0		\b, for extensions 0x%llx...
+>>24	ubequad		!0		\b, for extensions %#llx...
 >20	beshort		>0
->>24	ubequad		!0		\b, extensions 0x%llx...
+>>24	ubequad		!0		\b, extensions %#llx...
 # word 21-126 reserved for extensions and future use; set to nil
->42	ubequad		!0		\b, RESERVED 0x%llx
+>42	ubequad		!0		\b, RESERVED %#llx
 # lif first file name for standard directory; 0xffff... means uninitialized
 >8	ubelong		2
 >>512	string		<\xff\xff	\b, 1st file %-.10s

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.23 2021/04/06 21:58:26 christos Exp $
+# $File: games,v 1.24 2021/04/26 15:56:00 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -53,11 +53,11 @@
 # dividing this by entry size (64) gives number of files
 >>>8	ulelong/64 x	\b, %u files
 # offset to the beginning of the file table
->>>4	ulelong	x	\b, offset 0x%x
+>>>4	ulelong	x	\b, offset %#x
 # 1st file entry
 >>>(4.l)	use	pak-entry
 # 2nd file entry
-#>>>4	ulelong+64	x	\b, offset 0x%x
+#>>>4	ulelong+64	x	\b, offset %#x
 #>>>(4.l+64)	use	pak-entry
 #
 #	display file table entry of Quake PAK archive
@@ -65,7 +65,7 @@
 # normally entry start after header which implies offset 12 or higher
 >56	ulelong	>11	
 # the offset from the beginning of pak to beginning of this entry file contents
->>56	ulelong	x	at 0x%x
+>>56	ulelong	x	at %#x
 # the size of file for this entry 
 >>60	ulelong	x	%u bytes
 # 56 byte null-terminated entry name string includes path like maps/e1m1.bsp

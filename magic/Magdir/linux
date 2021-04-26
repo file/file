@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.78 2021/04/04 17:46:17 christos Exp $
+# $File: linux,v 1.79 2021/04/26 15:56:00 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -154,8 +154,8 @@
 >>>>(526.s+0x200) string	>\0	version %s,
 >>498	leshort		1		RO-rootFS,
 >>498	leshort		0		RW-rootFS,
->>508	leshort		>0		root_dev 0x%X,
->>502	leshort		>0		swap_dev 0x%X,
+>>508	leshort		>0		root_dev %#X,
+>>502	leshort		>0		swap_dev %#X,
 >>504	leshort		>0		RAMdisksize %u KB,
 >>506	leshort		0xFFFF		Normal VGA
 >>506	leshort		0xFFFE		Extended VGA
@@ -191,8 +191,8 @@
 
 >497		leshort		!0		x86 kernel
 >>504		leshort		>0		RAMdisksize=%u KB
->>502		leshort		>0		swap=0x%X
->>508		leshort		>0		root=0x%X
+>>502		leshort		>0		swap=%#X
+>>508		leshort		>0		root=%#X
 >>>498		leshort		1		\b-ro
 >>>498		leshort		0		\b-rw
 >>506		leshort		0xFFFF		vga=normal
@@ -528,7 +528,7 @@
 >48		lelong		x		\b, undo file features:
 >>48		lelong&1	0		lacks filesystem offset
 >>48		lelong&1	1		has filesystem offset
->>>64		lequad		x		at 0x%llx
+>>>64		lequad		x		at %#llx
 
 # ansible vault (does not really belong here)
 0		string		$ANSIBLE_VAULT;	Ansible Vault

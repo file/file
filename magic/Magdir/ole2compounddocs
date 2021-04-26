@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.10 2021/02/23 00:51:10 christos Exp $
+# $File: ole2compounddocs,v 1.11 2021/04/26 15:56:00 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -10,7 +10,7 @@
 # https://digital-preservation.github.io/droid/
 # skip droid skeleton like fmt-39-signature-id-128.doc by valid version
 >0x1A	ushort		!0xABAB		OLE 2 Compound Document
-#>0x1C	uleshort		x			\b, endnian 0x%4.4x
+#>0x1C	uleshort		x			\b, endnian %#4.4x
 # big endian not tested
 >>0x1C	ubeshort		=0xfffe			\b, big-endian
 >>>546	string	jbjb			: Microsoft Word Document
@@ -26,25 +26,25 @@
 # Minor Version 32h=50 3Bh=59 3Eh=62
 >>>0x18	uleshort		x			\b.%u
 # SecID of first sector of the directory stream is often 1 but high like 3144h
->>>48	ulelong			x			\b, SecID 0x%x
+>>>48	ulelong			x			\b, SecID %#x
 # Sector Shift Exponent in short-stream container stream: 6~64 bytes
 >>>32	uleshort		!6			\b, exponent of short stream %u
 # total number of sectors used for the FAT
 >>>44	ulelong			>1			\b, %u FAT sectors
 # SecID of first sector of the short-sector allocation table (Mini FAT)
 # or -2 (End Of ChainSecID) if not extant
->>>60	ulelong			!0xffFFffFE		\b, Mini FAT start sector 0x%x
+>>>60	ulelong			!0xffFFffFE		\b, Mini FAT start sector %#x
 # total number of sectors used for the short-sector allocation table
 >>>64	ulelong			!1			\b, %u Mini FAT sector
 # plural s
 >>>>64	ulelong			>1			\bs
 # SecID of first sector of the master sector allocation table (DIFAT)
 # or -2 (End Of Chain SecID) if no additional sectors used
->>>68	ulelong			!0xffFFffFE		\b, DIFAT start sector 0x%x
+>>>68	ulelong			!0xffFFffFE		\b, DIFAT start sector %#x
 # total number of sectors used for the master sector allocation table (DIFAT)
 >>>72	ulelong			>0			\b, %u DIFAT sectors
 # First part of the master sector allocation table (DIFAT) containing 109 SecIDs
-#>>>76 	ubequad			x			\b, DIFAT=0x%16.16llx
+#>>>76 	ubequad			x			\b, DIFAT=%#16.16llx
 #>>>84 	ubequad			x			\b%16.16llx...
 # pointer to root entry only works with standard configuration for SecID ~< 800h
 # Red-Carpet-presentation-1.0-1.sdd sg10.sdv 2000_GA_Annual_Review_Data.xls
@@ -88,7 +88,7 @@
 #	https://m.blog.naver.com/superman4u/40047693679
 #	https://misc.daniel-marschall.de/projects/guid_analysis/guid.txt
 #	http://www.windowstricks.in/online-windows-guid-converter
-#>80 	ubequad		!0			\b, clsid 0x%16.16llx
+#>80 	ubequad		!0			\b, clsid %#16.16llx
 #>>88 	ubequad		x			\b%16.16llx
 # test for "Root Entry" inside directory by type 5 value
 >66 	ubyte		5
@@ -529,6 +529,6 @@
 # remaining non null clsid
 >>88 	default		x			: UNKNOWN
 !:mime	application/x-ole-storage
->>>80 	ubequad		!0			\b, clsid 0x%16.16llx
+>>>80 	ubequad		!0			\b, clsid %#16.16llx
 >>>88 	ubequad		x			\b%16.16llx
 

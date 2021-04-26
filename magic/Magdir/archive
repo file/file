@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.146 2021/04/08 23:54:36 christos Exp $
+# $File: archive,v 1.147 2021/04/26 15:56:00 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -476,22 +476,22 @@
 # data size in bytes like 409600
 >0x40	ubelong		x	\b, %u bytes
 # for debugging purpose size in hexadecimal
-#>0x40	ubelong		x	(0x%8.8x)
+#>0x40	ubelong		x	(%#8.8x)
 # tag size in bytes
->0x44	ubelong		>0	\b, 0x%x tag size
+>0x44	ubelong		>0	\b, %#x tag size
 # data checksum
-#>0x48	ubelong		x	\b, 0x%x checksum
+#>0x48	ubelong		x	\b, %#x checksum
 # tag checksum
-#>0x4c	ubelong		x	\b, 0x%x tag checksum
+#>0x4c	ubelong		x	\b, %#x tag checksum
 # disk encoding
 >0x50	ubyte		0	\b, GCR CLV ssdd (400k)
 >0x50	ubyte		1	\b, GCR CLV dsdd (800k)
 >0x50	ubyte		2	\b, MFM CAV dsdd (720k)
 >0x50	ubyte		3	\b, MFM CAV dshd (1440k)
->0x50	ubyte		>3	\b, 0x%x encoding
+>0x50	ubyte		>3	\b, %#x encoding
 # format byte
->0x51	ubyte		x	\b, 0x%x format
-#>0x54	ubequad		x	\b, data 0x%16.16llx
+>0x51	ubyte		x	\b, %#x format
+#>0x54	ubequad		x	\b, data %#16.16llx
 # ESP, could this conflict with Easy Software Products' (e.g.ESP ghostscript) documentation?
 0	string	ESP ESP archive data
 # ZPack
@@ -524,11 +524,11 @@
 # compression method (0-4)
 >>8	uleshort	x	\b, %u method
 # offset of compressed data
->>10	uleshort	x	\b, 0x%x offset
+>>10	uleshort	x	\b, %#x offset
 #>>(10.s)	uleshort	x
 #>>>&-6		string	x	\b, TEST extension %-.3s
 # header flags to mark header extensions
->>12	uleshort	>0	\b, 0x%x flags
+>>12	uleshort	>0	\b, %#x flags
 # 4 bytes: decompressed length of file
 >>12	uleshort	&0x01
 >>>14	ulelong		x	\b, original size: %u bytes
@@ -629,7 +629,7 @@
 !:mime	application/x-compress-ftcomp
 !:ext	??_/??@/dll/drv/pk2/
 # probably A596FDFF magic at the beginning
->0	ubelong		!0xA596FDFF	\b, at beginning 0x%x
+>0	ubelong		!0xA596FDFF	\b, at beginning %#x
 # probably orginal file name with directory like: \OS2\unpack.exe \SYSTEM\8514.DRV MAHJONGG.EXE
 >41	string		x		"%s"
 
@@ -846,7 +846,7 @@
 !:ext	dz
 >>2	byte	x \b, version %i
 >>3	byte	x \b.%i
->>4	ulelong	x \b, offset 0x%x
+>>4	ulelong	x \b, offset %#x
 >>8	ulelong	x \b, %u files
 # ZZip archiver (.zz)
 0	string	ZZ\ \0\0 ZZip archive data
@@ -980,21 +980,21 @@
 # compressed data size != compressed file size
 #>7	ulelong		x		\b, data size %d
 # attribute: 0x2~?? 0x10~symlink|target 0x20~normal
-#>19	ubyte		x		\b, 19_0x%x
+#>19	ubyte		x		\b, 19_%#x
 # level identifier 0 1 2 3
 #>20	ubyte		x		\b, level %d
 # time stamp
-#>15		ubelong	x		DATE 0x%8.8x
+#>15		ubelong	x		DATE %#8.8x
 # OS ID for level 1
 >20	ubyte		1
 # 0x20 types find for *.rom files
->>(21.b+24)	ubyte	<0x21		\b, 0x%x OS
+>>(21.b+24)	ubyte	<0x21		\b, %#x OS
 # ascii type like M for MSDOS
 >>(21.b+24)	ubyte	>0x20		\b, '%c' OS
 # OS ID for level 2
 >20	ubyte		2
-#>>23	ubyte		x		\b, OS ID 0x%x
->>23	ubyte		<0x21		\b, 0x%x OS
+#>>23	ubyte		x		\b, OS ID %#x
+>>23	ubyte		<0x21		\b, %#x OS
 >>23	ubyte		>0x20		\b, '%c' OS
 # filename only for level 0 and 1
 >20	ubyte		<2
@@ -1589,7 +1589,7 @@
 >24	belong	2		MD5 checksum
 >24	belong	3		SHA-256 checksum
 >24	belong	4		SHA-512 checksum
->24	belong	>4		unknown 0x%x checksum
+>24	belong	>4		unknown %#x checksum
 #>24	belong	>4		checksum
 #			For no compression jump 0 bytes
 >24	belong	0
@@ -1597,7 +1597,7 @@
 # jump more bytes forward by header size
 >>>&(4.S)	ubyte	x
 # jump more bytes forward by compressed table of contents size
-#>>>>&(8.Q)	ubequad	x	\b, heap data 0x%llx
+#>>>>&(8.Q)	ubequad	x	\b, heap data %#llx
 >>>>&(8.Q)	ubyte	x
 # look for data by ./compress after message with 1 space at end
 >>>>>&-3	indirect x	\b, contains 
@@ -1669,7 +1669,7 @@
 # *.GHS or *.[0-9] with cns program option
 >2		ubyte&0x08		0x08		\b, split file
 # part of split index interesting for *.ghs
->>4		ubyte			x		id=0x%x
+>>4		ubyte			x		id=%#x
 # compression tag minus one equals numeric compression command line switch z[1-9]
 >3		ubyte			0		\b, no compression
 >3		ubyte			2		\b, fast compression (Z1)
@@ -1717,9 +1717,9 @@
 !:mime	application/x-acronis-tib
 !:ext	tib
 # 01000000
-#>20	ubelong		x			\b, at 20 0x%x
+#>20	ubelong		x			\b, at 20 %#x
 # 20000000
-#>28	ubelong		x			\b, at 28 0x%x
+#>28	ubelong		x			\b, at 28 %#x
 # strings like "Generic- SD/MMC 1.00" "Unknown Disk" "Msft Virtual Disk 1.0"
 # ???
 # strings like "\Device\0000011e" "\Device\0000015a"

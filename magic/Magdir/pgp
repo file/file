@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: pgp,v 1.24 2020/10/14 21:07:29 christos Exp $
+# $File: pgp,v 1.25 2021/04/26 15:56:00 christos Exp $
 # pgp:  file(1) magic for Pretty Good Privacy
 
 # Handling of binary PGP keys is in pgp-binary-keys.
@@ -546,9 +546,9 @@
 # secret subkey packet (tag 7) with same structure as secret key packet (tag 5)
 # skip Fetus.Sys16 CALIBUS.MAIN OrbFix.Sys16.Ex by looking for positive len
 >1	ubeshort	>0
-#>1	ubeshort	x		\b, body length 0x%x
+#>1	ubeshort	x		\b, body length %#x
 # next packet type often 88h,89h~(tag 2)~Signature Packet
-#>>(1.S+3)	ubyte	x		\b, next packet type 0x%x
+#>>(1.S+3)	ubyte	x		\b, next packet type %#x
 # skip Dragon.SHR DEMO.INIT by looking for positive version
 >>3	ubyte		>0
 # skip BUISSON.13 GUITAR1 by looking for low version number
@@ -564,7 +564,7 @@
 >>>>>11		ubeshort	x	%db
 >>>>>4		beldate		x	created on %s -
 # old versions use 2 additional bytes after time stamp
-#>>>>>8		ubeshort	x	0x%x
+#>>>>>8		ubeshort	x	%#x
 # display key algorithm 1~RSA Encrypt|Sign - 21~Diffie-Hellman
 >>>>>10	  	use		key_algo
 >>>>>(11.S/8)	ubequad		x

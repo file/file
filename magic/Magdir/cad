@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.27 2021/04/11 20:46:12 christos Exp $
+# $File: cad,v 1.28 2021/04/26 15:56:00 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -33,7 +33,7 @@
 # type of element 9~TCB 8~Digitizer setup 5~Group Data Elements
 #>1	ubyte&0x7F	x			\b, type %u
 # words to follow in element: 17H~CEL library 2FEh~DGN 9FEh,DFEh~CIT
-#>2	uleshort	x			\b, words 0x%4.4x to follow
+#>2	uleshort	x			\b, words %#4.4x to follow
 # test for 3 reserved 0 bytes in CIT or "conversion" in ViewInfo structure (DGN CEL)
 #>508	ubelong		x			\b, RESERVED %8.8x
 >508	ubelong&0xFFffFF00	=0
@@ -58,7 +58,7 @@
 >>>>1120	string		x		\b, units %-.2s
 # 2 chars for name of master unit like IN in ML SU tn th TH HU mm "\0 "\040 \0\0
 >>>>1122	string		>\0		%-.2s
-#>>>>1120	ubelong		x		\b, units 0x%8.8x
+#>>>>1120	ubelong		x		\b, units %#8.8x
 # element range low,high x y z like xlow=0 08010000h 01080000h
 #>>>>4		ubelong	  	!0		\b, xlow %8.8x
 #>>>>8		ubelong	  	!0		\b, ylow %8.8x
@@ -67,7 +67,7 @@
 #>>>>20		ubelong	  	!0		\b, yhigh %8.8x
 #>>>>24		ubelong	  	!0		\b, zhigh %8.8x
 # graphic group number; all other elements in that group have same non-0 number
-#>>>>28		leshort		x		\b, grphgrp 0x%4.4x
+#>>>>28		leshort		x		\b, grphgrp %#4.4x
 # words to optional attribute linkage
 #>>>>30		ubyte		x		\b, attindx \%o
 #>>>>31		ubyte		x		\b\%o
@@ -91,11 +91,11 @@
 # >>30	string	\372\106			DGNFile
 # >>30	string	\376\103			DGNFile
 # elements properties indicator
-#>>>>32		uleshort	!0		\b, properties 0x%4.4x
+#>>>>32		uleshort	!0		\b, properties %#4.4x
 # class 0~Primary
-#>>>>>32		uleshort&0x000F	!0		\b, class 0x%4.4x
+#>>>>>32		uleshort&0x000F	!0		\b, class %#4.4x
 # Symbology
-#>>>>>34		uleshort	x		\b, Symbology 0x%4.4x
+#>>>>>34		uleshort	x		\b, Symbology %#4.4x
 # test for 2nd element type 1~library cell header
 >>&1		ubyte&0x7F	1
 # test for 1st element with level 8 and type 5 for cell library
@@ -151,13 +151,13 @@
 >194	ubyte		&0x04			horizontal
 >194	ubyte		^0x04			vertical
 # ScannableFlag; Scanline indexing method used
-#>195	ubyte		!0			\b, ScannableFlag 0x%x
+#>195	ubyte		!0			\b, ScannableFlag %#x
 # RotationAngle; Rotation angle of raster data
-#>196	ubequad		!0			\b, RotationAngle 0x%llx
+#>196	ubequad		!0			\b, RotationAngle %#llx
 # SkewAngle; Skew angle of raster data
 #>204	ubequad		!0			\b, SkewAngle %llx
 # DataTypeModifier; Additional raster data format info
-#>212	uleshort	!0			\b, DataTypeModifier 0x%4.4x
+#>212	uleshort	!0			\b, DataTypeModifier %#4.4x
 # DesignFile[66]; Name of the design file
 >214	string		>\0			\b, DesignFile %-.66s
 # DatabaseFile[66]; Name of the database file
@@ -167,9 +167,9 @@
 # FileDescription[80]; Text description of file and contents
 >412	string		>\0			\b, FileDescription %-.80s
 # MinValue
-#>492	ubequad		!0			\b, MinValue 0x%llx
+#>492	ubequad		!0			\b, MinValue %#llx
 # MaxValue
-#>500	ubequad		!0			\b, MaxValue 0x%llx
+#>500	ubequad		!0			\b, MaxValue %#llx
 # Reserved[3]; Unused (always 0)
 #>508	ubelong&0xFFffFF00	x		\b, RESERVED %8.8x
 # GridFileVersion; Grid File Version like 2 3

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.143 2021/04/19 20:35:23 christos Exp $
+# $File: filesystems,v 1.144 2021/04/26 15:56:00 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -220,7 +220,7 @@
 >>>>>>18	string	=_		\b.
 >>>>>>>19	string	x		\b%-.1s
 >>>22		ubyte	0
->>>>21		ubyte	x		\b, from drive 0x%x
+>>>>21		ubyte	x		\b, from drive %#x
 >>>22		ubyte	>0
 >>>>21		string	x		\b, from drive %s
 >>>535		search/17	\x55\xAA
@@ -271,7 +271,7 @@
 >>>0x68		ubyte		x	\b%d
 >>>0x6d		ubyte		x	\b, (1<<%d) sectors per cluster
 >>>0x48		ulequad		x	\b, sectors %lld
->>>0x64		ulelong		x	\b, serial number 0x%x
+>>>0x64		ulelong		x	\b, serial number %#x
 
 # keep old DOS/MBR boot sector as dummy for mbr and bootloader displaying
 # only for sector sizes with 512 or more Bytes
@@ -308,7 +308,7 @@
 >>>>>(0x49.b)	string		Tabela\ de\ parti\207ao\ inv\240lida	portuguese
 >>>>>(0x49.b)	string		Tabla\ de\ partici\242n\ no\ v\240lida	spanish
 >>>>>(0x49.b)	string		Tavola\ delle\ partizioni\ non\ valida	italian
->>>>>0x49	ubyte		>0			at offset 0x%x
+>>>>>0x49	ubyte		>0			at offset %#x
 >>>>>>(0x49.b)	string		>\0			"%s"
 # "Error loading operating system"			nn=0xa3 for english version
 # "Fehler beim Laden des Betriebssystems"		nn=0xa7 for german version
@@ -316,7 +316,7 @@
 # "Erro na inicializa\207ao do sistema operacional"	nn=0xa7 for portuguese Brazilian version
 # "Error al cargar sistema operativo"			nn=0xa8 for spanish version
 # "Errore durante il caricamento del sistema operativo"	nn=0xae for italian version
->>>>>0x74	ubyte		>0			at offset 0x%x
+>>>>>0x74	ubyte		>0			at offset %#x
 >>>>>>(0x74.b)	string		>\0			"%s"
 # "Missing operating system"				nn=0xc2 for english version
 # "Betriebssystem fehlt"				nn=0xcd for german version
@@ -324,7 +324,7 @@
 # "Sistema operacional nao encontrado"			nn=0xd4 for portuguese Brazilian version
 # "Falta sistema operativo"				nn=0xca for spanish version
 # "Sistema operativo mancante"				nn=0xe2 for italian version
->>>>>0x79	ubyte		>0			at offset 0x%x
+>>>>>0x79	ubyte		>0			at offset %#x
 >>>>>>(0x79.b)	string		>\0			"%s"
 # Microsoft Windows 95B to XP (https://thestarman.pcministry.com/asm/mbr/95BMEMBR.htm)
 # assembler instructions: push ax;pop es;push  ax;pop ds;cld;mov si,7c1b
@@ -339,7 +339,7 @@
 >>>>(0x3C.b+0x0FF)	string	Ung\201ltige\ Partitionstabelle		german
 >>>>(0x3C.b+0x0FF)	string	Table\ de\ partition\ erron\202e	french
 >>>>(0x3C.b+0x0FF)	string	\215\245\257\340\240\242\250\253\354\255\240\357\ \342\240\241\253\250\346\240	russian
->>>>0x3C		ubyte	x			at offset 0x%x+0xFF
+>>>>0x3C		ubyte	x			at offset %#x+0xFF
 >>>>(0x3C.b+0x0FF)	string	>\0			"%s"
 # "Error loading operating system"			nn=0x127 for english version
 # "Fehler beim Laden des Betriebssystems"		nn=0x12b for german version
@@ -412,12 +412,12 @@
 >>>>(0x1b7.b+0x100)	string	>\0			"%s"
 # https://thestarman.pcministry.com/asm/mbr/Win2kmbr.htm#DiskSigs
 # https://en.wikipedia.org/wiki/MBR_disk_signature#ID
->>0x1b8	ulelong		>0				\b, disk signature 0x%-.4x
+>>0x1b8	ulelong		>0				\b, disk signature %#-.4x
 # driveID/timestamp for Win 95B,98,98SE and ME. See https://thestarman.pcministry.com/asm/mbr/mystery.htm
 >>0xDA	uleshort		0
 >>>0xDC 	ulelong		>0			\b, created
 # physical drive number (0x80-0xFF) when the Windows wrote that byte to the drive
->>>>0xDC	ubyte		x			with driveID 0x%x
+>>>>0xDC	ubyte		x			with driveID %#x
 # hours, minutes and seconds
 >>>>0xDf	ubyte		x			at %x
 >>>>0xDe	ubyte		x			\b:%x
@@ -464,13 +464,13 @@
 >>>397	search/4	Booting\040
 >>>>408	search/4	HD1/\0	 			\b, Ranish MBR (
 >>>>>416	string	Writing\ changes...		\b2.37
->>>>>>438	ubyte		x			\b,0x%x dots
+>>>>>>438	ubyte		x			\b,%#x dots
 >>>>>>440	ubyte		>0			\b,virus check
 >>>>>>441	ubyte		>0			\b,partition %c
 #2.38,2.42,2.44
 >>>>>416	string	!Writing\ changes...		\b
 >>>>>>418	ubyte	1				\bvirus check,
->>>>>>419	ubyte	x				\b0x%x seconds
+>>>>>>419	ubyte	x				\b%#x seconds
 >>>>>>420	ubyte&0x0F	>0			\b,partition
 >>>>>>>420	ubyte&0x0F	<5			\b %x
 >>>>>>>420	ubyte&0x0F	0Xf			\b ask
@@ -509,19 +509,19 @@
 >>0x41		ubyte		<2
 >>>0x3E		ubyte		>2		\b; GRand Unified Bootloader
 # 0x3 for 0.5.95,0.93,0.94,0.96 0x4 for 1.90
->>>>0x3E	ubyte		x		\b, stage1 version 0x%x
+>>>>0x3E	ubyte		x		\b, stage1 version %#x
 #If it is 0xFF, use a drive passed by BIOS
->>>>0x40	ubyte		<0xFF		\b, boot drive 0x%x
+>>>>0x40	ubyte		<0xFF		\b, boot drive %#x
 # in most case 0,1,0x2e for GRUB 0.5.95
->>>>0x41	ubyte		>0		\b, LBA flag 0x%x
->>>>0x42	uleshort	<0x8000		\b, stage2 address 0x%x
-#>>>>0x42	uleshort	=0x8000		\b, stage2 address 0x%x (usual)
->>>>0x42	uleshort	>0x8000		\b, stage2 address 0x%x
-#>>>>0x44	ulelong		=1		\b, 1st sector stage2 0x%x (default)
->>>>0x44	ulelong		>1		\b, 1st sector stage2 0x%x
->>>>0x48	uleshort	<0x800		\b, stage2 segment 0x%x
-#>>>>0x48	uleshort	=0x800		\b, stage2 segment 0x%x (usual)
->>>>0x48	uleshort	>0x800		\b, stage2 segment 0x%x
+>>>>0x41	ubyte		>0		\b, LBA flag %#x
+>>>>0x42	uleshort	<0x8000		\b, stage2 address %#x
+#>>>>0x42	uleshort	=0x8000		\b, stage2 address %#x (usual)
+>>>>0x42	uleshort	>0x8000		\b, stage2 address %#x
+#>>>>0x44	ulelong		=1		\b, 1st sector stage2 %#x (default)
+>>>>0x44	ulelong		>1		\b, 1st sector stage2 %#x
+>>>>0x48	uleshort	<0x800		\b, stage2 segment %#x
+#>>>>0x48	uleshort	=0x800		\b, stage2 segment %#x (usual)
+>>>>0x48	uleshort	>0x800		\b, stage2 segment %#x
 >>>>402		string	Geom\0Hard\ Disk\0Read\0\ Error\0
 >>>>>394	string	stage1			\b, GRUB version 0.5.95
 >>>>382		string	Geom\0Hard\ Disk\0Read\0\ Error\0
@@ -1126,9 +1126,9 @@
 >>48		leshort		0xAA55	2
 >>32		leshort		0xAA55	3
 >>16		leshort		0xAA55	4
->>4		ubyte		x	: ID=0x%x
+>>4		ubyte		x	: ID=%#x
 >>0		ubyte&0x80	0x80	\b, active
->>0		ubyte		>0x80	0x%x
+>>0		ubyte		>0x80	%#x
 >>1		ubyte		x	\b, start-CHS (
 >>1		use		partition-chs
 >>5		ubyte		x	\b), end-CHS (
@@ -1226,7 +1226,7 @@
 # ERRorTeXT
 >>181	search/166		Error\ \0\r\n				NetBSD mbr
 # NT Drive Serial Number https://thestarman.pcministry.com/asm/mbr/Win2kmbr.htm#DS
->>>0x1B8	ubelong		>0					\b,Serial 0x%-.8x
+>>>0x1B8	ubelong		>0					\b,Serial %#-.8x
 # BOOTSEL definitions contains assembler instructions: int 0x13;pop dx;push dx;push dx
 >>>0xbb		search/71	\xcd\x13\x5a\x52\x52			\b,bootselector
 # BOOT_EXTENDED definitions contains assembler instructions:
@@ -1277,31 +1277,31 @@
 # variant used by testdisk of https://www.cgsecurity.org/wiki/Menu_MBRCode
 >>>(0x1BC.s+8)		ubyte&2		2			\b,TestDisk
 #0x1~1,..,0x8~4,0x10~F,0x80~A enabled
-#>>>(0x1BC.s+10)		ubyte		x			\b,flags 0x%x
+#>>>(0x1BC.s+10)		ubyte		x			\b,flags %#x
 #0x0~1,0x1~2,...,0x3~4,0x4~F,0x7~D default boot
-#>>>(0x1BC.s+11)		ubyte		x			\b,cfg_def 0x%x
+#>>>(0x1BC.s+11)		ubyte		x			\b,cfg_def %#x
 # for older versions
 >>>(0x1BC.s+9)		ubyte		<2
 #>>>>(0x1BC.s+12)	ubyte		18			\b,%hhu/18 seconds
 >>>>(0x1BC.s+12)	ubyte		!18			\b,%u/18 seconds
 # floppy A: or B:
->>>>(0x1BC.s+13)	ubyte		<2			\b,floppy 0x%x
+>>>>(0x1BC.s+13)	ubyte		<2			\b,floppy %#x
 >>>>(0x1BC.s+13)	ubyte		>1
 # 1st hard disc
-#>>>>>(0x1BC.s+13)	ubyte		0x80			\b,drive 0x%x
+#>>>>>(0x1BC.s+13)	ubyte		0x80			\b,drive %#x
 # not 1st hard disc
->>>>>(0x1BC.s+13)	ubyte		!0x80			\b,drive 0x%x
+>>>>>(0x1BC.s+13)	ubyte		!0x80			\b,drive %#x
 # for version >= 2 maximal timeout can be 65534
 >>>(0x1BC.s+9)		ubyte		>1
 #>>>>(0x1BC.s+12)	uleshort	18			\b,%u/18 seconds
 >>>>(0x1BC.s+12)	uleshort	!18			\b,%u/18 seconds
 # floppy A: or B:
->>>>(0x1BC.s+14)	ubyte		<2			\b,floppy 0x%x
+>>>>(0x1BC.s+14)	ubyte		<2			\b,floppy %#x
 >>>>(0x1BC.s+14)	ubyte		>1
 # 1st hard disc
-#>>>>>(0x1BC.s+14)	ubyte		0x80			\b,drive 0x%x
+#>>>>>(0x1BC.s+14)	ubyte		0x80			\b,drive %#x
 # not 1st hard disc
->>>>>(0x1BC.s+14)	ubyte		!0x80			\b,drive 0x%x
+>>>>>(0x1BC.s+14)	ubyte		!0x80			\b,drive %#x
 >>>0	ubyte		x					\b)
 
 # added by Joerg Jenderek
@@ -1330,9 +1330,9 @@
 # GRUB 0.5.95 unofficial
 >>>>0x20C	ulelong&0x2E300000 0x2E300000
 # 0=stage2	1=ffs	2=e2fs	3=fat	4=minix	5=reiserfs
->>>>>0x20C	ubyte		x		\b, identifier 0x%x
-#>>>>>0x20D	ubyte		=0		\b, LBA flag 0x%x (default)
->>>>>0x20D	ubyte		>0		\b, LBA flag 0x%x
+>>>>>0x20C	ubyte		x		\b, identifier %#x
+#>>>>>0x20D	ubyte		=0		\b, LBA flag %#x (default)
+>>>>>0x20D	ubyte		>0		\b, LBA flag %#x
 # GRUB version as string
 >>>>>0x20E 	string		>\0		\b, GRUB version %-s
 # for stage1_5 is 0xffffffff + config_file "/boot/grub/stage2" default
@@ -1347,10 +1347,10 @@
 # for 1.94 contains kernel image size
 # for 0.93,0.94,0.96,0.97
 # 0=stage2	1=ffs	2=e2fs	3=fat	4=minix	5=reiserfs	6=vstafs	7=jfs	8=xfs	9=iso9660	a=ufs2
->>>>>0x210	ubyte		x		\b, identifier 0x%x
+>>>>>0x210	ubyte		x		\b, identifier %#x
 # The flag for LBA forcing is in most cases 0
-#>>>>>0x211	ubyte		=0		\b, LBA flag 0x%x (default)
->>>>>0x211	ubyte		>0		\b, LBA flag 0x%x
+#>>>>>0x211	ubyte		=0		\b, LBA flag %#x (default)
+>>>>>0x211	ubyte		>0		\b, LBA flag %#x
 # GRUB version as string
 >>>>>0x212 	string		>\0		\b, GRUB version %-s
 # for stage1_5 is 0xffffffff + config_file "/boot/grub/stage2" default
@@ -1377,9 +1377,9 @@
 >>>11		uleshort	>31
 >>>>21		ubyte&0xf0	0xF0
 >>>>>0		ubyte		0xEB		DOS/MBR boot sector
->>>>>>1		ubyte		x		\b, code offset 0x%x+2
+>>>>>>1		ubyte		x		\b, code offset %#x+2
 >>>>>0		ubyte		0xE9
->>>>>>1		uleshort	x		\b, code offset 0x%x+3
+>>>>>>1		uleshort	x		\b, code offset %#x+3
 >>>>>3		string		>\0		\b, OEM-ID "%-.8s"
 #http://mirror.href.com/thestarman/asm/debug/debug2.htm#IHC
 >>>>>>8		string		IHC		\b cached by Windows 9M
@@ -1404,9 +1404,9 @@
 #>>>>>17	uleshort	=0		\b, root entries %hu=0 (usual Fat32)
 >>>>>19		uleshort	>0		\b, sectors %u (volumes <=32 MB)
 #>>>>>19	uleshort	=0		\b, sectors %hu=0 (usual Fat32)
->>>>>21		ubyte		>0xF0		\b, Media descriptor 0x%x
-#>>>>>21	ubyte		=0xF0		\b, Media descriptor 0x%x (usual floppy)
->>>>>21		ubyte		<0xF0		\b, Media descriptor 0x%x
+>>>>>21		ubyte		>0xF0		\b, Media descriptor %#x
+#>>>>>21	ubyte		=0xF0		\b, Media descriptor %#x (usual floppy)
+>>>>>21		ubyte		<0xF0		\b, Media descriptor %#x
 >>>>>22		uleshort	>0		\b, sectors/FAT %u
 #>>>>>22	uleshort	=0		\b, sectors/FAT %hu=0 (usual Fat32)
 >>>>>24		uleshort	x		\b, sectors/track %u
@@ -1425,18 +1425,18 @@
 #>>>>>>>32	ulelong		=0		\b, sectors %u (volumes > 32 MB)
 # FAT<32 bit specific
 >>>>>>>82	string/c	!fat32
-#>>>>>>>>36	ubyte		0x80		\b, physical drive 0x%x=0x80 (usual harddisk)
-#>>>>>>>>36	ubyte		0		\b, physical drive 0x%x=0 (usual floppy)
+#>>>>>>>>36	ubyte		0x80		\b, physical drive %#x=0x80 (usual harddisk)
+#>>>>>>>>36	ubyte		0		\b, physical drive %#x=0 (usual floppy)
 >>>>>>>>36	ubyte		!0x80
->>>>>>>>>36	ubyte		!0		\b, physical drive 0x%x
+>>>>>>>>>36	ubyte		!0		\b, physical drive %#x
 # VGA-copy CRC or
 # in Windows NT bit 0 is a dirty flag to request chkdsk at boot time. bit 1 requests surface scan too
->>>>>>>>37	ubyte		>0		\b, reserved 0x%x
-#>>>>>>>>37	ubyte		=0		\b, reserved 0x%x
+>>>>>>>>37	ubyte		>0		\b, reserved %#x
+#>>>>>>>>37	ubyte		=0		\b, reserved %#x
 # extended boot signature value is 0x80 for NTFS, 0x28 or 0x29 for others
->>>>>>>>38	ubyte		!0x29		\b, dos < 4.0 BootSector (0x%x)
+>>>>>>>>38	ubyte		!0x29		\b, dos < 4.0 BootSector (%#x)
 >>>>>>>>38	ubyte&0xFE	=0x28
->>>>>>>>>39	ulelong		x		\b, serial number 0x%x
+>>>>>>>>>39	ulelong		x		\b, serial number %#x
 >>>>>>>>38	ubyte		=0x29
 >>>>>>>>>43	string		<NO\ NAME	\b, label: "%11.11s"
 >>>>>>>>>43	string		>NO\ NAME	\b, label: "%11.11s"
@@ -1478,7 +1478,7 @@
 >>>>>82		string/c	fat32		\b, FAT (32 bit)
 >>>>>>36	ulelong		x		\b, sectors/FAT %u
 # https://technet.microsoft.com/en-us/library/cc977221.aspx
->>>>>>40	uleshort	>0		\b, extension flags 0x%x
+>>>>>>40	uleshort	>0		\b, extension flags %#x
 #>>>>>>40	uleshort	=0		\b, extension flags %hu
 >>>>>>42	uleshort	>0		\b, fsVersion %u
 #>>>>>>42	uleshort	=0		\b, fsVersion %u (usual)
@@ -1495,19 +1495,19 @@
 >>>>>>50	default		x
 >>>>>>>50	uleshort	x		\b, Backup boot sector %u
 # corrected by Joerg Jenderek at Feb 2011 according to https://thestarman.pcministry.com/asm/mbr/MSWIN41.htm#FSINFO
->>>>>>52	ulelong		>0		\b, reserved1 0x%x
->>>>>>56	ulelong		>0		\b, reserved2 0x%x
->>>>>>60	ulelong		>0		\b, reserved3 0x%x
+>>>>>>52	ulelong		>0		\b, reserved1 %#x
+>>>>>>56	ulelong		>0		\b, reserved2 %#x
+>>>>>>60	ulelong		>0		\b, reserved3 %#x
 # same structure as FAT1X
-#>>>>>>64	ubyte		=0x80		\b, physical drive 0x%x=80 (usual harddisk)
-#>>>>>>64	ubyte		=0		\b, physical drive 0x%x=0 (usual floppy)
+#>>>>>>64	ubyte		=0x80		\b, physical drive %#x=80 (usual harddisk)
+#>>>>>>64	ubyte		=0		\b, physical drive %#x=0 (usual floppy)
 >>>>>>64	ubyte		!0x80
->>>>>>>64	ubyte		>0		\b, physical drive 0x%x
+>>>>>>>64	ubyte		>0		\b, physical drive %#x
 # in Windows NT bit 0 is a dirty flag to request chkdsk at boot time. bit 1 requests surface scan too
->>>>>>65	ubyte		>0		\b, reserved 0x%x
->>>>>>66	ubyte		!0x29		\b, dos < 4.0 BootSector (0x%x)
+>>>>>>65	ubyte		>0		\b, reserved %#x
+>>>>>>66	ubyte		!0x29		\b, dos < 4.0 BootSector (%#x)
 >>>>>>66	ubyte		=0x29
->>>>>>>67	ulelong		x		\b, serial number 0x%x
+>>>>>>>67	ulelong		x		\b, serial number %#x
 >>>>>>>71	string		<NO\ NAME	\b, label: "%11.11s"
 >>>>>>>71	string		>NO\ NAME	\b, label: "%11.11s"
 >>>>>>>71	string		=NO\ NAME	\b, unlabeled
@@ -1530,10 +1530,10 @@
 >>>>>>>19	uleshort	=0
 # 0 sectors/FAT
 # dos < 4.0 BootSector value found is 0x80
-#38	ubyte		=0x80			\b, dos < 4.0 BootSector (0x%x)
+#38	ubyte		=0x80			\b, dos < 4.0 BootSector (%#x)
 >>>>>>>>22	uleshort	=0		\b; NTFS
 >>>>>>>>>24	uleshort	>0		\b, sectors/track %u
->>>>>>>>>36	ulelong		!0x800080	\b, physical drive 0x%x
+>>>>>>>>>36	ulelong		!0x800080	\b, physical drive %#x
 >>>>>>>>>40	ulequad		>0		\b, sectors %lld
 >>>>>>>>>48	ulequad		>0		\b, $MFT start cluster %lld
 >>>>>>>>>56	ulequad		>0		\b, $MFTMirror start cluster %lld
@@ -1549,8 +1549,8 @@
 #>>>>>>>>>>68	ulelong		>127		\b, bytes/index block 2^(256-%d)
 >>>>>>>>>>68	ubyte		>127		\b, bytes/index block 2^(-1*%i)
 >>>>>>>>>72	ulequad		x		\b, serial number 0%llx
->>>>>>>>>80	ulelong		>0		\b, checksum 0x%x
-#>>>>>>>>>80	ulelong		=0		\b, checksum 0x%x=0 (usual)
+>>>>>>>>>80	ulelong		>0		\b, checksum %#x
+#>>>>>>>>>80	ulelong		=0		\b, checksum %#x=0 (usual)
 # unicode loadername size jump
 >>>>>>>>>(0x200.s*2)	ubyte				x
 # in next sector loadername terminated by unicode CTRL-D and $
@@ -1717,7 +1717,7 @@
 >0x94	lelong		x			(of %d),
 >0x50	string		x			name %s,
 >0x98	ulelong		x			version %u,
->0xa0	ulelong		x			flags 0x%x
+>0xa0	ulelong		x			flags %#x
 
 # ext2/ext3 filesystems - Andreas Dilger <adilger@dilger.ca>
 # ext4 filesystem - Eric Sandeen <sandeen@sandeen.net>
@@ -1937,7 +1937,7 @@
 #>>>0x60E	ubequad			0
 #>>>>0x600	ubequad			!0
 #!:mime application/x-ima
-#>>512		ubyte			x			\b, Media descriptor 0x%x
+#>>512		ubyte			x			\b, Media descriptor %#x
 # without x86 jump instruction
 #>>0		ulelong&0x804000E9	!0x000000E9
 # assembler instructions: CLI;MOV SP,1E7;MOV AX;07c0;MOV
@@ -1947,7 +1947,7 @@
 #>>0		ulelong&0x804000E9	=0x000000E9
 # only x86 short jump instruction found
 #>>>0		ubyte			=0xEB
-#>>>>1		ubyte			x			\b, code offset 0x%x+2
+#>>>>1		ubyte			x			\b, code offset %#x+2
 # https://thestarman.pcministry.com/DOS/ibm100/Boot.htm
 # assembler instructions: CLI;MOV AX,CS;MOV DS,AX;MOV DX,0
 #>>>>(1.b+2)	ubequad			0xfa8cc88ed8ba0000	\b, PC-DOS 1.0 bootloader
@@ -1987,8 +1987,8 @@
 >>38917	string    1         (version 1.0)
 >>38917	string    2         (version 1.5)
 >>38917	string    3         (version 2.0)
->>38917	byte     >0x33      (unknown version, ID 0x%X)
->>38917	byte     <0x31      (unknown version, ID 0x%X)
+>>38917	byte     >0x33      (unknown version, ID %#X)
+>>38917	byte     <0x31      (unknown version, ID %#X)
 # The next line is not necessary because the MBR staff is done looking for boot signature
 >0x1FE	leshort  0xAA55     (DOS/MBR boot sector)
 # "application id" which appears to be used as a volume label
@@ -2046,7 +2046,7 @@
 >8      lelong  &1 version #2
 >8      lelong  &2 sorted_dirs
 >8      lelong  &4 hole_support
->32     lelong  x CRC 0x%x,
+>32     lelong  x CRC %#x,
 >36     lelong  x edition %u,
 >40     lelong  x %u blocks,
 >44     lelong  x %u files
@@ -2056,7 +2056,7 @@
 >8      belong  &1 version #2
 >8      belong  &2 sorted_dirs
 >8      belong  &4 hole_support
->32     belong  x CRC 0x%x,
+>32     belong  x CRC %#x,
 >36     belong  x edition %u,
 >40     belong  x %u blocks,
 >44     belong  x %u files
@@ -2149,10 +2149,10 @@
 >31	byte	3		(lzma),
 >12	belong	x		%d bytes,
 >8	bedate	x		%s,
->16	belong	x		Load Address: 0x%08X,
->20	belong	x		Entry Point: 0x%08X,
->4	belong	x		Header CRC: 0x%08X,
->24	belong	x		Data CRC: 0x%08X
+>16	belong	x		Load Address: %#08X,
+>20	belong	x		Entry Point: %#08X,
+>4	belong	x		Header CRC: %#08X,
+>24	belong	x		Data CRC: %#08X
 
 # JFFS2 file system
 0	leshort	0x1984		Linux old jffs2 filesystem data little endian
@@ -2378,11 +2378,11 @@
 >40	lelong	x		\b number of files %u,
 >44	lelong	x		\b blocks available for writing %d,
 >48	lelong	x		\b inodes in cache %d,
->52	lelong	x		\b inode file disk address 0x%x,
+>52	lelong	x		\b inode file disk address %#x,
 >56	lelong	x		\b inode file inode number %u,
->60	lelong	x		\b address of last segment written 0x%x,
->64	lelong	x		\b address of next segment to write 0x%x,
->68	lelong	x		\b address of current segment written 0x%x
+>60	lelong	x		\b address of last segment written %#x,
+>64	lelong	x		\b address of next segment to write %#x,
+>68	lelong	x		\b address of current segment written %#x
 
 0	string	td\000		floppy image data (TeleDisk, compressed)
 0	string	TD\000		floppy image data (TeleDisk)
@@ -2414,7 +2414,7 @@
 >0x16	leshort	0		UBIfs image
 >0x08	lequad	x		\b, sequence number %llu
 >0x10	leshort x		\b, length %u
->0x04	lelong	x		\b, CRC 0x%08x
+>0x04	lelong	x		\b, CRC %#08x
 
 0	lelong	0x23494255
 >0x04	leshort	<2

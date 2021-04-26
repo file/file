@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.61 2021/02/23 00:51:10 christos Exp $
+# $File: database,v 1.62 2021/04/26 15:56:00 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -193,9 +193,9 @@
 >>>>>>>>>>>>1	ubyte			x		\b, update-date
 >>>>>>>>>>>>1	use			xbase-date
 # https://msdn.microsoft.com/de-de/library/cc483186(v=vs.71).aspx
-#>>>>>>>>>>>>29	ubyte			=0		\b, codepage ID=0x%x
+#>>>>>>>>>>>>29	ubyte			=0		\b, codepage ID=%#x
 # 2~cp850 , 3~cp1252 , 0x1b~?? ; what code page is 0x1b ?
->>>>>>>>>>>>29	ubyte			>0		\b, codepage ID=0x%x
+>>>>>>>>>>>>29	ubyte			>0		\b, codepage ID=%#x
 #>>>>>>>>>>>>28	ubyte&0x01		0		\b, no index file
 >>>>>>>>>>>>28	ubyte&0x01		1		\b, with index file .MDX
 >>>>>>>>>>>>28	ubyte&0x02		2		\b, with memo .FPT
@@ -306,7 +306,7 @@
 # unknown version (should not happen)
 >>0	default		x		xBase
 !:mime	application/x-dbf
->>>0	ubyte		x		(0x%x)
+>>>0	ubyte		x		(%#x)
 # flags in version byte
 # DBT flag (with dBASE III memo .DBT)!!
 # >>0	ubyte&0x80	>0		DBT_FLAG=%x
@@ -485,9 +485,9 @@
 >>12	ulelong		1		STreaMing
 !:ext	stm
 # format_version 620h
->>8	uleshort	x		\b, version 0x%x
->>10	uleshort	>0		revision 0x%4.4x
->>0	ubelong		x	 	\b, checksum 0x%8.8x
+>>8	uleshort	x		\b, version %#x
+>>10	uleshort	>0		revision %#4.4x
+>>0	ubelong		x	 	\b, checksum %#8.8x
 # Page size 4096 8192 32768
 >>236	ulequad		x		\b, page size %lld
 # database_state

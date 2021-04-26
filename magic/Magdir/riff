@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.42 2020/07/17 19:18:56 christos Exp $
+# $File: riff,v 1.43 2021/04/26 15:56:00 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -182,7 +182,7 @@
 # data chunk size = color entries * 4 + 4 + sometimes extra (4) appended bytes
 >>>16	ulelong		x		\b, data size %u
 # palVersion is always 0x0300
-#>>>20	leshort		x		\b, version 0x%4.4x
+#>>>20	leshort		x		\b, version %#4.4x
 # palNumEntries specifies the number of palette color entries
 >>>22	uleshort	x		\b, %u entries
 # after palPalEntry sized (number of color entries * 4 ) vector
@@ -190,7 +190,7 @@
 # jump relative 22 ( 8 + 16) bytes forward points after end of file or to
 # appended extra bytes like in http://safecolours.rigdenage.com/set(ms).zip/Protan(MS).pal
 >>>>&16		ubelong	x		\b, extra bytes
->>>>>&-4	ubelong	>0		0x%8.8x
+>>>>>&-4	ubelong	>0		%#8.8x
 # RIFF Device Independent Bitmap format
 # URL: http://fileformats.archiveteam.org/wiki/RDIB
 >8	string		RDIB		\b, device-independent bitmap
@@ -486,7 +486,7 @@
 >>>>>>>>(92.l+180)      leshort 0x0055  MPEG-1 Layer 3
 >>>>>>>>(92.l+180)      leshort 0x2000  Dolby AC3
 >>>>>>>>(92.l+180)      leshort 0x0161  DivX
-##>>>>>>>>(92.l+180)      leshort x       (0x%.4x)
+##>>>>>>>>(92.l+180)      leshort x       (%#.4x)
 >>>>>>>>(92.l+182)      leshort 1       (mono,
 >>>>>>>>(92.l+182)      leshort 2       (stereo,
 >>>>>>>>(92.l+182)      leshort >2      (%d channels,
@@ -498,7 +498,7 @@
 >>>>>>>>(92.l+188)      leshort 0x0055  MPEG-1 Layer 3
 >>>>>>>>(92.l+188)      leshort 0x2000  Dolby AC3
 >>>>>>>>(92.l+188)      leshort 0x0161  DivX
-##>>>>>>>>(92.l+188)      leshort x       (0x%.4x)
+##>>>>>>>>(92.l+188)      leshort x       (%#.4x)
 >>>>>>>>(92.l+190)      leshort 1       (mono,
 >>>>>>>>(92.l+190)      leshort 2       (stereo,
 >>>>>>>>(92.l+190)      leshort >2      (%d channels,
@@ -639,7 +639,7 @@
 >>20	uleshort%100	>0		\b.%u
 # for debugging purpose display next chunk like: DISP LIST
 #>>22	string		x		\b, 4th "%-4.4s"
-#>>26	ulelong		x		\b, 4th SIZE 0x%x
+#>>26	ulelong		x		\b, 4th SIZE %#x
 # for debugging purpose display 5th chunk like: LIST DISP ccmm osfp
 #>>(26.l+30)	string	x		\b, 5th "%-4.4s"
 # 1st data chunk length 10h implies 16 byte content with version info
@@ -672,7 +672,7 @@
 >>0	use		corel-version
 # for debugging purpose display next chunk like: DISP LIST
 #>>22	string		x		\b, 4th "%-4.4s"
-#>>26	ulelong		x		\b, 4th SIZE 0x%x
+#>>26	ulelong		x		\b, 4th SIZE %#x
 # for debugging purpose display 5th chunk like: LIST osfp
 #>>(26.l+30)	string	x		\b, 5th "%-4.4s"
 >4	ulelong+8	x		\b, %u bytes

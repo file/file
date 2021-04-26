@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: mach,v 1.28 2020/12/12 20:01:47 christos Exp $
+# $File: mach,v 1.29 2021/04/26 15:56:00 christos Exp $
 # Mach has two magic numbers, 0xcafebabe and 0xfeedface.
 # Unfortunately the first, cafebabe, is shared with
 # Java ByteCode, so they are both handled in the file "cafebabe".
@@ -54,37 +54,37 @@
 >>>>4	belong&0x00fffff0	0x30		pentium_2_m3
 >>>>4	belong&0x00fffff0	0x40		pentium_2_m0x40
 >>>>4	belong&0x00fffff0	0x50		pentium_2_m5
->>>>4	belong&0x00fffff0	>0x50		pentium_2_m0x%x
+>>>>4	belong&0x00fffff0	>0x50		pentium_2_m%#x
 >>>4	belong&0x0000000f	7		celeron
->>>>4	belong&0x00fffff0	0x00		\b_m0x%x
->>>>4	belong&0x00fffff0	0x10		\b_m0x%x
->>>>4	belong&0x00fffff0	0x20		\b_m0x%x
->>>>4	belong&0x00fffff0	0x30		\b_m0x%x
->>>>4	belong&0x00fffff0	0x40		\b_m0x%x
->>>>4	belong&0x00fffff0	0x50		\b_m0x%x
+>>>>4	belong&0x00fffff0	0x00		\b_m%#x
+>>>>4	belong&0x00fffff0	0x10		\b_m%#x
+>>>>4	belong&0x00fffff0	0x20		\b_m%#x
+>>>>4	belong&0x00fffff0	0x30		\b_m%#x
+>>>>4	belong&0x00fffff0	0x40		\b_m%#x
+>>>>4	belong&0x00fffff0	0x50		\b_m%#x
 >>>>4	belong&0x00fffff0	0x60
 >>>>4	belong&0x00fffff0	0x70		\b_mobile
->>>>4	belong&0x00fffff0	>0x70		\b_m0x%x
+>>>>4	belong&0x00fffff0	>0x70		\b_m%#x
 >>>4	belong&0x0000000f	8		pentium_3
 >>>>4	belong&0x00fffff0	0x00
 >>>>4	belong&0x00fffff0	0x10		\b_m
 >>>>4	belong&0x00fffff0	0x20		\b_xeon
->>>>4	belong&0x00fffff0	>0x20		\b_m0x%x
+>>>>4	belong&0x00fffff0	>0x20		\b_m%#x
 >>>4	belong&0x0000000f	9		pentiumM
 >>>>4	belong&0x00fffff0	0x00
->>>>4	belong&0x00fffff0	>0x00		\b_m0x%x
+>>>>4	belong&0x00fffff0	>0x00		\b_m%#x
 >>>4	belong&0x0000000f	10		pentium_4
 >>>>4	belong&0x00fffff0	0x00
 >>>>4	belong&0x00fffff0	0x10		\b_m
->>>>4	belong&0x00fffff0	>0x10		\b_m0x%x
+>>>>4	belong&0x00fffff0	>0x10		\b_m%#x
 >>>4	belong&0x0000000f	11		itanium
 >>>>4	belong&0x00fffff0	0x00
 >>>>4	belong&0x00fffff0	0x10		\b_2
->>>>4	belong&0x00fffff0	>0x10		\b_m0x%x
+>>>>4	belong&0x00fffff0	>0x10		\b_m%#x
 >>>4	belong&0x0000000f	12		xeon
 >>>>4	belong&0x00fffff0	0x00
 >>>>4	belong&0x00fffff0	0x10		\b_mp
->>>>4	belong&0x00fffff0	>0x10		\b_m0x%x
+>>>>4	belong&0x00fffff0	>0x10		\b_m%#x
 >>>4	belong&0x0000000f	>12		ia32 family=%d
 >>>>4	belong&0x00fffff0	0x00
 >>>>4	belong&0x00fffff0	>0x00		model=%x
@@ -176,7 +176,7 @@
 >>>4		belong&0x00ffffff	1	\bv8
 >>>4		belong&0x00ffffff	2	\be
 >>>>7		ubyte&0xff		>0	(caps:
->>>>7		ubyte&0xff		<0x80	0x%02x
+>>>>7		ubyte&0xff		<0x80	%#02x
 >>>>7		ubyte&0xc0		0x80	PAC
 >>>>>7		ubyte&0x3f		x	\b%02d
 >>>>7		ubyte&0xc0		0xc0	PAK

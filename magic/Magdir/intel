@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: intel,v 1.19 2020/12/12 20:01:47 christos Exp $
+# $File: intel,v 1.20 2021/04/26 15:56:00 christos Exp $
 # intel:  file(1) magic for x86 Unix
 #
 # Various flavors of x86 UNIX executable/object (other than Xenix, which
@@ -118,7 +118,7 @@
 # length, in bytes, of the entire DSDT (including the header)
 >>4	ulelong		x	\b, %u bytes
 # entire table must sum to zero
-#>>9	ubyte		x	\b, checksum 0x%x
+#>>9	ubyte		x	\b, checksum %#x
 # vendor ID for the ASL Compiler like: INTL MSFT ...
 >>28	string		>\0	\b, created by %.4s
 # revision number of the ASL Compiler like: 20051117 20140724 20190703 20200110 ...
