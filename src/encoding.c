@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.31 2021/04/19 18:38:04 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.32 2021/04/27 19:37:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -265,9 +265,7 @@ private int \
 looks_ ## NAME(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf, \
     size_t *ulen) \
 { \
-	size_t i, u; \
-	unsigned char dist[256]; \
-	memset(dist, 0, sizeof(dist)); \
+	size_t i; \
 \
 	*ulen = 0; \
 \
@@ -278,16 +276,7 @@ looks_ ## NAME(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf, \
 			return 0; \
 \
 		ubuf[(*ulen)++] = buf[i]; \
-		dist[buf[i]]++; \
 	} \
-	u = 0; \
-	for (i = 0; i < __arraycount(dist); i++) { \
-		if (dist[i]) \
-			u++; \
-	} \
-	if (u < MIN(nbytes, 3)) \
-		return 0; \
-\
 	return 1; \
 }
 
