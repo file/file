@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.302 2021/04/26 15:54:44 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.303 2021/04/27 20:42:12 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2412,7 +2412,7 @@ parse_ext(struct magic_set *ms, struct magic_entry *me, const char *line,
 
 	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, ext)),
-	    sizeof(m->ext), "EXTENSION", ",!+-/@?_$", 0);
+	    sizeof(m->ext), "EXTENSION", ",!+-/@?_$&", 0);
 }
 
 /*
