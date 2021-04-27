@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.196 2021/04/26 15:56:00 christos Exp $
+# $File: images,v 1.197 2021/04/27 20:39:48 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1078,6 +1078,22 @@
 # From: Alex Myczko <alex@aiei.ch>
 # https://www.atarimax.com/jindroush.atari.org/afmtatr.html
 0	leshort	0x0296		Atari ATR image
+
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/ImageLab/PrintTechnic
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/b/bitmap-b_w.trid.xml
+# Note:		called "ImageLab bitmap" by TrID
+#		verfied by XnView `nconvert -fullinfo "MAEDCHEN.B&W"`
+0	string		B&W256	ImageLab bitmap
+!:mime	image/x-ilab
+#	https://www.xnview.com/de/image_formats/
+# GRR: add char & inside parse_ext in ../../src/apprentice.c to avoid in file version 5.40 error like:
+# Magdir\images, 1090: Warning: EXTENSION type `        b_w/b&w' has bad char '&'
+!:ext	b_w/b&w
+# Width
+>6	ubeshort	x	\b, %u
+# Height
+>8	ubeshort	x	x %u
 
 # XXX:
 # This is bad magic 0x5249 == 'RI' conflicts with RIFF and other
