@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: uf2,v 1.2 2021/04/25 17:49:24 christos Exp $
+# $File: uf2,v 1.3 2021/04/28 01:00:31 christos Exp $
 # uf2:  file(1) magic for UF2 firmware image files
 #
 # https://github.com/microsoft/uf2
@@ -15,17 +15,27 @@
 >8	lelong	&0x0001		\b, not main flash
 >8	lelong	&0x1000		\b, file container
 >8	lelong	&0x2000		\b, family
-# jq -r '.[] | ">>28\tlelong\t\(.id)\t\(.description)"' uf2families.json | \
-# sort -n -k 3
+
+# To update the UF2 family data, use this fine command
+#
+# families=`curl \
+# https://raw.githubusercontent.com/microsoft/uf2/master/utils/uf2families.json \
+# | jq -r '.[] | ">>28\tlelong\t\(.id)\t\(.description)"' | sort -n -k 3` && \
+# perl -0777 -i -pe \
+# "s/(### BEGIN UF2 FAMILIES\\n).*(\\n### END UF2 FAMILIES)/\$1$families\$2/s" \
+# uf2
+
+### BEGIN UF2 FAMILIES
 >>28	lelong	0x00ff6919	ST STM32L4xx
 >>28	lelong	0x04240bdf	ST STM32L5xx
 >>28	lelong	0x16573617	Microchip (Atmel) ATmega32
 >>28	lelong	0x1851780a	Microchip (Atmel) SAML21
+>>28	lelong	0x1b57745f	Nordic NRF52
 >>28	lelong	0x1c5f21b0	ESP32
 >>28	lelong	0x1e1f432d	ST STM32L1xx
 >>28	lelong	0x202e3a91	ST STM32L0xx
 >>28	lelong	0x21460ff0	ST STM32WLxx
->>28	lelong	0x2abc77ec	NXP LPC55xx 
+>>28	lelong	0x2abc77ec	NXP LPC55xx
 >>28	lelong	0x300f5633	ST STM32G0xx
 >>28	lelong	0x31d228c6	GD32F350
 >>28	lelong	0x4c71240a	ST STM32G4xx
@@ -43,13 +53,15 @@
 >>28	lelong	0x6db66082	ST STM32H7xx
 >>28	lelong	0x70d16653	ST STM32WBxx
 >>28	lelong	0x7eab61ed	ESP8266
->>28	lelong	0x7f83e793	NXP KL32L2
+>>28	lelong	0x7f83e793	NXP KL32L2x
 >>28	lelong	0x8fb060fe	ST STM32F407VG
 >>28	lelong	0xada52840	Nordic NRF52840
 >>28	lelong	0xbfdd4eee	ESP32-S2
 >>28	lelong	0xc47e5767	ESP32-S3
 >>28	lelong	0xd42ba06c	ESP32-C3
 >>28	lelong	0xe48bff56	Raspberry Pi RP2040
+### END UF2 FAMILIES
+
 >>28	default	x
 >>>28	lelong	x		%#08x
 >8	lelong&0x2000	0	\b, file size
