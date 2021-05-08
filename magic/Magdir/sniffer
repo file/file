@@ -262,6 +262,7 @@
 >20	belong&0x03FFFFFF		279		(Elektrobit High Speed Capture and Replay (EBHSCR)
 >20	belong&0x03FFFFFF		281		(Broadcom tag
 >20	belong&0x03FFFFFF		282		(Broadcom tag (prepended)
+>20	belong&0x03FFFFFF		283		(802.15.4 with TAP
 >20	belong&0x03FFFFFF		284		(Marvell DSA
 >20	belong&0x03FFFFFF		285		(Marvell EDSA
 >20	belong&0x03FFFFFF		286		(ELEE lawful intercept
