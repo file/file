@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.311 2021/04/19 16:47:13 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.312 2021/05/09 22:38:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1940,13 +1940,14 @@ file_strncmp(const char *s1, const char *s2, size_t len, size_t maxlen,
 	 * but ignoring any nulls.
 	 */
 	v = 0;
+	len++;
 	if (0L == flags) { /* normal string: do it fast */
-		while (len-- > 0)
+		while (--len > 0)
 			if ((v = *b++ - *a++) != '\0')
 				break;
 	}
 	else { /* combine the others */
-		while (len-- > 0) {
+		while (--len > 0) {
 			if (b >= eb) {
 				v = 1;
 				break;
@@ -1964,7 +1965,8 @@ file_strncmp(const char *s1, const char *s2, size_t len, size_t maxlen,
 			else if ((flags & STRING_COMPACT_WHITESPACE) &&
 			    isspace(*a)) {
 				a++;
-				if (isspace(*b++)) {
+				if (isspace(*b)) {
+					b++;
 					if (!isspace(*a))
 						while (b < eb && isspace(*b))
 							b++;
@@ -1984,6 +1986,10 @@ file_strncmp(const char *s1, const char *s2, size_t len, size_t maxlen,
 				if ((v = *b++ - *a++) != '\0')
 					break;
 			}
+		}
+		if (len == 0 && v == 0 && (flags & STRING_FULL_WORD)) {
+			if (*b && !isspace(*b))
+				v = 1;
 		}
 	}
 	return v;

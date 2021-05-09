@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.303 2021/04/27 20:42:12 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.304 2021/05/09 22:38:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1802,6 +1802,9 @@ parse_string_modifier(struct magic_set *ms, struct magic *m, const char **lp)
 			break;
 		case CHAR_TRIM:
 			m->str_flags |= STRING_TRIM;
+			break;
+		case CHAR_FULL_WORD:
+			m->str_flags |= STRING_FULL_WORD;
 			break;
 		case CHAR_PSTRING_1_LE:
 #define SET_LENGTH(a) m->str_flags = (m->str_flags & ~PSTRING_LEN) | (a)
