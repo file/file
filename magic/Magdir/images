@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.197 2021/04/27 20:39:48 christos Exp $
+# $File: images,v 1.198 2021/05/12 16:34:11 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -624,18 +624,31 @@
 0	string		Sfff		structured fax file
 
 # From: Joerg Jenderek <joerg.jen.der.ek@gmx.net>
-# most files with the extension .EPA and some with .BMP
+# URL:	http://fileformats.archiveteam.org/wiki/Award_BIOS_logo
+# Note:	verified by XnView command `nconvert -fullinfo *.EPA`
 0	string		\x11\x06	Award BIOS Logo, 136 x 84
 !:mime	image/x-award-bioslogo
+!:ext	epa
 0	string		\x11\x09	Award BIOS Logo, 136 x 126
 !:mime	image/x-award-bioslogo
+!:ext	epa
+# https://telparia.com/fileFormatSamples/image/epa/IO.EPA
+# Note:	by bitmap-awbm-v1x1009.trid.xml called "Award BIOS logo bitmap (128x126) (v1)"
+#	verified by RECOIL `recoil2png -o tmp.png IO.EPA; file tmp.png`
+0	string		\x10\x09	Award BIOS Logo, 128 x 126
+!:mime	image/x-award-bioslogo
+!:ext	epa
 #0	string		\x07\x1f	BIOS Logo corrupted?
 # http://www.blackfiveservices.co.uk/awbmtools.shtml
 # http://biosgfx.narod.ru/v3/
 # http://biosgfx.narod.ru/abr-2/
 0	string		AWBM
->4	leshort		<1981		Award BIOS bitmap
-!:mime	image/x-award-bmp
+# Note:    by bitmap-awbm.trid.xml called "Award BIOS logo bitmap (v2)"
+>4	leshort		<1981		Award BIOS Logo, version 2
+#>4	leshort		<1981		Award BIOS bitmap
+!:mime	image/x-award-bioslogo2
+#!:mime	image/x-award-bmp
+!:ext	epa/bmp
 # image width is a multiple of 4
 >>4	leshort&0x0003	0
 >>>4		leshort	x		\b, %d
@@ -679,13 +692,105 @@
 #>>32	ulelong		>0		\b, %u colors
 # number of important colors used, or 0 when every color is important
 >>36	ulelong		>0		\b, %u important colors
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/VBM_(VDC_BitMap)
+# Reference:	http://csbruce.com/cbm/postings/csc19950906-1.txt
+#		http://mark0.net/download/triddefs_xml.7z
+#		defs/b/bitmap-vbm.trid.xml
+#		defs/b/bitmap-vbm-v3.trid.xml
+# Note:		called "VDC BitMap" by TrID
+#		verified by RECOIL `recoil2png -o tmp.png coke_can.vbm; file tmp.png`
+# begin with a signature of 'B' 'M' 0xCB, followed by a version byte 2 or 3
+# Similar to the unrelated Windows BMP format
+#	check for VDC bitmap and then display image dimension and version
+0	name		bitmap-vbm
+>2	ubyte		0xCB		VDC bitmap
+!:mime	image/x-commodore-vbm
+# http://recoil.sourceforge.net/formats.html
+!:ext	bm/vbm
+# the VBM format version number: 2 or 3
+>>3	ubyte		x		\b, version %u
+# width of the image in Hi/Lo format 
+>>4	ubeshort	x		\b, %u
+# height of the image
+>>6	ubeshort	x		x %u
+# version 3 images have the following additional header information 
+>>3	ubyte		=3
+# data-encoding type: 0~uncompressed 1~RLE-compressed 
+>>>8	ubyte		0		\b, uncompressed
+>>>8	ubyte		1		\b, RLE-compressed
+# byte code for general RLE repetitions
+#>>>9	ubyte		x		\b, RLE repetition code 0x%x
+# reserved := 0
+#>>>14	short		>0		\b, reserved 0x%x
+# length of comment text; 0~no comment text
+#>>>16	ubeshort	>0		\b, comment length %u
+>>>16	pstring/H	>0		\b, comment "%s"
+#
 0	string		BM
->14	leshort		12		PC bitmap, OS/2 1.x format
-!:mime	image/x-ms-bmp
+# check for magic and version 2 of VDC bitmap or BMP with cbSize=715=CB02
+>2	beshort		0xCB02
+>>6	short		=0
+>>>0	use     	bitmap-bmp
+# VDC bitmap height or maybe a few OS/2 BMP with nonzero "hotspot coordinates"
+>>6	short		!0
+>>>0	use     	bitmap-vbm
+# check for magic and version 3 of VDC bitmap or BMP with cbSize=971=CB03
+>2	beshort		0xCB03
+# check for reserved value (=0) of VDC bitmap
+>>14	short		=0
+>>>0	use     	bitmap-vbm
+# BMP with cbSize=????03CBh and dib header size != 0
+>>14	short		!0
+>>>0	use     	bitmap-bmp
+# cbSize is size of header or file size of Windows BMP bitmap
+>2	default		x
+>>0	use     	bitmap-bmp
+0	name		bitmap-bmp
+>14	lelong		12		PC bitmap, OS/2 1.x format
+!:mime	image/bmp
+!:ext	bmp
 >>18	leshort		x		\b, %d x
 >>20	leshort		x		%d
->14	leshort		64		PC bitmap, OS/2 2.x format
-!:mime	image/x-ms-bmp
+# number of color planes (must be 1)
+#>>22	leshort		!1		\b, %u color planes
+# number of bits per pixel (color depth); found 4 8
+>>24	leshort		x		x %d
+# x, y coordinates of the hotspot
+>>6	uleshort	>0		\b, hotspot %ux
+>>>8	uleshort	x		\b%u
+# cbSize; size of file or header like 1Ah 228C8h
+>>2	ulelong		x		\b, cbSize %u
+#>>2	ulelong		x		\b, cbSize 0x%8.8x
+# offBits; offset to bitmap data like: 
+>>10	ulelong			x	\b, bits offset %u
+# http://fileformats.archiveteam.org/wiki/BMP#OS.2F2_BMP_2.0 no examples found
+>14	ulelong		48		PC bitmap, OS/2 2.x format (DIB header size=48)
+>14	ulelong		24		PC bitmap, OS/2 2.x format (DIB header size=24)
+# http://entropymine.com/jason/bmpsuite/bmpsuite/q/pal8os2v2-16.bmp
+# Note:    by bitmap-bmp-v2o.trid.xml called "Windows Bitmap (v2o)"
+>14	ulelong		16		PC bitmap, OS/2 2.x format (DIB header size=16)
+!:mime	image/bmp
+!:apple	????BMPp
+!:ext	bmp
+# image width and height fields are unsigned integers for OS/2
+>>18	ulelong		x		\b, %u x
+>>22	ulelong		x		%u
+# number of bits per pixel (color depth); found 8
+>>28	uleshort	>1		x %u
+# x, y coordinates of the hotspot
+>>6	uleshort	>0		\b, hotspot %ux
+>>>8	uleshort	x		\b%u
+# number of color planes (must be 1)
+#>>26	uleshort	>1		\b, %u color planes
+# cbSize; size of file like: 241E
+>>2	ulelong		x		\b, cbSize %u
+#>>2	ulelong		x		\b, cbSize 0x%x
+# offBits; offset to bitmap data like: 41E
+>>10	ulelong			x	\b, bits offset %u
+#>>10	ulelong			x	\b, bits offset 0x%x
+>14	lelong		64		PC bitmap, OS/2 2.x format
+!:mime	image/bmp
 !:apple	????BMPp
 !:ext	bmp
 # image width and height fields are unsigned integers for OS/2
@@ -699,33 +804,54 @@
 >>26	uleshort	>1		\b, %u color planes
 # cbSize; size of file or headers
 >>2	ulelong		x		\b, cbSize %u
+# BMP with cbSize 000002CBh=715 or 000003CBh=971 maybe misinterpreted as VDC bitmap
 #>>2	ulelong		x		\b, cbSize %#x
 # offBits; offset to bitmap data like 56h 5Eh 8Eh 43Eh
 >>10	ulelong			x	\b, bits offset %u
 #>>10	ulelong			x	\b, bits offset %#x
 #>>(10.l) ubequad		!0	\b, bits %#16.16llx
 # BITMAPV2INFOHEADER	adds RGB bit masks
->14	leshort		52		PC bitmap, Adobe Photoshop
-!:mime	image/x-ms-bmp
+>14	lelong		52		PC bitmap, Adobe Photoshop
+!:mime	image/bmp
 !:apple	????BMPp
 !:ext	bmp
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
+# number of bits per pixel (color depth); found 16 32
 >>28	leshort		x		%d
+# x, y coordinates of the hotspot; should be zero for Windows variant
+>>6	uleshort	>0		\b, hotspot %ux
+>>>8	uleshort	x		\b%u
+# cbSize; size of file like: 14A 7F42
+>>2	ulelong		x		\b, cbSize %u
+#>>2	ulelong		x		\b, cbSize 0x%x
+# offBits; offset to bitmap data like: 42h
+>>10	ulelong			x	\b, bits offset %u
+#>>10	ulelong			x	\b, bits offset 0x%x
 # BITMAPV3INFOHEADER	adds alpha channel bit mask
->14	leshort		56		PC bitmap, Adobe Photoshop with alpha channel mask
-!:mime	image/x-ms-bmp
+>14	lelong		56		PC bitmap, Adobe Photoshop with alpha channel mask
+!:mime	image/bmp
 !:apple	????BMPp
 !:ext	bmp
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
+# number of bits per pixel (color depth); found 16 32
 >>28	leshort		x		%d
->14	leshort		40
+# x, y coordinates of the hotspot; should be zero for Windows variant
+>>6	uleshort	>0		\b, hotspot %ux
+>>>8	uleshort	x		\b%u
+# cbSize; size of file like: 4E 7F46 131DE 14046h
+>>2	ulelong		x		\b, cbSize %u
+#>>2	ulelong		x		\b, cbSize 0x%x
+# offBits; offset to bitmap data like: 46h
+>>10	ulelong			x	\b, bits offset %u
+#>>10	ulelong			x	\b, bits offset 0x%x
+>14	lelong		40
 # jump 4 bytes before end of file/header to skip fmt-116-signature-id-118.dib
 # broken for large bitmaps
 #>>(2.l-4)	ulong	x		PC bitmap, Windows 3.x format
->>14	leshort		40		PC bitmap, Windows 3.x format
-!:mime	image/x-ms-bmp
+>>14	lelong		40		PC bitmap, Windows 3.x format
+!:mime	image/bmp
 !:apple	????BMPp
 >>>18	lelong		x		\b, %d x
 >>>22	lelong		x		%d
@@ -736,7 +862,16 @@
 # compression method 2~RLE 4-bit/pixel implies also extension rle
 >>>>30	ulelong		2		x
 !:ext	bmp/rle
->>>>30	default		x		x
+# not RLE compressed and not 320x400 dimension
+>>>>30	default		x
+# "small" dimensions like: 14x15 15x16 16x14 16x16 32x32
+#	https://en.wikipedia.org/wiki/Favicon
+>>>>>18	ulequad&0xffFFffC0ffFFffC0 =0	x
+# https://www.politi-kdigital.de/favicon.ico
+# http://forum.rpc1.org/favicon.ico
+!:ext	bmp/ico
+# "big" dimensions > 63
+>>>>>18	default		x		x
 !:ext	bmp
 # number of bits per pixel (color depth); found 1 2 4 8 16 24 32
 >>>28	leshort		x		%d
@@ -764,21 +899,40 @@
 >>>10	ulelong			x	\b, bits offset %u
 #>>>10	ulelong			x	\b, bits offset %#x
 #>>>(10.l) ubequad		!0	\b, bits %#16.16llxd
->14	leshort		124		PC bitmap, Windows 98/2000 and newer format
-!:mime	image/x-ms-bmp
+>14	lelong		124		PC bitmap, Windows 98/2000 and newer format
+!:mime	image/bmp
+!:ext	bmp
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
+# color planes; must be 1
+#>>>26	uleshort	>1		\b, %u color planes
+# number of bits per pixel (color depth); found 4 8 16 24 32 1 (fmt-119-signature-id-121.bmp) 0 (rgb24jpeg.bmp rgb24png.bmp)
 >>28	leshort		x		%d
->14	leshort		108		PC bitmap, Windows 95/NT4 and newer format
-!:mime	image/x-ms-bmp
+# x, y coordinates of the hotspot; should be zero for Windows variant
+>>6	leshort		>0		\b, hotspot %ux
+>>>8	leshort		x		\b%u
+# cbSize; size of file like: 8E AA 48A 999 247A 4F02 7F8A 3F88E B216E 1D4C8A 100008A
+>>2	ulelong		x		\b, cbSize %u
+#>>2	ulelong		x		\b, cbSize 0x%x
+# offBits; offset to bitmap data like: 8A 47A ABABABAB (fmt-119-signature-id-121.bmp)
+>>10	ulelong			x	\b, bits offset %u
+#>>10	ulelong			x	\b, bits offset 0x%x
+>14	lelong		108		PC bitmap, Windows 95/NT4 and newer format
+!:mime	image/bmp
+!:ext	bmp
 >>18	lelong		x		\b, %d x
 >>22	lelong		x		%d x
+# number of bits per pixel (color depth); found 8 24 32
 >>28	leshort		x		%d
->14	leshort		128		PC bitmap, Windows NT/2000 format
-!:mime	image/x-ms-bmp
->>18	lelong		x		\b, %d x
->>22	lelong		x		%d x
->>28	leshort		x		%d
+# x, y coordinates of the hotspot; should be zero for Windows variant
+>>6	leshort		>0		\b, hotspot %ux
+>>>8	leshort		x		\b%u
+# cbSize; size of file like: 82 8A 9A 9F86 1E07A 3007A 88B7A C007A 
+>>2	ulelong		x		\b, cbSize %u
+#>>2	ulelong		x		\b, cbSize 0x%x
+# offBits; offset to bitmap data like: 7A 7E 46A
+>>10	ulelong			x	\b, bits offset %u
+#>>10	ulelong			x	\b, bits offset 0x%x
 # Update:	Joerg Jenderek
 # URL:		http://fileformats.archiveteam.org/wiki/OS/2_Icon
 # Reference:	http://www.fileformat.info
