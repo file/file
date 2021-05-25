@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.198 2021/05/12 16:34:11 christos Exp $
+# $File: images,v 1.199 2021/05/25 15:17:11 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1306,28 +1306,53 @@
 
 # Adobe Photoshop
 # From: Asbjoern Sloth Toennesen <asbjorn@lila.io>
-0	string		8BPS Adobe Photoshop Image
+# URL: 		http://fileformats.archiveteam.org/wiki/PSD
+# Reference:	https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/
+# Note:		verfied by XnView `nconvert -fullinfo *.psd *.psb *.pdd`
+#		and ImageMagick `identify -verbose *.pdd`
+0	string		8BPS
+# skip DROID x-fmt-92-signature-id-277.psd by checking valid width
+>18	belong		>0	Adobe Photoshop
 !:mime	image/vnd.adobe.photoshop
+!:apple	????8BPS
+# version: always equal to 1, but 2 for PSB
+>>4   beshort 1
+# URL: 		http://fileformats.archiveteam.org/wiki/PhotoDeluxe
+# EXTRAS/PHOTOS/DEMOPIX/ORIGINAL.PDD
+>>>34	search/0xC0d7	PHUT	Image (PhotoDeluxe)
+!:ext	pdd
+>>>34	default		x	Image
 !:ext	psd
->4   beshort 2 (PSB)
->18  belong  x \b, %d x
->14  belong  x %d,
->24  beshort 0 bitmap
->24  beshort 1 grayscale
->>12 beshort 2 with alpha
->24  beshort 2 indexed
->24  beshort 3 RGB
->>12 beshort 4 \bA
->24  beshort 4 CMYK
->>12 beshort 5 \bA
->24  beshort 7 multichannel
->24  beshort 8 duotone
->24  beshort 9 lab
->12  beshort > 1
->>12  beshort x \b, %dx
->12  beshort 1 \b,
->22  beshort x %d-bit channel
->12  beshort > 1 \bs
+# URL: 		http://fileformats.archiveteam.org/wiki/PSB
+>>4   beshort 2 Image (PSB)
+!:ext	psb
+# width in pixels: 1-30000 1-300000 for PSB
+>>18  belong  x \b, %d x
+>>14  belong  x %d,
+# The color mode; 0~Bitmap 1~Grayscale 2~Indexed 3~RGB 4~CMYK 7~Multichannel 9~Duotone 9~Lab
+>>24  beshort 0 bitmap
+>>24  beshort 1 grayscale
+# the number of channels; range is 1 to 56
+>>>12 beshort 2 with alpha
+>>24  beshort 2 indexed
+>>24  beshort 3 RGB
+>>>12 beshort 4 \bA
+>>24  beshort 4 CMYK
+>>>12 beshort 5 \bA
+>>24  beshort 7 multichannel
+>>24  beshort 8 duotone
+>>24  beshort 9 lab
+>>12  beshort > 1
+>>>12 beshort x \b, %dx
+>>12  beshort 1 \b,
+>>22  beshort x %d-bit channel
+>>12  beshort > 1 \bs
+# 6 reserved bytes; must be zero, but spaces inside ImageMagick input.psd
+# https://download.imagemagick.org/ImageMagick/download/ImageMagick-7.0.11-11.zip
+# ImageMagick-7.0.11-11\PerlMagick\t\input.psd
+>>6   bequad&0xFFffFFffFFff0000 !0 \b, at offset 6
+>>>6  belong  x	 0x%8.8x
+>>>6  beshort x   \b%4.4x
 
 # XV thumbnail indicator (ThMO)
 # URL:		https://en.wikipedia.org/wiki/Xv_(software)
