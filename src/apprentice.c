@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.304 2021/05/09 22:38:17 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.305 2021/06/30 10:08:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -268,6 +268,8 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("der"),		FILE_DER,		FILE_FMT_STR },
 	{ XX("guid"),		FILE_GUID,		FILE_FMT_STR },
 	{ XX("offset"),		FILE_OFFSET,		FILE_FMT_QUAD },
+	{ XX("bevarint"),	FILE_BEVARINT,		FILE_FMT_STR },
+	{ XX("levarint"),	FILE_LEVARINT,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -852,6 +854,8 @@ typesize(int type)
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
 	case FILE_OFFSET:
+	case FILE_BEVARINT:
+	case FILE_LEVARINT:
 		return 8;
 
 	case FILE_GUID:
@@ -912,6 +916,8 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
+	case FILE_BEVARINT:
+	case FILE_LEVARINT:
 	case FILE_GUID:
 	case FILE_OFFSET:
 		ts = typesize(m->type);
@@ -1105,6 +1111,8 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
+	case FILE_BEVARINT:
+	case FILE_LEVARINT:
 	case FILE_DER:
 	case FILE_GUID:
 	case FILE_OFFSET:
@@ -1465,7 +1473,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 		/* coalesce per file arrays into a single one, if needed */
 		if (mset[j].count == 0)
 			continue;
-		      
+
 		if (coalesce_entries(ms, mset[j].me, mset[j].count,
 		    &map->magic[j], &map->nmagic[j]) == -1) {
 			errs++;
@@ -1539,6 +1547,8 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_BEDOUBLE:
 		case FILE_LEDOUBLE:
 		case FILE_OFFSET:
+		case FILE_BEVARINT:
+		case FILE_LEVARINT:
 			v = CAST(int64_t, v);
 			break;
 		case FILE_STRING:
@@ -2415,7 +2425,7 @@ parse_ext(struct magic_set *ms, struct magic_entry *me, const char *line,
 
 	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, ext)),
-	    sizeof(m->ext), "EXTENSION", ",!+-/@?_$&", 0);
+	    sizeof(m->ext), "EXTENSION", ",!+-/@?_$&", 0); /* & for b&w */
 }
 
 /*
@@ -3399,6 +3409,39 @@ swap8(uint64_t sv)
 #endif
 	return rv;
 }
+
+protected uintmax_t 
+file_varint2uintmax_t(const unsigned char *us, int t, size_t *l)
+{
+        uintmax_t x = 0;
+        const unsigned char *c;
+        if (t == FILE_LEVARINT) {
+                for (c = us; *c; c++) {
+                        if ((*c & 0x80) == 0)
+                                break;
+                }
+		if (l)
+			*l = c - us + 1;
+                for (; c >= us; c--) {
+                        x |= *c & 0x7f;
+                        x <<= 7;
+                }
+        } else {
+printf("start: ");
+                for (c = us; *c; c++) {
+printf("%.2x ", *c);
+			x |= *c & 0x7f;
+			if ((*c & 0x80) == 0)
+				break;
+			x <<= 7;
+                }
+		if (l)
+			*l = c - us + 1;
+printf(" end %zu, %ju\n", *l, x);
+        }
+	return x;
+}
+
 
 /*
  * byteswap a single magic entry

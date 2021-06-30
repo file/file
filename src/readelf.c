@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.177 2021/04/09 20:40:56 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.178 2021/06/30 10:08:48 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -784,7 +784,7 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 
 			if (file_printf(ms, ", from '%.31s', pid=%u, uid=%u, "
 			    "gid=%u, nlwps=%u, lwp=%u (signal %u/code %u)",
-			    file_printable(sbuf, sizeof(sbuf),
+			    file_printable(ms, sbuf, sizeof(sbuf),
 			    RCAST(char *, pi.cpi_name), sizeof(pi.cpi_name)),
 			    elf_getu32(swap, CAST(uint32_t, pi.cpi_pid)),
 			    elf_getu32(swap, pi.cpi_euid),
@@ -1790,9 +1790,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	if (file_printf(ms, ", %s linked", linking_style) == -1)
 		return -1;
 	if (interp[0])
-		if (file_printf(ms, ", interpreter %s",
-		    file_printable(ibuf, sizeof(ibuf), interp, sizeof(interp)))
-			== -1)
+		if (file_printf(ms, ", interpreter %s", file_printable(ms,
+		    ibuf, sizeof(ibuf), interp, sizeof(interp))) == -1)
 			return -1;
 	return 0;
 }

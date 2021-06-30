@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.312 2021/05/09 22:38:17 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.313 2021/06/30 10:08:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -649,7 +649,7 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_LESTRING16:
 		if (m->reln == '=' || m->reln == '!') {
 			if (file_printf(ms, F(ms, desc, "%s"),
-			    file_printable(sbuf, sizeof(sbuf), m->value.s,
+			    file_printable(ms, sbuf, sizeof(sbuf), m->value.s,
 			    sizeof(m->value.s))) == -1)
 				return -1;
 			t = ms->offset + m->vallen;
@@ -667,7 +667,7 @@ mprint(struct magic_set *ms, struct magic *m)
 				str = file_strtrim(str);
 					
 			if (file_printf(ms, F(ms, desc, "%s"),
-			    file_printable(sbuf, sizeof(sbuf), str,
+			    file_printable(ms, sbuf, sizeof(sbuf), str,
 				sizeof(p->s) - (str - p->s))) == -1)
 				return -1;
 
@@ -781,8 +781,8 @@ mprint(struct magic_set *ms, struct magic *m)
 		}
 		scp = (m->str_flags & STRING_TRIM) ? file_strtrim(cp) : cp;
 					
-		rval = file_printf(ms, F(ms, desc, "%s"),
-		    file_printable(sbuf, sizeof(sbuf), scp, ms->search.rm_len));
+		rval = file_printf(ms, F(ms, desc, "%s"), file_printable(ms,
+		    sbuf, sizeof(sbuf), scp, ms->search.rm_len));
 		free(cp);
 
 		if (rval == -1)
@@ -809,7 +809,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		break;
 	case FILE_DER:
 		if (file_printf(ms, F(ms, desc, "%s"),
-		    file_printable(sbuf, sizeof(sbuf), ms->ms_value.s,
+		    file_printable(ms, sbuf, sizeof(sbuf), ms->ms_value.s,
 			sizeof(ms->ms_value.s))) == -1)
 			return -1;
 		t = ms->offset;

@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.226 2021/05/09 22:38:17 christos Exp $
+ * @(#)$File: file.h,v 1.227 2021/06/30 10:08:48 christos Exp $
  */
 
 #ifndef __file_h__
@@ -264,7 +264,9 @@ struct magic {
 #define				FILE_DER	48
 #define				FILE_GUID	49
 #define				FILE_OFFSET	50
-#define				FILE_NAMES_SIZE	51 /* size of array to contain all names */
+#define				FILE_BEVARINT	51
+#define				FILE_LEVARINT	52
+#define				FILE_NAMES_SIZE	53 /* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
@@ -484,6 +486,8 @@ struct stat;
 #define FILE_T_LOCAL	1
 #define FILE_T_WINDOWS	2
 protected const char *file_fmttime(char *, size_t, uint64_t, int);
+protected const char *file_fmtvarint(const unsigned char *, int, char *,
+    size_t);
 protected struct magic_set *file_ms_alloc(int);
 protected void file_ms_free(struct magic_set *);
 protected int file_default(struct magic_set *, size_t);
@@ -526,6 +530,8 @@ protected int buffer_apprentice(struct magic_set *, struct magic **,
 protected int file_magicfind(struct magic_set *, const char *, struct mlist *);
 protected uint64_t file_signextend(struct magic_set *, struct magic *,
     uint64_t);
+protected uintmax_t file_varint2uintmax_t(const unsigned char *, int, size_t *);
+
 protected void file_badread(struct magic_set *);
 protected void file_badseek(struct magic_set *);
 protected void file_oomem(struct magic_set *, size_t);
@@ -547,7 +553,8 @@ protected size_t file_pstring_length_size(struct magic_set *,
     const struct magic *);
 protected size_t file_pstring_get_length(struct magic_set *,
     const struct magic *, const char *);
-protected char * file_printable(char *, size_t, const char *, size_t);
+protected char * file_printable(struct magic_set *, char *, size_t,
+    const char *, size_t);
 #ifdef __EMX__
 protected int file_os2_apptype(struct magic_set *, const char *, const void *,
     size_t);

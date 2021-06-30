@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.121 2021/02/05 22:29:07 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.122 2021/06/30 10:08:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -756,14 +756,15 @@ file_pop_buffer(struct magic_set *ms, file_pushbuf_t *pb)
  * convert string to ascii printable format.
  */
 protected char *
-file_printable(char *buf, size_t bufsiz, const char *str, size_t slen)
+file_printable(struct magic_set *ms, char *buf, size_t bufsiz,
+    const char *str, size_t slen)
 {
 	char *ptr, *eptr = buf + bufsiz - 1;
 	const unsigned char *s = RCAST(const unsigned char *, str);
 	const unsigned char *es = s + slen;
 
 	for (ptr = buf;  ptr < eptr && s < es && *s; s++) {
-		if (isprint(*s)) {
+		if ((ms->flags & MAGIC_RAW) != 0 || isprint(*s)) {
 			*ptr++ = *s;
 			continue;
 		}

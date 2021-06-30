@@ -1,3 +1,8 @@
+2021-06-30  13:07  Christos Zoulas <christos@zoulas.com>
+
+	* PR/270: Don't translate unprintable characters in %s magic formats
+	  when -r
+
 2021-04-19  17:17  Christos Zoulas <christos@zoulas.com>
 
 	* PR/256: mutableVoid: If the file is less than 3 bytes, use the file
