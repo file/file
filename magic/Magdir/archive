@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.147 2021/04/26 15:56:00 christos Exp $
+# $File: archive,v 1.148 2021/06/30 10:24:51 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -168,8 +168,11 @@
 0	short		0143561		byte-swapped cpio archive
 !:mime	application/x-cpio # encoding: swapped
 0	string		070707		ASCII cpio archive (pre-SVR4 or odc)
+!:mime	application/x-cpio
 0	string		070701		ASCII cpio archive (SVR4 with no CRC)
+!:mime	application/x-cpio
 0	string		070702		ASCII cpio archive (SVR4 with CRC)
+!:mime	application/x-cpio
 
 #
 # Various archive formats used by various versions of the "ar"
