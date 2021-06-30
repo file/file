@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.81 2021/04/19 17:01:45 christos Exp $
+# $File: compress,v 1.82 2021/06/30 08:11:29 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -276,6 +276,7 @@
 0	string		LRZI			LRZIP compressed data
 >4	byte		x			- version %d
 >5	byte		x			\b.%d
+>22	byte		1			\b, encrypted
 !:mime	application/x-lrzip
 
 # https://fastcompression.blogspot.fi/2013/04/lz4-streaming-format-final.html
