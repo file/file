@@ -88,7 +88,7 @@ AM_CONDITIONAL(FSECT5, test x$fsect = x5)
 AC_SUBST(WARNINGS)
 
 dnl Checks for programs.
-AC_PROG_CC_STDC
+AC_PROG_CC
 AC_USE_SYSTEM_EXTENSIONS
 AM_PROG_CC_C_O
 AC_C_BIGENDIAN
@@ -97,7 +97,6 @@ AC_PROG_LN_S
 LT_INIT([disable-static pic-only])
 gl_VISIBILITY
 dnl Checks for headers
-AC_HEADER_STDC
 AC_HEADER_MAJOR
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(stdint.h fcntl.h inttypes.h unistd.h)
