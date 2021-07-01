@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.313 2021/06/30 10:08:48 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.314 2021/07/01 07:51:35 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -292,8 +292,8 @@ flush:
 		 */
 		if (*m->desc) {
 			*found_match = 1;
-			*returnval = 1;
 			if (print) {
+				*returnval = 1;
 				*need_separator = 1;
 				*printed_something = 1;
 				if (print_sep(ms, firstline) == -1)
@@ -401,9 +401,9 @@ flush:
 				}
 				if (*m->desc) {
 					*found_match = 1;
-					*returnval = 1;
 				}
 				if (print && *m->desc) {
+					*returnval = 1;
 					/*
 					 * This continuation matched.  Print
 					 * its message, with a blank before it
@@ -427,7 +427,6 @@ flush:
 						if (file_printf(ms, " ") == -1)
 							return -1;
 					}
-					*need_separator = 0;
 					if (mprint(ms, m) == -1)
 						return -1;
 					*need_separator = 1;
@@ -459,23 +458,14 @@ flush:
 		}
 		if (*found_match) {
 			if ((ms->flags & MAGIC_CONTINUE) == 0)
-				goto out;
+				return *returnval;
 			// So that we print a separator
 			*printed_something = 0;
 			firstline = 0;
 		}
 		cont_level = 0;
 	}
-out:
-	/*
-	 * If we are not printing (we are doing mime etc.)
-	 * and we did not find a mime entry, and we are at 0 level
-	 * we want to return 0 so that the default mime printer
-	 * takes over and prints "application/octet-stream"
-	 */
-	if (! print && ! *printed_something && ! *name_count)
-		return 0;
-	return *returnval;  /* This is hit if -k is set or there is no match */
+	return *returnval;
 }
 
 private int
