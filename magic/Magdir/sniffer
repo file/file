@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.29 2021/03/13 18:51:51 christos Exp $
+# $File: sniffer,v 1.30 2021/07/03 13:51:56 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -262,6 +262,7 @@
 >20	belong&0x03FFFFFF		279		(Elektrobit High Speed Capture and Replay (EBHSCR)
 >20	belong&0x03FFFFFF		281		(Broadcom tag
 >20	belong&0x03FFFFFF		282		(Broadcom tag (prepended)
+>20	belong&0x03FFFFFF		283		(802.15.4 with TAP
 >20	belong&0x03FFFFFF		284		(Marvell DSA
 >20	belong&0x03FFFFFF		285		(Marvell EDSA
 >20	belong&0x03FFFFFF		286		(ELEE lawful intercept
