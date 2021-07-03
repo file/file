@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.148 2021/06/30 10:24:51 christos Exp $
+# $File: archive,v 1.149 2021/07/03 14:01:27 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -450,8 +450,73 @@
 # look for first keyword of Panorama database *.pan
 >12	search/261	DESIGN
 # skip keyword with low entropy
->12	default		x	TTComp archive, binary, 4K dictionary
-# (version 5.25) labeled the above entry as "TTComp archive data"
+>12	default		x
+# skip DOS 2.0 backup id file, sequence 6 with many nils like BACKUPID_xx6.@@@ handled by ./msdos
+>>8	quad		!0
+>>>0	use	ttcomp
+# variant ASCII, 4K dictionary (strength=48=50-2). With strength=49 wrong order! WHY?
+0	string	\1\6
+# TODO:
+# skip VAX-order 68k Blit mpx/mux executable (strength=50) handled by ./blit
+!:strength	-2
+>0	use	ttcomp
+0	string	\0\5
+# skip some DOS 2.0 backup id file, sequence 5 with many nils like BACKUPID_075.@@@ handled by ./msdos
+>8	quad	!0
+>>0	use	ttcomp
+0	string	\1\5
+# TODO:
+# variant ASCII, 2K dictionary (strength=48=50-2). With strength=49 wrong order! WHY?
+# skip ctab data (strength=50) handled by ./ibm6000
+# skip locale data table (strength=50) handled by ./digital
+!:strength	-2
+>0	use	ttcomp
+0	string	\0\4
+# skip many Maple help database *.hdb with version tag handled by ./maple
+>1028	string	!version
+# skip veclib maple.hdb by looking for Mable keyword
+>>4	search/1091	Maple\040
+#>4	search/34090	Maple\040
+>>4	default		x
+# skip DOS 2.0-3.2 backed up sequence 4 with many nils like LOTUS5.RAR handled by ./msdos
+# skip xBASE Compound Index file *.CDX with many nils
+>>>0x54	quad		!0
+>>>>0	use	ttcomp
+0	string	\1\4
+# TODO:
+# skip Commodore PET BASIC 4.0 program *.prg
+# variant ASCII, 1K dictionary (strength=48=50-2). With strength=49 wrong order! WHY?
+# skip shared library (strength=50) handled by ./ibm6000
+!:strength	-2
+>0	use	ttcomp
+#	display information of TTComp archive
+0	name	ttcomp
+# (version 5.25) labeled the entry as "TTComp archive data"
+>0	ubyte	x	TTComp archive data
+!:mime	application/x-compress-ttcomp
+# PBACKSCR.PI1
+!:ext	$xe/$ts/pi1/__d
+# compression type: 0~binary compression 1~ASCII compression 
+>0	ubyte	0	\b, binary
+>0	ubyte	1	\b, ASCII
+# size of the dictionary:  4~1024 bytes 5~2048 bytes 6~4096 bytes 
+>1	ubyte	4	\b, 1K
+>1	ubyte	5	\b, 2K
+>1	ubyte	6	\b, 4K
+>1	ubyte	x	dictionary
+#	https://mark0.net/forum/index.php?topic=848
+# last 3 bytes probably have only 8 possible bit sequences
+# xxxxxxxx 0000000x 11111111	____FFh
+# xxxxxxxx 10000000 01111111	__807Fh	
+# 0xxxxxxx 11000000 00111111	__C03Fh
+# 00xxxxxx 11100000 00011111	__E01Fh
+# 000xxxxx 11110000 00001111	__F00Fh
+# 0000xxxx 11111000 00000111	__F807h
+# 00000xxx 11111100 00000011	__FC03h
+# 000000xx 11111110 00000001	__FE01h
+# but for quickgif.__d 0A7DD4h
+#>-3	ubyte		x	\b, last 3 bytes 0x%2.2x
+#>-2	ubeshort	x	\b%4.4x
 # From:		Joerg Jenderek
 # URL:		https://wiki.68kmla.org/DiskCopy_4.2_format_specification
 # reference:	http://nulib.com/library/FTN.e00005.htm
