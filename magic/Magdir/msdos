@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.148 2021/04/26 15:56:00 christos Exp $
+# $File: msdos,v 1.149 2021/07/03 14:00:31 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1695,7 +1695,8 @@
 0	string	Jetsam0		Mallard BASIC Jetsam index data
 
 # DOS backup 2.0 to 3.2
-
+# URL:		http://fileformats.archiveteam.org/wiki/BACKUP_(MS-DOS)
+# Reference:	http://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/dos/restore/brtecdoc.htm
 # backupid.@@@
 
 # plausibility check for date
@@ -1705,6 +1706,7 @@
 # actually 121 nul bytes
 >>>0x7	string	\0\0\0\0\0\0\0\0
 >>>>0x1 ubyte	x	DOS 2.0 backup id file, sequence %d
+#!:mime	application/octet-stream
 !:ext @@@
 >>>>0x0 ubyte	0xff	\b, last disk
 
@@ -1738,7 +1740,9 @@
 >>>>>>>1 uleshort	x	sequence %d of
 # full file name with path but without drive letter and colon stored from 0x05 til 0x52
 >>>>>>0x5	string	x	file %s
+#!:mime	application/octet-stream
 # backup name is original filename
+#!:ext	doc/exe/rar/zip
 #!:ext	*
 # magic/Magdir/msdos, 1169: Warning: EXTENSION type `     *' has bad char '*'
 # file: line 1169: Bad magic entry '  *'
