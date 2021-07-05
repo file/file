@@ -1,14 +1,14 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README,v 1.62 2021/04/19 15:56:44 christos Exp $
+    @(#) $File: README.md,v 1.1 2021/07/05 18:13:38 christos Exp $
 
-Mailing List: file@astron.com
-Mailing List archives: https://mailman.astron.com/pipermail/file/
-Bug tracker: https://bugs.astron.com/
-E-mail: christos@astron.com
-Build Status: https://travis-ci.org/file/file
-Public repo: https://github.com/file/file
-Test framework: https://github.com/file/file-tests
+- Mailing List: file@astron.com
+- Mailing List archives: https://mailman.astron.com/pipermail/file/
+- Bug tracker: https://bugs.astron.com/
+- E-mail: christos@astron.com
+- Build Status: https://travis-ci.org/file/file
+- Public repo: https://github.com/file/file
+- Test framework: https://github.com/file/file-tests
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
 
@@ -70,53 +70,53 @@ are in reasonable circulation. Send your magic numbers,
 in magic(5) format please, to the maintainer, Christos Zoulas.
 
 COPYING - read this first.
-README - read this second (you are currently reading this file).
-INSTALL - read on how to install
-src/apprentice.c - parses /etc/magic to learn magic
-src/apptype.c - used for OS/2 specific application type magic
-src/ascmagic.c - third & last set of tests, based on hardwired assumptions.
-src/asctime_r.c - replacement for OS's that don't have it.
-src/asprintf.c - replacement for OS's that don't have it.
-src/buffer.c - buffer handling functions.
-src/cdf.[ch] - parser for Microsoft Compound Document Files
-src/cdf_time.c - time converter for CDF.
-src/compress.c - handles decompressing files to look inside.
-src/ctime_r.c - replacement for OS's that don't have it.
-src/der.[ch] - parser for Distinguished Encoding Rules
-src/dprintf.c - replacement for OS's that don't have it.
-src/elfclass.h - common code for elf 32/64.
-src/encoding.c - handles unicode encodings
-src/file.c - the main program
-src/file.h - header file
-src/file_opts.h - list of options
-src/fmtcheck.c - replacement for OS's that don't have it.
-src/fsmagic.c - first set of tests the program runs, based on filesystem info
-src/funcs.c - utilility functions
-src/getline.c - replacement for OS's that don't have it.
-src/getopt_long.c - replacement for OS's that don't have it.
-src/gmtime_r.c - replacement for OS's that don't have it.
-src/is_csv.c - knows about Comma Separated Value file format (RFC 4180).
-src/is_json.c - knows about JavaScript Object Notation format (RFC 8259).
-src/is_tar.c, tar.h - knows about Tape ARchive format (courtesy John Gilmore).
-src/localtime_r.c - replacement for OS's that don't have it.
-src/magic.h.in - source file for magic.h
-src/mygetopt.h - replacement for OS's that don't have it.
-src/magic.c - the libmagic api
-src/names.h - header file for ascmagic.c
-src/pread.c - replacement for OS's that don't have it.
-src/print.c - print results, errors, warnings.
-src/readcdf.c - CDF wrapper.
-src/readelf.[ch] - Stand-alone elf parsing code.
-src/softmagic.c - 2nd set of tests, based on /etc/magic
-src/mygetopt.h - replacement for OS's that don't have it.
-src/strcasestr.c - replacement for OS's that don't have it.
-src/strlcat.c - replacement for OS's that don't have it.
-src/strlcpy.c - replacement for OS's that don't have it.
-src/strndup.c - replacement for OS's that don't have it.
-src/tar.h - tar file definitions
-src/vasprintf.c - for systems that don't have it.
-doc/file.man - man page for the command
-doc/magic.man - man page for the magic file, courtesy Guy Harris.
+* `README` - read this second (you are currently reading this file).
+* `INSTALL` - read on how to install
+* `src/apprentice.c` - parses /etc/magic to learn magic
+* `src/apptype.c` - used for OS/2 specific application type magic
+* `src/ascmagic.c` - third & last set of tests, based on hardwired assumptions.
+* `src/asctime_r.c` - replacement for OS's that don't have it.
+* `src/asprintf.c` - replacement for OS's that don't have it.
+* `src/buffer.c` - buffer handling functions.
+* `src/cdf.[ch]` - parser for Microsoft Compound Document Files
+* `src/cdf_time.c` - time converter for CDF.
+* `src/compress.c` - handles decompressing files to look inside.
+* `src/ctime_r.c` - replacement for OS's that don't have it.
+* `src/der.[ch]` - parser for Distinguished Encoding Rules
+* `src/dprintf.c` - replacement for OS's that don't have it.
+* `src/elfclass.h` - common code for elf 32/64.
+* `src/encoding.c` - handles unicode encodings
+* `src/file.c` - the main program
+* `src/file.h` - header file
+* `src/file_opts.h` - list of options
+* `src/fmtcheck.c` - replacement for OS's that don't have it.
+* `src/fsmagic.c` - first set of tests the program runs, based on filesystem info
+* `src/funcs.c` - utilility functions
+* `src/getline.c` - replacement for OS's that don't have it.
+* `src/getopt_long.c` - replacement for OS's that don't have it.
+* `src/gmtime_r.c` - replacement for OS's that don't have it.
+* `src/is_csv.c` - knows about Comma Separated Value file format (RFC 4180).
+* `src/is_json.c` - knows about JavaScript Object Notation format (RFC 8259).
+* `src/is_tar.c, tar.h` - knows about Tape ARchive format (courtesy John Gilmore).
+* `src/localtime_r.c` - replacement for OS's that don't have it.
+* `src/magic.h.in` - source file for magic.h
+* `src/mygetopt.h` - replacement for OS's that don't have it.
+* `src/magic.c` - the libmagic api
+* `src/names.h` - header file for ascmagic.c
+* `src/pread.c` - replacement for OS's that don't have it.
+* `src/print.c` - print results, errors, warnings.
+* `src/readcdf.c` - CDF wrapper.
+* `src/readelf.[ch]` - Stand-alone elf parsing code.
+* `src/softmagic.c` - 2nd set of tests, based on /etc/magic
+* `src/mygetopt.h` - replacement for OS's that don't have it.
+* `src/strcasestr.c` - replacement for OS's that don't have it.
+* `src/strlcat.c` - replacement for OS's that don't have it.
+* `src/strlcpy.c` - replacement for OS's that don't have it.
+* `src/strndup.c` - replacement for OS's that don't have it.
+* `src/tar.h` - tar file definitions
+* `src/vasprintf.c` - for systems that don't have it.
+* `doc/file.man` - man page for the command
+* `doc/magic.man` - man page for the magic file, courtesy Guy Harris.
 	Install as magic.4 on USG and magic.5 on V7 or Berkeley; cf Makefile.
 
 Magdir - directory of /etc/magic pieces
@@ -139,18 +139,16 @@ guidelines:
   * Full name and contact method (for discussion when entry has problem)
   * Further reference, such as documentation of format
 
+gpg for dummies:
 ------------------------------------------------------------------------------
 
-gpg for dummies:
-
-$ gpg --verify file-X.YY.tar.gz.asc file-X.YY.tar.gz
-gpg: assuming signed data in `file-X.YY.tar.gz'
-gpg: Signature made WWW MMM DD HH:MM:SS YYYY ZZZ using DSA key ID KKKKKKKK
+- $ gpg --verify file-X.YY.tar.gz.asc file-X.YY.tar.gz
+- gpg: assuming signed data in `file-X.YY.tar.gz'
+- gpg: Signature made WWW MMM DD HH:MM:SS YYYY ZZZ using DSA key ID KKKKKKKK
 
 To download the key:
 
 $ gpg --keyserver hkp://keys.gnupg.net --recv-keys KKKKKKKK
-
 ------------------------------------------------------------------------------
 
 
