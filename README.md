@@ -1,14 +1,14 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README.md,v 1.1 2021/07/05 18:13:38 christos Exp $
+    @(#) $File: README.md,v 1.2 2021/07/06 10:02:57 christos Exp $
 
-- Mailing List: file@astron.com
-- Mailing List archives: https://mailman.astron.com/pipermail/file/
-- Bug tracker: https://bugs.astron.com/
-- E-mail: christos@astron.com
-- Build Status: https://travis-ci.org/file/file
-- Public repo: https://github.com/file/file
-- Test framework: https://github.com/file/file-tests
+- Mailing List: <file@astron.com>
+- Mailing List archives: <https://mailman.astron.com/pipermail/file/>
+- Bug tracker: <https://bugs.astron.com/>
+- E-mail: christos@astron.com>
+- Build Status: <https://travis-ci.org/file/file>
+- Public repo: <https://github.com/file/file>
+- Test framework: <https://github.com/file/file-tests>
 
 Phone: Do not even think of telephoning me about this program. Send cash first!
 
@@ -20,15 +20,15 @@ This version is the standard "file" command for Linux,
 
 You can download the latest version of the original sources for file from:
 
-	ftp://ftp.astron.com/pub/file/
+	<ftp://ftp.astron.com/pub/file/>
 
 A public read-only git repository of the same sources is available at:
 
-	https://github.com/file/file
+	<https://github.com/file/file>
 
 We are continuously being fuzzed by OSS-FUZZ:
 
-	https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:file
+	<https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:file>
 
 The major changes for 5.x are CDF file parsing, indirect magic, name/use
 (recursion) and overhaul in mime and ascii encoding handling.
@@ -142,13 +142,17 @@ guidelines:
 gpg for dummies:
 ------------------------------------------------------------------------------
 
-- $ gpg --verify file-X.YY.tar.gz.asc file-X.YY.tar.gz
-- gpg: assuming signed data in `file-X.YY.tar.gz'
-- gpg: Signature made WWW MMM DD HH:MM:SS YYYY ZZZ using DSA key ID KKKKKKKK
+```
+$ gpg --verify file-X.YY.tar.gz.asc file-X.YY.tar.gz
+gpg: assuming signed data in `file-X.YY.tar.gz'
+gpg: Signature made WWW MMM DD HH:MM:SS YYYY ZZZ using DSA key ID KKKKKKKK
+```
 
 To download the key:
 
+```
 $ gpg --keyserver hkp://keys.gnupg.net --recv-keys KKKKKKKK
+```
 ------------------------------------------------------------------------------
 
 
