@@ -1,67 +1,60 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README.md,v 1.2 2021/07/06 10:02:57 christos Exp $
+    @(#) $File: README.md,v 1.3 2021/07/06 11:04:29 christos Exp $
 
 - Mailing List: <file@astron.com>
 - Mailing List archives: <https://mailman.astron.com/pipermail/file/>
-- Bug tracker: <https://bugs.astron.com/>
-- E-mail: christos@astron.com>
+- Bug Tracker: <https://bugs.astron.com/>
+- E-mail: <christos@astron.com>
 - Build Status: <https://travis-ci.org/file/file>
 - Public repo: <https://github.com/file/file>
+- Download link: <ftp://ftp.astron.com/pub/file/>
 - Test framework: <https://github.com/file/file-tests>
+- Fuzzing link: <https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:file>
 
-Phone: Do not even think of telephoning me about this program. Send cash first!
+Phone: Do not even think of telephoning me about this program. Send
+cash first!
 
 This is Release 5.x of Ian Darwin's (copyright but distributable)
 file(1) command, an implementation of the Unix File(1) command.
 It knows the 'magic number' of several thousands of file types.
-This version is the standard "file" command for Linux,
-*BSD, and other systems. (See "patchlevel.h" for the exact release number).
+This version is the standard "file" command for Linux, *BSD, and
+other systems. (See "patchlevel.h" for the exact release number).
 
-You can download the latest version of the original sources for file from:
+The major changes for 5.x are CDF file parsing, indirect magic,
+name/use (recursion) and overhaul in mime and ascii encoding
+handling.
 
-	<ftp://ftp.astron.com/pub/file/>
-
-A public read-only git repository of the same sources is available at:
-
-	<https://github.com/file/file>
-
-We are continuously being fuzzed by OSS-FUZZ:
-
-	<https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:file>
-
-The major changes for 5.x are CDF file parsing, indirect magic, name/use
-(recursion) and overhaul in mime and ascii encoding handling.
-
-The major feature of 4.x is the refactoring of the code into a library,
-and the re-write of the file command in terms of that library. The library
-itself, libmagic can be used by 3rd party programs that wish to identify
-file types without having to fork() and exec() file. The prime contributor
-for 4.0 was Mans Rullgard.
+The major feature of 4.x is the refactoring of the code into a
+library, and the re-write of the file command in terms of that
+library. The library itself, libmagic can be used by 3rd party
+programs that wish to identify file types without having to fork()
+and exec() file. The prime contributor for 4.0 was Mans Rullgard.
 
 UNIX is a trademark of UNIX System Laboratories.
 
-The prime contributor to Release 3.8 was Guy Harris, who put in megachanges
-including byte-order independence.
+The prime contributor to Release 3.8 was Guy Harris, who put in
+megachanges including byte-order independence.
 
 The prime contributor to Release 3.0 was Christos Zoulas, who put
 in hundreds of lines of source code changes, including his own
 ANSIfication of the code (I liked my own ANSIfication better, but
-his (__P()) is the "Berkeley standard" way of doing it, and I wanted UCB
-to include the code...), his HP-like "indirection" (a feature of
-the HP file command, I think), and his mods that finally got the
-uncompress (-z) mode finished and working.
+his (__P()) is the "Berkeley standard" way of doing it, and I wanted
+UCB to include the code...), his HP-like "indirection" (a feature
+of the HP file command, I think), and his mods that finally got
+the uncompress (-z) mode finished and working.
 
 This release has compiled in numerous environments; see PORTING
 for a list and problems.
 
-This fine freeware file(1) follows the USG (System V) model of the file
-command, rather than the Research (V7) version or the V7-derived 4.[23]
-Berkeley one. That is, the file /etc/magic contains much of the ritual
-information that is the source of this program's power. My version
-knows a little more magic (including tar archives) than System V; the
-/etc/magic parsing seems to be compatible with the (poorly documented)
-System V /etc/magic format (with one exception; see the man page).
+This fine freeware file(1) follows the USG (System V) model of the
+file command, rather than the Research (V7) version or the V7-derived
+4.[23] Berkeley one. That is, the file /etc/magic contains much of
+the ritual information that is the source of this program's power.
+My version knows a little more magic (including tar archives) than
+System V; the /etc/magic parsing seems to be compatible with the
+(poorly documented) System V /etc/magic format (with one exception;
+see the man page).
 
 In addition, the /etc/magic file is built from a subdirectory
 for easier(?) maintenance.  I will act as a clearinghouse for
