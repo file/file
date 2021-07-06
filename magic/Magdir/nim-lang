@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: nim-lang,v 1.1 2021/07/05 09:33:32 christos Exp $
+# $File: nim-lang,v 1.2 2021/07/06 12:32:10 christos Exp $
 # nim-lang:  file(1) magic for nim
 # URL:  https://nim-lang.org/
 
@@ -27,3 +27,4 @@
 
 0	name		nim2
 >&0	search/8192	when	Nim source code
+!:ext	nim
