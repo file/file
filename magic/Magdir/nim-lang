@@ -1,11 +1,10 @@
 
 #------------------------------------------------------------------------------
-# $File: nim-lang,v 1.2 2021/07/06 12:32:10 christos Exp $
+# $File: nim-lang,v 1.3 2021/07/06 12:34:06 christos Exp $
 # nim-lang:  file(1) magic for nim
 # URL:  https://nim-lang.org/
 
 0	search/8192	import
-!:ext	nim
 >&0	search/64	os
 >>&0	use		nim1
 >&0	default		x
