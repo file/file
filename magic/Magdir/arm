@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: arm,v 1.1 2021/04/04 18:24:34 christos Exp $
+# $File: arm,v 1.2 2021/07/14 17:40:31 christos Exp $
 # arm: file(1) magic for ARM COFF
 #
 # https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
@@ -9,7 +9,7 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10
 
@@ -18,7 +18,7 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10
 
@@ -27,7 +27,7 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10
 
@@ -36,6 +36,6 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10

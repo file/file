@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.149 2021/07/03 14:01:27 christos Exp $
+# $File: archive,v 1.150 2021/07/14 17:40:31 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -698,7 +698,7 @@
 !:ext	??_/??@/dll/drv/pk2/
 # probably A596FDFF magic at the beginning
 >0	ubelong		!0xA596FDFF	\b, at beginning %#x
-# probably orginal file name with directory like: \OS2\unpack.exe \SYSTEM\8514.DRV MAHJONGG.EXE
+# probably original file name with directory like: \OS2\unpack.exe \SYSTEM\8514.DRV MAHJONGG.EXE
 >41	string		x		"%s"
 
 # MP3 (archiver, not lossy audio compression)
