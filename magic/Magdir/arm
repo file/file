@@ -9,7 +9,7 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10
 
@@ -18,7 +18,7 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10
 
@@ -27,7 +27,7 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10
 
@@ -36,6 +36,6 @@
 # test for unused flag bits in f_flags
 >18	uleshort&0x8E80	0
 # use little endian variant of subroutine to
-# display name+variables+flags for common object formated files
+# display name+variables+flags for common object formatted files
 >>0	use				display-coff
 !:strength -10
