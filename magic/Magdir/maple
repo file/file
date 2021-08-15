@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: maple,v 1.8 2017/03/17 21:35:28 christos Exp $
+# $File: maple,v 1.9 2021/08/15 06:04:23 christos Exp $
 # maple:  file(1) magic for maple files
 # "H. Nanosecond" <aldomel@ix.netcom.com>
 # Maple V release 4, a multi-purpose math program
@@ -14,7 +14,24 @@
 # they are compiled indexes for maple files
 
 # .hdb
-0	string	\000\004\000\000	Maple help database
+# Update:	Joerg Jenderek
+# URL:		https://www.maplesoft.com/support/help/maple/view.aspx?path=Formats/HDB
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hdb-maple.trid.xml
+# Note:		This format was replaced in Maple 18 by the Maple Help format (*.help)
+0	string	\000\004\000\000
+# skip xBASE Compound Index file *.CDX by looking for version
+>1028	string		version	Maple help database
+# length of string version
+#>>1024	ulelong		!7	\b, at 0x400 unexpected %u
+#!:mime application/octet-stream
+!:mime application/x-maple-hdb
+!:ext	hdb
+>1028	default		x
+# skip more xBASE Compound Index file *.CDX by looking for keyword Maple
+# like hsum.hdb
+>>4	search/0xCC41	Maple	Maple help database
+!:mime	application/x-maple-hdb
+!:ext	hdb
 
 # .mhp
 # this has the form <PACKAGE=name>
