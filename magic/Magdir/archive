@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.150 2021/07/14 17:40:31 christos Exp $
+# $File: archive,v 1.151 2021/08/16 10:19:56 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1417,8 +1417,9 @@
 >>>>38		search/64       .app/   iOS App
 !:mime application/x-ios-app
 
->30	search/100/b application/epub+zip	EPUB document
-!:mime application/epub+zip
+# Dup, see above.
+#>30	search/100/b application/epub+zip	EPUB document
+#!:mime application/epub+zip
 
 # Generic zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 #   Next line excludes specialized formats:
