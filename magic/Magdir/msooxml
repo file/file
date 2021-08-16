@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msooxml,v 1.15 2020/09/05 22:59:14 christos Exp $
+# $File: msooxml,v 1.16 2021/08/16 10:06:55 christos Exp $
 # msooxml:  file(1) magic for Microsoft Office XML
 # From: Ralf Brown <ralf.brown@gmail.com>
 
@@ -21,6 +21,8 @@
 !:mime application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 >0		string		visio/		Microsoft Visio 2013+
 !:mime application/vnd.ms-visio.drawing.main+xml
+>0		string		AppManifest.xaml	Microsoft Silverlight Application
+!:mime application/x-silverlight-app
 
 # start by checking for ZIP local file header signature
 0		string		PK\003\004
