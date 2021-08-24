@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.86 2021/04/11 20:46:12 christos Exp $
+# $File: animation,v 1.87 2021/08/24 09:25:11 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1159,3 +1159,28 @@
 0	string	TVS\015\012
 >&0	string	Version\040	TeamViewer Session File
 >>&0	string	x		\b, version %s
+
+# SER file format - simple uncompressed video format for astronomical use
+# Initially developed by Lucam Recorder,
+# as of 2021 maintained by Heiko Wilkens, Grischa Hahn
+# Typical extensions: .SER
+# http://www.grischa-hahn.homepage.t-online.de/astro/ser/SER%20Doc%20V3b.pdf
+0	string	LUCAM-RECORDER	SER video sequence
+!:ext	ser
+>18	lelong	0	\b, bayer: mono
+>18	lelong	8	\b, bayer: RGGB
+>18	lelong	9	\b, bayer: GRBG
+>18	lelong	10	\b, bayer: GBRG
+>18	lelong	11	\b, bayer: BGGR
+>18	lelong	16	\b, bayer: CYYM
+>18	lelong	17	\b, bayer: YCMY
+>18	lelong	18	\b, bayer: YMCY
+>18	lelong	19	\b, bayer: MYYC
+>18	lelong	100	\b, bayer: RGB
+>18	lelong	101	\b, bayer: BGR
+>22	lelong	0	\b, big-endian
+>22	lelong	1	\b, little-endian
+>26	lelong	x	\b, width: %d
+>30	lelong	x	\b, height: %d
+>34	lelong	x	\b, %d bit
+>38	lelong	x	\b, frames: %d
