@@ -10,6 +10,7 @@ configure
 configure.lineno
 depcomp
 install-sh
+libmagic.pc
 ltmain.sh
 missing
 config.h
