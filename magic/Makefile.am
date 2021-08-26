@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.170 2021/07/05 09:34:18 christos Exp $
+# $File: Makefile.am,v 1.171 2021/08/26 10:41:18 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -7,7 +7,7 @@ MAGIC_FRAGMENT_DIR = $(MAGIC_DIR)/$(MAGIC_FRAGMENT_BASE)
 
 pkgdata_DATA = magic.mgc
 
-EXTRA_DIST = \
+MAGIC_FRAGMENTS = \
 $(MAGIC_DIR)/Header \
 $(MAGIC_DIR)/Localstuff \
 $(MAGIC_FRAGMENT_DIR)/acorn \
@@ -336,6 +336,11 @@ $(MAGIC_FRAGMENT_DIR)/zilog \
 $(MAGIC_FRAGMENT_DIR)/zip \
 $(MAGIC_FRAGMENT_DIR)/zyxel
 
+EXTRA_DIST = \
+$(MAGIC_DIR)/scripts/create_filemagic_flac \
+$(MAGIC_FRAGMENTS)
+
+
 MAGIC = magic.mgc
 CLEANFILES = ${MAGIC} $(MAGIC_FRAGMENT_DIR)/Localstuff
 
@@ -349,9 +354,9 @@ FILE_COMPILE = $(top_builddir)/src/file${EXEEXT}
 FILE_COMPILE_DEP = $(FILE_COMPILE)
 endif
 
-${MAGIC}: $(EXTRA_DIST) $(FILE_COMPILE_DEP)
+${MAGIC}: $(MAGIC_FRAGMENTS) $(FILE_COMPILE_DEP)
 	@rm -fr magic
-	@mkdir magic && cp -p $(EXTRA_DIST) magic
+	@mkdir magic && cp -p $(MAGIC_FRAGMENTS) magic
 	@(if expr "${FILE_COMPILE}" : '.*/.*' > /dev/null; then \
 	    echo "Using ${FILE_COMPILE} to generate ${MAGIC}" > /dev/null; \
 	  else \
