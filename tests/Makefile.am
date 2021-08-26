@@ -11,6 +11,7 @@ bcachefs.result \
 bcachefs.testfile \
 escapevel.result \
 escapevel.testfile \
+ext4.result \
 ext4.testfile \
 fit-map-data.result \
 fit-map-data.testfile \
