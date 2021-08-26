@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.35 2016/08/17 09:45:13 christos Exp $
+# $File: apt,v 1.1 2016/10/17 19:51:57 christos Exp $
 # apt: file(1) magic for APT Cache files
 # <http://www.fifi.org/doc/libapt-pkg-doc/cache.html/ch2.html>
 # <https://anonscm.debian.org/cgit/apt/apt.git/tree/apt-pkg/pkgcache.h#n292>

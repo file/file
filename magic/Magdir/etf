@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: elf,v 1.68 2014/09/19 19:05:57 christos Exp $
+# $File: etf,v 1.1 2015/04/19 22:40:04 christos Exp $
 # elf:  file(1) magic for Erlang External Term Format magic
 # http://erlang.org/doc/apps/erts/erl_ext_dist.html
 # This magic is too weak so it is not enabled by default

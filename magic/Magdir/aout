@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: aout,v 1.1 2013/01/09 22:37:23 christos Exp $
 # aout:  file(1) magic for a.out executable/object/etc entries that
 # handle executables on multiple platforms.
 #

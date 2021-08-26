@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File$
+# $File: smile,v 1.1 2011/08/17 17:37:18 christos Exp $
 # smile:  file(1) magic for Smile serialization
 #
 # The Smile serialization format uses a 4-byte header:

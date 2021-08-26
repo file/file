@@ -1,8 +1,8 @@
-/*	$File: localtime_r.c,v 1.1 2015/01/09 19:28:32 christos Exp $	*/
+/*	$File: localtime_r.c,v 1.2 2015/07/11 14:41:37 christos Exp $	*/
 
 #include "file.h"
 #ifndef	lint
-FILE_RCSID("@(#)$File: localtime_r.c,v 1.1 2015/01/09 19:28:32 christos Exp $")
+FILE_RCSID("@(#)$File: localtime_r.c,v 1.2 2015/07/11 14:41:37 christos Exp $")
 #endif	/* lint */
 #include <time.h>
 #include <string.h>

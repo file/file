@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: magic,v 1.9 2009/09/19 16:28:10 christos Exp $
+# $File: magic,v 1.10 2010/11/25 15:00:12 christos Exp $
 # magic:  file(1) magic for magic files
 #
 0	string/t		#\ Magic	magic text file for file(1) cmd

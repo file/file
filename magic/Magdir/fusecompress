@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mcrypt,v 1.5 2009/09/19 16:28:10 christos Exp $
+# $File: fusecompress,v 1.2 2011/08/08 09:05:55 christos Exp $
 # fusecompress:   file(1) magic for fusecompress
 0	string	\037\135\211	FuseCompress(ed) data
 >3	byte	0x00	(none format)

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: unknown,v 1.7 2009/09/19 16:28:13 christos Exp $
+# $File: unknown,v 1.8 2013/01/09 22:37:24 christos Exp $
 # unknown:  file(1) magic for unknown machines
 #
 # 0x107 is 0407, 0x108 is 0410, and 0x109 is 0411; those are all PDP-11

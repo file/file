@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.68 2014/09/19 19:05:57 christos Exp $
+# $File: cbor,v 1.1 2015/01/28 01:05:21 christos Exp $
 # cbor:  file(1) magic for CBOR files as defined in RFC 7049
 
 0	string	\xd9\xd9\xf7 Concise Binary Object Representation (CBOR) container

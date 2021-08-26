@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mips,v 1.9 2013/01/12 03:09:51 christos Exp $
+# $File: mips,v 1.10 2014/04/30 21:41:02 christos Exp $
 # mips:  file(1) magic for MIPS ECOFF and Ucode, as used in SGI IRIX
 # and DEC Ultrix
 #

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: bsdi,v 1.6 2013/01/09 22:37:24 christos Exp $
+# $File: bsdi,v 1.7 2014/03/29 15:40:34 christos Exp $
 # bsdi:  file(1) magic for BSD/OS (from BSDI) objects
 # Some object/executable formats use the same magic numbers as are used
 # in other OSes; those are handled by entries in aout.
