@@ -3,12 +3,18 @@ test_LDADD = $(top_builddir)/src/libmagic.la
 test_CPPFLAGS = -I$(top_builddir)/src
 
 EXTRA_DIST = \
+android-vdex-1.result \
+android-vdex-1.testfile \
+android-vdex-2.result \
+android-vdex-2.testfile \
 CVE-2014-1943.result \
 CVE-2014-1943.testfile \
 JW07022A.mp3.result \
 JW07022A.mp3.testfile \
 bcachefs.result \
 bcachefs.testfile \
+cl8m8ocofedso.result \
+cl8m8ocofedso.testfile \
 escapevel.result \
 escapevel.testfile \
 ext4.result \
@@ -29,6 +35,10 @@ json2.result \
 json2.testfile \
 json3.result \
 json3.testfile \
+matilde.arm.result \
+matilde.arm.testfile \
+pcjr.result \
+pcjr.testfile \
 pgp-binary-key-v2-phil.result \
 pgp-binary-key-v2-phil.testfile \
 pgp-binary-key-v3-lutz.result \
