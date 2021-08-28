@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: jpeg,v 1.35 2021/04/26 15:56:00 christos Exp $
+# $File: jpeg,v 1.36 2021/08/28 12:30:52 christos Exp $
 # JPEG images
 # SunOS 5.5.1 had
 #
@@ -17,6 +17,7 @@
 0	belong&0xffffff00	0xffd8ff00	JPEG image data
 !:mime	image/jpeg
 !:apple	8BIMJPEG
+!:strength *3
 !:ext jpeg/jpg/jpe/jfif
 >0	use			jpeg
 
