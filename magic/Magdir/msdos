@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.149 2021/07/03 14:00:31 christos Exp $
+# $File: msdos,v 1.150 2021/08/28 12:28:54 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -484,23 +484,23 @@
 # PROTMAN.DOS ELNKPL.DOS
 !:ext	sys/dev/bin/dos
 # 1 space char after "UPX compressed" to get phrase like "UPX compressed character device"
->40	search/7			UPX!			\bUPX compressed\040
+>40	search/7			UPX!			\bUPX compressed 
 # DOS device driver attributes
 >4	uleshort&0x8000			0x0000			\bblock device driver
 # character device
 >4	uleshort&0x8000			0x8000			\b
 # 1 space char after "clock" to get phrase like "clock character device driver CLOCK$"
->>4	uleshort&0x0008			0x0008			\bclock\040
+>>4	uleshort&0x0008			0x0008			\bclock 
 # fast video output by int 29h
 # 1 space char after "fast" to get phrase like "fast standard input/output character device driver"
->>4	uleshort&0x0010			0x0010			\bfast\040
+>>4	uleshort&0x0010			0x0010			\bfast 
 # standard input/output device
 # 1 space char after "standard" to get phrase like "standard input/output character device driver"
->>4	uleshort&0x0003			>0			\bstandard\040
+>>4	uleshort&0x0003			>0			\bstandard 
 >>>4	uleshort&0x0001			0x0001			\binput
 >>>4	uleshort&0x0003			0x0003			\b/
 # 1 space char after "output" to get phrase like "input/output character device driver"
->>>4	uleshort&0x0002			0x0002			\boutput\040
+>>>4	uleshort&0x0002			0x0002			\boutput 
 >>4	uleshort&0x8000			0x8000			\bcharacter device driver
 >0	ubyte				x
 # upx compressed device driver has garbage instead of real in name field of header
@@ -508,7 +508,7 @@
 >>40	default				x
 # leading/trailing nulls, zeros or non ASCII characters in 8-byte name field at offset 10 are skipped
 # 1 space char before device driver name to get phrase like "device driver PROTMAN$"
->>>12		ubyte			>0x2E			\b\040
+>>>12		ubyte			>0x2E			\b 
 >>>>10		ubyte			>0x20
 >>>>>10		ubyte			!0x2E
 >>>>>>10	ubyte			!0x2A			\b%c
@@ -1157,7 +1157,7 @@
 # PNG header (\x89PNG)
 >(12.l)		ubelong		=0x89504e47
 # 1 space char after "with" to get phrase "with PNG image" by magic in ./images
->>&-4		indirect	x	\b with\040
+>>&-4		indirect	x	\b with 
 # DIB image
 >(12.l)		ubelong		!0x89504e47
 #>>&-4		use     	dib-image
@@ -1329,8 +1329,8 @@
 >>>>>>>>>>>>>36	ubyte	!0x20			\b%c
 # followed by string like: 0 v.10 V1.20
 #
-# followed by ,\040Tran\040
->28	search/14	,\040Tran\040
+# followed by ,\040Tran 
+>28	search/14	,\040Tran 
 # probably translated version string like: 0 v1.00
 >>&0	string	x				\b, tran version %s
 # followed by Ctrl-J Ctrl-Z
@@ -1747,7 +1747,7 @@
 # magic/Magdir/msdos, 1169: Warning: EXTENSION type `     *' has bad char '*'
 # file: line 1169: Bad magic entry '  *'
 # after header original file content
->>>>>>128	indirect x	\b;\040
+>>>>>>128	indirect x	\b; 
 
 
 # DOS backup 3.3 to 5.x
