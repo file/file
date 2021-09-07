@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.144 2021/04/26 15:56:00 christos Exp $
+# $File: filesystems,v 1.145 2021/09/07 18:57:50 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1718,6 +1718,12 @@
 >0x50	string		x			name %s,
 >0x98	ulelong		x			version %u,
 >0xa0	ulelong		x			flags %#x
+
+0	ulequad		0x48414d3205172011	HAMMER2 filesystem (little-endian),
+>0x3b	byte		x			volume %d,
+>0x28	ulequad/1073741824 x			size %lluGB,
+>0x30	ulelong		x			version %u,
+>0x34	ulelong		x			flags %#x
 
 # ext2/ext3 filesystems - Andreas Dilger <adilger@dilger.ca>
 # ext4 filesystem - Eric Sandeen <sandeen@sandeen.net>
