@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.200 2021/07/14 09:07:00 christos Exp $
+# $File: images,v 1.201 2021/09/11 19:25:39 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -294,8 +294,16 @@
 # Fujifilm RAF RAW image files with embedded JPEG data and compressed
 # or uncompressed CFA RAW data. Byte order: Big Endian.
 # URL: https://libopenraw.freedesktop.org/formats/raf/
-0	string		FUJIFILMCCD-RAW Fujifilm RAF raw image data
+# Useful info from http://fileformats.archiveteam.org/wiki/Fujifilm_RAF.
+# File extension: RAF
+# Works for both the FinePix S2 Pro and the X-T3. Anybody have some more Fuji
+# raw samples available?
+# -- David Dyer-Bennet <dd-b@dd-b.net> 9-Sep-2021
+0	string		FUJIFILMCCD-RAW		Fujifilm RAF raw image data
 !:mime  image/x-fuji-raf
+!:ext	raf
+>0x10	string		x			\b, format version %4.4s
+>0x1C	string		x			\b, camera %s
 
 # Tag Image File Format, from Daniel Quinlan (quinlan@yggdrasil.com)
 # The second word of TIFF files is the TIFF version number, 42, which has
