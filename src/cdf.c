@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.117 2021/09/16 23:59:42 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.118 2021/09/17 17:42:14 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1091,8 +1091,9 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 
 				DPRINTF(("o=%" SIZE_T_FORMAT "u l=%d(%"
 				    SIZE_T_FORMAT "u), t=%" SIZE_T_FORMAT
-				    "u s=%s\n", o4, l, CDF_ROUND(l, sizeof(l)),
-				    left, inp[i].pi_str.s_buf));
+				    "u s=%.*s\n", o4, l,
+				    CDF_ROUND(l, sizeof(l)),
+				    left, (int)l, inp[i].pi_str.s_buf));
 
 				if (l & 1)
 					l++;
