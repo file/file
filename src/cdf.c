@@ -35,11 +35,10 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.118 2021/09/17 17:42:14 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.119 2021/09/17 17:44:07 christos Exp $")
 #endif
 
 #include <assert.h>
-#define CDF_DEBUG
 #ifdef CDF_DEBUG
 #include <err.h>
 #endif
