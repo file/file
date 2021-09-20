@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.19 2021/04/26 15:56:00 christos Exp $
+# $File: amigaos,v 1.20 2021/09/20 00:42:19 christos Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -40,7 +40,62 @@
 #26	string		V.2		Brian Postma's Soundmon Module sound file v2
 
 # The following are from: "Stefan A. Haubenthal" <polluks@web.de>
-0	beshort		0x0f00		AmigaOS bitmap font
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Amiga_bitmap_font
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/font-amiga.trid.xml
+#		https://wiki.amigaos.net/wiki/Graphics_Library_and_Text
+# fch_FileID=FCH_ID=0x0f00
+0	beshort		0x0f00
+# skip some AVM powerline firmware images by check for positive number of font elements
+# https://download.avm.de/fritzpowerline/fritzpowerline-1000e-t/other/fritz.os/fritz.powerline_1000ET_01_05.image
+>2	ubeshort	>0		AmigaOS bitmap font
+#!:mime	application/octet-stream
+!:mime	font/x-amiga-font
+!:ext	font
+# struct FontContents fch_FC; 1st fc_FileName [MAXFONTPATH=256]; ~ filename "/" fc_YSize
+# like: topazb/6 suits/8  Excel/9e emerald/17 Franklin/23 DIAMONDS/60.8C
+>>4	string		x		"%.256s"
+# fc_YSize ~number after slash in fc_FileName; like: 6 7 8 9 11 12 16 17 21 23 45 60
+>>260	beshort		x		\b, fc_YSize %u
+# fch_NumEntries; number of FontContents elements like:
+# 1 (often) 2 3 (IconCondensed.font tempfont.font) 4 (Franklin.font) 6 (mcoop.font)
+>>2	ubeshort	>1		\b, %u elements
+#>>2	beshort		x		\b, %u element
+# plural s
+#>>2	beshort		!1		\bs
+# like: 6 7 8 9 11 12 16 17 21 23 45 60
+#>>262	beshort		x		\b, FLAGS_STYLE
+>>2	beshort		>1		\b, 2nd
+# 2nd fc_FileName like: Franklin/36
+>>>264	string		x		"%.256s"
+>>2	beshort		>2		\b, 3rd
+# 3rd fc_FileName like: Franklin/18
+>>>524	string		x		"%.256s"
+# URL:		http://fileformats.archiveteam.org/wiki/Amiga_bitmap_font
+# Reference:	https://wiki.amigaos.net/wiki/Graphics_Library_and_Text
+#		http://mark0.net/download/triddefs_xml.7z/defs/f/font-amiga-var2.trid.xml
+# Note:		called by TrID "Amiga bitmap Font (var.2)"
+# fch_FileID=TFCH_ID=0x0f02
+0	beshort		0x0f02
+# skip possible misidentified foo by check for positive number of font elements
+>2	ubeshort	>0		AmigaOS bitmap font (TFCH)
+#!:mime	application/octet-stream
+!:mime	font/x-amiga-font
+!:ext	font
+# struct TFontContents fch_TFC[]; 1st tfc_FileName [254]; ~ filename "/" fc_YSize
+# like: Abbey/45 XScript/75 XTriumvirate/45
+>>4	string		x		"%.254s"
+# tfc_TagCount; including the TAG_END tag like: 4
+>>258	ubeshort	x		\b, tfc_TagCount %u
+# tfc_YSize ~number after slash in tfc_FileName; like: 45 75
+>>260	beshort		x		\b, tfc_YSize %u
+# tfc_Style; tfc_Flags like: 8022h 8222h
+#>>262	ubeshort	x		\b, FLAGS_STYLE %#x
+# fch_NumEntries; number of FontContents elements like: 1 (abbey.font) 2 (xscript.font xtriumvirate.font)
+>>2	ubeshort	>1		\b, %u elements
+>>2	beshort		>1		\b, 2nd
+# 2nd tfc_FileName like: XScript/45 XTriumvirate/30
+>>>264	string		x		"%.254s"
 0	beshort		0x0f03		AmigaOS outline font
 0	belong		0x80001001	AmigaOS outline tag
 0	string		##\ version	catalog translation
