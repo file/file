@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.150 2021/08/28 12:28:54 christos Exp $
+# $File: msdos,v 1.151 2021/09/20 18:08:28 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -732,7 +732,11 @@
 !:mime	application/x-dosexec
 !:ext	com
 #HELP.COm EDIT.coM
-18	string	\xcd\x21		COM executable for MS-DOS
+18	string	\xcd\x21	
+# not printable before it?
+>17	byte	>32
+>>17	byte	<126		
+>>17	default	x			COM executable for MS-DOS	
 !:mime	application/x-dosexec
 !:ext	com
 #NWRPLTRM.COm
