@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.114 2021/02/05 21:33:49 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.115 2021/09/20 17:45:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -156,6 +156,7 @@ out:
 	free(dllpath);
 }
 
+#ifndef BUILD_AS_WINDOWS_STATIC_LIBARAY
 /* Placate GCC by offering a sacrificial previous prototype */
 BOOL WINAPI DllMain(HINSTANCE, DWORD, LPVOID);
 
@@ -167,6 +168,7 @@ DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
 		_w32_dll_instance = hinstDLL;
 	return 1;
 }
+#endif
 #endif
 
 private const char *
