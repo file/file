@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.201 2021/09/11 19:25:39 christos Exp $
+# $File: images,v 1.202 2021/09/23 13:58:13 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1659,12 +1659,22 @@
 >768	beshort		7	bottom to top/right to left
 
 # From: Tom Hilinski <tom.hilinski@comcast.net>
-# https://www.unidata.ucar.edu/packages/netcdf/
+# https://www.unidata.ucar.edu/software/netcdf/
 0	string	CDF\001			NetCDF Data Format data
 # 64-bit offset netcdf Classic https://www.unidata.ucar.edu/software/netcdf/docs/file_format_specifications
 0	string	CDF\002			NetCDF Data Format data (64-bit offset)
 
-#-----------------------------------------------------------------------
+# From: Michael Liu
+# https://en.wikipedia.org/wiki/Common_Data_Format
+0	belong	0xCDF30001	Common Data Format (Version 3 or later) data
+!:mime  application/x-cdf
+                
+0	belong	0xCDF26002	Common Data Format (Version 2.6 or 2.7) data
+!:mime  application/x-cdf
+
+0	belong	0x0000FFFF	Common Data Format (Version 2.5 or earlier) data
+!:mime  application/x-cdf
+
 # Hierarchical Data Format, used to facilitate scientific data exchange
 # specifications at http://hdf.ncsa.uiuc.edu/
 # URL: 		http://fileformats.archiveteam.org/wiki/HDF
