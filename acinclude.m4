@@ -17,10 +17,10 @@ AC_CHECK_DECLS([tzname], , , [#include <time.h>])
 AC_CACHE_CHECK(for tzname, ac_cv_var_tzname,
 [AC_LINK_IFELSE(
 [AC_LANG_PROGRAM([#include <time.h>],
-[#if !HAVE_DECL_TZNAME
+[[#if !HAVE_DECL_TZNAME
 extern char *tzname[];
 #endif
-return tzname[0][0];])], [ac_cv_var_tzname=yes], [ac_cv_var_tzname=no])])
+return tzname[0][0];]])], [ac_cv_var_tzname=yes], [ac_cv_var_tzname=no])])
   if test $ac_cv_var_tzname = yes; then
     AC_DEFINE(HAVE_TZNAME,1,[HAVE_TZNAME])
   fi
