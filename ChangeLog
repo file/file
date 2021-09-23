@@ -1,7 +1,34 @@
+2021-09-23  03:51  Christos Zoulas <christos@zoulas.com>
+
+	* Avinash Sonawane: Fix tzname detection
+
+2021-09-03  09:17  Christos Zoulas <christos@zoulas.com>
+
+	* Fix relationship tests with "search" magic, don't short circuit
+	  logic
+
+2021-07-13  01:06  Christos Zoulas <christos@zoulas.com>
+
+	* Fix memory leak in compile mode
+
+2021-07-01  03:51  Christos Zoulas <christos@zoulas.com>
+
+	* PR/272: kiefermat: Only set returnval = 1 when we printed something
+	  (in all cases print or !print). This simplifies the logic and fixes
+	  the issue in the PR with -k and --mime-type there was no continuation
+	  printed before the default case.
+
 2021-06-30  13:07  Christos Zoulas <christos@zoulas.com>
 
 	* PR/270: Don't translate unprintable characters in %s magic formats
 	  when -r
+	* PR/269: Avoid undefined behavior with clang (adding offset to NULL)
+
+2021-05-09  18:38  Christos Zoulas <christos@zoulas.com>
+
+	* Add a new flag (f) that requires that the match is a full word,
+	   not a partial word match.
+	* Add varint types (unused)
 
 2021-04-19  17:17  Christos Zoulas <christos@zoulas.com>
 
