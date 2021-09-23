@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.202 2021/09/23 13:58:13 christos Exp $
+# $File: images,v 1.203 2021/09/23 13:59:02 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1668,7 +1668,7 @@
 # https://en.wikipedia.org/wiki/Common_Data_Format
 0	belong	0xCDF30001	Common Data Format (Version 3 or later) data
 !:mime  application/x-cdf
-                
+
 0	belong	0xCDF26002	Common Data Format (Version 2.6 or 2.7) data
 !:mime  application/x-cdf
 
