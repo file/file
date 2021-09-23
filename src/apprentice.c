@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.307 2021/07/13 05:06:48 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.308 2021/09/23 19:46:12 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3427,9 +3427,7 @@ file_varint2uintmax_t(const unsigned char *us, int t, size_t *l)
                         x <<= 7;
                 }
         } else {
-printf("start: ");
                 for (c = us; *c; c++) {
-printf("%.2x ", *c);
 			x |= *c & 0x7f;
 			if ((*c & 0x80) == 0)
 				break;
@@ -3437,7 +3435,6 @@ printf("%.2x ", *c);
                 }
 		if (l)
 			*l = c - us + 1;
-printf(" end %zu, %ju\n", *l, x);
         }
 	return x;
 }
