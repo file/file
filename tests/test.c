@@ -76,7 +76,7 @@ main(int argc, char **argv)
 	const char *result;
 	size_t result_len, desired_len;
 	char *desired = NULL;
-	int i, e = EXIT_FAILURE;
+	int e = EXIT_FAILURE;
 	FILE *fp;
 
 
