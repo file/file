@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.189 2021/02/05 21:33:49 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.190 2021/09/24 14:14:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -132,28 +132,28 @@ private const struct {
 
 private struct {
 	const char *name;
-	int tag;
 	size_t value;
-	int set;
 	size_t def;
 	const char *desc;
+	int tag;
+	int set;
 } pm[] = {
-	{ "bytes",	MAGIC_PARAM_BYTES_MAX, 0, 0, FILE_BYTES_MAX,
-	    "max bytes to look inside file" },
-	{ "elf_notes",	MAGIC_PARAM_ELF_NOTES_MAX, 0, 0, FILE_ELF_NOTES_MAX,
-	    "max ELF notes processed" },
-	{ "elf_phnum",	MAGIC_PARAM_ELF_PHNUM_MAX, 0, 0, FILE_ELF_PHNUM_MAX,
-	    "max ELF prog sections processed" },
-	{ "elf_shnum",	MAGIC_PARAM_ELF_SHNUM_MAX, 0, 0, FILE_ELF_SHNUM_MAX,
-	    "max ELF sections processed" },
-	{ "encoding",	MAGIC_PARAM_ENCODING_MAX, 0, 0, FILE_ENCODING_MAX,
-	    "max bytes to scan for encoding" },
-	{ "indir",	MAGIC_PARAM_INDIR_MAX, 0, 0, FILE_INDIR_MAX,
-	    "recursion limit for indirection" },
-	{ "name",	MAGIC_PARAM_NAME_MAX, 0, 0, FILE_NAME_MAX,
-	    "use limit for name/use magic" },
-	{ "regex",	MAGIC_PARAM_REGEX_MAX, 0, 0, FILE_REGEX_MAX,
-	    "length limit for REGEX searches" },
+	{ "bytes", 0, FILE_BYTES_MAX, "max bytes to look inside file",
+	    MAGIC_PARAM_BYTES_MAX, 0 },
+	{ "elf_notes", 0, FILE_ELF_NOTES_MAX, "max ELF notes processed",
+	    MAGIC_PARAM_ELF_NOTES_MAX, 0 },
+	{ "elf_phnum", 0, FILE_ELF_PHNUM_MAX, "max ELF prog sections processed",
+	    MAGIC_PARAM_ELF_PHNUM_MAX, 0 },
+	{ "elf_shnum", 0, FILE_ELF_SHNUM_MAX, "max ELF sections processed",
+	    MAGIC_PARAM_ELF_SHNUM_MAX, 0 },
+	{ "encoding", 0, FILE_ENCODING_MAX, "max bytes to scan for encoding",
+	    MAGIC_PARAM_ENCODING_MAX, 0 },
+	{ "indir", 0, FILE_INDIR_MAX, "recursion limit for indirection",
+	    MAGIC_PARAM_INDIR_MAX, 0 },
+	{ "name", 0, FILE_NAME_MAX, "use limit for name/use magic",
+	    MAGIC_PARAM_NAME_MAX, 0 },
+	{ "regex", 0, FILE_REGEX_MAX, "length limit for REGEX searches",
+	    MAGIC_PARAM_REGEX_MAX, 0 },
 };
 
 private int posixly;
