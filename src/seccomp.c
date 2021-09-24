@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.20 2021/04/30 22:07:03 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.21 2021/09/24 14:17:24 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -54,7 +54,8 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.20 2021/04/30 22:07:03 christos Exp $")
 #define ALLOW_IOCTL_RULE(param) \
     do \
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(ioctl), 1, \
-	    SCMP_CMP(1, SCMP_CMP_EQ, param)) == -1) \
+	    SCMP_CMP(1, SCMP_CMP_EQ, (scmp_datum_t)param, \
+		     (scmp_datum_t)0)) == -1) \
 		goto out; \
     while (/*CONSTCOND*/0)
 
