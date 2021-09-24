@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.308 2021/09/23 19:46:12 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.309 2021/09/24 13:59:19 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1342,6 +1342,12 @@ coalesce_entries(struct magic_set *ms, struct magic_entry *me, uint32_t nme,
 
 	for (i = 0; i < nme; i++)
 		mentrycount += me[i].cont_count;
+
+	if (mentrycount == 0) {
+		*ma = NULL;
+		*nma = 0;
+		return 0;
+	}
 
 	slen = sizeof(**ma) * mentrycount;
 	if ((*ma = CAST(struct magic *, malloc(slen))) == NULL) {
