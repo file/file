@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.171 2021/08/26 10:41:18 christos Exp $
+# $File: Makefile.am,v 1.172 2021/10/07 15:41:22 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -245,6 +245,7 @@ $(MAGIC_FRAGMENT_DIR)/project \
 $(MAGIC_FRAGMENT_DIR)/psdbms \
 $(MAGIC_FRAGMENT_DIR)/psl \
 $(MAGIC_FRAGMENT_DIR)/pulsar \
+$(MAGIC_FRAGMENT_DIR)/puzzle \
 $(MAGIC_FRAGMENT_DIR)/pwsafe \
 $(MAGIC_FRAGMENT_DIR)/pyramid \
 $(MAGIC_FRAGMENT_DIR)/python \
