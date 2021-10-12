@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.151 2021/09/20 18:08:28 christos Exp $
+# $File: msdos,v 1.152 2021/10/12 18:26:10 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -669,11 +669,11 @@
 ## SYSLINUX.COM (version 1.40 - 2.13)
 ## GFXBOOT.COM (version 3.75)
 ## COPYBS.COM POWEROFF.COM INT18.COM
-#>>1	default	x			COM executable for DOS
-#!:mime	application/x-dosexec
+>>1	default	x			COM executable for DOS
+!:mime	application/x-dosexec
 ##!:mime	application/x-ms-dos-executable
 ##!:mime	application/x-msdos-program
-#!:ext com
+!:ext com
 
 # URL:		https://en.wikipedia.org/wiki/UPX
 # Reference:	https://github.com/upx/upx/archive/v3.96.zip/upx-3.96/
