@@ -1,10 +1,10 @@
 # HOW TO RELEASE FILE
 
-@(#) $File: RELEASE-PROCEDURE,v 1.6 2018/07/25 06:17:15 christos Exp $
+@(#) $File: RELEASE-PROCEDURE,v 1.7 2021/10/18 16:38:25 christos Exp $
 
 1)  Update version number in configure.ac
 2)  Note the new version in ChangeLog
-3)  Update README if applicable
+3)  Update README.md if applicable
 4)  Commit changes into CVS
 5)  Rebuild and run tests (see README.DEVELOPER)
 6)  Tag the release with FILEx_yy
