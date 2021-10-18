@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.204 2021/10/12 18:02:16 christos Exp $
+# $File: images,v 1.205 2021/10/18 13:56:29 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1936,25 +1936,75 @@
 >>8	string		x		\b, "%4.4s" type
 
 # TIM images
-0		lelong		0x00000010	TIM image,
->4		lelong  	0x8		4-Bit,
->4		lelong  	0x9		8-Bit,
->4		lelong  	0x2		15-Bit,
->4		lelong  	0x3		24-Bit,
->4		lelong 		&8
->>(8.l+12)	leshort		x		Pixel at (%d,
->>(8.l+14)	leshort		x		\b%d)
->>(8.l+16)	leshort		x		Size=%dx
->>(8.l+18)	leshort		x		\b%d,
->>4		lelong 		0x8		16 CLUT Entries at
->>4		lelong 		0x9		256 CLUT Entries at
->>12		leshort		x		(%d,
->>14		leshort		x		\b%d)
->4		lelong		^8
->>12		leshort		x		Pixel at (%d,
->>14		leshort		x		\b%d)
->>16		leshort		x		Size=%dx
->>18		leshort		x		\b%d
+# URL:		http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)
+# Reference:	https://mrclick.zophar.net/TilEd/download/timgfx.txt
+# Update:	Joerg Jenderek
+# Note:		called as "PSX TIM *bpp bitmap" by bitmap-tim-*.trid.xml
+#		verified as "TIM PSX" by XnView `nconvert -fullinfo *.tim` and
+#		by RECOIL `recoil2png -o TMP.PNG input.tim; file TMP.PNG` and often
+#		as "PSX TIM" by ImageMagick version 7.1.0-10 command `identify *.tim`
+#		here signed integers are used but according to Kaitai unsigned
+0		lelong		0x00000010
+# 32 Flag bits *cttt; c~CLUT flag t~type 000~4BPP 001~8BPP 010~16BPP 011~24BPP 100~Mixed
+#>4		lelong  	x		FLAGS=%#x
+# 12+Size of CLUT (2Ch for 4BPP; 20Ch 40Ch 60Ch 80Ch C0Ch for 8BPP) or
+# +image data size (800Ch 2000Ch 2580C for 16BPP) (02000003h for dBase memo test.dbt)
+#>8		lelong		x		\b, 12+CLUT or data size=%#8.8x
+# CLUT or data size remainder is 12 (Ch), but 03 for dBase memo test.dbt
+#>8		ubyte&0x0F	=0x0C		\b, SIZE REMAINDER IS 12
+# skip dBase III memo test.dbt with invalid flags 22D10189h
+>4		lelong&0xffFFffF0	=0	Sony PlayStation PSX image,
+# file (version 5.40) labeled the above entry as "TIM image"
+!:mime	image/x-sony-tim
+!:ext	tim
+#>>4		lelong&0x00000007	x	\b, BPP~%u
+# 4BPP and 8BPP examples exist with CLUT or without CLUT
+>>4		lelong&0x07	0x0		4-Bit,
+>>4		lelong&0x07	0x1		8-Bit,
+# 16BPP and 24BPP examples have no CLUT
+>>4		lelong  	0x2		15-Bit,
+>>4		lelong  	0x3		24-Bit,
+# no example
+>>4		lelong&0x07  	0x4		Mixed-Bit,
+# CLUT flag set
+>>4		lelong 		&8
+# 12 + size of CLUT like: 1000Ch 800Ch 400Ch 40Ch and 2FEh (KAGE.TIM)
+#>>>(8.l+8)	lelong		x		\b, 12+CLUT SIZE=%#8.8x
+>>>(8.l+12)	leshort		x		Pixel at (%d,
+>>>(8.l+14)	leshort		x		\b%d) Size=
+# image width (to get actual width multiply by 4 for 4BPP and by 2 for 8BPP)
+>>>>4		lelong  	0x8
+>>>>>(8.l+16)	leshort*4	x		\b%d
+>>>>4		lelong  	0x9
+>>>>>(8.l+16)	leshort*2	x		\b%d
+# image height like: 32 64 128 144 160 208 256
+>>>(8.l+18)	leshort		x		\bx%d,
+>>>4		lelong 		0x8		16 CLUT Entries at
+>>>4		lelong 		0x9		256 CLUT Entries at
+>>>12		leshort		x		(%d,
+>>>14		leshort		x		\b%d)
+# no Color LookUp Table (CLUT)
+>>4		lelong		^8
+# image orgin X Y
+>>>12		leshort		x		Pixel at (%d,
+>>>14		leshort		x		\b%d) Size=
+# real image width = multiply by 4 (4BPP) 2 (8BPP) 1 (16BPP) 2/3 (24BPP)
+>>>>4		lelong  	0x0
+>>>>>16		leshort*4	x		\b%d
+>>>>4		lelong  	0x1
+>>>>>16		leshort*2	x		\b%d
+>>>>4		lelong  	0x2
+>>>>>16		leshort		x		\b%d
+>>>>4		lelong  	0x3
+# GRR: NOT working
+#>>>>>16		leshort*2/3	x		\b%d
+>>>>>16		leshort		x		\b2/3*%d
+# mixed format width not explained!
+>>>>4		lelong  	0x4
+>>>>>16		leshort		x		\b%d
+# image height like: 64 240 256
+>>>18		leshort		x		\bx%d
+# TIM image data
 
 # MDEC streams
 0		lelong		0x80010160	MDEC video stream,
