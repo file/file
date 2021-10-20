@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.151 2021/08/16 10:19:56 christos Exp $
+# $File: archive,v 1.152 2021/10/20 12:34:59 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -518,46 +518,65 @@
 #>-3	ubyte		x	\b, last 3 bytes 0x%2.2x
 #>-2	ubeshort	x	\b%4.4x
 # From:		Joerg Jenderek
-# URL:		https://wiki.68kmla.org/DiskCopy_4.2_format_specification
+# URL:		https://en.wikipedia.org/wiki/Disk_Copy
 # reference:	http://nulib.com/library/FTN.e00005.htm
 0x52	ubeshort	0x0100
 # test for disk image size equal or above 400k
 >0x40	ubelong		>409599
 # test also for disk image size equal or below 1440k to skip
 # windows7en.mbr UNICODE.DAT
->>0x40	ubelong		<1474561
-# To skip Flags$StringJoiner.class with size 00106A61h test also for only 4 disk image sizes
-# 00064000 for  400k GCR disks
-# 000c8000 for  800k GCR disks
-# 000b4000 for  720k MFM disks
-# 00168000 for 1440k MFM disks
->>>0x40	ubelong&0xffE03fFF	0
->>>>0	use	dc42-floppy
+#>>0x40	ubelong		<1474561
+# test now for "low" disk image size equal or below 64 MiB to skip
+# windows7en.mbr (B441BBAAh) UNICODE.DAT (0400AF05h)
+>>0x40	ubelong		<0x04000001
+# To skip Flags$StringJoiner.class with size 00106A61h test also for valid disk image sizes
+# 00064000 for  400k GCR disks	dc42-400k-gcr.trid.xml
+# 000c8000 for  800k GCR disks	dc42-800k-gcr.trid.xml
+# 000b4000 for  720k MFM disks	dc42-720k-mfm.trid.xml
+# 00168000 for 1440k MFM disks	dc42-1440k-mfm.trid.xml
+#	https://lisaem.sunder.net/LisaProjectDocs.txt
+# 00500000	05M	available
+# 00A00000	10M	available
+# 01800000	24M	possible
+# 02000000	32M	uncertain
+# 04000000	64M	uncertain
+>>>0x40	ubelong&0xf8003fFF	0
+# skip samples with invalid disk name length like:
+# 181 (biosmd80.rom) 202 (Flags$StringJoiner.class) 90 (UNICODE.DAT)
+>>>>0x0	ubyte			<64
+>>>>>0	use			dc42-floppy
 #	display information of Apple DiskCopy 4.2 floppy image
 0	name		dc42-floppy
-# image pascal name padded with NULs like Microsoft Mail
+# disk name length; maximal 63
+#>0	ubyte	    	x	DISK NAME LENGTH %u
+# ASCII image pascal (maximal 63 bytes) name padded with NULs like:
+# "Microsoft Mail" "Disquette 2" "IIe Installer Disk"
+# "-lisaem.sunder.net hd-" (dc42-lisaem.trid.xml) "-not a Macintosh disk" (dc42-nonmac.trid.xml)
 >00	pstring/B	x	Apple DiskCopy 4.2 image %s
 #!:mime	application/octet-stream
 !:mime	application/x-dc42-floppy-image
 !:apple	dCpydImg
-!:ext	image/dc42
-# data size in bytes like 409600
+# probably also img like: "Utilitaires 2.img" "Installation 7.img"
+!:ext	image/dc42/img
+# data size in bytes like: 409600 737280 819200 1474560
 >0x40	ubelong		x	\b, %u bytes
 # for debugging purpose size in hexadecimal
 #>0x40	ubelong		x	(%#8.8x)
-# tag size in bytes
+# tag size in bytes like: 0 (often) 2580h (PUID fmt/625) 4B00h (Microsoft Mail.image)
 >0x44	ubelong		>0	\b, %#x tag size
 # data checksum
 #>0x48	ubelong		x	\b, %#x checksum
 # tag checksum
 #>0x4c	ubelong		x	\b, %#x tag checksum
-# disk encoding
+# disk encoding like: 0 1 2 3 (PUID: fmt/625)
 >0x50	ubyte		0	\b, GCR CLV ssdd (400k)
 >0x50	ubyte		1	\b, GCR CLV dsdd (800k)
 >0x50	ubyte		2	\b, MFM CAV dsdd (720k)
 >0x50	ubyte		3	\b, MFM CAV dshd (1440k)
 >0x50	ubyte		>3	\b, %#x encoding
-# format byte
+# format byte like: 12h (Lisa 400K) 24h (400K Macintosh) 96h (800K Apple II disk)
+# 2 (Mac 400k "Disquette Installation 13.image")
+# 22h (double-sided MFM or Mac 800k "Disco 12.image" "IIe Installer Disk.image")
 >0x51	ubyte		x	\b, %#x format
 #>0x54	ubequad		x	\b, data %#16.16llx
 # ESP, could this conflict with Easy Software Products' (e.g.ESP ghostscript) documentation?
