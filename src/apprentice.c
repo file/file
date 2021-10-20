@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.309 2021/09/24 13:59:19 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.310 2021/10/20 13:56:15 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -50,6 +50,12 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.309 2021/09/24 13:59:19 christos Exp $")
 #endif
 #include <dirent.h>
 #include <limits.h>
+#ifdef HAVE_BYTESWAP_H
+#include <byteswap.h>
+#endif
+#ifdef HAVE_SYS_BSWAP_H
+#include <sys/bswap.h>
+#endif
 
 
 #define	EATAB {while (isascii(CAST(unsigned char, *l)) && \
@@ -124,9 +130,21 @@ private void mlist_free_all(struct magic_set *);
 private void mlist_free(struct mlist *);
 private void byteswap(struct magic *, uint32_t);
 private void bs1(struct magic *);
+
+#if defined(HAVE_BYTESWAP)
+#define swap2(x)	bswap_16(x)
+#define swap4(x)	bswap_32(x)
+#define swap8(x)	bswap_64(x)
+#elif defined(HAVE_SYS_BSWAP_H)
+#define swap2(x)	bswap16(x)
+#define swap4(x)	bswap32(x)
+#define swap8(x)	bswap64(x)
+#else
 private uint16_t swap2(uint16_t);
 private uint32_t swap4(uint32_t);
 private uint64_t swap8(uint64_t);
+#endif
+
 private char *mkdbname(struct magic_set *, const char *, int);
 private struct magic_map *apprentice_buf(struct magic_set *, struct magic *,
     size_t);
@@ -3355,6 +3373,7 @@ byteswap(struct magic *magic, uint32_t nmagic)
 		bs1(&magic[i]);
 }
 
+#if !defined(HAVE_BYTESWAP_H) && !defined(HAVE_SYS_BSWAP_H)
 /*
  * swap a short
  */
@@ -3394,7 +3413,7 @@ swap8(uint64_t sv)
 	uint64_t rv;
 	uint8_t *s = RCAST(uint8_t *, RCAST(void *, &sv));
 	uint8_t *d = RCAST(uint8_t *, RCAST(void *, &rv));
-#if 0
+# if 0
 	d[0] = s[3];
 	d[1] = s[2];
 	d[2] = s[1];
@@ -3403,7 +3422,7 @@ swap8(uint64_t sv)
 	d[5] = s[6];
 	d[6] = s[5];
 	d[7] = s[4];
-#else
+# else
 	d[0] = s[7];
 	d[1] = s[6];
 	d[2] = s[5];
@@ -3412,9 +3431,10 @@ swap8(uint64_t sv)
 	d[5] = s[2];
 	d[6] = s[1];
 	d[7] = s[0];
-#endif
+# endif
 	return rv;
 }
+#endif
 
 protected uintmax_t 
 file_varint2uintmax_t(const unsigned char *us, int t, size_t *l)
