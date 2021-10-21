@@ -1,16 +1,17 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README.md,v 1.3 2021/07/06 11:04:29 christos Exp $
+    @(#) $File: README.md,v 1.4 2021/10/21 01:51:31 christos Exp $
 
-- Mailing List: <file@astron.com>
-- Mailing List archives: <https://mailman.astron.com/pipermail/file/>
 - Bug Tracker: <https://bugs.astron.com/>
-- E-mail: <christos@astron.com>
 - Build Status: <https://travis-ci.org/file/file>
-- Public repo: <https://github.com/file/file>
 - Download link: <ftp://ftp.astron.com/pub/file/>
-- Test framework: <https://github.com/file/file-tests>
+- E-mail: <christos@astron.com>
 - Fuzzing link: <https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:file>
+- Home page: https://www.darwinsys.com/file/
+- Mailing List archives: <https://mailman.astron.com/pipermail/file/>
+- Mailing List: <file@astron.com>
+- Public repo: <https://github.com/file/file>
+- Test framework: <https://github.com/file/file-tests>
 
 Phone: Do not even think of telephoning me about this program. Send
 cash first!
