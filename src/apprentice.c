@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.310 2021/10/20 13:56:15 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.311 2021/10/21 13:00:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -131,7 +131,7 @@ private void mlist_free(struct mlist *);
 private void byteswap(struct magic *, uint32_t);
 private void bs1(struct magic *);
 
-#if defined(HAVE_BYTESWAP)
+#if defined(HAVE_BYTESWAP_H)
 #define swap2(x)	bswap_16(x)
 #define swap4(x)	bswap_32(x)
 #define swap8(x)	bswap_64(x)
