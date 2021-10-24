@@ -1,3 +1,7 @@
+2021-10-24  11:51   Christos Zoulas <christos@zoulas.com>
+
+	* Add support for msdos dates and times
+
 2021-10-20   9:55   Christos Zoulas <christos@zoulas.com>
 
 	* use the system byte swapping functions if available (Werner Fink)

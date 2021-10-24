@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.315 2021/09/03 13:17:52 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.316 2021/10/24 15:52:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -675,7 +675,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_LEDATE:
 	case FILE_MEDATE:
 		if (file_printf(ms, F(ms, desc, "%s"),
-		    file_fmttime(tbuf, sizeof(tbuf), p->l, 0)) == -1)
+		    file_fmtdatetime(tbuf, sizeof(tbuf), p->l, 0)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -685,7 +685,8 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_LELDATE:
 	case FILE_MELDATE:
 		if (file_printf(ms, F(ms, desc, "%s"),
-		    file_fmttime(tbuf, sizeof(tbuf), p->l, FILE_T_LOCAL)) == -1)
+		    file_fmtdatetime(tbuf, sizeof(tbuf), p->l, FILE_T_LOCAL))
+			== -1)
 			return -1;
 		t = ms->offset + sizeof(uint32_t);
 		break;
@@ -694,7 +695,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQDATE:
 	case FILE_LEQDATE:
 		if (file_printf(ms, F(ms, desc, "%s"),
-		    file_fmttime(tbuf, sizeof(tbuf), p->q, 0)) == -1)
+		    file_fmtdatetime(tbuf, sizeof(tbuf), p->q, 0)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -703,7 +704,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQLDATE:
 	case FILE_LEQLDATE:
 		if (file_printf(ms, F(ms, desc, "%s"),
-		    file_fmttime(tbuf, sizeof(tbuf), p->q, FILE_T_LOCAL)) == -1)
+		    file_fmtdatetime(tbuf, sizeof(tbuf), p->q, FILE_T_LOCAL)) == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
 		break;
@@ -712,7 +713,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_BEQWDATE:
 	case FILE_LEQWDATE:
 		if (file_printf(ms, F(ms, desc, "%s"),
-		    file_fmttime(tbuf, sizeof(tbuf), p->q, FILE_T_WINDOWS))
+		    file_fmtdatetime(tbuf, sizeof(tbuf), p->q, FILE_T_WINDOWS))
 		    == -1)
 			return -1;
 		t = ms->offset + sizeof(uint64_t);
@@ -810,6 +811,22 @@ mprint(struct magic_set *ms, struct magic *m)
 			return -1;
 		t = ms->offset;
 		break;
+	case FILE_MSDOSDATE:
+	case FILE_BEMSDOSDATE:
+	case FILE_LEMSDOSDATE:
+		if (file_printf(ms, F(ms, desc, "%s"),
+		    file_fmtdate(tbuf, sizeof(tbuf), p->h)) == -1)
+			return -1;
+		t = ms->offset + sizeof(uint16_t);
+		break;
+	case FILE_MSDOSTIME:
+	case FILE_BEMSDOSTIME:
+	case FILE_LEMSDOSTIME:
+		if (file_printf(ms, F(ms, desc, "%s"),
+		    file_fmttime(tbuf, sizeof(tbuf), p->h)) == -1)
+			return -1;
+		t = ms->offset + sizeof(uint16_t);
+		break;
 	default:
 		file_magerror(ms, "invalid m->type (%d) in mprint()", m->type);
 		return -1;
@@ -832,6 +849,12 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
   	case FILE_SHORT:
   	case FILE_BESHORT:
   	case FILE_LESHORT:
+	case FILE_MSDOSDATE:
+	case FILE_LEMSDOSDATE:
+	case FILE_BEMSDOSDATE:
+	case FILE_MSDOSTIME:
+	case FILE_LEMSDOSTIME:
+	case FILE_BEMSDOSTIME:
 		o = CAST(int32_t, (ms->offset + sizeof(short)));
 		break;
 
@@ -1137,6 +1160,12 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 			goto out;
 		return 1;
 	case FILE_SHORT:
+	case FILE_MSDOSDATE:
+	case FILE_LEMSDOSDATE:
+	case FILE_BEMSDOSDATE:
+	case FILE_MSDOSTIME:
+	case FILE_LEMSDOSTIME:
+	case FILE_BEMSDOSTIME:
 		if (cvt_16(p, m) == -1)
 			goto out;
 		return 1;
@@ -2016,6 +2045,12 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	case FILE_SHORT:
 	case FILE_BESHORT:
 	case FILE_LESHORT:
+	case FILE_MSDOSDATE:
+	case FILE_LEMSDOSDATE:
+	case FILE_BEMSDOSDATE:
+	case FILE_MSDOSTIME:
+	case FILE_LEMSDOSTIME:
+	case FILE_BEMSDOSTIME:
 		v = p->h;
 		break;
 

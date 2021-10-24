@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.311 2021/10/21 13:00:25 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.312 2021/10/24 15:52:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -288,6 +288,12 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("offset"),		FILE_OFFSET,		FILE_FMT_QUAD },
 	{ XX("bevarint"),	FILE_BEVARINT,		FILE_FMT_STR },
 	{ XX("levarint"),	FILE_LEVARINT,		FILE_FMT_STR },
+	{ XX("msdosdate"),	FILE_MSDOSDATE,		FILE_FMT_STR },
+	{ XX("lemsdosdate"),	FILE_LEMSDOSDATE,	FILE_FMT_STR },
+	{ XX("bemsdosdate"),	FILE_BEMSDOSDATE,	FILE_FMT_STR },
+	{ XX("msdostime"),	FILE_MSDOSTIME,		FILE_FMT_STR },
+	{ XX("lemsdostime"),	FILE_LEMSDOSTIME,	FILE_FMT_STR },
+	{ XX("bemsdostime"),	FILE_BEMSDOSTIME,	FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -835,6 +841,12 @@ typesize(int type)
 	case FILE_SHORT:
 	case FILE_LESHORT:
 	case FILE_BESHORT:
+	case FILE_MSDOSDATE:
+	case FILE_BEMSDOSDATE:
+	case FILE_LEMSDOSDATE:
+	case FILE_MSDOSTIME:
+	case FILE_BEMSDOSTIME:
+	case FILE_LEMSDOSTIME:
 		return 2;
 
 	case FILE_LONG:
@@ -938,6 +950,12 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_LEVARINT:
 	case FILE_GUID:
 	case FILE_OFFSET:
+	case FILE_MSDOSDATE:
+	case FILE_BEMSDOSDATE:
+	case FILE_LEMSDOSDATE:
+	case FILE_MSDOSTIME:
+	case FILE_BEMSDOSTIME:
+	case FILE_LEMSDOSTIME:
 		ts = typesize(m->type);
 		if (ts == FILE_BADSIZE)
 			abort();
@@ -1134,6 +1152,12 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_DER:
 	case FILE_GUID:
 	case FILE_OFFSET:
+	case FILE_MSDOSDATE:
+	case FILE_BEMSDOSDATE:
+	case FILE_LEMSDOSDATE:
+	case FILE_MSDOSTIME:
+	case FILE_BEMSDOSTIME:
+	case FILE_LEMSDOSTIME:
 		mstart->flag |= BINTEST;
 		break;
 	case FILE_STRING:
@@ -1553,6 +1577,12 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_FLOAT:
 		case FILE_BEFLOAT:
 		case FILE_LEFLOAT:
+		case FILE_MSDOSDATE:
+		case FILE_BEMSDOSDATE:
+		case FILE_LEMSDOSDATE:
+		case FILE_MSDOSTIME:
+		case FILE_BEMSDOSTIME:
+		case FILE_LEMSDOSTIME:
 			v = CAST(int32_t, v);
 			break;
 		case FILE_QUAD:

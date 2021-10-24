@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.227 2021/06/30 10:08:48 christos Exp $
+ * @(#)$File: file.h,v 1.228 2021/10/24 15:52:18 christos Exp $
  */
 
 #ifndef __file_h__
@@ -157,7 +157,7 @@
 #define MAXstring 128		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	16
+#define VERSIONNO	17
 #define FILE_MAGICSIZE	376
 
 #define FILE_GUID_SIZE	sizeof("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
@@ -213,60 +213,66 @@ struct magic {
 	uint8_t vallen;		/* length of string value, if any */
 	uint8_t type;		/* comparison type (FILE_*) */
 	uint8_t in_type;	/* type of indirection */
-#define 			FILE_INVALID	0
-#define 			FILE_BYTE	1
-#define				FILE_SHORT	2
-#define				FILE_DEFAULT	3
-#define				FILE_LONG	4
-#define				FILE_STRING	5
-#define				FILE_DATE	6
-#define				FILE_BESHORT	7
-#define				FILE_BELONG	8
-#define				FILE_BEDATE	9
-#define				FILE_LESHORT	10
-#define				FILE_LELONG	11
-#define				FILE_LEDATE	12
-#define				FILE_PSTRING	13
-#define				FILE_LDATE	14
-#define				FILE_BELDATE	15
-#define				FILE_LELDATE	16
-#define				FILE_REGEX	17
-#define				FILE_BESTRING16	18
-#define				FILE_LESTRING16	19
-#define				FILE_SEARCH	20
-#define				FILE_MEDATE	21
-#define				FILE_MELDATE	22
-#define				FILE_MELONG	23
-#define				FILE_QUAD	24
-#define				FILE_LEQUAD	25
-#define				FILE_BEQUAD	26
-#define				FILE_QDATE	27
-#define				FILE_LEQDATE	28
-#define				FILE_BEQDATE	29
-#define				FILE_QLDATE	30
-#define				FILE_LEQLDATE	31
-#define				FILE_BEQLDATE	32
-#define				FILE_FLOAT	33
-#define				FILE_BEFLOAT	34
-#define				FILE_LEFLOAT	35
-#define				FILE_DOUBLE	36
-#define				FILE_BEDOUBLE	37
-#define				FILE_LEDOUBLE	38
-#define				FILE_BEID3	39
-#define				FILE_LEID3	40
-#define				FILE_INDIRECT	41
-#define				FILE_QWDATE	42
-#define				FILE_LEQWDATE	43
-#define				FILE_BEQWDATE	44
-#define				FILE_NAME	45
-#define				FILE_USE	46
-#define				FILE_CLEAR	47
-#define				FILE_DER	48
-#define				FILE_GUID	49
-#define				FILE_OFFSET	50
-#define				FILE_BEVARINT	51
-#define				FILE_LEVARINT	52
-#define				FILE_NAMES_SIZE	53 /* size of array to contain all names */
+#define 			FILE_INVALID		0
+#define 			FILE_BYTE		1
+#define				FILE_SHORT		2
+#define				FILE_DEFAULT		3
+#define				FILE_LONG		4
+#define				FILE_STRING		5
+#define				FILE_DATE		6
+#define				FILE_BESHORT		7
+#define				FILE_BELONG		8
+#define				FILE_BEDATE		9
+#define				FILE_LESHORT		10
+#define				FILE_LELONG		11
+#define				FILE_LEDATE		12
+#define				FILE_PSTRING		13
+#define				FILE_LDATE		14
+#define				FILE_BELDATE		15
+#define				FILE_LELDATE		16
+#define				FILE_REGEX		17
+#define				FILE_BESTRING16		18
+#define				FILE_LESTRING16		19
+#define				FILE_SEARCH		20
+#define				FILE_MEDATE		21
+#define				FILE_MELDATE		22
+#define				FILE_MELONG		23
+#define				FILE_QUAD		24
+#define				FILE_LEQUAD		25
+#define				FILE_BEQUAD		26
+#define				FILE_QDATE		27
+#define				FILE_LEQDATE		28
+#define				FILE_BEQDATE		29
+#define				FILE_QLDATE		30
+#define				FILE_LEQLDATE		31
+#define				FILE_BEQLDATE		32
+#define				FILE_FLOAT		33
+#define				FILE_BEFLOAT		34
+#define				FILE_LEFLOAT		35
+#define				FILE_DOUBLE		36
+#define				FILE_BEDOUBLE		37
+#define				FILE_LEDOUBLE		38
+#define				FILE_BEID3		39
+#define				FILE_LEID3		40
+#define				FILE_INDIRECT		41
+#define				FILE_QWDATE		42
+#define				FILE_LEQWDATE		43
+#define				FILE_BEQWDATE		44
+#define				FILE_NAME		45
+#define				FILE_USE		46
+#define				FILE_CLEAR		47
+#define				FILE_DER		48
+#define				FILE_GUID		49
+#define				FILE_OFFSET		50
+#define				FILE_BEVARINT		51
+#define				FILE_LEVARINT		52
+#define				FILE_MSDOSDATE		53
+#define				FILE_LEMSDOSDATE	54
+#define				FILE_BEMSDOSDATE	55
+#define				FILE_MSDOSTIME		56
+#define				FILE_LEMSDOSTIME	57
+#define				FILE_BEMSDOSTIME	58
+#define				FILE_NAMES_SIZE		59 /* size of array to contain all names */
 
 #define IS_STRING(t) \
 	((t) == FILE_STRING || \
@@ -485,7 +491,9 @@ typedef unsigned long file_unichar_t;
 struct stat;
 #define FILE_T_LOCAL	1
 #define FILE_T_WINDOWS	2
-protected const char *file_fmttime(char *, size_t, uint64_t, int);
+protected const char *file_fmtdatetime(char *, size_t, uint64_t, int);
+protected const char *file_fmtdate(char *, size_t, uint16_t);
+protected const char *file_fmttime(char *, size_t, uint16_t);
 protected const char *file_fmtvarint(const unsigned char *, int, char *,
     size_t);
 protected struct magic_set *file_ms_alloc(int);
