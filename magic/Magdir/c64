@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: c64,v 1.9 2021/04/26 15:56:00 christos Exp $
+# $File: c64,v 1.10 2021/10/28 15:53:27 christos Exp $
 # c64:  file(1) magic for various commodore 64 related files
 #
 # From: Dirk Jagdmann <doj@cubic.org>
@@ -10,6 +10,21 @@
 0x61800 belong		0x28034400	D81 Image
 0	string		C64\40CARTRIDGE	CCS C64 Emultar Cartridge Image
 0	belong		0x43154164	X64 Image
+
+# DreamLoad archives see:
+# https://www.lemon64.com/forum/viewtopic.php?t=37415\
+# &sid=494dc2ca91289e05dadf80a7f8a968fe (at the bottom).
+# https://www.c64-wiki.com/wiki/DreamLoad.
+# Example HVSC Commodore 64 music collection:
+# https://kohina.duckdns.org/HVSC/C64Music/10_Years_HVSC.dfi
+
+Do you think it makes sense to include this?
+0	byte	0
+>1	string	DREAMLOAD\40FILE\40ARCHIVE
+>>0x17	byte	0	DFI Image
+>>>0x1a	leshort	x	version: %d.
+>>>0x18	leshort	x	\b%d
+>>>0x1c	lelong	x	tracks: %d
 
 0	string		GCR-1541	GCR Image
 >8	byte		x		version: %i
