@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.145 2021/09/07 18:57:50 christos Exp $
+# $File: filesystems,v 1.146 2021/10/28 10:54:11 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2404,6 +2404,66 @@
 0	beshort	0xAA5A		floppy image data (IBM SaveDskF, compressed)
 
 0	string	\074CPM_Disk\076	disk image data (YAZE)
+
+# From: 	Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Central_Point_Software#cite_note-6
+# Reference:	https://www.robcraig.com/download/transcopy-5-x-file-format
+#		https://www.robcraig.com/download/transcopy-file-format-by-gene-thompson
+#		http://mark0.net/download/triddefs_xml.7z/defs/t/tc-transcopy.trid.xml
+# TransCopy signature
+0		beshort		0x5AA5
+# skip Intel serial flash ROM with invalid 0 disk sides handled by ./intel
+>0x103		ubyte		!0
+# skip Intel serial flash ROM with unlikely "high" start cylinder 100 handled by ./intel
+#>>0x101		ubyte		<100		VALID_START_CYLINDER
+# skip Intel serial flash ROM with unlikely descrition handled by ./intel
+#>>>2		beshort		!0xF00f		VALID_DESCRIPTION
+# skip Intel serial flash ROM with invalid disk types 89h 88h handled by ./intel
+#>>>>0x100	byte		!0x89		VALID_DISK_TYPE
+>>0	use	tc-floppy
+#	display information of Central Point Software (CPS) Option Board TransCopy floppy image
+0	name		tc-floppy
+>0		beshort		x		TransCopy disk image
+#!:mime	application/octet-stream
+!:mime	application/x-floppy-image-tc
+# like: disk04.tc VOCALC2.TC WIZ5_A.tc WIZ2_720.IMG
+!:ext	tc/img
+# 1st description (optional 0-terminated maximal 32) like:
+# "Project Workbench 2.20" "Visi On Calc" "Wizardry V Disk 1 of 3"
+>2		string		>\0		%.32s
+# 2nd desc. (optional 0-terminated maximal 32) like:
+# "(1988)." "Advanced - Utility" 'Program Disk 2"
+>0x22		string		>\0		"%.32s"
+# Looks like ascii (like MESSAGES) formatted with attribute bytes (190)? 
+# not needed for disk copy
+#>>0x42		string		x		'%.190s'
+#>>0x88		lestring16	x		"%.8s"
+# disktype: 2~MFM High Density 3~MFM Double Density 4~Apple II GCR 5~FM Single Density
+# 6~Commodore GCR 7~MFM Double Density 8~Commodore Amiga Ch~Atari FM FFh~Unknown
+>0x100		ubyte		!0xFF		\b, disk type %u
+# StartingCylinder like: 0
+>0x101		ubyte		x		\b, cylinder
+>0x101		ubyte		!0		start=%u
+# EndingCylinder like: 40 (often) 41 79
+>0x102		ubyte		x		end=%u
+# NumberOfSides like: 2
+>0x103		ubyte		!2		\b, %u sides
+# TrackIncrement like: 1
+>0x104		ubyte		!1		\b, track increment %u
+# TrackPosTbl Track skew
+#>0x105		ubequad		x		\b, Track skew %#16.16llx
+# TrackOffsTbl
+#>0x305		ubequad		x		\b, TrackOffsTbl %#16.16llx
+# TrackLngthTbl
+#>0x505		ubequad		x		\b, TrackLngthTbl %#16.16llx
+# TrackTypeTable
+#>0x705		ubequad		x		\b, TrackTypeTable %#16.16llx
+# Address mark timing
+#>0x905		ubequad		x		\b, Address mark timing %#16.16llx
+# Track fragment
+#>0x2905 ubequad			!0		\b, Track fragment %#16.16llx
+# Track data
+#>0x4000		ubequad		!0		\b, Track data %#16.16llx
 
 # ReFS
 # Richard W.M. Jones <rjones@redhat.com>
