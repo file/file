@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.178 2021/06/30 10:08:48 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.179 2021/10/28 16:05:13 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1649,7 +1649,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	char ibuf[BUFSIZ];
 	char interp[BUFSIZ];
 	ssize_t bufsize;
-	size_t offset, align, len, need = 0;
+	size_t offset, align, need = 0;
 	int pie = 0, dynamic = 0;
 
 	if (num == 0) {
@@ -1709,7 +1709,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		}
 
 		if (doread) {
-			len = xph_filesz < sizeof(nbuf) ? xph_filesz
+			size_t len = xph_filesz < sizeof(nbuf) ? xph_filesz
 			    : sizeof(nbuf);
 			off_t offs = xph_offset;
 			bufsize = pread(fd, nbuf, len, offs);
@@ -1720,8 +1720,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 					return -1;
 				return 0;
 			}
-		} else
-			len = 0;
+		}
 
 		/* Things we can determine when we seek */
 		switch (xph_type) {
