@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.316 2021/10/24 15:52:18 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.317 2021/10/28 16:06:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -436,7 +436,6 @@ flush:
 				    &ms->c.li[cont_level].off)) {
 				case -1:
 				case 0:
-					flush = 1;
 					cont_level--;
 					break;
 				default:
