@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.37 2021/04/26 15:56:00 christos Exp $
+# $File: windows,v 1.38 2021/10/28 20:22:57 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -577,11 +577,15 @@
 !:mime text/plain
 !:ext	hhp
 # From:		Joerg Jenderek
-# URL:		https://documentation.basis.com/BASISHelp/WebHelp/b3odbc/obdcdriv_character_translation.htm
+# URL:		https://documentation.basis.com/BASISHelp/WebHelp/b3odbc/ODBC_Driver/obdcdriv_character_translation.htm
 # Reference:	https://www.garykessler.net/library/file_sigs.html
+#		http://mark0.net/download/triddefs_xml.7z/defs/c/cpx.trid.xml
 # Note:		stored in directory %WINDIR%\SysWOW64 or %WINDIR%\system
->>&0	regex/c		\^(Windows\ Latin)				Windows codepage translator
-!:mime	text/plain
+#		second word often Latin but sometimes Cyrillic like in 12510866.CPX
+>>&0	regex/c		\^(Windows\ )(Latin|Cyrillic)			Windows codepage translator
+#!:mime	text/plain
+!:mime	text/x-ms-cpx
+# like: 12510866.CPX 
 !:ext	cpx
 # unknown keyword after opening bracket
 >>&0	default				x
