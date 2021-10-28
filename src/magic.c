@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.115 2021/09/20 17:45:41 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.116 2021/10/28 16:24:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -442,8 +442,6 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 		errno = 0;
 		if ((fd = open(inname, flags)) < 0) {
 			okstat = stat(inname, &sb) == 0;
-			if (okstat && S_ISFIFO(sb.st_mode))
-				ispipe = 1;
 #ifdef WIN32
 			/*
 			 * Can't stat, can't open.  It may have been opened in
