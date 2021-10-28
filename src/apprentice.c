@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.314 2021/10/28 16:09:42 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.315 2021/10/28 16:15:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1204,19 +1204,20 @@ addentry(struct magic_set *ms, struct magic_entry *me,
    struct magic_entry_set *mset)
 {
 	size_t i = me->mp->type == FILE_NAME ? 1 : 0;
-	if (mset[i].count == mset[i].max) {
+	if (mset[i].me == NULL || mset[i].count == mset[i].max) {
 		struct magic_entry *mp;
 
-		mset[i].max += ALLOC_INCR;
+		size_t incr = mset[i].max + ALLOC_INCR;
 		if ((mp = CAST(struct magic_entry *,
-		    realloc(mset[i].me, sizeof(*mp) * mset[i].max))) ==
+		    realloc(mset[i].me, sizeof(*mp) * incr))) ==
 		    NULL) {
-			file_oomem(ms, sizeof(*mp) * mset[i].max);
+			file_oomem(ms, sizeof(*mp) * incr);
 			return -1;
 		}
 		(void)memset(&mp[mset[i].count], 0, sizeof(*mp) *
 		    ALLOC_INCR);
 		mset[i].me = mp;
+		mset[i].max = incr;
 	}
 	mset[i].me[mset[i].count++] = *me;
 	memset(me, 0, sizeof(*me));
