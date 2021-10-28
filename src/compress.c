@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.130 2021/10/28 16:00:03 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.131 2021/10/28 16:01:58 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -867,9 +867,6 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		    strerror(errno));
 	}
 
-	if (fd != -1)
-		(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
-
 	/* For processes with large mapped virtual sizes, vfork
 	 * may be _much_ faster (10-100 times) than fork.
 	 */
@@ -885,6 +882,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		 * do not modify fdp[i][j].
 		 */
 		if (fd != -1) {
+			(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
 			if (copydesc(STDIN_FILENO, fd))
 				(void) close(fd);
 		} else {
