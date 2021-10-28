@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.74 2019/09/11 15:46:30 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.75 2021/10/28 16:11:03 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -605,8 +605,8 @@ file_trycdf(struct magic_set *ms, const struct buffer *b)
 	}
 #endif
 
-	if ((i = cdf_read_user_stream(&info, &h, &sat, &ssat, &sst, &dir,
-	    "FileHeader", &scn)) != -1) {
+	if (cdf_read_user_stream(&info, &h, &sat, &ssat, &sst, &dir,
+	    "FileHeader", &scn) != -1) {
 #define HWP5_SIGNATURE "HWP Document File"
 		if (scn.sst_len * scn.sst_ss >= sizeof(HWP5_SIGNATURE) - 1
 		    && memcmp(scn.sst_tab, HWP5_SIGNATURE,
