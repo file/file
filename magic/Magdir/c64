@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: c64,v 1.10 2021/10/28 15:53:27 christos Exp $
+# $File: c64,v 1.11 2021/10/30 13:23:54 christos Exp $
 # c64:  file(1) magic for various commodore 64 related files
 #
 # From: Dirk Jagdmann <doj@cubic.org>
@@ -18,7 +18,6 @@
 # Example HVSC Commodore 64 music collection:
 # https://kohina.duckdns.org/HVSC/C64Music/10_Years_HVSC.dfi
 
-Do you think it makes sense to include this?
 0	byte	0
 >1	string	DREAMLOAD\40FILE\40ARCHIVE
 >>0x17	byte	0	DFI Image
