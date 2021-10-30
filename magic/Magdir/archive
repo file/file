@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.152 2021/10/20 12:34:59 christos Exp $
+# $File: archive,v 1.153 2021/10/30 16:35:20 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -704,6 +704,17 @@
 !:mime	application/x-ms-compress-sz
 !:ext	??$
 >>8	ulelong	>0		\b, original size: %u bytes
+
+# Summary:	CAZIP compressed file
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/CAZIP
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/caz.trid.xml
+# Note:		Format is distinct from CAZIPXP compressed
+0	string	\x0D\x0A\x1ACAZIP	CAZIP compressed file
+#!:mime	application/octet-stream
+!:mime	application/x-compress-cazip
+# like: BLINKER.WR_ CLIPDEFS._ CAOSETUP.EX_ CLIPPER.EX_ FILEIO.C_
+!:ext	??_/?_/_
 
 # Summary:	FTCOMP compressed archive
 # From:		Joerg Jenderek
