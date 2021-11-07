@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.38 2021/10/28 20:22:57 christos Exp $
+# $File: windows,v 1.39 2021/11/07 16:26:31 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -587,6 +587,25 @@
 !:mime	text/x-ms-cpx
 # like: 12510866.CPX 
 !:ext	cpx
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/InstallShield
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/l/lid-is.trid.xml
+# Note:		contain also 3 keywords like: count Default key0
+>>&0	regex/c		\^(Languages)]					InstallShield Language Identifier
+#!:mime	text/plain
+!:mime	text/x-installshield-lid
+# like: SETUP.LID
+!:ext	lid
+# From:		Joerg Jenderek
+# URL:		https://www.file-extensions.org/tag-file-extension
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/t/taginfo.trid.xml
+# Note:		contain also keywords like: Application Category Company Misc Version
+>>&0	regex/c		\^(TagInfo)]					TagInfo
+#!:mime	text/plain
+#!:mime	text/prs.lines.tag
+!:mime	text/x-ms-tag
+# like: DATA.TAG
+!:ext	tag
 # unknown keyword after opening bracket
 >>&0	default				x
 #>>>&0	string/c			x	UNKNOWN [%s
@@ -1084,3 +1103,45 @@
 0	string	ID;P	Microsoft SYLK program
 >4	string	>0	\b, created by %s
 !:ext	slk/sylk
+
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/InstallShield
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/i/ins.trid.xml
+# Note:		contain also keywords like: BATCH_INSTALL ISVERSION LOGHANDLE SRCDIR SRCDISK WINDIR WINSYSDISK 
+0	ubelong	0xB8C90C00	InstallShield Script
+#!:mime	application/octet-stream
+!:mime	application/x-installshield-ins
+# like test.ins Setup.ins
+!:ext	ins
+# UNKNOWN like: 160034121de07e00 1600341260befe00 16003412e0783700
+# 5000010021083f00 50000100b0335600 50000100cbfdf800 50000100dfbc4700
+#>4	ubequad		x		\b, at 4 %#16.16llx
+# copyright text like:	"Stirling Technologies, Inc.  (c) 1990-1994"
+#			"InstallSHIELD Software Coporation  (c) 1990-1997"
+>13	pstring/h	x		"%s"
+# look for specific ASCII variable names
+>1	search/0x121/s	SRCDIR	\b, variable names:
+# 1st like: SRCDIR
+>>&-4		leshort		x	#%u
+>>&-2		pstring/h	x	%s
+# 2nd like: SRCDISK
+>>>&0		leshort		x	#%u
+>>>&2		pstring/h	x	%s
+# 3rd like: TARGETDISK
+>>>>&0		leshort		x	#%u
+>>>>&2		pstring/h	x	%s
+# 4th like: TARGETDIR
+#>>>>>&0		leshort		x	#%u
+#>>>>>&2		pstring/h	x	%s
+# 5th like: WINDIR
+#>>>>>>&0	leshort		x	#%u
+#>>>>>>&2	pstring/h	x	%s
+# 6th like: WINDISK
+#>>>>>>>&0	leshort		x	#%u
+#>>>>>>>&2	pstring/h	x	%s
+# 7th like: WINSYSDIR
+#>>>>>>>>&0	leshort		x	#%u
+#>>>>>>>>&2	pstring/h	x	%s
+# ... LOGHANDLE
+>0		ubelong		x	...
+#

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.153 2021/10/30 16:35:20 christos Exp $
+# $File: archive,v 1.154 2021/11/07 16:26:31 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -808,7 +808,33 @@
 # ASD
 0	string	ASD ASD archive data
 # InstallShield CAB
-0	string	ISc( InstallShield CAB
+# Update:	Joerg Jenderek at Nov 2021
+# URL:		https://en.wikipedia.org/wiki/InstallShield
+# Reference:	https://github.com/twogood/unshield/blob/master/lib/cabfile.h
+# Note:		Not compatible with Microsoft CAB files
+# http://mark0.net/download/triddefs_xml.7z/defs/a/ark-cab-ishield.trid.xml
+# CAB_SIGNATURE 0x28635349
+0	string	ISc( InstallShield
+#!:mime		application/octet-stream
+!:mime		application/x-installshield
+# http://mark0.net/download/triddefs_xml.7z/defs/a/ark-cab-ishield-hdr.trid.xml
+>16	ulelong	!0	setup header
+# like: _SYS1.HDR _USER1.HDR data1.hdr
+!:ext	hdr
+>16	ulelong	=0	CAB
+# like: _SYS1.CAB _USER1.CAB DATA1.CAB  data2.cab
+!:ext	cab
+# https://github.com/twogood/unshield/blob/master/lib/helper.c
+# version like:	0x1005201 0x100600c 0x1007000 0x1009500
+#		0x2000578 0x20005dc 0x2000640 0x40007d0 0x4000834
+>4	ulelong	x	\b, version %#x
+# volume_info like: 0
+>8	ulelong	!0	\b, volume_info %#x
+# cab_descriptor_offset like: 0x200
+>12	ulelong	!0x200	\b, offset %#x
+#>0x200	ubequad	x	\b, at 0x200 %#16.16llx
+# cab_descriptor_size like: 0 (*.cab) BD5 C8B DA5 E2A E36 116C 251D 4DA9 56F0 5CC2 6E4B 777D 779E 1F7C2
+>16	ulelong	!0	\b, descriptor size %#x
 # TOP4
 0	string	T4\x1a TOP4 archive data
 # BatComp left out: sig looks like COM executable
