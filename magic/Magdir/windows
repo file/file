@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.39 2021/11/07 16:26:31 christos Exp $
+# $File: windows,v 1.40 2021/11/10 20:54:48 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -495,10 +495,16 @@
 # empty line CRLF
 0	ubeshort	0x0D0A
 >0	use		ini-file
-# comment line
+# comment line starting with semicolon
 0	string		;
->0	use		ini-file
-# section line
+# look for phrase of Windows policy ADMinistrative template (with starting remark)
+# like: WINDOW_95_CD/TOOLS/RESKIT/netadmin/poledit/conf.adm
+>1	search/3548	END\040CATEGORY
+# ADM with remark (by adm-rem.trid.xml) already done by generic ASCII variant
+# if no Windows policy ADMinistrative template then Windows INItialization
+>1	default		x
+>>0	use		ini-file
+# section line starting with left bracket
 0	string		[
 >0	use		ini-file
 # check and then display Windows INItialization configuration
@@ -626,27 +632,72 @@
 !:mime	application/x-wine-extension-ini
 #!:mime	text/plain
 !:ext	ini/inf
+# UTF-16 BOM
+0	ubeshort		=0xFFFE
+# look for phrase of Windows policy ADMinistrative template (UTF-16 by adm-uni.trid.xml)
+# like: wuau.adm
+>2	search/0x384A	E\0N\0D\0\040\0C\0A\0T\0E\0G\0O\0R\0Y\0
+>>0	use		windows-adm
+# if no Windows policy ADMinistrative template then Windows INFormation
+>2	default		x
 # UTF-16 BOM followed by CR~0D00 , comment~semicolon~3B00 , section~bracket~5B00
-0	ubelong&0xFFff89FF	=0xFFFE0900
+>>0	ubelong&0xFFff89FF	=0xFFFE0900
 # look for left bracket in section line
->2	search/8192		[
+>>>2	search/8192		[
 # keyword without 1st letter which is maybe up-/down-case
->>&3	lestring16		ersion]			Windows setup INFormation
-!:mime	application/x-setupscript
-!:ext	inf
->>&3	lestring16		trings]			Windows setup INFormation
-!:mime	application/x-setupscript
-!:ext	inf
->>&3	lestring16		ourceDisksNames]	Windows setup INFormation
-!:mime	application/x-setupscript
-!:ext	inf
-# netnwcli.inf start with ;---[ NetNWCli.INX ]
->>&3	default			x
-# look for NL followed by left bracket
->>>&0	search/8192		\x0A\x00\x5b
 >>>>&3	lestring16		ersion]			Windows setup INFormation
 !:mime	application/x-setupscript
+# like: hdaudio.inf iscsi.inf spaceport.inf tpm.inf usbhub3.inf UVncVirtualDisplay.inf
 !:ext	inf
+>>>>&3	lestring16		trings]			Windows setup INFormation
+!:mime	application/x-setupscript
+# like: arduino_gemma.inf iis.inf MSM8960.inf
+!:ext	inf
+>>>>&3	lestring16		ourceDisksNames]	Windows setup INFormation
+!:mime	application/x-setupscript
+# like: atiixpag.inf mdmnokia.inf netefe32.inf rdpbus.inf
+!:ext	inf
+# netnwcli.inf start with ;---[ NetNWCli.INX ]
+>>>>&3	default			x
+# look for NL followed by left bracket
+>>>>>&0	search/8192		\x0A\x00\x5b
+# like: defltwk.inf netvwifibus.inf WSDPrint.inf
+>>>>>>&3 lestring16		ersion]			Windows setup INFormation
+!:mime	application/x-setupscript
+!:ext	inf
+
+# Summary:	Windows Policy ADMinistrative template
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Administrative_Template
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/adm.trid.xml
+# Note:		typically stored in directory like: %WINDIR%\system32\GroupPolicy\ADM
+# worst case ASCII variant starting with remark line like: inetset.adm
+0	search/0x4E	CLASS\040
+>&0	string		MACHINE
+>>0	use		windows-adm
+>&0	string		USER
+>>0	use		windows-adm
+# display information about Windows policy ADMinistrative template
+0	name		windows-adm	Windows Policy Administrative Template
+!:mime	text/x-ms-adm
+!:ext	adm
+# UTF-16 BOM implies UTF-16 encoded ADM (by adm-uni.trid.xml)
+>0	ubeshort		=0xFFFE
+>>2	lestring16		x		\b, 1st line "%s"
+# look for UTF-16 encoded CarriageReturn LineFeed
+>>>2	search/0x3A		\r\0\n\0
+>>>>&0	lestring16		x		\b, 2nd line "%s"
+# no UTF-16 BOM implies "ASCII" encoded ADM (by adm.trid.xml)
+>0	ubeshort		!0xFFFE
+>>0		string		x		\b, 1st line "%s"
+#>>>&0		ubequad		x		\b, 2ND %16.16llx
+# 2nd line empty
+>>>&2		beshort		=0x0D0A
+>>>>&0		beshort		!0x0D0A		\b, 3th line
+>>>>>&-2	string		x		"%s"
+# 2nd line with content
+>>>&2		beshort		!0x0D0A		\b, 2nd line
+>>>>&-2		string		x		"%s"
 
 # Windows Precompiled INF files *.PNF added by Joerg Jenderek at Mar 2013 of _PNF_HEADER inf.h
 # http://read.pudn.com/downloads3/sourcecode/windows/248345/win2k/private/windows/setup/setupapi/inf.h__.htm
