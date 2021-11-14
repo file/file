@@ -1985,7 +1985,7 @@
 >>>14		leshort		x		\b%d)
 # no Color LookUp Table (CLUT)
 >>4		lelong		^8
-# image orgin X Y
+# image origin X Y
 >>>12		leshort		x		Pixel at (%d,
 >>>14		leshort		x		\b%d) Size=
 # real image width = multiply by 4 (4BPP) 2 (8BPP) 1 (16BPP) 2/3 (24BPP)
