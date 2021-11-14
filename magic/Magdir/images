@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.205 2021/10/18 13:56:29 christos Exp $
+# $File: images,v 1.206 2021/11/14 17:42:43 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1985,7 +1985,7 @@
 >>>14		leshort		x		\b%d)
 # no Color LookUp Table (CLUT)
 >>4		lelong		^8
-# image orgin X Y
+# image origin X Y
 >>>12		leshort		x		Pixel at (%d,
 >>>14		leshort		x		\b%d) Size=
 # real image width = multiply by 4 (4BPP) 2 (8BPP) 1 (16BPP) 2/3 (24BPP)

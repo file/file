@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.146 2021/10/28 10:54:11 christos Exp $
+# $File: filesystems,v 1.147 2021/11/14 17:42:43 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2416,7 +2416,7 @@
 >0x103		ubyte		!0
 # skip Intel serial flash ROM with unlikely "high" start cylinder 100 handled by ./intel
 #>>0x101		ubyte		<100		VALID_START_CYLINDER
-# skip Intel serial flash ROM with unlikely descrition handled by ./intel
+# skip Intel serial flash ROM with unlikely description handled by ./intel
 #>>>2		beshort		!0xF00f		VALID_DESCRIPTION
 # skip Intel serial flash ROM with invalid disk types 89h 88h handled by ./intel
 #>>>>0x100	byte		!0x89		VALID_DISK_TYPE
