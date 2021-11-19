@@ -100,7 +100,7 @@ dnl Checks for headers
 AC_HEADER_MAJOR
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(stdint.h fcntl.h inttypes.h unistd.h byteswap.h)
-AC_CHECK_HEADERS(utime.h wchar.h wctype.h)
+AC_CHECK_HEADERS(spawn.h utime.h wchar.h wctype.h)
 AC_CHECK_HEADERS(getopt.h err.h xlocale.h)
 AC_CHECK_HEADERS(sys/bswap.h sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h sys/sysmacros.h)
 if test "$enable_zlib" != "no"; then
@@ -165,7 +165,7 @@ else
 fi])
 
 dnl Checks for functions
-AC_CHECK_FUNCS(strndup mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale memmem pipe2)
+AC_CHECK_FUNCS(strndup mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale memmem pipe2 posix_spawnp)
 
 dnl Provide implementation of some required functions if necessary
 AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline ctime_r asctime_r localtime_r gmtime_r pread strcasestr fmtcheck dprintf)

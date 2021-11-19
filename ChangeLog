@@ -1,3 +1,8 @@
+2021-11-19  12:36   Christos Zoulas <christos@zoulas.com>
+
+	* implement running decompressor programs using
+	  posix_spawnp(2) instead of vfork(2)
+
 2021-10-24  11:51   Christos Zoulas <christos@zoulas.com>
 
 	* Add support for msdos dates and times
