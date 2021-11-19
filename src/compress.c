@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.132 2021/11/19 17:37:41 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.133 2021/11/19 19:48:20 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -768,30 +768,28 @@ static void
 handledesc(void *v, int fd, int fdp[3][2])
 {
 	if (fd != -1) {
-		if (v)
-			(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
+		(void) lseek(fd, CAST(off_t, 0), SEEK_SET);
 		movedesc(v, STDIN_FILENO, fd);
-		return;
+	} else {
+		movedesc(v, STDIN_FILENO, fdp[STDIN_FILENO][0]);
+		if (fdp[STDIN_FILENO][1] > 2)
+		    closedesc(v, fdp[STDIN_FILENO][1]);
 	}
-	movedesc(v, STDIN_FILENO, fdp[STDIN_FILENO][0]);
-	if (fdp[STDIN_FILENO][1] > 2)
-	    closedesc(v, fdp[STDIN_FILENO][1]);
 
-	if (v)
-		file_clear_closexec(STDIN_FILENO);
+	file_clear_closexec(STDIN_FILENO);
 
 ///FIXME: if one of the fdp[i][j] is 0 or 1, this can bomb spectacularly
 	movedesc(v, STDOUT_FILENO, fdp[STDOUT_FILENO][1]);
 	if (fdp[STDOUT_FILENO][0] > 2)
 		closedesc(v, fdp[STDOUT_FILENO][0]);
-	if (v)
-		file_clear_closexec(STDOUT_FILENO);
+
+	file_clear_closexec(STDOUT_FILENO);
 
 	movedesc(v, STDERR_FILENO, fdp[STDERR_FILENO][1]);
 	if (fdp[STDERR_FILENO][0] > 2)
 		closedesc(v, fdp[STDERR_FILENO][0]);
-	if (v)
-		file_clear_closexec(STDERR_FILENO);
+
+	file_clear_closexec(STDERR_FILENO);
 }
 
 static pid_t
@@ -881,6 +879,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 	pid_t writepid = -1;
 	size_t i;
 	ssize_t r;
+	char *const *args;
 #ifdef HAVE_POSIX_SPAWNP
 	posix_spawn_file_actions_t fa;
 #endif
@@ -934,19 +933,20 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		    strerror(errno));
 	}
 
+	args = RCAST(char *const *, RCAST(intptr_t, compr[method].argv));
 #ifdef HAVE_POSIX_SPAWNP
 	posix_spawn_file_actions_init(&fa);
 
 	handledesc(&fa, fd, fdp);
 
-	status = posix_spawnp(&pid, compr[method].argv[0], NULL, NULL,
-	    compr[method].argv, NULL);
+	status = posix_spawnp(&pid, compr[method].argv[0], &fa, NULL,
+	    args, NULL);
 
 	posix_spawn_file_actions_destroy(&fa);
 
 	if (status == -1) {
 		return makeerror(newch, n, "Cannot posix_spawn `%s', %s",
-		    strerror(errno));
+		    compr[method].argv[0], strerror(errno));
 	}
 #else
 	/* For processes with large mapped virtual sizes, vfork
@@ -963,10 +963,9 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 		 * in a way which confuses parent. In particular,
 		 * do not modify fdp[i][j].
 		 */
-		 handledesc(NULL, fd, fdp);
+		handledesc(NULL, fd, fdp);
 
-		(void)execvp(compr[method].argv[0],
-		    RCAST(char *const *, RCAST(intptr_t, compr[method].argv)));
+		(void)execvp(compr[method].argv[0], args);
 		dprintf(STDERR_FILENO, "exec `%s' failed, %s",
 		    compr[method].argv[0], strerror(errno));
 		_exit(1); /* _exit(), not exit(), because of vfork */
