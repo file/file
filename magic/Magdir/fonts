@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.47 2021/11/19 15:52:26 christos Exp $
+# $File: fonts,v 1.48 2021/11/20 13:33:24 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -33,7 +33,7 @@
 # font name directive followed by def like: c0633bt_.pfb
 >>>25	search/1247	/FontName\040/
 # show font name in parentheses like: Frankfurt Lithos CharterBT-BoldItalic Courier10PitchBT-Bold
->>>>&0	regex		[A-Za-z0-9\-]+		(%s)
+>>>>&0	regex		[A-Za-z0-9-]+		(%s)
 # http://cd.textfiles.com/maxfonts/ATM/M/MIRROR__.PFB
 6	string		%PS-AdobeFont-1.	PostScript Type 1 font program data
 !:mime	font/x-postscript-pfb
