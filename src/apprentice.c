@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.315 2021/10/28 16:15:14 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.316 2021/12/06 18:08:19 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1077,7 +1077,7 @@ apprentice_sort(const void *a, const void *b)
 private void
 apprentice_list(struct mlist *mlist, int mode)
 {
-	uint32_t magindex = 0;
+	uint32_t magindex, descindex, mimeindex, lineindex;
 	struct mlist *ml;
 	for (ml = mlist->next; ml != mlist; ml = ml->next) {
 		for (magindex = 0; magindex < ml->nmagic; magindex++) {
@@ -1094,17 +1094,22 @@ apprentice_list(struct mlist *mlist, int mode)
 			 * Try to iterate over the tree until we find item with
 			 * description/mimetype.
 			 */
-			while (magindex + 1 < ml->nmagic &&
-			       ml->magic[magindex + 1].cont_level != 0 &&
-			       *ml->magic[magindex].desc == '\0' &&
-			       *ml->magic[magindex].mimetype == '\0')
-				magindex++;
+			lineindex = descindex = mimeindex = magindex;
+			for (magindex++; magindex < ml->nmagic &&
+			   ml->magic[magindex].cont_level != 0; magindex++) {
+				if (*ml->magic[descindex].desc == '\0'
+				    && *ml->magic[magindex].desc)
+					descindex = magindex;
+				if (*ml->magic[mimeindex].mimetype == '\0'
+				    && *ml->magic[magindex].mimetype)
+					mimeindex = magindex;
+			}
 
 			printf("Strength = %3" SIZE_T_FORMAT "u@%u: %s [%s]\n",
 			    apprentice_magic_strength(m),
-			    ml->magic[magindex].lineno,
-			    ml->magic[magindex].desc,
-			    ml->magic[magindex].mimetype);
+			    ml->magic[lineindex].lineno,
+			    ml->magic[descindex].desc,
+			    ml->magic[mimeindex].mimetype);
 		}
 	}
 }
