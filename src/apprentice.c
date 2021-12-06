@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.316 2021/12/06 18:08:19 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.317 2021/12/06 19:42:29 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -120,7 +120,8 @@ private int parse(struct magic_set *, struct magic_entry *, const char *,
     size_t, int);
 private void eatsize(const char **);
 private int apprentice_1(struct magic_set *, const char *, int);
-private size_t apprentice_magic_strength(const struct magic *);
+private ssize_t apprentice_magic_strength_1(const struct magic *);
+private size_t apprentice_magic_strength(const struct magic *, size_t);
 private int apprentice_sort(const void *, const void *);
 private void apprentice_list(struct mlist *, int );
 private struct magic_map *apprentice_load(struct magic_set *,
@@ -899,8 +900,8 @@ typesize(int type)
 /*
  * Get weight of this magic entry, for sorting purposes.
  */
-private size_t
-apprentice_magic_strength(const struct magic *m)
+private ssize_t
+apprentice_magic_strength_1(const struct magic *m)
 {
 #define MULT 10U
 	size_t ts, v;
@@ -986,6 +987,7 @@ apprentice_magic_strength(const struct magic *m)
 	case FILE_INDIRECT:
 	case FILE_NAME:
 	case FILE_USE:
+	case FILE_CLEAR:
 		break;
 
 	case FILE_DER:
@@ -1022,6 +1024,33 @@ apprentice_magic_strength(const struct magic *m)
 		abort();
 	}
 
+	return val;
+}
+
+
+private size_t
+apprentice_magic_strength(const struct magic *m,
+    size_t nmagic __attribute__((__unused__)))
+{
+	ssize_t val = apprentice_magic_strength_1(m);
+
+#ifdef notyet
+	if (m->desc[0] == '\0') {
+		size_t i;
+		/*
+		 * Magic entries with no description get their continuations
+		 * added
+		 */
+		for (i = 1; m[i].cont_level != 0 && i < MIN(nmagic, 3); i++) {
+			ssize_t v = apprentice_magic_strength_1(&m[i]) >>
+			    (i + 1);
+			val += v;
+			if (m[i].desc[0] != '\0')
+				break;
+		}
+	}
+#endif
+
 	switch (m->factor_op) {
 	case FILE_FACTOR_OP_NONE:
 		break;
@@ -1044,12 +1073,15 @@ apprentice_magic_strength(const struct magic *m)
 	if (val <= 0)	/* ensure we only return 0 for FILE_DEFAULT */
 		val = 1;
 
+#ifndef notyet
 	/*
 	 * Magic entries with no description get a bonus because they depend
 	 * on subsequent magic entries to print something.
 	 */
 	if (m->desc[0] == '\0')
 		val++;
+#endif
+
 	return val;
 }
 
@@ -1061,8 +1093,8 @@ apprentice_sort(const void *a, const void *b)
 {
 	const struct magic_entry *ma = CAST(const struct magic_entry *, a);
 	const struct magic_entry *mb = CAST(const struct magic_entry *, b);
-	size_t sa = apprentice_magic_strength(ma->mp);
-	size_t sb = apprentice_magic_strength(mb->mp);
+	size_t sa = apprentice_magic_strength(ma->mp, ma->cont_count);
+	size_t sb = apprentice_magic_strength(mb->mp, mb->cont_count);
 	if (sa == sb)
 		return 0;
 	else if (sa > sb)
@@ -1106,7 +1138,7 @@ apprentice_list(struct mlist *mlist, int mode)
 			}
 
 			printf("Strength = %3" SIZE_T_FORMAT "u@%u: %s [%s]\n",
-			    apprentice_magic_strength(m),
+			    apprentice_magic_strength(m, ml->nmagic - magindex),
 			    ml->magic[lineindex].lineno,
 			    ml->magic[descindex].desc,
 			    ml->magic[mimeindex].mimetype);
