@@ -102,7 +102,7 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(stdint.h fcntl.h inttypes.h unistd.h byteswap.h)
 AC_CHECK_HEADERS(spawn.h utime.h wchar.h wctype.h)
 AC_CHECK_HEADERS(getopt.h err.h xlocale.h)
-AC_CHECK_HEADERS(sys/bswap.h sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h sys/sysmacros.h)
+AC_CHECK_HEADERS(sys/bswap.h sys/mman.h sys/stat.h sys/types.h sys/utime.h sys/time.h sys/sysmacros.h sys/ioctl.h)
 if test "$enable_zlib" != "no"; then
   AC_CHECK_HEADERS(zlib.h)
 fi
