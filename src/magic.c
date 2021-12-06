@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.116 2021/10/28 16:24:10 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.117 2021/12/06 15:33:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -221,6 +221,10 @@ out:
 		default_magic = NULL;
 	}
 
+	/* Before anything else, try to get a magic file from user HOME */
+	if ((home = getenv("HOME")) != NULL)
+		_w32_append_path(&hmagicpath, "%s%s", home, hmagic);
+
 	/* First, try to get a magic file from user-application data */
 	if ((home = getenv("LOCALAPPDATA")) != NULL)
 		_w32_append_path(&hmagicpath, "%s%s", home, hmagic);
@@ -273,9 +277,22 @@ unreadable_info(struct magic_set *ms, mode_t md, const char *file)
 		if (access(file, W_OK) == 0)
 			if (file_printf(ms, "writable, ") == -1)
 				return -1;
+#ifndef WIN32
 		if (access(file, X_OK) == 0)
 			if (file_printf(ms, "executable, ") == -1)
 				return -1;
+#else
+		/* X_OK doesn't work well on MS-Windows */
+		{
+			const char *p = strrchr(file, '.');
+			if (p && (stricmp(p, ".exe")
+				  || stricmp(p, ".dll")
+				  || stricmp(p, ".bat")
+				  || stricmp(p, ".cmd")))
+				if (file_printf(ms, "writable, ") == -1)
+					return -1;
+		}
+#endif
 	}
 	if (S_ISREG(md))
 		if (file_printf(ms, "regular file, ") == -1)
@@ -460,7 +477,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			rv = 0;
 			goto done;
 		}
-#if O_CLOEXEC == 0
+#if O_CLOEXEC == 0 && defined(F_SETFD)
 		(void)fcntl(fd, F_SETFD, FD_CLOEXEC);
 #endif
 	}
@@ -498,7 +515,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	} else if (fd != -1) {
 		/* Windows refuses to read from a big console buffer. */
 		size_t howmany =
-#if defined(WIN32)
+#ifdef WIN32
 		    _isatty(fd) ? 8 * 1024 :
 #endif
 		    ms->bytes_max;
