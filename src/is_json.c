@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.15 2020/06/07 19:05:47 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.16 2021/12/09 18:38:43 christos Exp $")
 #endif
 
 #include <string.h>
@@ -414,7 +414,7 @@ file_is_json(struct magic_set *ms, const struct buffer *b)
 			return -1;
 		return 1;
 	}
-	if (file_printf(ms, "JSON data") == -1)
+	if (file_printf(ms, "JSON text data") == -1)
 		return -1;
 #if JSON_COUNT
 #define P(n) st[n], st[n] > 1 ? "s" : ""
