@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: intel,v 1.20 2021/04/26 15:56:00 christos Exp $
+# $File: intel,v 1.21 2021/12/10 18:28:58 christos Exp $
 # intel:  file(1) magic for x86 Unix
 #
 # Various flavors of x86 UNIX executable/object (other than Xenix, which
@@ -43,7 +43,16 @@
 # no hint found, that at offset 22 is version
 #>22	leshort		>0		- version %d
 0	leshort		0x0200
->0	use				display-coff
+# no F_EXEC flag bit implies Intel ia64 COFF object file without optional header
+>18	leshort		^0x0002
+# skip some DEGAS high-res uncompressed bitmap *.pi3 handled by ./images like
+# GEMINI03.PI3 MODEM2.PI3 POWERFIX.PI3 sigirl1.pi3 vanna5.pi3
+# by test for valid starting character (often point 0x2E) of 1st section name
+>>20	ubyte		>0x1F
+>>>0	use				display-coff
+# F_EXEC flag bit implies Intel ia64 COFF executable
+>18	leshort		&0x0002
+>>0	use				display-coff
 0	leshort		0x8664
 >0	use				display-coff
 
