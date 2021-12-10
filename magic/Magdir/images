@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.207 2021/11/20 13:33:01 christos Exp $
+# $File: images,v 1.208 2021/12/10 18:27:45 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1240,6 +1240,165 @@
 # From: Alex Myczko <alex@aiei.ch>
 # https://www.atarimax.com/jindroush.atari.org/afmtatr.html
 0	uleshort	0x0296		Atari ATR image
+
+# URL:		http://fileformats.archiveteam.org/wiki/DEGAS_image
+# Reference:	https://wiki.multimedia.cx/index.php?title=Degas
+# From:		Joerg Jenderek
+#		http://mark0.net/download/triddefs_xml.7z/defs/b
+#		bitmap-pi2-degas.trid.xml bitmap-pi3-degas.trid.xml
+#		bitmap-pc1-degas.trid.xml bitmap-pc2-degas.trid.xml bitmap-pc3-degas.trid.xml 
+# Note:		verified by NetPBM `pi3topbm sigirl1.pi3 | file`
+# 		`deark -m degas -l -d2 ataribak.pi1` 
+#		XnView `nconvert -fullinfo *.p??`
+# DEGAS low-res uncompressed bitmap *.pi1
+0		beshort		0x0000
+# skip some ISO 9660 CD-ROM filesystems like plpbt.iso by test for 4 non black colors in palette entries
+>2		quad		!0
+# skip g3test.g3 by test for unused bits of 2nd color entry
+>>4		ubeshort&0xF000	0
+>>>0		use		degas-bitmap
+# DEGAS mid-res uncompressed bitmap *.pi2 (strength=50) after GEM Images like:
+# BEETHVEN.IMG CHURCH.IMG GAMEOVR4.IMG TURKEY.IMG clinton.img
+0		beshort		0x0001
+#!:strength +0
+# skip many control files like gnucash-4.8.setup.exe.aria2 by test for non black in 4 palette entries
+>2		quad		!0
+# skip control file load-v0001.aria2 by test for unused bits of 5th color palette entry
+>>10		ubeshort&0xF000	0
+# skip many GEM Image data like DANCER.IMG GAMEOVR4.IMG SHIP.IMG by test for unused bits of 8th color palette entry
+>>>16		ubeshort&0xF000	0
+# skip many GEM Image data like BEETHVEN.IMG CABINETS.IMG MEMO.IMG by test for unused bits of 14th color palette entry
+>>>>28		ubeshort&0xF000	0
+# skip few GEM Image data like CHURCH.IMG by test for unused bits of 15th color palette entry
+>>>>>30		ubeshort&0xF000	0
+# skip many GEM Image data like TIGER.IMG TURKEY.IMG XMAS.IMG by test for unused bits of 16th color palette entry
+>>>>>>32	ubeshort&0xF000	0
+# skip GEM Image data like clinton.img by test for existing bytes at the end
+>>>>>>>32026	quad		x
+>>>>>>>>0	use		degas-bitmap
+# DEGAS high-res uncompressed bitmap *.pi3
+0	beshort		0x0002
+# skip Intel ia64 COFF msvcrt.lib by test for unused bits of 1st atari color palette entry
+>2		ubeshort&0xF000	0
+# skip few Adobe PhotoShop Brushes like Faux-Spitzen.abr by check
+# for invalid Adobe PhotoShop Brush UTF16-LE string length
+>>19		ubyte			=0
+# many like: 4th_ofj2.pi3 GEMINI03.PI3 PEOPLE18.PI3 POWERFIX.PI3 abydos.pi3 highres.pi3 sigirl1.pi3 vanna5.pi3
+>>>0		use		degas-bitmap
+# Adobe PhotoShop Brush UTF16-LE string length 15 "Gitter - klein " 8 "Kreis 1 "
+>>19		ubyte			!0
+#>>19		ubyte			!0	\b, NOTE LENGTH %u
+#>>>21		lestring16		x	\b, BRUSH NOTE "%s"
+>>>(19.b*2)	ubequad			x
+# maybe last character of Adobe PhotoShop Brush UTF16-LE string and terminating nul char like
+# 006e0000 for n in "Faux-Spitzen.abr" 00310000 for 1 in "Verschiedene Spitzen.abr"
+# 00000000 "LEREDACT.PI3" 03730773 "TBX_DEMO.PI3"
+#>>>>&8		ubelong			x	\b, LAST CHAR+NIL %8.8x
+>>>>&8		ubelong&0xff00ffFF	!0
+# many DEGAS bitmap like: ARABDEMO.PI3 ELMRSESN.PI3 GEMVIEW.PI3 LEREDACT.PI3 PICCOLO.PI3 REPRO_JR.PI3 ST_TOOLS.PI3 TBX_DEMO.PI3 evgem7.pi3
+>>>>>0		use		degas-bitmap
+# test for last character of Adobe PhotoShop Brush UTF16-LE string and terminating nul char
+>>>>&8		ubelong&0xff00ffFF	=0
+# select last DEGAS bitmaps by invalid last char of brush note like BASICNES.PI3 DB_HELP.PI3 DB_WRITR.PI3 LEREDACT.PI3
+>>>>>&-4	ubelong&0x00FF0000	<0x00200000
+>>>>>>0		use		degas-bitmap
+# last character of Adobe PhotoShop Brush UTF16-LE note
+#>>>>>&-4	ubelong&0x00FF0000	>0x001F0000	\b, THAT IS ABR
+# DEGAS low-res compressed bitmap *.pc1 like: BATTLSHP.PC1 GNUCHESS.PC1 MEDUSABL.PC1 MOONLORD.PC1 WILDROSE.PC1
+0		beshort			0x8000
+# skip lif files handled via ./lif by test for unused bits of 1st palette entry
+>2		ubeshort&0xF000		0
+>>0		use		degas-bitmap
+# DEGAS mid-res compressed bitmap *.pc2 like: abydos.pc2 ARTIS3.PC2 SMTHDRAW.PC2 STAR_2K.PC2 TX2_DEMO.PC2
+0		beshort			0x8001
+>0		use		degas-bitmap
+# DEGAS high-res compressed bitmap *.pc3 like: abydos.pc3 COYOTE.PC3 ELEPHANT.PC3 TX2_DEMO.PC3 SMTHDRAW.PC3
+0		beshort			0x8002
+>0		use		degas-bitmap
+# display information of Atari DEGAS and DEGAS Elite bitmap images
+0	name		degas-bitmap
+>0	ubyte		x		Atari DEGAS
+#!:mime	application/octet-stream
+!:mime	image/x-atari-degas
+# compressed
+>0	ubyte		=0x80		Elite compressed
+# uncompressed
+#>0	ubyte		=0x00		uncompressed
+#>0	ubyte		=0x00		un.
+>0	ubyte		=0x00
+# check for existence of footer for DEGAS Elite images
+>>32042	ubequad		x		Elite
+>0	beshort		0x0000		bitmap
+!:ext	pi1
+>0	beshort		0x0001		bitmap
+!:ext	pi2
+>0	beshort		0x0002		bitmap
+# no example with SUH extension found
+#!:ext	pi3/suh
+!:ext	pi3
+>0	beshort		0x8000		bitmap
+!:ext	pc1
+>0	beshort		0x8001		bitmap
+!:ext	pc2
+>0	beshort		0x8002		bitmap
+!:ext	pc3
+# low resolution; 320x200, 16 colors
+>1	ubyte		=0		320 x 200 x 16
+# medium resolution; 640x200, 4 colors
+>1	ubyte		=1		640 x 200 x 4
+# high resolution; 640x400, 2 colors 
+>1	ubyte		=2		640 x 400 x 2
+# http://fileformats.archiveteam.org/wiki/Atari_ST_color_palette
+# hardware_palette[16]; 9 bit ?????RRR?GGG?BBB; 12 bit ????RRRRGGGGBBBB for Atari STE
+# for Atari DEGAS apparently no Spectrum 512 Enhanced 15 bit palette RGB?RRRRGGGGBBBB 
+# Red Green Blue unused bit ? often 0 but not bilboule.pi1; color_value (examples or numbers)
+# 1st color palette entry like: 0777 (61) 0fff (LEREDACT.PI3) 0fcf (devgem7.pi3) 0001 (9)
+>2	ubeshort	x		\b, color palette %4.4x
+# 2nd palette entry like: 0000 (32) 0700 (38) 0f00 (LEREDACT.PI3 devgem7.pi3)
+>4	ubeshort	x		%4.4x
+# 3rd palette entry
+>6	ubeshort	x		%4.4x
+# 4th palette entry like: 0000 (72)
+>8	ubeshort	x		%4.4x
+# 5th palette entry
+>10	ubeshort	x		%4.4x
+>2	ubeshort	x		...
+# 6th palette entry
+#>12	ubeshort	x		%4.4x
+# 7th palette entry like: 0000 (16) 0001 (ELMRSESN.PI3 elmrsesn.pi3) 0070 (51) 00f0 (BASICNES.PI3 LEREDACT.PI3) 00f8 (devgem7.pi3)
+#>14	ubeshort	x		%4.4x
+# 8th palette entry
+#>16	ubeshort	x		%4.4x
+# 9 palette entry
+#>18	ubeshort	x		%4.4x
+# 10 palette entry
+#>20	ubeshort	x		%4.4x
+# 11 palette entry
+#>22	ubeshort	x		%4.4x
+# 12 palette entry
+#>24	ubeshort	x		%4.4x
+# 13 palette entry
+#>26	ubeshort	x		%4.4x
+# 14th palette entry
+#>28	ubeshort	x		%4.4x
+# 15th palette entry
+#>30	ubeshort	x		%4.4x
+# 16th palette entry
+#>32	ubeshort	x		%4.4x
+# data[16000] for uncompressed images; pixel data
+#>34	ubequad		x		\b, DATA %#16.16llx...
+# footer for Elite variant images
+# https://www.fileformat.info/format/atari/egff.htm
+# https://pulkomandy.tk/projects/GrafX2/wiki/Develop/FileFormats/Atari
+# left_color_animation[4]; like: 0000000000000000 0000000100020003 fffafff000000030 (bigspid.pi1)
+#>32034  ubequad		!0		\b, color animations %16.16llx (left)
+# right_color_animation[4]; like: 0000000000000000 0000000100020003
+#>>32042  ubequad	!0		%16.16llx (right)
+# channel_direction[4]; 0~left 1~none 2~right like: 0001000100010001 0002000000010001 (cycle2.pi1)
+# sometimes unexpected like: feaafc0000000000 (bigspid.pi1)
+#>32050  ubequad		!0		\b, channel directions %16.16llx
+# channel_delay[4]; 128 - channel delay, timebase 1/60 s
+#>32058  ubequad		!0		\b, channel delays %16.16llx
 
 # From:		Joerg Jenderek
 # URL:		http://fileformats.archiveteam.org/wiki/ImageLab/PrintTechnic
