@@ -55,6 +55,7 @@
 # Mobipocket (www.mobipocket.com), donated by Carl Witty
 # expanded by Ralf Brown
 60		string	 	BOOKMOBI	Mobipocket E-book
+!:mime	application/x-mobipocket-ebook
 # MobiPocket stores a full title, pointed at by the belong at offset
 # 0x54 in its header at (78.L), with length given by the belong at
 # offset 0x58.
