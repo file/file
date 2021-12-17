@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.208 2021/12/10 18:27:45 christos Exp $
+# $File: images,v 1.209 2021/12/17 14:42:50 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -179,7 +179,7 @@
 # adding 65 to strength so that Netpbm images comes before "x86 boot sector" or
 # "DOS/MBR boot sector" identified by ./filesystems
 0	name		netpbm
->3	regex/s		=[0-9]{1,50}\ [0-9]{1,50}	Netpbm image data
+>3	regex/s		=[0-9]{1,50}[\040\t\f\r\n]+[0-9]{1,50}	Netpbm image data
 >>&0	regex		=[0-9]{1,50} 			\b, size = %s x
 >>>&0	regex		=[0-9]{1,50}			\b %s
 
