@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.318 2021/10/28 16:17:05 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.319 2022/01/10 19:32:04 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -53,7 +53,7 @@ private int mget(struct magic_set *, struct magic *, const struct buffer *,
 private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
     const struct buffer *, size_t, unsigned int);
 private int magiccheck(struct magic_set *, struct magic *);
-private int32_t mprint(struct magic_set *, struct magic *);
+private int mprint(struct magic_set *, struct magic *);
 private int moffset(struct magic_set *, struct magic *, const struct buffer *,
     int32_t *);
 private void mdebug(uint32_t, const char *, size_t);
@@ -564,13 +564,12 @@ varexpand(struct magic_set *ms, char *buf, size_t len, const char *str)
 }
 
 
-private int32_t
+private int
 mprint(struct magic_set *ms, struct magic *m)
 {
 	uint64_t v;
 	float vf;
 	double vd;
-	int64_t t = 0;
  	char buf[128], tbuf[26], sbuf[512], ebuf[512];
 	const char *desc;
 	union VALUETYPE *p = &ms->ms_value;
@@ -608,7 +607,6 @@ mprint(struct magic_set *ms, struct magic *m)
 		} \
 		break; \
 	} \
-	t = ms->offset + sizeof(stype); \
 	break
 
   	switch (m->type) {
@@ -641,13 +639,11 @@ mprint(struct magic_set *ms, struct magic *m)
 			    file_printable(ms, sbuf, sizeof(sbuf), m->value.s,
 			    sizeof(m->value.s))) == -1)
 				return -1;
-			t = ms->offset + m->vallen;
 		}
 		else {
 			char *str = p->s;
 
 			/* compute t before we mangle the string? */
-			t = ms->offset + strlen(str);
 
 			if (*m->value.s == '\0')
 				str[strcspn(str, "\r\n")] = '\0';
@@ -664,7 +660,6 @@ mprint(struct magic_set *ms, struct magic *m)
 				size_t l = file_pstring_length_size(ms, m);
 				if (l == FILE_BADSIZE)
 					return -1;
-				t += l;
 			}
 		}
 		break;
@@ -676,7 +671,6 @@ mprint(struct magic_set *ms, struct magic *m)
 		if (file_printf(ms, F(ms, desc, "%s"),
 		    file_fmtdatetime(tbuf, sizeof(tbuf), p->l, 0)) == -1)
 			return -1;
-		t = ms->offset + sizeof(uint32_t);
 		break;
 
 	case FILE_LDATE:
@@ -687,7 +681,6 @@ mprint(struct magic_set *ms, struct magic *m)
 		    file_fmtdatetime(tbuf, sizeof(tbuf), p->l, FILE_T_LOCAL))
 			== -1)
 			return -1;
-		t = ms->offset + sizeof(uint32_t);
 		break;
 
 	case FILE_QDATE:
@@ -696,7 +689,6 @@ mprint(struct magic_set *ms, struct magic *m)
 		if (file_printf(ms, F(ms, desc, "%s"),
 		    file_fmtdatetime(tbuf, sizeof(tbuf), p->q, 0)) == -1)
 			return -1;
-		t = ms->offset + sizeof(uint64_t);
 		break;
 
 	case FILE_QLDATE:
@@ -705,7 +697,6 @@ mprint(struct magic_set *ms, struct magic *m)
 		if (file_printf(ms, F(ms, desc, "%s"),
 		    file_fmtdatetime(tbuf, sizeof(tbuf), p->q, FILE_T_LOCAL)) == -1)
 			return -1;
-		t = ms->offset + sizeof(uint64_t);
 		break;
 
 	case FILE_QWDATE:
@@ -715,7 +706,6 @@ mprint(struct magic_set *ms, struct magic *m)
 		    file_fmtdatetime(tbuf, sizeof(tbuf), p->q, FILE_T_WINDOWS))
 		    == -1)
 			return -1;
-		t = ms->offset + sizeof(uint64_t);
 		break;
 
 	case FILE_FLOAT:
@@ -735,7 +725,6 @@ mprint(struct magic_set *ms, struct magic *m)
 				return -1;
 			break;
 		}
-		t = ms->offset + sizeof(float);
   		break;
 
 	case FILE_DOUBLE:
@@ -755,7 +744,6 @@ mprint(struct magic_set *ms, struct magic *m)
 				return -1;
 			break;
 		}
-		t = ms->offset + sizeof(double);
   		break;
 
 	case FILE_SEARCH:
@@ -777,11 +765,6 @@ mprint(struct magic_set *ms, struct magic *m)
 
 		if (rval == -1)
 			return -1;
-
-		if ((m->str_flags & REGEX_OFFSET_START))
-			t = ms->search.offset;
-		else
-			t = ms->search.offset + ms->search.rm_len;
 		break;
 	}
 
@@ -789,26 +772,22 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_CLEAR:
 	  	if (file_printf(ms, "%s", m->desc) == -1)
 			return -1;
-		t = ms->offset;
 		break;
 
 	case FILE_INDIRECT:
 	case FILE_USE:
 	case FILE_NAME:
-		t = ms->offset;
 		break;
 	case FILE_DER:
 		if (file_printf(ms, F(ms, desc, "%s"),
 		    file_printable(ms, sbuf, sizeof(sbuf), ms->ms_value.s,
 			sizeof(ms->ms_value.s))) == -1)
 			return -1;
-		t = ms->offset;
 		break;
 	case FILE_GUID:
 		(void) file_print_guid(buf, sizeof(buf), ms->ms_value.guid);
 		if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
 			return -1;
-		t = ms->offset;
 		break;
 	case FILE_MSDOSDATE:
 	case FILE_BEMSDOSDATE:
@@ -816,7 +795,6 @@ mprint(struct magic_set *ms, struct magic *m)
 		if (file_printf(ms, F(ms, desc, "%s"),
 		    file_fmtdate(tbuf, sizeof(tbuf), p->h)) == -1)
 			return -1;
-		t = ms->offset + sizeof(uint16_t);
 		break;
 	case FILE_MSDOSTIME:
 	case FILE_BEMSDOSTIME:
@@ -824,13 +802,12 @@ mprint(struct magic_set *ms, struct magic *m)
 		if (file_printf(ms, F(ms, desc, "%s"),
 		    file_fmttime(tbuf, sizeof(tbuf), p->h)) == -1)
 			return -1;
-		t = ms->offset + sizeof(uint16_t);
 		break;
 	default:
 		file_magerror(ms, "invalid m->type (%d) in mprint()", m->type);
 		return -1;
 	}
-	return CAST(int32_t, t);
+	return 0;
 }
 
 private int
