@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.123 2021/12/06 15:33:00 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.124 2022/01/10 14:15:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -90,7 +90,8 @@ file_checkfield(char *msg, size_t mlen, const char *what, const char **pp)
 protected int
 file_checkfmt(char *msg, size_t mlen, const char *fmt)
 {
-	for (const char *p = fmt; *p; p++) {
+	const char *p;
+	for (p = fmt; *p; p++) {
 		if (*p != '%')
 			continue;
 		if (*++p == '%')

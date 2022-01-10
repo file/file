@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.179 2021/10/28 16:05:13 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.180 2022/01/10 14:15:08 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1015,7 +1015,7 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	size_t elsize = xauxv_sizeof;
 	const char *tag;
 	int is_string;
-	size_t nval;
+	size_t nval, off;
 
 	if ((*flags & (FLAGS_IS_CORE|FLAGS_DID_CORE_STYLE)) !=
 	    (FLAGS_IS_CORE|FLAGS_DID_CORE_STYLE))
@@ -1043,7 +1043,7 @@ do_auxv_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	*flags |= FLAGS_DID_AUXV;
 
 	nval = 0;
-	for (size_t off = 0; off + elsize <= descsz; off += elsize) {
+	for (off = 0; off + elsize <= descsz; off += elsize) {
 		memcpy(xauxv_addr, &nbuf[doff + off], xauxv_sizeof);
 		/* Limit processing to 50 vector entries to prevent DoS */
 		if (nval++ >= 50) {
