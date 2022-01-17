@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.209 2021/12/17 14:42:50 christos Exp $
+# $File: images,v 1.210 2022/01/17 15:25:47 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3221,3 +3221,30 @@
 0	string		ASTM-E57	ASTM E57 three-dimensional model
 !:mime model/e57
 !:ext e57
+
+# QOI [Quite OK Image Format] images
+# (Horia Mihai David, mihaidavid@posteo.net)
+#
+# QOI format by Dominic Szablewski <http://phoboslab.org/>
+#           <https://qoiformat.org/>
+#
+# Based on spec v1.0 (2022.01.05) <https://qoiformat.org/qoi-specification.pdf>
+
+0	string		qoif	QOI image data
+!:ext qoi
+!:mime image/x-qoi
+# See <https://github.com/phoboslab/qoi/issues/167>
+>4      ubelong		x       %ux
+>8      ubelong		x       \b%u,
+>>13	ubyte		0	s
+>>>12	ubyte		3	\bRGB
+>>>12	ubyte		4	\bRGBA
+>>>12	default		x
+>>>>12	ubyte		x	\b*bad channels %u*
+>>>13	ubyte		0	(linear alpha)
+>>13	ubyte		1
+>>>12	ubyte		3	RGB
+>>>12	ubyte		4	RGBA
+>>>13	ubyte		1	(all channels linear)
+>>13	default		x
+>>>13	ubyte		x	*bad colorspace %u*
