@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.12 2021/09/04 16:00:38 christos Exp $
+# $File: ole2compounddocs,v 1.13 2022/01/17 17:01:01 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -258,6 +258,24 @@
 !:ext	prd/prv
 # 2nd directory entry name Pictures
 >>>>>>128 	lestring16	Pictures		with pictures
+#
+# URL:		http://fileformats.archiveteam.org/wiki/PageMaker
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/p
+#		pagemaker-generic.trid.xml
+#		pagemaker-pm6.trid.xml
+#		pagemaker-pm65.trid.xml
+#		pmd-pm7.trid.xml
+# From:		Joerg Jenderek
+# Note:		since version 6 embedd as stream with PageMaker name the "old" format handled by ./wordprocessors
+#		verified by Michal Mutl Structured Storage Viewer `SSView.exe brochus.pt6`
+# Second directory entry name PageMaker
+>>>>128 	lestring16	PageMaker		:
+# look for magic of "old" PageMaker like in 02TEMPLT.T65
+>>>>>0	search/0xa900/s	\0\0\0\0\0\0\xff\x99
+# GRR: jump to PageMaker stream and inspect it by sub routine PageMaker of ./wordprocessors failed with wrong version!
+#>>>>>>&0	use		PageMaker
+# THIS WORKS PARTLY!
+>>>>>>&0	indirect	x
 #	remaining null clsid
 >>>>128 	default		x			: UNKNOWN
 # second directory entry name like VisioDocument Control000
@@ -267,6 +285,9 @@
 # forth
 >>>>>384	lestring16	x %.20s
 !:mime	application/x-ole-storage
+# according to file version 5.41 with -e soft option
+#!:mime	application/CDFV2
+#!:ext	???
 #	look for known clsid GUID
 # - Visio documents
 # URL:	http://fileformats.archiveteam.org/wiki/Visio
@@ -561,8 +582,14 @@
 # pmv for template	https://www.file-extensions.org/pmv-file-extension
 !:ext	pmd/pmv
 # remaining non null clsid
->>88 	default		x			: UNKNOWN
+>>88 	default		x
+# GRR: check again for non null clsid because wrong when called by indirect directive
+>>>88 	ubequad		!0			: UNKNOWN
+# https://reposcope.com/mimetype/application/x-ole-storage
 !:mime	application/x-ole-storage
->>>80 	ubequad		!0			\b, clsid %#16.16llx
->>>88 	ubequad		x			\b%16.16llx
+# according to file version 5.41 with -e soft option
+#!:mime	application/CDFV2
+#!:ext	???
+>>>>80 	ubequad		!0			\b, clsid %#16.16llx
+>>>>88 	ubequad		x			\b%16.16llx
 
