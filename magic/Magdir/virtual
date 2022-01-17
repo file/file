@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: virtual,v 1.14 2021/04/26 15:56:00 christos Exp $
+# $File: virtual,v 1.15 2022/01/17 19:47:53 christos Exp $
 # From: James Nobis <quel@quelrod.net>
 # Microsoft hard disk images for:
 # Virtual Server
@@ -220,6 +220,7 @@
 # Made by reading sources, reading documentation, and doing trial and error
 # on existing QCOW files
 0	string/b	QFI\xFB
+!:mime	application/x-qemu-disk
 
 # Uncomment the following line to display Magic (only used for debugging
 # this magic number)
