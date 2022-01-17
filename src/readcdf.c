@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.75 2021/10/28 16:11:03 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.76 2022/01/17 16:59:01 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -674,7 +674,8 @@ out0:
 			if (file_printf(ms, ", %s", expn) == -1)
 				return -1;
 	} else if (ms->flags & MAGIC_MIME_TYPE) {
-		if (file_printf(ms, "application/CDFV2") == -1)
+		/* https://reposcope.com/mimetype/application/x-ole-storage */
+		if (file_printf(ms, "application/x-ole-storage") == -1)
 			return -1;
 	}
 	return 1;
