@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: freebsd,v 1.7 2009/09/19 16:28:09 christos Exp $
+# $File: freebsd,v 1.8 2022/01/18 23:45:39 christos Exp $
 # freebsd:  file(1) magic for FreeBSD objects
 #
 # All new-style FreeBSD magic numbers are in host byte order (i.e.,
@@ -142,3 +142,16 @@
 >9	byte	2		%d bytes in header,
 >>10	byte	x		%d chars wide by
 >>11	byte	x		%d chars high
+
+#
+# FreeBSD kernel minidumps
+#
+0	string	minidump\040FreeBSD/	FreeBSD kernel minidump
+>17	string	amd64			for %s,
+>>24	lelong	x			version %d
+>17	string	arm			for %s,
+>>24	lelong	x			version %d
+>17	string	i386			for %s,
+>>24	lelong	x			version %d
+>17	default	x
+>>17	string >\0			for %s
