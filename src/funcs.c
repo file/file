@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.124 2022/01/10 14:15:08 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.125 2022/02/14 16:26:10 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -54,9 +54,12 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.124 2022/01/10 14:15:08 christos Exp $")
 protected char *
 file_copystr(char *buf, size_t blen, size_t width, const char *str)
 {
-	if (++width > blen)
-		width = blen;
-	strlcpy(buf, str, width);
+	if (blen == 0)
+		return buf;
+	if (width >= blen)
+		width = blen - 1;
+	memcpy(buf, str, width);
+	buf[width] = '\0';
 	return buf;
 }
 
