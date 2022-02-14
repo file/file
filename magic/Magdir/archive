@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.154 2021/11/07 16:26:31 christos Exp $
+# $File: archive,v 1.155 2022/02/14 16:42:59 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -987,22 +987,25 @@
 # ARJ archiver (jason@jarthur.Claremont.EDU)
 0	leshort		0xea60		ARJ archive data
 !:mime	application/x-arj
->5	byte		x		\b, v%d,
->8	byte		&0x04		multi-volume,
->8	byte		&0x10		slash-switched,
->8	byte		&0x20		backup,
->34	string		x		original name: %s,
->7	byte		0		os: MS-DOS
->7	byte		1		os: PRIMOS
->7	byte		2		os: Unix
->7	byte		3		os: Amiga
->7	byte		4		os: Macintosh
->7	byte		5		os: OS/2
->7	byte		6		os: Apple ][ GS
->7	byte		7		os: Atari ST
->7	byte		8		os: NeXT
->7	byte		9		os: VAX/VMS
->3	byte		>0		%d]
+>5	byte		x		\b, v%d
+>8	byte		&0x01		\b, password-protected
+#>8	byte		&0x02		\b, secured
+>8	byte		&0x04		\b, multi-volume
+>8	byte		&0x08		\b, file-offset
+>8	byte		&0x10		\b, slash-switched
+>8	byte		&0x20		\b, backup
+>8	byte		&0x40		\b, secured
+>38	string		x		\b, original name: %s
+>7	byte		0		\b, OS: MS-DOS
+>7	byte		1		\b, OS: PRIMOS
+>7	byte		2		\b, OS: Unix
+>7	byte		3		\b, OS: Amiga
+>7	byte		4		\b, OS: Macintosh
+>7	byte		5		\b, OS: OS/2
+>7	byte		6		\b, OS: Apple ][ GS
+>7	byte		7		\b, OS: Atari ST
+>7	byte		8		\b, OS: NeXT
+>7	byte		9		\b, OS: VAX/VMS
 # [JW] idarc says this is also possible
 2	leshort		0xea60		ARJ archive data
 
