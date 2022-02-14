@@ -7,6 +7,8 @@ android-vdex-1.result \
 android-vdex-1.testfile \
 android-vdex-2.result \
 android-vdex-2.testfile \
+arj.result \
+arj.testfile \
 CVE-2014-1943.result \
 CVE-2014-1943.testfile \
 JW07022A.mp3.result \
