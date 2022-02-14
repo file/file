@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.174 2022/01/08 16:29:18 christos Exp $
+# $File: Makefile.am,v 1.175 2022/02/14 16:51:15 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -208,6 +208,7 @@ $(MAGIC_FRAGMENT_DIR)/netbsd \
 $(MAGIC_FRAGMENT_DIR)/netscape \
 $(MAGIC_FRAGMENT_DIR)/netware \
 $(MAGIC_FRAGMENT_DIR)/news \
+$(MAGIC_FRAGMENT_DIR)/nifty \
 $(MAGIC_FRAGMENT_DIR)/nim-lang \
 $(MAGIC_FRAGMENT_DIR)/nitpicker \
 $(MAGIC_FRAGMENT_DIR)/numpy \
