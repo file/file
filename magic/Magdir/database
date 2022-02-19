@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.64 2022/01/17 17:18:59 christos Exp $
+# $File: database,v 1.65 2022/02/19 22:35:32 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -151,6 +151,7 @@
 # https://www.clicketyclick.dk/databases/xbase/format/dbf.html
 # inspect VVYYMMDD , where 1<= MM <= 12 and 1<= DD <= 31
 0	ubelong&0x0000FFFF		<0x00000C20
+!:strength +10
 # skip Infocom game Z-machine
 >2		ubyte			>0
 # skip Androids *.xml
