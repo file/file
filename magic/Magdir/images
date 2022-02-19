@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.211 2022/02/08 18:52:34 christos Exp $
+# $File: images,v 1.212 2022/02/19 22:56:49 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -596,8 +596,49 @@
 >4	long		3		\b, rectangular 32-bit (24-bit with matte)
 
 # FIG (Facility for Interactive Generation of figures), an object-based format
-0	search/1	#FIG		FIG image text
+# URL: 		http://fileformats.archiveteam.org/wiki/Fig
+#		https://en.wikipedia.org/wiki/Xfig
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/fig.trid.xml
+# https://web.archive.org/web/20070920204655/http://epb.lbl.gov/xfig/fig-format.html
+# Update:	Joerg Jenderek
+# Note:		called "FIG vector drawing" by TrID,
+#		4 byte magic is assumed to be always at offset 0 and
+#		verified by `fig2mpdf -v bootloader.fig && file bootloader.pdf`
+#0	search/1/tb	#FIG		FIG image text
+# GRR: with --keep-going option the line above gives duplicate messages
+0	search/1/ts	#FIG
+>&0	use		image-xfig
+# binary data variant with non ASCII text characters like Control-A or °C in thermostat.fig
+0	search/1/bs	#FIG
+>&0	use		image-xfig
+#	display XFIG image describing text, mime type, file name extension and version
+0	name		image-xfig
+>8	ubyte		x		FIG image text
+#!:mime	text/plain
+# https://reposcope.com/mimetype/image/x-xfig
+!:mime	image/x-xfig
+!:ext	fig
+# version string like: 1.4 2.1 3.1 3.2
 >5	string		x		\b, version %.3s
+# some times after version text like: "Produced by xfig version 3.2.5-alpha5"
+>8	ubyte		>0x0D
+>>8	string		x		"%s"
+# should be point character (2Eh) of version string according to TrID
+#>6	ubyte		!0x2E		\b, at 6 %#x
+# caret character (23h) at the beginning in most or probaly all exanples
+#>0	ubyte		!0x23		\b, starting with character %#x
+# URL: 		http://fileformats.archiveteam.org/wiki/DeskMate_Draw
+#		http://en.wikipedia.org/wiki/Deskmate
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/dm-fig.trid.xml
+# From:		Joerg Jenderek
+# Note:		called "DeskMate Draw drawing" by TrID
+0	string		\x14FIG		DeskMate Drawing
+#!:mime	application/octet-stream
+!:mime	image/x-deskmate-fig
+!:ext	fig
+# TODO:
+#	"Cabri 3D Figure"	by TrID fig-cabri.trid.xml
+#	"Playmation Figure"	by TrID fig-playmation.trid.xml
 
 # PHIGS
 0	string		ARF_BEGARF		PHIGS clear text archive
