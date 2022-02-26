@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.13 2022/01/17 17:01:01 christos Exp $
+# $File: ole2compounddocs,v 1.14 2022/02/26 17:44:29 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -581,6 +581,20 @@
 !:mime	application/vnd.softmaker.planmaker
 # pmv for template	https://www.file-extensions.org/pmv-file-extension
 !:ext	pmd/pmv
+# URL:		http://fileformats.archiveteam.org/wiki/MAX_(3ds_Max)
+#		https://en.wikipedia.org/wiki/Autodesk_3ds_Max
+# Reference:	http://fileformats.archiveteam.org/wiki/Microsoft_Compound_File
+# Note:		called "3D Studio Max Scene" by TrID and "3DS Max" by DROID and
+#		"3DSMax thumbnail" by XnView and verfied by `nconvert -info A380.max`
+#		applies only to "newer" versions (about 2008-2020)
+>>88 	ubequad		0x9fed04143144cc1e	: Autodesk
+>>>80 	ubequad		0x7b8cdd1cc081a045	3ds Max
+#!:mime	application/x-ole-storage
+!:mime	model/x-autodesk-max
+# like: https://static.free3d.com/models/dropbox/dropbox/sq/A380.7z/A380.max 
+!:ext	max
+# also chr for character file according to DROID https://www.nationalarchives.gov.uk/PRONOM/fmt/978
+#!:ext	max/chr
 # remaining non null clsid
 >>88 	default		x
 # GRR: check again for non null clsid because wrong when called by indirect directive
