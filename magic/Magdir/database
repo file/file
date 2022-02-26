@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.65 2022/02/19 22:35:32 christos Exp $
+# $File: database,v 1.66 2022/02/26 17:42:21 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -400,7 +400,9 @@
 >>>>>>>>>>4	ushort		0
 # check for valid FoxPro field type
 >>>>>>>>>>>512	ubelong		<3
->>>>>>>>>>>>0	use		foxpro-memo-print
+# skip LXMDCLN4.OUT LXMDCLN6.OUT LXMDALG6.OUT with invalid blocksize 170=AAh
+>>>>>>>>>>>>6	ubeshort&0x002f	0
+>>>>>>>>>>>>>0	use		foxpro-memo-print
 # dBASE III DBT , garbage
 # skip WORD1XW.DOC with improbably high free block index
 >>>>>>>>>0	ulelong		<0x400000
@@ -492,7 +494,7 @@
 >0		belong		x		FoxPro FPT
 !:mime	application/x-fpt
 !:ext	fpt
-# Size of blocks for FoxPro ( 64,256 )
+# Size of blocks for FoxPro ( 64,256 ); probably a multiple of two
 >6		ubeshort	x		\b, blocks size %u
 # next available block
 #>0		belong		=0		\b, next free block index %u
