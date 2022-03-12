@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.155 2022/02/14 16:42:59 christos Exp $
+# $File: archive,v 1.156 2022/03/12 15:13:55 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1334,6 +1334,18 @@
 >>>62	string	base			Database file
 !:mime	application/vnd.sun.xml.base
 !:ext	sdb
+
+# URL:	https://wiki.openoffice.org/wiki/Documentation/DevGuide/Extensions/File_Format
+# From:	Joerg Jenderek
+# Note:	only few OXT samples are detected here by mimetype member
+#	is used by OpenOffice and LibreOffice and probably also NeoOffice
+#	verified by `unzip -Zv *.oxt` or `7z l -slt *.oxt`
+>>50	string	vnd.openofficeorg.		OpenOffice
+>>>68	string	extension			\b/LibreOffice Extension
+# http://extension.nirsoft.net/oxt
+!:mime	application/vnd.openofficeorg.extension
+# like: Gallery-Puzzle.2.1.0.1.oxt
+!:ext	oxt
 
 #   OpenDocument formats (for OpenOffice 2.x / StarOffice >= 8)
 #   URL: http://fileformats.archiveteam.org/wiki/OpenDocument
