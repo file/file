@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.156 2022/03/12 15:13:55 christos Exp $
+# $File: archive,v 1.157 2022/03/13 14:45:11 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -981,33 +981,143 @@
 >3	byte&0xf0	0x30
 >>3	byte	x (v%c)
 # JAR archiver (.j), this is the successor to ARJ, not Java's JAR (which is essentially ZIP)
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/JAR_(ARJ_Software)
+# reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/ark-jar.trid.xml
+#		https://www.sac.sk/download/pack/jar102x.exe/TECHNOTE.DOC
+# Note:		called "JAR compressed archive" by TrID
 0xe	string	\x1aJar\x1b JAR (ARJ Software, Inc.) archive data
+#!:mime	application/octet-stream
+!:mime	application/x-compress-j
+>0	ulelong	x		\b, CRC32 %#x
+# standard suffix is ".j"; for multi volumes following order j01 j02 ... j99 100 ... 990
+!:ext	j/j01/j02
+# URL:		http://fileformats.archiveteam.org/wiki/JARCS
+# reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/ark-jarcs.trid.xml
+# Note:		called "JARCS compressed archive" by TrID
 0	string	JARCS JAR (ARJ Software, Inc.) archive data
+#!:mime	application/octet-stream
+!:mime	application/x-compress-jar
+!:ext	jar
 
 # ARJ archiver (jason@jarthur.Claremont.EDU)
-0	leshort		0xea60		ARJ archive data
+# URL:		http://fileformats.archiveteam.org/wiki/ARJ
+# reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/ark-arj.trid.xml
+#		https://github.com/FarGroup/FarManager/
+#		blob/master/plugins/multiarc/arc.doc/arj.txt
+# Note:		called "ARJ compressed archive" by TrID and
+#		"ARJ File Format" by DROID via PUID fmt/610
+#		verified by `7z l -tarj PHRACK1.ARJ` and
+#		`arj.exe l TEST-hk9.ARJ`
+0	leshort		0xea60
+# skip DROID fmt-610-signature-id-946.arj by check for valid file type of main header
+>0xA	ubyte		2
+>>0	use		arj-archive
+0	name		arj-archive
+>0	leshort		x		ARJ archive
 !:mime	application/x-arj
+# look for terminating 0-character of filename
+>0x26	search/1024	\0
+# file name extension is normally .arj but not for parts of multi volume
+#>>&-5	string		x		extension %.4s
+>>&-5	string/c	.arj		data
+!:ext	arj
+>>&-5	default		x
+# for multi volume first name is archive.arj then following parts archive.a01 archive.a02 ...
+>>>8	byte		&0x04		data
+!:ext	a01/a02
+# for SFX first name is archive.exe then following parts archive.e01 archive.e02 ...
+>>>8	byte		^0x04		data, SFX multi-volume
+!:ext	e01/e02
+# basic header size like: 0x002b 0x002c 0x04e0 0x04e3 0x04e7
+#>2	uleshort	x		basic header size %#4.4x
+# next fragment content like: 0x0a200a003a8fc713 0x524a000010bb3471 0x524a0000c73c70f9
+#>(2.s)	ubequad		x		NEXT FRAGMENT CONTENT %#16.16llx
+# first_hdr_size; seems to be same as basic header size
+#>2	uleshort	x		1st header size %#x
+# archiver version number like: 3 4 6 11 102
 >5	byte		x		\b, v%d
+# minimum archiver version to extract like: 1
+>6	ubyte		!1		\b, minimum %u to extract
+# FOR DEBUGGING
+#>8	byte		x		\b, FLAGS %#x
+# GARBLED_FLAG1; garble with password; g switch
 >8	byte		&0x01		\b, password-protected
+# encryption version: 0~old  1~old 2~new 3~reserved 4~40 bit key GOST
+>>0x20	ubyte		x		(v%u)
 #>8	byte		&0x02		\b, secured
+# ANSIPAGE_FLAG; indicates ANSI codepage used by ARJ32; hy switch
+>8	byte		&0x02		\b, ANSI codepage
+# VOLUME_FLAG indicates presence of succeeding volume; but apparently not for SFX
 >8	byte		&0x04		\b, multi-volume
->8	byte		&0x08		\b, file-offset
+#>8	byte		&0x08		\b, file-offset
+# ARJPROT_FLAG; build with data protection record; hk switch
+>8	byte		&0x08		\b, recoverable
+# arj protection factor; maximal 10; switch hky -> factor=y+1
+>>0x22	byte		x		(factor %u)
 >8	byte		&0x10		\b, slash-switched
+# BACKUP_FLAG; obsolete
 >8	byte		&0x20		\b, backup
->8	byte		&0x40		\b, secured
->38	string		x		\b, original name: %s
->7	byte		0		\b, OS: MS-DOS
->7	byte		1		\b, OS: PRIMOS
->7	byte		2		\b, OS: Unix
->7	byte		3		\b, OS: Amiga
->7	byte		4		\b, OS: Macintosh
->7	byte		5		\b, OS: OS/2
->7	byte		6		\b, OS: Apple ][ GS
->7	byte		7		\b, OS: Atari ST
->7	byte		8		\b, OS: NeXT
->7	byte		9		\b, OS: VAX/VMS
+# SECURED_FLAG;
+>8	byte		&0x40		\b, secured,
+# ALTNAME_FLAG; indicates dual-name archive
+>8	byte		&0x80		\b, dual-name
+# security version; 0~old 2~current
+>9	ubyte		!0
+>>9	ubyte		!2		\b, security version %u
+# file type; 2 in main header; 0~binary 1~7-bitText 2~comment 3~directory 4~VolumeLabel 5=ChapterLabel
+>0xA	ubyte		!2		\b, file type %u
+# date+time when original archive was created in MS-DOS format via ./msdos
+>0xC	ulelong		x		\b, created
+>0xC	use		dos-date
+# or date and time by new internal function
+#>0xE	lemsdosdate	x		%s
+#>0xC	lemsdostime	x		%s
+# FOR DEBUGGING
+#>0x12	uleshort	x		RAW DATE %#4.4x
+#>0x10	uleshort	x		RAW TIME %#4.4x
+# date+time when archive was last modified; sometimes nil or
+# maybe wrong like in HP4DRVR.ARJ
+#>0x10	ulelong		>0		\b, modified
+#>>0x10	use		dos-date
+# or date and time by new internal function
+#>>0x12	lemsdosdate	x		%s
+#>>0x10	lemsdostime	x		%s
+# archive size (currently used only for secured archives); MAYBE?
+#>0x14	ulelong		!0		\b, file size %u
+# security envelope file position; MAYBE?
+#>0x18	ulelong		!0		\b, at %#x security envelope
+# filespec position in filename; WHAT IS THAT?
+#>0x1C	uleshort	>0		\b, filespec position %#x
+# length in bytes of security envelope data like: 2CAh 301h 364h 471h
+>0x1E	uleshort	!0		\b, security envelope length %#x
+# last chapter like: 0 1
+>0x21	ubyte		!0		\b, last chapter %u
+# filename (null-terminated string); sometimes at 0x26 when 4 bytes for extra data
+>34	byte		x		\b, original name:
+# with extras data
+>34	byte		<0x0B
+>>38	string		x		%s
+# without extras data
+>34	byte		>0x0A
+>>34	string		x		%s
+# host OS: 0~MSDOS ... 11~WIN32
+>7	byte		0		\b, os: MS-DOS
+>7	byte		1		\b, os: PRIMOS
+>7	byte		2		\b, os: Unix
+>7	byte		3		\b, os: Amiga
+>7	byte		4		\b, os: Macintosh
+>7	byte		5		\b, os: OS/2
+>7	byte		6		\b, os: Apple ][ GS
+>7	byte		7		\b, os: Atari ST
+>7	byte		8		\b, os: NeXT
+>7	byte		9		\b, os: VAX/VMS
+>7	byte		10		\b, os: WIN95
+>7	byte		11		\b, os: WIN32
 # [JW] idarc says this is also possible
 2	leshort		0xea60		ARJ archive data
+#2	leshort		0xea60
+#>2	use		arj-archive
 
 # HA archiver (Greg Roelofs, newt@uchicago.edu)
 # This is a really bad format. A file containing HAWAII will match this...
