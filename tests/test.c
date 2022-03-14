@@ -105,7 +105,6 @@ main(int argc, char **argv)
 
 	if (argc != 3) {
 		(void)fprintf(stderr, "Usage: %s TEST-FILE RESULT\n", prog);
-		magic_close(ms);
 		goto bad;
 	}
 	if ((result = magic_file(ms, argv[1])) == NULL) {
