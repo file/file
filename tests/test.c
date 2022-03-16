@@ -86,7 +86,7 @@ main(int argc, char **argv)
 	else
 		prog = argv[0];
 
-	ms = magic_open(MAGIC_NONE);
+	ms = magic_open(MAGIC_ERROR);
 	if (ms == NULL) {
 		(void)fprintf(stderr, "%s: ERROR opening MAGIC_NONE: %s\n",
 		    prog, strerror(errno));
