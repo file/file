@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.190 2021/09/24 14:14:26 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.191 2022/03/19 14:11:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -182,7 +182,7 @@ int
 main(int argc, char *argv[])
 {
 	int c;
-	size_t i;
+	size_t i, j, wid, nw;
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0, e = 0;
 #ifdef HAVE_LIBSECCOMP
@@ -408,27 +408,30 @@ main(int argc, char *argv[])
 	if (optind == argc) {
 		if (!didsomefiles)
 			usage();
-	}
-	else {
-		size_t j, wid, nw;
-		for (wid = 0, j = CAST(size_t, optind); j < CAST(size_t, argc);
-		    j++) {
-			nw = file_mbswidth(argv[j]);
-			if (nw > wid)
-				wid = nw;
-		}
-		/*
-		 * If bflag is only set twice, set it depending on
-		 * number of files [this is undocumented, and subject to change]
-		 */
-		if (bflag == 2) {
-			bflag = optind >= argc - 1;
-		}
-		for (; optind < argc; optind++)
-			e |= process(magic, argv[optind], wid);
+		goto out;
 	}
 
+	for (wid = 0, j = CAST(size_t, optind); j < CAST(size_t, argc);
+	    j++) {
+		nw = file_mbswidth(argv[j]);
+		if (nw > wid)
+			wid = nw;
+	}
+
+	/*
+	 * If bflag is only set twice, set it depending on
+	 * number of files [this is undocumented, and subject to change]
+	 */
+	if (bflag == 2) {
+		bflag = optind >= argc - 1;
+	}
+	for (; optind < argc; optind++)
+		e |= process(magic, argv[optind], wid);
+
 out:
+	if (!nobuffer)
+		e |= fflush(stdout) != 0;
+
 	if (magic)
 		magic_close(magic);
 	return e;
