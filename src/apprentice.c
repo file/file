@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.318 2022/03/19 16:58:47 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.319 2022/03/19 19:52:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -540,6 +540,9 @@ file_ms_free(struct magic_set *ms)
 	free(ms->o.pbuf);
 	free(ms->o.buf);
 	free(ms->c.li);
+#ifdef USE_C_LOCALE
+	freelocale(ms->c_lc_ctype);
+#endif
 	free(ms);
 }
 
@@ -579,6 +582,10 @@ file_ms_alloc(int flags)
 	ms->regex_max = FILE_REGEX_MAX;
 	ms->bytes_max = FILE_BYTES_MAX;
 	ms->encoding_max = FILE_ENCODING_MAX;
+#ifdef USE_C_LOCALE
+	ms->c_lc_ctype = newlocale(LC_CTYPE_MASK, "C", 0);
+	assert(ms->c_lc_ctype != NULL);
+#endif
 	return ms;
 free:
 	free(ms);
@@ -652,6 +659,7 @@ mlist_free_one(struct mlist *ml)
 		if (ml->magic_rxcomp[i]) {
 			file_regfree(ml->magic_rxcomp[i]);
 			free(ml->magic_rxcomp[i]);
+			ml->magic_rxcomp[i] = NULL;
 		}
 	}
 	free(ml->magic_rxcomp);
@@ -2820,7 +2828,8 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		}
 		if (m->type == FILE_REGEX) {
 			file_regex_t rx;
-			int rc = file_regcomp(&rx, m->value.s, REG_EXTENDED);
+			int rc = file_regcomp(ms, &rx, m->value.s,
+			    REG_EXTENDED);
 			if (rc) {
 				if (ms->flags & MAGIC_CHECK)
 					file_regerror(&rx, rc, ms);

@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.125 2022/02/14 16:26:10 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.126 2022/03/19 19:52:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -638,13 +638,13 @@ file_replace(struct magic_set *ms, const char *pat, const char *rep)
 	file_regex_t rx;
 	int rc, rv = -1;
 
-	rc = file_regcomp(&rx, pat, REG_EXTENDED);
+	rc = file_regcomp(ms, &rx, pat, REG_EXTENDED);
 	if (rc) {
 		file_regerror(&rx, rc, ms);
 	} else {
 		regmatch_t rm;
 		int nm = 0;
-		while (file_regexec(&rx, ms->o.buf, 1, &rm, 0) == 0) {
+		while (file_regexec(ms, &rx, ms->o.buf, 1, &rm, 0) == 0) {
 			ms->o.buf[rm.rm_so] = '\0';
 			if (file_printf(ms, "%s%s", rep,
 			    rm.rm_eo != 0 ? ms->o.buf + rm.rm_eo : "") == -1)
@@ -659,34 +659,52 @@ out:
 }
 
 protected int
-file_regcomp(file_regex_t *rx, const char *pat, int flags)
+file_regcomp(struct magic_set *ms, file_regex_t *rx, const char *pat, int flags)
 {
 #ifdef USE_C_LOCALE
-	rx->c_lc_ctype = newlocale(LC_CTYPE_MASK, "C", 0);
-	assert(rx->c_lc_ctype != NULL);
-	rx->old_lc_ctype = uselocale(rx->c_lc_ctype);
-	assert(rx->old_lc_ctype != NULL);
+	locale_t old = uselocale(ms->c_lc_ctype);
+	assert(old != NULL);
 #else
-	rx->old_lc_ctype = setlocale(LC_CTYPE, NULL);
-	assert(rx->old_lc_ctype != NULL);
-	rx->old_lc_ctype = strdup(rx->old_lc_ctype);
-	assert(rx->old_lc_ctype != NULL);
+	char old[1024];
+	strlcpy(old, setlocale(LC_CTYPE, NULL), sizeof(old));
 	(void)setlocale(LC_CTYPE, "C");
 #endif
 	rx->pat = pat;
 
-	return rx->rc = regcomp(&rx->rx, pat, flags);
+	rx->rc = regcomp(&rx->rx, pat, flags);
+
+#ifdef USE_C_LOCALE
+	uselocale(old);
+#else
+	(void)setlocale(LC_CTYPE, old);
+#endif
+	return rx->rc;
 }
 
 protected int
-file_regexec(file_regex_t *rx, const char *str, size_t nmatch,
-    regmatch_t* pmatch, int eflags)
+file_regexec(struct magic_set *ms, file_regex_t *rx, const char *str,
+    size_t nmatch, regmatch_t* pmatch, int eflags)
 {
+#ifdef USE_C_LOCALE
+	locale_t old = uselocale(ms->c_lc_ctype);
+	assert(old != NULL);
+#else
+	char old[1024];
+	strlcpy(old, setlocale(LC_CTYPE, NULL), sizeof(old));
+	(void)setlocale(LC_CTYPE, "C");
+#endif
+	int rc;
 	assert(rx->rc == 0);
 	/* XXX: force initialization because glibc does not always do this */
 	if (nmatch != 0)
 		memset(pmatch, 0, nmatch * sizeof(*pmatch));
-	return regexec(&rx->rx, str, nmatch, pmatch, eflags);
+	rc = regexec(&rx->rx, str, nmatch, pmatch, eflags);
+#ifdef USE_C_LOCALE
+	uselocale(old);
+#else
+	(void)setlocale(LC_CTYPE, old);
+#endif
+	return rc;
 }
 
 protected void
@@ -694,13 +712,6 @@ file_regfree(file_regex_t *rx)
 {
 	if (rx->rc == 0)
 		regfree(&rx->rx);
-#ifdef USE_C_LOCALE
-	(void)uselocale(rx->old_lc_ctype);
-	freelocale(rx->c_lc_ctype);
-#else
-	(void)setlocale(LC_CTYPE, rx->old_lc_ctype);
-	free(rx->old_lc_ctype);
-#endif
 }
 
 protected void

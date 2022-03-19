@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.229 2022/03/19 16:58:47 christos Exp $
+ * @(#)$File: file.h,v 1.230 2022/03/19 19:52:09 christos Exp $
  */
 
 #ifndef __file_h__
@@ -173,13 +173,6 @@
 
 typedef struct {
 	const char *pat;
-#if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE)
-#define USE_C_LOCALE
-	locale_t old_lc_ctype;
-	locale_t c_lc_ctype;
-#else
-	char *old_lc_ctype;
-#endif
 	int rc;
 	regex_t rx;
 } file_regex_t;
@@ -501,6 +494,10 @@ struct magic_set {
 #define	FILE_NAME_MAX			50
 #define	FILE_REGEX_MAX			8192
 #define	FILE_ENCODING_MAX		(64 * 1024)
+#if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE)
+#define USE_C_LOCALE
+	locale_t c_lc_ctype;
+#endif
 };
 
 /* Type for Unicode characters */
@@ -596,9 +593,10 @@ protected int buffer_fill(const struct buffer *);
 
 
 
-protected int file_regcomp(file_regex_t *, const char *, int);
-protected int file_regexec(file_regex_t *, const char *, size_t, regmatch_t *,
+protected int file_regcomp(struct magic_set *, file_regex_t *, const char *,
     int);
+protected int file_regexec(struct magic_set *, file_regex_t *, const char *,
+    size_t, regmatch_t *, int);
 protected void file_regfree(file_regex_t *);
 protected void file_regerror(file_regex_t *, int, struct magic_set *);
 

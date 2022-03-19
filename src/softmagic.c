@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.320 2022/03/19 16:58:47 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.321 2022/03/19 19:52:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -478,11 +478,11 @@ check_fmt(struct magic_set *ms, const char *fmt)
 	if (strchr(fmt, '%') == NULL)
 		return 0;
 
-	rc = file_regcomp(&rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
+	rc = file_regcomp(ms, &rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
 	if (rc) {
 		file_regerror(&rx, rc, ms);
 	} else {
-		rc = file_regexec(&rx, fmt, 0, 0, 0);
+		rc = file_regexec(ms, &rx, fmt, 0, 0, 0);
 		rv = !rc;
 	}
 	file_regfree(&rx);
@@ -2018,11 +2018,12 @@ alloc_regex(struct magic_set *ms, struct magic *m)
 		return NULL;
 	}
 
-	rc = file_regcomp(rx, m->value.s, REG_EXTENDED | REG_NEWLINE |
+	rc = file_regcomp(ms, rx, m->value.s, REG_EXTENDED | REG_NEWLINE |
 	    ((m->str_flags & STRING_IGNORE_CASE) ? REG_ICASE : 0));
 	if (rc == 0)
 		return rx;
 
+fprintf(stderr, "regcomp %s %d\n", m->value.s, rc);
 	file_regerror(rx, rc, ms);
 	file_regfree(rx);
 	free(rx);
@@ -2250,7 +2251,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		    search = CCAST(char *, "");
 		    copy = NULL;
 		}
-		rc = file_regexec(rx, RCAST(const char *, search),
+		rc = file_regexec(ms, rx, RCAST(const char *, search),
 		    1, &pmatch, 0);
 		free(copy);
 		switch (rc) {
