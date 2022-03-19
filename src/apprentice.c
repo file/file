@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.317 2021/12/06 19:42:29 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.318 2022/03/19 16:58:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -450,7 +450,15 @@ add_mlist(struct mlist *mlp, struct magic_map *map, size_t idx)
 	ml->map = idx == 0 ? map : NULL;
 	ml->magic = map->magic[idx];
 	ml->nmagic = map->nmagic[idx];
-
+	if (ml->nmagic) {
+		ml->magic_rxcomp = CAST(file_regex_t **,
+		    calloc(ml->nmagic, sizeof(*ml->magic_rxcomp)));
+		if (ml->magic_rxcomp == NULL) {
+			free(ml);
+			return -1;
+		}
+	} else
+		ml->magic_rxcomp = NULL;
 	mlp->prev->next = ml;
 	ml->prev = mlp->prev;
 	ml->next = mlp;
@@ -635,8 +643,19 @@ mlist_free_all(struct magic_set *ms)
 private void
 mlist_free_one(struct mlist *ml)
 {
+	size_t i;
+
 	if (ml->map)
 		apprentice_unmap(CAST(struct magic_map *, ml->map));
+
+	for (i = 0; i < ml->nmagic; ++i) {
+		if (ml->magic_rxcomp[i]) {
+			file_regfree(ml->magic_rxcomp[i]);
+			free(ml->magic_rxcomp[i]);
+		}
+	}
+	free(ml->magic_rxcomp);
+	ml->magic_rxcomp = NULL;
 	free(ml);
 }
 
@@ -3630,16 +3649,16 @@ file_magicfind(struct magic_set *ms, const char *name, struct mlist *v)
 
 	for (ml = mlist->next; ml != mlist; ml = ml->next) {
 		struct magic *ma = ml->magic;
-		uint32_t nma = ml->nmagic;
-		for (i = 0; i < nma; i++) {
+		for (i = 0; i < ml->nmagic; i++) {
 			if (ma[i].type != FILE_NAME)
 				continue;
 			if (strcmp(ma[i].value.s, name) == 0) {
 				v->magic = &ma[i];
-				for (j = i + 1; j < nma; j++)
+				for (j = i + 1; j < ml->nmagic; j++)
 				    if (ma[j].cont_level == 0)
 					    break;
 				v->nmagic = j - i;
+				v->magic_rxcomp = ml->magic_rxcomp;
 				return 0;
 			}
 		}

@@ -1,3 +1,8 @@
+2022-03-19  12:56   Christos Zoulas <christos@zoulas.com>
+
+	* cache regex (Dirk Mueller)
+	* detect filesystem full by flushing output (Dirk Mueller)
+
 2021-11-19  12:36   Christos Zoulas <christos@zoulas.com>
 
 	* implement running decompressor programs using

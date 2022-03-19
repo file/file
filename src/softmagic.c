@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.319 2022/01/10 19:32:04 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.320 2022/03/19 16:58:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,7 +43,7 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.319 2022/01/10 19:32:04 christos Exp $")
 #include <time.h>
 #include "der.h"
 
-private int match(struct magic_set *, struct magic *, uint32_t,
+private int match(struct magic_set *, struct magic *, file_regex_t **, uint32_t,
     const struct buffer *, size_t, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *, int *);
 private int mget(struct magic_set *, struct magic *, const struct buffer *,
@@ -52,7 +52,7 @@ private int mget(struct magic_set *, struct magic *, const struct buffer *,
     uint16_t *, int *, int *, int *, int *);
 private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
     const struct buffer *, size_t, unsigned int);
-private int magiccheck(struct magic_set *, struct magic *);
+private int magiccheck(struct magic_set *, struct magic *, file_regex_t **);
 private int mprint(struct magic_set *, struct magic *);
 private int moffset(struct magic_set *, struct magic *, const struct buffer *,
     int32_t *);
@@ -131,8 +131,8 @@ file_softmagic(struct magic_set *ms, const struct buffer *b,
 	}
 
 	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
-		if ((rv = match(ms, ml->magic, ml->nmagic, b, 0, mode,
-		    text, 0, indir_count, name_count,
+		if ((rv = match(ms, ml->magic, ml->magic_rxcomp, ml->nmagic, b,
+		    0, mode, text, 0, indir_count, name_count,
 		    &printed_something, &need_separator, NULL, NULL)) != 0)
 			return rv;
 
@@ -191,8 +191,8 @@ file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
  *	so that higher-level continuations are processed.
  */
 private int
-match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
-    const struct buffer *b, size_t offset, int mode, int text,
+match(struct magic_set *ms, struct magic *magic, file_regex_t **magic_rxcomp,
+    uint32_t nmagic, const struct buffer *b, size_t offset, int mode, int text,
     int flip, uint16_t *indir_count, uint16_t *name_count,
     int *printed_something, int *need_separator, int *returnval,
     int *found_match)
@@ -220,6 +220,7 @@ match(struct magic_set *ms, struct magic *magic, uint32_t nmagic,
 	for (magindex = 0; magindex < nmagic; magindex++) {
 		int flush = 0;
 		struct magic *m = &magic[magindex];
+		file_regex_t **m_rxcomp = &magic_rxcomp[magindex];
 
 		if (m->type != FILE_NAME)
 		if ((IS_STRING(m->type) &&
@@ -257,7 +258,7 @@ flush:
 				*returnval = 1;
 			}
 
-			switch (magiccheck(ms, m)) {
+			switch (magiccheck(ms, m, m_rxcomp)) {
 			case -1:
 				return -1;
 			case 0:
@@ -318,6 +319,7 @@ flush:
 		while (magindex + 1 < nmagic &&
 		    magic[magindex + 1].cont_level != 0) {
 			m = &magic[++magindex];
+			m_rxcomp = &magic_rxcomp[magindex];
 			ms->line = m->lineno; /* for messages */
 
 			if (cont_level < m->cont_level)
@@ -371,7 +373,7 @@ flush:
 				break;
 			}
 
-			switch (flush ? 1 : magiccheck(ms, m)) {
+			switch (flush ? 1 : magiccheck(ms, m, m_rxcomp)) {
 			case -1:
 				return -1;
 			case 0:
@@ -650,7 +652,7 @@ mprint(struct magic_set *ms, struct magic *m)
 
 			if (m->str_flags & STRING_TRIM)
 				str = file_strtrim(str);
-					
+
 			if (file_printf(ms, F(ms, desc, "%s"),
 			    file_printable(ms, sbuf, sizeof(sbuf), str,
 				sizeof(p->s) - (str - p->s))) == -1)
@@ -758,7 +760,7 @@ mprint(struct magic_set *ms, struct magic *m)
 			return -1;
 		}
 		scp = (m->str_flags & STRING_TRIM) ? file_strtrim(cp) : cp;
-					
+
 		rval = file_printf(ms, F(ms, desc, "%s"), file_printable(ms,
 		    sbuf, sizeof(sbuf), scp, ms->search.rm_len));
 		free(cp);
@@ -1828,9 +1830,9 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		for (mlp = ms->mlist[0]->next; mlp != ms->mlist[0];
 		    mlp = mlp->next)
 		{
-			if ((rv = match(ms, mlp->magic, mlp->nmagic, &bb, 0,
-			    BINTEST, text, 0, indir_count, name_count,
-			    printed_something, need_separator, NULL,
+			if ((rv = match(ms, mlp->magic, mlp->magic_rxcomp,
+			    mlp->nmagic, &bb, 0, BINTEST, text, 0, indir_count,
+			    name_count, printed_something, need_separator, NULL,
 			    NULL)) != 0)
 				break;
 		}
@@ -1881,8 +1883,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		nfound_match = 0;
 		(*name_count)++;
 		eoffset = ms->eoffset;
-		rv = match(ms, ml.magic, ml.nmagic, b, offset + o,
-		    mode, text, flip, indir_count, name_count,
+		rv = match(ms, ml.magic, ml.magic_rxcomp, ml.nmagic, b,
+		    offset + o, mode, text, flip, indir_count, name_count,
 		    printed_something, need_separator, returnval,
 		    &nfound_match);
 		ms->ms_value.q = nfound_match;
@@ -2004,8 +2006,31 @@ file_strncmp16(const char *a, const char *b, size_t len, size_t maxlen,
 	return file_strncmp(a, b, len, maxlen, flags);
 }
 
+private file_regex_t *
+alloc_regex(struct magic_set *ms, struct magic *m)
+{
+	int rc;
+	file_regex_t *rx = CAST(file_regex_t *, malloc(sizeof(*rx)));
+
+	if (rx == NULL) {
+		file_error(ms, errno, "can't allocate %" SIZE_T_FORMAT
+		    "u bytes", sizeof(*rx));
+		return NULL;
+	}
+
+	rc = file_regcomp(rx, m->value.s, REG_EXTENDED | REG_NEWLINE |
+	    ((m->str_flags & STRING_IGNORE_CASE) ? REG_ICASE : 0));
+	if (rc == 0)
+		return rx;
+
+	file_regerror(rx, rc, ms);
+	file_regfree(rx);
+	free(rx);
+	return NULL;
+}
+
 private int
-magiccheck(struct magic_set *ms, struct magic *m)
+magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 {
 	uint64_t l = m->value.q;
 	uint64_t v;
@@ -2089,8 +2114,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			break;
 
 		default:
-			file_magerror(ms, "cannot happen with float: invalid relation `%c'",
-			    m->reln);
+			file_magerror(ms, "cannot happen with float: "
+			    "invalid relation `%c'", m->reln);
 			return -1;
 		}
 		return matched;
@@ -2122,7 +2147,8 @@ magiccheck(struct magic_set *ms, struct magic *m)
 			break;
 
 		default:
-			file_magerror(ms, "cannot happen with double: invalid relation `%c'", m->reln);
+			file_magerror(ms, "cannot happen with double: "
+			    "invalid relation `%c'", m->reln);
 			return -1;
 		}
 		return matched;
@@ -2194,62 +2220,57 @@ magiccheck(struct magic_set *ms, struct magic *m)
 	}
 	case FILE_REGEX: {
 		int rc;
-		file_regex_t rx;
+		file_regex_t *rx = *m_cache;
 		const char *search;
+		regmatch_t pmatch;
+		size_t slen = ms->search.s_len;
+		char *copy;
 
 		if (ms->search.s == NULL)
 			return 0;
 
-		l = 0;
-		rc = file_regcomp(&rx, m->value.s,
-		    REG_EXTENDED|REG_NEWLINE|
-		    ((m->str_flags & STRING_IGNORE_CASE) ? REG_ICASE : 0));
-		if (rc) {
-			file_regerror(&rx, rc, ms);
-			v = CAST(uint64_t, -1);
-		} else {
-			regmatch_t pmatch;
-			size_t slen = ms->search.s_len;
-			char *copy;
-			if (slen != 0) {
-			    copy = CAST(char *, malloc(slen));
-			    if (copy == NULL)  {
-				file_regfree(&rx);
-				file_error(ms, errno,
-				    "can't allocate %" SIZE_T_FORMAT "u bytes",
-				    slen);
+		if (rx == NULL) {
+			rx = *m_cache = alloc_regex(ms, m);
+			if (rx == NULL)
 				return -1;
-			    }
-			    memcpy(copy, ms->search.s, slen);
-			    copy[--slen] = '\0';
-			    search = copy;
-			} else {
-			    search = CCAST(char *, "");
-			    copy = NULL;
-			}
-			rc = file_regexec(&rx, RCAST(const char *, search),
-			    1, &pmatch, 0);
-			free(copy);
-			switch (rc) {
-			case 0:
-				ms->search.s += CAST(int, pmatch.rm_so);
-				ms->search.offset += CAST(size_t, pmatch.rm_so);
-				ms->search.rm_len = CAST(size_t, 
-				    pmatch.rm_eo - pmatch.rm_so);
-				v = 0;
-				break;
-
-			case REG_NOMATCH:
-				v = 1;
-				break;
-
-			default:
-				file_regerror(&rx, rc, ms);
-				v = CAST(uint64_t, -1);
-				break;
-			}
 		}
-		file_regfree(&rx);
+		l = 0;
+		if (slen != 0) {
+		    copy = CAST(char *, malloc(slen));
+		    if (copy == NULL)  {
+			file_error(ms, errno,
+			    "can't allocate %" SIZE_T_FORMAT "u bytes",
+			    slen);
+			return -1;
+		    }
+		    memcpy(copy, ms->search.s, slen);
+		    copy[--slen] = '\0';
+		    search = copy;
+		} else {
+		    search = CCAST(char *, "");
+		    copy = NULL;
+		}
+		rc = file_regexec(rx, RCAST(const char *, search),
+		    1, &pmatch, 0);
+		free(copy);
+		switch (rc) {
+		case 0:
+			ms->search.s += CAST(int, pmatch.rm_so);
+			ms->search.offset += CAST(size_t, pmatch.rm_so);
+			ms->search.rm_len = CAST(size_t,
+			    pmatch.rm_eo - pmatch.rm_so);
+			v = 0;
+			break;
+
+		case REG_NOMATCH:
+			v = 1;
+			break;
+
+		default:
+			file_regerror(rx, rc, ms);
+			v = CAST(uint64_t, -1);
+			break;
+		}
 		if (v == CAST(uint64_t, -1))
 			return -1;
 		break;

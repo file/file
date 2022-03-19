@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.228 2021/10/24 15:52:18 christos Exp $
+ * @(#)$File: file.h,v 1.229 2022/03/19 16:58:47 christos Exp $
  */
 
 #ifndef __file_h__
@@ -88,6 +88,10 @@
 /* Do this here and now, because struct stat gets re-defined on solaris */
 #include <sys/stat.h>
 #include <stdarg.h>
+#include <locale.h>
+#if defined(HAVE_XLOCALE_H)
+#include <xlocale.h>
+#endif
 
 #define ENABLE_CONDITIONALS
 
@@ -166,6 +170,19 @@
 #define FILE_CHECK	1
 #define FILE_COMPILE	2
 #define FILE_LIST	3
+
+typedef struct {
+	const char *pat;
+#if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE)
+#define USE_C_LOCALE
+	locale_t old_lc_ctype;
+	locale_t c_lc_ctype;
+#else
+	char *old_lc_ctype;
+#endif
+	int rc;
+	regex_t rx;
+} file_regex_t;
 
 struct buffer {
 	int fd;
@@ -404,7 +421,8 @@ struct magic {
 /* list of magic entries */
 struct mlist {
 	struct magic *magic;		/* array of magic entries */
-	uint32_t nmagic;		/* number of entries in array */
+	file_regex_t **magic_rxcomp;	/* array of compiled regexps */
+	size_t nmagic;			/* number of entries in array */
 	void *map;			/* internal resources used by entry */
 	struct mlist *next, *prev;
 };
@@ -576,23 +594,7 @@ protected void buffer_init(struct buffer *, int, const struct stat *,
 protected void buffer_fini(struct buffer *);
 protected int buffer_fill(const struct buffer *);
 
-#include <locale.h>
-#if defined(HAVE_XLOCALE_H)
-#include <xlocale.h>
-#endif
 
-typedef struct {
-	const char *pat;
-#if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE)
-#define USE_C_LOCALE
-	locale_t old_lc_ctype;
-	locale_t c_lc_ctype;
-#else
-	char *old_lc_ctype;
-#endif
-	int rc;
-	regex_t rx;
-} file_regex_t;
 
 protected int file_regcomp(file_regex_t *, const char *, int);
 protected int file_regexec(file_regex_t *, const char *, size_t, regmatch_t *,
