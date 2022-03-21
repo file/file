@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.157 2022/03/13 14:45:11 christos Exp $
+# $File: archive,v 1.158 2022/03/21 21:25:50 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1718,6 +1718,8 @@
 # ACE archive (from http://www.wotsit.org/download.asp?f=ace)
 # by Stefan `Sec` Zehl <sec@42.org>
 7	string		**ACE**		ACE archive data
+!:mime	application/x-ace-compressed
+!:ext	ace
 >15	byte	>0		version %d
 >16	byte	=0x00		\b, from MS-DOS
 >16	byte	=0x01		\b, from OS/2

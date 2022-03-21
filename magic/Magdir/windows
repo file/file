@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.40 2021/11/10 20:54:48 christos Exp $
+# $File: windows,v 1.41 2022/03/21 21:25:50 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -382,6 +382,8 @@
 # Created by: unknown
 # 'L' + GUUID
 0	string		\114\0\0\0\001\024\002\0\0\0\0\0\300\0\0\0\0\0\0\106	MS Windows shortcut
+!:mime	application/x-ms-shortcut
+!:ext	lnk
 >20	lelong&1	1	\b, Item id list present
 >20	lelong&2	2	\b, Points to a file or directory
 >20	lelong&4	4	\b, Has Description string

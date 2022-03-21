@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.153 2021/10/24 15:53:21 christos Exp $
+# $File: msdos,v 1.154 2022/03/21 21:25:50 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1367,6 +1367,8 @@
 
 # HtmlHelp files (.chm)
 0	string/b	ITSF\003\000\000\000\x60\000\000\000	MS Windows HtmlHelp Data
+!:mime	application/vnd.ms-htmlhelp
+!:ext	chm
 
 # GFA-BASIC (Wolfram Kleff)
 2	string/b	GFA-BASIC3	GFA-BASIC 3 data
