@@ -32,17 +32,21 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.16 2021/12/09 18:38:43 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.17 2022/03/21 21:24:13 christos Exp $")
 #endif
 
-#include <string.h>
 #include "magic.h"
+#else
+#include <stdio.h>
+#include <stddef.h>
 #endif
+#include <string.h>
 
 #ifdef DEBUG
 #include <stdio.h>
 #define DPRINTF(a, b, c)	\
-    printf("%s [%.2x/%c] %.20s\n", (a), *(b), *(b), (const char *)(c))
+    printf("%*s%s [%.2x/%c] %.*s\n", (int)lvl, "", (a), *(b), *(b), \
+	(int)(b - c), (const char *)(c))
 #else
 #define DPRINTF(a, b, c)	do { } while (/*CONSTCOND*/0)
 #endif
@@ -117,7 +121,8 @@ json_skip_space(const unsigned char *uc, const unsigned char *ue)
 }
 
 static int
-json_parse_string(const unsigned char **ucp, const unsigned char *ue)
+json_parse_string(const unsigned char **ucp, const unsigned char *ue,
+    size_t lvl)
 {
 	const unsigned char *uc = *ucp;
 	size_t i;
@@ -155,8 +160,8 @@ json_parse_string(const unsigned char **ucp, const unsigned char *ue)
 				goto out;
 			}
 		case '"':
-			*ucp = uc;
 			DPRINTF("Good string: ", uc, *ucp);
+			*ucp = uc;
 			return 1;
 		default:
 			continue;
@@ -189,8 +194,8 @@ json_parse_array(const unsigned char **ucp, const unsigned char *ue,
 		case ']':
 		done:
 			st[JSON_ARRAYN]++;
-			*ucp = uc + 1;
 			DPRINTF("Good array: ", uc, *ucp);
+			*ucp = uc + 1;
 			return 1;
 		default:
 			goto out;
@@ -221,7 +226,7 @@ json_parse_object(const unsigned char **ucp, const unsigned char *ue,
 			goto out;
 		}
 		DPRINTF("next field", uc, *ucp);
-		if (!json_parse_string(&uc, ue)) {
+		if (!json_parse_string(&uc, ue, lvl)) {
 			DPRINTF("not string", uc, *ucp);
 			goto out;
 		}
@@ -243,12 +248,12 @@ json_parse_object(const unsigned char **ucp, const unsigned char *ue,
 			continue;
 		case '}': /* { */
 		done:
-			*ucp = uc;
 			DPRINTF("Good object: ", uc, *ucp);
+			*ucp = uc;
 			return 1;
 		default:
-			*ucp = uc - 1;
 			DPRINTF("not more", uc, *ucp);
+			*ucp = uc - 1;
 			goto out;
 		}
 	}
@@ -259,7 +264,8 @@ out:
 }
 
 static int
-json_parse_number(const unsigned char **ucp, const unsigned char *ue)
+json_parse_number(const unsigned char **ucp, const unsigned char *ue, 
+    size_t lvl)
 {
 	const unsigned char *uc = *ucp;
 	int got = 0;
@@ -310,7 +316,7 @@ out:
 
 static int
 json_parse_const(const unsigned char **ucp, const unsigned char *ue,
-    const char *str, size_t len)
+    const char *str, size_t len, size_t lvl)
 {
 	const unsigned char *uc = *ucp;
 
@@ -338,8 +344,10 @@ json_parse(const unsigned char **ucp, const unsigned char *ue,
 		goto out;
 
 	// Avoid recursion
-	if (lvl > 20)
+	if (lvl > 500) {
+		DPRINTF("Too many levels", uc, *ucp);
 		return 0;
+	}
 #if JSON_COUNT
 	/* bail quickly if not counting */
 	if (lvl > 1 && (st[JSON_OBJECT] || st[JSON_ARRAYN]))
@@ -349,7 +357,7 @@ json_parse(const unsigned char **ucp, const unsigned char *ue,
 	DPRINTF("Parse general: ", uc, *ucp);
 	switch (*uc++) {
 	case '"':
-		rv = json_parse_string(&uc, ue);
+		rv = json_parse_string(&uc, ue, lvl + 1);
 		t = JSON_STRING;
 		break;
 	case '[':
@@ -361,20 +369,21 @@ json_parse(const unsigned char **ucp, const unsigned char *ue,
 		t = JSON_OBJECT;
 		break;
 	case 't':
-		rv = json_parse_const(&uc, ue, "true", sizeof("true"));
+		rv = json_parse_const(&uc, ue, "true", sizeof("true"), lvl + 1);
 		t = JSON_CONSTANT;
 		break;
 	case 'f':
-		rv = json_parse_const(&uc, ue, "false", sizeof("false"));
+		rv = json_parse_const(&uc, ue, "false", sizeof("false"),
+		    lvl + 1);
 		t = JSON_CONSTANT;
 		break;
 	case 'n':
-		rv = json_parse_const(&uc, ue, "null", sizeof("null"));
+		rv = json_parse_const(&uc, ue, "null", sizeof("null"), lvl + 1);
 		t = JSON_CONSTANT;
 		break;
 	default:
 		--uc;
-		rv = json_parse_number(&uc, ue);
+		rv = json_parse_number(&uc, ue, lvl + 1);
 		t = JSON_NUMBER;
 		break;
 	}
@@ -382,8 +391,8 @@ json_parse(const unsigned char **ucp, const unsigned char *ue,
 		st[t]++;
 	uc = json_skip_space(uc, ue);
 out:
-	*ucp = uc;
 	DPRINTF("End general: ", uc, *ucp);
+	*ucp = uc;
 	if (lvl == 0)
 		return rv && (st[JSON_ARRAYN] || st[JSON_OBJECT]);
 	return rv;
