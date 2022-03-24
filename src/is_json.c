@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.17 2022/03/21 21:24:13 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.18 2022/03/24 15:47:27 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -47,8 +47,10 @@ FILE_RCSID("@(#)$File: is_json.c,v 1.17 2022/03/21 21:24:13 christos Exp $")
 #define DPRINTF(a, b, c)	\
     printf("%*s%s [%.2x/%c] %.*s\n", (int)lvl, "", (a), *(b), *(b), \
 	(int)(b - c), (const char *)(c))
+#define __file_debugused
 #else
 #define DPRINTF(a, b, c)	do { } while (/*CONSTCOND*/0)
+#define __file_debugused __attribute__((__unused__))
 #endif
 
 #define JSON_ARRAY	0
@@ -122,7 +124,7 @@ json_skip_space(const unsigned char *uc, const unsigned char *ue)
 
 static int
 json_parse_string(const unsigned char **ucp, const unsigned char *ue,
-    size_t lvl)
+    size_t lvl __file_debugused)
 {
 	const unsigned char *uc = *ucp;
 	size_t i;
@@ -265,7 +267,7 @@ out:
 
 static int
 json_parse_number(const unsigned char **ucp, const unsigned char *ue, 
-    size_t lvl)
+    size_t lvl __file_debugused)
 {
 	const unsigned char *uc = *ucp;
 	int got = 0;
@@ -316,7 +318,7 @@ out:
 
 static int
 json_parse_const(const unsigned char **ucp, const unsigned char *ue,
-    const char *str, size_t len, size_t lvl)
+    const char *str, size_t len, size_t lvl __file_debugused)
 {
 	const unsigned char *uc = *ucp;
 
