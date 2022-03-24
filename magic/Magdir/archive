@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.158 2022/03/21 21:25:50 christos Exp $
+# $File: archive,v 1.159 2022/03/24 15:48:58 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -150,7 +150,7 @@
 # Incremental snapshot gnu-tar format from:
 # https://www.gnu.org/software/tar/manual/html_node/Snapshot-Files.html
 0	string		GNU\ tar-	GNU tar incremental snapshot data
->&0	regex		[0-9]\.[0-9]+-[0-9]+	version %s
+>&0	regex		[0-9]\\.[0-9]+-[0-9]+	version %s
 
 # cpio archives
 #

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.41 2022/03/21 21:25:50 christos Exp $
+# $File: windows,v 1.42 2022/03/24 15:48:58 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -358,7 +358,7 @@
 # skip space at beginning
 >0     string		\040
 # name without extension and greater character or name with hlp extension
->>1	regex/c		\^([^\xd>]*|.*\.hlp)	MS Windows help file Content, based "%s"
+>>1	regex/c		\^([^\xd>]*|.*\\.hlp)	MS Windows help file Content, based "%s"
 !:mime	text/plain
 !:apple	????TEXT
 !:ext	cnt
@@ -543,7 +543,7 @@
 # http://www.winfaq.de/faq_html/Content/tip2500/onlinefaq.php?h=tip2653.htm
 # https://msdn.microsoft.com/en-us/library/windows/desktop/cc144102.aspx
 # .ShellClassInfo DeleteOnCopy LocalizedFileNames ASCII coded case-independent
->>&0	regex/c	\^(\.ShellClassInfo|DeleteOnCopy|LocalizedFileNames)]	Windows desktop.ini
+>>&0	regex/1024c	\^(\\.ShellClassInfo|DeleteOnCopy|LocalizedFileNames)]	Windows desktop.ini
 !:mime application/x-wine-extension-ini
 #!:mime text/plain
 # https://support.microsoft.com/kb/84709/
