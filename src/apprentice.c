@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.319 2022/03/19 19:52:09 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.320 2022/03/24 15:48:21 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2936,6 +2936,7 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 	char	*pmax = p + plen - 1;
 	int	c;
 	int	val;
+	size_t	bracket_nesting = 0;
 
 	while ((c = *s++) != '\0') {
 		if (isspace(CAST(unsigned char, c)))
@@ -2944,135 +2945,149 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 			file_error(ms, 0, "string too long: `%s'", origs);
 			return NULL;
 		}
-		if (c == '\\') {
-			switch(c = *s++) {
+		if (c != '\\') {
+		    if (c == '[') {
+			    bracket_nesting++;
+		    }
+		    if (c == ']' && bracket_nesting > 0) {
+			    bracket_nesting--;
+		    }
+		    *p++ = CAST(char, c);
+		    continue;
+		}
+		switch(c = *s++) {
 
-			case '\0':
-				if (warn)
-					file_magwarn(ms, "incomplete escape");
-				s--;
-				goto out;
-
-			case '\t':
-				if (warn) {
-					file_magwarn(ms,
-					    "escaped tab found, use \\t instead");
-					warn = 0;	/* already did */
-				}
-				/*FALLTHROUGH*/
-			default:
-				if (warn) {
-					if (isprint(CAST(unsigned char, c))) {
-						/* Allow escaping of
-						 * ``relations'' */
-						if (strchr("<>&^=!", c) == NULL
-						    && (m->type != FILE_REGEX ||
-						    strchr("[]().*?^$|{}", c)
-						    == NULL)) {
-							file_magwarn(ms, "no "
-							    "need to escape "
-							    "`%c'", c);
-						}
-					} else {
-						file_magwarn(ms,
-						    "unknown escape sequence: "
-						    "\\%03o", c);
+		case '\0':
+			if (warn)
+				file_magwarn(ms, "incomplete escape");
+			s--;
+			goto out;
+		case '.':
+			if (m->type == FILE_REGEX &&
+			    bracket_nesting == 0 && warn) {
+				file_magwarn(ms, "escaped dot ('.') found, "
+				    "use \\\\. instead");
+			}
+			warn = 0; /* already did */
+			/*FALLTHROUGH*/
+		case '\t':
+			if (warn) {
+				file_magwarn(ms,
+				    "escaped tab found, use \\\\t instead");
+				warn = 0;	/* already did */
+			}
+			/*FALLTHROUGH*/
+		default:
+			if (warn) {
+				if (isprint(CAST(unsigned char, c))) {
+					/* Allow escaping of
+					 * ``relations'' */
+					if (strchr("<>&^=!", c) == NULL
+					    && (m->type != FILE_REGEX ||
+					    strchr("[]().*?^$|{}", c)
+					    == NULL)) {
+						file_magwarn(ms, "no "
+						    "need to escape "
+						    "`%c'", c);
 					}
+				} else {
+					file_magwarn(ms,
+					    "unknown escape sequence: "
+					    "\\%03o", c);
 				}
-				/*FALLTHROUGH*/
-			/* space, perhaps force people to use \040? */
-			case ' ':
+			}
+			/*FALLTHROUGH*/
+		/* space, perhaps force people to use \040? */
+		case ' ':
 #if 0
-			/*
-			 * Other things people escape, but shouldn't need to,
-			 * so we disallow them
-			 */
-			case '\'':
-			case '"':
-			case '?':
+		/*
+		 * Other things people escape, but shouldn't need to,
+		 * so we disallow them
+		 */
+		case '\'':
+		case '"':
+		case '?':
 #endif
-			/* Relations */
-			case '>':
-			case '<':
-			case '&':
-			case '^':
-			case '=':
-			case '!':
-			/* and baskslash itself */
-			case '\\':
-				*p++ = CAST(char, c);
-				break;
+		/* Relations */
+		case '>':
+		case '<':
+		case '&':
+		case '^':
+		case '=':
+		case '!':
+		/* and backslash itself */
+		case '\\':
+			*p++ = CAST(char, c);
+			break;
 
-			case 'a':
-				*p++ = '\a';
-				break;
+		case 'a':
+			*p++ = '\a';
+			break;
 
-			case 'b':
-				*p++ = '\b';
-				break;
+		case 'b':
+			*p++ = '\b';
+			break;
 
-			case 'f':
-				*p++ = '\f';
-				break;
+		case 'f':
+			*p++ = '\f';
+			break;
 
-			case 'n':
-				*p++ = '\n';
-				break;
+		case 'n':
+			*p++ = '\n';
+			break;
 
-			case 'r':
-				*p++ = '\r';
-				break;
+		case 'r':
+			*p++ = '\r';
+			break;
 
-			case 't':
-				*p++ = '\t';
-				break;
+		case 't':
+			*p++ = '\t';
+			break;
 
-			case 'v':
-				*p++ = '\v';
-				break;
+		case 'v':
+			*p++ = '\v';
+			break;
 
-			/* \ and up to 3 octal digits */
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-				val = c - '0';
-				c = *s++;  /* try for 2 */
-				if (c >= '0' && c <= '7') {
-					val = (val << 3) | (c - '0');
-					c = *s++;  /* try for 3 */
-					if (c >= '0' && c <= '7')
-						val = (val << 3) | (c-'0');
-					else
-						--s;
-				}
+		/* \ and up to 3 octal digits */
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+			val = c - '0';
+			c = *s++;  /* try for 2 */
+			if (c >= '0' && c <= '7') {
+				val = (val << 3) | (c - '0');
+				c = *s++;  /* try for 3 */
+				if (c >= '0' && c <= '7')
+					val = (val << 3) | (c-'0');
 				else
 					--s;
-				*p++ = CAST(char, val);
-				break;
-
-			/* \x and up to 2 hex digits */
-			case 'x':
-				val = 'x';	/* Default if no digits */
-				c = hextoint(*s++);	/* Get next char */
-				if (c >= 0) {
-					val = c;
-					c = hextoint(*s++);
-					if (c >= 0)
-						val = (val << 4) + c;
-					else
-						--s;
-				} else
-					--s;
-				*p++ = CAST(char, val);
-				break;
 			}
-		} else
-			*p++ = CAST(char, c);
+			else
+				--s;
+			*p++ = CAST(char, val);
+			break;
+
+		/* \x and up to 2 hex digits */
+		case 'x':
+			val = 'x';	/* Default if no digits */
+			c = hextoint(*s++);	/* Get next char */
+			if (c >= 0) {
+				val = c;
+				c = hextoint(*s++);
+				if (c >= 0)
+					val = (val << 4) + c;
+				else
+					--s;
+			} else
+				--s;
+			*p++ = CAST(char, val);
+			break;
+		}
 	}
 	--s;
 out:
