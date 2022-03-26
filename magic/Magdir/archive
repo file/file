@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.159 2022/03/24 15:48:58 christos Exp $
+# $File: archive,v 1.160 2022/03/26 18:59:29 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -802,7 +802,11 @@
 0	string	NSK NaShrink archive data
 # SAPCAR
 0	string	#\ CAR\ archive\ header SAPCAR archive data
-0	string	CAR\ 2.00RG SAPCAR archive data
+0	string	CAR\ 2.00 SAPCAR archive data
+0	string	CAR\ 2.01 SAPCAR archive data
+#!:mime	application/octet-stream
+!:mime	application/vnd.sar
+!:ext	sar
 # Disintegrator
 0	string	DST Disintegrator archive data
 # ASD
