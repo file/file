@@ -802,7 +802,11 @@
 0	string	NSK NaShrink archive data
 # SAPCAR
 0	string	#\ CAR\ archive\ header SAPCAR archive data
-0	string	CAR\ 2.00RG SAPCAR archive data
+0	string	CAR\ 2.00 SAPCAR archive data
+0	string	CAR\ 2.01 SAPCAR archive data
+#!:mime	application/octet-stream
+!:mime	application/vnd.sar
+!:ext	sar
 # Disintegrator
 0	string	DST Disintegrator archive data
 # ASD
