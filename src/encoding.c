@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.33 2022/02/19 22:48:58 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.34 2022/04/04 16:45:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -458,11 +458,15 @@ looks_utf7(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf,
 		return -1;
 }
 
+#define UCS16_NOCHAR(c) ((c) >= 0xfdd0 && (c) <= 0xfdef)
+#define UCS16_HISURR(c) ((c) >= 0xd800 && (c) <= 0xdbff)
+#define UCS16_LOSURR(c) ((c) >= 0xdc00 && (c) <= 0xdfff)
+
 private int
 looks_ucs16(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
     size_t *ulen)
 {
-	int bigend;
+	int bigend, hi;
 	size_t i;
 
 	if (nbytes < 2)
@@ -478,19 +482,36 @@ looks_ucs16(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
 	*ulen = 0;
 
 	for (i = 2; i + 1 < nbytes; i += 2) {
-		/* XXX fix to properly handle chars > 65536 */
+		uint32_t uc;
 
 		if (bigend)
-			ubf[(*ulen)++] = bf[i + 1]
-			    | (CAST(file_unichar_t, bf[i]) << 8);
+			uc = bf[i + 1] | (CAST(file_unichar_t, bf[i]) << 8);
 		else
-			ubf[(*ulen)++] = bf[i]
-			    | (CAST(file_unichar_t, bf[i + 1]) << 8);
+			uc = bf[i] | (CAST(file_unichar_t, bf[i + 1]) << 8);
 
-		if (ubf[*ulen - 1] == 0xfffe)
+		uc &= 0xffff;
+
+		switch (uc) {
+		case 0xfffe:
+		case 0xffff:
 			return 0;
-		if (ubf[*ulen - 1] < 128 &&
-		    text_chars[CAST(size_t, ubf[*ulen - 1])] != T)
+		default:
+			if (UCS16_NOCHAR(uc))
+				return 0;
+			break;
+		}
+		if (hi) {
+			if (!UCS16_LOSURR(uc))
+				return 0;
+			uc = 0x10000 + 0x400 * (hi - 1) + (uc - 0xdc00);
+			hi = 0;
+		}
+		if (uc < 128 && text_chars[CAST(size_t, uc)] != T)
+			return 0;
+		ubf[(*ulen)++] = uc;
+		if (UCS16_HISURR(uc))
+			hi = uc - 0xd800 + 1;
+		if (UCS16_LOSURR(uc))
 			return 0;
 	}
 
