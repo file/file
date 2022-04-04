@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.18 2022/03/24 15:47:27 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.19 2022/04/04 17:47:45 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -396,7 +396,7 @@ out:
 	DPRINTF("End general: ", uc, *ucp);
 	*ucp = uc;
 	if (lvl == 0)
-		return rv && (st[JSON_ARRAYN] || st[JSON_OBJECT]);
+		return rv && uc == ue && (st[JSON_ARRAYN] || st[JSON_OBJECT]);
 	return rv;
 }
 

@@ -37,6 +37,10 @@ json2.result \
 json2.testfile \
 json3.result \
 json3.testfile \
+json4.result \
+json4.testfile \
+json5.result \
+json5.testfile \
 matilde.arm.result \
 matilde.arm.testfile \
 pcjr.result \
