@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.230 2022/03/19 19:52:09 christos Exp $
+ * @(#)$File: file.h,v 1.231 2022/04/11 18:07:38 christos Exp $
  */
 
 #ifndef __file_h__
@@ -497,6 +497,9 @@ struct magic_set {
 #if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE)
 #define USE_C_LOCALE
 	locale_t c_lc_ctype;
+#define file_locale_used
+#else
+#define file_locale_used __attribute__((__unused__))
 #endif
 };
 

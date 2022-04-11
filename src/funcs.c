@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.126 2022/03/19 19:52:09 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.127 2022/04/11 18:07:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -659,7 +659,8 @@ out:
 }
 
 protected int
-file_regcomp(struct magic_set *ms, file_regex_t *rx, const char *pat, int flags)
+file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
+    const char *pat, int flags)
 {
 #ifdef USE_C_LOCALE
 	locale_t old = uselocale(ms->c_lc_ctype);
@@ -682,8 +683,8 @@ file_regcomp(struct magic_set *ms, file_regex_t *rx, const char *pat, int flags)
 }
 
 protected int
-file_regexec(struct magic_set *ms, file_regex_t *rx, const char *str,
-    size_t nmatch, regmatch_t* pmatch, int eflags)
+file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
+    const char *str, size_t nmatch, regmatch_t* pmatch, int eflags)
 {
 #ifdef USE_C_LOCALE
 	locale_t old = uselocale(ms->c_lc_ctype);
