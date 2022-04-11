@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.134 2021/12/06 15:33:00 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.135 2022/04/11 18:14:41 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -741,7 +741,7 @@ movedesc(void *v, int i, int fd)
 	if (fd == i)
 		return; /* "no dup was necessary" */
 #ifdef HAVE_POSIX_SPAWNP
-	posix_spawn_file_actions_t *fa = v;
+	posix_spawn_file_actions_t *fa = RCAST(posix_spawn_file_actions_t *, v);
 	posix_spawn_file_actions_adddup2(fa, fd, i);
 	posix_spawn_file_actions_addclose(fa, fd);
 #else
@@ -757,7 +757,7 @@ static void
 closedesc(void *v, int fd)
 {
 #ifdef HAVE_POSIX_SPAWNP
-	posix_spawn_file_actions_t *fa = v;
+	posix_spawn_file_actions_t *fa = RCAST(posix_spawn_file_actions_t *, v);
 	posix_spawn_file_actions_addclose(fa, fd);
 #else
 	close(v ? fd : fd);

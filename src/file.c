@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.191 2022/03/19 14:11:47 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.192 2022/04/11 18:14:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -456,7 +456,7 @@ setparam(const char *p)
 	size_t i;
 	char *s;
 
-	if ((s = strchr(p, '=')) == NULL)
+	if ((s = CCAST(char *, strchr(p, '='))) == NULL)
 		goto badparm;
 
 	for (i = 0; i < __arraycount(pm); i++) {
@@ -629,7 +629,7 @@ docprint(const char *opts, int def)
 	int comma, pad;
 	char *sp, *p;
 
-	p = strchr(opts, '%');
+	p = CCAST(char *, strchr(opts, '%'));
 	if (p == NULL) {
 		fprintf(stdout, "%s", opts);
 		defprint(def);
