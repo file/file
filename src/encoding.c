@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.35 2022/04/11 13:10:29 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.36 2022/04/11 18:05:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -481,6 +481,7 @@ looks_ucs16(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
 		bigend = 1;
 
 	*ulen = 0;
+	hi = 0;
 
 	for (i = 2; i + 1 < nbytes; i += 2) {
 		uint32_t uc;
