@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.321 2022/03/19 19:52:09 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.322 2022/04/18 21:50:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -474,14 +474,13 @@ check_fmt(struct magic_set *ms, const char *fmt)
 {
 	file_regex_t rx;
 	int rc, rv = -1;
+        const char* pat = "%[-0-9\\.]*s";
 
 	if (strchr(fmt, '%') == NULL)
 		return 0;
 
-	rc = file_regcomp(ms, &rx, "%[-0-9\\.]*s", REG_EXTENDED|REG_NOSUB);
-	if (rc) {
-		file_regerror(&rx, rc, ms);
-	} else {
+	rc = file_regcomp(ms, &rx, pat, REG_EXTENDED|REG_NOSUB);
+	if (rc == 0) {
 		rc = file_regexec(ms, &rx, fmt, 0, 0, 0);
 		rv = !rc;
 	}
@@ -2023,9 +2022,6 @@ alloc_regex(struct magic_set *ms, struct magic *m)
 	if (rc == 0)
 		return rx;
 
-fprintf(stderr, "regcomp %s %d\n", m->value.s, rc);
-	file_regerror(rx, rc, ms);
-	file_regfree(rx);
 	free(rx);
 	return NULL;
 }
@@ -2268,12 +2264,9 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			break;
 
 		default:
-			file_regerror(rx, rc, ms);
-			v = CAST(uint64_t, -1);
+			return -1;
 			break;
 		}
-		if (v == CAST(uint64_t, -1))
-			return -1;
 		break;
 	}
 	case FILE_USE:

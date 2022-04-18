@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.127 2022/04/11 18:07:38 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.128 2022/04/18 21:50:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -639,9 +639,7 @@ file_replace(struct magic_set *ms, const char *pat, const char *rep)
 	int rc, rv = -1;
 
 	rc = file_regcomp(ms, &rx, pat, REG_EXTENDED);
-	if (rc) {
-		file_regerror(&rx, rc, ms);
-	} else {
+	if (rc == 0) {
 		regmatch_t rm;
 		int nm = 0;
 		while (file_regexec(ms, &rx, ms->o.buf, 1, &rm, 0) == 0) {
@@ -670,16 +668,22 @@ file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
 	strlcpy(old, setlocale(LC_CTYPE, NULL), sizeof(old));
 	(void)setlocale(LC_CTYPE, "C");
 #endif
-	rx->pat = pat;
-
-	rx->rc = regcomp(&rx->rx, pat, flags);
+	int rc;
+	rc = regcomp(rx, pat, flags);
 
 #ifdef USE_C_LOCALE
 	uselocale(old);
 #else
 	(void)setlocale(LC_CTYPE, old);
 #endif
-	return rx->rc;
+	if (rc > 0 && (ms->flags & MAGIC_CHECK)) {
+		char errmsg[512];
+
+		(void)regerror(rc, rx, errmsg, sizeof(errmsg));
+		file_magerror(ms, "regex error %d for `%s', (%s)", rc, pat,
+		    errmsg);
+	}
+	return rc;
 }
 
 protected int
@@ -695,11 +699,10 @@ file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
 	(void)setlocale(LC_CTYPE, "C");
 #endif
 	int rc;
-	assert(rx->rc == 0);
 	/* XXX: force initialization because glibc does not always do this */
 	if (nmatch != 0)
 		memset(pmatch, 0, nmatch * sizeof(*pmatch));
-	rc = regexec(&rx->rx, str, nmatch, pmatch, eflags);
+	rc = regexec(rx, str, nmatch, pmatch, eflags);
 #ifdef USE_C_LOCALE
 	uselocale(old);
 #else
@@ -711,18 +714,7 @@ file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
 protected void
 file_regfree(file_regex_t *rx)
 {
-	if (rx->rc == 0)
-		regfree(&rx->rx);
-}
-
-protected void
-file_regerror(file_regex_t *rx, int rc, struct magic_set *ms)
-{
-	char errmsg[512];
-
-	(void)regerror(rc, &rx->rx, errmsg, sizeof(errmsg));
-	file_magerror(ms, "regex error %d for `%s', (%s)", rc, rx->pat,
-	    errmsg);
+	regfree(rx);
 }
 
 protected file_pushbuf_t *

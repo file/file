@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.322 2022/04/18 21:46:43 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.323 2022/04/18 21:50:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2830,11 +2830,9 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			file_regex_t rx;
 			int rc = file_regcomp(ms, &rx, m->value.s,
 			    REG_EXTENDED);
-			if (rc) {
-				if (ms->flags & MAGIC_CHECK)
-					file_regerror(&rx, rc, ms);
+			if (rc == 0) {
+				file_regfree(&rx);
 			}
-			file_regfree(&rx);
 			return rc ? -1 : 0;
 		}
 		return 0;

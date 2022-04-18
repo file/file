@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.231 2022/04/11 18:07:38 christos Exp $
+ * @(#)$File: file.h,v 1.232 2022/04/18 21:50:49 christos Exp $
  */
 
 #ifndef __file_h__
@@ -171,11 +171,7 @@
 #define FILE_COMPILE	2
 #define FILE_LIST	3
 
-typedef struct {
-	const char *pat;
-	int rc;
-	regex_t rx;
-} file_regex_t;
+typedef regex_t file_regex_t;
 
 struct buffer {
 	int fd;
@@ -601,7 +597,6 @@ protected int file_regcomp(struct magic_set *, file_regex_t *, const char *,
 protected int file_regexec(struct magic_set *, file_regex_t *, const char *,
     size_t, regmatch_t *, int);
 protected void file_regfree(file_regex_t *);
-protected void file_regerror(file_regex_t *, int, struct magic_set *);
 
 typedef struct {
 	char *buf;
