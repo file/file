@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.14 2022/02/26 17:44:29 christos Exp $
+# $File: ole2compounddocs,v 1.15 2022/04/18 21:54:42 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -438,6 +438,15 @@
 !:apple	????PPT3
 # /autostart/template
 !:ext	ppt/pps/pot
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/AWD_(At_Work_Document)
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/awd-fax.trid.xml
+# Note:		called "Microsoft At Work Fax document" by TrID
+>>88 	ubequad		0xb29400dd010f2bf9	: Microsoft
+>>>80 	ubequad		0x801cb0023de01a10	At Work fax Document
+#!:mime	application/x-ole-storage
+!:mime	image/x-ms-awd
+!:ext	awd
 #
 # URL:	https://en.wikipedia.org/wiki/Microsoft_Project
 #??
