@@ -1,3 +1,9 @@
+2022-04-18  17:51   Christos Zoulas <christos@zoulas.com>
+
+	* fix regex cacheing bug (Dirk Mueller)
+	* merge file_regcomp and file_regerror() to simplify the code
+	  and reduce memory requirements for storing regexes (Dirk Mueller)
+
 2022-03-19  12:56   Christos Zoulas <christos@zoulas.com>
 
 	* cache regex (Dirk Mueller)
