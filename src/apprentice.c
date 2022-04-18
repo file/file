@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.321 2022/04/11 18:14:41 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.322 2022/04/18 21:46:43 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3678,11 +3678,11 @@ file_magicfind(struct magic_set *ms, const char *name, struct mlist *v)
 				continue;
 			if (strcmp(ma[i].value.s, name) == 0) {
 				v->magic = &ma[i];
+				v->magic_rxcomp = &(ml->magic_rxcomp[i]);
 				for (j = i + 1; j < ml->nmagic; j++)
 				    if (ma[j].cont_level == 0)
 					    break;
 				v->nmagic = j - i;
-				v->magic_rxcomp = ml->magic_rxcomp;
 				return 0;
 			}
 		}
