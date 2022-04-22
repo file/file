@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.36 2022/04/11 18:05:07 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.37 2022/04/22 23:07:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -80,7 +80,6 @@ file_encoding(struct magic_set *ms, const struct buffer *b,
 	size_t nbytes = b->flen;
 	size_t mlen;
 	int rv = 1, ucs_type;
-	unsigned char *nbuf = NULL;
 	file_unichar_t *udefbuf;
 	size_t udeflen;
 
@@ -103,13 +102,6 @@ file_encoding(struct magic_set *ms, const struct buffer *b,
 		file_oomem(ms, mlen);
 		goto done;
 	}
-	mlen = (nbytes + 1) * sizeof(nbuf[0]);
-	if ((nbuf = CAST(unsigned char *,
-	    calloc(CAST(size_t, 1), mlen))) == NULL) {
-		file_oomem(ms, mlen);
-		goto done;
-	}
-
 	if (looks_ascii(buf, nbytes, *ubuf, ulen)) {
 		if (looks_utf7(buf, nbytes, *ubuf, ulen) > 0) {
 			DPRINTF(("utf-7 %" SIZE_T_FORMAT "u\n", *ulen));
@@ -155,6 +147,13 @@ file_encoding(struct magic_set *ms, const struct buffer *b,
 		*code = "Non-ISO extended-ASCII";
 		*code_mime = "unknown-8bit";
 	} else {
+		unsigned char *nbuf;
+
+		mlen = (nbytes + 1) * sizeof(nbuf[0]);
+		if ((nbuf = CAST(unsigned char *, malloc(mlen))) == NULL) {
+			file_oomem(ms, mlen);
+			goto done;
+		}
 		from_ebcdic(buf, nbytes, nbuf);
 
 		if (looks_ascii(nbuf, nbytes, *ubuf, ulen)) {
@@ -171,10 +170,10 @@ file_encoding(struct magic_set *ms, const struct buffer *b,
 			rv = 0;
 			*type = "binary";
 		}
+		free(nbuf);
 	}
 
  done:
-	free(nbuf);
 	if (ubuf == &udefbuf)
 		free(udefbuf);
 
