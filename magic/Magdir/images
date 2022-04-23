@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.212 2022/02/19 22:56:49 christos Exp $
+# $File: images,v 1.213 2022/04/23 12:57:07 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1129,8 +1129,54 @@
 >>14	indirect	x	
 
 # XPM icons (Greg Roelofs, newt@uchicago.edu)
-0	search/1	/*\ XPM\ */	X pixmap image text
-!:mime	image/x-xpmi
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/XPM
+# Reference:	http://www.x.org/docs/XPM/xpm.pdf
+#		http://mark0.net/download/triddefs_xml.7z/defs/b/bitmap-xpm.trid.xml
+# Note:		called "X PixMap bitmap" by TrID and "X-Windows Pixmap Image" by DROID via PUID x-fmt/208
+# starting with c comment like: logo.xpm
+0	string			/*\040
+# 9 byte c-comment "/* XPM */" not at the beginning like: mozicon16.xpm mozicon50.xpm (thunderbird)
+>0	search/0xCE		/*\ XPM\ */
+# skip DROID x-fmt-208-signature-id-620.xpm by looking for char aray without explict length
+# and match mh-logo.xpm (emacs)
+>>&0		search/1249	[]
+>>>0		use		xpm-image
+# non standard because no 9 byte c-comment "/* XPM */" like: logo.xpm in qemu package
+>0	default			x
+# words are separated by a white space which can be composed of space and tabulation characters
+>>0		search/0x52	static\040char\040
+# skip debug.c testmlc.c by looking for char aray without explict length
+# https://www.clamav.net/downloads/production/clamav-0.104.2.tar.gz
+# clamav-0.104.2\libclammspack\mspack\debug.c 
+>>>&0		search/64	[]
+>>>>0		use		xpm-image
+#	display X pixmap image information
+0	name			xpm-image
+>0	string		x	X pixmap image text
+#!:mime	text/plain
+# https://reposcope.com/mimetype/image/x-xpixmap
+# alias
+#!:mime	image/x-xpm
+!:mime	image/x-xpixmap
+!:ext	xpm
+# NO pm example found!
+#!:ext	xpm/pm
+# look for start of character array at beginning of a line like: psetupl.xpm (OpenOffice 4.1.7)
+>0	search/0x406	\n"
+# DEBUG VALUES string
+#>>&0	string		x		'%s'
+# width with optional white space before like: 16 24 32 48 1280
+>>&0	regex/8		[0-9]{1,5}	\b, %s
+# height with white space like: 15 16 17 24 32 48 1024
+>>>&0	regex/8		[0-9]{1,5}	x %s
+# number of colors with white space like: 1 2 3 4 5 8 11 14 162 255 but unrelistic 4294967295 by hardcopy tool
+>>>>&0	regex/12	[0-9]{1,9}	x %s
+# chars_per_pixel with white space like: 1 2
+>>>>>&0	regex/14	[0-9]{1,2}	\b, %s chars/pixel
+# non standard because not starting with 9 byte c-comment "/* XPM */"
+>0	string		!/*\ XPM\ */
+>>0	string		x	\b, 1st line "%s"
 
 # Utah Raster Toolkit RLE images (janl@ifi.uio.no)
 0	uleshort	0xcc52		RLE image data,
