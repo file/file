@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.214 2022/04/25 17:31:12 christos Exp $
+# $File: images,v 1.215 2022/05/09 18:35:22 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1279,23 +1279,138 @@
 !:ext dcm/dicom/dic
 
 # XWD - X Window Dump file.
+# URL:		http://fileformats.archiveteam.org/wiki/XWD
+# Reference:	https://wiki.multimedia.cx/index.php?title=XWD
+#		http://mark0.net/download/triddefs_xml.7z/defs/x/xdm-x11.trid.xml
+# Note:		called "X-Windows Screen Dump (X11)" by TrID and
+#		"X-Windows Screen Dump" version X11 by DROID via PUID fmt/483
+#		verfied by XnView `nconvert -in xwd -info *`
+#		and ImageMagick 6.9.11 `identify -verbose *` as XWD X Windows system window dump
+#		and `xwud -in fig41.wxd -dumpheader`
 #   As described in /usr/X11R6/include/X11/XWDFile.h
 #   used by the xwd program.
 #   Bradford Castalia, idaeim, 1/01
-#   updated by Adam Buchbinder, 2/09
+#   updated by Adam Buchbinder, 2/09 and Joerg Jenderek, May 2022
 # The following assumes version 7 of the format; the first long is the length
 # of the header, which is at least 25 4-byte longs, and the one at offset 8
 # is a constant which is always either 1 or 2. Offset 12 is the pixmap depth,
 # which is a maximum of 32.
-0	ubelong	>100
+# Size of the entire file header (bytes) like: 100 104 105 106 107 109 110 113 114 115 118 172
+0	ubelong	>99
+# pixmap_format; Pixmap format; 0~1-bit (XYBitmap) format 1~single-plane (XYPixmap) 2~bitmap with two or more planes (ZPixmap)
 >8	ubelong	<3
+# pixmap_depth; Pixmap depth; value 1 - 32
 >>12	ubelong	<33
->>>4	ubelong	7			XWD X Window Dump image data
+# file_version; XWD_FILE_VERSION=7
+>>>4	ubelong	7
+# skip DROID fmt-401-signature-id-618.xwd by test for existing border field
+>>>>96	ubelong	x			X-Window screen dump image data, version X11
+# ./images (version 1.205) labeled the above entry as "XWD X Window Dump image data"
+# https://reposcope.com/mimetype/image/x-xwindowdump
 !:mime	image/x-xwindowdump
->>>>100	string	>\0			\b, "%s"
->>>>16	ubelong	x			\b, %dx
->>>>20	ubelong	x			\b%dx
->>>>12	ubelong	x			\b%d
+#!:ext	xwd
+!:ext	xwd/dmp
+# https://www.xnview.com/en/image_formats/ NO example with x11 suffix FOUND!
+#!:ext	xwd/dmp/x11
+# https://www.nationalarchives.gov.uk/PRONOM/fmt/401 NO example with xdm suffix FOUND!
+#!:ext	xwd/dmp/x11/xmd
+# file comment if header > 100; so not in MARBLES.XWD and hardcopy-x-window-v11.xwd
+>>>>>0	ubelong	>100
+# comment or windows name
+>>>>>>100 string	>\0			\b, "%s"
+# pixmap_width;	pixmap width like: 576 800 1014 1280 1419 NOT -1414812757=abABabABh
+>>>>>16	ubelong	x			\b, %dx
+# pixmap_height; pixmap height like: 449 454 600 704 720 1001 1024 NOT -1414812757=abABabABh
+>>>>>20	ubelong	x			\b%dx
+# pixmap_depth;	pixmap depth
+>>>>>12	ubelong	x			\b%d
+# XOffset; Bitmap X offset; pixel numbers to ignore at the beginning of each scan-line
+#>>>>>24	ubelong	x			\b, %u ignore
+# ByteOrder; byte order of image data: 0~least significant byte first 1~most significant byte first
+>>>>>28	ubelong	>0			\b, order %u
+# BitmapUnit; bitmap base data size unit in each scan line like: 8 16 32
+#>>>>>32	ubelong	x			\b, unit %u
+# BitmapBitOrder; bit-order of image data; apparently same as ByteOrder
+#>>>>>36	ubelong	x			\b, bit order %u
+# BitmapPad; number of padding bits added to each scan line like: 8 16 32
+#>>>>>40	ubelong	x			\b, pad %u
+# BitsPerPixel; Bits per pixel: 1~StaticGray and GrayScale 2-15~StaticColor and PseudoColor 16,24,32~TrueColor and DirectColor
+#>>>>>44	ubelong	x			\b, %u bits/pixel
+# BytesPerLine; size of each scan line in bytes
+#>>>>>48	ubelong	x			\b, %u bytes/line
+# VisualClass; class of the image: 0~StaticGray 1~GrayScale 2~StaticColor 3~PseudoColor 4~TrueColor 5~DirectColor
+#>>>>>52	ubelong	x			\b, %u Class
+# RedMask; red RGB mask values used by ZPixmaps like: 0 0xff0000
+#>>>>>56	ubelong	!0			\b, %#x red
+# GreenMask; green mask like: 0
+#>>>>>60	ubelong	!0			\b, %#x green
+# BlueMask; blue mask like: 0 0xff
+#>>>>>64	ubelong	!0			\b, %#x blue
+# BitsPerRgb; Size of each color mask in bits like: 0 1 8 24
+#>>>>>68	ubelong	x			\b, %u bits/RGB
+# NumberOfColors; number of colors in image like: 256 4 2 0 (WHAT DOES THIS MEAN?)
+>>>>>72	ubelong	x			\b, %u colors
+# ColorMapEntries; number of entries in color map like: 256 16 2 0~no color map
+>>>>>76	ubelong	x			%u entries
+# WindowWidth; window width
+#>>>>>80	ubelong	x			\b, %u width
+# WindowHeight; window height
+#>>>>>84	ubelong	x			\b, %u height
+# WindowX; Window upper left X coordinate like: 0 24 32 80 237 290 422 466 568 (lenna.dmp)
+>>>>>88	ubelong	!0			\b, x=%d
+# WindowY; Window upper left Y coordinate like: 0 8 18 26 60 73 107 (fig41.xwd) 128
+>>>>>92	ubelong	!0			\b, y=%d
+# WindowBorderWidth; Window border width; apparently pixmap_width=WindowWidth+2*WindowBorderWidth
+# like: 1 (fig41.xwd) 2 (maze.dmp) 3 (lenna.dmp mandrill.dmp)
+>>>>>96	ubelong	>0			\b, %u border
+# From:		Joerg Jenderek
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/x/xdm-x10.trid.xml
+# Note:		called "X-Windows Screen Dump (X10)" by TrID and
+#		"X-Windows Screen Dump" version X10 by DROID via PUID x-fmt/300
+#		verfied by XnView `nconvert -in xwd -info *`
+# HeaderSize is the size of the header in bytes; always 40 for X10 variant
+0	ubelong		=0x000000028
+# FileVersion; always 6 for X10 variant
+>4	ubelong		=6
+# skip DROID x-fmt-300-signature-id-619.xdm by test existing border field
+>>36	ubeshort	x		X-Window screen dump image data, version X10
+!:mime	image/x-xwindowdump
+!:ext	xwd
+# http://www.nationalarchives.gov.uk/pronom/fmt/401 NO example with xdm suffix FOUND!
+#!:ext	xwd/xdm
+# PixmapWidth; pixmap width like: 127 1280
+>>>20	ubelong		x		\b, %d
+# PixmapHeight; pixmap height like: 64 1024
+>>>24	ubelong		x		\bx%d
+# DisplayPlanes; number of display planes like: 1 4 8
+>>>12	ubelong		x		\bx%u
+# DisplayType; display type like: 1 3
+#>>>8	ubelong		x		\b, type %u
+# PixmapFormat; pixmap format like: 1~bitmap with two or more planes (ZPixmap) 0~single-plane bitmap (XYBitmap)
+#>>>16	ubelong	x			\b, %u format
+# WindowWidth; window width; probably PixmapWidth=WindowWidth+2*WindowBorderWidth
+#>>>28	ubeshort	x		\b, width %u
+# WindowHeight;  window height; probably PixmapWidth=PixmapHeight+2*WindowBorderWidth
+#>>>30	ubeshort	x		\b, height %u
+# WindowX; window upper left X coordinate like: 0
+>>>32	ubeshort		!0	\b, x=%d
+# WindowY; window upper left Y coordinate like: 0
+>>>34	ubeshort		!0	\b, y=%d
+# WindowBorderWidth; window border width like: 0
+>>>36	ubeshort	!0		\b, %u border
+# WindowNumColors; Number of color entries in window like: 2 16 256
+#>>>38	ubeshort	x		\b, %u colors
+# if the image is a PseudoColor image, a color map immediately follows the header. X10COLORMAP[WindowNumColors];
+# EntryNumber; number of the color-map entry like: 0
+#>>>40	ubeshort	x		\b, colors #%u
+# Red; red-channel value
+#>>>42	ubeshort	!0		\b, red %#x
+# Green; green-channel value
+#>>>44	ubeshort	!0		\b, green %#x
+# Blue; blue-channel value
+#>>>46	ubeshort	!0		\b, blue %#x
+# 2ND Entry like: 2
+#>>>48	ubeshort	x		\b, colors #%u
 
 # PDS - Planetary Data System
 #   These files use Parameter Value Language in the header section.
