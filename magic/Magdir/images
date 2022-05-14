@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.222 2022/05/14 20:02:39 christos Exp $
+# $File: images,v 1.223 2022/05/14 20:05:09 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3779,6 +3779,7 @@
 # TODO: Don't show "rescale to" if it matches the image size.
 0	string	GDST	Godot 3 texture:
 !:ext	stex
+!:mime	image/x-godot-stex
 >4	uleshort	x	%u x
 >8	uleshort	x	%u
 >6	uleshort	0	\b,
@@ -3801,6 +3802,7 @@
 # TODO: Don't show "rescale to" if it matches the image size.
 0	string	GST2	Godot 4 texture
 !:ext	stex
+!:mime	image/x-godot-stex
 >4	ulelong		x	v%u:
 >0x28	uleshort	x	%u x
 >0x2A	uleshort	x	%u
