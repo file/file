@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.65 2022/05/14 19:41:51 christos Exp $
+# $File: console,v 1.66 2022/05/14 20:03:10 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -78,8 +78,8 @@
 >23	byte	!1		FMC-
 >23	byte	1		FSC-
 >16	string	x		\b%.3s
->15	byte	x		\b, mfr %02X
->20	byte	x		(Rev.%02u)
+>15	ubyte	x		\b, mfr %02X
+>20	ubyte	x		(Rev.%02u)
 
 # Headered version.
 0	string	FDS\x1A
@@ -228,21 +228,56 @@
 >0x10	use	sega-mega-drive-header
 >0	byte	x			\b, 2352-byte sectors
 
-# Sega Mega Drive, 32X, Pico, and Mega CD Boot ROM images.
+# Sega Mega Drive: Identify the system ID.
 0x100		string	SEGA
->0x3C0		bequad	0x4D41525320434845	Sega 32X ROM image
+>0x3C0		string	MARS\ CHECK\ MODE	Sega 32X ROM image
 !:mime		application/x-genesis-32x-rom
 >>0		use	sega-mega-drive-header
->0x3C0		bequad	!0x4D41525320434845
->>0x105		belong	0x5049434F	Sega Pico ROM image
+>0x104		string	\ PICO			Sega Pico ROM image
 !:mime		application/x-sega-pico-rom
->>>0		use	sega-mega-drive-header
->>0x105		belong	!0x5049434F
->>>0x180	beshort	0x4252		Sega Mega CD Boot ROM image
+>>0		use	sega-mega-drive-header
+>0x104		string	TOYS\ PICO		Sega Pico ROM image
+!:mime		application/x-sega-pico-rom
+>>0		use	sega-mega-drive-header
+>0x104		string	\ TOYS\ PICO		Sega Pico ROM image
+!:mime		application/x-sega-pico-rom
+>>0		use	sega-mega-drive-header
+>0x104		string	\ IAC			Sega Pico ROM image
+!:mime		application/x-sega-pico-rom
+>>0		use	sega-mega-drive-header
+>0x104		string	\ TERA68K		Sega Teradrive (68K) ROM image
+!:mime		application/x-sega-teradrive-rom
+>>0		use	sega-mega-drive-header
+>0x104		string	\ TERA286		Sega Teradrive (286) ROM image
+!:mime		application/x-sega-teradrive-rom
+>>0		use	sega-mega-drive-header
+>0x180		string	BR			Sega Mega CD Boot ROM image
 !:mime		application/x-genesis-rom
->>>0x180	beshort	!0x4252		Sega Mega Drive / Genesis ROM image
+>>0		use	sega-mega-drive-header
+>0x104		default	x			Sega Mega Drive / Genesis ROM image
 !:mime		application/x-genesis-rom
->>>0		use	sega-mega-drive-header
+>>0		use	sega-mega-drive-header
+
+# Sega Mega Drive: Some ROMs have "SEGA" at 0x101, not 0x100.
+0x100		string	\ SEGA			Sega Mega Drive / Genesis ROM image
+>0		use	sega-mega-drive-header
+
+# Sega Pico ROMs that don't start with "SEGA".
+0x100		string	SAMSUNG\ PICO		Samsung Pico ROM image
+!:mime		application/x-sega-pico-rom
+>0		use	sega-mega-drive-header
+0x100		string	IMA\ IKUNOUJYUKU	Samsung Pico ROM image
+!:mime		application/x-sega-pico-rom
+>0		use	sega-mega-drive-header
+0x100		string	IMA IKUNOJYUKU		Samsung Pico ROM image
+!:mime		application/x-sega-pico-rom
+>0		use	sega-mega-drive-header
+
+# Sega Picture Magic (modified 32X)
+0x100		string	Picture\ Magic
+>0x3C0		string	PICTURE MAGIC-01	Sega 32X ROM image
+!:mime		application/x-genesis-32x-rom
+>>0		use	sega-mega-drive-header
 
 #------------------------------------------------------------------------------
 # genesis: file(1) magic for the Super MegaDrive ROM dump format
