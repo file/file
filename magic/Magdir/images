@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.221 2022/05/14 20:01:57 christos Exp $
+# $File: images,v 1.222 2022/05/14 20:02:39 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3749,7 +3749,7 @@
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 # Shows rescale value if it's not a power of 2.
 0	name	godot-rescale-display-h
->0	clear
+>0	clear	x
 >0	uleshort	0
 >0	uleshort	1
 >0	uleshort	2
@@ -3808,8 +3808,7 @@
 >12	use	godot-rescale-display-h
 >12	uleshort	x	\b,
 >0x2C	ulelong		>1	%u mipmaps,
->0x24	ulelong		0
->>0x30	use	godot-pixel-format
->0x24	ulelong		1	embedded PNG image
->0x24	ulelong		2	embedded WebP image
->0x24	ulelong		3	Basis Universal
+>0x30	use	godot-pixel-format
+>0x24	ulelong		1	\b, embedded PNG image
+>0x24	ulelong		2	\b, embedded WebP image
+>0x24	ulelong		3	\b, Basis Universal
