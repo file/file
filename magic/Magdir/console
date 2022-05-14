@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.64 2022/02/14 23:56:56 christos Exp $
+# $File: console,v 1.65 2022/05/14 19:41:51 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -479,6 +479,8 @@
 >0x23	byte	0x10			Color
 >0	byte	x			ROM image
 >0x24	string	>\0			\b: "%.12s"
+>0x21	byte	x			\b, NEOP%02X
+>0x20	byte	x			\b%02X
 >0x1F	byte	0xFF			(debug mode enabled)
 
 #------------------------------------------------------------------------------
