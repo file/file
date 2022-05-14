@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.219 2022/05/14 19:45:29 christos Exp $
+# $File: images,v 1.220 2022/05/14 19:45:58 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3679,9 +3679,9 @@
 >>>13	ubyte		x	*bad colorspace %u*
 
 
-# Type: Godot 3.x texture (pixel format)
+# Type: Godot 3,4 texture (pixel format)
 # From: David Korth <gerbilsoft@gerbilsoft.com>
-0	name	godot-3.x-pixel-format
+0	name	godot-pixel-format
 >0	ulelong&0xFFFFF	0	L8
 >0	ulelong&0xFFFFF	1	LA8
 >0	ulelong&0xFFFFF	2	R8
@@ -3727,7 +3727,8 @@
 # - https://github.com/godotengine/godot/blob/3.3/core/image.h
 # - https://github.com/godotengine/godot/blob/3.3/scene/resources/texture.cpp
 # - https://github.com/godotengine/godot/blob/3.3/scene/resources/texture.h
-0	string	GDST	Godot 3.x texture:
+# TODO: Don't show "rescale to" if it matches the image size.
+0	string	GDST	Godot 3 texture:
 !:ext	stex
 >4	uleshort	x	%u x
 >8	uleshort	x	%u
@@ -3739,4 +3740,25 @@
 >16	ulelong&0x100000	0x100000	lossless encoding
 >16	ulelong&0x200000	0x200000	lossy encoding
 >16	ulelong&0x300000	0
->>16	use	godot-3.x-pixel-format
+>>16	use	godot-pixel-format
+
+# Type: Godot 4 texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://github.com/godotengine/godot/blob/master/core/io/image.h
+# - https://github.com/godotengine/godot/blob/master/scene/resources/texture.cpp
+# - https://github.com/godotengine/godot/blob/master/scene/resources/texture.h
+# TODO: Don't show "rescale to" if it matches the image size.
+0	string	GST2	Godot 4 texture
+!:ext	stex
+>4	ulelong		x	v%u:
+>0x28	uleshort	x	%u x
+>0x2A	uleshort	x	%u (rescale to
+>8	ulelong		x	%u x
+>12	ulelong		x	%u),
+>0x2C	ulelong		>1	%u mipmaps,
+>0x24	ulelong		0
+>>0x30	use	godot-pixel-format
+>0x24	ulelong		1	embedded PNG image
+>0x24	ulelong		2	embedded WebP image
+>0x24	ulelong		3	Basis Universal
