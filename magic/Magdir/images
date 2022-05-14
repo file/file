@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.216 2022/05/14 19:43:55 christos Exp $
+# $File: images,v 1.217 2022/05/14 19:44:26 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3677,3 +3677,66 @@
 >>>13	ubyte		1	(all channels linear)
 >>13	default		x
 >>>13	ubyte		x	*bad colorspace %u*
+
+
+# Type: Godot 3.x texture (pixel format)
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+0	name	godot-3.x-pixel-format
+>0	ulelong&0xFFFFF	0	L8
+>0	ulelong&0xFFFFF	1	LA8
+>0	ulelong&0xFFFFF	2	R8
+>0	ulelong&0xFFFFF	3	RG8
+>0	ulelong&0xFFFFF	4	RGB8
+>0	ulelong&0xFFFFF	5	RGBA8
+>0	ulelong&0xFFFFF	6	RGBA4444
+>0	ulelong&0xFFFFF	7	RGB565
+>0	ulelong&0xFFFFF	8	RF
+>0	ulelong&0xFFFFF	9	RGF
+>0	ulelong&0xFFFFF	10	RGBF
+>0	ulelong&0xFFFFF	11	RGBAF
+>0	ulelong&0xFFFFF	12	RH
+>0	ulelong&0xFFFFF	13	RGH
+>0	ulelong&0xFFFFF	14	RGBH
+>0	ulelong&0xFFFFF	15	RGBAH
+>0	ulelong&0xFFFFF	16	RGBE9995
+>0	ulelong&0xFFFFF	17	DXT1
+>0	ulelong&0xFFFFF	18	DXT3
+>0	ulelong&0xFFFFF	19	DXT5
+>0	ulelong&0xFFFFF	20	RGTC_R
+>0	ulelong&0xFFFFF	21	RGTC_RG
+>0	ulelong&0xFFFFF	22	BPTC_RGBA
+>0	ulelong&0xFFFFF	23	BPTC_RGBF
+>0	ulelong&0xFFFFF	24	BPTC_RGBFU
+>0	ulelong&0xFFFFF	25	PVRTC1_2
+>0	ulelong&0xFFFFF	26	PVRTC1_2A
+>0	ulelong&0xFFFFF	27	PVRTC1_4
+>0	ulelong&0xFFFFF	28	PVRTC1_4A
+>0	ulelong&0xFFFFF	29	ETC
+>0	ulelong&0xFFFFF	30	ETC2_R11
+>0	ulelong&0xFFFFF	31	ETC2_R11S
+>0	ulelong&0xFFFFF	32	ETC2_RG11
+>0	ulelong&0xFFFFF	33	ETC2_RG11S
+>0	ulelong&0xFFFFF	34	ETC2_RGB8
+>0	ulelong&0xFFFFF	35	ETC2_RGBA8
+>0	ulelong&0xFFFFF	36	ETC2_RGB8A1
+>0	ulelong&0xFFFFF	37	ASTC_8x8
+
+# Type: Godot 3.x texture.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://github.com/godotengine/godot/blob/3.3/core/image.h
+# - https://github.com/godotengine/godot/blob/3.3/scene/resources/texture.cpp
+# - https://github.com/godotengine/godot/blob/3.3/scene/resources/texture.h
+0	string	GDST	Godot 3.x texture:
+!:ext	stex
+>6	uleshort	!0	%u x
+>6	uleshort	0
+>>4	uleshort	x	%u x
+>10	uleshort	!0	%u,
+>10	uleshort	0
+>>8	uleshort	x	%u,
+>16	ulelong&0x800000	!0		has mipmaps,
+>16	ulelong&0x200000	0x200000	lossless encoding
+>16	ulelong&0x400000	0x400000	lossy encoding
+>16	ulelong&0x600000	0
+>>16	use	godot-3.x-pixel-format
