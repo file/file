@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.148 2022/05/16 13:15:39 christos Exp $
+# $File: filesystems,v 1.149 2022/05/21 22:50:28 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2316,6 +2316,8 @@
 >0x10078	lequad		x		%lld/
 >0x10070	lequad		x		\b%lld bytes used,
 >0x10088	lequad		x		%lld devices
+
+0		string		btrfs-stream	BTRFS stream file
 
 # dvdisaster's .ecc
 # From: "Nelson A. de Oliveira" <naoliv@gmail.com>
