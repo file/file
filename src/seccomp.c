@@ -177,7 +177,9 @@ enable_sandbox_full(void)
 #endif
 	ALLOW_RULE(fcntl);
  	ALLOW_RULE(fcntl64);
+#ifdef __NR_fstat
 	ALLOW_RULE(fstat);
+#endif
  	ALLOW_RULE(fstat64);
 #ifdef __NR_fstatat64
 	ALLOW_RULE(fstatat64);
