@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.160 2022/03/26 18:59:29 christos Exp $
+# $File: archive,v 1.161 2022/05/27 21:25:58 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1707,12 +1707,30 @@
 !:mime	application/x-bittorrent
 
 # Atari MSA archive - Teemu Hukkanen <tjhukkan@iki.fi>
-0	beshort 0x0e0f		Atari MSA archive data
->2	beshort x		\b, %d sectors per track
->4	beshort 0		\b, 1 sided
->4	beshort 1		\b, 2 sided
->6	beshort x		\b, starting track: %d
->8	beshort x		\b, ending track: %d
+# URL:		http://fileformats.archiveteam.org/wiki/MSA_(Magic_Shadow_Archiver)
+# Reference:	http://info-coach.fr/atari/documents/_mydoc/FD_Image_File_Format.pdf
+#		http://mark0.net/download/triddefs_xml.7z/defs/m/msa.trid.xml
+# Update:	Joerg Jenderek
+# Note:		called by TrID "Atari MSA Disk Image" and verified by
+#		command like `deark -l -m msa -d2 PDATS578.msa` as " Atari ST floppy disk image"
+# GRR: line below is too general as it matches setup.skin
+0	beshort 0x0e0f
+# skip foo setup.skin with unrealistic high number 52255 of sides by check for valid "low" value
+>4	ubeshort <2		Atari MSA archive data
+#!:mime	application/octet-stream
+!:mime	application/x-atari-msa
+!:ext	msa
+# sectors per track like: 9 10
+>>2	beshort x		\b, %d sectors per track
+# sides (0 or 1; add 1 to this to get correct number of sides)
+>>4	beshort 0		\b, 1 sided
+>>4	beshort 1		\b, 2 sided
+# starting track like: 0
+>>6	beshort x		\b, starting track: %d
+# ending track like: 39 79 80 81
+>>8	beshort x		\b, ending track: %d
+# tracks content
+#>>10	ubequad x		\b, track content %#16.16llx
 
 # Alternate ZIP string (amc@arwen.cs.berkeley.edu)
 0	string	PK00PK\003\004	Zip archive data
