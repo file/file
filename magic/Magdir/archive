@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.161 2022/05/27 21:25:58 christos Exp $
+# $File: archive,v 1.162 2022/05/27 21:27:59 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -689,7 +689,15 @@
 # 2 bytes: length of data + mentioned bytes
 #
 #		SZDD variant Haruhiko Okumura's LZSS or 7z type MsLZ
+# URL:		http://fileformats.archiveteam.org/wiki/MS-DOS_installation_compression
+# Reference:	http://www.cabextract.org.uk/libmspack/doc/szdd_kwaj_format.html
+#		http://mark0.net/download/triddefs_xml.7z/defs/s/szdd.trid.xml
+# Note:		called "Microsoft SZDD compressed (Haruhiko Okumura's LZSS)" by TrID
+#		verfied by 7-Zip `7z l -tMsLZ -slt *.??_` as MsLZ
+#		`deark -l -m lzss_oku -d2 setup-1-41.bin` as "LZSS.C by Haruhiko Okumura"
 >0	string	SZDD		MS Compress archive data, SZDD variant
+# 2nd part of signature
+#>>4	ubelong	0x88F02733	\b, SIGNATURE OK
 !:mime	application/x-ms-compress-szdd
 !:ext	??_
 # The character missing from the end of the filename (0=unknown)
@@ -698,6 +706,24 @@
 # Compression mode: "A" (0x41) found but sometimes "B" in Windows 3.1 builds 026 and 034e
 >>8	string	!A		\b, %-.1s method
 >>10	ulelong	>0		\b, original size: %u bytes
+# Summary:	InstallShield archive with SZDD compressed
+# URL:		https://community.flexera.com/t5/InstallShield-Knowledge-Base/InstallShield-Redistributable-Files/ta-p/5647
+# From:		Joerg Jenderek
+1	search/48/bs	SZDD\x88\xF0\x27\x33	InstallShield archive
+#!:mime	application/octet-stream
+!:mime	application/x-installshield-compress-szdd
+!:ext	ibt
+# name of compressed archive member like: setup.dl_ _setup7int.dl_ _setup2k.dl_ _igdi.dl_ cabinet.dl_
+>0	string	x		%s
+# name of uncompressed archive member like: setup.dll _Setup.dll IGdi.dll CABINET.DLL
+>>&1	string	x		(%s)
+# probably version like: 9.0.0.333 9.1.0.429 11.50.0.42618
+>>>&1	string	x		\b, version %s
+# SZDD member length like: 168048 169333 181842
+>>>>&1	string	x		\b, %s bytes
+# MS Compress archive data
+#>&0	string		SZDD	\b, SIGNATURE FOUND
+>&0	indirect	x
 #		QBasic SZDD variant
 3	string	\x88\xf0\x27
 >0	string	SZ\x20		MS Compress archive data, QBasic variant
