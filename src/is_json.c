@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.19 2022/04/04 17:47:45 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.20 2022/05/28 00:44:22 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -466,7 +466,7 @@ main(int argc, char *argv[])
 	if (fstat(fd, &st) == -1)
 		err(EXIT_FAILURE, "Can't stat `%s'", argv[1]);
 
-	if ((p = malloc(st.st_size)) == NULL)
+	if ((p = CAST(char *, malloc(st.st_size))) == NULL)
 		err(EXIT_FAILURE, "Can't allocate %jd bytes",
 		    (intmax_t)st.st_size);
 	if (read(fd, p, st.st_size) != st.st_size)
