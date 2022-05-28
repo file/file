@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.233 2022/05/28 01:04:57 christos Exp $
+ * @(#)$File: file.h,v 1.234 2022/05/28 20:24:09 christos Exp $
  */
 
 #ifndef __file_h__
@@ -575,7 +575,7 @@ protected size_t file_pstring_length_size(struct magic_set *,
     const struct magic *);
 protected size_t file_pstring_get_length(struct magic_set *,
     const struct magic *, const char *);
-protected char * file_printable(struct magic_set *, char *, size_t,
+public char * file_printable(struct magic_set *, char *, size_t,
     const char *, size_t);
 #ifdef __EMX__
 protected int file_os2_apptype(struct magic_set *, const char *, const void *,

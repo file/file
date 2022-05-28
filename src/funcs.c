@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.128 2022/04/18 21:50:49 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.129 2022/05/28 20:24:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -763,7 +763,7 @@ file_pop_buffer(struct magic_set *ms, file_pushbuf_t *pb)
 /*
  * convert string to ascii printable format.
  */
-protected char *
+public char *
 file_printable(struct magic_set *ms, char *buf, size_t bufsiz,
     const char *str, size_t slen)
 {
