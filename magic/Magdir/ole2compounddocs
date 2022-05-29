@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.15 2022/04/18 21:54:42 christos Exp $
+# $File: ole2compounddocs,v 1.16 2022/05/29 20:10:09 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -438,6 +438,19 @@
 !:apple	????PPT3
 # /autostart/template
 !:ext	ppt/pps/pot
+# From:		Joerg Jenderek
+# URL:		https://www.file-extensions.org/ppa-file-extension
+#		https://en.wikipedia.org/wiki/Microsoft_PowerPoint#cite_note-231
+# Reference:	http://fileformats.archiveteam.org/wiki/Microsoft_Compound_File
+>>88 	ubequad		0x871800aa0060263b	: Microsoft
+# only version 8 (97) tested; PowerPoint 4.0 to 11.0 (2004) (Wikipedia); 97 to 2003 (file-extensions.org)
+>>>80 	ubequad		0xf04672810a72cf11	PowerPoint Addin or Wizard
+# second, third and fourth directory entry name like VBA PROJECT PROJECTwm
+# http://extension.nirsoft.net/pwz
+!:mime	application/vnd.ms-powerpoint
+# like: BSHPPT97.PPA "AutoContent Wizard.pwz"
+!:ext	ppa/pwz
+#
 # From:		Joerg Jenderek
 # URL:		http://fileformats.archiveteam.org/wiki/AWD_(At_Work_Document)
 # Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/awd-fax.trid.xml
