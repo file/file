@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.43 2022/04/18 21:45:19 christos Exp $
+# $File: windows,v 1.44 2022/05/31 17:39:08 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1156,6 +1156,22 @@
 0	string	ID;P	Microsoft SYLK program
 >4	string	>0	\b, created by %s
 !:ext	slk/sylk
+
+# Summary:	Windows Performance Monitor Alert
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Performance_Monitor
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/p/pma.trid.xml
+# Note:		called "Windows Performance Monitor Alert" by TrID
+0	ubelong			=0xDC058340
+>4	ubyte			=0		Windows Performance Monitor Alert
+#!:mime		application/octet-stream
+# https://www.thoughtco.com/mime-types-by-content-type-3469108
+# https://filext.com/file-extension/PAM
+!:mime		application/x-perfmon 
+#!:mime		application/x-ms-pma
+!:ext		pma
+# metric type like: "BrowserMetrics" "CrashpadMetrics" "SetupMetrics"
+>>80	string			x		\b, "%s"
 
 # From:		Joerg Jenderek
 # URL:		https://en.wikipedia.org/wiki/InstallShield
