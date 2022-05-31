@@ -1,3 +1,8 @@
+2022-05-31  14:50   Christos Zoulas <christos@zoulas.com>
+
+	* PR/348: add missing cases to prevent file from aborting on
+	  random magic files.
+
 2022-05-27  21:05   Christos Zoulas <christos@zoulas.com>
 
 	* PR/351: octalify filenames when not raw before printing.
