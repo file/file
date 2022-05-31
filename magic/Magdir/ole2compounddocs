@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.17 2022/05/31 17:37:54 christos Exp $
+# $File: ole2compounddocs,v 1.18 2022/05/31 17:38:36 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -483,6 +483,20 @@
 >>>80 	ubequad		0x3a8fb774c8c8d111	Project
 !:mime	application/vnd.ms-project
 !:ext	mpp
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Microsoft_Office_shared_tools#Binder
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/o/obd.trid.xml
+#		http://fileformats.archiveteam.org/wiki/Microsoft_Compound_File
+# Note:		only version 8 tested and called "Office Binder Document" by TrID and
+#		"Microsoft Office Binder File for Windows" version 97-2000 by DROID fmt/240
+>>88 	ubequad		0xb21c00aa004ba90b	: Microsoft
+>>>80 	ubequad		0x0004855964661b10	Office Binder Document, Template or wizard
+# second directory entry name like Binder
+# https://www.file-extensions.org/obd-file-extension
+#!:mime	application/vnd.ms-binder
+!:mime	application/x-msbinder
+# obt for template; obz for Microsoft Office Binder wizard
+!:ext	obd/obt/obz
 #
 # URL:		http://fileformats.archiveteam.org/wiki/WordPerfect
 # Reference:	http://fileformats.archiveteam.org/wiki/Microsoft_Compound_File
