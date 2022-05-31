@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.323 2022/04/18 21:50:49 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.324 2022/05/31 18:54:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -620,6 +620,7 @@ apprentice_unmap(struct magic_map *map)
 		break;
 #endif
 	default:
+		fprintf(stderr, "Bad map type %d", map->type);
 		abort();
 	}
 	free(map);
@@ -894,6 +895,8 @@ typesize(int type)
 	case FILE_FLOAT:
 	case FILE_BEFLOAT:
 	case FILE_LEFLOAT:
+	case FILE_BEID3:
+	case FILE_LEID3:
 		return 4;
 
 	case FILE_QUAD:
@@ -936,8 +939,10 @@ apprentice_magic_strength_1(const struct magic *m)
 
 	switch (m->type) {
 	case FILE_DEFAULT:	/* make sure this sorts last */
-		if (m->factor_op != FILE_FACTOR_OP_NONE)
+		if (m->factor_op != FILE_FACTOR_OP_NONE) {
+			fprintf(stderr, "Bad factor_op %d", m->factor_op);
 			abort();
+		}
 		return 0;
 
 	case FILE_BYTE:
@@ -977,6 +982,8 @@ apprentice_magic_strength_1(const struct magic *m)
 	case FILE_BEVARINT:
 	case FILE_LEVARINT:
 	case FILE_GUID:
+	case FILE_BEID3:
+	case FILE_LEID3:
 	case FILE_OFFSET:
 	case FILE_MSDOSDATE:
 	case FILE_BEMSDOSDATE:
@@ -985,8 +992,11 @@ apprentice_magic_strength_1(const struct magic *m)
 	case FILE_BEMSDOSTIME:
 	case FILE_LEMSDOSTIME:
 		ts = typesize(m->type);
-		if (ts == FILE_BADSIZE)
+		if (ts == FILE_BADSIZE) {
+			(void)fprintf(stderr, "Bad size for type %d\n",
+			    m->type);
 			abort();
+		}
 		val += ts * MULT;
 		break;
 
@@ -1094,6 +1104,7 @@ apprentice_magic_strength(const struct magic *m,
 		val /= m->factor;
 		break;
 	default:
+		(void)fprintf(stderr, "Bad factor_op %u\n", m->factor_op);
 		abort();
 	}
 
@@ -2592,6 +2603,7 @@ check_format_type(const char *ptr, int type, const char **estr)
 				h = 0;
 				break;
 			default:
+				fprintf(stderr, "Bad number format %d", type);
 				abort();
 			}
 		} else
@@ -2734,6 +2746,7 @@ check_format_type(const char *ptr, int type, const char **estr)
 
 	default:
 		/* internal error */
+		fprintf(stderr, "Bad file format %d", type);
 		abort();
 	}
 invalid:
@@ -2902,6 +2915,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 				x = 0;
 				break;
 			default:
+				fprintf(stderr, "Bad width %zu", ts);
 				abort();
 			}
 			if (x) {
