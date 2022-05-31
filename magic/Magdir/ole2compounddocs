@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.16 2022/05/29 20:10:09 christos Exp $
+# $File: ole2compounddocs,v 1.17 2022/05/31 17:37:54 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -199,6 +199,22 @@
 #!:mime	application/x-ole-storage
 !:mime	application/x-ms-info
 !:ext	nfo
+#
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Microsoft_Access
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/m/mdz.trid.xml
+#		http://fileformats.archiveteam.org/wiki/Microsoft_Compound_File
+# Note:		only version foo tested and called "Microsoft Access Wizard template" by TrID
+# Fourth directory entry name TemplateID
+>>>>384 	lestring16	TemplateID		: Microsoft Access wizard template
+# Second directory entry name like \005SummaryInformation and 3rd name like \005DocumentSummaryInformation
+#!:mime	application/x-ole-storage
+#!:mime	application/vnd.ms-office
+#!:mime	application/vnd.ms-access
+#!:mime	application/msaccess
+!:mime	application/x-ms-mdz
+# http://extension.nirsoft.net/mdz
+!:ext	mdz
 #
 # URL:	http://fileformats.archiveteam.org/wiki/Corel_Print_House
 # Second directory entry name Thumbnail
