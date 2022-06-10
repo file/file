@@ -41,6 +41,8 @@ json4.result \
 json4.testfile \
 json5.result \
 json5.testfile \
+json6.result \
+json6.testfile \
 matilde.arm.result \
 matilde.arm.testfile \
 pcjr.result \
