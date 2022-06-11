@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.21 2022/06/10 14:14:21 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.22 2022/06/11 19:24:41 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -184,6 +184,8 @@ json_parse_array(const unsigned char **ucp, const unsigned char *ue,
 	DPRINTF("Parse array: ", uc, *ucp);
 	while (uc < ue) {
 		uc = json_skip_space(uc, ue);
+		if (uc == ue)
+			goto out;
 		if (*uc == ']')
 			goto done;
 		if (!json_parse(&uc, ue, st, lvl + 1))
