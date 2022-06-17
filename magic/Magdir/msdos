@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.154 2022/03/21 21:25:50 christos Exp $
+# $File: msdos,v 1.155 2022/06/17 18:02:19 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1274,11 +1274,6 @@
 >>>>16	long		>0		length %d
 >>>20	long		>0		TIFF starts at byte %d
 >>>>24	long		>0		length %d
-
-# TNEF magic From "Joomy" <joomy@se-ed.net>
-# Microsoft Outlook's Transport Neutral Encapsulation Format (TNEF)
-0	lelong		0x223e9f78	TNEF
-!:mime	application/vnd.ms-tnef
 
 # Norton Guide (.NG , .HLP) files added by Joerg Jenderek from source NG2HTML.C
 # of http://www.davep.org/norton-guides/ng2h-105.tgz
