@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.88 2022/05/14 22:06:04 christos Exp $
+# $File: animation,v 1.89 2022/06/17 18:03:35 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -30,8 +30,6 @@
 #!:mime	image/x-quicktime
 4       string          pckg            Apple QuickTime compressed archive
 !:mime	application/x-quicktime-player
-4	string/W	jP		JPEG 2000 image
-!:mime	image/jp2
 
 #### MP4 ####
 # https://www.ftyps.com/ with local additions
