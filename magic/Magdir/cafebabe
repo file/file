@@ -44,6 +44,10 @@
 >>4	belong		0x0038		(Java SE 12)
 >>4	belong		0x0039		(Java SE 13)
 >>4	belong		0x003A		(Java SE 14)
+>>4 belong		0x003B		(Java SE 15)
+>>4 belong		0x003C		(Java SE 16)
+>>4 belong		0x003D		(Java SE 17)
+>>4 belong		0x003E		(Java SE 18)
 # pool count unequal zero
 #>>8	beshort		x	        \b, pool count %#x
 # pool table
