@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.45 2022/06/17 18:05:21 christos Exp $
+# $File: windows,v 1.46 2022/07/02 17:46:09 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -15,14 +15,84 @@
 
 
 # Summary: Outlook Express DBX file
-# Extension: .dbx
 # Created by: Christophe Monniez
-0	string	\xCF\xAD\x12\xFE	MS Outlook Express DBX file
->4	byte	=0xC5			\b, message database
->4	byte	=0xC6			\b, folder database
->4	byte	=0xC7			\b, account information
->4	byte	=0x30			\b, offline database
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Outlook_Express_Database
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/dbx.trid.xml
+#		https://sourceforge.net/projects/ol2mbox/files/LibDBX/
+#		v1.0.4/libdbx_1.0.4.tar.gz/FILE-FORMAT 
+# Note:		called "Outlook Express Database" by TrID and DROID via PUID fmt/838 fmt/839
+#		and partly verified by `undbx --verbosity 4 Posteingang.dbx`
+0	string	\xCF\xAD\x12\xFE
+# skip DROID fmt-838-signature-id-1193.dbx fmt-839-signature-id-1194.dbx by check for valid file size
+>0x7C	ulelong	>0			MS Outlook Express DBX file
+#!:mime		application/octet-stream
+#!:mime		application/vnd.ms-outlook
+!:mime		application/x-ms-dbx
+!:ext	dbx
+>>4	byte	=0xC5			\b, message database
+>>4	byte	=0xC6			\b, folder database
+>>4	byte	=0xC7			\b, account information
+>>4	byte	=0x30			\b, offline database
+# version like: 5.2 5.5 (typical)
+>>20	ulequad	!0x0000000500000005	\b, version
+# major version
+>>>24	ulelong	x			%u
+# minor version
+>>>20	ulelong	x			\b.%u
+# CLSID: 6F74FDC5-E366-11d1-9A4E-00C04FA309D4~Message 6F74FDC6-E366-11D1-9A4E-00C04FA309D4~Folder
+# 26FE9D30-1A8F-11D2-AABF-006097D474C4~offline
+#>>4	guid	x			\b, CLSID %s
+# file size; total size of file; sometimes real size a little bit higher
+>>0x7C	ulelong	x			\b, ~ %u bytes
+# highest Email ID; the next email will have a number one higher than this
+>>0x5c	ulelong	x			\b, highest ID %#x
+# item count; number of items stored in this DBX file
+>>0xC4	ulelong	x			\b, %u item
+# plural s
+>>0xC4	ulelong	!1			\bs
+# index pointer; file offset pointing to a page of Data Indexes
+>>0xE4	ulelong	>0			\b, index pointer %#x
 
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Nickfile
+#		https://www.nirsoft.net/utils/outlook_nk2_edit.html
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/n/nk2.trid.xml
+#		https://github.com/libyal/libnk2/blob/main/documentation
+#		Nickfile%20(NK2)%20format.asciidoc
+# Note:		called "Outlook Nickfile" by TrID & TestDisk and
+#		"Outlook Nickname File" by Microsoft Outlook and
+#		"Outlook AutoComplete File" by Nirsoft NK2Edit
+#		partly verfied by NK2Edit Raw Text Edit Mode
+0	ubelong		0x0DF0ADBA	MS Outlook Nickfile
+#!:mime		application/octet-stream
+#!:mime		application/vnd.ms-outlook
+!:mime		application/x-ms-nickfile
+!:ext	nk2/dat/bak
+# nick is used by "older" Outlook; dat is used by "newer" Outlook (probably 2010 - 2016); bak is used for backup
+#!:ext	nick/nk2/dat/bak
+# Unknown; probably a version indicator like: 0000000Ah 0000000Ch 
+>4	ulelong		x		\b, probably version %u
+# Unknown2; probably a version indicator like: 1 0
+>8	ulelong		x		\b.%u
+# number of rows (nickname or alias items) in file
+>12	ulelong		x		\b, %u items
+# number of item entries/columns/properties value like: 17h
+>16	ulelong		x		\b, %u entries
+# value type/property tag: 001Fh~4 bytes for data size of UTF-16 LE string
+>20	uleshort	x		\b, value type %#4.4x
+# entry type/property identifier: 6001h~PR_DOTSTUFF_STATE/PR_NICK_NAME_W
+>22	uleshort	x		\b, entry type %#4.4x
+# Reserved like: 0013FD90h
+#>24	ulelong		x		\b, reserved %#8.8x
+# value data array/Irrelevant Union like: 0000000004E31A80h
+#>28	ulequad		x		\b, data %#16.16llx
+# UTF-16
+>20	uleshort	=0x001F
+# unicode string bytes like: 2Ch
+>>36	ulelong		x		\b, %u bytes
+# unicode string value PT_UNICODE like: janesmith@contoso.org
+>>40	lestring16	x		"%s"
 
 # Summary: Windows crash dump
 # Extension: .dmp
