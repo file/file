@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.178 2022/04/02 14:47:42 christos Exp $
+# $File: Makefile.am,v 1.179 2022/07/04 17:15:09 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -53,6 +53,7 @@ $(MAGIC_FRAGMENT_DIR)/bout \
 $(MAGIC_FRAGMENT_DIR)/bsdi \
 $(MAGIC_FRAGMENT_DIR)/bsi \
 $(MAGIC_FRAGMENT_DIR)/btsnoop \
+$(MAGIC_FRAGMENT_DIR)/burp \
 $(MAGIC_FRAGMENT_DIR)/bytecode \
 $(MAGIC_FRAGMENT_DIR)/c-lang \
 $(MAGIC_FRAGMENT_DIR)/c64 \
