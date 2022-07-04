@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.22 2022/06/11 19:24:41 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.23 2022/07/04 16:18:13 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -326,14 +326,15 @@ json_parse_const(const unsigned char **ucp, const unsigned char *ue,
 	const unsigned char *uc = *ucp;
 
 	DPRINTF("Parse const: ", uc, *ucp);
-	for (len--; uc < ue && --len;) {
-		if (*uc++ == *++str)
-			continue;
+	*ucp += --len - 1;
+	for (; uc < ue && --len;) {
+		if (*uc++ != *++str) {
+			DPRINTF("Bad const: ", uc, *ucp);
+			return 0;
+		}
 	}
-	if (len)
-		DPRINTF("Bad const: ", uc, *ucp);
-	*ucp = uc;
-	return len == 0;
+	DPRINTF("Good const: ", uc, *ucp);
+	return 1;
 }
 
 static int

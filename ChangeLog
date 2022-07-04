@@ -1,3 +1,7 @@
+2022-07-04  12:15  Christos Zoulas <christos@zoulas.com>
+
+	* PR/356: Fix JSON constant parsing (davewhite)
+
 2022-06-10   9:40  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.42
