@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.197 2022/07/04 19:44:35 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.198 2022/07/04 20:16:29 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -580,8 +580,11 @@ fname_print(const char *inname)
 		bytesconsumed = mbrtowc(&nextchar, inname, n, &state);
 		if (bytesconsumed == CAST(size_t, -1) ||
 		    bytesconsumed == CAST(size_t, -2))  {
-			nextchar = *inname;
-			bytesconsumed = 1;
+			nextchar = *inname++;
+			n--;
+			(void)mbrlen(NULL, 0, &state);
+			file_octal(CAST(unsigned char, nextchar));
+			continue;
 		}
 		inname += bytesconsumed;
 		n -= bytesconsumed;
@@ -660,9 +663,12 @@ file_mbswidth(struct magic_set *ms, const char *s)
 		    bytesconsumed == CAST(size_t, -2)) {
 			nextchar = *s;
 			bytesconsumed = 1;
+			(void)mbrlen(NULL, 0, &state);
+			width += 4;
+		} else {
+			width += ((ms->flags & MAGIC_RAW) != 0
+			    || iswprint(nextchar)) ? wcwidth(nextchar) : 4;
 		}
-		width += ((ms->flags & MAGIC_RAW) != 0
-		    || iswprint(nextchar)) ? wcwidth(nextchar) : 4;
 
 		s += bytesconsumed, n -= bytesconsumed;
 	}
