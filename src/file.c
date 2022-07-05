@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.200 2022/07/05 19:53:42 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.201 2022/07/05 20:05:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -666,8 +666,9 @@ file_mbswidth(struct magic_set *ms, const char *s)
 			(void)memset(&state, 0, sizeof(state));
 			width += 4;
 		} else {
+			int w = wcwidth(nextchar);
 			width += ((ms->flags & MAGIC_RAW) != 0
-			    || iswprint(nextchar)) ? wcwidth(nextchar) : 4;
+			    || iswprint(nextchar)) ? (w > 0 ? w : 1) : 4;
 		}
 
 		s += bytesconsumed, n -= bytesconsumed;
