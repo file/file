@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.199 2022/07/04 22:30:51 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.200 2022/07/05 19:53:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -589,7 +589,7 @@ fname_print(const char *inname)
 		inname += bytesconsumed;
 		n -= bytesconsumed;
 		if (iswprint(nextchar)) {
-			putwc(nextchar, stdout);
+			printf("%lc", nextchar);
 			continue;
 		}
 		/* XXX: What if it is > 255? */
