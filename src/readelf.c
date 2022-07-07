@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.180 2022/01/10 14:15:08 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.181 2022/07/07 17:19:52 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -895,6 +895,13 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 					size_t no;
 					int adjust = 1;
 					if (prpsoffsets(k) >= prpsoffsets(i))
+						continue;
+					/*
+					 * pr_fname == pr_psargs - 16 &&
+					 * non-nul-terminated fname (qemu)
+					 */
+					if (prpsoffsets(k) ==
+					    prpsoffsets(i) - 16 && j == 16)
 						continue;
 					for (no = doff + prpsoffsets(k);
 					     no < doff + prpsoffsets(i); no++)
