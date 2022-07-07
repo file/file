@@ -47,6 +47,8 @@ json7.result \
 json7.testfile \
 json8.result \
 json8.testfile \
+jsonlines.testfile \
+jsonlines.result \
 matilde.arm.result \
 matilde.arm.testfile \
 pcjr.result \
