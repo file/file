@@ -1,3 +1,8 @@
+2022-07-07  13:21  Christos Zoulas <christos@zoulas.com>
+
+        * PR/364: Detect non-nul-terminated core filenames from QEMU
+	  (mam-ableton)
+
 2022-07-04  15:45  Christos Zoulas <christos@zoulas.com>
 
 	* PR/359: Add support for http://ndjson.org/ (darose)
