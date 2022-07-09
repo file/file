@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.162 2022/05/27 21:27:59 christos Exp $
+# $File: archive,v 1.163 2022/07/09 16:11:56 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2081,3 +2081,6 @@
 # URL: http://mattmahoney.net/dc/#paq9a
 # Note: Line 1186 of paq9a.cpp gives the magic bytes
 0	string	pQ9\001		PAQ9A archive
+
+# From wof (wof@stachelkaktus.net)
+0	string	Unison\ archive\ format	Unison archive format
