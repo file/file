@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.155 2022/06/17 18:02:19 christos Exp $
+# $File: msdos,v 1.156 2022/07/12 18:57:42 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -587,7 +587,8 @@
 # skip "GPG symmetrically encrypted data" ./gnu
 # skip "PGP symmetric key encrypted data" ./pgp
 # openpgpdefs.h: fourth byte < 14 indicate cipher algorithm type
->>>4	ubyte			>13	DOS executable (COM, 0x8C-variant)
+>>>4	ubyte			>13
+>>>>0		use	msdos-com
 # the remaining files should be DOS *.COM executables
 # dosshell.COM	8cc0 2ea35f07 e85211 e88a11 b80058 cd
 # hmload.COM	8cc8 8ec0 bbc02b 89dc 83c30f c1eb04 b4
@@ -597,45 +598,159 @@
 # SHARE.COM	8cca 2e8916 d602 b430 cd21 8b 2e0200 8b
 # validchr.COM	8cca 2e8916 9603 b430 cd21 8b 2e028b1e
 # devload.COM	8cca 8916ad01 b430 cd21 8b2e0200 892e
-!:mime	application/x-dosexec
-!:ext com
-
-# updated by Joerg Jenderek at Oct 2008
-0	ulelong		0xffff10eb	DR-DOS executable (COM)
-# byte 0xeb conflicts with "sequent" magic leshort 0xn2eb
-0	ubeshort&0xeb8d	>0xeb00
-# DR-DOS STACKER.COM SCREATE.SYS missed
 
 0       name    msdos-com
->0  byte        x               DOS executable (COM)
-!:mime	application/x-dosexec
-!:ext	com
+# URL:		http://fileformats.archiveteam.org/wiki/DOS_executable_(.com)
+>0  byte        x               DOS executable (
+# DOS execuable with JuMP 16-bit instruction
+>0	byte			=0xE9
+# check for probably nil padding til offset 64 of Lotus driver name
+>>56		quad		=0
+# check for "long" alpabetical Lotus driver name like:
+# Diablo "COMPAQ Text Display" "IBM Monochrome Display" "Plantronics ColorPlus"
+>>>24			regex	=^[A-Z][A-Za-z\040]{5,21}	\bLotus driver) %s
+!:mime				application/x-dosexec
+# like: CPQ0TD.DRV IBM0MONO.DRV (Lotus 123 10a) SDIAB4.DRV SPL0CPLS.DRV (Lotus Symphony 2)
+!:ext				drv
+# COM with nils like MODE.COM IBMDOS.COM (pcdos 3.31 ru Compaq) RSSTUB.COM (PC-DOS 2000 de) ACCESS.COM (Lotus Symphony 1)
+>>>24			default	x				\bCOM)
+!:mime				application/x-dosexec
+!:ext				com
+# DOS excutable with JuMP 16-bit and without nil padding
+>>56		quad		!0
+# https://wiki.syslinux.org/wiki/index.php?title=Doc/comboot
+# TODO: HOWTO distinguish COMboot from pure DOS executables?
+# look for unreliable Syslinux specific api call INTerrupt 22h for 16-bit COMBOOT program
+>>>1			search/0xc088	\xcd\x22		\bCOM or COMBOOT 16-bit)
+!:mime				application/x-dosexec
+# like: sbm.cbt command.com (Windows XP) UNI2ASCI.COM (FreeDOS 1.2)
+!:ext				com/cbt
+>>>1			default		x			\bCOM)
+!:mime				application/x-dosexec
+!:ext				com
+# DOS executable without JuMP 16-bit instruction
+>0	byte			!0xE9
+# SCREATE.SYS	https://en.wikipedia.org/wiki/Stac_Electronics
+>>10		string		=?STACVOL			\bSCREATE.SYS)
+!:mime			application/x-dosexec
+!:ext			sys
+# COM executable without JuMP 16-bit instruction and not SCREATE.SYS
+>>10		string		!?STACVOL			\bCOM)
+!:mime			application/x-dosexec
+!:ext			com
 >6	string		SFX\ of\ LHarc	\b, %s
 >0x1FE leshort	0xAA55		    \b, boot code
 >85	string		UPX		        \b, UPX compressed
 >4	string		\ $ARX		    \b, ARX self-extracting archive
 >4	string		\ $LHarc	    \b, LHarc self-extracting archive
 >0x20e string	SFX\ by\ LARC	\b, LARC self-extracting archive
+# like: E30ODI.COM MADGEODI.COM UNI2ASCI.COM RECOVER.COM (DOS 2) COMMAND.COM (DOS 2)
+>1	search/0xc088	\xcd\x22	\b, maybe with interrupt 22h
+>0	ubelong		x		\b, start instruction %#8.8x
 
 # JMP 8bit
 0	        byte	0xeb
+# byte 0xeb conflicts with magic leshort 0xn2eb of "SYMMETRY i386" handled by ./sequent
 # allow forward jumps only
 >1          byte    >-1
 # that offset must be accessible
+# with hexadecimal values like: 0e 2e 50 8c 8d ba bc bd be e8 fb fc
 >>(1.b+2)   byte    x
->>>0        use msdos-com
-
+# if look like COM executable with x86 boot signature then this
+# implies FAT volume with x86 real mode code already handled by ./filesystems
+#
+# No x86 boot signature implies often DOS executable
+# check for unrealistic high number of FATs. Then it is an unusual disk image or often a DOS executable
+# like: FIXBIOS.COM (50 bytes)
+>>>16		ubyte		>3
+# https://www.drivedroid.io/
+# skip MBR disk image drivedroid.img version 12 July 2013 by start message
+>>>>2		string		!DriveDroid
+# ftp://old-dos.ru/OSCollect/OS/MS-DOS/Final Releases/
+# skip unusual floppy image disk1.img of MS-DOS 1.25 (Corona Data Systems OEM)
+# by check for characteristic message text near the beginning
+>>>>>15		string		!Non\040System\040disk
+# "ftp://old-dos.ru/OSCollect/OS/BeOS/BeOS 4.0.rar"
+# skip BeOS 4 bootfloppy.img done as "Linux kernel x86 boot executable" by ./linux
+# by check for characteristic message text near the beginning
+>>>>>>6		string		!read\040error\015
+# https://github.com/ventoy/Ventoy/releases/download/v1.0.78/ventoy-1.0.78-windows.zip
+# skip ventoy 1.0.78 boot_hybrid.img
+>>>>>>>24	string		!\220\220\353I$\022\017
+# "ftp://old-dos.ru/OSCollect/OS/MS-DOS/Final Releases/PC-DOS 1.0 (5.25).rar"
+# skip unusual floppy image PCDOS100.IMG of DOS 1.0
+# by check for characteristic message text near the beginning
+>>>>>>>>9	string		!7-May-81
+# "ftp://old-dos.ru/OSCollect/OS/BeOS/BeOS 5.0 Personal (BA).rar"
+# skip BeOS 5 floppy_1.44.00.ima done as "DOS/MBR boot sector" by ./filesystems
+# by check for characteristic message near the beginning
+>>>>>>>>>3	string		!\370sdfS\270
+# like: FIXBIOS.COM (50 bytes)
+>>>>>>>>>>0		use		msdos-com
+# check for unrealistic low number of FATs. Then it is an unusual FAT disk image or often a DOS executable
+# like: DEVICE.COM INSTALL.COM (GAG 4.10) WORD.COM (Word 1.15)
+>>>16		ubyte		=0
+# if low FATs with x86 boot signature it can be unusual disk image like: boot.img (Ventoy 1.0.27) geodspms.img (Syslinux)
+>>>>0x1FE	leshort		=0xAA55
+>>>>0x1FE	default		x
+# https://thestarman.pcministry.com/tool/hxd/dimtut.htm
+# skip unusual floppy image TK-DOS11.img IBMDOS11.img of IBM DOS 1.10
+# by check for characteristic bootloader names near end of boot sector
+>>>>>395	string		!ibmbio\040\040com
+>>>>>>0			use		msdos-com
+# 8-bit jump with valid number of FAT implies FAT volume already handled by ./filesystems
+# like: balder.img
+>>>16		default		x
+# skip disk images with boot signature at end of 1st sector
+# like: TDSK-64b.img
+>>>>(11.s-2)	uleshort	!0xAA55
+# skip unusual floppy image without boot signature like 360k-256.img (mtools 4.0.18)
+# by check for characteristic file system type text for FAT (12 bit or 16 bit)
+>>>>>54		string		!FAT
+# "ftp://old-dos.ru/OSCollect/OS/MS-DOS/Final Releases/Microsoft MS-DOS 3.31 (Compaq OEM) (3.5).rar" 
+# skip unusual floppy image Disk4.img without boot signature and file system type text
+# by check for characteristic OEM-ID text
+>>>>>>3		string		!COMPAQ\040\040
+# no such DOS COM executables found
+>>>>>>>0		use		msdos-com
 # JMP 16bit
 0           byte    0xe9
+# 16-bit offset; for DEBUGGING!; can be negative like: USBDRIVE.COM
+#>1		leshort		x	\b, OFFSET %d
 # forward jumps
->1          short   >-1
+>1		leshort	>-1
 # that offset must be accessible
+# with hexadecimal values like: 06 1e 0e 2e 60 8c 8d b4 ba be e8 fc
 >>(1.s+3)   byte    x
->>>0        use msdos-com
+# check for unrealistic high number of FATs. Then it is not a disk image and it is a DOS executable
+# like: CALLVER.COM CPUCACHE.COM K437_EUR.COM SHSUCDX.COM UMBFILL.COM (183 bytes)
+>>>16		ubyte		>3
+>>>>0			use		msdos-com
+# check for unrealistic low number of FATs. Then it is not a disk image and it is a DOS executable
+# like: GAG.COM DRMOUSE.COM NDN.COM CPQ0TD.DRV
+>>>16		ubyte		=0
+>>>>0			use		msdos-com
+# maybe disc image with valid number of FATs or DOS executable
+# like: IPXODI.COM PERUSE.COM TASKID.COM
+>>>16		default	x
+# invalid low media descriptor. Then it is not a disk image and it is a DOS executable
+>>>>21		ubyte		<0xE5
+>>>>>0			use		msdos-com
+# valid media descriptor. Then it is maybe disk image or DOS executable
+>>>>21		ubyte		>0xE4
+# invalid sectorsize not a power of 2 from 32-32768. Then it is not a disk image and it must be DOS executable
+# like: LEARN.COM (Word 1.15)
+>>>>>11		uleshort&0x001f	!0
+>>>>>>0			use		msdos-com
 # negative offset, must not lead into PSP
->1          short   <-259
+# like: BASICA.COM (PC dos 3.20) FORMAT.COM SMC8100.COM WORD.COM (word4)
+# HIDSUPT1.COM USBDRIVE.COM USBSUPT1.COM USBUHCI.COM (FreeDOS USBDOS)
+>1		leshort	<-259
 # that offset must be accessible
+# add 10000h to jump at end of 64 KiB segment, add 1 for jump instruction and 2 for 16-bit offset
 >>(1,s+65539)   byte    x
+# after jump next instruction for DEBUGGING!
+#>>>&-1		ubelong	x	\b, NEXT instruction %#8.8x
 >>>0        use msdos-com
 
 # updated by Joerg Jenderek at Oct 2008,2015
