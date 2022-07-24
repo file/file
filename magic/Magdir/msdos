@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.156 2022/07/12 18:57:42 christos Exp $
+# $File: msdos,v 1.157 2022/07/24 23:52:02 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -647,6 +647,8 @@
 # like: E30ODI.COM MADGEODI.COM UNI2ASCI.COM RECOVER.COM (DOS 2) COMMAND.COM (DOS 2)
 >1	search/0xc088	\xcd\x22	\b, maybe with interrupt 22h
 >0	ubelong		x		\b, start instruction %#8.8x
+# show more instructions but not in samples like: rem.com (DJGPP)
+>4	ubelong		x		%8.8x
 
 # JMP 8bit
 0	        byte	0xeb
@@ -753,7 +755,7 @@
 #>>>&-1		ubelong	x	\b, NEXT instruction %#8.8x
 >>>0        use msdos-com
 
-# updated by Joerg Jenderek at Oct 2008,2015
+# updated by Joerg Jenderek at Oct 2008,2015,2022
 # following line is too general
 0	ubyte		0xb8
 # skip 2 linux kernels like memtest.bin with "\xb8\xc0\x07\x8e" in ./linux
@@ -776,19 +778,49 @@
 # syslinux version (4.x)
 # "COM executable (COM32R)" or "Syslinux COM32 module" by TrID
 >>>1	lelong		0x21CD4CFe	\b, relocatable)
-# Hajin Jang <hajin_jang@worksmobile.com>:
-# Disable simplest COM signature to prevent false positive on some EUC-KR text files.
-## remaining are DOS COM executables starting with assembler instruction MOV
-## like FreeDOS BANNER*.COM FINDDISK.COM GIF2RAW.COM WINCHK.COM
-## MS-DOS SYS.COM RESTART.COM
-## SYSLINUX.COM (version 1.40 - 2.13)
-## GFXBOOT.COM (version 3.75)
-## COPYBS.COM POWEROFF.COM INT18.COM
->>1	default	x			COM executable for DOS
-!:mime	application/x-dosexec
-##!:mime	application/x-ms-dos-executable
-##!:mime	application/x-msdos-program
-!:ext com
+>>1	default	x
+# look for interrupt instruction like in rem.com (DJGPP) LOADER.COM (DR-DOS 7.x)
+>>>3	search/118	\xCD
+# FOR DEBUGGING; possible hexadecimal interupt number like: 10~BANNER.COM 13~bcdw_cl.com 15~poweroff.com (Syslinux)
+# 1A~BERNDPCI.COM 20~SETENHKB.COM 21~mostly 22~gfxboot.com (Syslinux) 2F~SHUTDOWN.COM (GEMSYS)
+#>>>>&0	ubyte	x			\b, INTERUPT %#x
+# few examples with interrupt 0x13 instruction
+>>>>&0	ubyte	=0x13
+# FOR DEBUGGING!
+#>>>>>3	ubequad	x			\b, 2nd INSTRUCTION %#16.16llx
+# skip Gpt.com Mbr.com (edk2-UDK2018 bootsector) described as "DOS/MBR boot sector" by ./filesystems
+# by check for assembler instructions: mov  es,ax ; mov  ax,07c0h ; mov ds,ax 
+>>>>>3	ubequad	!0x8ec0b8c0078ed88d
+# few COM exectables with interrupt 0x13 instruction like: Bootable CD Wizard executables bcdw_cl.com fdemuoff.com
+# http://bootcd.narod.ru/bcdw150z_en.zip
+>>>>>>0		use		msdos-com
+# few examples with interrupt 0x16 instruction like flashimg.img
+>>>>&0	ubyte	=0x16
+# skip Syslinux 3.71 flashimg.img done as "DOS/MBR boot sector" by ./filesystems
+# by check for assembler instructions: cmp ax 0xE4E4 (magic); jnz
+>>>>>8	ubelong	!0x3DE4E475
+# no DOS executable with interrupt 0x16 found
+>>>>>>0		use		msdos-com
+# most examples with interrupt instruction unequal 0x13 and 0x16
+>>>>&0	default	x
+#>>>>>&-1 ubyte	x			\b, INTERUPT %#x
+# like: LOADER.COM SETENHKB.COM banner.com copybs.com gif2raw.com poweroff.com rem.com
+>>>>>0		use		msdos-com
+# few COM executables without interupt instruction like RESTART.COM (DOS 7.10) REBOOT.COM
+# or some EUC-KR text files or one Ulead Imaginfo thumbnail
+>>>3	default	x
+# FOR DEBUGGING; 2nd instruction like 0x50 (RESTART.COM) 0x8e (REBOOT.COM)
+# or random like: 0x0 (IMAGINFO.PE3 sky_snow) 0xb1 (euckr_.txt)
+#>>>>3	ubyte	x			\b, 2nd INSTRUCTION %#x
+# skip 1 Ulead Imaginfo thumbnail (IMAGINFO.PE3 sky_snow) 
+# inside SAMPLES/TEXTURES/SKY_SNOW
+# from https://archive.org/download/PI3CANON/PI3CANON.iso
+>>>>3	ubyte	!0x0
+# skip some EUC-KR text files like: euckr_falsepositive.txt
+# https://bugs.astron.com/view.php?id=186
+>>>>>3	ubyte	!0xb1
+# like: RESTART.COM (DOS 7.10) REBOOT.COM
+>>>>>>0	use		msdos-com
 
 # URL:		https://en.wikipedia.org/wiki/UPX
 # Reference:	https://github.com/upx/upx/archive/v3.96.zip/upx-3.96/
