@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.201 2022/07/05 20:05:23 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.202 2022/07/26 15:10:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -535,6 +535,7 @@ out:		file_err(EXIT_FAILURE, "Cannot allocate memory for file list");
 			char **nf = realloc(flist, fimax * sizeof(*flist));
 			if (nf == NULL)
 				goto out;
+			flist = nf;
 		}
 		flist[fi++] = line;
 		cwid = file_mbswidth(ms, line);
