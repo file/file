@@ -535,6 +535,7 @@ out:		file_err(EXIT_FAILURE, "Cannot allocate memory for file list");
 			char **nf = realloc(flist, fimax * sizeof(*flist));
 			if (nf == NULL)
 				goto out;
+			flist = nf;
 		}
 		flist[fi++] = line;
 		cwid = file_mbswidth(ms, line);
