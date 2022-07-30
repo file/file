@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.23 2022/07/30 18:08:21 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.24 2022/07/30 18:08:36 christos Exp $")
 #endif
 #else
 #define SIZE_T_FORMAT "z"
@@ -448,8 +448,6 @@ main(int argc, char *argv[])
 	if (fstat(fd, &st) == -1)
 		err(EXIT_FAILURE, "stat `%s'", argv[1]);
 	l = (size_t)st.st_size;
-	if (l < 8192)
-		l = 8192;
 	if ((p = mmap(NULL, l, PROT_READ, MAP_FILE, fd, 0)) == MAP_FAILED)
 		err(EXIT_FAILURE, "mmap `%s'", argv[1]);
 
