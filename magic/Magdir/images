@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.225 2022/07/30 17:05:46 christos Exp $
+# $File: images,v 1.226 2022/07/30 18:13:33 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3908,3 +3908,14 @@
 >0x24	ulelong		1	\b, embedded PNG image
 >0x24	ulelong		2	\b, embedded WebP image
 >0x24	ulelong		3	\b, Basis Universal
+
+# Summary:	iCEDraw graphic *.IDF
+# URL:		http://fileformats.archiveteam.org/wiki/ICEDraw
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/i/idf-icedraw.trid.xml
+# From:		Joerg Jenderek
+# Note:		called "iCEDraw graphic" by TrID, "iCEDraw text" by FFmpeg and "iCE Draw" by Ansilove
+#		verified by FFmpeg command `ffprobe ICE-9605.IDF` and `ansilove -s SQ-FORCE.IDF`
+0	string		\0041.4\0\0\0\0O\0	iCEDraw graphic
+#!:mime	application/octet-stream
+!:mime	image/x-idf
+!:ext	idf
