@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.323 2022/05/28 00:44:22 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.324 2022/07/30 18:09:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2279,7 +2279,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		if (matched == -1) {
 			if ((ms->flags & MAGIC_DEBUG) != 0) {
 				(void) fprintf(stderr,
-				    "EOF comparing DER entries");
+				    "EOF comparing DER entries\n");
 			}
 			return 0;
 		}
