@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.27 2021/12/06 15:05:16 christos Exp $
+# $File: wordprocessors,v 1.28 2022/08/08 12:59:02 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -28,6 +28,9 @@
 !:ext	wps
 
 # Corel/WordPerfect
+# URL:		https://en.wikipedia.org/wiki/WordPerfect
+# Reference:	https://github.com/OneWingedShark/WordPerfect/blob/master/doc/SDK_Help/FileFormats/WPFF_DocumentStructure.htm
+#		http://mark0.net/download/triddefs_xml.7z/defs/w/wp-generic.trid.xml
 0	string	\xffWPC
 # WordPerfect
 >8	byte	1
@@ -201,6 +204,20 @@
 >>9	byte	10	IntelliTAG (SGML) compiled DTD
 >>9	default	x
 >>>9	byte	x	IntelliTAG: Unknown filetype %d
+# Summary:	Corel WordPerfect WritingTools advise part
+# From:		Joerg Jenderek
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/adv-wp.trid.xml
+>8	byte	34
+>>9	byte	11	Corel WordPerfect dictionary advise
+#!:mime	application/octet-stream
+!:mime	application/x-wordperfect-adv
+#!:mime	application/vnd.wordperfect.adv
+# like: WT21de.adv Wt13de.adv Wt13es.adv Wt13fr.adv wt13us.adv
+!:ext	adv
+# advise text part often start with tag like: 580A
+#>>>(16.s)	ubequad	x	ADVISE PART %#llx
+# part of advise text like: "This is too informal for most writing."
+>>>(16.s+16)	string	x	(...%-.33s...)
 # everything else
 >8	default x
 >>8	byte	x	Unknown Corel/Wordperfect product %d,
