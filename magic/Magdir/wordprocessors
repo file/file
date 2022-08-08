@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.28 2022/08/08 12:59:02 christos Exp $
+# $File: wordprocessors,v 1.29 2022/08/08 13:00:46 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -60,6 +60,13 @@
 >>9	byte	44	WordPerfect 3.5 document
 >>9	byte	45	WordPerfect 4.2 document
 >>9	byte	69	WordPerfect dialog file
+# From:		Joerg Jenderek
+# Note:		found in sub directory WritingTools inside WordPerfect 2021 program directory
+>>9	byte	70	WordPerfect Writing Tools
+#!:mime	application/octet-stream
+!:mime	application/x-wordperfect-cbt
+# like: Wt13cbede.cbt Wt13cbeit.cbt Wt13cbefr.cbt WT21cbede.cbt Wt13cbeEN.CBD WT21cbeEN.CBD
+!:ext	cbd/cbt
 >>9	byte	76	WordPerfect button bar
 >>9	default x
 >>>9	byte	x	Corel WordPerfect: Unknown filetype %d
