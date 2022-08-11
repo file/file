@@ -403,10 +403,26 @@
 0	string		THX		AHX version
 >3	byte		=0		1 module data
 >3	byte		=1		2 module data
->10	byte		x		TRL: %u
->11	byte		x		TRK: %u
->12	byte		x		SMP: %u
->13	byte		x		SS: %u
+>11	ubyte		x		TRK: %u
+>10	ubyte		x		TRL: %u
+>12	ubyte		x		SMP: %u
+>13	ubyte		x		SS: %u
+>(4.H)		string		x		Title: "%.128s"
+
+# header is mostly AHX format
+0		string		HVL
+>3		byte		<2	Hively Tracker Song
+>3		byte		=0		v1 module data
+>3		byte		=1		v2 module data
+>11		ubyte		x		TRK: %u
+>10		ubyte		x		TRL: %u
+>12		ubyte		x		SMP: %u
+>13		ubyte		x		SS: %u
+>8		ubyte/4		=0		CHN: 4
+>8		ubyte/4		>0		CHN: 4+%u
+#>-0		offset		<0xffff
+>(4.H)		string		x		Title: "%.128s"
+
 #
 0	string		OKTASONG	Oktalyzer module data
 #
@@ -891,11 +907,6 @@
 >0x3		byte/16		x	Version %d.
 >0x3		byte&0x0F	x	\b%02d
 >>0x4		string		>\0	title: "%s"
-
-0		string		HVL
->3		byte		<2	Hively Tracker Song
->3		byte		0	1 module data
->3		byte		1	2 module data
 
 0		string		MO3
 >3		ubyte		<6	MOdule with MP3
