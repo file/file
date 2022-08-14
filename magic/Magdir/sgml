@@ -7,10 +7,12 @@
 >14	regex		['"\ \t]*[0-9.]+['"\ \t]*
 >>19	search/4096	\<svg			SVG Scalable Vector Graphics image
 !:mime	image/svg+xml
+!:ext   svg
 >>19	search/4096	\<gnc-v2		GnuCash file
 !:mime	application/x-gnucash
 0	string		\<svg			SVG Scalable Vector Graphics image
 !:mime	image/svg+xml
+!:ext   svg
 
 # Sitemap file
 0	string/t		\<?xml\ version=

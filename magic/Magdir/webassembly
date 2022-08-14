@@ -12,4 +12,6 @@
 
 0	string	\0asm	WebAssembly (wasm) binary module
 >4	lelong	=1	version %#x (MVP)
+!:mime  application/wasm
+!:ext   wasm
 >4	lelong	>1	version %#x

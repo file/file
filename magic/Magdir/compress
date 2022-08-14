@@ -147,6 +147,7 @@
 # bzip2
 0	string		BZh		bzip2 compressed data
 !:mime	application/x-bzip2
+!:ext	bz2
 >3	byte		>47		\b, block size = %c00k
 
 # bzip	a block-sorting file compressor
