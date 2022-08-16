@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.164 2022/07/30 17:02:25 christos Exp $
+# $File: archive,v 1.165 2022/08/16 11:16:39 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1746,13 +1746,17 @@
 # Felix von Leitner <felix-file@fefe.de>
 0	string	d8:announce	BitTorrent file
 !:mime	application/x-bittorrent
+!:ext	torrent
 # Durval Menezes, <jmgthbfile at durval dot com>
 0	string	d13:announce-list	BitTorrent file
 !:mime	application/x-bittorrent
+!:ext	torrent
 0	string	d7:comment	BitTorrent file
 !:mime	application/x-bittorrent
+!:ext	torrent
 0	string	d4:info		BitTorrent file
 !:mime	application/x-bittorrent
+!:ext	torrent
 
 # Atari MSA archive - Teemu Hukkanen <tjhukkan@iki.fi>
 # URL:		http://fileformats.archiveteam.org/wiki/MSA_(Magic_Shadow_Archiver)
