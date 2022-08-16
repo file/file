@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.29 2022/08/08 13:00:46 christos Exp $
+# $File: wordprocessors,v 1.30 2022/08/16 12:05:49 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -206,6 +206,29 @@
 >>9	byte	24	GroupWise admin ADS deferment data file
 >>9	default	x
 >>>9	byte	x	GroupWise: Unknown filetype %d
+# Corel Writing Tools WT*.*
+# From:		Joerg Jenderek
+# URL:		https://support.corel.com/hc/en-us/articles/215876258-Writing-Tools-Spell-Check-Dictionary-does-not-work-in-WordPerfect-X5
+#		http://wordperfect.helpmax.net/en/editing-and-formatting-documents/using-the-writing-tools/working-with-user-word-lists/
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/u/uwl-wp.trid.xml
+>8	byte	32
+>>9	byte	10	Corel Writing Tools User Word List
+#!:mime	application/octet-stream
+!:mime	application/x-wordperfect-wordlist
+# personal user word list UWL under user directory like: WTDE.UWL WTUS.UWL WT21DE.UWL WT21US.UWL WT13DE.UWL ...
+# and "template" SAV/HWL variant under program directory like: wt13en.hwl Wt13de.sav Wt13it.sav wt13ru.sav WT21us.sav Wtcz.sav ...
+!:ext	uwl/hwl/sav
+# jump to document area with some marker and word list
+>>>(4.l)	ubyte	x
+# look for beginning of word list starting mostly with letter a as UTF-16 like: Wt13es.sav
+# but not found in russian wt13ru.sav
+>>>>&0	search/91/sb	a\0
+# word list starting like: "acsesory\022accessory.\001\026acomodate\026accommodate4\001"
+>>>>>&0		lestring16	x	(...%-.33s...)
+# pointer to document area like: 200h
+>>>4	ulelong	!0x200	\b, at %#x document area
+# file size, not including pad characters at EOF
+>>>0x14	uleshort x	\b, %u bytes
 # IntelliTAG
 >8	byte	33
 >>9	byte	10	IntelliTAG (SGML) compiled DTD
