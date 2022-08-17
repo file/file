@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.324 2022/07/30 18:09:08 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.325 2022/08/17 08:45:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -118,7 +118,7 @@ file_softmagic(struct magic_set *ms, const struct buffer *b,
     uint16_t *indir_count, uint16_t *name_count, int mode, int text)
 {
 	struct mlist *ml;
-	int rv, printed_something = 0, need_separator = 0;
+	int rv = 0, printed_something = 0, need_separator = 0;
 	uint16_t nc, ic;
 
 	if (name_count == NULL) {
@@ -130,13 +130,24 @@ file_softmagic(struct magic_set *ms, const struct buffer *b,
 		indir_count = &ic;
 	}
 
-	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next)
-		if ((rv = match(ms, ml->magic, ml->magic_rxcomp, ml->nmagic, b,
+	for (ml = ms->mlist[0]->next; ml != ms->mlist[0]; ml = ml->next) {
+		int ret = match(ms, ml->magic, ml->magic_rxcomp, ml->nmagic, b,
 		    0, mode, text, 0, indir_count, name_count,
-		    &printed_something, &need_separator, NULL, NULL)) != 0)
-			return rv;
+		    &printed_something, &need_separator, NULL, NULL);
+		switch (ret) {
+		case -1:
+			return ret;
+		case 0:
+			continue;
+		default:
+			if ((ms->flags & MAGIC_CONTINUE) == 0)
+				return ret;
+			rv = ret;
+			break;
+		}
+	}
 
-	return 0;
+	return rv;
 }
 
 #define FILE_FMTDEBUG
