@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.202 2022/07/26 15:10:05 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.203 2022/08/17 08:47:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -675,7 +675,7 @@ file_mbswidth(struct magic_set *ms, const char *s)
 		s += bytesconsumed, n -= bytesconsumed;
 	}
 #else
-	while (*s) {
+	for (; *s; s++) {
 		width += (ms->flags & MAGIC_RAW) != 0
 		    || isprint(CAST(unsigned char, *s)) ? 1 : 4;
 	}
