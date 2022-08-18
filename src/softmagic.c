@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.325 2022/08/17 08:45:33 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.326 2022/08/18 07:57:53 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -212,7 +212,8 @@ match(struct magic_set *ms, struct magic *magic, file_regex_t **magic_rxcomp,
 	unsigned int cont_level = 0;
 	int found_matchv = 0; /* if a match is found it is set to 1*/
 	int returnvalv = 0, e;
-	int firstline = 1; /* a flag to print X\n  X\n- X */
+	/* a flag to print X\n  X\n- X */
+	int firstline = !(*printed_something || *need_separator);
 	struct buffer bb;
 	int print = (ms->flags & MAGIC_NODESC) == 0;
 
