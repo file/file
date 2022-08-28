@@ -17,6 +17,10 @@ bcachefs.result \
 bcachefs.testfile \
 cl8m8ocofedso.result \
 cl8m8ocofedso.testfile \
+dsd64-dff.result \
+dsd64-dff.testfile \
+dsd64-dsf.result \
+dsd64-dsf.testfile \
 escapevel.result \
 escapevel.testfile \
 ext4.result \
