@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.80 2022/03/24 15:48:58 christos Exp $
+# $File: linux,v 1.81 2022/09/01 09:48:47 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -535,3 +535,24 @@
 >&0		regex		[0-9]+\\.[0-9]+	\b, version %s
 >>&0		string		;
 >>>&0		regex		[A-Z0-9]+	\b, encryption %s
+
+# From:		Joerg Jenderek
+# URL:		https://www.gnu.org/software/grub
+# Reference:	https://ftp.gnu.org/gnu/grub/grub-2.06.tar.gz
+#		grub-2.06/include/grub/keyboard_layouts.h 
+#		grub-2.06/grub-core/commands/keylayouts.c
+# GRUB_KEYBOARD_LAYOUTS_FILEMAGIC
+0	string		GRUBLAYO		GRUB Keyboard
+!:mime			application/x-grub-keyboard
+!:ext			gkb
+# GRUB_KEYBOARD_LAYOUTS_VERSION like: 10
+>8	ulelong		!10			\b, version %u
+# 4 grub_uint32_t grub_keyboard_layout[160]
+# for normal french keyboard this is letter a
+>92	ubyte		!0x71
+>>92	ubyte		>0x40			\b, english q is %c
+#>732	ubyte		x			\b, english Q is %c
+# for normal german keyboard this is letter z
+>124	ubyte		!0x79
+>>124	ubyte		>0x40			\b, english y is %c
+#>764	ubyte		x			\b, english Y is %c
