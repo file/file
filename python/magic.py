@@ -288,16 +288,26 @@ class MagicDetect(object):
         if self.mime_magic is None:
             raise error
         if self.mime_magic.load() == -1:
+            self.mime_magic.close()
+            self.mime_magic = None
             raise error
         self.none_magic = open(MAGIC_NONE)
         if self.none_magic is None:
+            self.mime_magic.close()
+            self.mime_magic = None
             raise error
         if self.none_magic.load() == -1:
+            self.none_magic.close()
+            self.none_magic = None
+            self.mime_magic.close()
+            self.mime_magic = None
             raise error
 
     def __del__(self):
-        self.mime_magic.close()
-        self.none_magic.close()
+        if self.mime_magic is not None:
+            self.mime_magic.close()
+        if self.none_magic is not None:
+            self.none_magic.close()
 
 threadlocal = threading.local()
 
