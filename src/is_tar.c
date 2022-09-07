@@ -40,7 +40,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.45 2022/09/07 14:16:33 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.46 2022/09/07 15:37:58 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -116,10 +116,8 @@ is_tar(const unsigned char *buf, size_t nbytes)
 	nulp = memchr(header->header.name, 0, sizeof(header->header.name));
 	if (nulp != NULL && nulp >= header->header.name + sizeof(gpkg_match) &&
 	    memcmp(nulp - sizeof(gpkg_match) + 1, gpkg_match,
-	    sizeof(gpkg_match)) == 0) {
-		fprintf(stderr, "match\n");
-			return 0;
-	}
+	    sizeof(gpkg_match)) == 0)
+	    return 0;
 
 	recsum = from_oct(header->header.chksum, sizeof(header->header.chksum));
 
