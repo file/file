@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: subtitle,v 1.1 2022/08/29 15:26:55 christos Exp $
+# $File: subtitle,v 1.2 2022/09/07 11:29:09 christos Exp $
 # subtitle:  file(1) magic for subtitles files
 
 # EBU-STL
@@ -16,14 +16,14 @@
 !:ext	stl
 
 # SubRip (srt) subtitles
-0	regex/20	=^1[\r\n]+0[01]:[0-9]{2}:[0-9]{2},[0-9]{3}\ -->	 SubRip
+0	regex/20	=^1[\r\n]+0[01]:[0-9]{2}:[0-9]{2},[0-9]{3}\040-->	 SubRip
 !:mime	application/x-subrip
 !:ext	srt
 
 # WebVTT subtitles
 # https://www.w3.org/TR/webvtt1/
 0	string/t	WEBVTT
->&0	regex/255	=[0-9]{2}:[0-9]{2}\.[0-9]{3}\ -->	WebVTT subtitles
+>&0	regex/255	=[0-9]{2}:[0-9]{2}\\.[0-9]{3}\040-->	WebVTT subtitles
 !:mime	text/vtt
 !:ext	vtt
 
