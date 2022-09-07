@@ -29,6 +29,8 @@ fit-map-data.result \
 fit-map-data.testfile \
 gedcom.result \
 gedcom.testfile \
+gpkg-1-zst.result \
+gpkg-1-zst.testfile \
 hddrawcopytool.result \
 hddrawcopytool.testfile \
 issue311docx.result \
