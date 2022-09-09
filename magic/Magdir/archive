@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.166 2022/09/07 11:29:37 christos Exp $
+# $File: archive,v 1.167 2022/09/09 15:14:45 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -176,7 +176,7 @@
 # URL:		https://www.gentoo.org/glep/glep-0078.html
 # Note:		assumes the strict format
 0	name		tar-gpkg
->0	string		x		Gentoo GLEP 78 (GPKG) binary package
+>0	regex		[^/]+		Gentoo GLEP 78 (GPKG) binary package for "%s"
 !:mime	application/x-tar
 !:ext	tar
 # the logic below requires the gpkg-1 file to be empty
