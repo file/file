@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.90 2021/10/24 15:52:18 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.91 2022/09/10 13:19:26 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -214,6 +214,10 @@ file_mdump(struct magic *m)
 			(void)fprintf(stderr, "%s,",
 			    file_fmttime(tbuf, sizeof(tbuf), m->value.h));
 			break;
+		case FILE_OCTAL:
+			(void)fprintf(stderr, "%s",
+			    file_fmtnum(tbuf, sizeof(tbuf), m->value.s, 8));
+			break;
 		case FILE_DEFAULT:
 			/* XXX - do anything here? */
 			break;
@@ -339,4 +343,22 @@ out:
 	strlcpy(buf, "*Invalid time*", bsize);
 	return buf;
 
+}
+
+protected const char *
+file_fmtnum(char *buf, size_t blen, const char *us, int base)
+{
+	char *endptr;
+	unsigned long long val;
+
+	errno = 0;
+	val = strtoull(us, &endptr, base);
+	if (*endptr || errno) {
+bad:		strlcpy(buf, "*Invalid number*", blen);
+		return buf;
+	}
+
+	if (snprintf(buf, blen, "%llu", val) < 0)
+		goto bad;
+	return buf;
 }

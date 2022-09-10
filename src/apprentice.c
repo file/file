@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.324 2022/05/31 18:54:25 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.325 2022/09/10 13:19:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -295,6 +295,7 @@ static const struct type_tbl_s type_tbl[] = {
 	{ XX("msdostime"),	FILE_MSDOSTIME,		FILE_FMT_STR },
 	{ XX("lemsdostime"),	FILE_LEMSDOSTIME,	FILE_FMT_STR },
 	{ XX("bemsdostime"),	FILE_BEMSDOSTIME,	FILE_FMT_STR },
+	{ XX("octal"),		FILE_OCTAL,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 
@@ -306,6 +307,7 @@ static const struct type_tbl_s special_tbl[] = {
 	{ XX("der"),		FILE_DER,		FILE_FMT_STR },
 	{ XX("name"),		FILE_NAME,		FILE_FMT_STR },
 	{ XX("use"),		FILE_USE,		FILE_FMT_STR },
+	{ XX("octal"),		FILE_OCTAL,		FILE_FMT_STR },
 	{ XX_NULL,		FILE_INVALID,		FILE_FMT_NONE },
 };
 # undef XX
@@ -1002,6 +1004,7 @@ apprentice_magic_strength_1(const struct magic *m)
 
 	case FILE_PSTRING:
 	case FILE_STRING:
+	case FILE_OCTAL:
 		val += m->vallen * MULT;
 		break;
 
@@ -1233,6 +1236,7 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_MSDOSTIME:
 	case FILE_BEMSDOSTIME:
 	case FILE_LEMSDOSTIME:
+	case FILE_OCTAL:
 		mstart->flag |= BINTEST;
 		break;
 	case FILE_STRING:
@@ -1694,6 +1698,7 @@ file_signextend(struct magic_set *ms, struct magic *m, uint64_t v)
 		case FILE_CLEAR:
 		case FILE_DER:
 		case FILE_GUID:
+		case FILE_OCTAL:
 			break;
 		default:
 			if (ms->flags & MAGIC_CHECK)
@@ -2167,6 +2172,9 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 				break;
 			case 'I':
 				m->in_type = FILE_BEID3;
+				break;
+			case 'o':
+				m->in_type = FILE_OCTAL;
 				break;
 			case 'q':
 				m->in_type = FILE_LEQUAD;
@@ -2832,6 +2840,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 	case FILE_NAME:
 	case FILE_USE:
 	case FILE_DER:
+	case FILE_OCTAL:
 		*p = getstr(ms, m, *p, action == FILE_COMPILE);
 		if (*p == NULL) {
 			if (ms->flags & MAGIC_CHECK)

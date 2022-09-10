@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.326 2022/08/18 07:57:53 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.327 2022/09/10 13:19:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -816,6 +816,11 @@ mprint(struct magic_set *ms, struct magic *m)
 		    file_fmttime(tbuf, sizeof(tbuf), p->h)) == -1)
 			return -1;
 		break;
+	case FILE_OCTAL:
+		file_fmtnum(buf, sizeof(buf), m->value.s, 8);
+		if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
+			return -1;
+		break;
 	default:
 		file_magerror(ms, "invalid m->type (%d) in mprint()", m->type);
 		return -1;
@@ -864,6 +869,7 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
   	case FILE_PSTRING:
   	case FILE_BESTRING16:
   	case FILE_LESTRING16:
+	case FILE_OCTAL:
 		if (m->reln == '=' || m->reln == '!') {
 			o = ms->offset + m->vallen;
 		} else {
@@ -1174,7 +1180,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		return 1;
 	case FILE_STRING:
 	case FILE_BESTRING16:
-	case FILE_LESTRING16: {
+	case FILE_LESTRING16:
+	case FILE_OCTAL: {
 		/* Null terminate and eat *trailing* return */
 		p->s[sizeof(p->s) - 1] = '\0';
 		return 1;
@@ -1661,6 +1668,11 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 					return 0;
 				off = SEXT(sgn,64,LE64(q));
 				break;
+			case FILE_OCTAL:
+				if (OFFSET_OOB(nbytes, offset, m->vallen))
+					return 0;
+				off = SEXT(sgn,64,strtoull(p->s, NULL, 8));
+				break;
 			default:
 				if ((ms->flags & MAGIC_DEBUG) != 0)
 					fprintf(stderr, "bad op=%d\n", op);
@@ -1727,6 +1739,12 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			if (OFFSET_OOB(nbytes, offset, 8))
 				return 0;
 			offset = do_ops(m, SEXT(sgn,64,BE64(p)), off);
+			break;
+		case FILE_OCTAL:
+			if (OFFSET_OOB(nbytes, offset, m->vallen))
+				return 0;
+			offset = do_ops(m,
+			    SEXT(sgn,64,strtoull(p->s, NULL, 8)), off);
 			break;
 		default:
 			if ((ms->flags & MAGIC_DEBUG) != 0)
@@ -1812,6 +1830,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	case FILE_STRING:
 	case FILE_PSTRING:
 	case FILE_SEARCH:
+	case FILE_OCTAL:
 		if (OFFSET_OOB(nbytes, offset, m->vallen))
 			return 0;
 		break;
@@ -2170,6 +2189,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 
 	case FILE_STRING:
 	case FILE_PSTRING:
+	case FILE_OCTAL:
 		l = 0;
 		v = file_strncmp(m->value.s, p->s, CAST(size_t, m->vallen),
 		    sizeof(p->s), m->str_flags);

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.167 2022/09/09 15:14:45 christos Exp $
+# $File: archive,v 1.168 2022/09/10 13:19:26 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -190,6 +190,7 @@
 >>>>&0	string		lzo\0		using lzo compression
 >>>>&0	string		xz\0		using xz compression
 >>>>&0	string		zst\0		using zstd compression
+>>>(636.o+1024)	search/611	.sig\0	\b, signed
 
 # Incremental snapshot gnu-tar format from:
 # https://www.gnu.org/software/tar/manual/html_node/Snapshot-Files.html

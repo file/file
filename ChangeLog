@@ -1,3 +1,7 @@
+2022-09-10   9:17  Christos Zoulas <christos@zoulas.com>
+
+	* Add octal indirect magic (Michal Gorny)
+
 2022-08-17  11:43  Christos Zoulas <christos@zoulas.com>
 
 	* PR/374: avoid infinite loop in non-wide code (piru)
