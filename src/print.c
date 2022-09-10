@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.91 2022/09/10 13:19:26 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.92 2022/09/10 13:21:42 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -200,7 +200,7 @@ file_mdump(struct magic *m)
 		case FILE_LEVARINT:
 		case FILE_BEVARINT:
 			(void)fprintf(stderr, "%s", file_fmtvarint(
-			    m->value.us, m->type, tbuf, sizeof(tbuf)));
+			    tbuf, sizeof(tbuf), m->value.us, m->type));
 			break;
 		case FILE_MSDOSDATE:
 		case FILE_BEMSDOSDATE:
@@ -261,7 +261,7 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 }
 
 protected const char *
-file_fmtvarint(const unsigned char *us, int t, char *buf, size_t blen)
+file_fmtvarint(char *buf, size_t blen, const unsigned char *us, int t)
 {
 	snprintf(buf, blen, "%jd", file_varint2uintmax_t(us, t, NULL));
 	return buf;
