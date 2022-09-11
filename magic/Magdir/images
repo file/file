@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.226 2022/07/30 18:13:33 christos Exp $
+# $File: images,v 1.227 2022/09/11 20:58:52 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1458,7 +1458,25 @@
 >2		quad		!0
 # skip g3test.g3 by test for unused bits of 2nd color entry
 >>4		ubeshort&0xF000	0
->>>0		use		degas-bitmap
+#>>>0		beshort	x	1ST_VALUE=%x
+>>>-0		offset	x	FILE_SIZE=%lld
+# standard DEGAS low-res uncompressed bitmap *.pi1 with file size 32034
+>>>-0		offset	=32034	VARIANT_STANDARD
+#>>>>0		beshort	x	1st_VALUE=%x
+# like: 8ball.pi1 teddy.pi1 sonic01.pi1 
+>>>>0		use		degas-bitmap
+# about 61 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 32066
+>>>-0		offset	=32066	VARIANT_ELITE
+# like: spider.pi1 pinkgirl.pi1 frog3.pi1
+>>>>0		use		degas-bitmap
+# about 55 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 32128
+>>>-0		offset	=32128	VARIANT_3
+# like: mountain.pi1 bigspid.pi1 alf33.pi1
+>>>>0		use		degas-bitmap
+# 1 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 44834
+>>>-0		offset	=44834	VARIANT_4
+# like: kenshin.pi1
+>>>>0		use		degas-bitmap
 # DEGAS mid-res uncompressed bitmap *.pi2 (strength=50) after GEM Images like:
 # BEETHVEN.IMG CHURCH.IMG GAMEOVR4.IMG TURKEY.IMG clinton.img
 0		beshort		0x0001
