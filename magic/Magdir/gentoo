@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: gentoo,v 1.1 2022/09/11 21:04:30 christos Exp $
+# $File: gentoo,v 1.2 2022/09/12 13:13:28 christos Exp $
 # gentoo:  file(1) magic for gentoo specific formats
 #
 # Summary: Gentoo ebuild Manifest files (GLEP 74)
@@ -53,3 +53,28 @@
 0	string		\<?xml
 >0	search/512	\<catmetadata		Gentoo category metadata file
 >0	search/512	\<pkgmetadata		Gentoo package metadata file
+
+# Summary: Gentoo GLEP 78 binary package
+# Reference: https://www.gentoo.org/glep/glep-0078.html
+# Note: assumes the strict format
+# Submitted by: Michal Gorny <mgorny@gentoo.org>
+
+# GPKG uses ustar (or ustar-compatible GNU format) that starts with
+# a <directory>/gpkg-1 file
+257	string		ustar
+>0	search/100	/gpkg-1\0
+>>0	regex		[^/]+		Gentoo GLEP 78 (GPKG) binary package for "%s"
+!:mime	application/x-tar
+!:ext	tar
+# the logic below requires the gpkg-1 file to be empty
+>>>124	string	00000000000\0
+# determine the compression used by looking at the second member name
+>>>>512	search/100	.tar.
+>>>>>&0	string		gz\0		using gzip compression
+>>>>>&0	string		bz2\0		using bzip2 compression
+>>>>>&0	string		lz\0		using lzip compression
+>>>>>&0	string		lz4\0		using lz4 compression
+>>>>>&0	string		lzo\0		using lzo compression
+>>>>>&0	string		xz\0		using xz compression
+>>>>>&0	string		zst\0		using zstd compression
+>>>>(636.o+1024)	search/611	.sig\0	\b, signed
