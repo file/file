@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.203 2022/08/17 08:47:47 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.204 2022/09/13 18:46:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -513,7 +513,7 @@ unwrap(struct magic_set *ms, const char *fn)
 	int wid = 0, cwid;
 	int e = 0;
 	size_t fi = 0, fimax = 100;
-	char **flist = malloc(sizeof(*flist) * fimax);
+	char **flist = CAST(char **, malloc(sizeof(*flist) * fimax));
 
 	if (flist == NULL)
 out:		file_err(EXIT_FAILURE, "Cannot allocate memory for file list");
@@ -532,7 +532,8 @@ out:		file_err(EXIT_FAILURE, "Cannot allocate memory for file list");
 			line[len - 1] = '\0';
 		if (fi >= fimax) {
 			fimax += 100;
-			char **nf = realloc(flist, fimax * sizeof(*flist));
+			char **nf = CAST(char **,
+			    realloc(flist, fimax * sizeof(*flist)));
 			if (nf == NULL)
 				goto out;
 			flist = nf;

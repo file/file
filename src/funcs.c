@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.130 2022/07/04 19:44:35 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.131 2022/09/13 18:46:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -686,6 +686,7 @@ file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
 	return rc;
 }
 
+/*ARGSUSED*/
 protected int
 file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
     const char *str, size_t nmatch, regmatch_t* pmatch, int eflags)

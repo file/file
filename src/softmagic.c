@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.327 2022/09/10 13:19:26 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.328 2022/09/13 18:46:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -43,7 +43,7 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.327 2022/09/10 13:19:26 christos Exp $")
 #include <time.h>
 #include "der.h"
 
-private int match(struct magic_set *, struct magic *, file_regex_t **, uint32_t,
+private int match(struct magic_set *, struct magic *, file_regex_t **, size_t,
     const struct buffer *, size_t, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *, int *);
 private int mget(struct magic_set *, struct magic *, const struct buffer *,
@@ -203,7 +203,7 @@ file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
  */
 private int
 match(struct magic_set *ms, struct magic *magic, file_regex_t **magic_rxcomp,
-    uint32_t nmagic, const struct buffer *b, size_t offset, int mode, int text,
+    size_t nmagic, const struct buffer *b, size_t offset, int mode, int text,
     int flip, uint16_t *indir_count, uint16_t *name_count,
     int *printed_something, int *need_separator, int *returnval,
     int *found_match)
@@ -1862,8 +1862,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		{
 			if ((rv = match(ms, mlp->magic, mlp->magic_rxcomp,
 			    mlp->nmagic, &bb, 0, BINTEST, text, 0, indir_count,
-			    name_count, printed_something, need_separator, NULL,
-			    NULL)) != 0)
+			    name_count, printed_something, need_separator,
+			    NULL, NULL)) != 0)
 				break;
 		}
 
@@ -2297,7 +2297,6 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 
 		default:
 			return -1;
-			break;
 		}
 		break;
 	}

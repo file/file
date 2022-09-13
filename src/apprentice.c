@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.325 2022/09/10 13:19:26 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.326 2022/09/13 18:46:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1068,6 +1068,7 @@ apprentice_magic_strength_1(const struct magic *m)
 }
 
 
+/*ARGSUSED*/
 private size_t
 apprentice_magic_strength(const struct magic *m,
     size_t nmagic __attribute__((__unused__)))
@@ -1296,7 +1297,8 @@ addentry(struct magic_set *ms, struct magic_entry *me,
 		(void)memset(&mp[mset[i].count], 0, sizeof(*mp) *
 		    ALLOC_INCR);
 		mset[i].me = mp;
-		mset[i].max = incr;
+		mset[i].max = CAST(uint32_t, incr);
+		assert(mset[i].max == incr);
 	}
 	mset[i].me[mset[i].count++] = *me;
 	memset(me, 0, sizeof(*me));
@@ -2426,6 +2428,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
  * parse a STRENGTH annotation line from magic file, put into magic[index - 1]
  * if valid
  */
+/*ARGSUSED*/
 private int
 parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line,
     size_t len __attribute__((__unused__)))

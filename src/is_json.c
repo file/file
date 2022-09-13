@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.25 2022/07/06 19:05:56 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.26 2022/09/13 18:46:07 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -122,6 +122,7 @@ json_skip_space(const unsigned char *uc, const unsigned char *ue)
 	return uc;
 }
 
+/*ARGSUSED*/
 static int
 json_parse_string(const unsigned char **ucp, const unsigned char *ue,
     size_t lvl __file_debugused)
@@ -268,6 +269,7 @@ out:
 	return 0;
 }
 
+/*ARGSUSED*/
 static int
 json_parse_number(const unsigned char **ucp, const unsigned char *ue, 
     size_t lvl __file_debugused)
@@ -319,6 +321,7 @@ out:
 	return got;
 }
 
+/*ARGSUSED*/
 static int
 json_parse_const(const unsigned char **ucp, const unsigned char *ue,
     const char *str, size_t len, size_t lvl __file_debugused)

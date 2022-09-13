@@ -40,7 +40,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_tar.c,v 1.46 2022/09/07 15:37:58 christos Exp $")
+FILE_RCSID("@(#)$File: is_tar.c,v 1.47 2022/09/13 18:46:07 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -113,7 +113,8 @@ is_tar(const unsigned char *buf, size_t nbytes)
 	/* If the file looks like Gentoo GLEP 78 binary package (GPKG),
 	 * don't waste time on further checks and fall back to magic rules.
 	 */
-	nulp = memchr(header->header.name, 0, sizeof(header->header.name));
+	nulp = CAST(const char *,
+	    memchr(header->header.name, 0, sizeof(header->header.name)));
 	if (nulp != NULL && nulp >= header->header.name + sizeof(gpkg_match) &&
 	    memcmp(nulp - sizeof(gpkg_match) + 1, gpkg_match,
 	    sizeof(gpkg_match)) == 0)
