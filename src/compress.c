@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.136 2022/09/13 16:08:34 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.137 2022/09/14 14:37:07 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -77,6 +77,12 @@ typedef void (*sig_t)(int);
 #if defined(HAVE_LZMA_H) && defined(XZLIBSUPPORT)
 #define BUILTIN_XZLIB
 #include <lzma.h>
+#endif
+
+#if defined(HAVE_ZSTD_H) && defined(ZSTDLIBSUPPORT)
+#define BUILTIN_ZSTDLIB
+#include <zstd.h>
+#include <zstd_errors.h>
 #endif
 
 #ifdef DEBUG
@@ -175,6 +181,7 @@ private const struct {
 #define METH_FROZEN	2
 #define METH_BZIP	7
 #define METH_XZ		9
+#define METH_ZSTD	12
 #define METH_LZMA	13
 #define METH_ZLIB	14
     { { .magic = "\037\235" },	2, gzip_args, NULL },	/* 0, compressed */
@@ -221,6 +228,10 @@ private int uncompressbzlib(const unsigned char *, unsigned char **, size_t,
 #endif
 #ifdef BUILTIN_XZLIB
 private int uncompressxzlib(const unsigned char *, unsigned char **, size_t,
+    size_t *);
+#endif
+#ifdef BUILTIN_ZSTDLIB
+private int uncompresszstd(const unsigned char *, unsigned char **, size_t,
     size_t *);
 #endif
 
@@ -608,9 +619,8 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	strlcpy(RCAST(char *, *newch), z.msg ? z.msg : zError(rc), bytes_max);
-	*n = strlen(RCAST(char *, *newch));
-	return ERRDATA;
+	free(*newch);
+	return makeerror(newch, n, "%s", z.msg ? z.msg : zError(rc));
 }
 #endif
 
@@ -651,9 +661,8 @@ uncompressbzlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	snprintf(RCAST(char *, *newch), bytes_max, "bunzip error %d", rc);
-	*n = strlen(RCAST(char *, *newch));
-	return ERRDATA;
+	free(*newch);
+	return makeerror(newch, n, "bunzip error %d", rc);
 }
 #endif
 
@@ -691,9 +700,57 @@ uncompressxzlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	snprintf(RCAST(char *, *newch), bytes_max, "unxz error %d", rc);
-	*n = strlen(RCAST(char *, *newch));
-	return ERRDATA;
+	free(*newch);
+	return makeerror(newch, n, "unxz error %d", rc);
+}
+#endif
+
+#ifdef BUILTIN_ZSTDLIB
+private int
+uncompresszstd(const unsigned char *old, unsigned char **newch,
+    size_t bytes_max, size_t *n)
+{
+    size_t rc;
+    ZSTD_DStream *zstd;
+    ZSTD_inBuffer in;
+    ZSTD_outBuffer out;
+
+    if ((zstd = ZSTD_createDStream()) == NULL)
+        return makeerror(newch, n, "No ZSTD decompression stream, %s",
+	    strerror(errno));
+
+    rc = ZSTD_DCtx_reset(zstd, ZSTD_reset_session_only);
+    if (ZSTD_isError(rc))
+        goto err;
+
+    if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL) {
+        ZSTD_freeDStream(zstd);
+        return makeerror(newch, n, "No buffer, %s", strerror(errno));
+    }
+
+    in.src = CCAST(const void *, old);
+    in.size = *n;
+    in.pos = 0;
+    out.dst = RCAST(void *, *newch);
+    out.size = bytes_max;
+    out.pos = 0;
+
+    rc = ZSTD_decompressStream(zstd, &out, &in);
+    if (ZSTD_isError(rc))
+        goto err;
+
+    *n = out.pos;
+
+    ZSTD_freeDStream(zstd);
+
+    /* let's keep the nul-terminate tradition */
+    (*newch)[*n] = '\0';
+
+    return OKDATA;
+err:
+    ZSTD_freeDStream(zstd);
+    free(*newch);
+    return makeerror(newch, n, "zstd error %d", ZSTD_getErrorCode(rc));
 }
 #endif
 
@@ -864,6 +921,10 @@ methodname(size_t method)
 	case METH_LZMA:
 		return "xzlib";
 #endif
+#ifdef BUILTIN_ZSTDLIB
+	case METH_ZSTD:
+		return "zstd";
+#endif
 	default:
 		return compr[method].argv[0];
 	}
@@ -899,6 +960,10 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 	case METH_XZ:
 	case METH_LZMA:
 		return uncompressxzlib(old, newch, bytes_max, n);
+#endif
+#ifdef BUILTIN_ZSTDLIB
+	case METH_ZSTD:
+		return uncompresszstd(old, newch, bytes_max, n);
 #endif
 	default:
 		break;
