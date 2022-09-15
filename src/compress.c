@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.137 2022/09/14 14:37:07 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.138 2022/09/15 14:45:31 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -83,6 +83,11 @@ typedef void (*sig_t)(int);
 #define BUILTIN_ZSTDLIB
 #include <zstd.h>
 #include <zstd_errors.h>
+#endif
+
+#if defined(HAVE_LZLIB_H) && defined(LZLIBSUPPORT)
+#define BUILTIN_LZLIB
+#include <lzlib.h>
 #endif
 
 #ifdef DEBUG
@@ -181,6 +186,7 @@ private const struct {
 #define METH_FROZEN	2
 #define METH_BZIP	7
 #define METH_XZ		9
+#define METH_LZIP	8
 #define METH_ZSTD	12
 #define METH_LZMA	13
 #define METH_ZLIB	14
@@ -232,6 +238,10 @@ private int uncompressxzlib(const unsigned char *, unsigned char **, size_t,
 #endif
 #ifdef BUILTIN_ZSTDLIB
 private int uncompresszstd(const unsigned char *, unsigned char **, size_t,
+    size_t *);
+#endif
+#ifdef BUILTIN_LZLIB
+private int uncompresslzlib(const unsigned char *, unsigned char **, size_t,
     size_t *);
 #endif
 
@@ -754,6 +764,72 @@ err:
 }
 #endif
 
+#ifdef BUILTIN_LZLIB
+private int
+uncompresslzlib(const unsigned char *old, unsigned char **newch,
+    size_t bytes_max, size_t *n)
+{
+    enum LZ_Errno err;
+    size_t old_remaining = *n;
+    size_t new_remaining = bytes_max;
+    size_t total_read = 0;
+    unsigned char *bufp;
+    struct LZ_Decoder *dec;
+
+    if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
+        return makeerror(newch, n, "No buffer, %s", strerror(errno));
+    bufp = *newch;
+
+    dec = LZ_decompress_open();
+    if (!dec) {
+        free(*newch);
+        return makeerror(newch, n, "unable to allocate LZ_Decoder");
+    }
+    if (LZ_decompress_errno(dec) != LZ_ok)
+        goto err;
+
+    for (;;) {
+        // LZ_decompress_read() stops at member boundaries, so we may
+        // have more than one successful read after writing all data
+        // we have.
+        if (old_remaining > 0) {
+            int wr = LZ_decompress_write(dec, old, old_remaining);
+            if (wr < 0)
+                goto err;
+            old_remaining -= wr;
+            old += wr;
+        }
+
+        int rd = LZ_decompress_read(dec, bufp, new_remaining);
+        if (rd > 0) {
+            new_remaining -= rd;
+            bufp += rd;
+            total_read += rd;
+        }
+
+        if (rd < 0 || LZ_decompress_errno(dec) != LZ_ok)
+            goto err;
+        if (new_remaining == 0)
+            break;
+        if (old_remaining == 0 && rd == 0)
+            break;
+    }
+
+    LZ_decompress_close(dec);
+    *n = total_read;
+
+    /* let's keep the nul-terminate tradition */
+    *bufp = '\0';
+
+    return OKDATA;
+err:
+    err = LZ_decompress_errno(dec);
+    LZ_decompress_close(dec);
+    free(*newch);
+    return makeerror(newch, n, "lzlib error: %s", LZ_strerror(err));
+}
+#endif
+
 
 static int
 makeerror(unsigned char **buf, size_t *len, const char *fmt, ...)
@@ -925,6 +1001,10 @@ methodname(size_t method)
 	case METH_ZSTD:
 		return "zstd";
 #endif
+#ifdef BUILTIN_LZLIB
+	case METH_LZIP:
+		return "lzlib";
+#endif
 	default:
 		return compr[method].argv[0];
 	}
@@ -964,6 +1044,10 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 #ifdef BUILTIN_ZSTDLIB
 	case METH_ZSTD:
 		return uncompresszstd(old, newch, bytes_max, n);
+#endif
+#ifdef BUILTIN_LZLIB
+	case METH_LZIP:
+		return uncompresslzlib(old, newch, bytes_max, n);
 #endif
 	default:
 		break;

@@ -1,3 +1,7 @@
+2022-09-15  10:45  Christos Zoulas <christos@zoulas.com>
+
+	* Add built-in lzip decompression support (Michal Gorny)
+
 2022-09-14  10:35  Christos Zoulas <christos@zoulas.com>
 
 	* Add built-in zstd decompression support (Martin Rodriguez Reboredo)
