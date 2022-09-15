@@ -1,6 +1,6 @@
-.\" $File: libmagic.man,v 1.45 2019/06/08 22:16:24 christos Exp $
+.\" $File: libmagic.man,v 1.46 2022/09/15 16:54:14 christos Exp $
 .\"
-.\" Copyright (c) Christos Zoulas 2003, 2018.
+.\" Copyright (c) Christos Zoulas 2003, 2018, 2022
 .\" All Rights Reserved.
 .\"
 .\" Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
 .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 .\" SUCH DAMAGE.
 .\"
-.Dd June 8, 2019
+.Dd September 15, 2022
 .Dt LIBMAGIC 3
 .Os
 .Sh NAME
@@ -143,6 +143,8 @@ Don't report on compression, only report about the uncompressed data.
 Don't check for
 .Dv EMX
 application type (only on EMX).
+.It Dv MAGIC_NO_COMPRESS_FORK
+Don't allow decompressors that use fork.
 .It Dv MAGIC_NO_CHECK_CDF
 Don't get extra information on MS Composite Document Files.
 .It Dv MAGIC_NO_CHECK_COMPRESS

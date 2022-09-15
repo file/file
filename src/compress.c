@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.138 2022/09/15 14:45:31 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.139 2022/09/15 16:54:14 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -220,7 +220,7 @@ private const struct {
 private ssize_t swrite(int, const void *, size_t);
 #if HAVE_FORK
 private size_t ncompr = __arraycount(compr);
-private int uncompressbuf(int, size_t, size_t, const unsigned char *,
+private int uncompressbuf(int, size_t, size_t, int, const unsigned char *,
     unsigned char **, size_t *);
 #ifdef BUILTIN_DECOMPRESS
 private int uncompresszlib(const unsigned char *, unsigned char **, size_t,
@@ -308,7 +308,8 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 		}
 
 		nsz = nbytes;
-		urv = uncompressbuf(fd, ms->bytes_max, i, buf, &newbuf, &nsz);
+		urv = uncompressbuf(fd, ms->bytes_max, i, 
+		    (ms->flags & MAGIC_NO_COMPRESS_FORK), buf, &newbuf, &nsz);
 		DPRINTF("uncompressbuf = %d, %s, %" SIZE_T_FORMAT "u\n", urv,
 		    (char *)newbuf, nsz);
 		switch (urv) {
@@ -1011,8 +1012,8 @@ methodname(size_t method)
 }
 
 private int
-uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
-    unsigned char **newch, size_t* n)
+uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
+    const unsigned char *old, unsigned char **newch, size_t* n)
 {
 	int fdp[3][2];
 	int status, rv, w;
@@ -1051,6 +1052,11 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, const unsigned char *old,
 #endif
 	default:
 		break;
+	}
+
+	if (nofork) {
+	    return makeerror(newch, n,
+		"Fork is required to uncompress, but disabled");
 	}
 
 	(void)fflush(stdout);

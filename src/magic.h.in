@@ -47,6 +47,8 @@
 					   * extensions */
 #define MAGIC_COMPRESS_TRANSP	0x2000000 /* Check inside compressed files
 					   * but not report compression */
+#define MAGIC_NO_COMPRESS_FORK	0x4000000 /* Don't allow decompression that
+					   * needs to fork */
 #define MAGIC_NODESC		(MAGIC_EXTENSION|MAGIC_MIME|MAGIC_APPLE)
 
 #define	MAGIC_NO_CHECK_COMPRESS	0x0001000 /* Don't check for compressed files */

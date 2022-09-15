@@ -1,3 +1,8 @@
+2022-09-15  13:50  Christos Zoulas <christos@zoulas.com>
+
+	* Add MAGIC_NO_COMPRESS_FORK and use it to produce a more
+	  meaningful error message if we are sandboxing.
+
 2022-09-15  10:45  Christos Zoulas <christos@zoulas.com>
 
 	* Add built-in lzip decompression support (Michal Gorny)
