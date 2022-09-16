@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.92 2022/09/10 13:21:42 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.93 2022/09/16 14:14:30 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -52,7 +52,7 @@ file_mdump(struct magic *m)
 	static const char optyp[] = { FILE_OPS };
 	char tbuf[256];
 
-	(void) fprintf(stderr, "%u: %.*s %u", m->lineno,
+	(void) fprintf(stderr, "%u: %.*s %d", m->lineno,
 	    (m->cont_level & 7) + 1, ">>>>>>>>", m->offset);
 
 	if (m->flag & INDIR) {
@@ -62,7 +62,7 @@ file_mdump(struct magic *m)
 		    "*bad in_type*");
 		if (m->in_op & FILE_OPINVERSE)
 			(void) fputc('~', stderr);
-		(void) fprintf(stderr, "%c%u),",
+		(void) fprintf(stderr, "%c%d),",
 		    (CAST(size_t, m->in_op & FILE_OPS_MASK) <
 		    __arraycount(optyp)) ?
 		    optyp[m->in_op & FILE_OPS_MASK] : '?', m->in_offset);
@@ -134,7 +134,7 @@ file_mdump(struct magic *m)
 		case FILE_BESHORT:
 		case FILE_BELONG:
 		case FILE_INDIRECT:
-			(void) fprintf(stderr, "%d", m->value.l);
+			(void) fprintf(stderr, "%d", CAST(int32_t, m->value.l));
 			break;
 		case FILE_BEQUAD:
 		case FILE_LEQUAD:
@@ -263,7 +263,8 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 protected const char *
 file_fmtvarint(char *buf, size_t blen, const unsigned char *us, int t)
 {
-	snprintf(buf, blen, "%jd", file_varint2uintmax_t(us, t, NULL));
+	snprintf(buf, blen, "%jd", CAST(intmax_t,
+	    file_varint2uintmax_t(us, t, NULL)));
 	return buf;
 }
 
