@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf_time.c,v 1.20 2021/12/06 15:33:00 christos Exp $")
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.21 2022/09/16 13:51:06 christos Exp $")
 #endif
 
 #include <time.h>
@@ -157,7 +157,7 @@ cdf_timespec_to_timestamp(cdf_timestamp_t *t, const struct timespec *ts)
 		return -1;
 	}
 	*t = (ts->ts_nsec / 100) * CDF_TIME_PREC;
-	*t = tm.tm_sec;
+	*t += tm.tm_sec;
 	*t += tm.tm_min * 60;
 	*t += tm.tm_hour * 60 * 60;
 	*t += tm.tm_mday * 60 * 60 * 24;
