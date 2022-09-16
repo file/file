@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.26 2022/09/13 18:46:07 christos Exp $")
+FILE_RCSID("@(#)$File: is_json.c,v 1.27 2022/09/16 14:15:29 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -475,7 +475,7 @@ file_is_json(struct magic_set *ms, const struct buffer *b)
 int
 main(int argc, char *argv[])
 {
-	int fd, rv;
+	int fd;
 	struct stat st;
 	unsigned char *p;
 	size_t stats[JSON_MAX];
