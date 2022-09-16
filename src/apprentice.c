@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.326 2022/09/13 18:46:07 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.327 2022/09/16 13:45:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -476,7 +476,6 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 {
 	struct magic_map *map;
 #ifndef COMPILE_ONLY
-	struct mlist *ml;
 	size_t i;
 #endif
 
@@ -511,7 +510,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 				apprentice_unmap(map);
 			else
 				mlist_free_all(ms);
-			file_oomem(ms, sizeof(*ml));
+			file_oomem(ms, sizeof(*ms->mlist[0]));
 			return -1;
 		}
 	}
@@ -693,7 +692,6 @@ buffer_apprentice(struct magic_set *ms, struct magic **bufs,
     size_t *sizes, size_t nbufs)
 {
 	size_t i, j;
-	struct mlist *ml;
 	struct magic_map *map;
 
 	if (nbufs == 0)
@@ -718,7 +716,7 @@ buffer_apprentice(struct magic_set *ms, struct magic **bufs,
 
 		for (j = 0; j < MAGIC_SETS; j++) {
 			if (add_mlist(ms->mlist[j], map, j) == -1) {
-				file_oomem(ms, sizeof(*ml));
+				file_oomem(ms, sizeof(*ms->mlist[0]));
 				goto fail;
 			}
 		}
@@ -2762,6 +2760,7 @@ check_format_type(const char *ptr, int type, const char **estr)
 	}
 invalid:
 	*estr = "not valid";
+	return -1;
 toolong:
 	*estr = "too long";
 	return -1;
