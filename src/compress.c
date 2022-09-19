@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.139 2022/09/15 16:54:14 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.140 2022/09/19 19:54:01 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -1144,29 +1144,24 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 		goto err;
 	}
 	rv = OKDATA;
-	errno = 0;
 	r = sread(fdp[STDOUT_FILENO][0], *newch, bytes_max, 0);
-	if (r == 0 && errno == 0)
-		goto ok;
-	if (r <= 0) {
-		DPRINTF("Read stdout failed %d (%s)\n", fdp[STDOUT_FILENO][0],
-		    r != -1 ? strerror(errno) : "no data");
-
+	if (r < 0) {
 		rv = ERRDATA;
-		if (r == 0 &&
-		    (r = sread(fdp[STDERR_FILENO][0], *newch, bytes_max, 0)) > 0)
-		{
-			r = filter_error(*newch, r);
-			goto ok;
-		}
-		free(*newch);
-		if  (r == 0)
-			rv = makeerror(newch, n, "Read failed, %s",
-			    strerror(errno));
-		else
-			rv = makeerror(newch, n, "No data");
+		DPRINTF("Read stdout failed %d (%s)\n", fdp[STDOUT_FILENO][0],
+		        strerror(errno));
 		goto err;
+	} else if ((r = sread(fdp[STDERR_FILENO][0], *newch, bytes_max, 0)) > 0)
+	{
+		rv = ERRDATA;
+		r = filter_error(*newch, r);
+		goto ok;
 	}
+	if  (r == 0)
+		goto ok;
+	free(*newch);
+	rv = makeerror(newch, n, "Read stderr failed, %s",
+	    strerror(errno));
+	goto err;
 ok:
 	*n = r;
 	/* NUL terminate, as every buffer is handled here. */
