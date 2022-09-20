@@ -1,3 +1,7 @@
+2022-09-20  17:12  Christos Zoulas <christos@zoulas.com>
+
+	* fixed various clustefuzz issues
+
 2022-09-19  15:54  Christos Zoulas <christos@zoulas.com>
 
 	* Fix error detection for decompression code (Vincent Mihalkovic)
