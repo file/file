@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.329 2022/09/20 20:25:46 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.330 2022/09/20 21:00:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2434,6 +2434,7 @@ parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line,
 	const char *l = line;
 	char *el;
 	unsigned long factor;
+	char sbuf[512];
 	struct magic *m = &me->mp[0];
 
 	if (m->factor_op != FILE_FACTOR_OP_NONE) {
@@ -2444,12 +2445,15 @@ parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line,
 	}
 	if (m->type == FILE_NAME) {
 		file_magwarn(ms, "%s: Strength setting is not supported in "
-		    "\"name\" magic entries", m->value.s);
+		    "\"name\" magic entries",
+		    file_printable(ms, sbuf, sizeof(sbuf), m->value.s,
+		    sizeof(m->value.s)));
 		return -1;
 	}
 	EATAB;
 	switch (*l) {
 	case FILE_FACTOR_OP_NONE:
+		break;
 	case FILE_FACTOR_OP_PLUS:
 	case FILE_FACTOR_OP_MINUS:
 	case FILE_FACTOR_OP_TIMES:
