@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.29 2021/12/06 19:33:27 christos Exp $
+# $File: cad,v 1.30 2022/09/20 20:11:57 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -301,8 +301,8 @@
 # https://docs.techsoft3d.com/visualize/3df/latest/build/general/hsf/\
 # HSF_architecture.html
 # Stephane Charette <stephane.charette@gmail.com>
-0	string	;;\020HSF\020V		OpenHSF (Hoops Stream Format)
->7	regex/9 V[.0-9]{4,5}\020	%s
+0	string	;;\040HSF\040V		OpenHSF (Hoops Stream Format)
+>7	regex/9 V[.0-9]{4,5}\040	%s
 !:ext hsf
 
 # AutoCAD Drawing Exchange Format
