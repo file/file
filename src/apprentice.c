@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.328 2022/09/20 19:47:57 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.329 2022/09/20 20:25:46 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2577,6 +2577,35 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line,
 }
 
 private int
+check_regex(struct magic_set *ms, struct magic *m)
+{
+	char sbuf[512];
+	size_t i;
+
+	for (i = 0; i < sizeof(m->value.s); i++) {
+		unsigned char c = m->value.s[i];
+		if (c == '\0')
+			break;
+		if (isprint(c) || isspace(c) || c == '\b'
+		    || c == 0x8a) // XXX: apple magic fixme
+			continue;
+		file_magwarn(ms,
+		    "non-ascii characters in regex \\%#o `%s'",
+		    c, file_printable(ms, sbuf, sizeof(sbuf),
+		    m->value.s, sizeof(m->value.s)));
+		return -1;
+	}
+	if (i == sizeof(m->value.s)) {
+		file_magwarn(ms,
+		    "unterminated regex `%s'",
+		    file_printable(ms, sbuf, sizeof(sbuf),
+		    m->value.s, sizeof(m->value.s)));
+		return -1;
+	}
+	return 0;
+}
+
+private int
 check_format_type(const char *ptr, int type, const char **estr)
 {
 	int quad = 0, h;
@@ -2852,8 +2881,10 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		}
 		if (m->type == FILE_REGEX) {
 			file_regex_t rx;
-			int rc = file_regcomp(ms, &rx, m->value.s,
-			    REG_EXTENDED);
+			int rc;
+			if (check_regex(ms, m))
+				return -1;
+			rc = file_regcomp(ms, &rx, m->value.s, REG_EXTENDED);
 			if (rc == 0) {
 				file_regfree(&rx);
 			}
