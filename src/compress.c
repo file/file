@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.140 2022/09/19 19:54:01 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.141 2022/09/20 20:36:11 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -562,8 +562,14 @@ private int
 uncompressgzipped(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n)
 {
-	unsigned char flg = old[3];
+	unsigned char flg;
 	size_t data_start = 10;
+
+	if (*n < 4) {
+		goto err;	
+	}
+
+	flg = old[3];
 
 	if (flg & FEXTRA) {
 		if (data_start + 1 >= *n)
