@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.327 2022/09/16 13:45:31 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.328 2022/09/20 19:47:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2898,6 +2898,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		m->value.q = file_signextend(ms, m, ull);
 		if (*p == ep) {
 			file_magwarn(ms, "Unparsable number `%s'", *p);
+			return -1;
 		} else {
 			size_t ts = typesize(m->type);
 			uint64_t x;
@@ -2907,6 +2908,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 				file_magwarn(ms,
 				    "Expected numeric type got `%s'",
 				    type_tbl[m->type].name);
+				return -1;
 			}
 			for (q = *p; isspace(CAST(unsigned char, *q)); q++)
 				continue;
@@ -2933,6 +2935,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 				file_magwarn(ms, "Overflow for numeric"
 				    " type `%s' value %#" PRIx64,
 				    type_tbl[m->type].name, ull);
+				return -1;
 			}
 		}
 		if (errno == 0) {
