@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.141 2022/09/20 20:36:11 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.142 2022/09/20 21:11:00 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -623,8 +623,10 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 		goto err;
 
 	rc = inflate(&z, Z_SYNC_FLUSH);
-	if (rc != Z_OK && rc != Z_STREAM_END)
+	if (rc != Z_OK && rc != Z_STREAM_END) {
+		inflateEnd(&z);
 		goto err;
+	}
 
 	*n = CAST(size_t, z.total_out);
 	rc = inflateEnd(&z);
