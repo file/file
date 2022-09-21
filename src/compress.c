@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.146 2022/09/21 13:55:20 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.147 2022/09/21 13:55:46 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -1165,7 +1165,6 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 	}
 	if  (r == 0)
 		goto ok;
-	free(*newch);
 	rv = makeerror(newch, n, "Read stderr failed, %s",
 	    strerror(errno));
 	goto err;
