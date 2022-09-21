@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.144 2022/09/21 11:47:24 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.145 2022/09/21 12:00:27 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -651,13 +651,13 @@ uncompressbzlib(const unsigned char *old, unsigned char **newch,
 	int rc;
 	bz_stream bz;
 
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
+		return makeerror(newch, n, "No buffer, %s", strerror(errno));
+
 	memset(&bz, 0, sizeof(bz));
 	rc = BZ2_bzDecompressInit(&bz, 0, 0);
 	if (rc != BZ_OK)
 		goto err;
-
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
 	bz.next_in = CCAST(char *, RCAST(const char *, old));
 	bz.avail_in = CAST(uint32_t, *n);
@@ -695,13 +695,13 @@ uncompressxzlib(const unsigned char *old, unsigned char **newch,
 	int rc;
 	lzma_stream xz;
 
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
+		return makeerror(newch, n, "No buffer, %s", strerror(errno));
+
 	memset(&xz, 0, sizeof(xz));
 	rc = lzma_auto_decoder(&xz, UINT64_MAX, 0);
 	if (rc != LZMA_OK)
 		goto err;
-
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
 	xz.next_in = CCAST(const uint8_t *, old);
 	xz.avail_in = CAST(uint32_t, *n);
@@ -709,8 +709,10 @@ uncompressxzlib(const unsigned char *old, unsigned char **newch,
 	xz.avail_out = CAST(unsigned int, bytes_max);
 
 	rc = lzma_code(&xz, LZMA_RUN);
-	if (rc != LZMA_OK && rc != LZMA_STREAM_END)
+	if (rc != LZMA_OK && rc != LZMA_STREAM_END) {
+		lzma_end(&xz);
 		goto err;
+	}
 
 	*n = CAST(size_t, xz.total_out);
 
@@ -731,47 +733,47 @@ private int
 uncompresszstd(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n)
 {
-    size_t rc;
-    ZSTD_DStream *zstd;
-    ZSTD_inBuffer in;
-    ZSTD_outBuffer out;
+	size_t rc;
+	ZSTD_DStream *zstd;
+	ZSTD_inBuffer in;
+	ZSTD_outBuffer out;
 
-    if ((zstd = ZSTD_createDStream()) == NULL)
-        return makeerror(newch, n, "No ZSTD decompression stream, %s",
-	    strerror(errno));
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
+		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
-    rc = ZSTD_DCtx_reset(zstd, ZSTD_reset_session_only);
-    if (ZSTD_isError(rc))
-        goto err;
+	if ((zstd = ZSTD_createDStream()) == NULL) {
+		free(*newch);
+		return makeerror(newch, n, "No ZSTD decompression stream, %s",
+		    strerror(errno));
+	}
 
-    if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL) {
-        ZSTD_freeDStream(zstd);
-        return makeerror(newch, n, "No buffer, %s", strerror(errno));
-    }
+	rc = ZSTD_DCtx_reset(zstd, ZSTD_reset_session_only);
+	if (ZSTD_isError(rc))
+		goto err;
 
-    in.src = CCAST(const void *, old);
-    in.size = *n;
-    in.pos = 0;
-    out.dst = RCAST(void *, *newch);
-    out.size = bytes_max;
-    out.pos = 0;
+	in.src = CCAST(const void *, old);
+	in.size = *n;
+	in.pos = 0;
+	out.dst = RCAST(void *, *newch);
+	out.size = bytes_max;
+	out.pos = 0;
 
-    rc = ZSTD_decompressStream(zstd, &out, &in);
-    if (ZSTD_isError(rc))
-        goto err;
+	rc = ZSTD_decompressStream(zstd, &out, &in);
+	if (ZSTD_isError(rc))
+		goto err;
 
-    *n = out.pos;
+	*n = out.pos;
 
-    ZSTD_freeDStream(zstd);
+	ZSTD_freeDStream(zstd);
 
-    /* let's keep the nul-terminate tradition */
-    (*newch)[*n] = '\0';
+	/* let's keep the nul-terminate tradition */
+	(*newch)[*n] = '\0';
 
-    return OKDATA;
+	return OKDATA;
 err:
-    ZSTD_freeDStream(zstd);
-    free(*newch);
-    return makeerror(newch, n, "zstd error %d", ZSTD_getErrorCode(rc));
+	ZSTD_freeDStream(zstd);
+	free(*newch);
+	return makeerror(newch, n, "zstd error %d", ZSTD_getErrorCode(rc));
 }
 #endif
 
@@ -780,64 +782,64 @@ private int
 uncompresslzlib(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n)
 {
-    enum LZ_Errno err;
-    size_t old_remaining = *n;
-    size_t new_remaining = bytes_max;
-    size_t total_read = 0;
-    unsigned char *bufp;
-    struct LZ_Decoder *dec;
+	enum LZ_Errno err;
+	size_t old_remaining = *n;
+	size_t new_remaining = bytes_max;
+	size_t total_read = 0;
+	unsigned char *bufp;
+	struct LZ_Decoder *dec;
 
-    if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-        return makeerror(newch, n, "No buffer, %s", strerror(errno));
-    bufp = *newch;
+	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
+		return makeerror(newch, n, "No buffer, %s", strerror(errno));
+	bufp = *newch;
 
-    dec = LZ_decompress_open();
-    if (!dec) {
-        free(*newch);
-        return makeerror(newch, n, "unable to allocate LZ_Decoder");
-    }
-    if (LZ_decompress_errno(dec) != LZ_ok)
-        goto err;
+	dec = LZ_decompress_open();
+	if (!dec) {
+		free(*newch);
+		return makeerror(newch, n, "unable to allocate LZ_Decoder");
+	}
+	if (LZ_decompress_errno(dec) != LZ_ok)
+		goto err;
 
-    for (;;) {
-        // LZ_decompress_read() stops at member boundaries, so we may
-        // have more than one successful read after writing all data
-        // we have.
-        if (old_remaining > 0) {
-            int wr = LZ_decompress_write(dec, old, old_remaining);
-            if (wr < 0)
-                goto err;
-            old_remaining -= wr;
-            old += wr;
-        }
+	for (;;) {
+		// LZ_decompress_read() stops at member boundaries, so we may
+		// have more than one successful read after writing all data
+		// we have.
+		if (old_remaining > 0) {
+			int wr = LZ_decompress_write(dec, old, old_remaining);
+			if (wr < 0)
+				goto err;
+			old_remaining -= wr;
+			old += wr;
+		}
 
-        int rd = LZ_decompress_read(dec, bufp, new_remaining);
-        if (rd > 0) {
-            new_remaining -= rd;
-            bufp += rd;
-            total_read += rd;
-        }
+		int rd = LZ_decompress_read(dec, bufp, new_remaining);
+		if (rd > 0) {
+			new_remaining -= rd;
+			bufp += rd;
+			total_read += rd;
+		}
 
-        if (rd < 0 || LZ_decompress_errno(dec) != LZ_ok)
-            goto err;
-        if (new_remaining == 0)
-            break;
-        if (old_remaining == 0 && rd == 0)
-            break;
-    }
+		if (rd < 0 || LZ_decompress_errno(dec) != LZ_ok)
+			goto err;
+		if (new_remaining == 0)
+			break;
+		if (old_remaining == 0 && rd == 0)
+			break;
+	}
 
-    LZ_decompress_close(dec);
-    *n = total_read;
+	LZ_decompress_close(dec);
+	*n = total_read;
 
-    /* let's keep the nul-terminate tradition */
-    *bufp = '\0';
+	/* let's keep the nul-terminate tradition */
+	*bufp = '\0';
 
-    return OKDATA;
+	return OKDATA;
 err:
-    err = LZ_decompress_errno(dec);
-    LZ_decompress_close(dec);
-    free(*newch);
-    return makeerror(newch, n, "lzlib error: %s", LZ_strerror(err));
+	err = LZ_decompress_errno(dec);
+	LZ_decompress_close(dec);
+	free(*newch);
+	return makeerror(newch, n, "lzlib error: %s", LZ_strerror(err));
 }
 #endif
 
