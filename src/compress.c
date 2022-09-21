@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.143 2022/09/21 01:45:47 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.144 2022/09/21 11:47:24 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -665,8 +665,10 @@ uncompressbzlib(const unsigned char *old, unsigned char **newch,
 	bz.avail_out = CAST(unsigned int, bytes_max);
 
 	rc = BZ2_bzDecompress(&bz);
-	if (rc != BZ_OK && rc != BZ_STREAM_END)
+	if (rc != BZ_OK && rc != BZ_STREAM_END) {
+		BZ2_bzDecompressEnd(&bz);
 		goto err;
+	}
 
 	/* Assume byte_max is within 32bit */
 	/* assert(bz.total_out_hi32 == 0); */
