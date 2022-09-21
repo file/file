@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.142 2022/09/20 21:11:00 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.143 2022/09/21 01:45:47 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -889,7 +889,7 @@ movedesc(void *v, int i, int fd)
 #else
 	if (dup2(fd, i) == -1) {
 		DPRINTF("dup(%d, %d) failed (%s)\n", fd, i, strerror(errno));
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	close(v ? fd : fd);
 #endif
@@ -946,15 +946,15 @@ writechild(int fd, const void *old, size_t n)
 	pid = fork();
 	if (pid == -1) {
 		DPRINTF("Fork failed (%s)\n", strerror(errno));
-		exit(1);
+		return -1;
 	}
 	if (pid == 0) {
 		/* child */
 		if (swrite(fd, old, n) != CAST(ssize_t, n)) {
 			DPRINTF("Write failed (%s)\n", strerror(errno));
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 	/* parent */
 	return pid;
@@ -1131,7 +1131,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 		(void)execvp(compr[method].argv[0], args);
 		dprintf(STDERR_FILENO, "exec `%s' failed, %s",
 		    compr[method].argv[0], strerror(errno));
-		_exit(1); /* _exit(), not exit(), because of vfork */
+		_exit(EXIT_FAILURE); /* _exit(), not exit(), because of vfork */
 	}
 #endif
 	/* parent */
@@ -1142,6 +1142,11 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 	if (fd == -1) {
 		closefd(fdp[STDIN_FILENO], 0);
 		writepid = writechild(fdp[STDIN_FILENO][1], old, *n);
+		if (writepid == (pid_t)-1) {
+			rv = makeerror(newch, n, "Write to child failed, %s",
+			    strerror(errno));
+			goto err;
+		}
 		closefd(fdp[STDIN_FILENO], 1);
 	}
 
