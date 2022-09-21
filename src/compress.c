@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.145 2022/09/21 12:00:27 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.146 2022/09/21 13:55:20 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -226,23 +226,23 @@ private int uncompressbuf(int, size_t, size_t, int, const unsigned char *,
 private int uncompresszlib(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
 private int uncompressgzipped(const unsigned char *, unsigned char **, size_t,
-    size_t *);
+    size_t *, int);
 #endif
 #ifdef BUILTIN_BZLIB
 private int uncompressbzlib(const unsigned char *, unsigned char **, size_t,
-    size_t *);
+    size_t *, int);
 #endif
 #ifdef BUILTIN_XZLIB
 private int uncompressxzlib(const unsigned char *, unsigned char **, size_t,
-    size_t *);
+    size_t *, int);
 #endif
 #ifdef BUILTIN_ZSTDLIB
 private int uncompresszstd(const unsigned char *, unsigned char **, size_t,
-    size_t *);
+    size_t *, int);
 #endif
 #ifdef BUILTIN_LZLIB
 private int uncompresslzlib(const unsigned char *, unsigned char **, size_t,
-    size_t *);
+    size_t *, int);
 #endif
 
 static int makeerror(unsigned char **, size_t *, const char *, ...)
@@ -319,7 +319,8 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 			if (urv == ERRDATA)
 				prv = format_decompression_error(ms, i, newbuf);
 			else
-				prv = file_buffer(ms, -1, NULL, name, newbuf, nsz);
+				prv = file_buffer(ms, -1, NULL, name, newbuf,
+				    nsz);
 			if (prv == -1)
 				goto error;
 			rv = 1;
@@ -336,7 +337,8 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 			 * XXX: If file_buffer fails here, we overwrite
 			 * the compressed text. FIXME.
 			 */
-			if (file_buffer(ms, -1, NULL, NULL, buf, nbytes) == -1) {
+			if (file_buffer(ms, -1, NULL, NULL, buf, nbytes) == -1)
+			{
 				if (file_pop_buffer(ms, pb) != NULL)
 					abort();
 				goto error;
@@ -560,7 +562,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 
 private int
 uncompressgzipped(const unsigned char *old, unsigned char **newch,
-    size_t bytes_max, size_t *n)
+    size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
 	unsigned char flg;
 	size_t data_start = 10;
@@ -606,9 +608,6 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 	int rc;
 	z_stream z;
 
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-		return makeerror(newch, n, "No buffer, %s", strerror(errno));
-
 	z.next_in = CCAST(Bytef *, old);
 	z.avail_in = CAST(uint32_t, *n);
 	z.next_out = *newch;
@@ -638,7 +637,6 @@ uncompresszlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	free(*newch);
 	return makeerror(newch, n, "%s", z.msg ? z.msg : zError(rc));
 }
 #endif
@@ -646,13 +644,10 @@ err:
 #ifdef BUILTIN_BZLIB
 private int
 uncompressbzlib(const unsigned char *old, unsigned char **newch,
-    size_t bytes_max, size_t *n)
+    size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
 	int rc;
 	bz_stream bz;
-
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
 	memset(&bz, 0, sizeof(bz));
 	rc = BZ2_bzDecompressInit(&bz, 0, 0);
@@ -682,7 +677,6 @@ uncompressbzlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	free(*newch);
 	return makeerror(newch, n, "bunzip error %d", rc);
 }
 #endif
@@ -690,13 +684,10 @@ err:
 #ifdef BUILTIN_XZLIB
 private int
 uncompressxzlib(const unsigned char *old, unsigned char **newch,
-    size_t bytes_max, size_t *n)
+    size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
 	int rc;
 	lzma_stream xz;
-
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
 	memset(&xz, 0, sizeof(xz));
 	rc = lzma_auto_decoder(&xz, UINT64_MAX, 0);
@@ -723,7 +714,6 @@ uncompressxzlib(const unsigned char *old, unsigned char **newch,
 
 	return OKDATA;
 err:
-	free(*newch);
 	return makeerror(newch, n, "unxz error %d", rc);
 }
 #endif
@@ -731,18 +721,14 @@ err:
 #ifdef BUILTIN_ZSTDLIB
 private int
 uncompresszstd(const unsigned char *old, unsigned char **newch,
-    size_t bytes_max, size_t *n)
+    size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
 	size_t rc;
 	ZSTD_DStream *zstd;
 	ZSTD_inBuffer in;
 	ZSTD_outBuffer out;
 
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-		return makeerror(newch, n, "No buffer, %s", strerror(errno));
-
 	if ((zstd = ZSTD_createDStream()) == NULL) {
-		free(*newch);
 		return makeerror(newch, n, "No ZSTD decompression stream, %s",
 		    strerror(errno));
 	}
@@ -772,7 +758,6 @@ uncompresszstd(const unsigned char *old, unsigned char **newch,
 	return OKDATA;
 err:
 	ZSTD_freeDStream(zstd);
-	free(*newch);
 	return makeerror(newch, n, "zstd error %d", ZSTD_getErrorCode(rc));
 }
 #endif
@@ -780,7 +765,7 @@ err:
 #ifdef BUILTIN_LZLIB
 private int
 uncompresslzlib(const unsigned char *old, unsigned char **newch,
-    size_t bytes_max, size_t *n)
+    size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
 	enum LZ_Errno err;
 	size_t old_remaining = *n;
@@ -789,13 +774,10 @@ uncompresslzlib(const unsigned char *old, unsigned char **newch,
 	unsigned char *bufp;
 	struct LZ_Decoder *dec;
 
-	if ((*newch = CAST(unsigned char *, malloc(bytes_max + 1))) == NULL)
-		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 	bufp = *newch;
 
 	dec = LZ_decompress_open();
 	if (!dec) {
-		free(*newch);
 		return makeerror(newch, n, "unable to allocate LZ_Decoder");
 	}
 	if (LZ_decompress_errno(dec) != LZ_ok)
@@ -838,7 +820,6 @@ uncompresslzlib(const unsigned char *old, unsigned char **newch,
 err:
 	err = LZ_decompress_errno(dec);
 	LZ_decompress_close(dec);
-	free(*newch);
 	return makeerror(newch, n, "lzlib error: %s", LZ_strerror(err));
 }
 #endif
@@ -851,6 +832,7 @@ makeerror(unsigned char **buf, size_t *len, const char *fmt, ...)
 	va_list ap;
 	int rv;
 
+	free(*buf);
 	va_start(ap, fmt);
 	rv = vasprintf(&msg, fmt, ap);
 	va_end(ap);
@@ -1023,6 +1005,39 @@ methodname(size_t method)
 	}
 }
 
+private int (*
+getdecompressor(int method))(const unsigned char *, unsigned char **, size_t,
+    size_t *, int)
+{
+	switch (method) {
+#ifdef BUILTIN_DECOMPRESS
+	case METH_FROZEN:
+		return uncompressgzipped;
+	case METH_ZLIB:
+		return uncompresszlib;
+#endif
+#ifdef BUILTIN_BZLIB
+	case METH_BZIP:
+		return uncompressbzlib;
+#endif
+#ifdef BUILTIN_XZLIB
+	case METH_XZ:
+	case METH_LZMA:
+		return uncompressxzlib;
+#endif
+#ifdef BUILTIN_ZSTDLIB
+	case METH_ZSTD:
+		return uncompresszstd;
+#endif
+#ifdef BUILTIN_LZLIB
+	case METH_LZIP:
+		return uncompresslzlib;
+#endif
+	default:
+		return NULL;
+	}
+}
+
 private int
 uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
     const unsigned char *old, unsigned char **newch, size_t* n)
@@ -1037,38 +1052,19 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 #ifdef HAVE_POSIX_SPAWNP
 	posix_spawn_file_actions_t fa;
 #endif
+	int (*decompress)(const unsigned char *, unsigned char **,
+	    size_t, size_t *, int) = getdecompressor(method);
 
-	switch (method) {
-#ifdef BUILTIN_DECOMPRESS
-	case METH_FROZEN:
-		return uncompressgzipped(old, newch, bytes_max, n);
-	case METH_ZLIB:
-		return uncompresszlib(old, newch, bytes_max, n, 1);
-#endif
-#ifdef BUILTIN_BZLIB
-	case METH_BZIP:
-		return uncompressbzlib(old, newch, bytes_max, n);
-#endif
-#ifdef BUILTIN_XZLIB
-	case METH_XZ:
-	case METH_LZMA:
-		return uncompressxzlib(old, newch, bytes_max, n);
-#endif
-#ifdef BUILTIN_ZSTDLIB
-	case METH_ZSTD:
-		return uncompresszstd(old, newch, bytes_max, n);
-#endif
-#ifdef BUILTIN_LZLIB
-	case METH_LZIP:
-		return uncompresslzlib(old, newch, bytes_max, n);
-#endif
-	default:
-		break;
-	}
+	*newch = CAST(unsigned char *, malloc(bytes_max + 1));
+	if (*newch == NULL)
+		return makeerror(newch, n, "No buffer, %s", strerror(errno));
 
-	if (nofork) {
-	    return makeerror(newch, n,
-		"Fork is required to uncompress, but disabled");
+	if (decompress) {
+		if (nofork) {
+			return makeerror(newch, n,
+			    "Fork is required to uncompress, but disabled");
+		}
+		return (*decompress)(old, newch, bytes_max, n, 1);
 	}
 
 	(void)fflush(stdout);
@@ -1154,12 +1150,6 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 		closefd(fdp[STDIN_FILENO], 1);
 	}
 
-	*newch = CAST(unsigned char *, malloc(bytes_max + 1));
-	if (*newch == NULL) {
-		rv = makeerror(newch, n, "No buffer, %s",
-		    strerror(errno));
-		goto err;
-	}
 	rv = OKDATA;
 	r = sread(fdp[STDOUT_FILENO][0], *newch, bytes_max, 0);
 	if (r < 0) {
@@ -1191,7 +1181,6 @@ err:
 	w = waitpid(pid, &status, 0);
 wait_err:
 	if (w == -1) {
-		free(*newch);
 		rv = makeerror(newch, n, "Wait failed, %s", strerror(errno));
 		DPRINTF("Child wait return %#x\n", status);
 	} else if (!WIFEXITED(status)) {
