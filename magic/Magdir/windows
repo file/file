@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.46 2022/07/02 17:46:09 christos Exp $
+# $File: windows,v 1.47 2022/09/23 13:23:04 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -871,21 +871,24 @@
 >>>2		uleshort	<3
 # look for colon in WinDirPath after PNF header
 #>>>>0x59	search/18	:
->>>>0	use	PreCompiledInf
+# skip few Adobe Photoshop Color swatch ("Mac OS.aco" TRUMATCH-Farben.aco Windows.aco) and some
+# Targa image (money-256.tga XING_B_UCM8.tga x-fmt-367-signature-id-604.tga) with "invalid low section name" \0
+>>>>(20.l)	ubelong		>0x40004000
+>>>>>0	use	PreCompiledInf
 0	name	PreCompiledInf
 >0		uleshort	x	Windows Precompiled iNF
 !:mime	application/x-pnf
 !:ext	pnf
 # major version 1 for older Windows like XP and 3 since about Windows Vista
-# 101h~98-XP; 301h~Windows Vista-7 ; 302h~Windows 10 14393; 303h~Windows 10 18362
+# 101h~95-XP; 301h~Windows Vista-7 ; 302h~Windows 10 14393; 303h~Windows 10 18362-Windows11
 >1		ubyte		x		\b, version %u
 >0		ubyte		x		\b.%u
 >0		uleshort	=0x0101		(Windows
->>4	ulelong&0x00000001	!0x00000001	98)
+>>4	ulelong&0x00000001	!0x00000001	95-98)
 >>4	ulelong&0x00000001	=0x00000001	XP)
 >0		uleshort	=0x0301		(Windows Vista-8.1)
 >0		uleshort	=0x0302		(Windows 10 older)
->0		uleshort	=0x0303		(Windows 10)
+>0		uleshort	=0x0303		(Windows 10-11)
 # 1 ,2 (windows 98 SE)
 >2		uleshort	!2		\b, InfStyle %u
 #	PNF_FLAG_IS_UNICODE		0x00000001
@@ -927,7 +930,7 @@
 >>(20.l)	string		x		"%s"
 # FILETIME is number of 100-nanosecond intervals since 1 January 1601
 #>24		ulequad		x		\b, InfVersionLastWriteTime %16.16llx
-#>24		foodate-0xbar	x		\b, InfVersionLastWriteTime %s
+>24		qwdate		x		\b, InfVersionLastWriteTime %s
 # for Windows 98, XP
 >0		uleshort	<0x0102
 # only found values lower 0x00ffFFff
@@ -965,6 +968,7 @@
 >>>>>(72.l)	string		x		OsLoaderPath "%s"
 # 1fdh
 #>>>76		uleshort	x		\b, StringTableHashBucketCount %#x
+# https://docs.microsoft.com/en-us/openspecs/office_standards/ms-oe376/6c085406-a698-4e12-9d4d-c3b0ee3dbc4a
 # only 407h found
 >>>78		uleshort	!0x409		\b, LanguageID %x
 #>>>78		uleshort	=0x409		\b, LanguageID %x
