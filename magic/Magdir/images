@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.227 2022/09/11 20:58:52 christos Exp $
+# $File: images,v 1.228 2022/09/23 13:20:36 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1740,6 +1740,113 @@
 >>6   bequad&0xFFffFFffFFff0000 !0 \b, at offset 6
 >>>6  belong  x	 0x%8.8x
 >>>6  beshort x   \b%4.4x
+
+# From:		Joerg Jenderek
+# URL:		https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/
+#		http://fileformats.archiveteam.org/wiki/Photoshop
+# Reference:	http://www.nomodes.com/aco.html
+# Note:		registers as Photoshop.SwatchesFile for Photoshop.exe on Windows
+# check for valid versions like: 2 (newest) 1 (old) 0 (oldest no examples)
+0		ubeshort				<3
+# skip few Atari DEGAS med-res bitmap (DIAGRAM1.PI2) and many ISO 9660 CD-ROM by check for invalid low color numbers (0)
+>2		ubeshort				>0
+# skip few Targa (bmpsuite-15col.tga rgb24_top_left_colormap.tga) by check for invalid high color space ID (F0 1D)
+>>4		ubeshort				<16
+# skip many (69/327) Targa image *.TGA by check of accessing near the ending of first color space section (size=nc*5*2)
+>>>(2.S*10)	ubelong					x
+# RGB branch for Adobe Photoshop Color swatch
+>>>>4		ubeshort				=0
+# skip many (220/327) Targa by check of for invalid high RGB color z value (hexadecimal 2 3 2e03 4600 5e04 7502 8002 8b05 c700)
+>>>>>12			ubeshort			=0
+# RGB branch for Adobe Photoshop Color swatch for older versions
+>>>>>>0				ubeshort		<2
+>>>>>>>0				use		adobe-aco
+# RGB branch for Adobe Photoshop Color swatch for newer version 2
+>>>>>>0				ubeshort		=2
+# skip many (74/176) Atari DEGAS hi-res bitmap (*.PI3) by check for invalid low color name length (0)
+>>>>>>>16				ubeshort	>0
+>>>>>>>>0					use	adobe-aco
+# non RGB branch for Adobe Photoshop Color swatch
+>>>>4		ubeshort				!0
+# non RGB branch for Adobe Photoshop Color swatch for older versions
+>>>>>0			ubeshort			<2
+# skip many GEM Image (CHURCH.IMG TIGER.IMG) by check for invalid second high color space ID (55 114 143 157 256 288 450)
+>>>>>>14			ubeshort		<16
+>>>>>>>0				use		adobe-aco
+# non RGB branch for Adobe Photoshop Color swatch for newer version 2
+>>>>>0			ubeshort			=2
+# skip few Atari DEGAS hi-res bitmap (pal1wb-blue.pi3) and few ABR by check for invalid "high" nil bytes (7) before color name length
+>>>>>>14			ubeshort		=0
+>>>>>>>0				use		adobe-aco
+#	display Adobe Photoshop Color swatch file information (version, number of colors, color spaces, coordinates, names)
+0	name		adobe-aco
+>0		ubeshort				x		Adobe Photoshop Color swatch, version %u
+#!:mime		application/octet-stream
+!:mime		application/x-adobe-aco
+!:apple		????8BCO
+!:ext		aco
+>0		ubeshort				<2
+>>(2.S*10)	ubelong					x
+# version 2 section after version 1 section
+>>>&0		ubeshort				2		and 2
+# nc; number of colors like: 20 50 86 88 126 204 300 1050 1137 1280 2092 3010 4096
+>2		ubeshort				x		\b, %u colors
+# maybe last 4 bytes of first section (probably y z color value) like: 0 0x66660000 0xfe700000 0xffff0000
+#>(2.S*10)	ubelong					x		1ST_SECTION_END=%#8.8x
+>0		ubeshort				<2		\b; 1st
+# first older Adobe Photoshop Color entry
+>>4			use				aco-color
+>>>2				ubeshort		>1		\b; 2nd
+# second older Adobe Photoshop Color entry
+>>>>14					use		aco-color
+>0		ubeshort				=2		\b; 1st
+# first new Adobe Photoshop Color entry
+>>4			use				aco-color-v2
+>>>2				ubeshort		>1		\b; 2nd
+# jump first color name length words
+>>>>(16.S*2)				ubequad		x
+# second new Adobe Photoshop Color entry
+>>>>>&10					use	aco-color-v2
+#	display Adobe Photoshop Color entry (color space, color coordinates)
+0	name		aco-color
+# each color spec entry occupies five words
+# color space: 0~RGB 1~HSB 2~CMYK 3~Pantone 4~Focoltone 5~Trumatch 6~Toyo 7~Lab 8~Grayscale 9?~wideCMYK 10~HKS ...
+#>0		ubeshort				x		COLOR_ENTRY
+>0		ubeshort				0		RGB
+>0		ubeshort				1		HSB
+>0		ubeshort				2		CMYK
+>0		ubeshort				3		Pantone
+>0		ubeshort				4		Focoltone
+>0		ubeshort				5		Trumatch
+>0		ubeshort				6		Toyo
+>0		ubeshort				7		Lab
+>0		ubeshort				8		Grayscale
+>0		ubeshort				9		wide CMYK
+>0		ubeshort				10		HKS
+# unofficial
+# >0		ubeshort				12		foo
+# >0		ubeshort				13		bar
+# >0		ubeshort				14		FOO
+# >0		ubeshort				15		BAR
+>0		ubeshort				x		space (%u)
+# color coordinate w
+>2		ubeshort				x		\b, w %#x
+# color coordinate x
+>4		ubeshort				x		\b, x %#x
+# color coordinate y
+>6		ubeshort				x		\b, y %#x
+# color coordinate z; zero for RGB space
+>8		ubeshort				x		\b, z %#x
+#	display Adobe Photoshop Color entry version 2 (color space, color coordinates names)
+0	name		aco-color-v2
+>0		use					aco-color
+#>10		ubeshort				x		\b, NUL_BYTES %#x
+# color name lenght plus one (len+1) like: 7 8 9 13 14 15 16 17 22 26
+#>>12		ubeshort			 	x		\b, LENGTH %u
+>>12		ubeshort-1				x		\b, %u chars
+# len words; UTF-16 representation of the color name like: "DIC 1s" "PANTONE Process Yellow PC"
+>>14		bestring16				x		"%s"
+# followed by nil word
 
 # XV thumbnail indicator (ThMO)
 # URL:		https://en.wikipedia.org/wiki/Xv_(software)
