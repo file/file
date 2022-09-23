@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.228 2022/09/23 13:20:36 christos Exp $
+# $File: images,v 1.229 2022/09/23 13:21:22 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1459,22 +1459,22 @@
 # skip g3test.g3 by test for unused bits of 2nd color entry
 >>4		ubeshort&0xF000	0
 #>>>0		beshort	x	1ST_VALUE=%x
->>>-0		offset	x	FILE_SIZE=%lld
+#>>>-0		offset	x	FILE_SIZE=%lld
 # standard DEGAS low-res uncompressed bitmap *.pi1 with file size 32034
->>>-0		offset	=32034	VARIANT_STANDARD
+>>>-0		offset	=32034
 #>>>>0		beshort	x	1st_VALUE=%x
 # like: 8ball.pi1 teddy.pi1 sonic01.pi1 
 >>>>0		use		degas-bitmap
 # about 61 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 32066
->>>-0		offset	=32066	VARIANT_ELITE
+>>>-0		offset	=32066
 # like: spider.pi1 pinkgirl.pi1 frog3.pi1
 >>>>0		use		degas-bitmap
 # about 55 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 32128
->>>-0		offset	=32128	VARIANT_3
+>>>-0		offset	=32128
 # like: mountain.pi1 bigspid.pi1 alf33.pi1
 >>>>0		use		degas-bitmap
 # 1 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 44834
->>>-0		offset	=44834	VARIANT_4
+>>>-0		offset	=44834
 # like: kenshin.pi1
 >>>>0		use		degas-bitmap
 # DEGAS mid-res uncompressed bitmap *.pi2 (strength=50) after GEM Images like:
@@ -1515,8 +1515,12 @@
 # 00000000 "LEREDACT.PI3" 03730773 "TBX_DEMO.PI3"
 #>>>>&8		ubelong			x	\b, LAST CHAR+NIL %8.8x
 >>>>&8		ubelong&0xff00ffFF	!0
+# skip many Adobe Photoshop Color swatch (ANPA-Farben.aco TOYO-Farbsystem.aco) with invalid 3rd color entry (1319 2201 2206 21f5 2480 24db 25fd)
+>>>>>6		ubeshort&0xF000	0
+# skip few Adobe Photoshop Color swatch (FOCOLTONE-Farben.aco "PANTONE process coated.aco") with invalid 4th color entry  (ffff)
+>>>>>>8		ubeshort&0xF000	0
 # many DEGAS bitmap like: ARABDEMO.PI3 ELMRSESN.PI3 GEMVIEW.PI3 LEREDACT.PI3 PICCOLO.PI3 REPRO_JR.PI3 ST_TOOLS.PI3 TBX_DEMO.PI3 evgem7.pi3
->>>>>0		use		degas-bitmap
+>>>>>>>0	use		degas-bitmap
 # test for last character of Adobe PhotoShop Brush UTF16-LE string and terminating nul char
 >>>>&8		ubelong&0xff00ffFF	=0
 # select last DEGAS bitmaps by invalid last char of brush note like BASICNES.PI3 DB_HELP.PI3 DB_WRITR.PI3 LEREDACT.PI3
