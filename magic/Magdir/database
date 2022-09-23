@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.67 2022/07/12 18:57:42 christos Exp $
+# $File: database,v 1.68 2022/09/23 19:54:41 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -410,8 +410,10 @@
 >>>>>>>>>>513	ubyte		>037
 # skip DOS executables CPQ0TD.DRV E30ODI.COM IBM0MONO.DRV by looking for printable 1st character of 1st memo item
 >>>>>>>>>>>512	ubyte		>037
-# unusual dBASE III DBT like adressen.dbt
->>>>>>>>>>>>0	use		dbase3-memo-print
+# skip few (14/758) Microsoft Event Trace Logs (boot_BASE+CSWITCH_1.etl DlTel-Merge.etl UpdateUx.006.etl) with invalid "high" 1st item \377\377
+>>>>>>>>>>>>512	ubyte		<0377
+# unusual dBASE III DBT like adressen.dbt biblio.dbt fsadress.dbt
+>>>>>>>>>>>>>0	use		dbase3-memo-print
 # dBASE III DBT like angest.dbt, or garbage PCX DBF
 >>>>>>>>8	ubelong		!0
 # skip PCX and some DBF by test for for reserved NULL bytes
@@ -424,7 +426,19 @@
 >>>>>>>>>>>>512	ubyte		<0200
 # skip gluon-ffhat-1.0-tp-link-tl-wr1043n-nd-v2-sysupgrade.bin by printable 2nd character
 >>>>>>>>>>>>>513 ubyte		>037
->>>>>>>>>>>>>>0	use		dbase3-memo-print
+# skip few (8/758) Microsoft Event Trace Logs (WBEngine.3.etl Wifi.etl) with valid 1st item like
+# "9600.20369.amd64fre.winblue_ltsb_escrow.220427-1727"
+# "9600.19846.amd64fre.winblue_ltsb_escrow.200923-1735"
+# "10586.494.amd64fre.th2_release_sec.160630-1736"
+# by looking for valid terminating character Ctrl-Z
+>>>>>>>>>>>>>>513 search/0x11E	\032
+# followed by second character Ctrl-Z implies typical DBT
+>>>>>>>>>>>>>>>&0	ubyte	032
+# examples like: angest.dbt
+>>>>>>>>>>>>>>>>0	use	dbase3-memo-print
+>>>>>>>>>>>>>>>&0	ubyte	0
+# no example found here with terminating sequence CTRL-Z + \0
+>>>>>>>>>>>>>>>>0	use	dbase3-memo-print
 # dBASE IV DBT with positive block size
 >>>>>>>20	uleshort	>0
 # dBASE IV DBT with valid block length like 512, 1024
@@ -451,6 +465,11 @@
 >512	string			>\0		\b, 1st item "%s"
 # For DEBUGGING
 #>512	ubelong			x		\b, 1ST item %#8.8x
+#>513	search/0x225		\032		FOUND_TERMINATOR
+#>>&0	ubyte			032		2xCTRL_Z
+# fsadress.dbt has 1 Ctrl-Z terminator followed by nil byte
+#>>&0	ubyte			0		1xCTRL_Z
+
 # https://www.clicketyclick.dk/databases/xbase/format/dbt.html
 #		Print the information of dBase IV DBT memo file
 0	name				dbase4-memo-print
