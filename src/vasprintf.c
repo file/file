@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
@@ -108,7 +110,11 @@ you use strange formats.
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: vasprintf.c,v 1.21 2022/09/16 13:49:39 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: vasprintf.c,v 1.22 2022/09/24 20:22:22 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif	/* lint */
 
 #include <assert.h>

@@ -1,4 +1,6 @@
-/*	$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $	*/
+/*	$NetBSD$	*/
+
+/*	NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp 	*/
 
 /*-
  * Copyright (c) 1990, 1993
@@ -33,8 +35,8 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $");
-__RCSID("$NetBSD: strncasecmp.c,v 1.2 2007/06/04 18:19:27 christos Exp $");
+__RCSID("NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp ");
+__RCSID("NetBSD: strncasecmp.c,v 1.2 2007/06/04 18:19:27 christos Exp ");
 #endif /* LIBC_SCCS and not lint */
 
 #include "file.h"

@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Copyright (c) Christos Zoulas 2021.
  * All Rights Reserved.
@@ -27,7 +29,11 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: memtest.c,v 1.4 2022/09/16 14:12:14 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: memtest.c,v 1.5 2022/09/24 20:22:21 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif
 
 #include <sys/types.h>

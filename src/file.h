@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
@@ -27,7 +29,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.237 2022/09/10 13:21:42 christos Exp $
+ * @(#)$File: file.h,v 1.238 2022/09/24 20:22:21 christos Exp $
  */
 
 #ifndef __file_h__

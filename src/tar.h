@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
@@ -32,7 +34,7 @@
  *
  * Created 25 August 1985 by John Gilmore, ihnp4!hoptoad!gnu.
  *
- * $File: tar.h,v 1.13 2010/11/30 14:58:53 rrt Exp $ # checkin only
+ * $File: tar.h,v 1.14 2022/09/24 20:22:22 christos Exp $ # checkin only
  */
 
 /*

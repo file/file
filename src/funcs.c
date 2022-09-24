@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Copyright (c) Christos Zoulas 2003.
  * All Rights Reserved.
@@ -27,7 +29,11 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.132 2022/09/24 19:17:26 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: funcs.c,v 1.133 2022/09/24 20:22:21 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif	/* lint */
 
 #include "magic.h"

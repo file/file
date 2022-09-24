@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Table of command-line options
  *

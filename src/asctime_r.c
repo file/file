@@ -1,8 +1,14 @@
-/*	$File: asctime_r.c,v 1.1 2012/05/15 17:14:36 christos Exp $	*/
+/*	$NetBSD$	*/
+
+/*	$File: asctime_r.c,v 1.2 2022/09/24 20:22:21 christos Exp $	*/
 
 #include "file.h"
 #ifndef	lint
-FILE_RCSID("@(#)$File: asctime_r.c,v 1.1 2012/05/15 17:14:36 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: asctime_r.c,v 1.2 2022/09/24 20:22:21 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif	/* lint */
 #include <time.h>
 #include <string.h>

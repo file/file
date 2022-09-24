@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Adapted from: apptype.c, Written by Eberhard Mattes and put into the
  * public domain
@@ -27,7 +29,11 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apptype.c,v 1.14 2018/09/09 20:33:28 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: apptype.c,v 1.15 2022/09/24 20:22:21 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif /* lint */
 
 #include <stdlib.h>

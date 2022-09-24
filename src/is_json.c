@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*-
  * Copyright (c) 2018 Christos Zoulas
  * All rights reserved.
@@ -32,7 +34,11 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_json.c,v 1.27 2022/09/16 14:15:29 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: is_json.c,v 1.28 2022/09/24 20:22:21 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif
 
 #include "magic.h"

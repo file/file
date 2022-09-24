@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*-
  * Copyright (c) 2016 Christos Zoulas
  * All rights reserved.
@@ -35,7 +37,11 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.25 2022/09/16 14:10:24 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: der.c,v 1.26 2022/09/24 20:22:21 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif
 #else
 #define SIZE_T_FORMAT "z"

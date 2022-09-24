@@ -1,3 +1,5 @@
+/*	$NetBSD$	*/
+
 /*
  * Copyright (c) Christos Zoulas 2003.
  * All Rights Reserved.
@@ -27,7 +29,11 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.184 2022/09/22 13:42:34 christos Exp $")
+#if 0
+FILE_RCSID("@(#)$File: readelf.c,v 1.185 2022/09/24 20:22:21 christos Exp $")
+#else
+__RCSID("$NetBSD$");
+#endif
 #endif
 
 #ifdef BUILTIN_ELF
