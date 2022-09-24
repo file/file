@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.131 2022/09/13 18:46:07 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.132 2022/09/24 19:17:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -656,10 +656,43 @@ out:
 	return rv;
 }
 
+private int
+check_regex(struct magic_set *ms, const char *pat)
+{
+	char sbuf[512];
+	unsigned char oc = '\0';
+
+	for (const char *p = pat; *p; p++) {
+		unsigned char c = *p;
+		// Avoid repetition
+		if (c == oc && strchr("?*+{", c) != NULL) {
+			size_t len = strlen(pat);
+			file_magwarn(ms,
+			    "repetition-operator operand `%c' "
+			    "invalid in regex `%s'", c,
+			    file_printable(ms, sbuf, sizeof(sbuf), pat, len));
+			return -1;
+		}
+		oc = c;
+		if (isprint(c) || isspace(c) || c == '\b'
+		    || c == 0x8a) // XXX: apple magic fixme
+			continue;
+		size_t len = strlen(pat);
+		file_magwarn(ms,
+		    "non-ascii characters in regex \\%#o `%s'",
+		    c, file_printable(ms, sbuf, sizeof(sbuf), pat, len));
+		return -1;
+	}
+	return 0;
+}
+
 protected int
 file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
     const char *pat, int flags)
 {
+	if (check_regex(ms, pat) == -1)
+		return -1;
+
 #ifdef USE_C_LOCALE
 	locale_t old = uselocale(ms->c_lc_ctype);
 	assert(old != NULL);
@@ -677,10 +710,11 @@ file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
 	(void)setlocale(LC_CTYPE, old);
 #endif
 	if (rc > 0 && (ms->flags & MAGIC_CHECK)) {
-		char errmsg[512];
+		char errmsg[512], buf[512];
 
 		(void)regerror(rc, rx, errmsg, sizeof(errmsg));
-		file_magerror(ms, "regex error %d for `%s', (%s)", rc, pat,
+		file_magerror(ms, "regex error %d for `%s', (%s)", rc, 
+		    file_printable(ms, buf, sizeof(buf), pat, strlen(pat)),
 		    errmsg);
 	}
 	return rc;
@@ -773,7 +807,8 @@ file_printable(struct magic_set *ms, char *buf, size_t bufsiz,
 	const unsigned char *es = s + slen;
 
 	for (ptr = buf;  ptr < eptr && s < es && *s; s++) {
-		if ((ms->flags & MAGIC_RAW) != 0 || isprint(*s)) {
+		if ((ms->flags & MAGIC_RAW) != 0 ||
+		    (isprint(*s) && !isspace(*s))) {
 			*ptr++ = *s;
 			continue;
 		}
