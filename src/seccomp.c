@@ -1,5 +1,3 @@
-/*	$NetBSD$	*/
-
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,11 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-#if 0
-FILE_RCSID("@(#)$File: seccomp.c,v 1.23 2022/09/24 20:22:22 christos Exp $")
-#else
-__RCSID("$NetBSD$");
-#endif
+FILE_RCSID("@(#)$File: seccomp.c,v 1.24 2022/09/24 20:30:13 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP

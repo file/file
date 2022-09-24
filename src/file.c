@@ -1,5 +1,3 @@
-/*	$NetBSD$	*/
-
 /*
  * Copyright (c) Ian F. Darwin 1986-1995.
  * Software written by Ian F. Darwin and others;
@@ -34,11 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-#if 0
-FILE_RCSID("@(#)$File: file.c,v 1.206 2022/09/24 20:22:21 christos Exp $")
-#else
-__RCSID("$NetBSD$");
-#endif
+FILE_RCSID("@(#)$File: file.c,v 1.207 2022/09/24 20:30:13 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"

@@ -1,12 +1,6 @@
-/*	$NetBSD$	*/
-
 #include "file.h"
 #ifndef lint
-#if 0
-FILE_RCSID("@(#)$File: pread.c,v 1.4 2022/09/24 20:22:21 christos Exp $")
-#else
-__RCSID("$NetBSD$");
-#endif
+FILE_RCSID("@(#)$File: pread.c,v 1.5 2022/09/24 20:30:13 christos Exp $")
 #endif  /* lint */
 #include <fcntl.h>
 #include <unistd.h>

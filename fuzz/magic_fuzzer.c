@@ -1,5 +1,3 @@
-/*	$NetBSD$	*/
-
 /*
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,11 +28,7 @@
 #include "file.h"
 
 #ifndef	lint
-#if 0
-FILE_RCSID("@(#)$File: magic_fuzzer.c,v 1.2 2022/09/24 20:22:21 christos Exp $")
-#else
-__RCSID("$NetBSD$");
-#endif
+FILE_RCSID("@(#)$File: magic_fuzzer.c,v 1.3 2022/09/24 20:30:13 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"

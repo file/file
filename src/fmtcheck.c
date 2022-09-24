@@ -1,6 +1,4 @@
-/*	$NetBSD$	*/
-
-/*	NetBSD: fmtcheck.c,v 1.8 2008/04/28 20:22:59 martin Exp 	*/
+/*	$NetBSD: fmtcheck.c,v 1.8 2008/04/28 20:22:59 martin Exp $	*/
 
 /*-
  * Copyright (c) 2000 The NetBSD Foundation, Inc.
@@ -32,11 +30,7 @@
 
 #include "file.h"
 #ifndef lint
-#if 0
-FILE_RCSID("@(#)$File: fmtcheck.c,v 1.5 2022/09/24 20:22:21 christos Exp $")
-#else
-__RCSID("$NetBSD$");
-#endif
+FILE_RCSID("@(#)$File: fmtcheck.c,v 1.6 2022/09/24 20:30:13 christos Exp $")
 #endif /* lint */
 
 #include <stdio.h>

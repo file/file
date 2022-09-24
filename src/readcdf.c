@@ -1,5 +1,3 @@
-/*	$NetBSD$	*/
-
 /*-
  * Copyright (c) 2008, 2016 Christos Zoulas
  * All rights reserved.
@@ -28,11 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-#if 0
-FILE_RCSID("@(#)$File: readcdf.c,v 1.77 2022/09/24 20:22:21 christos Exp $")
-#else
-__RCSID("$NetBSD$");
-#endif
+FILE_RCSID("@(#)$File: readcdf.c,v 1.78 2022/09/24 20:30:13 christos Exp $")
 #endif
 
 #include <assert.h>
