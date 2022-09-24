@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.149 2022/09/24 20:30:13 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.150 2022/09/24 20:57:38 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -308,6 +308,7 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 		}
 
 		nsz = nbytes;
+		free(newbuf);
 		urv = uncompressbuf(fd, ms->bytes_max, i, 
 		    (ms->flags & MAGIC_NO_COMPRESS_FORK), buf, &newbuf, &nsz);
 		DPRINTF("uncompressbuf = %d, %s, %" SIZE_T_FORMAT "u\n", urv,
