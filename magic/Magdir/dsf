@@ -1,10 +1,19 @@
 
 #------------------------------------------------------------
-# $File: dsf,v 1.1 2022/01/08 16:29:18 christos Exp $
+# $File: dsf,v 1.2 2022/09/27 19:08:29 christos Exp $
 # dsf:  file(1) magic for DSD Stream File
 # URL:          https://en.wikipedia.org/wiki/Direct_Stream_Digital
 # Reference:    https://dsd-guide.com/sites/default/files/white-papers/DSFFileFormatSpec_E.pdf
-0	string	DSD\x20		DSD Stream File,
+
+# Sony DSF audio format (Direct Stream Digital Stream File)
+# Used for lossless digital storage of songs produced as DSD audio
+# Portable analog of a track stored on a Super Audio CD (SACD)
+# https://dsd-guide.com/sites/default/files/white-papers/DSFFileFormatSpec_E.pdf
+# From: Toni Ruottu <toni.ruottu@iki.fi>
+
+0	string	DSD\x20		DSF audio bitstream data
+!:mime		audio/x-dsf
+!:ext		dsf
 >0x30	leshort	1		mono,
 >0x30	leshort	2		stereo,
 >0x30	leshort	3		three-channel,
