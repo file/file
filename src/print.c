@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.95 2022/09/24 20:30:13 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.96 2022/09/27 01:58:20 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -250,7 +250,7 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 	/* cuz we use stdout for most, stderr here */
 	(void) fflush(stdout);
 
-	if (ms->file)
+	if (ms && ms->file)
 		(void) fprintf(stderr, "%s, %lu: ", ms->file,
 		    CAST(unsigned long, ms->line));
 	(void) fprintf(stderr, "Warning: ");

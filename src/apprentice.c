@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.333 2022/09/24 20:30:13 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.334 2022/09/27 01:58:20 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -940,8 +940,8 @@ apprentice_magic_strength_1(const struct magic *m)
 	switch (m->type) {
 	case FILE_DEFAULT:	/* make sure this sorts last */
 		if (m->factor_op != FILE_FACTOR_OP_NONE) {
-			fprintf(stderr, "Bad factor_op %d", m->factor_op);
-			abort();
+			file_magwarn(NULL, "Usupported factor_op in default %d",
+			    m->factor_op);
 		}
 		return 0;
 
