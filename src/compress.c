@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.150 2022/09/24 20:57:38 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.151 2022/09/27 02:37:28 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -1158,8 +1158,17 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 		DPRINTF("Read stdout failed %d (%s)\n", fdp[STDOUT_FILENO][0],
 		        strerror(errno));
 		goto err;
-	} else if ((r = sread(fdp[STDERR_FILENO][0], *newch, bytes_max, 0)) > 0)
-	{
+	} 
+	if (CAST(size_t, r) == bytes_max) {
+		/*
+		 * close fd so that the child exits with sigpipe and ignore
+		 * errors, otherwise we risk the child blocking and never
+		 * exiting.
+		 */
+		closefd(fdp[STDOUT_FILENO], 0);
+		goto ok;
+	}
+	if ((r = sread(fdp[STDERR_FILENO][0], *newch, bytes_max, 0)) > 0) {
 		rv = ERRDATA;
 		r = filter_error(*newch, r);
 		goto ok;
