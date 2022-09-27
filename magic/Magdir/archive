@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.169 2022/09/12 13:13:28 christos Exp $
+# $File: archive,v 1.170 2022/09/27 19:26:16 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2110,3 +2110,7 @@
 
 # From wof (wof@stachelkaktus.net)
 0	string	Unison\ archive\ format	Unison archive format
+
+# https://ankiweb.net
+30	string	collection.anki2	Anki APKG file
+#!:ext	.apkg
