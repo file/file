@@ -51,24 +51,26 @@ slurp(FILE *fp, size_t *final_len)
 {
 	size_t len = 256;
 	int c;
-	char *l = (char *)xrealloc(NULL, len), *s = l;
+	char *l = xrealloc(NULL, len), *s = l;
 
 	for (c = getc(fp); c != EOF; c = getc(fp)) {
 		if (s == l + len) {
-			l = xrealloc(l, len * 2);
+			s = l + len;
 			len *= 2;
+			l = xrealloc(l, len);
 		}
 		*s++ = c;
 	}
 	if (s != l && s[-1] == '\n')
 		s--;
-	if (s == l + len)
-		l = (char *)xrealloc(l, len + 1);
+	if (s == l + len) {
+		l = xrealloc(l, len + 1);
+		s = l + len;
+	}
 	*s++ = '\0';
 
 	*final_len = s - l;
-	l = (char *)xrealloc(l, s - l);
-	return l;
+	return xrealloc(l, s - l);
 }
 
 int
