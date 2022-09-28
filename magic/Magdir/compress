@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.83 2022/08/16 11:16:39 christos Exp $
+# $File: compress,v 1.84 2022/09/28 15:36:38 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -12,6 +12,7 @@
 0	string		\037\235	compress'd data
 !:mime	application/x-compress
 !:apple	LZIVZIVU
+!:ext	Z
 >2	byte&0x80	>0		block compressed
 >2	byte&0x1f	x		%d bits
 
@@ -125,6 +126,7 @@
 # packed data, Huffman (minimum redundancy) codes on a byte-by-byte basis
 0	string		\037\036	packed data
 !:mime	application/octet-stream
+!:ext	z
 >2	belong		>1		\b, %d characters originally
 >2	belong		=1		\b, %d character originally
 #
@@ -159,6 +161,7 @@
 # lzip
 0	string		LZIP		lzip compressed data
 !:mime application/x-lzip
+!:ext lz
 >4	byte		x		\b, version: %d
 
 # squeeze and crunch
@@ -194,6 +197,7 @@
 
 # lzop from <markus.oberhumer@jk.uni-linz.ac.at>
 0	string		\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a	lzop compressed data
+!:ext	lzo
 >9	beshort		<0x0940
 >>9	byte&0xf0	=0x00		- version 0.
 >>9	beshort&0x0fff	x		\b%03x,
@@ -258,6 +262,7 @@
 0	lelong&0xffffff	=0x5d
 >12	leshort		0xff			LZMA compressed data,
 !:mime	application/x-lzma
+!:ext	lzma
 >>5	lequad		=0xffffffffffffffff	streamed
 >>5	lequad		!0xffffffffffffffff	non-streamed, size %lld
 >12	leshort		0			LZMA compressed data,
@@ -268,6 +273,7 @@
 0	ustring		\xFD7zXZ\x00		XZ compressed data, checksum
 !:strength * 2
 !:mime	application/x-xz
+!:ext	xz
 >7	byte&0xf	0x0			NONE
 >7	byte&0xf	0x1			CRC32
 >7	byte&0xf	0x4			CRC64
@@ -283,6 +289,7 @@
 # https://fastcompression.blogspot.fi/2013/04/lz4-streaming-format-final.html
 0	lelong		0x184d2204	LZ4 compressed data (v1.4+)
 !:mime	application/x-lz4
+!:ext	lz4
 # Added by osm0sis@xda-developers.com
 0 	lelong		0x184c2103	LZ4 compressed data (v1.0-v1.3)
 !:mime	application/x-lz4
@@ -319,19 +326,26 @@
 # https://github.com/facebook/zstd/blob/dev/zstd_compression_format.md
 0     lelong       0xFD2FB522  Zstandard compressed data (v0.2)
 !:mime  application/zstd
+!:ext zst
 0     lelong       0xFD2FB523  Zstandard compressed data (v0.3)
 !:mime  application/zstd
+!:ext zst
 0     lelong       0xFD2FB524  Zstandard compressed data (v0.4)
 !:mime  application/zstd
+!:ext zst
 0     lelong       0xFD2FB525  Zstandard compressed data (v0.5)
 !:mime  application/zstd
+!:ext zst
 0     lelong       0xFD2FB526  Zstandard compressed data (v0.6)
 !:mime  application/zstd
+!:ext zst
 0     lelong       0xFD2FB527  Zstandard compressed data (v0.7)
 !:mime  application/zstd
+!:ext zst
 >4    use          zstd-dictionary-id
 0     lelong       0xFD2FB528  Zstandard compressed data (v0.8+)
 !:mime  application/zstd
+!:ext zst
 >4    use          zstd-dictionary-id
 
 # https://github.com/facebook/zstd/blob/dev/zstd_compression_format.md
