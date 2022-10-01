@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.334 2022/09/27 01:58:20 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.335 2022/10/01 21:15:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2916,7 +2916,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			}
 			for (q = *p; isspace(CAST(unsigned char, *q)); q++)
 				continue;
-			if (*q == '-')
+			if (*q == '-' && ull != UINT64_MAX)
 				ull = -CAST(int64_t, ull);
 			switch (ts) {
 			case 1:
