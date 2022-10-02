@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.239 2022/09/24 20:30:13 christos Exp $
+ * @(#)$File: file.h,v 1.240 2022/10/02 12:53:28 christos Exp $
  */
 
 #ifndef __file_h__
@@ -483,8 +483,8 @@ struct magic_set {
 	size_t bytes_max;		/* number of bytes to read from file */
 	size_t encoding_max;		/* bytes to look for encoding */
 #ifndef FILE_BYTES_MAX
-# define FILE_BYTES_MAX (1024 * 1024)	/* how much of the file to look at */
-#endif
+# define FILE_BYTES_MAX (7 * 1024 * 1024)/* how much of the file to look at */
+#endif /* above 0x6ab0f4 map offset for HelveticaNeue.dfont */
 #define	FILE_ELF_NOTES_MAX		256
 #define	FILE_ELF_PHNUM_MAX		2048
 #define	FILE_ELF_SHNUM_MAX		32768
