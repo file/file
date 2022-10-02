@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.19 2022/09/11 20:52:40 christos Exp $
+# $File: ole2compounddocs,v 1.20 2022/10/02 12:48:22 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -199,6 +199,18 @@
 #!:mime	application/x-ole-storage
 !:mime	application/x-ms-info
 !:ext	nfo
+#
+# From:		Joerg Jenderek
+# URL:		https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/arn-autoruns-v14.trid.xml
+# Note:		older versions til 13 about middle 2021 handled by ./windows
+#		called "Sysinternals Autoruns data (v14)" by TrID
+# second, third and fourth directory entry name like Header Items 0
+>>>>128 	lestring16	Header		: Microsoft sysinternals AutoRuns data, version 14
+#!:mime	application/x-ole-storage
+!:mime		application/x-ms-arn
+# like: MyHOSTNAME.arn
+!:ext		arn
 #
 # From:		Joerg Jenderek
 # URL:		https://en.wikipedia.org/wiki/Microsoft_Access
