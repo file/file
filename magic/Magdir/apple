@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.45 2021/04/26 15:56:00 christos Exp $
+# $File: apple,v 1.46 2022/10/02 12:50:40 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1/t	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -491,9 +491,107 @@
 # Usually not in separate files, but have either filename rsrc with
 # no extension, or a filename corresponding to another file, with
 # extensions rsr/rsrc
+# URL:		http://fileformats.archiveteam.org/wiki/Macintosh_resource_file
+#		https://en.wikipedia.org/wiki/Resource_fork
+# Reference:	https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format
+#		http://developer.apple.com/legacy/mac/library/documentation/mac/pdf/MoreMacintoshToolbox.pdf
+#		https://formats.kaitai.io/resource_fork/
+# Update:	Joerg Jenderek
+# Note:		verified often by command like `deark -m macrsrc Icon_.rsrc`
+# offset of resource data; usually starts at offset 0x0100
 0	string  \000\000\001\000
->4	leshort 0
->>16	lelong  0			Apple HFS/HFS+ resource fork
+# skip NPETraceSession.etl with invalid "low" map offset 0
+>4	ubelong	>0xFF
+# skip few Atari DEGAS Elite bitmap (eil2.pi1 nastro.pi1) with ivalid "high" 0x6550766 0x7510763 map length
+>>12	ubelong	<0x8001
+# most examples with zeroed system reserved field
+>>>16	lelong  =0
+>>>>0	use	apple-rsr
+# few samples with not zeroed system reserved field like: Empty.rsrc.rsr OpenSans-CondBold.dfont
+>>>16	lelong  !0
+# resource fork variant with not zeroed system reserved field and copy of header 
+>>>>(4.L)	ubelong	0x100
+# GRR: the line above only works if in ../../src/file.h FILE_BYTES_MAX is raised from 1 MiB above 0x6ab0f4 (HelveticaNeue.dfont)
+>>>>>0	use	apple-rsr
+# data fork variant with not zeroed system reserved field and no copy of header 
+>>>>(4.L)	ubelong	0
+>>>>>0	use	apple-rsr
+# Note: moved and merged from ./macintosh
+# From: Adam Buchbinder <adam.buchbinder@gmail.com>
+# URL: https://en.wikipedia.org/wiki/Datafork_TrueType
+# Derived from the 'fondu' and 'ufond' source code (fondu.sf.net). 'sfnt' is
+# TrueType; 'POST' is PostScript. 'FONT' and 'NFNT' sometimes appear, but I
+# don't know what they mean.
+#	display information about Mac OSX datafork font DFONT
+0	name		apple-dfont
+>(4.L+30)	ubelong x		Mac OSX datafork font,
+# https://en.wikipedia.org/wiki/Datafork_TrueType
+!:mime		application/x-dfont
+!:ext		dfont
+# https://exiftool.org/TagNames/RSRC.html
+>(4.L+30)	ubelong	0x73666e74	TrueType
+>(4.L+30)	ubelong	0x464f4e54	'FONT'
+>(4.L+30)	ubelong	0x4e464e54	'NFNT'
+>(4.L+30)	ubelong	0x504f5354	PostScript
+>(4.L+30)	ubelong	0x464f4e44	'FOND'
+>(4.L+30)	ubelong	0x76657273	'vers'
+#	display information about Macintosh resource
+0	name		apple-rsr
+>(4.L+30)	ubelong	0x73666e74
+>>0	use	apple-dfont
+>(4.L+30)	ubelong	0x464f4e54
+>>0	use	apple-dfont
+>(4.L+30)	ubelong	0x4e464e54
+>>0	use	apple-dfont
+>(4.L+30)	ubelong	0x504f5354
+>>0	use	apple-dfont
+>(4.L+30)	ubelong	0x464f4e44
+>>0	use	apple-dfont
+>(4.L+30)	ubelong	0x76657273
+>>0	use	apple-dfont
+>(4.L+30)	default	x		Apple HFS/HFS+ resource fork
+#!:mime		application/octet-stream
+!:mime		application/x-apple-rsr
+!:ext		rsrc/rsr
+# offset to resource data; usually starts at offset 0x0100
+>0		ubelong		!0x100	\b, data offset %#x
+# offset to resource map; positive but not nil like in NPETraceSession.etl
+>4		ubelong		x	\b, map offset %#x
+# length of resource map; positive with 32K limitation but not
+# nil like in NPETraceSession.etl or high like 0x7510763 in nastro.pi1
+>12		ubelong		x	\b, map length %#x
+# length of resource data; positive but not nil like in NPETraceSession.etl
+>8		ubelong		x	\b, data length %#x
+# reserved 112 bytes for system use; apparently often nil, but 8fd20000h in Empty.rsrc.rsr and 0x00768c2b in OpenSans-CondBold.dfont
+>16		ubelong		!0	\b, at 16 %#8.8x
+# https://fontforge.org/docs/techref/macformats.html
+# jump to resource map
+# a copy of resource header or 16 bytes of zeros for data fork
+#>(4.L)		ubelong		x	\b, DATA offset %#x
+#>(4.L+4) 	ubelong 	x	\b, MAP offset %#x
+#>(4.L+8) 	ubelong 	x	\b, DATA length %#x
+#>(4.L+12) 	ubelong 	x	\b, MAP length %#x
+# nextResourceMap; handle to next resource map; used by the Resource Manager for internal bookkeeping; should be zero
+>(4.L+16) 	ubelong		!0	\b, nextResourceMap %#x
+# fileRef; file reference number; used by the Resource Manager for internal bookkeeping; should be zero
+>(4.L+20)	ubeshort	!0	\b, fileRef %#x
+# attributes; Resource fork attributes (80h~read-only 40h~compression needed 20h~changed); other bits are reserved and should be zero
+>(4.L+22)	ubeshort	!0	\b, attributes %#x
+# typeListOffset; offset from resource map to start of type list like: 1Ch
+>(4.L+24)	ubeshort	x	\b, list offset %#x
+# nameListOffset; offset from esource map to start of name list like: 32h 46h 56h (XLISP.RSR XLISPTIN.RSR) 13Eh (HelveticaNeue.dfont)
+>(4.L+26)	ubeshort	x	\b, name offset %#x
+# typeCount; number of types in the map minus 1; If there are no resources, this is 0xFFFF
+>(4.L+28)	beshort+1	>0	\b, %u type
+# plural s 
+>>(4.L+28)	beshort+1	>1	\bs
+# resource type list array; 1st resource type like: ALRT CODE FOND MPSR icns scsz
+>>(4.L+30)	ubelong		x	\b, %#x
+>>(4.L+30)	string		x	'%-.4s'
+# resourceCount; number of this type resources minus one. If there is one resource of this type, this is 0x0000
+>>(4.L+34)	beshort+1	x	* %d
+# resourceListOffset; offset from type list to resource list like: Ah 12h DAh
+>(4.L+36)	ubeshort	x	resource offset %#x
 
 #https://en.wikipedia.org/wiki/AppleScript
 0	string	FasdUAS			AppleScript compiled
