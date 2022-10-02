@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.69 2022/04/20 21:14:23 christos Exp $
+# $File: commands,v 1.70 2022/10/02 12:29:47 christos Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
@@ -8,6 +8,8 @@
 !:mime	text/x-shellscript
 0	string/fwb	#!\ /bin/sh		POSIX shell script executable (binary data)
 !:mime	text/x-shellscript
+>10	string	\#\040This\040script\040was\040generated\040using\040Makeself	\b, self-executable archive
+>>53	string	x	\b, Makeself %s
 
 0	string/fwt	#!\ /bin/csh		C shell script text executable
 !:mime	text/x-shellscript
