@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.170 2022/09/27 19:26:16 christos Exp $
+# $File: archive,v 1.171 2022/10/02 12:34:00 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1786,6 +1786,14 @@
 
 # Alternate ZIP string (amc@arwen.cs.berkeley.edu)
 0	string	PK00PK\003\004	Zip archive data
+!:mime	application/zip
+!:ext zip/cbz
+
+# Recognize ZIP archives with prepended data by end-of-central-directory record
+# https://en.wikipedia.org/wiki/ZIP_(file_format)#End_of_central_directory_record_(EOCD)
+# by Michal Gorny <mgorny@gentoo.org>
+-2	uleshort	0
+>&-22	string	PK\005\006	Zip archive, with extra data prepended
 !:mime	application/zip
 !:ext zip/cbz
 
