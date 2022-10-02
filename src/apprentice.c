@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.335 2022/10/01 21:15:55 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.336 2022/10/02 15:21:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2835,6 +2835,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 {
 	char *ep;
 	uint64_t ull;
+	int y;
 
 	switch (m->type) {
 	case FILE_BESTRING16:
@@ -2921,21 +2922,25 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			switch (ts) {
 			case 1:
 				x = CAST(uint64_t, ull & ~0xffULL);
+				y = (x & ~0xffULL) != ~0xffULL;
 				break;
 			case 2:
 				x = CAST(uint64_t, ull & ~0xffffULL);
+				y = (x & ~0xffffULL) != ~0xffffULL;
 				break;
 			case 4:
 				x = CAST(uint64_t, ull & ~0xffffffffULL);
+				y = (x & ~0xffffffffULL) != ~0xffffffffULL;
 				break;
 			case 8:
 				x = 0;
+				y = 0;
 				break;
 			default:
 				fprintf(stderr, "Bad width %zu", ts);
 				abort();
 			}
-			if (x) {
+			if (x && y) {
 				file_magwarn(ms, "Overflow for numeric"
 				    " type `%s' value %#" PRIx64,
 				    type_tbl[m->type].name, ull);
