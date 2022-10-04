@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.47 2022/09/23 13:23:04 christos Exp $
+# $File: windows,v 1.48 2022/10/04 14:21:28 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -115,16 +115,55 @@
 
 
 # Summary: Vista Event Log
-# Extension: .evtx
 # Created by: Andreas Schuster (https://computer.forensikblog.de/)
-# Reference (1): https://computer.forensikblog.de/en/2007/05/some_magic.html
-0	string		ElfFile\0	MS Windows Vista Event Log
+# Update:	Joerg Jenderek
+# URL:		https://github.com/libyal/libevtx/blob/main/documentation/Windows%20XML%20Event%20Log%20(EVTX).asciidoc
+# Reference (1): https://web.archive.org/web/20110803085000/
+#		https://computer.forensikblog.de/en/2007/05/some_magic.html
+#		http://mark0.net/download/triddefs_xml.7z/defs/e/evtx.trid.xml
+# Note:		called "Vista Event Log" by TrID and "Event Log" by Windows
+# 		verified partly by `wevtutil.exe gli /lf:true dumpfile.evtx`
+0	string		ElfFile\0	MS Windows
+#!:mime		application/octet-stream
+!:mime		application/x-ms-evtx
+!:ext		evtx
+# Major+Minor format version: 3.1~Vista and later 3.2~Windows 10 (2004) and later 
+>0x24	ulelong		=0x00030001	Vista-8.1 Event Log
+>0x24	ulelong		!0x00030001	10-11 Event Log, version 
+>>0x26	uleshort	x		%u
+>>0x24	uleshort	x		\b.%u
 >0x2a	leshort		x		\b, %d chunks
 >>0x10	lelong		x		\b (no. %d in use)
 >0x18	lelong		>1		\b, next record no. %d
 >0x18	lelong		=1		\b, empty
 >0x78	lelong		&1		\b, DIRTY
 >0x78	lelong		&2		\b, FULL
+
+# Summary:	Windows Event Trace Log
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/ETL
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/e/etl.trid.xml
+#		https://www.geoffchappell.com/studies/windows/km/ntoskrnl/api/etw/tracelog/trace_logfile_header.htm
+# Note:		called "Window tracing/diagnostic binary log" by TrID
+# 		verified by `tracerpt.EXE Wifi.etl -of EVTX`
+#		and by etl-parser `etl2xml --input AMSITrace.etl --output AMSITrace.xml`
+# Every ETL file begins with a WMI_BUFFER_HEADER, a SYSTEM_TRACE_HEADER and a TRACE_LOGFILE_HEADER
+0	ubyte			0
+# look for corresponding encoded as UTF-16 file name extension like in: boot_BASE+CSWITCH_1.etl
+>0	search/0x699087/b	.\0e\0t\0l\0\0\0
+# GRR: line above only works if in ../../src/file.h FILE_BYTES_MAX is raised above 699086h (6,59 MiB)
+>>0	use			trace-etl
+# display information of Windows Performance Analyzer Trace File (file name)
+0	name		trace-etl
+>0	ubyte			x		Windows Event Trace Log
+#!:mime		application/x-ms-etl
+# http://extension.nirsoft.net/etl
+!:mime		application/etl
+!:ext		etl
+# look for DOS drive letter part of log file name like: PhotosAppTracing_startedInBGMode.etl
+>0	search/0x2b4/sb	:\0\x5c\0	
+# like: "c:\Windows\Logs\NetSetup\service.0.etl" "C:\Windows\System32\LogFiles\WMI\Wifi.etl"
+>>&-2	lestring16		x		"%s"
 
 # Summary: Windows System Deployment Image
 # Created by: Joerg Jenderek
