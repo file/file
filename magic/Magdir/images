@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.229 2022/09/23 13:21:22 christos Exp $
+# $File: images,v 1.230 2022/10/07 17:42:06 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1528,17 +1528,19 @@
 >>>>>>0		use		degas-bitmap
 # last character of Adobe PhotoShop Brush UTF16-LE note
 #>>>>>&-4	ubelong&0x00FF0000	>0x001F0000	\b, THAT IS ABR
+
+# Commented out because they are weak
 # DEGAS low-res compressed bitmap *.pc1 like: BATTLSHP.PC1 GNUCHESS.PC1 MEDUSABL.PC1 MOONLORD.PC1 WILDROSE.PC1
-0		beshort			0x8000
+#0		beshort			0x8000
 # skip lif files handled via ./lif by test for unused bits of 1st palette entry
->2		ubeshort&0xF000		0
->>0		use		degas-bitmap
+#>2		ubeshort&0xF000		0
+#>>0		use		degas-bitmap
 # DEGAS mid-res compressed bitmap *.pc2 like: abydos.pc2 ARTIS3.PC2 SMTHDRAW.PC2 STAR_2K.PC2 TX2_DEMO.PC2
-0		beshort			0x8001
->0		use		degas-bitmap
+#0		beshort			0x8001
+#>0		use		degas-bitmap
 # DEGAS high-res compressed bitmap *.pc3 like: abydos.pc3 COYOTE.PC3 ELEPHANT.PC3 TX2_DEMO.PC3 SMTHDRAW.PC3
-0		beshort			0x8002
->0		use		degas-bitmap
+#0		beshort			0x8002
+#>0		use		degas-bitmap
 # display information of Atari DEGAS and DEGAS Elite bitmap images
 0	name		degas-bitmap
 >0	ubyte		x		Atari DEGAS
