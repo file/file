@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: gentoo,v 1.2 2022/09/12 13:13:28 christos Exp $
+# $File: gentoo,v 1.3 2022/10/07 18:15:56 christos Exp $
 # gentoo:  file(1) magic for gentoo specific formats
 #
 # Summary: Gentoo ebuild Manifest files (GLEP 74)
@@ -36,6 +36,7 @@
 # (<tag>'s already been matched prior to calling)
 0	name	gentoo-manifest
 >&0	regex	[[:space:]]+[[:print:]]+[[:space:]]+[[:digit:]]+[[:space:]]+[[:alnum:]]+[[:space:]]+[[:xdigit:]]{32}	Gentoo Manifest (GLEP 74)
+!:mime	application/vnd.gentoo.manifest
 
 # Summary: Gentoo ebuild and eclass files
 # Reference: https://projects.gentoo.org/pms/8/pms.html
