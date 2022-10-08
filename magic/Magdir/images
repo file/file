@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.230 2022/10/07 17:42:06 christos Exp $
+# $File: images,v 1.231 2022/10/08 18:37:40 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -311,12 +311,12 @@
 0	string		MM\x00\x2a	TIFF image data, big-endian
 !:strength +70
 !:mime	image/tiff
-!:ext	tif,tiff
+!:ext	tif/tiff
 >(4.L)	use		\^tiff_ifd
 0	string		II\x2a\x00	TIFF image data, little-endian
 !:mime	image/tiff
 !:strength +70
-!:ext	tif,tiff
+!:ext	tif/tiff
 >(4.l)	use		tiff_ifd
 
 0	name		tiff_ifd
