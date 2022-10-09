@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <errno.h>
 
@@ -76,11 +77,11 @@ slurp(FILE *fp, size_t *final_len)
 int
 main(int argc, char **argv)
 {
-	struct magic_set *ms;
+	struct magic_set *ms = NULL;
 	const char *result;
 	size_t result_len, desired_len;
 	char *desired = NULL;
-	int e = EXIT_FAILURE;
+	int e = EXIT_FAILURE, flags, c;
 	FILE *fp;
 
 
@@ -90,7 +91,32 @@ main(int argc, char **argv)
 	else
 		prog = argv[0];
 
-	ms = magic_open(MAGIC_ERROR);
+	if (argc == 1)
+		return 0;
+
+	flags = 0;
+	while ((c = getopt(argc, argv, "ek")) != -1)
+		switch (c) {
+		case 'e':
+			flags |= MAGIC_ERROR;
+			break;
+		case 'k':
+			flags |= MAGIC_CONTINUE;
+			break;
+		default:
+			goto usage;
+		}
+
+	argc -= optind;
+	argv += optind;
+	if (argc != 2) {
+usage:
+		(void)fprintf(stderr,
+		    "Usage: %s [-ek] TEST-FILE RESULT\n", prog);
+		goto bad;
+	}
+
+	ms = magic_open(flags);
 	if (ms == NULL) {
 		(void)fprintf(stderr, "%s: ERROR opening MAGIC_NONE: %s\n",
 		    prog, strerror(errno));
@@ -102,29 +128,20 @@ main(int argc, char **argv)
 		goto bad;
 	}
 
-	if (argc == 1) {
-		e = 0;
-		goto bad;
-	}
-
-	if (argc != 3) {
-		(void)fprintf(stderr, "Usage: %s TEST-FILE RESULT\n", prog);
-		goto bad;
-	}
-	if ((result = magic_file(ms, argv[1])) == NULL) {
+	if ((result = magic_file(ms, argv[0])) == NULL) {
 		(void)fprintf(stderr, "%s: ERROR loading file %s: %s\n",
 		    prog, argv[1], magic_error(ms));
 		goto bad;
 	}
-	fp = fopen(argv[2], "r");
+	fp = fopen(argv[1], "r");
 	if (fp == NULL) {
 		(void)fprintf(stderr, "%s: ERROR opening `%s': %s",
-		    prog, argv[2], strerror(errno));
+		    prog, argv[1], strerror(errno));
 		goto bad;
 	}
 	desired = slurp(fp, &desired_len);
 	fclose(fp);
-	(void)printf("%s: %s\n", argv[1], result);
+	(void)printf("%s: %s\n", argv[0], result);
 	if (strcmp(result, desired) != 0) {
 	    result_len = strlen(result);
 	    (void)fprintf(stderr, "%s: ERROR: result was (len %zu)\n%s\n"
@@ -135,6 +152,7 @@ main(int argc, char **argv)
 	e = 0;
 bad:
 	free(desired);
-	magic_close(ms);
+	if (ms)
+		magic_close(ms);
 	return e;
 }
