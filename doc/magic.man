@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.100 2022/09/10 13:19:26 christos Exp $
-.Dd September 10, 2022
+.\" $File: magic.man,v 1.101 2022/10/09 18:51:04 christos Exp $
+.Dd October 9, 2022
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -68,54 +68,52 @@ A 32-bit single precision IEEE floating point number in this machine's native by
 A 64-bit double precision IEEE floating point number in this machine's native byte order.
 .It Dv string
 A string of bytes.
-The string type specification can be optionally followed
-by /[WwcCtbTf]*.
-The
-.Dq W
-flag compacts whitespace in the target, which must
+The string type specification can be optionally followed by a /<width> 
+option and optionally followed by a set of flags /[bCcftTtWw]*.
+The width limits the number of characters to be copied.
+Zero means all characters.
+The following flags are supported:
+.Bl -tag -width B -compact -offset XXXX
+.It b
+Force binary file test.
+.It C
+Use upper case insensitive matching: upper case
+characters in the magic match both lower and upper case characters in the
+target, whereas lower case characters in the magic only match upper case
+characters in the target.
+.It c
+Use lower case insensitive matching: lower case
+characters in the magic match both lower and upper case characters in the
+target, whereas upper case characters in the magic only match upper case
+characters in the target.
+To do a complete case insensitive match, specify both
+.Dq c
+and
+.Dq C .
+.It f
+Require that the matched string is a full word, not a partial word match.
+.It T
+Trim the string, i.e. leading and trailing whitespace
+.It t
+Force text file test.
+.It W
+Compact whitespace in the target, which must
 contain at least one whitespace character.
 If the magic has
 .Dv n
 consecutive blanks, the target needs at least
 .Dv n
 consecutive blanks to match.
-The
-.Dq w
-flag treats every blank in the magic as an optional blank.
-The
-.Dq f
-flags requires that the matched string is a full word, not a partial word match.
-The
-.Dq c
-flag specifies case insensitive matching: lower case
-characters in the magic match both lower and upper case characters in the
-target, whereas upper case characters in the magic only match upper case
-characters in the target.
-The
-.Dq C
-flag specifies case insensitive matching: upper case
-characters in the magic match both lower and upper case characters in the
-target, whereas lower case characters in the magic only match upper case
-characters in the target.
-To do a complete case insensitive match, specify both
-.Dq c
-and
-.Dq C .
-The
-.Dq t
-flag forces the test to be done for text files, while the
-.Dq b
-flag forces the test to be done for binary files.
-The
-.Dq T
-flag causes the string to be trimmed, i.e. leading and trailing whitespace
+.It w
+Treat every blank in the magic as an optional blank.
 is deleted before the string is printed.
+.El
 .It Dv pstring
 A Pascal-style string where the first byte/short/int is interpreted as the
 unsigned length.
 The length defaults to byte and can be specified as a modifier.
 The following modifiers are supported:
-.Bl -tag -compact -width B
+.Bl -tag -width B -compact -offset XXXX
 .It B
 A byte length (default).
 .It H
