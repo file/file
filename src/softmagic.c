@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.333 2022/10/09 14:06:43 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.334 2022/10/09 18:38:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1320,6 +1320,7 @@ private int
 mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
     const unsigned char *s, uint32_t offset, size_t nbytes, struct magic *m)
 {
+	size_t size = sizeof(*p);
 	/*
 	 * Note: FILE_SEARCH and FILE_REGEX do not actually copy
 	 * anything, but setup pointers into the source
@@ -1417,6 +1418,9 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		}
 		case FILE_STRING:	/* XXX - these two should not need */
 		case FILE_PSTRING:	/* to copy anything, but do anyway. */
+			if (m->str_range != 0 && m->str_range < sizeof(*p))
+				size = m->str_range;
+			break;
 		default:
 			break;
 		}
@@ -1432,10 +1436,10 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 		(void)memset(p, '\0', sizeof(*p));
 		return 0;
 	}
-	if (nbytes - offset < sizeof(*p))
+	if (nbytes - offset < size)
 		nbytes = nbytes - offset;
 	else
-		nbytes = sizeof(*p);
+		nbytes = size;
 
 	(void)memcpy(p, s + offset, nbytes);
 
