@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.182 2022/09/11 21:04:30 christos Exp $
+# $File: Makefile.am,v 1.183 2022/10/09 13:40:22 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -92,7 +92,6 @@ $(MAGIC_FRAGMENT_DIR)/dif \
 $(MAGIC_FRAGMENT_DIR)/diff \
 $(MAGIC_FRAGMENT_DIR)/digital \
 $(MAGIC_FRAGMENT_DIR)/dolby \
-$(MAGIC_FRAGMENT_DIR)/dsf \
 $(MAGIC_FRAGMENT_DIR)/dump \
 $(MAGIC_FRAGMENT_DIR)/dyadic \
 $(MAGIC_FRAGMENT_DIR)/ebml \
