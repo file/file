@@ -88,6 +88,12 @@ pgp-binary-key-v4-rsa-no-userid-secret.result \
 pgp-binary-key-v4-rsa-no-userid-secret.testfile \
 pgp-binary-key-v4-rsa-secret-key.result \
 pgp-binary-key-v4-rsa-secret-key.testfile \
+pnm1.result \
+pnm1.testfile \
+pnm2.result \
+pnm2.testfile \
+pnm3.result \
+pnm3.testfile \
 regex-eol.magic \
 regex-eol.result \
 regex-eol.testfile \
