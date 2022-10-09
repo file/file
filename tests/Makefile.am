@@ -17,6 +17,14 @@ bcachefs.result \
 bcachefs.testfile \
 cl8m8ocofedso.result \
 cl8m8ocofedso.testfile \
+cmd1.testfile \
+cmd1.result \
+cmd2.testfile \
+cmd2.result \
+cmd3.testfile \
+cmd3.result \
+cmd4.testfile \
+cmd4.result \
 dsd64-dff.result \
 dsd64-dff.testfile \
 dsd64-dsf.result \
