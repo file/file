@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.336 2022/10/02 15:21:27 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.337 2022/10/09 16:46:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -497,7 +497,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	map = apprentice_map(ms, fn);
 	if (map == NULL) {
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "using regular magic file `%s'", fn);
+			file_magwarn(NULL, "using regular magic file `%s'", fn);
 		map = apprentice_load(ms, fn, action);
 		if (map == NULL)
 			return -1;
