@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.183 2022/10/09 13:40:22 christos Exp $
+# $File: Makefile.am,v 1.184 2022/10/09 18:34:18 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -107,6 +107,7 @@ $(MAGIC_FRAGMENT_DIR)/esri \
 $(MAGIC_FRAGMENT_DIR)/fcs \
 $(MAGIC_FRAGMENT_DIR)/filesystems \
 $(MAGIC_FRAGMENT_DIR)/finger \
+$(MAGIC_FRAGMENT_DIR)/firmware \
 $(MAGIC_FRAGMENT_DIR)/flash \
 $(MAGIC_FRAGMENT_DIR)/flif \
 $(MAGIC_FRAGMENT_DIR)/fonts \
