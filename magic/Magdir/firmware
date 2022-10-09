@@ -1,12 +1,12 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.1 2022/10/09 18:34:18 christos Exp $
+# $File: firmware,v 1.2 2022/10/09 18:37:25 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
 # https://github.com/MatrixEditor/frontier-smart-api/blob/main/docs/firmware-2.0.md#11-header-structure
 # examples: https://github.com/cweiske/frontier-silicon-firmwares
-0	belong		0x76110000	Frontier Silicon firmware download
->4	belong		0x7c		correct size
->8	belong		x		\b, MeOS version %x
->12	string/32/T	x		\b, version %s
->40	string/64/T	x		\b, customization %s
+0	lelong		0x00001176	
+>4	lelong		0x7c		Frontier Silicon firmware download
+>>8	lelong		x		\b, MeOS version %x
+>>12	string/32/T	x		\b, version %s
+>>40	string/64/T	x		\b, customization %s
