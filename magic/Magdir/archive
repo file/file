@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.171 2022/10/02 12:34:00 christos Exp $
+# $File: archive,v 1.172 2022/10/10 18:45:58 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -821,8 +821,10 @@
 # QFC
 0	string	\x1aFC\x1a QFC archive data
 0	string	\x1aQF\x1a QFC archive data
-# PRO-PACK
-0	string	RNC PRO-PACK archive data
+# PRO-PACK https://www.segaretro.org/Rob_Northen_compression
+0	string	RNC
+>3	byte	1	PRO-PACK archive data (compression 1)
+>3	byte	2	PRO-PACK archive data (compression 2)
 # 777
 0	string	777 777 archive data
 # LZS221
