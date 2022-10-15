@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.68 2022/05/14 20:04:43 christos Exp $
+# $File: console,v 1.69 2022/10/15 14:21:13 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -759,6 +759,28 @@
 0	string	PPF10			Playstation Patch File version 1.0
 >5	byte	0			\b, Simple Encoding
 >6	string	x			\b, description: %s
+
+# Compressed ISO disc image (used mostly by PSP, PS2 and MegaDrive)
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://en.wikipedia.org/wiki/.CSO
+# NOTE: This is NOT the same as Compact ISO or GameCube/Wii disc image,
+# though it has the same magic number.
+0               string                  CISO
+# Match CISO version 1 with ISO-9660 sector size
+>20             ubyte                   <2
+>>16            ulelong                 =2048           CSO v1 disk image
+!:mime  application/x-compressed-iso
+!:ext   ciso/cso
+>>>8            ulequad                 x               \b, original size %llu bytes
+>>>16           ulelong                 x               \b, datablock size %u bytes
+# Match CISO version 2
+>20             ubyte                   =2
+>>22            uleshort                =0
+>>>4            ulelong                 =24             CSO v2 disk image
+!:mime  application/x-compressed-iso
+!:ext   ciso/cso
+>>>>8           ulequad                 x               \b, original size %llu bytes
+>>>>16          ulelong                 x               \b, datablock size %u bytes
 
 # From: Daniel Dawson <ddawson@icehouse.net>
 # SNES9x .smv "movie" file format.
