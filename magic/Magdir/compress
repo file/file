@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.85 2022/10/15 14:45:49 christos Exp $
+# $File: compress,v 1.86 2022/10/16 12:59:51 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -438,3 +438,7 @@
 >46	lelong		x	\b, read size %d
 >50	lelong		x	\b, number of reads %d
 >54	leshort		x	\b, version %d
+
+# https://github.com/kspalaiologos/bzip3/blob/master/doc/file_format.md
+0	string/b	BZ3v1	bzip3 compressed data
+>5	ulelong		x	\b, blocksize %u
