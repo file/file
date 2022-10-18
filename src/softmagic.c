@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.334 2022/10/09 18:38:08 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.335 2022/10/18 17:32:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2238,6 +2238,12 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		slen = MIN(m->vallen, sizeof(m->value.s));
 		l = 0;
 		v = 0;
+		if ((ms->flags & MAGIC_DEBUG) != 0) {
+			fprintf(stderr, "search: [");
+			file_showstr(stderr, ms->search.s, ms->search.s_len);
+			fprintf(stderr, "] for [");
+			file_showstr(stderr, m->value.s, slen);
+		}
 #ifdef HAVE_MEMMEM
 		if (slen > 0 && m->str_flags == 0) {
 			const char *found;
@@ -2246,6 +2252,10 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 				idx = ms->search.s_len;
 			found = CAST(const char *, memmem(ms->search.s, idx,
 			    m->value.s, slen));
+			if ((ms->flags & MAGIC_DEBUG) != 0) {
+				fprintf(stderr, "] %sfound\n",
+				    found ? "" : "not ");
+			}
 			if (!found) {
 				v = 1;
 				break;
@@ -2270,6 +2280,9 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 				ms->search.rm_len = ms->search.s_len - idx;
 				break;
 			}
+		}
+		if ((ms->flags & MAGIC_DEBUG) != 0) {
+			fprintf(stderr, "] %sfound\n", v == 0 ? "" : "not ");
 		}
 		break;
 	}
