@@ -45,6 +45,8 @@ issue311docx.result \
 issue311docx.testfile \
 issue359xlsx.result \
 issue359xlsx.testfile \
+jpeg-text.result \
+jpeg-text.testfile \
 json1.result \
 json1.testfile \
 json2.result \
