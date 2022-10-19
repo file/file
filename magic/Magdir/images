@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.233 2022/10/15 16:07:36 christos Exp $
+# $File: images,v 1.234 2022/10/19 20:15:16 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1483,19 +1483,17 @@
 #!:strength +0
 # skip many control files like gnucash-4.8.setup.exe.aria2 by test for non black in 4 palette entries
 >2		quad		!0
-# skip control file load-v0001.aria2 by test for unused bits of 5th color palette entry
->>10		ubeshort&0xF000	0
-# skip many GEM Image data like DANCER.IMG GAMEOVR4.IMG SHIP.IMG by test for unused bits of 8th color palette entry
->>>16		ubeshort&0xF000	0
-# skip many GEM Image data like BEETHVEN.IMG CABINETS.IMG MEMO.IMG by test for unused bits of 14th color palette entry
->>>>28		ubeshort&0xF000	0
-# skip few GEM Image data like CHURCH.IMG by test for unused bits of 15th color palette entry
->>>>>30		ubeshort&0xF000	0
-# skip many GEM Image data like TIGER.IMG TURKEY.IMG XMAS.IMG by test for unused bits of 16th color palette entry
->>>>>>32	ubeshort&0xF000	0
-# skip GEM Image data like clinton.img by test for existing bytes at the end
->>>>>>>32026	quad		x
->>>>>>>>0	use		degas-bitmap
+# skip control file load-v0001.aria2 and many GEM Image data like
+# GAMEOVR4.IMG BEETHVEN.IMG CHURCH.IMG TURKEY.IMG clinton.img
+# by test for valid file sizes
+# standard DEGAS mid-res uncompressed bitmap *.pi2 with file size 32034
+>>-0		offset	=32034
+# (39/41) like: GEMINI03.PI2 ST_TOOLS.PI2 TBX_DEMO.PI2
+>>>0		use		degas-bitmap
+# few DEGAS Elite mid-res uncompressed bitmap *.pi2 with file size 32066
+>>-0		offset	=32066
+# (2/41) like: medres.pi2
+>>>0		use		degas-bitmap
 # DEGAS high-res uncompressed bitmap *.pi3
 0	beshort		0x0002
 # skip Intel ia64 COFF msvcrt.lib by test for unused bits of 1st atari color palette entry
@@ -1528,19 +1526,27 @@
 >>>>>>0		use		degas-bitmap
 # last character of Adobe PhotoShop Brush UTF16-LE note
 #>>>>>&-4	ubelong&0x00FF0000	>0x001F0000	\b, THAT IS ABR
-
-# Commented out because they are weak
 # DEGAS low-res compressed bitmap *.pc1 like: BATTLSHP.PC1 GNUCHESS.PC1 MEDUSABL.PC1 MOONLORD.PC1 WILDROSE.PC1
-#0		beshort			0x8000
+0		beshort			0x8000
 # skip lif files handled via ./lif by test for unused bits of 1st palette entry
-#>2		ubeshort&0xF000		0
-#>>0		use		degas-bitmap
+>2		ubeshort&0xF000		0
+# skip CRI ADX ADPCM audio (R04HT.adx R03T-15552.adx) with 44100 Hz misinterpreted as 5th color entry value AC44h
+>>10		ubeshort&0xF000		0
+# skip few (fmt-840-signature-id-1195.adx fmt-840-signature-id-1199.adx) by test for 4 first non black colors in palette entries
+>>>2		quad			!0
+>>>>0		use		degas-bitmap
 # DEGAS mid-res compressed bitmap *.pc2 like: abydos.pc2 ARTIS3.PC2 SMTHDRAW.PC2 STAR_2K.PC2 TX2_DEMO.PC2
-#0		beshort			0x8001
-#>0		use		degas-bitmap
+0		beshort			0x8001
+# skip many (1274/1369) PostScript Type 1 font (DarkGardenMK.pfb coupbi.pfb MONOBOLD.PFB) with invalid 1st atari color palette entry 5506 5b06 6906 7906 7e06 fb15
+>2		ubeshort&0xF000		0
+# skip some (95/1369) PostScript Type 1 font (fmt-525-signature-id-816.pfb LUXEMBRG.PFB) with invalid 3rd atari color palette entry 2521
+>>6		ubeshort&0xF000		0
+>>>0		use		degas-bitmap
 # DEGAS high-res compressed bitmap *.pc3 like: abydos.pc3 COYOTE.PC3 ELEPHANT.PC3 TX2_DEMO.PC3 SMTHDRAW.PC3
-#0		beshort			0x8002
-#>0		use		degas-bitmap
+0		beshort			0x8002
+# skip some (36/212) Python Pickle (factor_cache.pickle environment.pickle) with invalid 1st atari color entry (2863 6363 7d71)
+>2		ubeshort&0xF000		0
+>>0		use		degas-bitmap
 # display information of Atari DEGAS and DEGAS Elite bitmap images
 0	name		degas-bitmap
 >0	ubyte		x		Atari DEGAS
