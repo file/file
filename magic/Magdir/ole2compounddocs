@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.20 2022/10/02 12:48:22 christos Exp $
+# $File: ole2compounddocs,v 1.21 2022/10/19 20:16:27 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -72,6 +72,7 @@
 #>67 	ubyte		x			\b, color %x
 # the DirIDs of the child nodes. Should both be -1 in the root storage entry
 #>68 	bequad		!0xffffffffffffffff	\b, DirIDs %llx
+# NEXT lines for DEBUGGING
 # second directory entry name like VisioDocument Control000 
 #>128	lestring16	x \b, 2nd %.20s
 # third directory entry like WordDocument
@@ -317,62 +318,53 @@
 # THIS WORKS PARTLY!
 >>>>>>&0	indirect	x
 #	remaining null clsid
->>>>128 	default		x			: UNKNOWN
-# second directory entry name like VisioDocument Control000
->>>>>128	lestring16	x with names %.20s
-# third directory entry like WordDocument
->>>>>256	lestring16	x %.20s
-# forth
->>>>>384	lestring16	x %.20s
-!:mime	application/x-ole-storage
-# according to file version 5.41 with -e soft option
-#!:mime	application/CDFV2
-#!:ext	???
+>>>>128 	default		x
+>>>>>0 	use		ole2-unknown
 #	look for known clsid GUID
 # - Visio documents
 # URL:	http://fileformats.archiveteam.org/wiki/Visio
 #   Last update on 10/23/2006 by Lester Hightower, 07/20/2019 by Joerg Jenderek
->>88 	ubequad		0xc000000000000046	: Microsoft
->>>80 	ubequad		0x131a020000000000	Visio 2000-2002 Document, stencil or template
+>>88 	ubequad		0xc000000000000046
+>>>80 	ubequad		0x131a020000000000	: Microsoft Visio 2000-2002 Document, stencil or template
 !:mime	application/vnd.visio
 # VSD~Drawing VSS~Stencil VST~Template 
 !:ext	vsd/vss/vst
->>>80 	ubequad		0x141a020000000000	Visio 2003-2010 Document, stencil or template
+>>>80 	ubequad		0x141a020000000000	: Microsoft Visio 2003-2010 Document, stencil or template
 !:mime	application/vnd.visio
 !:ext	vsd/vss/vst
 #
 # URL:	http://fileformats.archiveteam.org/wiki/Windows_Installer
->>>80 	ubequad		0x84100c0000000000	Windows Installer Package
+>>>80 	ubequad		0x84100c0000000000	: Microsoft Windows Installer Package
 !:mime	application/x-msi
 #!:mime	application/x-ms-win-installer
 !:ext	msi
->>>80 	ubequad		0x86100c0000000000	Windows Installer Patch
+>>>80 	ubequad		0x86100c0000000000	: Microsoft Windows Installer Patch
 # ??
 !:mime	application/x-wine-extension-msp
 #!:mime	application/x-ms-msp
 !:ext	msp
 #
 # URL:	http://fileformats.archiveteam.org/wiki/DOC
->>>80 	ubequad		0x0009020000000000	Word 6-95 document or template
+>>>80 	ubequad		0x0009020000000000	: Microsoft Word 6-95 document or template
 !:mime	application/msword
 # for template MSWDW8TN
 !:apple	MSWDWDBN
 !:ext	doc/dot
->>>80 	ubequad		0x0609020000000000	Word 97-2003 document or template
+>>>80 	ubequad		0x0609020000000000	: Microsoft Word 97-2003 document or template
 !:mime	application/msword
 !:apple	MSWDWDBN
 # dot for template; no extension on Macintosh
 !:ext	doc/dot/
 #
 # URL:	http://fileformats.archiveteam.org/wiki/Microsoft_Works_Word_Processor
->>>80 	ubequad		0x0213020000000000	Works 3-4 document or template
+>>>80 	ubequad		0x0213020000000000	: Microsoft Works 3-4 document or template
 !:mime	application/vnd.ms-works
 !:apple	????AWWP
 # ps for template	https://filext.com/file-extension/PS	bps for backup
 !:ext	wps/ps/bps
 #
 # URL:	http://fileformats.archiveteam.org/wiki/Microsoft_Works_Database
->>>80 	ubequad		0x0313020000000000	Works 3-4 database or template
+>>>80 	ubequad		0x0313020000000000	: Microsoft Works 3-4 database or template
 !:mime	application/vnd.ms-works-db
 # https://www.macdisk.com/macsigen.php
 !:apple	????AWDB
@@ -380,14 +372,14 @@
 !:ext	wdb/db/bdb
 #
 # URL:	https://en.wikipedia.org/wiki/Microsoft_Excel
->>>80 	ubequad		0x1008020000000000	Excel 5-95 worksheet, addin or template
+>>>80 	ubequad		0x1008020000000000	: Microsoft Excel 5-95 worksheet, addin or template
 !:mime	application/vnd.ms-excel
 # https://www.macdisk.com/macsigen.php
 !:apple	????XLS5
 # worksheet/addin/template/no extension on Macintosh
 !:ext	xls/xla/xlt/
 #
->>>80 	ubequad		0x2008020000000000	Excel 97-2003
+>>>80 	ubequad		0x2008020000000000	: Microsoft Excel 97-2003
 !:mime	application/vnd.ms-excel
 # https://www.macdisk.com/macsigen.php	XLS5 for Excel 5
 !:apple	????XLS9
@@ -403,23 +395,36 @@
 #!:ext	xls/xlt/
 #
 # URL:	http://fileformats.archiveteam.org/wiki/OLE2
->>>80 	ubequad		0x0b0d020000000000	Outlook 97-2003 item
-#>>>80 	ubequad		0x0b0d020000000000	Outlook 97-2003 Message
+>>>80 	ubequad		0x0b0d020000000000	: Microsoft Outlook 97-2003 item
+#>>>80 	ubequad		0x0b0d020000000000	: Microsoft Outlook 97-2003 Message
 #!:mime	application/vnd.ms-outlook
 !:mime	application/x-ms-msg
 !:ext	msg
 # URL:	https://wiki.fileformat.com/email/oft/
->>>80 	ubequad		0x46f0060000000000	Outlook 97-2003 item template
+>>>80 	ubequad		0x46f0060000000000	: Microsoft Outlook 97-2003 item template
 #!:mime	application/vnd.ms-outlook
 !:mime	application/x-ms-oft
 !:ext	oft
 #
 # URL:	http://fileformats.archiveteam.org/wiki/PPT
->>>80 	ubequad		0x5148040000000000	PowerPoint 4.0 presentation
+>>>80 	ubequad		0x5148040000000000	: Microsoft PowerPoint 4.0 presentation
 !:mime	application/vnd.ms-powerpoint
 # https://www.macdisk.com/macsigen.php
 !:apple	????PPT3
 !:ext	ppt
+# Summary:	"newer" Greenstreet Art drawing
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/GST_ART
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/art-gst-docfile.trid.xml
+# Note:		called like "Greenstreet Art drawing" by TrID
+# Note:		CONTENT stream contains binary part of older versions with phrase GST:ART at offset 16
+#		verified by Michal Mutl Structured Storage Viewer `SSView.exe BCARD2.ART`
+>>>80 	ubequad		0x602c020000000000	: Greenstreet Art drawing
+#!:mime	application/x-ole-storage
+!:mime	image/x-greenstreet-art
+!:ext	art
+>>>80 	default		x
+>>>>0 	use		ole2-unknown
 #??
 # URL:	http://www.checkfilename.com/view-details/Microsoft-Works/RespageIndex/0/sTab/2/
 >>88 	ubequad		0xa29a00aa004a1a72	: Microsoft
@@ -673,13 +678,28 @@
 #!:ext	max/chr
 # remaining non null clsid
 >>88 	default		x
-# GRR: check again for non null clsid because wrong when called by indirect directive
->>>88 	ubequad		!0			: UNKNOWN
+>>>0 	use		ole2-unknown
+# display information about directory for not detected CDF files
+0	name			ole2-unknown
+>80 	ubequad		x			: UNKNOWN
 # https://reposcope.com/mimetype/application/x-ole-storage
 !:mime	application/x-ole-storage
 # according to file version 5.41 with -e soft option
 #!:mime	application/CDFV2
 #!:ext	???
->>>>80 	ubequad		!0			\b, clsid %#16.16llx
->>>>88 	ubequad		x			\b%16.16llx
-
+>80 	ubequad		!0			\b, clsid %#16.16llx
+>>88 ubequad		x			\b%16.16llx
+# converted hexadecimal format to standard GUUID notation
+>>80	guid		x			{%s}
+# second directory entry name like VisioDocument Control000
+>128	lestring16	x with names %.20s
+# third directory entry like WordDocument Preview.dib
+>256	lestring16	x %.20s
+# forth like \005SummaryInformation
+>384	lestring16	x %.25s
+# 5th
+>512	lestring16	x %.10s
+# 6th
+>640	lestring16	x %.10s
+# 7th
+>768	lestring16	x %.10s
