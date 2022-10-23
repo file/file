@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.337 2022/10/09 16:46:08 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.338 2022/10/23 13:21:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -554,7 +554,7 @@ file_ms_alloc(int flags)
 	size_t i, len;
 
 	if ((ms = CAST(struct magic_set *, calloc(CAST(size_t, 1u),
-	    sizeof(struct magic_set)))) == NULL)
+	    sizeof(*ms)))) == NULL)
 		return NULL;
 
 	if (magic_setflags(ms, flags) == -1) {
@@ -704,7 +704,7 @@ buffer_apprentice(struct magic_set *ms, struct magic **bufs,
 	for (i = 0; i < MAGIC_SETS; i++) {
 		mlist_free(ms->mlist[i]);
 		if ((ms->mlist[i] = mlist_alloc()) == NULL) {
-			file_oomem(ms, sizeof(*ms->mlist[i]));
+			file_oomem(ms, sizeof(*ms->mlist[0]));
 			goto fail;
 		}
 	}
@@ -752,7 +752,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	for (i = 0; i < MAGIC_SETS; i++) {
 		mlist_free(ms->mlist[i]);
 		if ((ms->mlist[i] = mlist_alloc()) == NULL) {
-			file_oomem(ms, sizeof(*ms->mlist[i]));
+			file_oomem(ms, sizeof(*ms->mlist[0]));
 			for (j = 0; j < i; j++) {
 				mlist_free(ms->mlist[j]);
 				ms->mlist[j] = NULL;
@@ -1167,14 +1167,16 @@ apprentice_list(struct mlist *mlist, int mode)
 			 * description/mimetype.
 			 */
 			lineindex = descindex = mimeindex = magindex;
-			for (magindex++; magindex < ml->nmagic &&
-			   ml->magic[magindex].cont_level != 0; magindex++) {
+			for (; magindex + 1 < ml->nmagic &&
+			   ml->magic[magindex + 1].cont_level != 0;
+			   magindex++) {
+				uint32_t mi = magindex + 1;
 				if (*ml->magic[descindex].desc == '\0'
-				    && *ml->magic[magindex].desc)
-					descindex = magindex;
+				    && *ml->magic[mi].desc)
+					descindex = mi;
 				if (*ml->magic[mimeindex].mimetype == '\0'
-				    && *ml->magic[magindex].mimetype)
-					mimeindex = magindex;
+				    && *ml->magic[mi].mimetype)
+					mimeindex = mi;
 			}
 
 			printf("Strength = %3" SIZE_T_FORMAT "u@%u: %s [%s]\n",
@@ -1589,7 +1591,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 			i = set_text_binary(ms, mset[j].me, mset[j].count, i);
 		}
 		if (mset[j].me)
-			qsort(mset[j].me, mset[j].count, sizeof(*mset[j].me),
+			qsort(mset[j].me, mset[j].count, sizeof(*mset[0].me),
 			    apprentice_sort);
 
 		/*
