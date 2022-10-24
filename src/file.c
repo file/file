@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.209 2022/10/23 14:22:53 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.210 2022/10/24 20:21:54 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -533,15 +533,15 @@ unwrap(struct magic_set *ms, const char *fn, int immed)
 		if (line[len - 1] == '\n')
 			line[len - 1] = '\0';
 		cwid = file_mbswidth(ms, line);
-		if (cwid > wid)
-			wid = cwid;
 		if (immed) {
-			e |= process(ms, line, wid);
+			e |= process(ms, line, cwid);
 			free(line);
 			line = NULL;
 			llen = 0;
 			continue;
 		}
+		if (cwid > wid)
+			wid = cwid;
 		if (fi >= fimax) {
 			fimax += 100;
 			char **nf = CAST(char **,
