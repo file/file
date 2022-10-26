@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.211 2022/10/26 16:56:14 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.212 2022/10/26 18:09:26 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -571,10 +571,10 @@ unwrap(struct magic_set *ms, const char *fn)
 private void
 file_octal(unsigned char c)
 {
-	putc('\\', stdout);
-	putc(((c >> 6) & 7) + '0', stdout);
-	putc(((c >> 3) & 7) + '0', stdout);
-	putc(((c >> 0) & 7) + '0', stdout);
+	(void)putc('\\', stdout);
+	(void)putc(((c >> 6) & 7) + '0', stdout);
+	(void)putc(((c >> 3) & 7) + '0', stdout);
+	(void)putc(((c >> 0) & 7) + '0', stdout);
 }
 
 private void
@@ -612,7 +612,7 @@ fname_print(const char *inname)
 	for (i = 0; i < n; i++) {
 		unsigned char c = CAST(unsigned char, inname[i]);
 		if (isprint(c)) {
-			putc(c);
+			(void)putc(c, stdout);
 			continue;
 		}
 		file_octal(c);
@@ -708,8 +708,8 @@ defprint(int def)
 	if (!def)
 		return;
 	if (((def & 1) && posixly) || ((def & 2) && !posixly))
-		fprintf(stdout, " (default)");
-	fputc('\n', stdout);
+		(void)fprintf(stdout, " (default)");
+	(void)putc('\n', stdout);
 }
 
 private void
@@ -721,7 +721,7 @@ docprint(const char *opts, int def)
 
 	p = CCAST(char *, strchr(opts, '%'));
 	if (p == NULL) {
-		fprintf(stdout, "%s", opts);
+		(void)fprintf(stdout, "%s", opts);
 		defprint(def);
 		return;
 	}
@@ -729,26 +729,26 @@ docprint(const char *opts, int def)
 	for (sp = p - 1; sp > opts && *sp == ' '; sp--)
 		continue;
 
-	fprintf(stdout, "%.*s", CAST(int, p - opts), opts);
+	(void)printf("%.*s", CAST(int, p - opts), opts);
 	pad = (int)CAST(int, p - sp - 1);
 
 	switch (*++p) {
 	case 'e':
 		comma = 0;
 		for (i = 0; i < __arraycount(nv); i++) {
-			fprintf(stdout, "%s%s", comma++ ? ", " : "", nv[i].name);
+			(void)printf("%s%s", comma++ ? ", " : "", nv[i].name);
 			if (i && i % 5 == 0 && i != __arraycount(nv) - 1) {
-				fprintf(stdout, ",\n%*s", pad, "");
+				(void)printf(",\n%*s", pad, "");
 				comma = 0;
 			}
 		}
 		break;
 	case 'P':
 		for (i = 0; i < __arraycount(pm); i++) {
-			fprintf(stdout, "%9s %7zu %s", pm[i].name, pm[i].def,
+			(void)printf("%9s %7zu %s", pm[i].name, pm[i].def,
 			    pm[i].desc);
 			if (i != __arraycount(pm) - 1)
-				fprintf(stdout, "\n%*s", pad, "");
+				(void)printf("\n%*s", pad, "");
 		}
 		break;
 	default:
@@ -756,7 +756,7 @@ docprint(const char *opts, int def)
 		   *p);
 		break;
 	}
-	fprintf(stdout, "%s", opts + (p - opts) + 1);
+	(void)printf("%s", opts + (p - opts) + 1);
 
 }
 
@@ -768,15 +768,15 @@ help(void)
 "Determine type of FILEs.\n"
 "\n", stdout);
 #define OPT(shortname, longname, opt, def, doc)      \
-	fprintf(stdout, "  -%c, --" longname, shortname), \
+	(void)printf("  -%c, --" longname, shortname), \
 	docprint(doc, def);
 #define OPT_LONGONLY(longname, opt, def, doc, id)    	\
-	fprintf(stdout, "      --" longname),	\
+	(void)printf("      --" longname),	\
 	docprint(doc, def);
 #include "file_opts.h"
 #undef OPT
 #undef OPT_LONGONLY
-	fprintf(stdout, "\nReport bugs to https://bugs.astron.com/\n");
+	(void)printf("\nReport bugs to https://bugs.astron.com/\n");
 	exit(EXIT_SUCCESS);
 }
 
@@ -801,11 +801,11 @@ file_err(int e, const char *fmt, ...)
 	int se = errno;
 
 	va_start(ap, fmt);
-	fprintf(stderr, "%s: ", file_progname);
-	vfprintf(stderr, fmt, ap);
+	(void)fprintf(stderr, "%s: ", file_progname);
+	(void)vfprintf(stderr, fmt, ap);
 	va_end(ap);
 	if (se)
-		fprintf(stderr, " (%s)\n", strerror(se));
+		(void)fprintf(stderr, " (%s)\n", strerror(se));
 	else
 		fputc('\n', stderr);
 	exit(e);
@@ -817,10 +817,10 @@ file_errx(int e, const char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
-	fprintf(stderr, "%s: ", file_progname);
-	vfprintf(stderr, fmt, ap);
+	(void)fprintf(stderr, "%s: ", file_progname);
+	(void)vfprintf(stderr, fmt, ap);
 	va_end(ap);
-	fprintf(stderr, "\n");
+	(void)fprintf(stderr, "\n");
 	exit(e);
 }
 
@@ -831,11 +831,11 @@ file_warn(const char *fmt, ...)
 	int se = errno;
 
 	va_start(ap, fmt);
-	fprintf(stderr, "%s: ", file_progname);
-	vfprintf(stderr, fmt, ap);
+	(void)fprintf(stderr, "%s: ", file_progname);
+	(void)vfprintf(stderr, fmt, ap);
 	va_end(ap);
 	if (se)
-		fprintf(stderr, " (%s)\n", strerror(se));
+		(void)fprintf(stderr, " (%s)\n", strerror(se));
 	else
 		fputc('\n', stderr);
 	errno = se;
@@ -848,9 +848,9 @@ file_warnx(const char *fmt, ...)
 	int se = errno;
 
 	va_start(ap, fmt);
-	fprintf(stderr, "%s: ", file_progname);
-	vfprintf(stderr, fmt, ap);
+	(void)fprintf(stderr, "%s: ", file_progname);
+	(void)vfprintf(stderr, fmt, ap);
 	va_end(ap);
-	fprintf(stderr, "\n");
+	(void)fprintf(stderr, "\n");
 	errno = se;
 }
