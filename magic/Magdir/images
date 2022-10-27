@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.234 2022/10/19 20:15:16 christos Exp $
+# $File: images,v 1.235 2022/10/27 18:05:43 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -652,7 +652,86 @@
 >24	string		SunGKS		\b, SunGKS
 
 # CGM image files
-0	string		BEGMF		clear text Computer Graphics Metafile
+# Update:	Joerg Jenderek
+# URL: 		http://fileformats.archiveteam.org/wiki/CGM
+#		https://en.wikipedia.org/wiki/Computer_Graphics_Metafile
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cgm-ct.trid.xml
+#		http://standards.iso.org/ittf/PubliclyAvailableStandards/c032381_ISO_IEC_8632-4_1999(E).zip
+# Note:		called "Computer Graphics Metafile (Clear Text)" by TrID and
+#		"Computer Graphics Metafile ASCII" by DROID or CGM by XnView
+#		verified by LibreOffice and partly by XnView `nconvert -info *.CGM`
+# According to TrID only letter B and M are always upcased and by DROID often only B is upcased for command BEGIN METAFILE
+0	string/c	begmf
+# skip SOME DROID fmt-301-signature-id-359.cgm fmt-301-signature-id-361.cgm fmt-302-signature-id-364.cgm
+# fmt-302-signature-id-365.cgm x-fmt-142-signature-id-350.cgm x-fmt-142-signature-id-351.cgm
+>5	short		!0
+# skip other versions of DROID fmt-301-signature-id-359.cgm fmt-301-signature-id-361.cgm fmt-302-signature-id-364.cgm
+# fmt-302-signature-id-365.cgm x-fmt-142-signature-id-350.cgm x-fmt-142-signature-id-351.cgm
+>>5	short		!0xABab		clear text Computer Graphics Metafile
+# https://reposcope.com/mimetype/image/cgm
+!:mime	image/cgm
+!:ext	cgm
+# SF:NAME like: 'metafile example';
+>>>5	string		x		%s
+# look for command METAFILE VERSION (MFVERSION <SOFTSEP> <I:VERSION>)
+>>>2	search/128/c	mfversion
+#>>>>&0	ubyte		x		SOFTSEP=%#x
+# version like: 1 3 4
+>>>>&1	ubyte		>0x31		\b, version %c
+# Summary:	Computer Graphics Metafile (binary)
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cgm-bin.trid.xml
+#		https://standards.iso.org/ittf/PubliclyAvailableStandards/c032380_ISO_IEC_8632-3_1999(E).zip
+# Note:		called "Computer Graphics Metafile (binary)" by TrID and DROID or CGM by XnView
+#		verified by LibreOffice and partly by XnView `nconvert -info *.CGM`
+# look for BEGIN METAFILE (element Class 0 and ID 1 and "random" Parameter) that is binary C C C C 0 0 0 0 0 0 1 P P P P P
+0	ubeshort&0xFFe0		0x0020
+# skip SOME DROID fmt-303-signature-id-368.cgm fmt-304-signature-id-369.cgm fmt-305-signature-id-370.cgm fmt-306-signature-id-371.cgm
+# with containing only 28 bytes
+>28	ubyte			x
+# look for METAFILE VERSION (element class 1 and id 1 and parameter P1 with length 2) that is binary 0 0 0 1 i i i i i i 1 P P P 1 P
+# with "low" version; 2nd worst case argentin.cgm with parameter length 56
+# worst MS.CGM
+#>>2	search/73/b		\x10\x22\0	binary Computer Graphics Metafile
+>>2	search/128/b		\x10\x22\0	binary Computer Graphics Metafile
+!:mime	image/cgm
+!:ext	cgm
+# metafile 2 byte version number like: 1 (most) 2 3 4
+>>>&-1	ubeshort		>1		\b, version %u
+# length number of 1st parameter octets in range 0 to 30 implies short command
+>>>0	ubeshort&0x001F		<31		\b, parameter length %u
+# length of string like: 8 9 10 11 12 29
+#>>>>2		ubyte		x		\b, %u BYTES (SHORT)
+# string like: 'HiJaak 2' 'Example 1' 'sahara.cgm' 'MASTERCLIPS--Art Of Business '
+>>>>2		pstring		>\0		'%s'
+# after 1st short command with even parameter length comes 2nd command like: 1022h 0010h (EAF00010.CGM 'HiJaak 2' FLOPPY2.CGM TIGER.CGM 'B:\TIGER.CGM')
+>>>>0  		ubeshort&0x0001	=0
+>>>>>(2.b+3)	ubeshort	!0x1022		\b, 2nd command %#4.4x (short even)
+# after 1st short command with odd parameter length comes nil padding byte followed 2nd command like: 1022h
+>>>>0  		ubeshort&0x0001	=1
+#>>>>>(2.b+3)	ubyte		!0		\b, PADDING %#x
+>>>>>(2.b+4)	ubeshort	!0x1022		\b, 2nd command %#4.4x (short odd)
+# 11111 binary (decimal 31) in the parameter field indicates that the command is in long-form
+>>>0	ubeshort&0x001F		=0x1F
+# bit 15 is partition flag with 1 for 'not-last' partition and 0 for 'last' partition
+>>>>2  		ubeshort&0x8000	!0		\b, partition flag %#4.4x
+# bits 0 to 14 is parameter list length; the number of following parameter octets; range 0 to 32767
+# length of 1st long command parameter like: 53
+>>>>2  		ubeshort&0x7Fff	x		\b, parameter length %u (long)
+# The two header words are then followed by lenghth of 1st string like: 52
+#>>>>4		ubyte		x		\b, %u BYTES
+# string like: 'K:\PROJECTS\GRAPHICS\DWKS3.5\CLIPART\FLAGS\Italy.cgm'
+>>>>4		pstring/B	x		'%s'
+# odd long parameter length implies single null padding octet to start command on word boundary
+>>>>2  		ubeshort&0x0001	=1
+# after 1st long command with odd parameter length comes nil padding byte followed by 2nd command like: 1022h
+#>>>>>(4.b+5)		ubyte	!0		\b, PADDING %#x
+>>>>>(4.b+6)		ubeshort !0x1022	\b, 2nd command %#4.4x (long odd)
+# even long parameter length implies next command directly is following
+>>>>2  		ubeshort&0x0001	=0
+# after 1st long command with even parameter length comes 2nd command like: 1022h 0x1054 (MS.CGM)
+>>>>>(4.b+5)	ubeshort	!0x1022		\b, 2nd command %#4.4x (long even)
+# look for END METAFILE (element class 0 and id 2 and 0 parameter) that is binary 0 0 0 0 i i i i i 1 i P P P P P
+>>>-2	ubeshort		!0x0040		\b, NOT_FOUND_END_METAFILE
 
 # MGR bitmaps  (Michael Haardt, u31b3hs@pool.informatik.rwth-aachen.de)
 0	string	yz	MGR bitmap, modern format, 8-bit aligned
@@ -2656,6 +2735,7 @@
 
 # BS encoded bitstreams
 2		uleshort	0x3800		BS image,
+# GRR: the above line is also true for binary Computer Graphics Metafile SAB00012.CGM with long parameter length 56 (=38h)
 >6		uleshort	x		Version %d,
 >4		uleshort	x		Quantization %d,
 >0		uleshort	x		(Decompresses to %d words)
