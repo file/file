@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.25 2022/05/31 18:40:20 christos Exp $
+# $File: games,v 1.26 2022/10/28 20:20:03 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -510,3 +510,12 @@
 >>0	ulelong&0xf	=8	RDR 2,
 >>4	ulelong 	x	%d bytes,
 >>>8	ulelong 	x	%d entries
+
+# Blitz3D Model File Format
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://github.com/minetest/B3DExport/blob/master/B3DExport.py
+0	string		BB3D
+>4	lelong		>0
+>>8	lelong		>0	Blitz3D Model
+!:ext	b3d
+>>>8	lelong		x	\b, version %d
