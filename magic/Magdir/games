@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.26 2022/10/28 20:20:03 christos Exp $
+# $File: games,v 1.27 2022/10/29 13:22:45 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -519,3 +519,13 @@
 >>8	lelong		>0	Blitz3D Model
 !:ext	b3d
 >>>8	lelong		x	\b, version %d
+
+# Minetest Schematic File Format
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://github.com/minetest/minetest/blob/5.6.1/src/mapgen/mg_schematic.h
+0	string		MTSM	Minetest Schematic
+!:ext	mts
+>4	ubeshort	x	\b, version %d
+>6	ubeshort	x	\b, size [%d
+>8	ubeshort	x	\b, %d
+>10	ubeshort	x	\b, %d]
