@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.27 2022/10/29 13:22:45 christos Exp $
+# $File: games,v 1.28 2022/10/30 18:45:53 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -529,3 +529,12 @@
 >6	ubeshort	x	\b, size [%d
 >8	ubeshort	x	\b, %d
 >10	ubeshort	x	\b, %d]
+
+# MagicaVoxel File Format
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://github.com/ephtracy/voxel-model/blob/ee2216c28a78ebb68691dc6cfa9c4ba429117ea2/MagicaVoxel-file-format-vox.txt
+# Note: This format is used in Veloren voxel RPG.
+0	string		VOX\x20
+>4	lelong		>0	MagicaVoxel model
+!:ext	vox
+>>4	lelong		x	\b, version %d
