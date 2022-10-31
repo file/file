@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.151 2022/09/27 02:37:28 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.152 2022/10/31 13:22:26 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -1080,7 +1080,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 	 * analyze two large compressed files, both will spawn
 	 * an uncompressing child here, which writes out uncompressed data.
 	 * We read some portion, then close the pipe, then waitpid() the child.
-	 * If uncompressed data is larger, child shound get EPIPE and exit.
+	 * If uncompressed data is larger, child should get EPIPE and exit.
 	 * However, with *parallel* calls OTHER child may unintentionally
 	 * inherit pipe fds, thus keeping pipe open and making writes in
 	 * our child block instead of failing with EPIPE!

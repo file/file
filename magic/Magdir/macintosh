@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: macintosh,v 1.34 2022/10/19 20:15:16 christos Exp $
+# $File: macintosh,v 1.35 2022/10/31 13:22:26 christos Exp $
 # macintosh description
 #
 # BinHex is the Macintosh ASCII-encoded file format (see also "apple")
@@ -186,7 +186,7 @@
 # few (31/1247) examples (hinkC4.0.sitx.bin InternetExplorer5.1.smi.bin G3FirmwareUpdate1.1.smi.bin Firewire2.3.3.smi.bin LR2image.bin) contain zeroed date fields
 >91	long		!0
 >>91	beldate-0x7C25B080	x	\b, %s
-# THIS SHOULD NEVER HAPPEN! Maybe another file type is misidetified or time overflow
+# THIS SHOULD NEVER HAPPEN! Maybe another file type is misidentified or time overflow
 >91	ubelong		<0x7c25b080	INVALID date
 # reported date seconds by deark
 #>91	ubelong		x		deark-DATE=%u

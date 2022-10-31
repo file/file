@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.31 2022/08/31 08:00:53 christos Exp $
+# $File: wordprocessors,v 1.32 2022/10/31 13:22:26 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -430,7 +430,7 @@
 >110	uleshort/256	=0			document
 # https://www.macdisk.com/macsigen.php
 !:apple	ALB3ALD3
-# PT3 for template and no example for PageMaker document/publiction with PM3 extension
+# PT3 for template and no example for PageMaker document/publication with PM3 extension
 !:ext	pm3/pt3
 >110	uleshort/256	=4			document
 !:apple	ALD4ALB4

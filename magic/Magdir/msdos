@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.158 2022/09/07 11:17:31 christos Exp $
+# $File: msdos,v 1.159 2022/10/31 13:22:26 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -420,7 +420,7 @@
 >0x0a	leshort			3		for DOS
 # http://www.ctyme.com/intr/rb-2939.htm#Table1610
 # library by module type mask 00038000h (bits 15-17); 
-# 0h ~exectable Program module 
+# 0h ~executable Program module 
 >0x10	ulelong&0x00038000	=0x00000000	(program)
 #!:ext	exe
 # OSF_IS_DLL=8000h			~Library module (DLL)
@@ -602,11 +602,11 @@
 0       name    msdos-com
 # URL:		http://fileformats.archiveteam.org/wiki/DOS_executable_(.com)
 >0  byte        x               DOS executable (
-# DOS execuable with JuMP 16-bit instruction
+# DOS executable with JuMP 16-bit instruction
 >0	byte			=0xE9
 # check for probably nil padding til offset 64 of Lotus driver name
 >>56		quad		=0
-# check for "long" alpabetical Lotus driver name like:
+# check for "long" alphabetic Lotus driver name like:
 # Diablo "COMPAQ Text Display" "IBM Monochrome Display" "Plantronics ColorPlus"
 >>>24			regex	=^[A-Z][A-Za-z\040]{5,21}	\bLotus driver) %s
 !:mime				application/x-dosexec
@@ -616,7 +616,7 @@
 >>>24			default	x				\bCOM)
 !:mime				application/x-dosexec
 !:ext				com
-# DOS excutable with JuMP 16-bit and without nil padding
+# DOS executable with JuMP 16-bit and without nil padding
 >>56		quad		!0
 # https://wiki.syslinux.org/wiki/index.php?title=Doc/comboot
 # TODO: HOWTO distinguish COMboot from pure DOS executables?
@@ -781,7 +781,7 @@
 >>1	default	x
 # look for interrupt instruction like in rem.com (DJGPP) LOADER.COM (DR-DOS 7.x)
 >>>3	search/118	\xCD
-# FOR DEBUGGING; possible hexadecimal interupt number like: 10~BANNER.COM 13~bcdw_cl.com 15~poweroff.com (Syslinux)
+# FOR DEBUGGING; possible hexadecimal interrupt number like: 10~BANNER.COM 13~bcdw_cl.com 15~poweroff.com (Syslinux)
 # 1A~BERNDPCI.COM 20~SETENHKB.COM 21~mostly 22~gfxboot.com (Syslinux) 2F~SHUTDOWN.COM (GEMSYS)
 #>>>>&0	ubyte	x			\b, INTERUPT %#x
 # few examples with interrupt 0x13 instruction
@@ -791,7 +791,7 @@
 # skip Gpt.com Mbr.com (edk2-UDK2018 bootsector) described as "DOS/MBR boot sector" by ./filesystems
 # by check for assembler instructions: mov  es,ax ; mov  ax,07c0h ; mov ds,ax 
 >>>>>3	ubequad	!0x8ec0b8c0078ed88d
-# few COM exectables with interrupt 0x13 instruction like: Bootable CD Wizard executables bcdw_cl.com fdemuoff.com
+# few COM executables with interrupt 0x13 instruction like: Bootable CD Wizard executables bcdw_cl.com fdemuoff.com
 # http://bootcd.narod.ru/bcdw150z_en.zip
 >>>>>>0		use		msdos-com
 # few examples with interrupt 0x16 instruction like flashimg.img
@@ -806,7 +806,7 @@
 #>>>>>&-1 ubyte	x			\b, INTERUPT %#x
 # like: LOADER.COM SETENHKB.COM banner.com copybs.com gif2raw.com poweroff.com rem.com
 >>>>>0		use		msdos-com
-# few COM executables without interupt instruction like RESTART.COM (DOS 7.10) REBOOT.COM
+# few COM executables without interrupt instruction like RESTART.COM (DOS 7.10) REBOOT.COM
 # or some EUC-KR text files or one Ulead Imaginfo thumbnail
 >>>3	default	x
 # FOR DEBUGGING; 2nd instruction like 0x50 (RESTART.COM) 0x8e (REBOOT.COM)

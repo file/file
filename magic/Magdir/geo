@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: geo,v 1.9 2022/09/23 13:25:15 christos Exp $
+# $File: geo,v 1.10 2022/10/31 13:22:26 christos Exp $
 # Geo- files from Kurt Schwehr <schwehr@ccom.unh.edu>
 
 ######################################################################
@@ -124,7 +124,7 @@
 #
 ######################################################################
 
-# IVS - IVS3d.com Tagged Data Represetation
+# IVS - IVS3d.com Tagged Data Representation
 0	string	%%\ TDR\ 2.0	IVS Fledermaus TDR file
 
 # http://www.ecma-international.org/publications/standards/Ecma-363.htm

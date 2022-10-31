@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mathematica,v 1.14 2021/11/07 16:27:36 christos Exp $
+# $File: mathematica,v 1.15 2022/10/31 13:22:26 christos Exp $
 # mathematica:  file(1) magic for mathematica files
 # "H. Nanosecond" <aldomel@ix.netcom.com>
 # Mathematica a multi-purpose math program
@@ -132,7 +132,7 @@
 >>>>0	ulelong		<53
 # skip tokens.dat and some Netwfw*.dat by check for valid imaginary flag value of MAT version 4
 >>>>>12	ulelong		<2
-# no misidentfied little endian MATrix example with "short" matrix name
+# no misidentified little endian MATrix example with "short" matrix name
 >>>>>>16	ulelong		<3
 >>>>>>>0	use	\^matlab4
 # little endian MATrix with "long" matrix name or some misidentified samples

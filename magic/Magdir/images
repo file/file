@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.235 2022/10/27 18:05:43 christos Exp $
+# $File: images,v 1.236 2022/10/31 13:22:26 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -625,7 +625,7 @@
 >>8	string		x		"%s"
 # should be point character (2Eh) of version string according to TrID
 #>6	ubyte		!0x2E		\b, at 6 %#x
-# caret character (23h) at the beginning in most or probaly all exanples
+# caret character (23h) at the beginning in most or probably all examples
 #>0	ubyte		!0x23		\b, starting with character %#x
 # URL: 		http://fileformats.archiveteam.org/wiki/DeskMate_Draw
 #		http://en.wikipedia.org/wiki/Deskmate
@@ -1217,7 +1217,7 @@
 0	string			/*\040
 # 9 byte c-comment "/* XPM */" not at the beginning like: mozicon16.xpm mozicon50.xpm (thunderbird)
 >0	search/0xCE		/*\ XPM\ */
-# skip DROID x-fmt-208-signature-id-620.xpm by looking for char aray without explict length
+# skip DROID x-fmt-208-signature-id-620.xpm by looking for char array without explict length
 # and match mh-logo.xpm (emacs)
 >>&0		search/1249	[]
 >>>0		use		xpm-image
@@ -1225,7 +1225,7 @@
 >0	default			x
 # words are separated by a white space which can be composed of space and tabulation characters
 >>0		search/0x52	static\040char\040
-# skip debug.c testmlc.c by looking for char aray without explict length
+# skip debug.c testmlc.c by looking for char array without explict length
 # https://www.clamav.net/downloads/production/clamav-0.104.2.tar.gz
 # clamav-0.104.2\libclammspack\mspack\debug.c 
 >>>&0		search/64	[]
@@ -1932,7 +1932,7 @@
 0	name		aco-color-v2
 >0		use					aco-color
 #>10		ubeshort				x		\b, NUL_BYTES %#x
-# color name lenght plus one (len+1) like: 7 8 9 13 14 15 16 17 22 26
+# color name length plus one (len+1) like: 7 8 9 13 14 15 16 17 22 26
 #>>12		ubeshort			 	x		\b, LENGTH %u
 >>12		ubeshort-1				x		\b, %u chars
 # len words; UTF-16 representation of the color name like: "DIC 1s" "PANTONE Process Yellow PC"

@@ -254,7 +254,7 @@
 2019-12-15  22:13  Christos Zoulas <christos@zoulas.com>
     Document changes since the previous release:
 	- Always accept -S (no sandbox) even if we don't support sandboxing
-	- More syscalls elided for sandboxiing
+	- More syscalls elided for sandboxing
 	- For ELF dynamic means having an interpreter not just PT_DYNAMIC
 	- Check for large ELF session header offset
 	- When saving and restoring a locale, keep the locale name in our
@@ -1784,7 +1784,7 @@
 
 	* Magic format checks (Dr. Werner Fink)
 
-	* Magic format function improvent (Karl Chen)
+	* Magic format function improvement (Karl Chen)
 
 2006-05-03 11:11 Christos Zoulas <christos@astron.com>
 

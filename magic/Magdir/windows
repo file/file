@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.48 2022/10/04 14:21:28 christos Exp $
+# $File: windows,v 1.49 2022/10/31 13:22:26 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1385,7 +1385,7 @@
 # 5000010021083f00 50000100b0335600 50000100cbfdf800 50000100dfbc4700
 #>4	ubequad		x		\b, at 4 %#16.16llx
 # copyright text like:	"Stirling Technologies, Inc.  (c) 1990-1994"
-#			"InstallSHIELD Software Coporation  (c) 1990-1997"
+#			"InstallSHIELD Software Corporation  (c) 1990-1997"
 >13	pstring/h	x		"%s"
 # look for specific ASCII variable names
 >1	search/0x121/s	SRCDIR	\b, variable names:

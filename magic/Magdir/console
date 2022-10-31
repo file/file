@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.69 2022/10/15 14:21:13 christos Exp $
+# $File: console,v 1.70 2022/10/31 13:22:26 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -68,7 +68,7 @@
 !:mime	application/x-nes-rom
 
 #------------------------------------------------------------------------------
-# fds: file(1) magic for Famciom Disk System disk images
+# fds: file(1) magic for Famicom Disk System disk images
 # Reference: https://wiki.nesdev.com/w/index.php/Family_Computer_Disk_System#.FDS_format
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 # TODO: Check "Disk info block" and get info from that in addition to the optional header.

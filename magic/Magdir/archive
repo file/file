@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.172 2022/10/10 18:45:58 christos Exp $
+# $File: archive,v 1.173 2022/10/31 13:22:26 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1236,7 +1236,7 @@
 >>>>>>3	regex		\^lh[01]	LHarc 1.x/ARX archive data
 # LHice archiver use ".ICE" as name extension instead usual one ".lzh"
 # FOOBAR archiver use ".foo" as name extension instead usual one
-# "Florain Orjanov's and Olga Bachetska's ARchiver" not found at the moment
+# "Florian Orjanov's and Olga Bachetska's ARchiver" not found at the moment
 >>>>>>>2	string	-lh1		\b 
 !:ext lha/lzh/ice
 >>>>>>3	regex		\^lh[23d]	LHa 2.x? archive data
