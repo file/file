@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.32 2022/07/30 16:46:56 christos Exp $
+# $File: sniffer,v 1.33 2022/10/31 14:39:24 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -333,8 +333,40 @@
 
 #
 # HP-UX "nettl" capture files.
-#
+# URL:		https://nixdoc.net/man-pages/HP-UX/man1m/nettl.1m.html
+# Reference:	https://github.com/wireshark/wireshark/blob/master/wiretap/nettl.c
+# Update:	Joerg Jenderek
+# Note:		Wireshark fills "meta information header fields" with "dummy" values 
+# nettl_magic_hpux9[12]; for HP-UX 9.x not tested
+0	string		\x00\x00\x00\x01\x00\x00\x00\x00\x00\x07\xD0\x00	HP/UX 9.x nettl capture file
+!:mime	application/x-nettl
+!:ext	trc0/trc1
+# nettl_magic_hpux10[12]; for HP-UX 10.x and 11.x
 0	string		\x54\x52\x00\x64\x00	HP/UX nettl capture file
+# https://reposcope.com/mimetype/application/x-nettl
+!:mime	application/x-nettl
+# maybe also TRC000 TRC001 TRC002 ...
+!:ext	trc0/trc1
+# file_name[56]; maybe also like /tmp/raw.tr.TRC000
+>12	string		!/tmp/wireshark.TRC000
+>>12	string		x			"%-.56s"
+# tz[20]; like UTC
+>68	string		!UTC			\b, tz
+>>68	string		x			%-.20s
+# host_name[9];
+>88	string		>\0			\b, host %-.9s
+# os_vers[9]; like B.11.11
+>97	string		!B.11.11		\b, os
+>>97	string		x			%-.9s
+# os_v; like 55h
+>>106	ubyte		x			(%#x)
+# xxa[8]; like 0
+>107	ubequad		!0			\b, xxa=%#16.16llx
+# model[11] like: 9000/800
+>115	string		!9000/800		\b, model
+>>115	string		x			%-.11s
+# unknown; probably just padding to 128 bytes like: 0406h
+>126	ubeshort	!0x0406h		\b, at 126 %#4.4x
 
 #
 # RADCOM WAN/LAN Analyzer capture files.
