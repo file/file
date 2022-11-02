@@ -136,6 +136,8 @@
 >>(0x3c.l+4)	leshort		0x5032	RISC-V 32-bit
 >>(0x3c.l+4)	leshort		0x5064	RISC-V 64-bit
 >>(0x3c.l+4)	leshort		0x5128	RISC-V 128-bit
+>>(0x3c.l+4)	leshort		0x6232	LoongArch 32-bit
+>>(0x3c.l+4)	leshort		0x6264	LoongArch 64-bit
 >>(0x3c.l+4)	leshort		0x9041	Mitsubishi M32R
 >>(0x3c.l+4)	leshort		0x8664	x86-64
 >>(0x3c.l+4)	leshort		0xaa64	Aarch64
