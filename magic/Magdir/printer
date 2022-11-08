@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: printer,v 1.29 2019/04/19 00:42:27 christos Exp $
+# $File: printer,v 1.30 2022/11/08 16:14:07 christos Exp $
 # printer:  file(1) magic for printer-formatted files
 #
 
@@ -45,6 +45,8 @@
 #
 0	string		*PPD-Adobe:\x20	PPD file
 >&0	string		x		\b, version %s
+!:ext	ppd
+!:mime	application/vnd.cups-ppd
 
 # HP Printer Job Language
 0	string		\033%-12345X@PJL	HP Printer Job Language data
