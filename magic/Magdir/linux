@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.82 2022/09/07 11:23:44 christos Exp $
+# $File: linux,v 1.83 2022/11/18 19:02:28 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -67,8 +67,8 @@
 >16	lelong		x		%d characters,
 >12	lelong&0x01	0		no directory,
 >12	lelong&0x01	!0		Unicode directory,
->24	lelong		x		%d
->28	lelong		x		\bx%d
+>28	lelong		x		%d
+>24	lelong		x		\bx%d
 
 # Linux swap and hibernate files
 # Linux kernel: include/linux/swap.h
