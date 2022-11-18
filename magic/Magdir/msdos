@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.159 2022/10/31 13:22:26 christos Exp $
+# $File: msdos,v 1.160 2022/11/18 16:15:16 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -49,23 +49,101 @@
 #
 # Many of the compressed formats were extracted from IDARC 1.23 source code.
 #
+# e_magic
 0	string/b	MZ
-# All non-DOS EXE extensions have the relocation table more than 0x40 bytes into the file.
->0x18	leshort <0x40 MS-DOS executable
+#	TODO
+# FLT:	Syntrillium CoolEdit Filter		https://en.wikipedia.org/wiki/Adobe_Audition
+# FMX64:FileMaker Pro 64-bit plug-in		https://en.wikipedia.org/wiki/FileMaker
+# FMX:	FileMaker Pro 32-bit plug-in		https://en.wikipedia.org/wiki/FileMaker
+# FOD:	WIFE Font Driver
+# GAU:	MS Flight Simulator Gauge
+# IFS:	OS/2 Installable File System		https://en.wikipedia.org/wiki/OS/2
+# MEXW32:MATLAB Windows 32bit compiled function	https://en.wikipedia.org/wiki/MATLAB
+# MEXW64:MATLAB Windows 64bit compiled function	https://en.wikipedia.org/wiki/MATLAB
+# MLL:	Maya plug-in (generic)	       		http://en.wikipedia.org/wiki/Autodesk_Maya
+# PFL:	PhotoFilter plugin			http://photofiltre.free.fr
+# 8*:	PhotoShop plug-in (generic)		http://www.adobe.com/products/photoshop/main.html
+# PLG:	Aston Shell plugin			http://www.astonshell.com/
+# QLB:	Microsoft Basic Quick library		https://en.wikipedia.org/wiki/QuickBASIC
+# SKL:	WinLIFT skin				http://www.zapsolution.com/winlift/index.htm
+# TBK:	Asymetrix ToolBook application		http://www.toolbook.com
+# TBP:	The Bat! plugin	   			http://www.ritlabs.com
+# UPC:	Ultimate Paint Graphics Editor plugin	http://ultimatepaint.j-t-l.com
+# XFM:	Syntrillium Cool Edit Transform Effect	bad http://www.cooledit.com
+# XPL:	X-Plane plugin	      			http://www.xsquawkbox.net/xpsdk/
+# ZAP:	ZoneLabs Zone Alarm data		http://www.zonelabs.com
+#
+# NEXT LINES FOR DEBUGGING!
+# e_cblp; bytes on last page of file
+# e_cp; pages in file
+#>4		uleshort	x	\b, e_cp 0x%x
+# e_lfanew; file address of new exe header
+#>0x3c		ulelong		x	\b, e_lfanew 0x%x
+# e_lfarlc; address of relocation table
+#>0x18		uleshort	x	\b, e_lfarlc=0x%x
+# e_ovno; overlay number. If zero, this is the main executable foo
+#>0x1a		uleshort	!0	\b, e_ovno 0x%x
+#>0x1C		ubequad		!0	\b, e_res 0x%16.16llx
+# e_oemid; often 0
+#>0x24		uleshort	!0	\b, e_oemid 0x%x
+# e_oeminfo; typically zeroes, but 13Dh (WORDSTAR.CNV WPFT5.CNV) 143h (WRITWIN.CNV)
+# 1A3h (DBASE.CNV LOTUS123.CNV RFTDCA.CNV WORDDOS.CNV WORDMAC.CNV WORDWIN1.CNVXLBIFF.CNV)
+#>0x26		uleshort	!0	\b, e_oeminfo 0x%x
+#  e_res2; typically zeroes, but 000006006F082D2Ah SCSICFG.EXE 00009A0300007C03h de.exe
+# 0000CA0000000002h country.exe dosxmgr.exe 421E0A00421EA823h QMC.EXE
+#>0x28		ubequad		!0	\b, e_res2 0x%16.16llx
+# https://web.archive.org/web/20171116024937/http://www.ctyme.com/intr/rb-2939.htm#table1593
+# new exe header magic like: PE NE LE LX W3 W4
+# no examples found for ZM DL MP P2 P3
+#>(0x3c.l)	string		x	\b, at 0x3c %.2s
+#
+# Most non-DOS MZ-executable extensions have the relocation table more than 0x40 bytes into the file.
+# http://www.mitec.cz/Downloads/EXE.zip/EXE64.exe	e_lfarlc=0x8ead
+# OS/2 ECS\INSTALL\DETECTEI\PCISCAN.EXE			e_lfarlc=0x1c
+# some EFI apps Shell_Full.efi ext4_x64_signed.efi	e_lfarlc=0
+# Icon library WORD60.ICL				e_lfarlc=0
+# Microsoft compiled help format 2.0 WINWORD.DEV.HXS	e_lfarlc=0
+>0x18	uleshort <0x40
+# check magic of new second header
+# NE executable with low e_lfarlc like: WORD60.ICL
+# ICL:	Icons Library 16-bit			http://fileformats.archiveteam.org/wiki/Icon_library
+>>(0x3c.l)	string	NE	Windows Icons Library 16-bit
+!:mime		image/x-ms-icl
+!:ext		icl
+# handle LX executable with low e_lfarlc like: PCISCAN.EXE
+>>(0x3c.l)	string	LX
+>>>(0x3c.l)	use		lx-executable
+# skip Portable Executable (PE) with low e_lfarlc here, because handled later
+# like: ext4_x64_signed.efi Shell_Full.efi WINWORD.DEV.HXS
+>>(0x3c.l)	string	PE
+# not New Executable (NE) and not PE with low e_lfarlc like:
+# MACCNV55.EXE WORK_RTF.EXE TELE200.EXE NDD.EXE iflash.exe
+>>(0x3c.l)	default	x	MS-DOS executable, MZ for MS-DOS
 !:mime	application/x-dosexec
 # Windows and later versions of DOS will allow .EXEs to be named with a .COM
 # extension, mostly for compatibility's sake.
+# like: EDIT.COM 4DOS.COM CMD8086.COM CMD-FR.COM SYSLINUX.COM
 # URL:		https://en.wikipedia.org/wiki/Personal_NetWare#VLM
 # Reference:	https://mark0.net/download/triddefs_xml.7z/defs/e/exe-vlm-msg.trid.xml
-!:ext	exe/com/vlm
+# also like: BGISRV.DRV
+!:ext	exe/com/vlm/drv
 # These traditional tests usually work but not always.  When test quality support is
 # implemented these can be turned on.
 #>>0x18	leshort	0x1c	(Borland compiler)
 #>>0x18	leshort	0x1e	(MS compiler)
 
 # Maybe it's a PE?
+# URL:		http://fileformats.archiveteam.org/wiki/Portable_Executable
+# Reference:	https://docs.microsoft.com/de-de/windows/win32/debug/pe-format
 >(0x3c.l)	string		PE\0\0	PE
-!:mime	application/x-dosexec
+!:mime	application/vnd.microsoft.portable-executable
+# https://docs.microsoft.com/de-de/windows/win32/debug/pe-format#characteristics
+# DLL Characteristics
+#>>(0x3c.l+22)	leshort		x	\b, CHARACTERISTICS 0x%x
+# 0x0200~IMAGE_FILE_DEBUG_STRIPPED Debugging information is removed from the image file
+# 0x1000~IMAGE_FILE_SYSTEM The image file is a system file, not a user program. 
+# 0x2000~IMAGE_FILE_DLL The image file is a dynamic-link library (DLL)
+#>>(0x3c.l+92)	leshort		x	\b, SUBSYSTEM %u
 >>(0x3c.l+24)	leshort		0x010b	\b32 executable
 >>(0x3c.l+24)	leshort		0x020b	\b32+ executable
 >>(0x3c.l+24)	leshort		0x0107	ROM image
@@ -176,10 +254,13 @@
 >>&(0x3c.l+0xf8)	search/0x100	_winzip_ \b, ZIP self-extracting archive (WinZip)
 >>&(0x3c.l+0xf8)	search/0x100	SharedD \b, Microsoft Installer self-extracting archive
 >>0x30			string		Inno \b, InnoSetup self-extracting archive
+# NumberOfSections; Normal Dynamic Link libraries have a few sections for code, data and resource etc.
+# PE used as container have less sections
+>>(0x3c.l+6)	leshort			>1	\b, %u sections
 
 # If the relocation table is 0x40 or more bytes into the file, it's definitely
 # not a DOS EXE.
->0x18  leshort >0x3f
+>0x18	uleshort	>0x3f
 
 # Hmm, not a PE but the relocation table is too high for a traditional DOS exe,
 # must be one of the unusual subformats.
@@ -268,11 +349,19 @@
 !:ext	exe/com
 # header data too small for extended executable
 >2		long	!0
->>0x18		leshort <0x40
+>>0x18		uleshort <0x40
 >>>(4.s*512)	leshort !0x014c
 
 >>>>&(2.s-514)	string	!LE
->>>>>&-2	string	!BW \b, MZ for MS-DOS
+>>>>>&-2	string	!BW
+#>>>>>>(0x3c.l)	string		x	\b, 2ND MAGIC %.2s
+# but some LX executable appear here also like: PCISCAN.EXE
+>>>>>>(0x3c.l)	string	!LX
+# because Portable Executable (PE) already done skip many here like:
+# xcopy32.exe stinger64.exe WimUtil.exe
+# NO such DOS examples found and
+# DOS examples seems to be already handled by e_lfarlc <0x40 like: CMD8086.COM CMD-FR.COM
+>>>>>>>(0x3c.l)	string	!PE	\b, MZ for MS-DOS
 !:mime	application/x-dosexec
 >>>>&(2.s-514)	string	LE \b, LE
 >>>>>0x240	search/0x100	DOS/4G for MS-DOS, DOS4GW DOS extender
@@ -386,6 +475,7 @@
 >0x00	uleshort		x	executable
 #!:mime	application/x-msdownload
 !:mime	application/x-lx-executable
+!:ext	exe
 # byte order: 00h~little-endian non-zero=1~big-endian
 #>0x02	ubyte			=0		(little-endian)
 >0x02	ubyte			!0		(big-endian)
