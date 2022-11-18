@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.173 2022/10/31 13:22:26 christos Exp $
+# $File: archive,v 1.174 2022/11/18 15:57:03 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -752,6 +752,88 @@
 !:mime	application/x-ms-compress-sz
 !:ext	??$
 >>8	ulelong	>0		\b, original size: %u bytes
+
+# Summary:	lzss compressed/EDI Pack
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/EDI_Install_packed_file
+# Note:		called "EDI Install LZS compressed data" by TrID and verified by
+#		command like `deark -l -m edi_pack -d2 BOOK01A.IC$` as "EDI Pack LZSS1"
+0	string					EDILZSS
+>7	string					1
+# look for point character before orginal file name extension
+>>8	search/9/b				.
+# check suffix of possible orginal file anme
+#>>>&0		ubelong				x	SUFFIX=%8.8x
+# samples without valid character after point in original file name field like: FENNEL.LZS PLANTAIN.LZS
+>>>&0		ubyte				<0x20
+>>>>0			use				edi-lzs
+# samples with valid character after point in original file name field
+>>>&0		ubyte				>0x1F
+# check 2nd charcter of suffix
+#>>>>&0			ubyte	x			2ND_SUFFIX=%x
+# sample with one valid character after point followed by \0 in original file name field like: SPELMATE.H$
+>>>>&0			ubyte			=0
+>>>>>0				use			edi-pack
+>>>>&0			ubyte			>0x1F
+# check 3rd charcter of suffix
+#>>>>>&0				ubyte		x	3RD_SUFFIX=%x
+# no sample with 2 valid characters after point followed by \0 in original file name field
+>>>>>&0				ubyte		=0
+>>>>>>0					use		edi-pack
+# samples with valid 3rd character after point in original file name field
+>>>>>&0				ubyte		>0x1F
+# sample with 3 valid character after point followed by \0 in original file name field like: BOOK01A.IC$ CTL3D.DL$
+>>>>>>&0				ubyte	=0
+>>>>>>>0					use	edi-pack
+# sample with 3 valid character after point followed by no \0 in original file name field like: HERBTEXT.LZS
+>>>>>>&0				ubyte	!0
+>>>>>>>0					use	edi-lzs
+# no sample with invalid 3rd character after point in original file name field
+>>>>>&0				default		x
+>>>>>>0					use		edi-lzs
+# sample with invalid 2nd character after point in original file name field like: LACERATE.LZS SPLINTER.LZS
+>>>>&0			default			x
+>>>>>0	use						edi-lzs
+# sample without point character in original file name field like GUNSHOT.LZS
+>>8	default					x
+>>>0		use					edi-lzs
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/e/edi-lzss2.trid.xml
+# Note:		called "EDI Install Pro LZSS2 compressed data" by TrID and verified by
+#		command like `deark -l -m edi_pack -d2 4WAY.WA$` as "EDI Pack LZSS2"
+>7	string			2			EDI LZSS2 packed
+#!:mime	application/octet-stream
+!:mime	application/x-edi-pack-lzss
+# the name of a compressed file often ends in character '$' or '_'
+!:ext	??$/??_
+# original filename, NUL-terminated, padded to 13 bytes like: mci.vbx 4way.wav skymap.exe cmdialog.vbx
+>>8		string		x			"%-0.13s"
+# original file size, as a 4-byte integer.
+>>21		ulelong		x			\b, %u bytes
+# compressed data like: ff5249464606ec00 ff4d5aa601010000
+>>>25		ubequad		x			\b, data %#16.16llx...
+0	name		edi-pack
+# Note:		verified by command like `deark -l -d2 SPELMATE.H$` as "EDI Pack LZSS1"
+# original filename, NUL-terminated, padded to 13 bytes like: ctl3d.dll spelmate.h filemenu.rc owl.def index-it.exe
+# but not like \377Aloe.lzs\273 (HERBTEXT.LZS)
+>8	string		x				EDI LZSS packed "%-.13s"
+#!:mime	application/octet-stream
+!:mime	application/x-edi-pack-lzss
+# the name of a compressed file often ends in character '$' or '_'
+!:ext	??$/?$
+# compressed data like: f7000001eff02020 ff4d5aa900020000 ff2f2a207370656c
+>21	ubequad		x				\b, data %#16.16llx...
+# URL:		http://fileformats.archiveteam.org/wiki/EDI_LZSSLib
+# Note:		verified partly by command like `deark -l -m edi_pack -d2 GUNSHOT.LZS` as "EDI LZSSLib"
+0	name		edi-lzs
+# Note:		verified by command like `deark -l -d2 GUNSHOT.LZS` as "EDI LZSSLib"
+# no original filename looks like: \277BM\226.\0 \277BM.n\001 \277BM\226.\0 \277BM.g\001 \377Aloe.lzs\273
+>8	string		x				EDI LZSSLib packed
+#!:mime	application/octet-stream
+!:mime	application/x-edi-pack-lzss
+# The name of a compressed file ends with LZS suffix
+!:ext	lzs
+# compressed data like: bf424df6e10100f3 ff416c6f652e6c7a ff416c6f652e6c7a
+>8	ubequad		x				\b, data %#16.16llx...
 
 # Summary:	CAZIP compressed file
 # From:		Joerg Jenderek
