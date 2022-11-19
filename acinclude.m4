@@ -43,7 +43,7 @@ AC_CACHE_CHECK(for daylight, ac_cv_var_daylight,
 [#if !HAVE_DECL_DAYLIGHT
 extern int daylight;
 #endif
-atoi(daylight);])], ac_cv_var_daylight=yes, ac_cv_var_daylight=no)])
+daylight = atoi("1");])], ac_cv_var_daylight=yes, ac_cv_var_daylight=no)])
   if test $ac_cv_var_daylight = yes; then
     AC_DEFINE(HAVE_DAYLIGHT,1,[HAVE_DAYLIGHT])
   fi
