@@ -39,7 +39,8 @@ AC_CHECK_DECLS([daylight], , , [#include <time.h>
 #include <stdlib.h>])
 AC_CACHE_CHECK(for daylight, ac_cv_var_daylight,
 [AC_LINK_IFELSE(
-[AC_LANG_PROGRAM([#include <time.h>],
+[AC_LANG_PROGRAM([#include <time.h>
+#include <stdlib.h>],
 [#if !HAVE_DECL_DAYLIGHT
 extern int daylight;
 #endif
