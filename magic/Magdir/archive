@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.174 2022/11/18 15:57:03 christos Exp $
+# $File: archive,v 1.175 2022/11/21 22:25:37 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -506,11 +506,12 @@
 >>>>0	use	ttcomp
 0	string	\1\4
 # TODO:
-# skip Commodore PET BASIC 4.0 program *.prg
-# variant ASCII, 1K dictionary (strength=48=50-2). With strength=49 wrong order! WHY?
 # skip shared library (strength=50) handled by ./ibm6000
 !:strength	-2
->0	use	ttcomp
+# skip Commodore PET BASIC programs (Mastermind.prg) with last 3 nil bytes (\0~end of line followed by 0000h line offset)
+#>-4	ubelong		x	LAST_BYTES=%8.8x
+>-4	ubelong&0x00FFffFF	!0
+>>0	use	ttcomp
 #	display information of TTComp archive
 0	name	ttcomp
 # (version 5.25) labeled the entry as "TTComp archive data"
@@ -873,8 +874,6 @@
 3	string	OctSqu Squash archive data
 # Terse
 0	string	\5\1\1\0 Terse archive data
-# PUCrunch
-0	string	\x01\x08\x0b\x08\xef\x00\x9e\x32\x30\x36\x31 PUCrunch archive data
 # UHarc
 0	string	UHA UHarc archive data
 # ABComp
