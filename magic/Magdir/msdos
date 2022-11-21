@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.160 2022/11/18 16:15:16 christos Exp $
+# $File: msdos,v 1.161 2022/11/21 22:26:55 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -95,7 +95,9 @@
 # https://web.archive.org/web/20171116024937/http://www.ctyme.com/intr/rb-2939.htm#table1593
 # new exe header magic like: PE NE LE LX W3 W4
 # no examples found for ZM DL MP P2 P3
-#>(0x3c.l)	string		x	\b, at 0x3c %.2s
+#>(0x3c.l)	string		x	\b, at [0x3c] %.2s
+#>(0x3c.l)	ubelong		x	\b, at [0x3c] %#8.8x
+#>(0x3c.l+4)	ubelong		x	\b, at [0x3c+4] %#8.8x
 #
 # Most non-DOS MZ-executable extensions have the relocation table more than 0x40 bytes into the file.
 # http://www.mitec.cz/Downloads/EXE.zip/EXE64.exe	e_lfarlc=0x8ead
@@ -139,17 +141,34 @@
 !:mime	application/vnd.microsoft.portable-executable
 # https://docs.microsoft.com/de-de/windows/win32/debug/pe-format#characteristics
 # DLL Characteristics
-#>>(0x3c.l+22)	leshort		x	\b, CHARACTERISTICS 0x%x
+#>>(0x3c.l+22)	uleshort	x	\b, CHARACTERISTICS %#4.4x,
 # 0x0200~IMAGE_FILE_DEBUG_STRIPPED Debugging information is removed from the image file
 # 0x1000~IMAGE_FILE_SYSTEM The image file is a system file, not a user program. 
 # 0x2000~IMAGE_FILE_DLL The image file is a dynamic-link library (DLL)
-#>>(0x3c.l+92)	leshort		x	\b, SUBSYSTEM %u
 >>(0x3c.l+24)	leshort		0x010b	\b32 executable
+# https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#windows-subsystem
+#>>>(0x3c.l+92)	leshort		x	\b, SUBSYSTEM %u
 >>(0x3c.l+24)	leshort		0x020b	\b32+ executable
+#>>>(0x3c.l+92)	leshort		x	\b, SUBSYSTEM %u
 >>(0x3c.l+24)	leshort		0x0107	ROM image
 >>(0x3c.l+24)	default		x	Unknown PE signature
 >>>&0 		leshort		x	%#x
 >>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
+# 0~IMAGE_SUBSYSTEM_UNKNOWN An unknown subsystem
+>>(0x3c.l+92)	leshort		0	(
+# Summary:	Microsoft compiled help *.HXS format 2.0
+# URL:		https://en.wikipedia.org/wiki/Microsoft_Help_2
+# Reference:	http://www.russotto.net/chm/itolitlsformat.html
+#		https://mark0.net/download/triddefs_xml.7z/defs/h/hxs.trid.xml
+# Note:		2 PE sections (.rsrc, .its) implies Microsoft compiled help format; the .its section contains the help content ITOLITLS
+#		verified by command like `pelook.exe -d WINWORD.HXS & pelook.exe -h WINWORD.HXS`
+>>>(0x3c.l+6)	uleshort	=2	\bMicrosoft compiled help format 2.0)
+!:ext	hxs
+# 3 PE sections (.text, .reloc, .rsrc) implies some Control Panel Item like: 
+# CPL:	Control Panel item for WINE 1.7.28	https://www.winehq.org/
+>>>(0x3c.l+6)	uleshort	!2	\bControl Panel Item)
+!:ext	cpl
+# 1~IMAGE_SUBSYSTEM_NATIVE device drivers and native Windows processes 
 >>(0x3c.l+92)	leshort		1
 # Native PEs include ntoskrnl.exe, hal.dll, smss.exe, autochk.exe, and all the
 # drivers in Windows/System32/drivers/*.sys.
@@ -157,6 +176,7 @@
 !:ext	dll/sys
 >>>(0x3c.l+22)	leshort&0x2000	0	(native)
 !:ext	exe/sys
+# 2~IMAGE_SUBSYSTEM_WINDOWS_GUI	The Windows graphical user interface (GUI) subsystem 
 >>(0x3c.l+92)	leshort		2
 >>>(0x3c.l+22)	leshort&0x2000	>0	(GUI)
 # These could probably be at least partially distinguished from one another by
@@ -172,21 +192,72 @@
 # Screen savers typically include code from the scrnsave.lib static library, but
 # that's not guaranteed.
 !:ext	exe/scr
+# 3~IMAGE_SUBSYSTEM_WINDOWS_CUI	The Windows character subsystem 
 >>(0x3c.l+92)	leshort		3
 >>>(0x3c.l+22)	leshort&0x2000	>0	(console)
 !:ext	dll/cpl/tlb/ocx/acm/ax/ime
 >>>(0x3c.l+22)	leshort&0x2000	0	(console)
 !:ext	exe/com
-# https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
->>(0x3c.l+92)	leshort		7	(POSIX)
->>(0x3c.l+92)	leshort		9	(Windows CE)
+# NO Windows Subsystem number 4!
+>>(0x3c.l+92)	leshort		4	(Unknown subsystem 4)
+# 5~IMAGE_SUBSYSTEM_OS2_CUI The OS/2 character subsystem 
+>>(0x3c.l+92)	leshort		5	(OS/2)
+# GRR: No examples found by Joerg Jenderek
+#!:ext	foo-exe-os2
+# NO Windows Subsystem number 6!
+>>(0x3c.l+92)	leshort		6	(Unknown subsystem 6)
+# 7~IMAGE_SUBSYSTEM_POSIX_CUI The Posix character subsystem 
+>>(0x3c.l+92)	leshort		7	(POSIX
+>>>(0x3c.l+22)	leshort&0x2000	>0	\b)
+# like: PSXDLL.DLL
+!:ext	dll
+>>>(0x3c.l+22)	leshort&0x2000	0	\b)
+# like: PAX.EXE
+!:ext	exe
+# 8~IMAGE_SUBSYSTEM_NATIVE_WINDOWS Native Win9x driver 
+>>(0x3c.l+92)	leshort		8	(Win9x)
+# GRR: No examples found by Joerg Jenderek
+#!:ext	foo-exe-win98
+# 9~IMAGE_SUBSYSTEM_WINDOWS_CE_GUI Windows CE
+>>(0x3c.l+92)	leshort		9	(Windows CE
+>>>(0x3c.l+22)	leshort&0x2000	>0	\b)
+# like: MCS9900Ce50.dll Mosiisr99x.dll TMCGPS.DLL
+!:ext	dll
+>>>(0x3c.l+22)	leshort&0x2000	0	\b)
+# like: NNGStart.exe navigator.exe
+!:ext	exe
+# 10~IMAGE_SUBSYSTEM_EFI_APPLICATION An Extensible Firmware Interface (EFI) application 
 >>(0x3c.l+92)	leshort		10	(EFI application)
+# like: bootmgfw.efi grub.efi gdisk_x64.efi Shell_Full.efi shim.efi syslinux.efi
+!:ext	efi
+# 11~IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER An EFI driver with boot services 
 >>(0x3c.l+92)	leshort		11	(EFI boot service driver)
+# like: ext2_x64_signed.efi Fat_x64.efi iso9660_x64_signed.efi
+!:ext	efi
 >>(0x3c.l+92)	leshort		12	(EFI runtime driver)
+# no sample found
+!:ext	efi
+# 13~IMAGE_SUBSYSTEM_EFI_ROM An EFI ROM image
 >>(0x3c.l+92)	leshort		13	(EFI ROM)
+# no sample found
+!:ext	efi
+# 14~IMAGE_SUBSYSTEM_XBOX XBOX 
 >>(0x3c.l+92)	leshort		14	(XBOX)
->>(0x3c.l+92)	leshort		15	(Windows boot application)
->>(0x3c.l+92)	default		x	(Unknown subsystem
+#!:ext	foo-xbox
+# NO Windows Subsystem number 15!
+>>(0x3c.l+92)	leshort		15	(Unknown subsystem 15)
+# 16~IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION Windows boot application
+>>(0x3c.l+92)	leshort		16	(Windows boot application
+>>>(0x3c.l+22)	leshort&0x2000	>0	\b)
+# like: bootvhd.dll bootuwf.dll hvloader.dll tcbloader.dll bootspaces.dll
+!:ext	dll
+>>>(0x3c.l+22)	leshort&0x2000	0	\b)
+# like: bootmgr.efi memtest.efi shellx64.efi memtest.exe winload.exe winresume.exe bootvhd.dll hvloader.dll
+!:ext	efi/exe
+# GRR: the next 2 lines are not executed!
+#>>(0x3c.l+92)	default		x	(Unknown subsystem
+#>>>&0		leshort		x	%#x)
+>>(0x3c.l+92)	leshort		>16	(Unknown subsystem
 >>>&0		leshort		x	%#x)
 >>(0x3c.l+4)	leshort		0x14c	Intel 80386
 >>(0x3c.l+4)	leshort		0x166	MIPS R4000
@@ -257,6 +328,8 @@
 # NumberOfSections; Normal Dynamic Link libraries have a few sections for code, data and resource etc.
 # PE used as container have less sections
 >>(0x3c.l+6)	leshort			>1	\b, %u sections
+# do not display for 1 section to get output like in version 5.43 and to keep output columns low
+#>>(0x3c.l+6)	leshort			=1	\b, %u section
 
 # If the relocation table is 0x40 or more bytes into the file, it's definitely
 # not a DOS EXE.
