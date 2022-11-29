@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.83 2022/11/18 19:02:28 christos Exp $
+# $File: linux,v 1.84 2022/11/29 23:10:29 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -492,9 +492,12 @@
 0		lelong		0x58313116	CRIU inventory
 
 # Kdump compressed dump files
-# https://sourceforge.net/p/makedumpfile/code/ci/master/tree/IMPLEMENTATION
+# https://github.com/makedumpfile/makedumpfile/blob/master/IMPLEMENTATION
 
-0		string		KDUMP          	Kdump compressed dump
+0		string		KDUMP\x20\x20\x20	Kdump compressed dump
+>0		use		kdump-compressed-dump
+
+0		name		kdump-compressed-dump
 >8		long		x		v%d
 >12		string		>\0		\b, system %s
 >77		string		>\0		\b, node %s
@@ -502,6 +505,12 @@
 >207		string		>\0		\b, version %s
 >272		string		>\0		\b, machine %s
 >337		string		>\0		\b, domain %s
+
+# Flattened format
+0		string		makedumpfile
+>16		bequad		1
+>>0x1010	string		KDUMP\x20\x20\x20	Flattened kdump compressed dump
+>>>0x1010	use		kdump-compressed-dump
 
 # Device Tree files
 0		search/1024	/dts-v1/	Device Tree File (v1)
