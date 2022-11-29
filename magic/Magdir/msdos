@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.161 2022/11/21 22:26:55 christos Exp $
+# $File: msdos,v 1.162 2022/11/29 23:19:37 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -93,6 +93,7 @@
 # 0000CA0000000002h country.exe dosxmgr.exe 421E0A00421EA823h QMC.EXE
 #>0x28		ubequad		!0	\b, e_res2 0x%16.16llx
 # https://web.archive.org/web/20171116024937/http://www.ctyme.com/intr/rb-2939.htm#table1593
+# https://github.com/uxmal/reko/blob/master/src/ImageLoaders/MzExe/ExeImageLoader.cs
 # new exe header magic like: PE NE LE LX W3 W4
 # no examples found for ZM DL MP P2 P3
 #>(0x3c.l)	string		x	\b, at [0x3c] %.2s
@@ -289,6 +290,7 @@
 >>(0x3c.l+4)	leshort		0x8664	x86-64
 >>(0x3c.l+4)	leshort		0xaa64	Aarch64
 >>(0x3c.l+4)	leshort		0xc0ee	MSIL
+# GRR: the next 2 lines are not executed!
 >>(0x3c.l+4)	default		x	Unknown processor type
 >>>&0		leshort		x	%#x
 >>(0x3c.l+22)	leshort&0x0200	>0	(stripped to external PDB)
@@ -338,25 +340,121 @@
 # Hmm, not a PE but the relocation table is too high for a traditional DOS exe,
 # must be one of the unusual subformats.
 >>(0x3c.l) string !PE\0\0 MS-DOS executable
-!:mime	application/x-dosexec
+#!:mime	application/x-dosexec
 
 >>(0x3c.l)		string		NE \b, NE
-!:mime	application/x-dosexec
+#!:mime	application/x-dosexec
+!:mime	application/x-ms-ne-executable
+# FOR DEBUGGING!
+# Reference:	https://wiki.osdev.org/NE
+# ProgFlags; Program flags, bitmapped
+#>>>(0x3c.l+0x0C)	ubyte		x	\b, ProgFlags 0x%2.2x
+# >>>(0x3c.l+0x0c)	ubyte&0x03	=0	\b, none
+# >>>(0x3c.l+0x0c)	ubyte&0x03	=1	\b, single shared
+# >>>(0x3c.l+0x0c)	ubyte&0x03	=2	\b, multiple
+# >>>(0x3c.l+0x0c)	ubyte&0x03	=3	\b, (null)
+# >>>(0x3c.l+0x0c)	ubyte		&0x04	\b, Global initialization
+# >>>(0x3c.l+0x0c)	ubyte		&0x08	\b, Protected mode only
+# >>>(0x3c.l+0x0c)	ubyte		&0x10	\b, 8086 instructions
+# >>>(0x3c.l+0x0c)	ubyte		&0x20	\b, 80286 instructions
+# >>>(0x3c.l+0x0c)	ubyte		&0x40	\b, 80386 instructions
+# >>>(0x3c.l+0x0c)	ubyte		&0x80	\b, 80x87 instructions
+# ApplFlags; Application flags, bitmapped
+# https://www.fileformat.info/format/exe/corion-ne.htm
+#>>>(0x3c.l+0x0D)	ubyte		x	\b, ApplFlags 0x%2.2x
+# Application type (bits 0-2); 1~Full screen (not aware of Windows/P.M. API)
+# 2~Compatible with Windows/P.M. API 3~Uses Windows/P.M. API
+#>>>(0x3c.l+0x0D)	ubyte&0x07	=1	\b, Full screen
+#>>>(0x3c.l+0x0D)	ubyte&0x07	=2	\b, Compatible with Windows/P.M. API
+#>>>(0x3c.l+0x0D)	ubyte&0x07	=3	\b, use Windows/P.M. API
+# bit 7; DLL or driver (SS:SP info invalid, CS:IP points at FAR init routine called with AX handle
+#>>>(0x3c.l+0x0D)	ubyte		&0x80	\b, DLL or driver
+# AutoDataSegIndex; automatic data segment index like: 0 2 3 22
+# zero if the SINGLEDATA and MULTIPLEDATA bits are cleared
+#>>>(0x3c.l+0x0e)	uleshort	x	\b, AutoDataSegIndex %u
+# InitHeapSize; intial local heap size like; 0 400h 1400h
+# zero if there is no local allocation
+#>>>(0x3c.l+0x10)	uleshort	!0	\b, InitHeapSize 0x%x
+# InitStackSize; inital stack size like: 0 10h A00h 7D0h A8Ch FA0h 1000h 1388h
+# 1400h (CBT) 1800h 2000h 2800h 2EE0h 2F3Ch 3258h 3E80h 4000h 4E20h 5000h 6000h
+# 6D60h 8000h 40000h
+# zero if the SS register value does not equal the DS register value
+#>>>(0x3c.l+0x12)	uleshort	!0	\b, InitStackSize 0x%x
+# EntryPoint; segment offset value of CS:IP like: 0 10000h 18A84h 11C1Ah 307F1h 
+#>>>(0x3c.l+0x14)	ulelong		!0 	\b, EntryPoint 0x%x
+# InitStack; specifies the segment offset value of stack pointer SS:SP
+# like: 0 20000h 160000h
+#>>>(0x3c.l+0x18)	ulelong		!0	\b, InitStack 0x%x
+# SegCount; number of segments in segment table like: 0 1 2 3 16h
+#>>>(0x3c.l+0x1C)	uleshort	x	\b, SegCount 0x%x
+# ModRefs; number of module references (DLLs) like; 0 1 3
+#>>>(0x3c.l+0x1E)	uleshort	!0	\b, ModRefs %u
+# NoResNamesTabSiz; size in bytes of non-resident names table
+# like: Bh 16h B4h B9h 2Ch 18Fh 16AAh
+#>>>(0x3c.l+0x20)	uleshort	x	\b, NoResNamesTabSiz 0x%x
+# SegTableOffset; offset of Segment table like: 40h
+#>>>(0x3c.l+0x22)	uleshort	!0x40	\b, SegTableOffset 0x%x
+# ResTableOffset; offset of resources table like: 40h 50h 58h F0h
+# 40h for most fonts likedos737.fon FMFONT.FOT but 60h for L1WBASE.FON
+#>>>(0x3c.l+0x24)	uleshort	x 	\b, ResTableOffset 0x%x
+# ResidNamTable; offset of resident names table
+# like: 58h 5Ch 60h 68h 74h 98h 2E3h 2E7h 2F0h
+#>>>(0x3c.l+0x26)	uleshort		x \b, ResidNamTable 0x%x
+# ImportNameTable; offset of imported names table (array of counted strings, terminated with string of length 00h)
+# like: 77h 7Eh 80h C6h A7h ACh 2F8h 3FFh
+#>>>(0x3c.l+0x2a)	uleshort	x	\b, ImportNameTable 0x%x
+# OffStartNonResTab; offset from start of file to non-resident names table
+# like: 110h 11Dh 19Bh 1A5h 3F5h 4C8h 4EEh D93h
+#>>>(0x3c.l+0x2c)	ulelong		x	\b, OffStartNonResTab 0x%x
+# MovEntryCount; number of movable entry points like: 0 4 5 6 16 17 24 312 355 446
+#>>>(0x3c.l+0x30)	uleshort	!0	\b, MovEntryCount %u
+# FileAlnSzShftCnt; log2 of the segment sector size; 4~16 0~9~512 (default)
+#>>>(0x3c.l+0x32)	uleshort	!9 	\b, FileAlnSzShftCnt %u
+# nResTabEntries; number of resource table entries like: 0 2
+#>>>(0x3c.l+0x34)	uleshort	!0	\b, nResTabEntries %u
+# targOS; Target OS; 0~unknown~OS/2 1.0 or MS Windows 1-2
+# OS/2 1.0 like: DTM.DLL SHELL11F.EXE HELPMSG.EXE CREATEDD.EXE
+# or Windows 1.03 - 2.1 like: MSDOSD.EXE KARTEI.EXE KALENDER.EXE
+#>>>(0x3c.l+0x36)	byte		x TARGOS %x
+>>>(0x3c.l+0x36)	byte		0 for OS/2 1.0 or MS Windows 1-2
 >>>(0x3c.l+0x36)	byte		1 for OS/2 1.x
 >>>(0x3c.l+0x36)	byte		2 for MS Windows 3.x
 >>>(0x3c.l+0x36)	byte		3 for MS-DOS
 >>>(0x3c.l+0x36)	byte		4 for Windows 386
 >>>(0x3c.l+0x36)	byte		5 for Borland Operating System Services
+# http://downloads.sourceforge.net/dfendreloaded/D-Fend-Reloaded-1.4.4.zip
+# D-Fend Reloaded/VirtualHD/FREEDOS/DPMILD32.EXE
+# GRR: WHAT OS is this?
+#>>>(0x3c.l+0x36)	byte		6 for TARGET SIX
+# https://en.wikipedia.org/wiki/Phar_Lap_(company)
+>>>(0x3c.l+0x36)	byte		0x81 for MS-DOS, Phar Lap DOS extender, OS/2
+# like: CVP7.EXE
+>>>(0x3c.l+0x36)	byte		0x82 for MS-DOS, Phar Lap DOS extender, Windows
 >>>(0x3c.l+0x36)	default		x
->>>>(0x3c.l+0x36)	byte		x (unknown OS %x)
->>>(0x3c.l+0x36)	byte		0x81 for MS-DOS, Phar Lap DOS extender
+>>>>(0x3c.l+0x36)	ubyte		x (unknown OS %#x)
+# expctwinver; expected Windows version (minor first) like:
+# 0.0~DTM.DLL 203.4~Windows 1.03 GDI.EXE 2.1~TTY.DRV 3.0~dos737.fon FMFONT.FOT THREED.VBX 3.10~GDI.EXE 4.0~(ME) VGAFULL.3GR
+>>>(0x3c.l+0x3F)	ubyte		x	(%u
+>>>(0x3c.l+0x3E)	ubyte		x	\b.%u)
+# OS2EXEFlags; other EXE flags
+# 0~Long filename support 1~2.x protected mode 4~2.x proportional fonts 8~Executable has gangload area
+#>>>(0x3c.l+0x37)	byte		!0	\b, OS2EXEFlags 0x%x
+# retThunkOffset; offset to return thunks or start of gangload area like: 0 34h 58h 246h 
+#>>>(0x3c.l+0x38)	uleshort	!0	\b, retThunkOffset 0x%x
+# segrefthunksoff; offset to segment reference thunks or size of gangload area
+# like: 0 33Eh 39Ah AEEh
+#>>>(0x3c.l+0x3A)	uleshort	!0	\b, segrefthunksoff 0x%x
+# mincodeswap; minimum code swap area size like 0 620Ch
+#>>>(0x3c.l+0x3C)	uleshort	!0 \b, mincodeswap 0x%x
 >>>(0x3c.l+0x0c)	leshort&0x8000	0x8000 (DLL or font)
 # DRV: Driver
 # 3GR: Grabber device driver
 # CPL: Control Panel Item
-# VBX: Visual Basic Extension
-# FON: Bitmap font
+# VBX: Visual Basic Extension		https://en.wikipedia.org/wiki/Visual_Basic
+# FON: Bitmap font			http://fileformats.archiveteam.org/wiki/FON
 # FOT: Font resource file
+# EXE: WINSPOOL.EXE USER.EXE krnl386.exe GDI.EXE
+# CNV: Microsoft Word text conversion	https://www.file-extensions.org/cnv-file-extension-microsoft-word-text-conversion-data
 !:ext	dll/drv/3gr/cpl/vbx/fon/fot
 >>>(0x3c.l+0x0c)	leshort&0x8000	0 (EXE)
 !:ext	exe/scr
@@ -382,8 +480,17 @@
 >>>&(&0x54.l-3)		string		arjsfx \b, ARJ self-extracting archive
 
 # MS Windows system file, supposedly a collection of LE executables
+# like vmm32.vxd WIN386.EXE
 >>(0x3c.l)		string		W3 \b, W3 for MS Windows
-!:mime	application/x-dosexec
+#!:mime	application/x-dosexec
+!:mime	application/x-ms-w3-executable
+!:ext	vxd/exe
+# W4 executable
+>>(0x3c.l)		string		W4 \b, W4 for MS Windows
+#!:mime	application/x-dosexec
+!:mime	application/x-ms-w4-executable
+# windows 98 VMM32.VXD
+!:ext	vxd
 
 >>(0x3c.l)		string		LE\0\0 \b, LE executable
 !:mime	application/x-dosexec
