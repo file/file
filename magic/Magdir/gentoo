@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: gentoo,v 1.3 2022/10/07 18:15:56 christos Exp $
+# $File: gentoo,v 1.4 2022/11/29 23:06:09 christos Exp $
 # gentoo:  file(1) magic for gentoo specific formats
 #
 # Summary: Gentoo ebuild Manifest files (GLEP 74)
@@ -44,16 +44,20 @@
 0	search/512	EAPI=
 >0	regex		.*\n[\040\t]*EAPI=["']?	Gentoo ebuild
 >>&0	regex		[[:alnum:]+_.-]+	\b, EAPI %s
+!:mime	application/vnd.gentoo.ebuild
 
 0	search/512	@ECLASS:\040		Gentoo eclass
 >&0	string		x			%s
+!:mime	application/vnd.gentoo.eclass
 
 # Summary: Gentoo supplementary package and category metadata files
 # Reference: https://www.gentoo.org/glep/glep-0068.html
 # Submitted by: Michal Gorny <mgorny@gentoo.org>
 0	string		\<?xml
 >0	search/512	\<catmetadata		Gentoo category metadata file
+!:mime	application/vnd.gentoo.catmetadata+xml
 >0	search/512	\<pkgmetadata		Gentoo package metadata file
+!:mime	application/vnd.gentoo.pkgmetadata+xml
 
 # Summary: Gentoo GLEP 78 binary package
 # Reference: https://www.gentoo.org/glep/glep-0078.html

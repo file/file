@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.175 2022/11/21 22:25:37 christos Exp $
+# $File: archive,v 1.176 2022/11/29 23:06:09 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2157,6 +2157,7 @@
 # https://gitweb.gentoo.org/proj/portage.git/tree/man/xpak.5
 -4	string	STOP
 >-16	string	XPAKSTOP	Gentoo binary package (XPAK)
+!:mime	application/vnd.gentoo.xpak
 
 # From:		Joerg Jenderek
 # URL:		https://kodi.wiki/view/TexturePacker
