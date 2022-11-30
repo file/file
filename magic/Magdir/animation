@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.90 2022/08/16 11:16:39 christos Exp $
+# $File: animation,v 1.91 2022/11/30 20:34:47 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -937,6 +937,15 @@
 >188	byte			0x47		MPEG transport stream data
 !:mime  video/MP2T
 !:ext	ts
+
+# Blu-ray disc Audio-Video MPEG-2 transport stream
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://en.wikipedia.org/wiki/MPEG_transport_stream
+# Note: similar to ISO 13818.1 but with 4 extra bytes per packets
+4	belong&0xFF5FFF10	=0x47400010
+>196	byte			=0x47		BDAV MPEG-2 Transport Stream (M2TS)
+!:mime	video/MP2T
+!:ext	m2ts/mts
 
 # DIF digital video file format <mpruett@sgi.com>
 0	belong&0xffffff00	0x1f070000      DIF
