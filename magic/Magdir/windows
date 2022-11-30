@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.49 2022/10/31 13:22:26 christos Exp $
+# $File: windows,v 1.50 2022/11/30 20:24:43 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -790,6 +790,27 @@
 !:mime	text/x-ms-cpx
 # like: 12510866.CPX 
 !:ext	cpx
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/File_Explorer
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/s/scf-exp.trid.xml,scf-exp-old.trid.xml
+# Note:		called "Windows Explorer Command Shell File" by TrID and "File Explorer Command" by Windows via SHCmdFile
+>>&0	regex/c		\^Shell]\r\n					Windows Explorer Shell Command File
+#!:mime	text/plain
+!:mime	text/x-ms-scf
+# like: channels.scf desktop.scf explorer.scf "Desktop anzeigen.scf"
+!:ext	scf
+# look for icon file directive maybe pointing to malicious file
+>>>1		search/128	IconFile=				\b, icon
+>>>>&0		string		x					"%s"
+# From:		Joerg Jenderek
+# URL:		http://en.wikipedia.org/wiki/VIA_Technologies
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/s/scf-via.trid.xml
+# Note:		called "VIA setup configuration file" by TrID
+>>&0	regex/c		\^SCF]\r\n					VIA setup configuration
+#!:mime	text/plain
+!:mime	text/x-via-scf
+# like: SETUP.SCF
+!:ext	scf
 # From:		Joerg Jenderek
 # URL:		https://en.wikipedia.org/wiki/InstallShield
 # Reference:	http://mark0.net/download/triddefs_xml.7z/defs/l/lid-is.trid.xml
