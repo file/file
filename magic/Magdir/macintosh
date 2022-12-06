@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: macintosh,v 1.35 2022/10/31 13:22:26 christos Exp $
+# $File: macintosh,v 1.36 2022/12/06 18:45:20 christos Exp $
 # macintosh description
 #
 # BinHex is the Macintosh ASCII-encoded file format (see also "apple")
@@ -455,7 +455,7 @@
 >>>0x412	beshort			x	number of blocks: %d,
 >>>0x424	pstring			x	volume name: %s
 
-0x400	beshort			0x482B		Macintosh HFS Extended
+0	name			hfsplus
 >&0	beshort			x		version %d data
 >0	beshort			0x4C4B		(bootable)
 >0x404	belong			^0x00000100	(mounted)
@@ -473,6 +473,11 @@
 >&38	belong			x		block size: %d,
 >&42	belong			x		number of blocks: %d,
 >&46	belong			x		free blocks: %d
+
+0x400	beshort			0x482B		Apple HFS Plus
+>&0	use			hfsplus
+0x400	beshort			0x4858		Apple HFS Plus Extended
+>&0	use			hfsplus
 
 ## AFAIK, only the signature is different
 # same as Apple Partition Map
