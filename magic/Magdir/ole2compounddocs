@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.21 2022/10/19 20:16:27 christos Exp $
+# $File: ole2compounddocs,v 1.22 2022/12/09 15:56:56 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -334,10 +334,16 @@
 !:ext	vsd/vss/vst
 #
 # URL:	http://fileformats.archiveteam.org/wiki/Windows_Installer
->>>80 	ubequad		0x84100c0000000000	: Microsoft Windows Installer Package
+#	https://en.wikipedia.org/wiki/Windows_Installer#ICE_validation
+# Update: Joerg Jenderek
+# Windows Installer Package *.MSI or validation module *.CUB
+>>>80 	ubequad		0x84100c0000000000	: Microsoft Windows Installer Package or validation module
 !:mime	application/x-msi
 #!:mime	application/x-ms-win-installer
-!:ext	msi
+#	https://learn.microsoft.com/en-us/windows/win32/msi/internal-consistency-evaluators-ices
+# cub is used for validation module like: Vstalogo.cub XPlogo.cub darice.cub logo.cub mergemod.cub
+#!:mime	application/x-ms-cub
+!:ext	msi/cub
 >>>80 	ubequad		0x86100c0000000000	: Microsoft Windows Installer Patch
 # ??
 !:mime	application/x-wine-extension-msp
