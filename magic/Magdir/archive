@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.176 2022/11/29 23:06:09 christos Exp $
+# $File: archive,v 1.177 2022/12/09 15:50:25 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2206,3 +2206,20 @@
 # https://ankiweb.net
 30	string	collection.anki2	Anki APKG file
 #!:ext	.apkg
+
+# Synology archive (DiskStation Manager 7.0+)
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# Note: These archives are signed and encrypted.
+0		ulelong&0xFFFFFF00	0xEFBEAD00
+# MessagePack header (fixarray of 5 elements starting with a bin of 32 bytes)
+>8  	ulelong&0x00FFFFFF	0x20C495	Synology archive
+!:ext	spk
+# Extract some properties from MessagePack third item
+>>43	search/0x10000		package=
+>>>&0	string				x			\b, package %s
+>>43	search/0x10000		arch=
+>>>&0	string				x			%s
+>>43	search/0x10000		version=
+>>>&0	string				x			%s
+>>43	search/0x10000		create_time=
+>>>&0	string				x			\b, created on %s
