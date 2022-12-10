@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.151 2022/12/10 20:16:03 christos Exp $
+# $File: filesystems,v 1.152 2022/12/10 20:56:50 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1643,25 +1643,25 @@
 >128	lelong		0		TIME optimization
 >128	lelong		1		SPACE optimization
 
-42332	lelong		0x19012038	Unix Fast File system with EA [v2] (little-endian)
+42332	lelong		0x19012038	Unix Fast File system [v2ea] (little-endian)
 >40960	use		ffsv2
 
 42332	lelong		0x19540119	Unix Fast File system [v2] (little-endian)
 >40960	use		ffsv2
 
-42332	belong		0x19012038	Unix Fast File system with EA [v2] (little-endian)
+42332	belong		0x19012038	Unix Fast File system [v2ea] (little-endian)
 >40960	use		\^ffsv2
 
 42332	belong		0x19540119	Unix Fast File system [v2] (big-endian)
 >40960	use		\^ffsv2
 
-66908	lelong		0x19012038	Unix Fast File system with EA [v2] (little-endian)
+66908	lelong		0x19012038	Unix Fast File system [v2ea] (little-endian)
 >65536	use		ffsv2
 
 66908	lelong		0x19540119	Unix Fast File system [v2] (little-endian)
 >65536	use		ffsv2
 
-66908	belong		0x19012038	Unix Fast File system with EA [v2] (little-endian)
+66908	belong		0x19012038	Unix Fast File system [v2ea] (little-endian)
 >65536	use		\^ffsv2
 
 66908	belong		0x19540119	Unix Fast File system [v2] (big-endian)
