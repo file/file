@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.33 2022/10/31 14:39:24 christos Exp $
+# $File: sniffer,v 1.34 2022/12/14 18:27:36 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -327,9 +327,42 @@
 
 #
 # Novell LANalyzer capture files.
-#
-0	leshort		0x1001		Novell LANalyzer capture file
-0	leshort		0x1007		Novell LANalyzer capture file
+# URL:		http://www.blacksheepnetworks.com/security/info/nw/lan/trace.txt
+# Reference:	https://github.com/wireshark/wireshark/blob/master/wiretap/lanalyzer.c
+# Update:	Joerg Jenderek
+# 
+# regular trace header record (RT_HeaderRegular)
+0	leshort		0x1001
+# GRR: line above is too generic because it matches Commodore Plus/4 BASIC V3.5
+# and VIC-20 BASIC V2 program
+# skip many Commodore Basic program (Microzodiac.prg Minefield.prg Vic-tac-toe.prg breakvic_joy.prg)
+# with invalid second record type 0 instead of "Trace receive channel name record"
+>(2.s+4)	leshort	=0x1006h
+>>0	use	novell-lanalyzer
+# cyclic trace header record (RT_HeaderCyclic)
+0	leshort		0x1007
+>0	use	novell-lanalyzer
+0	name	novell-lanalyzer
+>0	leshort		x		Novell LANalyzer capture file
+# https://reposcope.com/mimetype/application/x-lanalyzer
+!:mime	application/x-lanalyzer
+# maybe also TR2 .. TR9 TRA .. TRZ
+!:ext	tr1
+# version like: 1.5
+>4		ubyte	x		\b, version %u
+# minor version; one byte identifying the trace file minor version number
+>5		ubyte	x		\b.%u
+# Trace header record type like: 1001~regular or 1007~cyclic
+>0	leshort		!0x1001		\b, record type %4.4x
+# record_length[2] is the length of the data part of 1st reorcd (without "type" and "length" fields) like: 4Ch
+>2		leshort	x		\b, record length %#x
+# second record type like: 1006h~Trace receive channel name record
+>(2.s+4)	leshort	!0x1006h	\b, 2nd record type %#4.4x
+>(2.s+6)	leshort	x		\b, 2nd record length %#x
+# each channel name is a null-terminated, eight-byte ASCII string like: Channel1
+>(2.s+8)	string	x		\b, names %.9s
+# 2nd channel name like: Channel2
+>(2.s+17)	string	x		%.9s ...
 
 #
 # HP-UX "nettl" capture files.
