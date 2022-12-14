@@ -17,10 +17,10 @@ MINGWLIBS = -lgnurx -lshlwapi
 else
 MINGWLIBS =
 endif
-libmagic_la_LIBADD = $(LTLIBOBJS) $(MINGWLIBS)
+libmagic_la_LIBADD = -lm $(LTLIBOBJS) $(MINGWLIBS)
 
 file_SOURCES = file.c seccomp.c
-file_LDADD = libmagic.la
+file_LDADD = libmagic.la -lm
 CLEANFILES = magic.h
 EXTRA_DIST = magic.h.in cdf.mk BNF memtest.c
 HDR= $(top_srcdir)/src/magic.h.in

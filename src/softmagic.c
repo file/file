@@ -32,11 +32,12 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.336 2022/12/09 17:58:19 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.337 2022/12/14 14:24:36 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
 #include <assert.h>
+#include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -2152,19 +2153,19 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			break;
 
 		case '!':
-			matched = fv != fl;
+			matched = isunordered(fl, fv) ? 1 : fv != fl;
 			break;
 
 		case '=':
-			matched = fv == fl;
+			matched = isunordered(fl, fv) ? 0 : fv == fl;
 			break;
 
 		case '>':
-			matched = fv > fl;
+			matched = isgreater(fv, fl);
 			break;
 
 		case '<':
-			matched = fv < fl;
+			matched = isless(fv, fl);
 			break;
 
 		default:
@@ -2185,19 +2186,19 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			break;
 
 		case '!':
-			matched = dv != dl;
+			matched = isunordered(dv, dl) ? 1 : dv != dl;
 			break;
 
 		case '=':
-			matched = dv == dl;
+			matched = isunordered(dv, dl) ? 0 : dv == dl;
 			break;
 
 		case '>':
-			matched = dv > dl;
+			matched = isgreater(dv, dl);
 			break;
 
 		case '<':
-			matched = dv < dl;
+			matched = isless(dv, dl);
 			break;
 
 		default:
