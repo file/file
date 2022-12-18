@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.177 2022/12/09 15:50:25 christos Exp $
+# $File: archive,v 1.178 2022/12/18 14:47:37 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2223,3 +2223,40 @@
 >>>&0	string				x			%s
 >>43	search/0x10000		create_time=
 >>>&0	string				x			\b, created on %s
+
+# MonoGame/XNA processed assets archive
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://github.com/MonoGame/MonoGame/blob/v3.8.1/MonoGame.Framework/Content/ContentManager.cs
+0	string	XNB
+# XNB must be version 4 or 5
+>4	byte	<6
+>>4	byte	>3
+# Size must be positive
+>>>6	lelong	>0	MonoGame/XNA processed assets
+!:ext	xnb
+>>>>3	string	=w	\b, for Windows
+>>>>3	string	=x	\b, for Xbox360
+>>>>3	string	=i	\b, for iOS
+>>>>3	string	=a	\b, for Android
+>>>>3	string	=d	\b, for DesktopGL
+>>>>3	string	=X	\b, for MacOSX
+>>>>3	string	=W	\b, for WindowsStoreApp
+>>>>3	string	=n	\b, for NativeClient
+>>>>3	string	=M	\b, for WindowsPhone8
+>>>>3	string	=r	\b, for RaspberryPi
+>>>>3	string	=P	\b, for PlayStation4
+>>>>3	string	=5	\b, for PlayStation5
+>>>>3	string	=O	\b, for XboxOne
+>>>>3	string	=S	\b, for Nintendo Switch
+>>>>3	string	=G	\b, for Google Stadia
+>>>>3	string	=b	\b, for WebAssembly and Bridge.NET
+>>>>3	string	=m	\b, for WindowsPhone7.0 (XNA)
+>>>>3	string	=p	\b, for PlayStationMobile
+>>>>3	string	=v	\b, for PSVita
+>>>>3	string	=g	\b, for Windows (OpenGL)
+>>>>3	string	=l	\b, for Linux
+>>>>4	byte	x	\b, version %d
+>>>>5	byte	&0x80	\b, LZX compressed
+>>>>>10	lelong	x	\b, decompressed size: %d bytes
+>>>>5	byte	&0x40	\b, LZ4 compressed
+>>>>>10	lelong	x	\b, decompressed size: %d bytes
