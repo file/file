@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: printer,v 1.30 2022/11/08 16:14:07 christos Exp $
+# $File: printer,v 1.31 2022/12/18 14:50:43 christos Exp $
 # printer:  file(1) magic for printer-formatted files
 #
 
@@ -150,3 +150,82 @@
 # From: Paolo <oopla@users.sf.net>
 # Epson ESC/Page, ESC/PageColor
 0	string	\x1b\x01@EJL	Epson ESC/Page language printer data
+
+# Summary:	Hewlett-Packard Graphics Language
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/HP-GL
+#		https://en.wikipedia.org/wiki/HPGL
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hpg.trid.xml
+# Note:		called "Hewlett-Packard Graphics Language" by TrID and
+#		"Hewlett Packard Graphics Language" by DROID via PUID x-fmt/293 and
+#		HPGL by XnView command `nconvert -info *`
+# initialize, start a plotting job 
+0	string	IN;
+>0		use		hpgl
+# fill.plt
+0	string	INPS
+>0		use		hpgl
+# http://ftp.funet.fi/index/graphics/packages/hpgl2ps/hpgl2ps.tar.Z/hpgl2ps/test1.hpgl 
+0	string	DF;
+>0		use		hpgl
+# http://ftp.funet.fi/index/graphics/packages/hpgl2ps/hpgl2ps.tar.Z/hpgl2ps/test3.hpgl 
+# Select Pen n
+0	string	SP
+>0		use		hpgl
+# charsize.hp pages.hp	set the scaling points (P1 and P2) to their default positions
+0	string	IP0
+>0		use		hpgl
+# ci.hp
+0	string	CO\040
+>0		use		hpgl
+# iw.hp 286x192.5_lh.hpg 286x192.5_lq.hpg
+0	string	PS\040
+>0		use		hpgl
+# thick.hp
+0	string	PS9
+>0		use		hpgl
+# ul.hp
+0	string	PS4
+>0		use		hpgl
+# la.hp
+0	string	BP
+>0		use		hpgl
+# miter.hp
+0	string	PA
+>0		use		hpgl
+# pw.hpg	number of pens x
+0	string	NP
+>0		use		hpgl
+# win_1.hp
+#0	string	\003INCA		WHAT_IS_THAT
+#>0		use		hpgl
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hpgl2.trid.xml
+# Note:		called "Hewlett-Packard Graphics Language 2" by TrID
+0	string	\033%-1B		Hewlett-Packard Graphics Language 2
+!:mime	application/vnd.hp-HPGL
+# like: dt.plt
+!:ext	plt
+#!:ext	plt/gl2/hpg2/spl
+# remaining part after escsape sequnce
+>5	string	x			with "%-.10s"
+#	display Hewlett-Packard Graphics Language vector graphic information
+0	name				hpgl
+>0	string	x			Hewlett-Packard Graphics Language
+#!:mime	vector/x-hpgl
+# https://www.iana.org/assignments/media-types/application/vnd.hp-HPGL
+!:mime	application/vnd.hp-HPGL
+# no example with HPL suffix found
+!:ext	hpgl/hpg/hp/plt
+# like: "IN;" "DF;IN;LT;PU1000,1000;PD2000,10" "SP6;DI0,1;SR0.70,1.90;SC0,800,"
+# "CO Concentric circles drawn with different linewidths;"
+>0	string	x			\b, starting with "%-.54s"
+# continue but not for 1 long line without CR or LF
+>>&0	ubyte	<0x0E
+#>>&0	ubyte	<0x0E			TERMINATOR=%x
+# second line after 1 terminator character
+>>>&0	string	>\r			with "%-.10s"
+# next character again CR or LF
+>>>&0	ubyte	<0x0E
+#>>>&0	ubyte	<0x0E			2ND_CHARACTER=%x
+# second line after 2 terminator characters
+>>>>&0	string	>\r			with "%-.10s"
