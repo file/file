@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.162 2022/11/29 23:19:37 christos Exp $
+# $File: msdos,v 1.163 2022/12/18 14:54:39 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1845,6 +1845,12 @@
 >0x2c	default		x
 # look for 1st member name
 >>(16.l+16)	ubyte	x
+# From:		Joerg Jenderek
+# URL:		https://docs.microsoft.com/en-us/windows-hardware/drivers/install/building-device-metadata-packages
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/devicemetadata-ms.trid.xml
+>>>&-1	string 		PackageInfo.xml	\b, Device Metadata Package
+!:mime	application/vnd.ms-cab-compressed
+!:ext	devicemetadata-ms
 # https://en.wikipedia.org/wiki/SNP_file_format
 >>>&-1	string/c 	_accrpt_.snp	\b, Access report snapshot
 !:mime	application/msaccess
