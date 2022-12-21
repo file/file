@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.87 2022/12/02 17:25:31 christos Exp $
+# $File: compress,v 1.88 2022/12/21 15:55:52 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -19,7 +19,7 @@
 # gzip (GNU zip, not to be confused with Info-ZIP or PKWARE zip archiver)
 # URL: https://en.wikipedia.org/wiki/Gzip
 # Reference: https://tools.ietf.org/html/rfc1952
-# Update: Joerg Jenderek, Apr 2019
+# Update: Joerg Jenderek, Apr 2019, Dec 2022
 #   Edited by Chris Chittleborough <cchittleborough@yahoo.com.au>, March 2002
 #	* Original filename is only at offset 10 if "extra field" absent
 #	* Produce shorter output - notably, only report compression methods
@@ -62,20 +62,24 @@
 !:mime	application/gzip
 >>>0	use	gzip-info
 # size of the original (uncompressed) input data modulo 2^32
->>-0	offset		>48
+# TODO: check for GXD MCD cad the reported size
 >>>-4	ulelong		x		\b, original size modulo 2^32 %u
->>-0	offset		<48		\b, truncated
 # gzipped TAR or VirtualBox extension package
 #!:mime	application/x-compressed-tar
 #!:mime	application/x-virtualbox-vbox-extpack
 # https://www.w3.org/TR/SVG/mimereg.html
-#!:mime	image/image/svg+xml-compressed
+#!:mime	image/svg+xml-compressed
 #	zlib.3.gz
 #	microcode-20180312.tgz
 #	tpz same as tgz
 #	lua-md5_1.2-1_i386_i486.ipk	https://en.wikipedia.org/wiki/Opkg
 #	Oracle_VM_VirtualBox_Extension_Pack-5.0.12-104815.vbox-extpack
-!:ext	gz/tgz/tpz/ipk/vbox-extpack/svgz
+#	trees.blend			http://fileformats.archiveteam.org/wiki/BLEND
+#	2020-07-19-Note-16-24.xoj	https://xournal.sourceforge.net/manual.html
+#	MYgnucash-gz.gnucash		https://wiki.gnucash.org/wiki/GnuCash_XML_format
+#	text-rotate.dia			https://en.wikipedia.org/wiki/Dia_(software)
+#	MYrdata.RData			https://en.wikipedia.org/wiki/R_(programming_language)
+!:ext	gz/tgz/tpz/ipk/vbox-extpack/svgz/blend/dia/gnucash/rdata/xoj
 # FNAME/FCOMMENT bit implies file name/comment as iso-8859-1 text
 >3	byte&0x18	>0		gzip compressed data
 !:mime	application/gzip
@@ -84,12 +88,13 @@
 #!:mime	application/x-abiword-compressed
 #!:mime	image/image/svg+xml-compressed
 #	kleopatra_splashscreen.svgz	gzipped .svg
-!:ext	gz/tgz/tpz/zabw/svgz
+#	RSI-Mega-Demo_Disk1.adz		gzipped .adf	http://fileformats.archiveteam.org/wiki/ADF_(Amiga)
+#	PostbankTest.kmy		gzipped XML	https://docs.kde.org/stable5/en/kmymoney/kmymoney/details.formats.compressed.html
+#	Logo.xcfgz			gzipped .xcf	http://fileformats.archiveteam.org/wiki/XCF
+!:ext	gz/tgz/tpz/zabw/svgz/adz/kmy/xcfgz
 >>0	use	gzip-info
 # size of the original (uncompressed) input data modulo 2^32
->>-0	offset		>48
->>>-4	ulelong		x		\b, original size modulo 2^32 %u
->>-0	offset		<48		\b, truncated
+>>-4	ulelong		x		\b, original size modulo 2^32 %u
 #	display information of gzip compressed files
 0	name				gzip-info
 #>2	byte		x		THIS iS GZIP
