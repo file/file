@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.178 2022/12/18 14:47:37 christos Exp $
+# $File: archive,v 1.179 2022/12/21 15:50:59 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2260,3 +2260,13 @@
 >>>>>10	lelong	x	\b, decompressed size: %d bytes
 >>>>5	byte	&0x40	\b, LZ4 compressed
 >>>>>10	lelong	x	\b, decompressed size: %d bytes
+
+# Electron ASAR archive
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://github.com/electron/asar
+0		ulelong	4
+# Match JSON header start and end
+>16		string	{"files":{"
+>>(12.l+12)	string }}}}		Electron ASAR archive
+!:ext	asar
+>>>12		ulelong	x		\b, header length: %d bytes
