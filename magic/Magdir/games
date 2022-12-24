@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.29 2022/12/21 15:49:49 christos Exp $
+# $File: games,v 1.30 2022/12/24 22:33:20 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -618,3 +618,70 @@
 >4	lelong		>0	MagicaVoxel model
 !:ext	vox
 >>4	lelong		x	\b, version %d
+
+# Wwise SoundBank
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://wiki.xentax.com/index.php/Wwise_SoundBank_(*.bnk)
+0	string	BKHD
+# Little-endian version (such as x86 PC)
+>4	ulelong	<0x100		Wwise SoundBank (little-endian)
+!:ext	bnk
+>>0	use	wwise_bkhd
+# Big-endian version (such as PS3)
+>4	ubelong	<0x100		Wwise SoundBank (big-endian)
+!:ext	bnk
+>>0	use	\^wwise_bkhd
+
+0	name	wwise_bkhd
+>8	ulelong	x		\b, version %d
+>12	ulelong	x		\b, id %08X
+>16	ulelong	=0x00		\b, SFX
+>16	ulelong	=0x01		\b, arabic
+>16	ulelong	=0x02		\b, bulgarian
+>16	ulelong	=0x03		\b, chinese (HK)
+>16	ulelong	=0x04		\b, chinese (PRC)
+>16	ulelong	=0x05		\b, chinese (Taiwan)
+>16	ulelong	=0x06		\b, czech
+>16	ulelong	=0x07		\b, danish
+>16	ulelong	=0x08		\b, dutch
+>16	ulelong	=0x09		\b, english (Australia)
+>16	ulelong	=0x0A		\b, english (India)
+>16	ulelong	=0x0B		\b, english (UK)
+>16	ulelong	=0x0C		\b, english (US)
+>16	ulelong	=0x0D		\b, finnish
+>16	ulelong	=0x0E		\b, french (Canada)
+>16	ulelong	=0x0F		\b, french (France)
+>16	ulelong	=0x10		\b, german
+>16	ulelong	=0x11		\b, greek
+>16	ulelong	=0x12		\b, hebrew
+>16	ulelong	=0x13		\b, hungarian
+>16	ulelong	=0x14		\b, indonesian
+>16	ulelong	=0x15		\b, italian
+>16	ulelong	=0x16		\b, japanese
+>16	ulelong	=0x17		\b, korean
+>16	ulelong	=0x18		\b, latin
+>16	ulelong	=0x19		\b, norwegian
+>16	ulelong	=0x1A		\b, polish
+>16	ulelong	=0x1B		\b, portuguese (Brazil)
+>16	ulelong	=0x1C		\b, portuguese (Portugal)
+>16	ulelong	=0x1D		\b, romanian
+>16	ulelong	=0x1E		\b, russian
+>16	ulelong	=0x1F		\b, slovenian
+>16	ulelong	=0x20		\b, spanish (Mexico)
+>16	ulelong	=0x21		\b, spanish (Spain)
+>16	ulelong	=0x22		\b, spanish (US)
+>16	ulelong	=0x23		\b, swedish
+>16	ulelong	=0x24		\b, turkish
+>16	ulelong	=0x25		\b, ukrainian
+>16	ulelong	=0x26		\b, vietnamese
+
+# Wwise Audio Package
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://wiki.xentax.com/index.php/Wwise_Audio_PCK
+0	string	AKPK
+# Little-endian version (such as x86 PC)
+>8	ulelong	<0x100	Wwise Audio Package (little-endian)
+!:ext	pck
+# Big-endian version (such as PS3)
+>8	ubelong	<0x100	Wwise Audio Package (big-endian)
+!:ext	pck
