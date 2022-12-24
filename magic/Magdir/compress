@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.88 2022/12/21 15:55:52 christos Exp $
+# $File: compress,v 1.89 2022/12/24 22:47:53 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -432,19 +432,19 @@
 # https://support-docs.illumina.com/SW/ORA_Format_Specification/Content/SW/ORA/ORAFormatSpecification.htm
 0	uleshort	0x7c49	
 >2	lelong		0x80	ORA FASTQ compressed file
->6	ulelong		x	\b, DNA size %u
->10	ulelong		x	\b, read names size %u
->14	ulelong		x	\b, quality buffer 1 size %u
->18	ulelong		x	\b, quality buffer 2 size %u
->22	ulelong		x	\b, sequence buffer size %u
->26	ulelong		x	\b, N-position buffer size %u
->30	ulelong		x	\b, crypto buffer size %u
->34	ulelong		x	\b, misc  buffer 1 size %u
->38	ulelong		x	\b, misc  buffer 2 size %u
->42	ulelong		x	\b, flags %#x
->46	lelong		x	\b, read size %d
->50	lelong		x	\b, number of reads %d
->54	leshort		x	\b, version %d
+>>6	ulelong		x	\b, DNA size %u
+>>10	ulelong		x	\b, read names size %u
+>>14	ulelong		x	\b, quality buffer 1 size %u
+>>18	ulelong		x	\b, quality buffer 2 size %u
+>>22	ulelong		x	\b, sequence buffer size %u
+>>26	ulelong		x	\b, N-position buffer size %u
+>>30	ulelong		x	\b, crypto buffer size %u
+>>34	ulelong		x	\b, misc  buffer 1 size %u
+>>38	ulelong		x	\b, misc  buffer 2 size %u
+>>42	ulelong		x	\b, flags %#x
+>>46	lelong		x	\b, read size %d
+>>50	lelong		x	\b, number of reads %d
+>>54	leshort		x	\b, version %d
 
 # https://github.com/kspalaiologos/bzip3/blob/master/doc/file_format.md
 0	string/b	BZ3v1	bzip3 compressed data
