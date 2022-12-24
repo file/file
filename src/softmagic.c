@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.337 2022/12/14 14:24:36 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.338 2022/12/24 22:30:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1459,8 +1459,8 @@ do_ops(struct magic *m, uint32_t *rv, intmax_t lhs, intmax_t off)
 {
 	intmax_t offset;
 	// On purpose not INTMAX_MAX
-	if (lhs >= INT_MAX || lhs <= INT_MIN ||
-	    off >= INT_MAX || off <= INT_MIN) {
+	if (lhs >= UINT_MAX || lhs <= INT_MIN ||
+	    off >= UINT_MAX || off <= INT_MIN) {
 		fprintf(stderr, "lhs/off overflow %jd %jd\n", lhs, off);
 		return 1;
 	}
