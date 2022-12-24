@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.70 2022/10/31 13:22:26 christos Exp $
+# $File: console,v 1.71 2022/12/24 22:31:58 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -543,6 +543,19 @@
 # CPE executables
 0	string	CPE		CPE executable
 >3	byte	x		(version %d)
+
+# Sony PlayStation archive (PSARC)
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://www.psdevwiki.com/ps3/PlayStation_archive_(PSARC)
+0	string		PSAR	Sony PlayStation Archive
+!:ext	psarc
+>4	ubeshort	x	\b, version %d.
+>6	ubeshort	x	\b%d
+>8	string		zlib	\b, zlib compression
+>8	string		lzma	\b, LZMA compression
+>28	ubeshort&2	0	\b, relative paths
+>28	ubeshort&2	2	\b, absolute paths
+>28	ubeshort&1	1	\b, ignore case
 
 #------------------------------------------------------------------------------
 # Microsoft Xbox executables .xbe (Esa Hyytia <ehyytia@cc.hut.fi>)
