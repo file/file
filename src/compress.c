@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.154 2022/12/26 17:35:45 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.155 2022/12/26 18:48:55 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -408,7 +408,7 @@ file_protected ssize_t
 sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
 {
 	ssize_t rv;
-#ifdef FIONREAD
+#if defined(FIONREAD) && !defined(__MINGW32__)
 	int t = 0;
 #endif
 	size_t rn = n;
@@ -416,7 +416,7 @@ sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
 	if (fd == STDIN_FILENO)
 		goto nocheck;
 
-#ifdef FIONREAD
+#if defined(FIONREAD) && !defined(__MINGW32__)
 	if (canbepipe && (ioctl(fd, FIONREAD, &t) == -1 || t == 0)) {
 #ifdef FD_ZERO
 		ssize_t cnt;

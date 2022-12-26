@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.136 2022/12/26 17:31:14 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.137 2022/12/26 18:48:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -878,7 +878,9 @@ file_print_guid(char *str, size_t len, const uint64_t *guid)
 file_protected int
 file_pipe_closexec(int *fds)
 {
-#ifdef HAVE_PIPE2
+#ifdef __MINGW32__
+	return 0;
+#elif defined(HAVE_PIPE2)
 	return pipe2(fds, O_CLOEXEC);
 #else
 	if (pipe(fds) == -1)

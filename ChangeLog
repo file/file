@@ -1,3 +1,8 @@
+
+2922-12-26   1:47  Christos Zoulas <christos@zoulas.com>
+
+	* PR/412: fix MinGW compilation
+
 2922-12-26  12:26  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.44
