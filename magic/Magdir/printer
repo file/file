@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: printer,v 1.31 2022/12/18 14:50:43 christos Exp $
+# $File: printer,v 1.32 2022/12/26 17:25:19 christos Exp $
 # printer:  file(1) magic for printer-formatted files
 #
 
@@ -84,7 +84,16 @@
 >0	search/10000	@PJL\ ENTER\ LANGUAGE=QPDL	- Samsung QPDL
 >0	search/10000	@PJL\ ENTER\ LANGUAGE\ =\ QPDL	- Samsung QPDL
 >0	search/10000	@PJL\ ENTER\ LANGUAGE=ZJS	- HP ZJS
-
+# Summary:	Hewlett-Packard printer firmware update
+# From:		Joerg Jenderek
+# URL:		https://support.hp.com/us-en/drivers/selfservice/hp-envy-6000e-all-in-one-printer-series/2100187505/model/2100187513
+# Note:		firmware update tested with ENVY 6000 All-in-One Printer
+0	string		@PJL\ ENTER\ LANGUAGE=FWUPDATE2	HP Printer firmware update
+#!:mime	application/octet-stream
+#!:mime	application/x-hp-firmware
+# https://ftp.hp.com/pub/softlib/software13/printers/en6000/2214/EN6000_2214B.exe
+# vasari_base_dist_pp1_001.2214B_nonassert_appsigned_lbi_rootfs_secure_signed.ful2
+!:ext	ful2
 
 # HP Printer Control Language, Daniel Quinlan (quinlan@yggdrasil.com)
 0	string		\033E\033	HP PCL printer data
