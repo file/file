@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.153 2022/12/26 17:31:14 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.154 2022/12/26 17:35:45 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -1007,7 +1007,7 @@ methodname(size_t method)
 }
 
 file_private int (*
-getdecompressor(int method))(const unsigned char *, unsigned char **, size_t,
+getdecompressor(size_t method))(const unsigned char *, unsigned char **, size_t,
     size_t *, int)
 {
 	switch (method) {
