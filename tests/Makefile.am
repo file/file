@@ -101,6 +101,8 @@ regex-eol.result \
 regex-eol.testfile \
 uf2.result \
 uf2.testfile \
+xclbin.result \
+xclbin.testfile \
 zstd-3-skippable-frames.result \
 zstd-dictionary-0.result \
 zstd-dictionary-1.result \
