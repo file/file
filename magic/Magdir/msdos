@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.163 2022/12/18 14:54:39 christos Exp $
+# $File: msdos,v 1.164 2022/12/26 17:23:08 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1874,14 +1874,20 @@
 !:ext	msu
 >>>&-1	default		x
 # look at point character of 1st archive member name for file name extension
+# GRR: search range is maybe too large and match point else where like in EN600x64.cab!
 >>>>&-1	search/255 	.
 # http://www.pptfaq.com/FAQ00164_What_is_a_PPZ_file-.htm
 # PPZ were created using Pack & Go feature of PowerPoint versions 97 - 2002
 # packs optional files, a PowerPoint presentation *.ppt with optional PLAYLIST.LST to CAB
->>>>>&0	string/c	ppt\0		\b, PowerPoint Packed and Go
+>>>>>&0	string/c	ppt\0
+>>>>>>28 uleshort	>1		\b, PowerPoint Packed and Go
 !:mime	application/vnd.ms-powerpoint
 #!:mime	application/mspowerpoint
 !:ext	ppz
+# or POWERPNT.PPT packed as POWERPNT.PP_ found on Windows 2000,XP setup CD in directory i386
+>>>>>>28 uleshort	=1		\b, one packed PowerPoint
+!:mime	application/vnd.ms-cab-compressed
+!:ext	pp_
 # https://msdn.microsoft.com/en-us/library/windows/desktop/bb773190(v=vs.85).aspx
 # first member *.theme implies Windows 7 Theme Pack like in CommunityShowcaseAqua3.themepack
 # or Windows 8 Desktop Theme Pack like in PanoramicGlaciers.deskthemepack
@@ -1928,6 +1934,16 @@
 # archive need some output like "single" in version 5.32 to avoid error messages
 >>>>>>>>>30	uleshort	!0x0000	\b, single
 !:mime	application/vnd.ms-cab-compressed
+!:ext	cab
+# first archive name without point character
+>>>>&-1	default		x
+>>>>>28	uleshort	=1	\b, single
+!:mime	application/vnd.ms-cab-compressed
+# on XP_CD\I386\ like: NETWORKS._ PROTOCOL._ QUOTES._ SERVICES._
+!:ext	_
+>>>>>28	uleshort	>1	\b, many
+!:mime	application/vnd.ms-cab-compressed
+# like: HP Envy 6000 printer driver packages Full_x86.cab Full_x64.cab
 !:ext	cab
 # TODO: additional extensions like
 # .xtp	InfoPath Template Part
@@ -2026,9 +2042,9 @@
 # define ifoldCONTINUED_PREV_AND_NEXT  (0xFFFF)
 >8	uleshort	>0		\b, iFolder %#x
 # date stamp for file
-#>10	uleshort	x		\b, date %#x
+>10	lemsdosdate	x		last modified %s
 # time stamp for file
-#>12	uleshort	x		\b, time %#x
+>12	lemsdostime	x		%s
 # attribs is attribute flags for file
 # define  _A_RDONLY       (0x01)  file is read-only
 # define  _A_HIDDEN       (0x02)  file is hidden
