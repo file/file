@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.152 2022/10/31 13:22:26 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.153 2022/12/26 17:31:14 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -174,7 +174,7 @@ static const char *zstd_args[] = {
 #define	do_zlib		NULL
 #define	do_bzlib	NULL
 
-private const struct {
+file_private const struct {
 	union {
 		const char *magic;
 		int (*func)(const unsigned char *);
@@ -217,39 +217,39 @@ private const struct {
 #define NODATA	1
 #define ERRDATA	2
 
-private ssize_t swrite(int, const void *, size_t);
+file_private ssize_t swrite(int, const void *, size_t);
 #if HAVE_FORK
-private size_t ncompr = __arraycount(compr);
-private int uncompressbuf(int, size_t, size_t, int, const unsigned char *,
+file_private size_t ncompr = __arraycount(compr);
+file_private int uncompressbuf(int, size_t, size_t, int, const unsigned char *,
     unsigned char **, size_t *);
 #ifdef BUILTIN_DECOMPRESS
-private int uncompresszlib(const unsigned char *, unsigned char **, size_t,
+file_private int uncompresszlib(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
-private int uncompressgzipped(const unsigned char *, unsigned char **, size_t,
+file_private int uncompressgzipped(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
 #endif
 #ifdef BUILTIN_BZLIB
-private int uncompressbzlib(const unsigned char *, unsigned char **, size_t,
+file_private int uncompressbzlib(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
 #endif
 #ifdef BUILTIN_XZLIB
-private int uncompressxzlib(const unsigned char *, unsigned char **, size_t,
+file_private int uncompressxzlib(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
 #endif
 #ifdef BUILTIN_ZSTDLIB
-private int uncompresszstd(const unsigned char *, unsigned char **, size_t,
+file_private int uncompresszstd(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
 #endif
 #ifdef BUILTIN_LZLIB
-private int uncompresslzlib(const unsigned char *, unsigned char **, size_t,
+file_private int uncompresslzlib(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
 #endif
 
 static int makeerror(unsigned char **, size_t *, const char *, ...)
     __attribute__((__format__(__printf__, 3, 4)));
-private const char *methodname(size_t);
+file_private const char *methodname(size_t);
 
-private int
+file_private int
 format_decompression_error(struct magic_set *ms, size_t i, unsigned char *buf)
 {
 	unsigned char *p;
@@ -266,7 +266,7 @@ format_decompression_error(struct magic_set *ms, size_t i, unsigned char *buf)
 	    methodname(i), buf);
 }
 
-protected int
+file_protected int
 file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 {
 	unsigned char *newbuf = NULL;
@@ -379,7 +379,7 @@ out:
 /*
  * `safe' write for sockets and pipes.
  */
-private ssize_t
+file_private ssize_t
 swrite(int fd, const void *buf, size_t n)
 {
 	ssize_t rv;
@@ -404,7 +404,7 @@ swrite(int fd, const void *buf, size_t n)
 /*
  * `safe' read for sockets and pipes.
  */
-protected ssize_t
+file_protected ssize_t
 sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
 {
 	ssize_t rv;
@@ -469,7 +469,7 @@ nocheck:
 	return rn;
 }
 
-protected int
+file_protected int
 file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
     size_t nbytes)
 {
@@ -561,7 +561,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 #define FCOMMENT	(1 << 4)
 
 
-private int
+file_private int
 uncompressgzipped(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
@@ -602,7 +602,7 @@ err:
 	return makeerror(newch, n, "File too short");
 }
 
-private int
+file_private int
 uncompresszlib(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n, int zlib)
 {
@@ -643,7 +643,7 @@ err:
 #endif
 
 #ifdef BUILTIN_BZLIB
-private int
+file_private int
 uncompressbzlib(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
@@ -683,7 +683,7 @@ err:
 #endif
 
 #ifdef BUILTIN_XZLIB
-private int
+file_private int
 uncompressxzlib(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
@@ -720,7 +720,7 @@ err:
 #endif
 
 #ifdef BUILTIN_ZSTDLIB
-private int
+file_private int
 uncompresszstd(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
@@ -764,7 +764,7 @@ err:
 #endif
 
 #ifdef BUILTIN_LZLIB
-private int
+file_private int
 uncompresslzlib(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
@@ -975,7 +975,7 @@ filter_error(unsigned char *ubuf, ssize_t n)
 	return n;
 }
 
-private const char *
+file_private const char *
 methodname(size_t method)
 {
 	switch (method) {
@@ -1006,7 +1006,7 @@ methodname(size_t method)
 	}
 }
 
-private int (*
+file_private int (*
 getdecompressor(int method))(const unsigned char *, unsigned char **, size_t,
     size_t *, int)
 {
@@ -1039,7 +1039,7 @@ getdecompressor(int method))(const unsigned char *, unsigned char **, size_t,
 	}
 }
 
-private int
+file_private int
 uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
     const unsigned char *old, unsigned char **newch, size_t* n)
 {

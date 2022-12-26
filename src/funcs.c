@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.135 2022/10/09 13:44:47 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.136 2022/12/26 17:31:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -51,7 +51,7 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.135 2022/10/09 13:44:47 christos Exp $")
 #define SIZE_MAX	((size_t)~0)
 #endif
 
-protected char *
+file_protected char *
 file_copystr(char *buf, size_t blen, size_t width, const char *str)
 {
 	if (blen == 0)
@@ -63,7 +63,7 @@ file_copystr(char *buf, size_t blen, size_t width, const char *str)
 	return buf;
 }
 
-private void
+file_private void
 file_clearbuf(struct magic_set *ms)
 {
 	free(ms->o.buf);
@@ -71,7 +71,7 @@ file_clearbuf(struct magic_set *ms)
 	ms->o.blen = 0;
 }
 
-private int
+file_private int
 file_checkfield(char *msg, size_t mlen, const char *what, const char **pp)
 {
 	const char *p = *pp;
@@ -90,7 +90,7 @@ file_checkfield(char *msg, size_t mlen, const char *what, const char **pp)
 	return 0;
 }
 
-protected int
+file_protected int
 file_checkfmt(char *msg, size_t mlen, const char *fmt)
 {
 	const char *p;
@@ -129,7 +129,7 @@ file_checkfmt(char *msg, size_t mlen, const char *fmt)
 /*
  * Like printf, only we append to a buffer.
  */
-protected int
+file_protected int
 file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 {
 	int len;
@@ -172,7 +172,7 @@ out:
 	return -1;
 }
 
-protected int
+file_protected int
 file_printf(struct magic_set *ms, const char *fmt, ...)
 {
 	int rv;
@@ -189,7 +189,7 @@ file_printf(struct magic_set *ms, const char *fmt, ...)
  */
 /*VARARGS*/
 __attribute__((__format__(__printf__, 3, 0)))
-private void
+file_private void
 file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
     size_t lineno)
 {
@@ -210,7 +210,7 @@ file_error_core(struct magic_set *ms, int error, const char *f, va_list va,
 }
 
 /*VARARGS*/
-protected void
+file_protected void
 file_error(struct magic_set *ms, int error, const char *f, ...)
 {
 	va_list va;
@@ -223,7 +223,7 @@ file_error(struct magic_set *ms, int error, const char *f, ...)
  * Print an error with magic line number.
  */
 /*VARARGS*/
-protected void
+file_protected void
 file_magerror(struct magic_set *ms, const char *f, ...)
 {
 	va_list va;
@@ -232,20 +232,20 @@ file_magerror(struct magic_set *ms, const char *f, ...)
 	va_end(va);
 }
 
-protected void
+file_protected void
 file_oomem(struct magic_set *ms, size_t len)
 {
 	file_error(ms, errno, "cannot allocate %" SIZE_T_FORMAT "u bytes",
 	    len);
 }
 
-protected void
+file_protected void
 file_badseek(struct magic_set *ms)
 {
 	file_error(ms, errno, "error seeking");
 }
 
-protected void
+file_protected void
 file_badread(struct magic_set *ms)
 {
 	file_error(ms, errno, "error reading");
@@ -254,7 +254,7 @@ file_badread(struct magic_set *ms)
 #ifndef COMPILE_ONLY
 #define FILE_SEPARATOR "\n- "
 
-protected int
+file_protected int
 file_separator(struct magic_set *ms)
 {
 	return file_printf(ms, FILE_SEPARATOR);
@@ -289,7 +289,7 @@ checkdone(struct magic_set *ms, int *rv)
 	return 0;
 }
 
-protected int
+file_protected int
 file_default(struct magic_set *ms, size_t nb)
 {
 	if (ms->flags & MAGIC_MIME) {
@@ -319,7 +319,7 @@ file_default(struct magic_set *ms, size_t nb)
  *	-1: error
  */
 /*ARGSUSED*/
-protected int
+file_protected int
 file_buffer(struct magic_set *ms, int fd, struct stat *st,
     const char *inname __attribute__ ((__unused__)),
     const void *buf, size_t nb)
@@ -500,7 +500,7 @@ simple:
 }
 #endif
 
-protected int
+file_protected int
 file_reset(struct magic_set *ms, int checkloaded)
 {
 	if (checkloaded && ms->mlist[0] == NULL) {
@@ -525,7 +525,7 @@ file_reset(struct magic_set *ms, int checkloaded)
 	*(n)++ = ((CAST(uint32_t, *(o)) >> 0) & 7) + '0', \
 	(o)++)
 
-protected const char *
+file_protected const char *
 file_getbuffer(struct magic_set *ms)
 {
 	char *pbuf, *op, *np;
@@ -603,7 +603,7 @@ file_getbuffer(struct magic_set *ms)
 	return ms->o.pbuf;
 }
 
-protected int
+file_protected int
 file_check_mem(struct magic_set *ms, unsigned int level)
 {
 	size_t len;
@@ -626,13 +626,13 @@ file_check_mem(struct magic_set *ms, unsigned int level)
 	return 0;
 }
 
-protected size_t
+file_protected size_t
 file_printedlen(const struct magic_set *ms)
 {
 	return ms->o.blen;
 }
 
-protected int
+file_protected int
 file_replace(struct magic_set *ms, const char *pat, const char *rep)
 {
 	file_regex_t rx;
@@ -656,7 +656,7 @@ out:
 	return rv;
 }
 
-private int
+file_private int
 check_regex(struct magic_set *ms, const char *pat)
 {
 	char sbuf[512];
@@ -686,7 +686,7 @@ check_regex(struct magic_set *ms, const char *pat)
 	return 0;
 }
 
-protected int
+file_protected int
 file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
     const char *pat, int flags)
 {
@@ -721,7 +721,7 @@ file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
 }
 
 /*ARGSUSED*/
-protected int
+file_protected int
 file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
     const char *str, size_t nmatch, regmatch_t* pmatch, int eflags)
 {
@@ -746,13 +746,13 @@ file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
 	return rc;
 }
 
-protected void
+file_protected void
 file_regfree(file_regex_t *rx)
 {
 	regfree(rx);
 }
 
-protected file_pushbuf_t *
+file_protected file_pushbuf_t *
 file_push_buffer(struct magic_set *ms)
 {
 	file_pushbuf_t *pb;
@@ -774,7 +774,7 @@ file_push_buffer(struct magic_set *ms)
 	return pb;
 }
 
-protected char *
+file_protected char *
 file_pop_buffer(struct magic_set *ms, file_pushbuf_t *pb)
 {
 	char *rbuf;
@@ -798,7 +798,7 @@ file_pop_buffer(struct magic_set *ms, file_pushbuf_t *pb)
 /*
  * convert string to ascii printable format.
  */
-protected char *
+file_protected char *
 file_printable(struct magic_set *ms, char *buf, size_t bufsiz,
     const char *str, size_t slen)
 {
@@ -829,7 +829,7 @@ struct guid {
 	uint8_t data4[8];
 };
 
-protected int
+file_protected int
 file_parse_guid(const char *s, uint64_t *guid)
 {
 	struct guid *g = CAST(struct guid *, CAST(void *, guid));
@@ -854,7 +854,7 @@ file_parse_guid(const char *s, uint64_t *guid)
 #endif
 }
 
-protected int
+file_protected int
 file_print_guid(char *str, size_t len, const uint64_t *guid)
 {
 	const struct guid *g = CAST(const struct guid *,
@@ -875,7 +875,7 @@ file_print_guid(char *str, size_t len, const uint64_t *guid)
 #endif
 }
 
-protected int
+file_protected int
 file_pipe_closexec(int *fds)
 {
 #ifdef HAVE_PIPE2
@@ -891,7 +891,7 @@ file_pipe_closexec(int *fds)
 #endif
 }
 
-protected int
+file_protected int
 file_clear_closexec(int fd) {
 #ifdef F_SETFD
 	return fcntl(fd, F_SETFD, 0);
@@ -900,7 +900,7 @@ file_clear_closexec(int fd) {
 #endif
 }
 
-protected char *
+file_protected char *
 file_strtrim(char *str)
 {
 	char *last;

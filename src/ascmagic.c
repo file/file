@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.112 2022/09/24 20:30:13 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.113 2022/12/26 17:31:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -50,15 +50,15 @@ FILE_RCSID("@(#)$File: ascmagic.c,v 1.112 2022/09/24 20:30:13 christos Exp $")
 #define ISSPC(x) ((x) == ' ' || (x) == '\t' || (x) == '\r' || (x) == '\n' \
 		  || (x) == 0x85 || (x) == '\f')
 
-private unsigned char *encode_utf8(unsigned char *, size_t, file_unichar_t *,
+file_private unsigned char *encode_utf8(unsigned char *, size_t, file_unichar_t *,
     size_t);
-private size_t trim_nuls(const unsigned char *, size_t);
+file_private size_t trim_nuls(const unsigned char *, size_t);
 
 /*
  * Undo the NUL-termination kindly provided by process()
  * but leave at least one byte to look at
  */
-private size_t
+file_private size_t
 trim_nuls(const unsigned char *buf, size_t nbytes)
 {
 	while (nbytes > 1 && buf[nbytes - 1] == '\0')
@@ -67,7 +67,7 @@ trim_nuls(const unsigned char *buf, size_t nbytes)
 	return nbytes;
 }
 
-protected int
+file_protected int
 file_ascmagic(struct magic_set *ms, const struct buffer *b, int text)
 {
 	file_unichar_t *ubuf = NULL;
@@ -101,7 +101,7 @@ file_ascmagic(struct magic_set *ms, const struct buffer *b, int text)
 	return rv;
 }
 
-protected int
+file_protected int
 file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
     file_unichar_t *ubuf, size_t ulen, const char *code, const char *type,
     int text)
@@ -339,7 +339,7 @@ done:
  * Encode Unicode string as UTF-8, returning pointer to character
  * after end of string, or NULL if an invalid character is found.
  */
-private unsigned char *
+file_private unsigned char *
 encode_utf8(unsigned char *buf, size_t len, file_unichar_t *ubuf, size_t ulen)
 {
 	size_t i;

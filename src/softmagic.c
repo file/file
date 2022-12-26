@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.338 2022/12/24 22:30:01 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.339 2022/12/26 17:31:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -44,29 +44,29 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.338 2022/12/24 22:30:01 christos Exp $")
 #include <time.h>
 #include "der.h"
 
-private int match(struct magic_set *, struct magic *, file_regex_t **, size_t,
+file_private int match(struct magic_set *, struct magic *, file_regex_t **, size_t,
     const struct buffer *, size_t, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *, int *, int *);
-private int mget(struct magic_set *, struct magic *, const struct buffer *,
+file_private int mget(struct magic_set *, struct magic *, const struct buffer *,
     const unsigned char *, size_t,
     size_t, unsigned int, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *, int *, int *);
-private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
+file_private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
     const struct buffer *, size_t, unsigned int);
-private int magiccheck(struct magic_set *, struct magic *, file_regex_t **);
-private int mprint(struct magic_set *, struct magic *);
-private int moffset(struct magic_set *, struct magic *, const struct buffer *,
+file_private int magiccheck(struct magic_set *, struct magic *, file_regex_t **);
+file_private int mprint(struct magic_set *, struct magic *);
+file_private int moffset(struct magic_set *, struct magic *, const struct buffer *,
     int32_t *);
-private void mdebug(uint32_t, const char *, size_t);
-private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
+file_private void mdebug(uint32_t, const char *, size_t);
+file_private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, struct magic *);
-private int mconvert(struct magic_set *, struct magic *, int);
-private int print_sep(struct magic_set *, int);
-private int handle_annotation(struct magic_set *, struct magic *, int);
-private int cvt_8(union VALUETYPE *, const struct magic *);
-private int cvt_16(union VALUETYPE *, const struct magic *);
-private int cvt_32(union VALUETYPE *, const struct magic *);
-private int cvt_64(union VALUETYPE *, const struct magic *);
+file_private int mconvert(struct magic_set *, struct magic *, int);
+file_private int print_sep(struct magic_set *, int);
+file_private int handle_annotation(struct magic_set *, struct magic *, int);
+file_private int cvt_8(union VALUETYPE *, const struct magic *);
+file_private int cvt_16(union VALUETYPE *, const struct magic *);
+file_private int cvt_32(union VALUETYPE *, const struct magic *);
+file_private int cvt_64(union VALUETYPE *, const struct magic *);
 
 #define OFFSET_OOB(n, o, i)	((n) < CAST(uint32_t, (o)) || (i) > ((n) - (o)))
 #define BE64(p) ( \
@@ -114,7 +114,7 @@ private int cvt_64(union VALUETYPE *, const struct magic *);
  * Passed the name and FILE * of one file to be typed.
  */
 /*ARGSUSED1*/		/* nbytes passed for regularity, maybe need later */
-protected int
+file_protected int
 file_softmagic(struct magic_set *ms, const struct buffer *b,
     uint16_t *indir_count, uint16_t *name_count, int mode, int text)
 {
@@ -156,7 +156,7 @@ file_softmagic(struct magic_set *ms, const struct buffer *b,
 #ifdef FILE_FMTDEBUG
 #define F(a, b, c) file_fmtcheck((a), (b), (c), __FILE__, __LINE__)
 
-private const char * __attribute__((__format_arg__(3)))
+file_private const char * __attribute__((__format_arg__(3)))
 file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
 	const char *file, size_t line)
 {
@@ -203,7 +203,7 @@ file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
  *	If a continuation matches, we bump the current continuation level
  *	so that higher-level continuations are processed.
  */
-private int
+file_private int
 match(struct magic_set *ms, struct magic *magic, file_regex_t **magic_rxcomp,
     size_t nmagic, const struct buffer *b, size_t offset, int mode, int text,
     int flip, uint16_t *indir_count, uint16_t *name_count,
@@ -482,7 +482,7 @@ flush:
 	return *returnval;
 }
 
-private int
+file_private int
 check_fmt(struct magic_set *ms, const char *fmt)
 {
 	file_regex_t rx;
@@ -578,7 +578,7 @@ varexpand(struct magic_set *ms, char *buf, size_t len, const char *str)
 }
 
 
-private int
+file_private int
 mprint(struct magic_set *ms, struct magic *m)
 {
 	uint64_t v;
@@ -829,7 +829,7 @@ mprint(struct magic_set *ms, struct magic *m)
 	return 0;
 }
 
-private int
+file_private int
 moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
     int32_t *op)
 {
@@ -982,7 +982,7 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	return 1;
 }
 
-private uint32_t
+file_private uint32_t
 cvt_id3(struct magic_set *ms, uint32_t v)
 {
 	v = ((((v >>  0) & 0x7f) <<  0) |
@@ -994,7 +994,7 @@ cvt_id3(struct magic_set *ms, uint32_t v)
 	return v;
 }
 
-private int
+file_private int
 cvt_flip(int type, int flip)
 {
 	if (flip == 0)
@@ -1079,28 +1079,28 @@ cvt_flip(int type, int flip)
 	if (m->mask_op & FILE_OPINVERSE) \
 		p->fld = ~p->fld \
 
-private int
+file_private int
 cvt_8(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(b, uint8_t);
 	return 0;
 }
 
-private int
+file_private int
 cvt_16(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(h, uint16_t);
 	return 0;
 }
 
-private int
+file_private int
 cvt_32(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(l, uint32_t);
 	return 0;
 }
 
-private int
+file_private int
 cvt_64(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(q, uint64_t);
@@ -1126,14 +1126,14 @@ cvt_64(union VALUETYPE *p, const struct magic *m)
 			break; \
 		} \
 
-private int
+file_private int
 cvt_float(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT2(f, float);
 	return 0;
 }
 
-private int
+file_private int
 cvt_double(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT2(d, double);
@@ -1145,7 +1145,7 @@ cvt_double(union VALUETYPE *p, const struct magic *m)
  * While we're here, let's apply the mask operation
  * (unless you have a better idea)
  */
-private int
+file_private int
 mconvert(struct magic_set *ms, struct magic *m, int flip)
 {
 	union VALUETYPE *p = &ms->ms_value;
@@ -1308,7 +1308,7 @@ out:
 }
 
 
-private void
+file_private void
 mdebug(uint32_t offset, const char *str, size_t len)
 {
 	(void) fprintf(stderr, "mget/%" SIZE_T_FORMAT "u @%d: ", len, offset);
@@ -1317,7 +1317,7 @@ mdebug(uint32_t offset, const char *str, size_t len)
 	(void) fputc('\n', stderr);
 }
 
-private int
+file_private int
 mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
     const unsigned char *s, uint32_t offset, size_t nbytes, struct magic *m)
 {
@@ -1454,7 +1454,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 	return 0;
 }
 
-private int
+file_private int
 do_ops(struct magic *m, uint32_t *rv, intmax_t lhs, intmax_t off)
 {
 	intmax_t offset;
@@ -1504,7 +1504,7 @@ do_ops(struct magic *m, uint32_t *rv, intmax_t lhs, intmax_t off)
 	return 0;
 }
 
-private int
+file_private int
 msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
     const struct buffer *b, size_t o, unsigned int cont_level)
 {
@@ -1554,7 +1554,7 @@ normal:
 	return 0;
 }
 
-private int
+file_private int
 save_cont(struct magic_set *ms, struct cont *c)
 {
 	size_t len;
@@ -1569,14 +1569,14 @@ save_cont(struct magic_set *ms, struct cont *c)
 	return 0;
 }
 
-private void
+file_private void
 restore_cont(struct magic_set *ms, struct cont *c)
 {
 	free(ms->c.li);
 	ms->c = *c;
 }
 
-private int
+file_private int
 mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
     const unsigned char *s, size_t nbytes, size_t o, unsigned int cont_level,
     int mode, int text, int flip, uint16_t *indir_count, uint16_t *name_count,
@@ -1973,7 +1973,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	return 1;
 }
 
-private uint64_t
+file_private uint64_t
 file_strncmp(const char *s1, const char *s2, size_t len, size_t maxlen,
     uint32_t flags)
 {
@@ -2050,7 +2050,7 @@ file_strncmp(const char *s1, const char *s2, size_t len, size_t maxlen,
 	return v;
 }
 
-private uint64_t
+file_private uint64_t
 file_strncmp16(const char *a, const char *b, size_t len, size_t maxlen,
     uint32_t flags)
 {
@@ -2063,7 +2063,7 @@ file_strncmp16(const char *a, const char *b, size_t len, size_t maxlen,
 	return file_strncmp(a, b, len, maxlen, flags);
 }
 
-private file_regex_t *
+file_private file_regex_t *
 alloc_regex(struct magic_set *ms, struct magic *m)
 {
 	int rc;
@@ -2084,7 +2084,7 @@ alloc_regex(struct magic_set *ms, struct magic *m)
 	return NULL;
 }
 
-private int
+file_private int
 magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 {
 	uint64_t l = m->value.q;
@@ -2460,7 +2460,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 	return matched;
 }
 
-private int
+file_private int
 handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 {
 	if ((ms->flags & MAGIC_APPLE) && m->apple[0]) {
@@ -2493,7 +2493,7 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 	return 0;
 }
 
-private int
+file_private int
 print_sep(struct magic_set *ms, int firstline)
 {
 	if (firstline)
