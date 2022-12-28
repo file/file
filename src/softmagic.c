@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.339 2022/12/26 17:31:14 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.340 2022/12/28 17:47:56 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -41,6 +41,7 @@ FILE_RCSID("@(#)$File: softmagic.c,v 1.339 2022/12/26 17:31:14 christos Exp $")
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <time.h>
 #include "der.h"
 
