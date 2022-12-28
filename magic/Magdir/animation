@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.91 2022/11/30 20:34:47 christos Exp $
+# $File: animation,v 1.92 2022/12/28 17:49:55 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -37,6 +37,7 @@
 4	string		ftyp		ISO Media
 # https://aeroquartet.com/wordpress/2016/03/05/3-xavc-s/
 >8	string		XAVC		\b, MPEG v4 system, Sony XAVC Codec
+!:mime	video/mp4
 >>96	string		x		\b, Audio "%.4s"
 >>118	beshort		x		at %dHz
 >>140	string		x		\b, Video "%.4s"
