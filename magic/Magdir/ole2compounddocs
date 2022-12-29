@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.22 2022/12/09 15:56:56 christos Exp $
+# $File: ole2compounddocs,v 1.23 2022/12/29 15:47:00 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -344,6 +344,14 @@
 # cub is used for validation module like: Vstalogo.cub XPlogo.cub darice.cub logo.cub mergemod.cub
 #!:mime	application/x-ms-cub
 !:ext	msi/cub
+# From:		Joerg Jenderek
+# URL:		http://en.wikipedia.org/wiki/Windows_Installer
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/m/mst.trid.xml
+#		called "Windows SDK Setup Transform script" by TrID
+>>>80 	ubequad		0x82100c0000000000	: Microsoft Windows Installer transform script
+#!:mime	application/x-ole-storage
+!:mime	application/x-ms-mst
+!:ext	mst
 >>>80 	ubequad		0x86100c0000000000	: Microsoft Windows Installer Patch
 # ??
 !:mime	application/x-wine-extension-msp
