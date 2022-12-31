@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.179 2022/12/21 15:50:59 christos Exp $
+# $File: archive,v 1.180 2022/12/31 20:24:08 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1876,9 +1876,14 @@
 # https://en.wikipedia.org/wiki/ZIP_(file_format)#End_of_central_directory_record_(EOCD)
 # by Michal Gorny <mgorny@gentoo.org>
 -2	uleshort	0
->&-22	string	PK\005\006	Zip archive, with extra data prepended
+>&-22	string	PK\005\006
+# without #!
+>>0	string	!#!	Zip archive, with extra data prepended
 !:mime	application/zip
 !:ext zip/cbz
+# with #!
+>>0	string/w	#!\ 	a
+>>>&-1	string/T	x	%s script executable (Zip archive)
 
 # ACE archive (from http://www.wotsit.org/download.asp?f=ace)
 # by Stefan `Sec` Zehl <sec@42.org>
