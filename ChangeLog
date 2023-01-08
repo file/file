@@ -1,4 +1,8 @@
 
+2923-01-08   1:08  Christos Zoulas <christos@zoulas.com>
+
+	* PR/415: Fix decompression with program returning empty
+
 2922-12-26   1:47  Christos Zoulas <christos@zoulas.com>
 
 	* PR/408: fix -p with seccomp
