@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.19 2021/04/26 15:56:00 christos Exp $
+# $File: android,v 1.20 2023/01/12 00:09:46 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -207,3 +207,8 @@
 >8	string	>000	dex section version: %s,
 >12	lelong	>0	number of dex files: %d,
 >16	lelong	>0	verifier deps size: %d
+
+# Disassembled DEX files
+0	string/t	.class\x20
+>&0	regex/512	\^\\.super\x20L.*;$	disassembled Android DEX Java class (smali/baksmali)
+!:ext	smali
