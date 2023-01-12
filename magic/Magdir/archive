@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.180 2022/12/31 20:24:08 christos Exp $
+# $File: archive,v 1.181 2023/01/12 00:06:52 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1504,6 +1504,65 @@
 0	string		PK\x07\x08PK\x03\x04	Zip multi-volume archive data, at least PKZIP v2.50 to extract
 !:mime	application/zip
 !:ext zip/cbz
+
+# Android APK file (Zip archive)
+0	string		PK\003\004
+!:strength +1
+# Starts with AndroidManifest.xml (file name length = 19)
+>26	uleshort	19
+>>30	string	AndroidManifest.xml	Android package (APK), with AndroidManifest.xml
+>>>-22	string	PK\005\006
+>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+# Starts with META-INF/com/android/build/gradle/app-metadata.properties
+>26	uleshort	57
+>>30	string	META-INF/com/android/build/gradle/
+>>>&0	string	app-metadata.properties	Android package (APK), with gradle app-metadata.properties
+>>>>-22	string	PK\005\006
+>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+# Starts with classes.dex (file name length = 11)
+>26	uleshort	11
+>>30	string	classes.dex	Android package (APK), with classes.dex
+>>>-22	string	PK\005\006
+>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+# Starts with META-INF/MANIFEST.MF (file name length = 20)
+# NB: checks for resources.arsc or drawables as well to avoid matching JAR files
+>26	uleshort	20
+>>30	string	META-INF/MANIFEST.MF
+# Contains resources.arsc (near the end, in the central directory)
+>>>-512	search	resources.arsc	Android package (APK), with MANIFEST.MF and resources.arsc
+>>>>-22	string	PK\005\006
+>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>-512 default x
+# Contains drawables (near the end, in the central directory)
+>>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
+>>>>>-22	string	PK\005\006
+>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+# Starts with zipflinger virtual entry (28 + 104 = 132 bytes)
+# See https://github.com/obfusk/apksigcopier/blob/666f5b7/apksigcopier/__init__.py#L230
+>4	string	\x00\x00\x00\x00\x00\x00
+>>&0	string	\x21\x08\x21\x02
+>>>&0	string	\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+>>>>&0	string	\x00\x00	Android package (APK), with zipflinger virtual entry
+>>>>>-22	string	PK\005\006
+>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+# APK Signing Block
+>0	default	x
+>>-22	string	PK\005\006
+>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	Android package (APK), with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
 
 # Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 0	string		PK\005\006	Zip archive data (empty)
