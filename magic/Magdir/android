@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.20 2023/01/12 00:09:46 christos Exp $
+# $File: android,v 1.21 2023/01/12 00:10:34 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -212,3 +212,24 @@
 0	string/t	.class\x20
 >&0	regex/512	\^\\.super\x20L.*;$	disassembled Android DEX Java class (smali/baksmali)
 !:ext	smali
+
+# Android ART (baseline) profile + metadata: baseline.prof, baseline.profm
+# Reference: https://android.googlesource.com/platform/frameworks/support/\
+#            +/refs/heads/androidx-main/profileinstaller/profileinstaller/\
+#            src/main/java/androidx/profileinstaller/ProfileTranscoder.java
+# Reference: https://android.googlesource.com/platform/frameworks/support/\
+#            +/refs/heads/androidx-main/profileinstaller/profileinstaller/\
+#            src/main/java/androidx/profileinstaller/ProfileVersion.java
+0	string	pro\x00
+>0	regex	pro\x000[0-9][0-9]\x00	Android ART profile
+!:ext	prof
+>>4	string	001\x00	\b, version 001 N
+>>4	string	005\x00	\b, version 005 O
+>>4	string	009\x00	\b, version 009 O MR1
+>>4	string	010\x00	\b, version 010 P
+>>4	string	015\x00	\b, version 015 S
+0	string	prm\x00
+>0	regex	prm\x000[0-9][0-9]\x00	Android ART profile metadata
+!:ext	profm
+>>4	string	001\x00	\b, version 001 N
+>>4	string	002\x00	\b, version 002
