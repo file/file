@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.21 2023/01/12 00:10:34 christos Exp $
+# $File: android,v 1.22 2023/01/12 00:11:15 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -233,3 +233,22 @@
 !:ext	profm
 >>4	string	001\x00	\b, version 001 N
 >>4	string	002\x00	\b, version 002
+
+# Android package resource table (ARSC): resources.arsc
+# Reference: https://android.googlesource.com/platform/tools/base/\
+#            +/refs/heads/mirror-goog-studio-main/apkparser/binary-resources/\
+#            src/main/java/com/google/devrel/gmscore/tools/apk/arsc
+# 00: resource table type = 0x0002 (2) + header size = 12 (2)
+# 04: chunk size (4, skipped)
+# 08: #packages (4)
+0	ulelong	0x000c0002	Android package resource table (ARSC)
+!:ext	arsc
+>8	ulelong	!1	\b, %d packages
+# 12: string pool type = 0x0001 (2) + header size = 28 (2)
+# 16: chunk size (4, skipped)
+# 20: #strings (4), #styles (4), flags (4)
+>12	ulelong	0x001c0001
+>>20	ulelong	!0	\b, %d string(s)
+>>24	ulelong	!0	\b, %d style(s)
+>>28	ulelong	&1	\b, sorted
+>>28	ulelong	&256	\b, utf8
