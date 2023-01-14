@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.181 2023/01/12 00:06:52 christos Exp $
+# $File: archive,v 1.182 2023/01/14 19:38:12 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1008,11 +1008,39 @@
 # TPac
 0	string	\4TPAC\3 TPac archive data
 # Ai
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Ai_Archiver
 0	string	Ai\1\1\0 Ai archive data
+#!:mime	application/octet-stream
+!:mime	application/x-compress-ai
+!:ext	ai
 0	string	Ai\1\0\0 Ai archive data
+#!:mime	application/octet-stream
+!:mime	application/x-compress-ai
+!:ext	ai
 # Ai32
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/ark-ai.trid.xml
+# Note:		called "Ai Archivator compressed archive" by TrID
 0	string	Ai\2\0 Ai32 archive data
+#!:mime	application/octet-stream
+!:mime	application/x-compress-ai
+!:ext	ai
+# original file name
+>8	pstring/h x	"%s"
+# according to TrID the next 3 bytes are nil
+>5	ubyte	!0	\b, at 5 %#x
+>6	ubyte	!0	\b, at 6 %#x
+>7	ubyte	!0	\b, at 7 %#x
+# the fourth byte with value 0 is probably a flag for "non solid" mode
+#>3	ubyte	=0x00	\b, unsolid mode
 0	string	Ai\2\1 Ai32 archive data
+#!:mime	application/octet-stream
+!:mime	application/x-compress-ai
+!:ext	ai
+# original file name
+>8	pstring/h x	"%s"
+# the fourth byte with value 0x01 is probably a flag for "solid" mode; this is not the default
+>3	ubyte	=0x01	\b, solid mode
 # SBC
 0	string	SBC SBC archive data
 # Ybs
