@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.182 2023/01/14 19:38:12 christos Exp $
+# $File: archive,v 1.183 2023/01/14 19:43:33 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1559,7 +1559,7 @@
 !:mime	application/vnd.android.package-archive
 !:ext	apk
 # Starts with META-INF/MANIFEST.MF (file name length = 20)
-# NB: checks for resources.arsc or drawables as well to avoid matching JAR files
+# NB: checks for resources.arsc, classes.dex, etc. as well to avoid matching JAR files
 >26	uleshort	20
 >>30	string	META-INF/MANIFEST.MF
 # Contains resources.arsc (near the end, in the central directory)
@@ -1568,11 +1568,25 @@
 >>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
->>>-512 default x
-# Contains drawables (near the end, in the central directory)
->>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
+>>>-512	default x
+# Contains classes.dex (near the end, in the central directory)
+>>>>-512	search	classes.dex	Android package (APK), with MANIFEST.MF and classes.dex
 >>>>>-22	string	PK\005\006
 >>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>>-512	default x
+# Contains lib/armeabi (near the end, in the central directory)
+>>>>>-512	search	lib/armeabi	Android package (APK), with MANIFEST.MF and armeabi lib
+>>>>>>-22	string	PK\005\006
+>>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>>>-512	default x
+# Contains drawables (near the end, in the central directory)
+>>>>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
+>>>>>>>-22	string	PK\005\006
+>>>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
 # Starts with zipflinger virtual entry (28 + 104 = 132 bytes)
