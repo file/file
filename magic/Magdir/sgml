@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sgml,v 1.47 2023/01/12 00:02:16 christos Exp $
+# $File: sgml,v 1.48 2023/01/18 16:10:21 christos Exp $
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
 0	string		\<?xml\ version=
@@ -57,6 +57,7 @@
 !:mime	text/html
 0	string/ct	\<!--
 >&0	search/4096/cWt	\<!doctype\ html	HTML document text
+!:mime	text/html
 >&0	search/4096/ct	\<html>	HTML document text
 !:mime	text/html
 
