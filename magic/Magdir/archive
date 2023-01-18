@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.183 2023/01/14 19:43:33 christos Exp $
+# $File: archive,v 1.184 2023/01/18 16:12:38 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1539,66 +1539,70 @@
 # Starts with AndroidManifest.xml (file name length = 19)
 >26	uleshort	19
 >>30	string	AndroidManifest.xml	Android package (APK), with AndroidManifest.xml
->>>-22	string	PK\005\006
->>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>-22	string	PK\005\006
+>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 # Starts with META-INF/com/android/build/gradle/app-metadata.properties
 >26	uleshort	57
 >>30	string	META-INF/com/android/build/gradle/
 >>>&0	string	app-metadata.properties	Android package (APK), with gradle app-metadata.properties
->>>>-22	string	PK\005\006
->>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>>-22	string	PK\005\006
+>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 # Starts with classes.dex (file name length = 11)
 >26	uleshort	11
 >>30	string	classes.dex	Android package (APK), with classes.dex
->>>-22	string	PK\005\006
->>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>-22	string	PK\005\006
+>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 # Starts with META-INF/MANIFEST.MF (file name length = 20)
 # NB: checks for resources.arsc, classes.dex, etc. as well to avoid matching JAR files
 >26	uleshort	20
 >>30	string	META-INF/MANIFEST.MF
 # Contains resources.arsc (near the end, in the central directory)
 >>>-512	search	resources.arsc	Android package (APK), with MANIFEST.MF and resources.arsc
->>>>-22	string	PK\005\006
->>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>>-22	string	PK\005\006
+>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 >>>-512	default x
 # Contains classes.dex (near the end, in the central directory)
 >>>>-512	search	classes.dex	Android package (APK), with MANIFEST.MF and classes.dex
->>>>>-22	string	PK\005\006
->>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>>>-22	string	PK\005\006
+>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 >>>>-512	default x
 # Contains lib/armeabi (near the end, in the central directory)
 >>>>>-512	search	lib/armeabi	Android package (APK), with MANIFEST.MF and armeabi lib
->>>>>>-22	string	PK\005\006
->>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>>>>-22	string	PK\005\006
+>>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 >>>>>-512	default x
 # Contains drawables (near the end, in the central directory)
 >>>>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
->>>>>>>-22	string	PK\005\006
->>>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>>>>>-22	string	PK\005\006
+>>>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+# It may or may not be an APK file, but it's definitely a Java JAR file
+>>>>>>-512	default x	Java archive data (JAR)
+!:mime	application/java-archive
+!:ext	jar
 # Starts with zipflinger virtual entry (28 + 104 = 132 bytes)
 # See https://github.com/obfusk/apksigcopier/blob/666f5b7/apksigcopier/__init__.py#L230
 >4	string	\x00\x00\x00\x00\x00\x00
 >>&0	string	\x21\x08\x21\x02
 >>>&0	string	\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
 >>>>&0	string	\x00\x00	Android package (APK), with zipflinger virtual entry
->>>>>-22	string	PK\005\006
->>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 !:mime	application/vnd.android.package-archive
 !:ext	apk
+>>>>>-22	string	PK\005\006
+>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 # APK Signing Block
 >0	default	x
 >>-22	string	PK\005\006
@@ -1823,9 +1827,10 @@
 >>>38		regex	[!-OQ-~]+		Zip data (MIME type "%s"?)
 !:mime	application/zip
 
-# Java Jar files
+# Java Jar files (see also APK files above)
 >(26.s+30)	leshort	0xcafe		Java archive data (JAR)
 !:mime	application/java-archive
+!:ext	jar
 
 # iOS App
 >(26.s+30)	leshort	!0xcafe
