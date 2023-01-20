@@ -69,7 +69,7 @@ LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
 	if (size == 0)
 		return 0;
-
+        else
 	magic_buffer(magic, data, size);
 	return 0;
 }
