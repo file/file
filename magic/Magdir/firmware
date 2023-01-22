@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.3 2022/10/15 15:38:44 christos Exp $
+# $File: firmware,v 1.4 2023/01/22 15:05:39 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -31,3 +31,15 @@
 >75             string                  label_HPE-HPB-BMC-ILO5-4096
 >>880           string                  HPIMAGE\x00     HPE iLO5 firmware update image,
 >>944           string                  x               version %s
+
+# IBM POWER Secure Boot Container
+# from https://github.com/open-power/skiboot/blob/master/libstb/container.h
+0	belong	0x17082011	POWER Secure Boot Container,
+>4	beshort	x		version %u
+>6	bequad	x		container size %llu
+# These are always zero
+# >14	bequad	x		target HRMOR %llx
+# >22	bequad  x		stack pointer %llx
+>4096	ustring \xFD7zXZ\x00    XZ compressed
+0	belong	0x1bad1bad	POWER boot firmware
+>256	belong	0x48002030	(PHYP entry point)
