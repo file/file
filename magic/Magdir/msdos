@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.164 2022/12/26 17:23:08 christos Exp $
+# $File: msdos,v 1.165 2023/01/22 15:00:23 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1483,15 +1483,82 @@
 0	string/b	Nullsoft\ AVS\ Preset\ 	Winamp plug in
 
 # Windows Metafile .WMF
-0	string/b	\327\315\306\232	Windows metafile
-!:mime	image/wmf
-!:ext	wmf
+# URL: 		http://fileformats.archiveteam.org/wiki/Windows_Metafile
+#		http://en.wikipedia.org/wiki/Windows_Metafile
+# Reference:	https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-WMF/%5bMS-WMF%5d.pdf
+#		http://mark0.net/download/triddefs_xml.7z/defs/w/wmf.trid.xml
+# Note:		called "Windows Metafile" by TrID and
+#		verified by ImageMagick `identify -verbose *.wmf` as WMF (Windows Meta File)
+# META_PLACEABLE Record (Aldus Placeable Metafile signature)
+0	string/b	\327\315\306\232
+# Note:		called "Windows Metafile Image with Placeable File Header" by DROID via PUID x-fmt/119
+#		and verified by XnView `nconvert -info abydos.wmf SPA_FLAG.wmf hardcopy-windows-meta.wmf` as "Windows Placeable metafile"
+# skip failed libreoffice-7.3.2.2 ofz35149-1.wmf with invalid version 2020h and exttextout-2.wmf with invalid version 3a02h
+# and x-fmt-119-signature-id-609.wmf without version instead of 0100h=METAVERSION100 or 0300h=METAVERSION300
+>26	uleshort&0xFDff	=0x0100			Windows metafile
+# HWmf; resource handle to the metafile; When the metafile is on disk, this field MUST contain 0
+# seems to be always true but in failed samples 2020h ofz35149-1.wmf 56f8h exttextout-2.wmf
+>>4	uleshort	!0			\b, resource handle %#x
+# BoundingBox; the rectangle in the playback context measured in logical units for displaying
+# sometimes useful like: hardcopy-windows-meta.wmf (0,0 / 1280,1024)
+# but garbage in x-fmt-119-signature-id-609.wmf (-21589,-21589 / -21589,-21589)
+#>>6	ubequad		x			\b, bounding box %#16.16llx
+# Left; x-coordinate of the upper-left corner of the rectangle
+>>6	leshort		x			\b, bounding box (%d
+# Top; y-coordinate upper-left corner
+>>8	leshort		x			\b,%d
+# Right; x-coordinate lower-right corner
+>>10	leshort		x			/ %d
+# Bottom; y-coordinate lower-right corner
+>>12	leshort		x			\b,%d)
+# Inch; number of logical units per inch like: 72 96 575 576 1000 1200 1439 1440 2540
+>>14	uleshort	x			\b, dpi %u
+# Reserved; field is not used and MUST be set to 0; but ababababh in x-fmt-119-signature-id-609.wmf
+>>16	ulelong		!0			\b, reserved %#x
+# Checksum; checksum for the previous 10 words
+>>20	uleshort	x			\b, checksum %#x
+# META_HEADER Record after META_PLACEABLE Record
+>>22	use		wmf-head
+# GRR:		no example for type 2 (DISKMETAFILE) variant found under few thousands WMF
 0	string/b	\002\000\011\000	Windows metafile
+>0	use		wmf-head
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/w/wmf-16.trid.xml
+# Note:		called "Windows Metafile (old Win 3.x format)" by TrID and
+#		"Windows Metafile Image without Placeable File Header" by DROID via PUID x-fmt/119
+#		verified by XnView `nconvert -info *.wmf` as Windows metafile
+# variant with type=1=MEMORYMETAFILE and valid HeaderSize 9
+0	string/b	\001\000\011\000
+# skip DROID x-fmt-119-signature-id-1228.wmf by looking for content after header (18 bytes=2*011)
+>18	ulelong		>0			Windows metafile
+# GRR: in version 5.44 unequal and not endian variant not working!
+#>18	ulelong		!0			THIS_SHOULD_NOT_HAPPEN
+#>18	long		!0			THIS_SHOULD_NOT_HAPPEN
+>>0	use		wmf-head
+#	display information of Windows metafile header (type, size, objects)
+0	name		wmf-head
+# MetafileType: 0001h=MEMORYMETAFILE~Metafile is stored in memory 0002h=DISKMETAFILE~Metafile is stored on disk
+>0	uleshort	!0x0001			\b, type %#x
+# HeaderSize; the number of WORDs in header record; seems to be always 9 (18 bytes)
+>2	uleshort*2	!18			\b, header size %u
+# MetafileVersion: 0100h=METAVERSION100~DIBs (device-independent bitmaps) not supported 0300h=METAVERSION300~DIBs are supported
+# but in failed samples 2020h ofz35149-1.wmf 3a02h exttextout-2.wmf
+>4	uleshort	=0x0100			\b, DIBs not supported 
+>4	uleshort	=0x0300
+#>4	uleshort	=0x0300			\b, DIBs supported
+# this should not happen!
+>4	default		x			\b, version
+>>4	uleshort	x			%#x
+# Size; the number of WORDs in the entire metafile
+>6	ulelong	x				\b, size %u words
+#>6	ulelong*2	x			\b, size %u bytes
 !:mime	image/wmf
 !:ext	wmf
-0	string/b	\001\000\011\000	Windows metafile
-!:mime	image/wmf
-!:ext	wmf
+# NumberOfObjects: the number of graphics objects like: 0 hardcopy-windows-meta.wmf 1 2 3 4 5 6 7 8 9 12 13 14 16 17 20 27 110 PERSGRID.WMF
+>10	uleshort	x			\b, %u objects
+# MaxRecord: the size of the largest record in the metafile in WORDs like: 78h b0h 1f4h 310h 63fh 1e0022h 3fcc21h
+>12	ulelong		x			\b, largest record size %#x
+# NumberOfMembers: It SHOULD be 0x0000, but 5 TestBitBltStretchBlt.wmf 13 TestPalette.wmf and in failed samples 4254 bitcount-1.wmf 8224 ofz5942-1.wmf 56832 exttextout-2.wmf
+>16	uleshort	!0			\b, %u members
 
 #tz3 files whatever that is (MS Works files)
 0	string/b	\003\001\001\004\070\001\000\000	tz3 ms-works file
