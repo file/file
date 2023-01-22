@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: printer,v 1.32 2022/12/26 17:25:19 christos Exp $
+# $File: printer,v 1.33 2023/01/22 15:03:03 christos Exp $
 # printer:  file(1) magic for printer-formatted files
 #
 
@@ -30,13 +30,42 @@
 
 # DOS EPS Binary File Header
 # From: Ed Sznyter <ews@Black.Market.NET>
-0       belong          0xC5D0D3C6      DOS EPS Binary File
->4      long            >0              Postscript starts at byte %d
->>8     long            >0              length %d
->>>12   long            >0              Metafile starts at byte %d
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Encapsulated_PostScript
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/eps-adobe.trid.xml
+# Note:		called "Encapsulated PostScript binary" by TrID and 
+#		verified partly by ImageMagick `identify -verbose *` as EPT (Encapsulated PostScript with TIFF preview)
+0       belong          0xC5D0D3C6
+# skip DROID fmt-122-signature-id-174.eps fmt-123-signature-id-178.eps fmt-124-signature-id-180.eps
+# by looking for content after header
+# GRR: in version 5.44 unequal and not endian variant not working!
+>32	ulelong		>0		DOS EPS Binary File
+!:mime	image/x-eps
+# TODO: check that "long" is false on big endian machines
+# Postscript often (850/857) comes after header; so values like: 30 32 or 2788 10644 43350 71828  
+>>4      long            >0              at byte %d
+# 1 space char after length value to get phrase like "length 263893 PostScript document text"
+>>>8     long            >0              length %d 
+# PostScript document text handled by ./printer
+>>>>(4.l)	indirect		x
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/e/eps-wmf.trid.xml
+# Note:		called "Encapsulated PostScript binary (with WMF preview)" by TrID
+#		verified partly by XnView `nconvert -info *.EP?` as TIFF epsp
+>>>>12   long            >0               at byte %d
+!:ext	eps
+# GRR: in file version 5.44 calling indirect of ./msdos produce phrase like "length 452\012- Windows metafile"
 >>>>16  long            >0              length %d
->>>20   long            >0              TIFF starts at byte %d
->>>>24  long            >0              length %d
+# Windows metafile data handled by ./msdos
+>>>>>(12.l)	indirect		x
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/e/eps-tiff.trid.xml
+# Note:		called "Encapsulated PostScript binary (with TIFF preview)" by TrID
+>>>>20   long            >0              at byte %d
+# For the variant with the TIFF preview image sometimes the file extension ept is used
+!:ext	eps/ept
+# GRR: in file version 5.44 calling indirect of ./images produce phrase like "length 43320\012- TIFF image data,"
+>>>>>24  long            >0              length %d
+# TIFF image data handled by ./images
+>>>>>>(20.l)	indirect		x
 
 # Summary: Adobe's PostScript Printer Description File
 # Extension: .ppd
