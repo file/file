@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.165 2023/01/22 15:00:23 christos Exp $
+# $File: msdos,v 1.166 2023/01/22 15:02:31 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1747,17 +1747,6 @@
 #>>&06		string	x			\b:%s
 >0x187	search/0xB55	AUTOEXECBAT\ 4.0\0	\b +AUTOEXEC.BAT
 #>>&06		string	x			\b:%s
-
-# DOS EPS Binary File Header
-# From: Ed Sznyter <ews@Black.Market.NET>
-0	belong		0xC5D0D3C6	DOS EPS Binary File
-!:mime	image/x-eps
->4	long		>0		Postscript starts at byte %d
->>8	long		>0		length %d
->>>12	long		>0		Metafile starts at byte %d
->>>>16	long		>0		length %d
->>>20	long		>0		TIFF starts at byte %d
->>>>24	long		>0		length %d
 
 # Norton Guide (.NG , .HLP) files added by Joerg Jenderek from source NG2HTML.C
 # of http://www.davep.org/norton-guides/ng2h-105.tgz
