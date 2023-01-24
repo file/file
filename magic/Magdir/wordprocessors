@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.33 2022/12/31 20:27:17 christos Exp $
+# $File: wordprocessors,v 1.34 2023/01/24 20:13:40 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -442,8 +442,11 @@
 # minor version of WP file like: 0 1
 >11	byte	x	\b%d
 
-# Hangul (Korean) Word Processor File
-0	string	HWP\ Document\ File	Hangul (Korean) Word Processor File 3.0
+# Hancom HWP (Hangul Word Processor)
+# Hangul Word Processor 3.0 through 97 used HWP 3.0 format.
+# URL: https://www.hancom.com/etc/hwpDownload.do
+0	string	HWP\ Document\ File     Hancom HWP (Hangul Word Processor) file, version 3.0
+!:ext	hwp
 
 # CosmicBook, from Benoit Rouits
 0       string  CSBK    Ted Neslson's CosmicBook hypertext file

@@ -26,7 +26,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readcdf.c,v 1.79 2022/12/26 17:31:14 christos Exp $")
+FILE_RCSID("@(#)$File: readcdf.c,v 1.80 2023/01/24 20:13:40 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -613,7 +613,7 @@ file_trycdf(struct magic_set *ms, const struct buffer *b)
 		    sizeof(HWP5_SIGNATURE) - 1) == 0) {
 		    if (NOTMIME(ms)) {
 			if (file_printf(ms,
-			    "Hangul (Korean) Word Processor File 5.x") == -1)
+			    "Hancom HWP (Hangul Word Processor) file, version 5.0") == -1)
 			    return -1;
 		    } else if (ms->flags & MAGIC_MIME_TYPE) {
 			if (file_printf(ms, "application/x-hwp") == -1)

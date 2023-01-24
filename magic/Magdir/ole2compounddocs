@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.23 2022/12/29 15:47:00 christos Exp $
+# $File: ole2compounddocs,v 1.24 2023/01/24 20:13:40 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -262,9 +262,11 @@
 !:ext	tpl
 #
 # URL:	https://en.wikipedia.org/wiki/Hangul_(word_processor)
+#       https://www.hancom.com/etc/hwpDownload.do
 # Note:	"HWP Document File" signature found in FileHeader
+# Hangul Word Processor WORDIAN, 2002 and later is using HWP 5.0 format.
 # Second directory entry name FileHeader hint for Thinkfree Office document
->>>>128 	lestring16	FileHeader		: Hangul (Korean) 5.0 Word Processor File
+>>>>128 	lestring16	FileHeader		: Hancom HWP (Hangul Word Processor) file, version 5.0
 #!:mime	application/haansofthwp
 !:mime	application/x-hwp
 # https://example-files.online-convert.com/document/hwp/example.hwp

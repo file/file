@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.184 2023/01/18 16:12:38 christos Exp $
+# $File: archive,v 1.185 2023/01/24 20:13:40 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1773,6 +1773,16 @@
 #    From: Ralf Brown <ralf.brown@gmail.com>
 >>50	string	epub+zip	EPUB document
 !:mime application/epub+zip
+
+# From: Hajin Jang <jb6804@naver.com>
+# hwpx (OWPML) document format follows OCF specification.
+# Hangul Word Processor 2010+ supports HWPX format.
+# URL: https://www.hancom.com/etc/hwpDownload.do
+#      https://standard.go.kr/KSCI/standardIntro/getStandardSearchView.do?menuId=503&topMenuId=502&ksNo=KSX6101
+#      https://e-ks.kr/streamdocs/view/sd;streamdocsId=72059197557727331
+>>50	string	hwp+zip     Hancom HWP (Hangul Word Processor) file, HWPX
+!:mime application/hwp+zip
+!:ext	hwpx
 
 # From:	Joerg Jenderek
 # URL:	http://en.wikipedia.org/wiki/CorelDRAW
