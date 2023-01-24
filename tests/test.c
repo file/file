@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 
 #include "magic.h"
 
@@ -83,6 +84,9 @@ main(int argc, char **argv)
 	char *desired = NULL;
 	int e = EXIT_FAILURE, flags, c;
 	FILE *fp;
+
+	setenv("TZ", "UTC", 1);
+	tzset();
 
 
 	prog = strrchr(argv[0], '/');
