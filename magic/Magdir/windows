@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.50 2022/11/30 20:24:43 christos Exp $
+# $File: windows,v 1.51 2023/01/24 20:46:25 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1434,3 +1434,9 @@
 # ... LOGHANDLE
 >0		ubelong		x	...
 #
+
+0	guid	7B5C52E4-D88C-4DA7-AEB1-5378D02996D3	Microsoft OneNote
+!:ext one
+!:mime	application/onenote
+0	guid	43FF2FA1-EFD9-4C76-9EE2-10EA5722765F	Microsoft OneNote Revision Store File
+
