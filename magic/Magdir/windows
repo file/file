@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.51 2023/01/24 20:46:25 christos Exp $
+# $File: windows,v 1.52 2023/02/03 20:24:36 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1440,3 +1440,14 @@
 !:mime	application/onenote
 0	guid	43FF2FA1-EFD9-4C76-9EE2-10EA5722765F	Microsoft OneNote Revision Store File
 
+# Microsoft XAML Binary Format
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://github.com/WalkingCat/XbfDump/blob/8832d2ffcaa738434d803fefa2ba99d3af37ed29/xbf_data.h
+0	string	XBF\0
+>12	ulelong	<0xFF
+>>16	ulelong	<0xFF	Microsoft XAML Binary Format
+!:ext xbf
+>>>12	ulelong	x	%d
+>>>16	ulelong	x	\b.%d
+>>>4	ulelong	x	\b, metadata size: %d bytes
+>>>8	ulelong	x	\b, node size: %d bytes
