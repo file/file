@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.236 2022/10/31 13:22:26 christos Exp $
+# $File: images,v 1.237 2023/02/03 20:23:15 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3918,6 +3918,29 @@
 #>>>0x178	string	x	icc=%.4s
 #	display ICC/ICM color profile by ./icc
 #>>>0x154	use		color-profile
+
+# URL:		http://fileformats.archiveteam.org/wiki/CorelDRAW
+#		https://en.wikipedia.org/wiki/CorelDRAW
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cdr-gen.trid.xml
+# Note:		called "CorelDRAW drawing (generic)" by TrID
+#		version til 2 WL-based; from version 3 til 13 handled by ./riff and from 14 zip based handled by ./archive
+0	ubelong&0xFFffF7ff	0x574C6500	Corel Draw Picture
+#!:mime						image/x-coreldraw
+!:mime						application/vnd.corel-draw
+!:ext						cdr
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cdr-corel-10.trid.xml
+# Note:		called "CorelDRAW drawing (v1.0)" by TrID and
+#		"CorelDraw Drawing" with version "1.0" by DROID via PUID fmt/467
+#		only DROID fmt-467-signature-id-726.cdr example
+>2	ubyte			0x65		\b, version 1.0
+#>>4	ubelong			!0x45000000	\b, at 4 %#8.8x
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cdr-corel-20.trid.xml
+# Note:		called "CorelDRAW drawing (v2.0)" by TrID and
+#		"CorelDraw Drawing" with version "2.0" by DROID via PUID fmt/466
+>2	ubyte			0x6D		\b, version 2.0
+# According to DROID 0xed080000 or 0x25050000
+#>>4	ubelong			!0xed080000
+#>>>4	ubelong			!0x25050000	\b, at 4 %#8.8x
 
 # Type: Crunch compressed texture.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
