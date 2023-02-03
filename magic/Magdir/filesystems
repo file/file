@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.153 2023/02/03 19:19:40 christos Exp $
+# $File: filesystems,v 1.154 2023/02/03 21:50:56 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2681,8 +2681,8 @@
 # XX: 01 - 05 (object type)
 # YY: 00 for version 1 root directory, > 00 for version 2 (name data)
 0x4	string	\x00\x00\x00\x01\xFF\xFF
->0	string  \x00\x00\x00
->0	ubelong	0
->0	ubelong	>5
->0	default	x	YAFFS filesystem root entry (big endian)
->>0	use	\^yafs
+>0	string	\x00\x00\x00
+>>0	ubelong	0
+>>0	ubelong	>5
+>>0	default	x	YAFFS filesystem root entry (big endian)
+>>>0	use	\^yafs
