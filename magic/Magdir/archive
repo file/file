@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.185 2023/01/24 20:13:40 christos Exp $
+# $File: archive,v 1.186 2023/02/04 18:55:02 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1712,9 +1712,13 @@
 >>>>77	string	-web			HTML Document Template
 !:mime	application/vnd.oasis.opendocument.text-web
 !:ext	oth
->>>>77	string	-master			Master Document
+>>>>77	string	-master
+>>>>>84	byte	!0x2d			Master Document
 !:mime	application/vnd.oasis.opendocument.text-master
 !:ext	odm
+>>>>>84	string	-template		Master Template
+!:mime	application/vnd.oasis.opendocument.text-master-template
+!:ext	otm
 >>>73	string	graphics
 >>>>81	byte	!0x2d			Drawing
 !:mime	application/vnd.oasis.opendocument.graphics
