@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.154 2023/02/03 21:50:56 christos Exp $
+# $File: filesystems,v 1.155 2023/02/04 13:31:07 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2658,7 +2658,7 @@
 # mkyaffsimage always writes a root directory with empty name, then processing the target directory contents
 # mkyaffs2image directly proceeds to writing entries with the appropriate u32 YAFFS_OBJECT_TYPE (1-5 valid), each with parent id 1
 
-0	name	yafs
+0	name	yaffs
 >0	ulelong	1	\b, type file
 >0	ulelong	2	\b, type symlink
 >0	ulelong	3	\b, type root or directory
@@ -2675,7 +2675,7 @@
 >0	ulelong	0
 >0	ulelong	>5
 >0	default	x	YAFFS filesystem root entry (little endian)
->>0	use	yafs
+>>0	use	yaffs
 
 # Big Endian: 00 00 00 XX 00 00 00 01 FF FF YY
 # XX: 01 - 05 (object type)
@@ -2685,4 +2685,4 @@
 >>0	ubelong	0
 >>0	ubelong	>5
 >>0	default	x	YAFFS filesystem root entry (big endian)
->>>0	use	\^yafs
+>>>0	use	\^yaffs
