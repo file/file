@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.166 2023/01/22 15:02:31 christos Exp $
+# $File: msdos,v 1.167 2023/02/04 18:49:42 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -286,6 +286,8 @@
 >>(0x3c.l+4)	leshort		0x5032	RISC-V 32-bit
 >>(0x3c.l+4)	leshort		0x5064	RISC-V 64-bit
 >>(0x3c.l+4)	leshort		0x5128	RISC-V 128-bit
+>>(0x3c.l+4)	leshort		0x6232	LoongArch 32-bit
+>>(0x3c.l+4)	leshort		0x6264	LoongArch 64-bit
 >>(0x3c.l+4)	leshort		0x9041	Mitsubishi M32R
 >>(0x3c.l+4)	leshort		0x8664	x86-64
 >>(0x3c.l+4)	leshort		0xaa64	Aarch64
