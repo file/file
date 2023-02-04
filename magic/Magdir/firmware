@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.4 2023/01/22 15:05:39 christos Exp $
+# $File: firmware,v 1.5 2023/02/04 18:57:32 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -43,3 +43,27 @@
 >4096	ustring \xFD7zXZ\x00    XZ compressed
 0	belong	0x1bad1bad	POWER boot firmware
 >256	belong	0x48002030	(PHYP entry point)
+
+# ARM Cortex-M vector table
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://developer.arm.com/documentation/100701/0200/Exception-properties
+# Match stack MSB
+3		byte			0x20
+# Function pointers must be in Thumb-mode and before 0x20000000 (4*5 bits match)
+>4		ulelong&0xE0000001	1
+>>8		ulelong&0xE0000001	1
+>>>12		ulelong&0xE0000001	1
+>>>>44		ulelong&0xE0000001	1
+>>>>>56		ulelong&0xE0000001	1
+# Match Cortex-M reserved sections
+>>>>>>28	ulelong			0
+>>>>>>>32	ulelong			0
+>>>>>>>>36	ulelong			0
+>>>>>>>>>40	ulelong			0
+>>>>>>>>>>52	ulelong			0	ARM Cortex-M firmware
+>>>>>>>>>>>0	ulelong			>0	\b, initial SP at 0x%08x
+>>>>>>>>>>>4	ulelong^1		x	\b, reset at 0x%08x
+>>>>>>>>>>>8	ulelong^1		x	\b, NMI at 0x%08x
+>>>>>>>>>>>12	ulelong^1		x	\b, HardFault at 0x%08x
+>>>>>>>>>>>44	ulelong^1		x	\b, SVCall at 0x%08x
+>>>>>>>>>>>56	ulelong^1		x	\b, PendSV at 0x%08x
