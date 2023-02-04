@@ -37,6 +37,8 @@ gedcom.result \
 gedcom.testfile \
 gpkg-1-zst.result \
 gpkg-1-zst.testfile \
+hello-racket_rkt.result \
+hello-racket_rkt.testfile \
 hddrawcopytool.result \
 hddrawcopytool.testfile \
 HWP2016.hwp.result \
