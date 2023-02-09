@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.120 2022/12/26 17:31:14 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.121 2023/02/09 17:45:19 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -625,6 +625,9 @@ magic_setparam(struct magic_set *ms, int param, const void *val)
 	case MAGIC_PARAM_ELF_SHNUM_MAX:
 		ms->elf_shnum_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
+	case MAGIC_PARAM_ELF_SHSIZE_MAX:
+		ms->elf_shsize_max = *CAST(const size_t *, val);
+		return 0;
 	case MAGIC_PARAM_ELF_NOTES_MAX:
 		ms->elf_notes_max = CAST(uint16_t, *CAST(const size_t *, val));
 		return 0;
@@ -660,6 +663,9 @@ magic_getparam(struct magic_set *ms, int param, void *val)
 		return 0;
 	case MAGIC_PARAM_ELF_SHNUM_MAX:
 		*CAST(size_t *, val) = ms->elf_shnum_max;
+		return 0;
+	case MAGIC_PARAM_ELF_SHSIZE_MAX:
+		*CAST(size_t *, val) = ms->elf_shsize_max;
 		return 0;
 	case MAGIC_PARAM_ELF_NOTES_MAX:
 		*CAST(size_t *, val) = ms->elf_notes_max;
