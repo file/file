@@ -1,4 +1,9 @@
 
+2923-02-09  12:50  Christos Zoulas <christos@zoulas.com>
+	
+	* bump the max size of the elf section notes to be read to 128K
+	  and make it configurable
+
 2923-01-08   1:08  Christos Zoulas <christos@zoulas.com>
 
 	* PR/415: Fix decompression with program returning empty
