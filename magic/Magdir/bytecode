@@ -37,5 +37,5 @@
 >&0	pstring	x
 >>&0	pstring	racket
 >>>0	string	#~	Racket bytecode
->>>&0	pstring	x       (version %s)
+>>>>&0	pstring	x       (version %s)
 
