@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.52 2023/02/03 20:24:36 christos Exp $
+# $File: windows,v 1.53 2023/02/20 15:25:37 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -830,6 +830,14 @@
 !:mime	text/x-ms-tag
 # like: DATA.TAG
 !:ext	tag
+# URL:		https://en.wikipedia.org/wiki/Flatpak
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/flatpakref.trid.xml
+# Note:		called "Flatpack Reference" by TrID
+>>&0	string		Flatpak\ Ref]					Flatpak repository reference
+#!:mime	text/plain
+# https://reposcope.com/mimetype/application/vnd.flatpak.ref
+!:mime	application/vnd.flatpak.ref
+!:ext	flatpakref
 # unknown keyword after opening bracket
 >>&0	default				x
 #>>>&0	string/c			x	UNKNOWN [%s
@@ -839,6 +847,12 @@
 >>>>&0	string/c			version				Windows setup INFormation
 !:mime application/x-setupscript
 !:ext	inf
+# From:		Joerg Jenderek
+# URL:		https://cdrtfe.sourceforge.io/
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cfp-cdrtfe.trid.xml
+>>>>&0	string				FileExplorer]			cdrtfe Project
+!:mime	text/x-cfp
+!:ext	cfp
 # https://en.wikipedia.org/wiki/Initialization_file	Windows Initialization File or other
 >>>>&0	default				x
 >>>>>&0	ubyte				x
@@ -850,6 +864,9 @@
 !:mime	application/x-wine-extension-ini
 #!:mime	text/plain
 !:ext	ini/inf
+# samples with only 1 and unknown section name
+>>>&0	default				x				Generic INItialization configuration
+>>>>0	string				x				\b, 1st line "%s"
 # UTF-16 BOM
 0	ubeshort		=0xFFFE
 # look for phrase of Windows policy ADMinistrative template (UTF-16 by adm-uni.trid.xml)
