@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.23 2023/01/22 15:07:06 christos Exp $
+# $File: android,v 1.24 2023/02/20 16:51:59 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -254,3 +254,6 @@
 >>24	ulelong	!0	\b, %d style(s)
 >>28	ulelong	&1	\b, sorted
 >>28	ulelong	&256	\b, utf8
+
+# extracted APK Signing Block
+-16	string	APK\x20Sig\x20Block\x2042	APK Signing Block
