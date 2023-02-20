@@ -11,6 +11,8 @@ arj.result \
 arj.testfile \
 bcachefs.result \
 bcachefs.testfile \
+bcachefs2.result \
+bcachefs2.testfile \
 cl8m8ocofedso.result \
 cl8m8ocofedso.testfile \
 cmd1.result \

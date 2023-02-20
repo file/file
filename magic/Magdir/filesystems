@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.155 2023/02/04 13:31:07 christos Exp $
+# $File: filesystems,v 1.156 2023/02/20 16:23:19 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2603,19 +2603,25 @@
 >10	ubelong		x	\b-%08x
 >14	ubeshort	x	\b%04x
 
-0x1018		string		\xc6\x85\x73\xf6\x4e\x1a\x45\xca\x82\x65\xf5\x7f\x48\xba\x6d\x81	bcachefs
->0x1068		lequad		8	\b, UUID=
->>0x1038	use		bcachefs-uuid
->>0x1048	string		>0	\b, label "%.32s"
->>0x1010	uleshort	x	\b, version %u
->>0x1012	uleshort	x	\b, min version %u
->>0x107a	byte		x	\b, device %d
+0	name	bcachefs	bcachefs
+>0x68	lequad		8	\b, UUID=
+>>0x38	use		bcachefs-uuid
+>>0x48	string		>0	\b, label "%.32s"
+>>0x10	uleshort	x	\b, version %u
+>>0x12	uleshort	x	\b, min version %u
+>>0x7a	byte		x	\b, device %d
 # assumes the first field is the members field
->>0x12f4	ulelong		0x01	\b/UUID=
->>>0x12f0	default		x
->>>&(0x107a.b*56)	use	bcachefs-uuid
->>0x107b	byte		x	\b, %d devices
->>0x1090	byte		^0x02	\b (unclean)
+>>0x2f4	ulelong		0x01	\b/UUID=
+>>>0x2f0	default		x
+>>>&(0x07a.b*56)	use	bcachefs-uuid
+>>0x07b	byte		x	\b, %d devices
+>>0x090	byte		^0x02	\b (unclean)
+
+0x1018		string		\xc6\x85\x73\xf6\x4e\x1a\x45\xca\x82\x65\xf5\x7f\x48\xba\x6d\x81
+>0x1000		use		bcachefs
+
+0x1018          string          \xc6\x85\x73\xf6\x66\xce\x90\xa9\xd9\x6a\x60\xcf\x80\x3d\xf7\xef
+>0x1000		use		bcachefs
 
 # EROFS
 # https://kernel.googlesource.com/pub/scm/linux/kernel/git/xiang/erofs-utils/\
