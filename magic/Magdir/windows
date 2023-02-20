@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.53 2023/02/20 15:25:37 christos Exp $
+# $File: windows,v 1.54 2023/02/20 15:27:44 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1451,6 +1451,19 @@
 # ... LOGHANDLE
 >0		ubelong		x	...
 #
+
+# Summary:	Microsoft Remote Desktop Protocol connection
+# From:		Joerg Jenderek
+# URL:		https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/rdp-files
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/r/rdp.trid.xml
+# Note:		called "Remote Desktop Connection Settings" by TrID
+0	string		screen\040mode\040id:i:	Remote Desktop Protocol connection
+#!:mime	text/plain
+!:mime	text/x-ms-rdp
+!:ext	rdp
+# Screen mode: 1~session appear in a window 2~session appear full screen
+>17	string		1			\b, window mode
+>17	string		2			\b, full screen mode
 
 0	guid	7B5C52E4-D88C-4DA7-AEB1-5378D02996D3	Microsoft OneNote
 !:ext one
