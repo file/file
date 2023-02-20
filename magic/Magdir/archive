@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.186 2023/02/04 18:55:02 christos Exp $
+# $File: archive,v 1.187 2023/02/20 16:15:18 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1761,8 +1761,7 @@
 # Valid for LibreOffice Base 6.0.1.1 at least
 >>>73	string	base 			Database
 # https://bugs.documentfoundation.org/show_bug.cgi?id=45854
-!:mime	application/vnd.oasis.opendocument.database
-#!:mime	application/vnd.oasis.opendocument.base
+!:mime	application/vnd.oasis.opendocument.base
 !:ext	odb
 >>>73	string	image
 >>>>78	byte	!0x2d			Image
