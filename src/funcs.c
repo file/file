@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.138 2023/02/20 17:09:30 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.139 2023/03/04 18:10:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -661,8 +661,9 @@ check_regex(struct magic_set *ms, const char *pat)
 {
 	char sbuf[512];
 	unsigned char oc = '\0';
+	const char *p;
 
-	for (const char *p = pat; *p; p++) {
+	for (p = pat; *p; p++) {
 		unsigned char c = *p;
 		// Avoid repetition
 		if (c == oc && strchr("?*+{", c) != NULL) {
