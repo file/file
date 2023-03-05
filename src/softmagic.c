@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.340 2022/12/28 17:47:56 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.341 2023/03/05 20:00:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1456,13 +1456,15 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 }
 
 file_private int
-do_ops(struct magic *m, uint32_t *rv, intmax_t lhs, intmax_t off)
+do_ops(struct magic_set *ms, struct magic *m, uint32_t *rv, intmax_t lhs,
+    intmax_t off)
 {
 	intmax_t offset;
 	// On purpose not INTMAX_MAX
 	if (lhs >= UINT_MAX || lhs <= INT_MIN ||
 	    off >= UINT_MAX || off <= INT_MIN) {
-		fprintf(stderr, "lhs/off overflow %jd %jd\n", lhs, off);
+		if ((ms->flags & MAGIC_DEBUG) != 0)
+			fprintf(stderr, "lhs/off overflow %jd %jd\n", lhs, off);
 		return 1;
 	}
 	   
@@ -1498,7 +1500,8 @@ do_ops(struct magic *m, uint32_t *rv, intmax_t lhs, intmax_t off)
 	if (m->in_op & FILE_OPINVERSE)
 		offset = ~offset;
 	if (offset >= UINT_MAX) {
-		fprintf(stderr, "offset overflow %jd\n", offset);
+		if ((ms->flags & MAGIC_DEBUG) != 0)
+			fprintf(stderr, "offset overflow %jd\n", offset);
 		return 1;
 	}
 	*rv = CAST(uint32_t, offset);
@@ -1702,25 +1705,25 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		case FILE_BYTE:
 			if (OFFSET_OOB(nbytes, offset, 1))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,8,p->b), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,8,p->b), off))
 				return 0;
 			break;
 		case FILE_BESHORT:
 			if (OFFSET_OOB(nbytes, offset, 2))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,16,BE16(p)), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,16,BE16(p)), off))
 				return 0;
 			break;
 		case FILE_LESHORT:
 			if (OFFSET_OOB(nbytes, offset, 2))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,16,LE16(p)), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,16,LE16(p)), off))
 				return 0;
 			break;
 		case FILE_SHORT:
 			if (OFFSET_OOB(nbytes, offset, 2))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,16,p->h), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,16,p->h), off))
 				return 0;
 			break;
 		case FILE_BELONG:
@@ -1730,7 +1733,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			lhs = BE32(p);
 			if (in_type == FILE_BEID3)
 				lhs = cvt_id3(ms, CAST(uint32_t, lhs));
-			if (do_ops(m, &offset, SEXT(sgn,32,lhs), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,32,lhs), off))
 				return 0;
 			break;
 		case FILE_LELONG:
@@ -1740,37 +1743,37 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			lhs = LE32(p);
 			if (in_type == FILE_LEID3)
 				lhs = cvt_id3(ms, CAST(uint32_t, lhs));
-			if (do_ops(m, &offset, SEXT(sgn,32,lhs), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,32,lhs), off))
 				return 0;
 			break;
 		case FILE_MELONG:
 			if (OFFSET_OOB(nbytes, offset, 4))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,32,ME32(p)), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,32,ME32(p)), off))
 				return 0;
 			break;
 		case FILE_LONG:
 			if (OFFSET_OOB(nbytes, offset, 4))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,32,p->l), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,32,p->l), off))
 				return 0;
 			break;
 		case FILE_LEQUAD:
 			if (OFFSET_OOB(nbytes, offset, 8))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,64,LE64(p)), off))	
+			if (do_ops(ms, m, &offset, SEXT(sgn,64,LE64(p)), off))	
 				return 0;
 			break;
 		case FILE_BEQUAD:
 			if (OFFSET_OOB(nbytes, offset, 8))
 				return 0;
-			if (do_ops(m, &offset, SEXT(sgn,64,BE64(p)), off))
+			if (do_ops(ms, m, &offset, SEXT(sgn,64,BE64(p)), off))
 				return 0;
 			break;
 		case FILE_OCTAL:
 			if (OFFSET_OOB(nbytes, offset, m->vallen))
 				return 0;
-			if(do_ops(m, &offset,
+			if(do_ops(ms, m, &offset,
 			    SEXT(sgn,64,strtoull(p->s, NULL, 8)), off))
 				return 0;
 			break;
