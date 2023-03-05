@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.113 2022/12/26 17:31:14 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.114 2023/03/05 19:22:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -148,8 +148,10 @@ file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
 			goto done;
 		}
 		if ((utf8_end = encode_utf8(utf8_buf, mlen, ubuf, ulen))
-		    == NULL)
+		    == NULL) {
+			rv = 0;
 			goto done;
+		}
 		buffer_init(&bb, b->fd, &b->st, utf8_buf,
 		    CAST(size_t, utf8_end - utf8_buf));
 
