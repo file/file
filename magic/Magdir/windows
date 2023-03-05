@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.54 2023/02/20 15:27:44 christos Exp $
+# $File: windows,v 1.55 2023/03/05 20:15:08 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -865,7 +865,8 @@
 #!:mime	text/plain
 !:ext	ini/inf
 # samples with only 1 and unknown section name
->>>&0	default				x				Generic INItialization configuration
+# XXX: matches a file containing '[1] 2'
+#>>>&0	default				x				Generic INItialization configuration
 >>>>0	string				x				\b, 1st line "%s"
 # UTF-16 BOM
 0	ubeshort		=0xFFFE
