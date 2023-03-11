@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.187 2023/02/20 16:15:18 christos Exp $
+# $File: archive,v 1.188 2023/03/11 18:26:45 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -271,7 +271,8 @@
 #>>68	string		x		(format %.3s)
 >68	string		=2.0\n
 # 2nd archive name=control archive name like control.tar.gz or control.tar.xz
->>72	string		>\0		\b, with %.14s
+# or control.tar.zst
+>>72	string		>\0		\b, with %.15s
 # look for 3rd archive name=data archive name like data.tar.{gz,xz,bz2,lzma}
 >>0	search/0x93e4f	data.tar.	\b, data compression
 # the above line only works if FILE_BYTES_MAX in ../../src/file.h is raised
