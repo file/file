@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.55 2023/03/05 20:15:08 christos Exp $
+# $File: windows,v 1.56 2023/03/11 18:54:29 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -838,6 +838,15 @@
 # https://reposcope.com/mimetype/application/vnd.flatpak.ref
 !:mime	application/vnd.flatpak.ref
 !:ext	flatpakref
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/CloneCD
+# Reference:	https://en.wikipedia.org/wiki/CloneCD_Control_File
+#		http://mark0.net/download/triddefs_xml.7z/defs/c/cdimage-clonecd-cue.trid.xml
+# Note:		called "CloneCD CDImage (description)" by TrID and "CloneCD Control File" by DROID via PUID fmt/1760
+>>&0	string		CloneCD]					CloneCD CD-image Description
+#!:mime	text/plain
+!:mime	text/x-ccd
+!:ext	ccd
 # unknown keyword after opening bracket
 >>&0	default				x
 #>>>&0	string/c			x	UNKNOWN [%s
