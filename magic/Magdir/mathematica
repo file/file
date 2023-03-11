@@ -1,48 +1,59 @@
 
 #------------------------------------------------------------------------------
-# $File: mathematica,v 1.15 2022/10/31 13:22:26 christos Exp $
+# $File: mathematica,v 1.16 2023/03/11 18:12:41 christos Exp $
 # mathematica:  file(1) magic for mathematica files
 # "H. Nanosecond" <aldomel@ix.netcom.com>
 # Mathematica a multi-purpose math program
 # versions 2.2 and 3.0
 
+0	name	wolfram
+>0	string	x	Mathematica notebook version 2.x
+!:ext mb
+!:mime application/vnd.wolfram.mathematica
+
 #mathematica .mb
-0	string	\064\024\012\000\035\000\000\000	Mathematica version 2 notebook
-!:ext mb
-0	string	\064\024\011\000\035\000\000\000	Mathematica version 2 notebook
-!:ext mb
+0	string	\064\024\012\000\035\000\000\000
+>0	use	wolfram
+0	string	\064\024\011\000\035\000\000\000
+>0	use	wolfram
+
+# 
+0	search/1000	Content-type:\040application/mathematica	Mathematica notebook version 2.x
+!:ext nb
+!:mime application/mathematica
+
 
 # .ma
 # multiple possibilities:
 
-0	string	(*^\n\n::[\011frontEndVersion\ =\ 	Mathematica notebook
+0	string	(*^\n\n::[\011frontEndVersion\ =
 #>41	string	>\0	%s
-!:ext mb
+>0	use	wolfram
 
-#0	string	(*^\n\n::[\011palette	Mathematica notebook version 2.x
+#0	string	(*^\n\n::[\011palette
 
-#0	string	(*^\n\n::[\011Information	Mathematica notebook version 2.x
+#0	string	(*^\n\n::[\011Information
 #>675	string	>\0	%s #doesn't work well
 
 # there may be 'cr' instead of 'nl' in some does this matter?
 
 # generic:
-0	string	(*^\r\r::[\011	Mathematica notebook version 2.x
-!:ext mb
-0	string	(*^\r\n\r\n::[\011	Mathematica notebook version 2.x
-!:ext mb
-0	string	(*^\015			Mathematica notebook version 2.x
-!:ext mb
-0	string	(*^\n\r\n\r::[\011	Mathematica notebook version 2.x
-!:ext mb
-0	string	(*^\r::[\011	Mathematica notebook version 2.x
-!:ext mb
-0	string	(*^\r\n::[\011	Mathematica notebook version 2.x
-!:ext mb
-0	string	(*^\n\n::[\011	Mathematica notebook version 2.x
-!:ext mb
-0	string	(*^\n::[\011	Mathematica notebook version 2.x
-!:ext mb
+0	string	(*^\r\r::[\011
+>0	use	wolfram
+0	string	(*^\r\n\r\n::[\011
+>0	use	wolfram
+0	string	(*^\015
+>0	use	wolfram
+0	string	(*^\n\r\n\r::[\011
+>0	use	wolfram
+0	string	(*^\r::[\011
+>0	use	wolfram
+0	string	(*^\r\n::[\011
+>0	use	wolfram
+0	string	(*^\n\n::[\011
+>0	use	wolfram
+0	string	(*^\n::[\011
+>0	use	wolfram
 
 
 # Mathematica .mx files
