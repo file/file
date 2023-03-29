@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.30 2022/12/24 22:33:20 christos Exp $
+# $File: games,v 1.31 2023/03/29 22:57:27 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -183,6 +183,15 @@
 
 0	string	MComprHD	MAME CHD compressed hard disk image,
 >12	belong	x		version %u
+
+# MAME input recordings
+
+0	string	MAMEINP\0		MAME input recording
+>8	leqdate	x			at %s,
+>16	leshort	x			format version %d.
+>18	leshort	x			\b%d,
+>20	string	x			%s driver,
+>32	string	x			%s
 
 # doom - submitted by Jon Dowland
 
