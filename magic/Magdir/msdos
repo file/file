@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.167 2023/02/04 18:49:42 christos Exp $
+# $File: msdos,v 1.168 2023/03/29 22:50:03 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -740,14 +740,18 @@
 0	string	\xffKEYB\ \ \ \0\0\0\0
 >12	string	\0\0\0\0`\004\360	MS-DOS KEYBoard Layout file
 
-# DOS device driver updated by Joerg Jenderek at May 2011,Mar 2017,Aug 2020
+# DOS device driver updated by Joerg Jenderek at May 2011,Mar 2017,Aug 2020,Mar 2023
 # URL:		http://fileformats.archiveteam.org/wiki/DOS_device_driver
 # Reference:	http://www.delorie.com/djgpp/doc/rbinter/it/46/16.html
-# https://amaus.net/static/S100/IBM/software/DOS/DOS%20techref/CHAPTER.009
+# http://www.o3one.org/hwdocs/bios_doc/dosref22.html
 0	ulequad&0x07a0ffffffff		0xffffffff
 # skip OS/2 INI ./os2
 >4  ubelong   !0x14000000
->>0	use				msdos-driver
+#>>10  ubequad   x		MAYBE_DRIVER_NAME=%16.16llx
+# https://bugs.astron.com/view.php?id=434
+# skip OOXML document fragment 0000.dat where driver name is "empty" instead of "ASCII like"
+>>10  ubequad   !0
+>>>0	use				msdos-driver
 0       name    			msdos-driver		DOS executable (
 #!:mime	application/octet-stream
 !:mime	application/x-dosdriver
@@ -779,8 +783,8 @@
 >>40	search/7			UPX!
 >>40	default				x
 # leading/trailing nulls, zeros or non ASCII characters in 8-byte name field at offset 10 are skipped
-# 1 space char before device driver name to get phrase like "device driver PROTMAN$"
->>>12		ubyte			>0x2E			\b 
+# 1 space char before device driver name to get phrase like "device driver PROTMAN$" "device driver HP-150II" "device driver PC$MOUSE"
+>>>12		ubyte			>0x23			\b 
 >>>>10		ubyte			>0x20
 >>>>>10		ubyte			!0x2E
 >>>>>>10	ubyte			!0x2A			\b%c
