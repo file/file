@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.188 2023/03/11 18:26:45 christos Exp $
+# $File: archive,v 1.189 2023/03/30 08:54:19 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -185,16 +185,88 @@
 # The SVR4 "cpio(4)" hints that there are additional formats, but they
 # are defined as "short"s; I think all the new formats are
 # character-header formats and thus are strings, not numbers.
-0	short		070707		cpio archive
+# URL:		http://fileformats.archiveteam.org/wiki/Cpio
+#		https://en.wikipedia.org/wiki/Cpio
+# Reference:	https://people.freebsd.org/~kientzle/libarchive/man/cpio.5.txt
+# Update:	Joerg Jenderek
+#
+# Reference:    http://mark0.net/download/triddefs_xml.7z/defs/a/ark-cpio-bin.trid.xml
+# Note:		called "CPIO archive (binary)" by TrID, "cpio/Binary LE" by 7-Zip and "CPIO" by DROID via PUID fmt/635
+0	short		070707
+# skip DROID fmt-635-signature-id-960.cpio by looking for pathname of 1st entry
+>26	string		>\0		cpio archive
 !:mime	application/x-cpio
+# https://download.opensuse.org/distribution/leap/15.4/iso/openSUSE-Leap-15.4-NET-x86_64-Media.iso
+# boot/x86_64/loader/bootlogo
+# message.cpi
+!:ext	/cpio/cpi
+>>0	use	cpio-bin
+# Reference:    http://mark0.net/download/triddefs_xml.7z/defs/a/ark-cpio-bin-sw.trid.xml
+# Note:		called "CPIO archive (byte swapped binary)" by TrID and "Cpio/Binary BE" by 7-Zip
 0	short		0143561		byte-swapped cpio archive
 !:mime	application/x-cpio # encoding: swapped
+# https://telparia.com/fileFormatSamples/archive/cpio/skeleton2.cpio
+!:ext	cpio
+>0	use	cpio-bin-be
+# Reference:    http://mark0.net/download/triddefs_xml.7z/defs/a/ark-cpio.trid.xml
+# Note:		called "CPIO archive (portable)" by TrID, "cpio/Portable ASCII" by 7-Zip and "cpio/odc" by GNU cpio
 0	string		070707		ASCII cpio archive (pre-SVR4 or odc)
 !:mime	application/x-cpio
+# https://telparia.com/fileFormatSamples/archive/cpio/ pthreads-1.60B5.osr5src.cpio cinema.cpi VOL.000.008 VOL.000.012
+!:ext	cpio/cpi/008/012
+# Note:		called "CPIO archive (portable)" by TrID, "cpio/New ASCII" by 7-Zip and "cpio/newc" by GNU cpio
 0	string		070701		ASCII cpio archive (SVR4 with no CRC)
 !:mime	application/x-cpio
+# https://telparia.com/fileFormatSamples/archive/cpio/MainActor-2.06.3.cpio
+!:ext	cpio
+# Note:		called "CPIO archive (portable)" by TrID, "cpio/New CRC" by 7-Zip and "cpio/crc" by GNU cpio
 0	string		070702		ASCII cpio archive (SVR4 with CRC)
 !:mime	application/x-cpio
+# http://ftp.gnu.org/gnu/tar/tar-1.27.cpio.gz
+# https://telparia.com/fileFormatSamples/archive/cpio/pcmcia
+!:ext	/cpio
+#	display information of old binary cpio archive
+# Note:	verfied by 7-Zip `7z l -tcpio -slt *.cpio` and
+#	`cpio -ivt --numeric-uid-gid --file=clam.bin-le.cpio`
+0	name	cpio-bin
+# c_dev; device number; WHAT IS THAT?
+>2	uleshort	x		\b; device %u
+# c_ino; truncated inode number; use `ls --inode`
+>4	uleshort	x		\b, inode %u
+# c_mode; mode specifies permissions and file type like: ?622~?rw-r--r-- by `ls -l`
+>6	uleshort	x		\b, mode %o
+# c_uid; numeric user id; use `ls --numeric-uid-gid`
+>8	uleshort	x		\b, uid %u
+# c_gid; numeric group id
+>10	uleshort	x		\b, gid %u
+# c_nlink; links to this file; directories at least 2
+>12	uleshort	>1		\b, %u links
+# c_rdev; device number for block and character entries; zero for all other entries by writers
+# like 0x0440 for /dev/ttyS0
+>14	uleshort	>0		\b, device %#4.4x
+# c_mtime[2]; modification time in seconds since 1 January 1970; most-significant 16 bits first 
+>16	medate		x		\b, modified %s
+# c_filesize[2]; size of pathname; most-significant 16 bits first like: 544
+>22	melong		x		\b, %u bytes
+# c_namesize; bytes in the pathname that follows the header like: 9
+#>20	uleshort	x		\b, namesize %u
+# pathname of entry like: "clam.exe"
+>26	string		x		"%s"
+#	display information of old binary byte swapped cpio archive
+# Note:	verfied by 7-Zip `7z l -tcpio -slt *.cpio` and
+#	`LANGUAGE=C cpio -ivt --numeric-uid-gid --file=clam.bin-be.cpio`
+0	name	cpio-bin-be
+>2	ubeshort	x		\b; device %u
+>4	ubeshort	x		\b, inode %u
+>6	ubeshort	x		\b, mode %o
+>8	ubeshort	x		\b, uid %u
+>10	ubeshort	x		\b, gid %u
+>12	ubeshort	>1		\b, %u links
+>14	ubeshort	>0		\b, device %#4.4x
+>16	bedate		x		\b, modified %s
+>22	ubelong	 	x		\b, %u bytes
+#>20	ubeshort	x		\b, namesize %u
+>26	string		x		"%s"
 
 #
 # Various archive formats used by various versions of the "ar"
