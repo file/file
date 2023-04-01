@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.237 2023/02/03 20:23:15 christos Exp $
+# $File: images,v 1.238 2023/04/01 16:08:19 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4159,3 +4159,40 @@
 #!:mime	application/octet-stream
 !:mime	image/x-idf
 !:ext	idf
+
+# Type: ColoRIX VGA Paint Image File (.rix/.sci/.scX)
+# From: Eddy Jansson <github.com/eloj>
+# Reference: https://www.fileformat.info/format/rix/spec/
+#
+0	name		rix-header
+>0	uleshort	x	\b, %u x
+>2	uleshort	x	%u
+# palette type:
+# .. if direct color, low bits encode bpp
+>4	ubyte&128	0
+>>4 ubyte&127		x	\b %u bpp (direct color)
+# .. else palette
+>4	ubyte&128	128
+>>4	ubyte&7		0	\b x 2
+>>4	ubyte&7		1	\b x 4
+>>4	ubyte&7		2	\b x 8
+>>4	ubyte&7		3	\b x 16
+>>4	ubyte&7		4	\b x 32
+>>4	ubyte&7		5	\b x 64
+>>4	ubyte&7		6	\b x 128
+>>4	ubyte&7		7	\b x 256
+# storage type
+#>5	ubyte&15	0	\b, Linear
+>5	ubyte&15	1	\b, Planar (0213)
+>5	ubyte&15	2	\b, Planar
+>5	ubyte&15	3	\b, Text
+>5	ubyte&15	4	\b, Planar lines
+>5	ubyte&128	128	\b (compressed)
+>5	ubyte&64	64	\b (extension)
+>5	ubyte&32	32	\b (encrypted)
+
+0	string	RIX3	ColoRIX Image
+>4	use		rix-header
+
+0	string	RIX7	ColoRIX Slideshow
+>4	use		rix-header
