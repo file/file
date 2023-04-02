@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.238 2023/04/01 16:08:19 christos Exp $
+# $File: images,v 1.239 2023/04/02 15:19:40 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4195,4 +4195,3 @@
 >4	use		rix-header
 
 0	string	RIX7	ColoRIX Slideshow
->4	use		rix-header
