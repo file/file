@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.168 2023/03/29 22:50:03 christos Exp $
+# $File: msdos,v 1.169 2023/04/17 16:39:19 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1717,8 +1717,6 @@
 1	string		RDC-meg		MegaDots
 >8	byte		>0x2F		version %c
 >9	byte		>0x2F		\b.%c file
-0	lelong		0x4C
->4	lelong		0x00021401	Windows shortcut file
 
 # .PIF files added by Joerg Jenderek from https://smsoft.ru/en/pifdoc.htm
 # only for windows versions equal or greater 3.0

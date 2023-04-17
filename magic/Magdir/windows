@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.57 2023/04/17 16:35:03 christos Exp $
+# $File: windows,v 1.58 2023/04/17 16:39:19 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -494,54 +494,233 @@
 # https://ithreats.files.wordpress.com/2009/05/\040
 # lnk_the_windows_shortcut_file_format.pdf
 # Summary: Windows shortcut
-# Extension: .lnk
 # Created by: unknown
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Windows_Shortcut
+#		https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-shllink/
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/l/lnk-shortcut.trid.xml
+#		https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/%5bMS-SHLLINK%5d.pdf
+# Note:		called "Windows Shortcut" by TrID, "Microsoft Windows Shortcut" by DROID via PUID x-fmt/428 and "Windows shortcut file" by ./msdos (v 1.158)
+# 		partly verified by command like `lnkinfo AOL.lnk`
 # 'L' + GUUID
+# HeaderSize + LinkCLSID 00021401-0000-0000-C000-000000000046
 0	string		\114\0\0\0\001\024\002\0\0\0\0\0\300\0\0\0\0\0\0\106	MS Windows shortcut
 !:mime	application/x-ms-shortcut
 !:ext	lnk
+# LinkFlags
+# HasLinkTargetIDList; if set a LinkTargetIDList structure MUST follow the ShellLinkHeader; If is not set, structure MUST NOT be present
 >20	lelong&1	1	\b, Item id list present
+# HasLinkInfo; if set a LinkInfo structure MUST follow the ShellLinkHeader or LinkTargetIDList; If is not set, structure MUST NOT be present
 >20	lelong&2	2	\b, Points to a file or directory
 >20	lelong&4	4	\b, Has Description string
 >20	lelong&8	8	\b, Has Relative path
 >20	lelong&16	16	\b, Has Working directory
 >20	lelong&32	32	\b, Has command line arguments
 >20	lelong&64	64	\b, Icon
+# IconIndex
 >>56	lelong		x	\b number=%d
+# IsUnicode; If set then StringData section contains Unicode-encoded strings
+>20	lelong&128	128	\b, Unicoded
+# ForceNoLinkInfo; LinkInfo structure is ignored
+>20	lelong&256	256	\b, NoLinkInfo
+# HasExpString; with an EnvironmentVariableDataBlock
+>20	lelong&512	512	\b, HasEnvironment
+# look for BlockSize 314h and EnvironmentVariableDataBlock BlockSignature A0000001h
+>>76	search/1972		\x14\x03\x00\x00\x01\x00\x00\xa0
+# TargetAnsi (260 bytes); NULL-terminated path to environment variable encoded with system default code page
+#>>>&0	string		x	'%s'
+# TargetUnicode (520 bytes): optional NULL-terminated path to same environment variable Unicode encoded
+# like: "%windir%\system32\calc.exe"
+>>>&260	lestring16	x	"%s"
+# RunInSeparateProcess; run in a separate virtual machine when launching a 16-bit application; no examples found
+>20	lelong&1024	1024	\b, RunInSeparateProcess
+# Unused1; undefined and MUST be ignored
+#>20	lelong&2048	2048	\b, Unused1
+# HasDarwinID; with a DarwinDataBlock
+>20	lelong&4096	4096	\b, HasDarwinID
+# look for BlockSize 314h and DarwinDataBlock BlockSignature A0000006h
+>>76	search/1972		\x14\x03\x00\x00\x06\x00\x00\xa0
+# DarwinDataAnsi (260 bytes); NULL-terminated application identifier encoded with system default code page; SHOULD be ignored
+#>>>&0	string		x	'%s'
+# DarwinDataUnicode (520 bytes); NULL-terminated application identifier Unicode encoded
+>>>&260	lestring16	x	"%s"
+# RunAsUser; target application is run as a different user
+>20	lelong&8192	8192	\b, RunAsUser
+# HasExpIcon; with an IconEnvironmentDataBlock
+>20	lelong&16384	16384	\b, HasExpIcon
+# look for BlockSize 314h and IconEnvironmentDataBlock BlockSignature A0000007h
+>>76	search/1972		\x14\x03\x00\x00\x07\x00\x00\xa0
+# TargetAnsi (260 bytes); NULL-terminated path to environment icon variable encoded with system default code page
+#>>>&0	string		x	'%s'
+# TargetUnicode (520 bytes); optional NULL-terminated path to same icon environment variable Unicode encoded
+# like: "%SystemDrive%\Program Files\YaCy\addon\YaCy.ico"
+>>>&260	lestring16	x	"%s"
+# NoPidlAlias; represented in the shell namespace; no examples found
+>20	lelong&32768	32768	\b, NoPidlAlias
+# Unused2; undefined and MUST be ignored
+#>20	lelong&65536	65536	\b, Unused2
+# RunWithShimLayer; with a ShimDataBlock; no examples found
+>20	lelong&131072	131072	\b, RunWithShimLayer
+# ForceNoLinkTrack; TrackerDataBlock is ignored; no examples found
+>20	lelong&262144	262144	\b, ForceNoLinkTrack
+>20	lelong&262144	0
+# look for BlockSize 60h, TrackerDataBlock BlockSignature A0000003h, it length 58h and Version 0
+>>76	search/1972		\x60\x00\x00\x00\x03\x00\x00\xa0\x58\x00\x00\x00\0\0\0\0
+# MachineID (16 bytes); a NULL-terminated NetBIOS name encoded with system default code page of the machine
+>>>&0	string		x			\b, MachineID %0.16s
+# Droid (32 bytes)
+#
+# DroidBirth (32 bytes)
+#
+# EnableTargetMetadata; collect target properties and store in PropertyStoreDataBlock
+>20	lelong&524288	524288	\b, EnableTargetMetadata
+# look for BlockSize >= Ch, PropertyStoreDataBlock BlockSignature A0000009h
+#>>76	search/1972		\x00\x00\x09\x00\x00\xa0
+# PropertyStore (variable)
+#
+# DisableLinkPathTracking; EnvironmentVariableDataBlock is ignored; no examples found
+>20	lelong&1048576	1048576	\b, DisableLinkPathTracking
+# DisableKnownFolderTracking; SpecialFolderDataBlock and KnownFolderDataBlock are ignored and not saved
+>20	lelong&2097152	2097152	\b, DisableKnownFolderTracking
+>20	lelong&2097152	0
+# look for BlockSize 1Ch and KnownFolderDataBlock BlockSignature A000000Bh
+>>76	search/1972		\x1c\x00\x00\x00\x0B\x00\x00\xa0
+# https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/known-folder-guids-for-file-dialog-custom-places
+# KnownFolderID specifies the folder GUID ID
+# ProgramFiles				905E63B6-C1BF-494E-B29C-65B732D3D21A
+# ProgramFilesX86			7C5A40EF-A0FB-4BFC-874A-C0F2E0B9FA8E
+>>>&0	guid	x			KnownFolderID %s
+# DisableKnownFolderAlias; unaliased form of the known folder IDList SHOULD be used; no examples found
+>20	lelong&4194304	4194304	\b, DisableKnownFolderAlias
+# AllowLinkToLink; link that references another link is enabled; no examples found
+>20	lelong&8388608	8388608	\b, AllowLinkToLink
+# UnaliasOnSave; unaliased form of that known folder or the target IDList SHOULD be used; no examples found
+>20	lelong&16777216 16777216	\b, UnaliasOnSave
+# PreferEnvironmentPath; path specified in the EnvironmentVariableDataBlock SHOULD be used
+>20	lelong&33554432	33554432	\b, PreferEnvironmentPath
+# KeepLocalIDListForUNCTarget; UNC name SHOULD be stored in local path IDList in PropertyStoreDataBlock; no examples found
+>20	lelong&67108864	67108864	\b, KeepLocalIDListForUNCTarget
+# FileAttributes
 >24	lelong&1	1	\b, Read-Only
 >24	lelong&2	2	\b, Hidden
 >24	lelong&4	4	\b, System
->24	lelong&8	8	\b, Volume Label
+# Reserved1; MUST be zero
+>24	lelong&8	8	\b, Reserved1
 >24	lelong&16	16	\b, Directory
 >24	lelong&32	32	\b, Archive
->24	lelong&64	64	\b, Encrypted
+# Reserved2; MUST be zero
+>24	lelong&64	64	\b, Reserved2
 >24	lelong&128	128	\b, Normal
 >24	lelong&256	256	\b, Temporary
+# no examples found
 >24	lelong&512	512	\b, Sparse
+# no examples found
 >24	lelong&1024	1024	\b, Reparse point
 >24	lelong&2048	2048	\b, Compressed
 >24	lelong&4096	4096	\b, Offline
->28	leqwdate	x	\b, ctime=%s
->36	leqwdate	x	\b, mtime=%s
->44	leqwdate	x	\b, atime=%s
+# FILE_ATTRIBUTE_NOT_CONTENT_INDEXED; contents need to be indexed
+>24	lelong&8192	8192	\b, NeedIndexed
+# FILE_ATTRIBUTE_ENCRYPTED; file or directory is encrypted
+>24	lelong&16384	16384	\b, Encrypted
+# value zero means there is no time set on the target
+>28	leqwdate	!0	\b, ctime=%s
+# Access time of target in UTC
+>36	leqwdate	!0	\b, atime=%s
+# write time of target in UTC
+>44	leqwdate	!0	\b, mtime=%s
+# FileSize; 32 bit size of target in bytes
 >52	lelong		x	\b, length=%u, window=
->60	lelong&1	1	\bhide
->60	lelong&2	2	\bnormal
->60	lelong&4	4	\bshowminimized
->60	lelong&8	8	\bshowmaximized
->60	lelong&16	16	\bshownoactivate
->60	lelong&32	32	\bminimize
->60	lelong&64	64	\bshowminnoactive
->60	lelong&128	128	\bshowna
->60	lelong&256	256	\brestore
->60	lelong&512	512	\bshowdefault
-#>20	lelong&1	0
-#>>20	lelong&2	2
-#>>>(72.l-64)	pstring/h	x	\b [%s]
-#>20	lelong&1	1
-#>>20	lelong&2	2
-#>>>(72.s)	leshort	x
-#>>>&75	pstring/h	x	\b [%s]
+# ShowCommand; 1~SW_SHOWNORMAL 3~SW_SHOWMAXIMIZED HerzlichMEDION.lnk 7~SW_SHOWMINNOACTIVE YaCy.lnk Privoxy.lnk; All other values like 2 MUST be treated as SW_SHOWNORMAL
+#>60	lelong		x	ShowCommand=%#x
+>60	lelong		x
+>>60	lelong		3	\bshowmaximized
+>>60	lelong		7	\bshowminnoactive
+>>60	default		x	\bnormal
+# Hotkey
+>64	uleshort	>0	\b, hot key
+# 41h~A 42h~B ...
+>>64	ubyte		x	%c
+# modifier keys: 0x01~HOTKEYF_SHIFT 0x02~HOTKEYF_CONTROL 0x04~HOTKEYF_ALT
+>>65	ubyte&1		1	\b+SHIFT
+>>65	ubyte&2		2	\b+CONTROL
+>>65	ubyte&4		4	\b+ALT
+# Reserved; MUST be zero
+#>66	uleshort	!0	\b, reserved %#x
+# Reserved2; MUST be zero
+#>68	ulelong		!0	\b, reserved2 %#x
+# Reserved3; MUST be zero
+#>72	ulelong		!0	\b, reserved3 %#x
+# optional LINKTARGET_IDLIST if LinkFlags bit HasLinkTargetIDList is set
+>20	lelong&1	1
+# IDListSize; size of IDList
+>>76	uleshort	x	\b, IDListSize %#4.4x
+# 1st item
+>>78	use		lnk-item
+# 2nd possible item
+>>(78.s+78)	uleshort	>0
+>>>(78.s+78)	use			lnk-item
+# 3rd possible item
+>>>&(&-2.s-2)	uleshort	>0
+>>>>&-2		use			lnk-item
+# 4th possible item
+>>>>&(&-2.s-2)	uleshort	>0
+>>>>>&-2	use			lnk-item
+# Because HasLinkInfo is set, a LinkInfo structure follows
+>20	lelong&2	2
+# if no LINKTARGET_IDLIST (no HasLinkTargetIDList) then direct after header; no example found
+>>20	lelong&1	=0
+>>>76	use			lnk-info
+# if LINKTARGET_IDLIST (HasLinkTargetIDList) then after LINKTARGET_IDLIST by addtional IDListSize bytes 
+>>20	lelong&1	=1
+>>>76	uleshort	>0
+#>>>>(76.s+78)	use		lnk-info
+>>>>(76.s+78)	ubelong	x
+# move pointer to beginnig of LinkInfo structure
+>>>>>&-8	ubelong	x
+#>>>>>>&16	ulelong	x	\b, LocalBasePathOffset=%#8.8x
+>>>>>>&(&16.l) string	x	\b, LocalBasePath "%s"
+# check and then display link item (size,data)
+0	name		lnk-item
+# size value 0x0000 means TerminalID; indicates the end of the item IDs list
+>0	uleshort	>0
+#>>0	uleshort	x	\b, ItemIDSize %#4.4x
+# item Data
+#>>2	ubequad		x	\b, Item data=%#16.16llx
+#>>2	ubyte		x	\b, Item type=%#x
+>>2	ubyte		=0x1f	\b, Root folder
+# like:	"26EE0668-A00A-44D7-9371-BEB064C98683"	Control Panel
+#	"20D04FE0-3AEA-1069-A2D8-08002B30309D"	My Computer
+#	"871C5380-42A0-1069-A2EA-08002B30309D"	Internet Explorer
+>>>4	guid		x	"%s"
+>>2	ubyte		=0x2f	\b, Volume
+# like: "C:\" "D:\"
+>>>3	string		x	"%s"
+# Control panel category
+#>>2	ubyte		foo	\b, Control panel category
+# display LinkInfo structure (size,flags,offsets)
+0	name		lnk-info
+# LinkInfoSize; size of the LinkInfo structure
+>0	ulelong		x	\b, LinkInfoSize %#x
+# LinkInfoHeaderSize; if 1C no optional fields; >=24 optional fields are specified
+>4	ulelong		x	\b, LinkInfoHeaderSize %#x
+# LinkInfoFlags; 
+#>8	ulelong	 	x	\b, LinkInfoFlags=%#x
+>8	ulelong&1 	1	\b, VolumeIDAndLocalBasePath
+# VolumeIDOffset; location of the VolumeID field (VolumeIDSize DriveType DriveSerialNumber VolumeLabelOffset ... ) inside LinkInfo structure
+>>12	ulelong	  	x	\b, VolumeIDOffset %#x
+# LocalBasePathOffset; location of LocalBasePath field like "C:\test\a.txt" inside LinkInfo structure
+>>16	ulelong		x	\b, LocalBasePathOffset %#x
+# LocalBasePathOffsetUnicode; location of the LocalBasePathUnicode field inside LinkInfo structure
+>>4	ulelong		>23
+>>>28	ulelong		x	\b, LocalBasePathOffsetUnicode %#x
+>8	ulelong&2 	2	\b, CommonNetworkRelativeLinkAndPathSuffix
+# CommonNetworkRelativeLinkOffset; location of the CommonNetworkRelativeLink field inside LinkInfo structure
+>>20	ulelong		x	\b, CommonNetworkRelativeLinkOffset %#x
+# CommonPathSuffixOffset; location of CommonPathSuffix field
+>24	ulelong		x	\b, CommonPathSuffixOffset %#x
+# CommonPathSuffixOffsetUnicode; location of CommonPathSuffixUnicode field inside LinkInfo structure
+>4	ulelong		>23
+>>32	ulelong		x	\b, CommonPathSuffixOffsetUnicode %#x
 
 # Summary: Outlook Personal Folders
 # Created by: unknown
