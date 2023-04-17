@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.189 2023/03/30 08:54:19 christos Exp $
+# $File: archive,v 1.190 2023/04/17 16:40:52 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1949,16 +1949,116 @@
 >8	belong	x	\b, size %d
 
 # Zoo archiver
-20	lelong		0xfdc4a7dc	Zoo archive data
+# Update: Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Zoo_(file_format)
+#		http://fileformats.archiveteam.org/wiki/Zoo
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/ark-zoo-strict.trid.xml
+#		http://distcache.freebsd.org/ports-distfiles/zoo-2.10pl1.tar.gz/zoo.h 
+# Note:		called "ZOO compressed archive (strict)" by TrID and "ZOO Compressed Archive" by DROID via PUID x-fmt/269 
+#		verified by command like `deark -m zoo -l -d2 WHRCGA.ZOO`
+20	lelong		0xfdc4a7dc
+# skip DROID x-fmt-269-signature-id-621.zoo by looking for valid major version to manipulate archive
+>32	byte		>0		Zoo archive data
 !:mime	application/x-zoo
->4	byte		>48		\b, v%c.
->>6	byte		>47		\b%c
->>>7	byte		>47		\b%c
->32	byte		>0		\b, modify: v%d
->>33	byte		x		\b.%d+
->42	lelong		0xfdc4a7dc	\b,
->>70	byte		>0		extract: v%d
->>>71	byte		x		\b.%d+
+# bak is extension of backup-ed zoo
+!:ext	zoo/bak
+# version in text form like: 1.50 2.00 2.10
+>>4	byte		>48		\b, v%c.
+>>>6	byte		>47		\b%c
+>>>>7	byte		>47		\b%c
+# ZOO files typically start with "ZOO ?.?? Archive.", followed by the bytes 0x1a 0x0 0x0; not used by Zoo and they may be anything
+>>8	string		!\040Archive.\032 \b, at 8
+>>>8	string		x		text "%0.10s"
+# major_ver.minor_ver; minimum version needed to manipulate archive like: 1.0 2.0
+>>32	byte		>0		\b, modify: v%d
+>>>33	byte		x		\b.%d+
+# major_ver.minor_ver; minimum version needed to extract after modify like in old versions
+>>(24.l+28)	ubyte	x		\b, extract: v%u
+>>(24.l+29)	ubyte	x		\b.%u+
+# with zoo 2.00 additional fields have been added in the archive header
+>>32	byte		>1
+# type; type of archive header like: 1 2
+>>>34		ubyte	!1		\b, header type %u
+# acmt_pos; position of archive comment like: 6258 30599 61369 149501
+>>>35		lelong	>0		\b, at %d
+# acmt_len; length of archive comment like: 258
+>>>>39			uleshort x	%u bytes comment
+#>>>>(35.l)		ubequad	x	COMMENT=%16.16llx
+# 1st character of comment maybe is CarriageReturn (0x0d)
+>>>>(35.l) 		ubyte	<040
+# 2nd character of comment maybe is LineFeed (0x0a)
+>>>>>(35.l+1) 		ubyte	<040
+# comment string after CRLF like "Anonymous ftp site garbo.uwasa.fi 128.214.87.1 moderated by"
+>>>>>>(35.l+2)		string	x	%s
+# next character of remaining comment maybe is CarriageReturn (0x0d)
+>>>>>>>&0		ubyte	<040
+>>>>>>>>&0		ubyte	<040
+# 2nd comment part like: Timo Salmi ts@chyde.uwasa.fi      PC directories and uploads\015\012Harri Valkama hv@chyde.uwasa.fi   PC, Mac, Unix files, and upload
+>>>>>>>>>&0		string	>037	%s
+# vdata; archive-level versioning byte like: 1 3
+>>>41		ubyte	!1		\b, vdata %#x
+# zoo_start; pointer to 1st entry header 
+>>24	lelong		x		\b; at %u
+# zoo_minus; zoo_start -1 for consistency checking
+#>>28	lelong		x		\b, zoo_minus %#x
+# zoo_tag; tag for check
+#>>(24.l+0) ulelong	!0xfdc4a7dc	\b, zoo_tag=%8.8x
+# type; type of directory entry like: 1 2
+>>(24.l+4)	ubyte	!2		type=%u
+# packing_method; 0~no packing 1~normal LZW 2~lzh
+>>(24.l+5)	ubyte		x	method=
+>>>(24.l+5)	ubyte		0	\bnot-compressed
+>>>(24.l+5)	ubyte		1	\blzd
+>>>(24.l+5)	ubyte		2	\blzh
+# next; position of next directory entry
+>>(24.l+6)	ulelong		x	\b, next entry at %u
+# offset; position of file data for this entry
+#>>(24.l+10) ulelong		x	\b, data at %u
+# file_crc; CRC-16 of file data
+>>(24.l+18)	uleshort	x	\b, CRC %#4.4x
+# comment; zero if none or points to entry comment like ADD9h (WHRCGA.ZOO)
+>>(24.l+32)	lelong		>0	\b, at %#x
+# cmt_size; if not 0 for none then length of entry comment like: 46
+>>>(24.l+36)	uleshort	>0	%u bytes comment
+# entry comment itself like: "CGA .GL file showing menu input from keyboard"
+>>>>(&-6.l)	string		x	"%s"
+# org_size; original size of file
+>>(24.l+20)	ulelong		x	\b, size %u
+# size_now; compressed size of file
+>>(24.l+24)	ulelong		x	(%u compressed)
+# major_ver.minor_ver; minimum version needed to extract already done
+# deleted; will be 1 if deleted, 0 if not
+>>(24.l+30)	ubyte		=1	\b, deleted
+# struc; file structure if any; WHAT IS THAT?
+>>(24.l+31)	ubyte		!0	\b, structured
+# fname[13]; short/DOS file name like 12345678.012
+>>(24.l+38)	string	x		\b, %0.13s
+# for directory entry type 2 with variable part
+>>(24.l+4)	ubyte	=2
+# var_dir_len; length of variable part of dir entry
+>>>(24.l+51)		uleshort >0
+#>>>(24.l+51)		uleshort >0	\b, variable part length %u
+# namlen; length of long filename
+#>>>>(24.l+56)		ubyte	x	\b, namlen %u
+# dirlen; length of directory name
+#>>>>(24.l+57)		ubyte	x	\b, dirlen %u
+# if file length positive then show long file name
+>>>>(24.l+56)		ubyte	>0
+# lfname[256]; long file name \0-terminated
+>>>>>(24.l+58)		string	x	"%s"
+# if directory length positive then jump before file name field and then jump this addtional length plus 2 (\0-terminator + dirlen field) to following directory name
+>>>>(24.l+57)		ubyte	>0
+>>>>>(24.l+55)		ubyte	x
+# dirname[256]; directory name \0-terminated
+>>>>>>&(&0.b+2)		string	x	in "%s"
+# dir_crc; CRC of directory entry
+#>>>(24.l+54)		uleshort x	\b, entry CRC %#4.4x
+# tz; timezone where file was archived; 7Fh~unknown 4~1.00hoursWestOfUTC 12 16 20~5.00hoursWestOfUTC -107~26.75hoursEastOfUTC -4~1.00hoursEastOfUTC
+>>>(24.l+53)		byte	!0x7f	\b, time zone %d/4
+# date; last mod file date in DOS format
+>>>(24.l+14)		lemsdosdate x	\b, modified %s
+# time; last mod file time in DOS format
+>>>(24.l+16)		lemsdostime x	%s
 
 # Shell archives
 10	string		#\ This\ is\ a\ shell\ archive	shell archive text
