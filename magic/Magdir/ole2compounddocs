@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.24 2023/01/24 20:13:40 christos Exp $
+# $File: ole2compounddocs,v 1.25 2023/04/17 16:36:24 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -579,6 +579,19 @@
 # https://www.macdisk.com/macsigen.php "WPC2" for Wordperfect 2 *.wpd
 !:apple	????WPC9
 !:ext	wpg
+#
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/CorelCAD
+#		https://en.wikipedia.org/wiki/CorelCAD
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/ccd-corelcad.trid.xml
+# Note:		called "CorelCAD Drawing" by TrID and CorelCAD
+# directory entry names like Contents ViewInfo CustomViewDescriptions LayerInfo
+>>88 	ubequad		0xbe26db67235e2689	: Corel
+>>>80 	ubequad		0x20f414de1cacce11	\bCAD Drawing or Template
+#!:mime	application/x-ole-storage
+!:mime	application/x-corel-cad
+# CCT for CorelCAD Template 
+!:ext	ccd/cct
 #
 # URL:	http://fileformats.archiveteam.org/wiki/StarOffice_binary_formats
 >>88 	ubequad		0x996104021c007002	: StarOffice
