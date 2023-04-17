@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.56 2023/03/11 18:54:29 christos Exp $
+# $File: windows,v 1.57 2023/04/17 16:35:03 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -479,10 +479,17 @@
 >16	string		>\0			for "%s"
 
 # Summary: Hyper terminal
-# Extension: .ht
 # Created by: unknown
+# Update:	Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/HyperACCESS
+#		https://www.hilgraeve.com/hyperterminal/
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/ht.trid.xml
+# Note:		called "HyperTerminal data file" by TrID and "HyperTerminal File" on English Windows
 0	string		HyperTerminal\040
->15	string		1.0\ --\ HyperTerminal\ data\ file	MS Windows HyperTerminal profile
+>14	string		1.0\ --\ HyperTerminal\ data\ file	MS Windows HyperTerminal profile
+#!:mime	application/octet-stream
+!:mime	application/x-ms-ht
+!:ext	ht
 
 # https://ithreats.files.wordpress.com/2009/05/\040
 # lnk_the_windows_shortcut_file_format.pdf
