@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.101 2022/10/09 18:51:04 christos Exp $
-.Dd October 9, 2022
+.\" $File: magic.man,v 1.102 2023/04/18 16:36:31 christos Exp $
+.Dd Arpil 18, 2023
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -540,6 +540,20 @@ space.
 An APPLE 4+4 character APPLE creator and type can be specified as:
 .Bd -literal -offset indent
 !:apple	CREATYPE
+.Ed
+.Pp
+A slash-separated list of commonly found filename extensions can be specified
+as:
+.Bd -literal -offset indent
+!:ext	ext[/ext...]
+.Ed
+.Pp
+i.e. the literal string
+.Dq !:ext
+followed by a slash-separated list of commonly found extensions; for example
+for JPEG images:
+.Bd -literal -offset indent
+!:ext jpeg/jpg/jpe/jfif
 .Ed
 .Pp
 A MIME type is given on a separate line, which must be the next
