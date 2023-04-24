@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.89 2022/12/24 22:47:53 christos Exp $
+# $File: compress,v 1.90 2023/04/24 17:26:56 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -449,3 +449,13 @@
 # https://github.com/kspalaiologos/bzip3/blob/master/doc/file_format.md
 0	string/b	BZ3v1	bzip3 compressed data
 >5	ulelong		x	\b, blocksize %u
+
+
+# https://support-docs.illumina.com/SW/ORA_Format_Specification/Content/\
+# SW/ORA/ORAFormatSpecification.htm
+# From Guillaume Rizk
+0	short	=0x7C49 DRAGEN ORA file,
+>-261	short	=0x7C49 with metadata:
+>-125	u8	x	NB reads: %llu,
+>-109	u8	x	NB bases: %llu.
+>-219	u4&0x02	2	File contains interleaved paired reads
