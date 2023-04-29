@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.25 2023/01/06 17:32:32 christos Exp $
+# $File: sql,v 1.26 2023/04/29 17:26:58 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -88,8 +88,14 @@
 # Version 1 used GDBM internally; its files cannot be distinguished
 # from other GDBM files.
 #
+# Update:	Joerg Jenderek
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/s/sqlite-2x.trid.xml
+# Note:		called "SQLite 2.x database" by TrID and "SQLite Database File Format" version 2 by DROID via PUID fmt/1135
 # Version 2 used this format:
 0	string	**\ This\ file\ contains\ an\ SQLite  SQLite 2.x database
+!:mime	application/x-sqlite2
+# FileAttributesStore.db test.sqlite2
+!:ext	sqlite/sqlite2/db
 
 # URL:		https://en.wikipedia.org/wiki/SQLite
 # Reference:	https://www.sqlite.org/fileformat.html
