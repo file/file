@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.47 2022/12/09 15:48:14 christos Exp $
+# $File: apple,v 1.48 2023/05/01 14:20:21 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1/t	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -424,7 +424,13 @@
 #>0x410	string	disk\ image	UDIF read/write image (UDRW)
 
 # From: Toby Peterson <toby@apple.com>
+# From https://www.nationalarchives.gov.uk/pronom/fmt/866
+0	string	bplist00
+>8	search/500	WebMainResource	Apple Safari Webarchive
+!:mime	application/x-webarchive
+!:strength +50
 0	string	bplist00	Apple binary property list
+!:mime	application/x-bplist
 
 # Apple binary property list (bplist)
 #  Assumes version bytes are hex.
