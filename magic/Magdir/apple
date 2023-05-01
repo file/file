@@ -424,7 +424,13 @@
 #>0x410	string	disk\ image	UDIF read/write image (UDRW)
 
 # From: Toby Peterson <toby@apple.com>
+# From https://www.nationalarchives.gov.uk/pronom/fmt/866
+0	string	bplist00
+>8	search/500	WebMainResource	Apple Safari Webarchive
+!:mime	application/x-webarchive
+!:strength +50
 0	string	bplist00	Apple binary property list
+!:mime	application/x-bplist
 
 # Apple binary property list (bplist)
 #  Assumes version bytes are hex.
