@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.25 2023/04/17 16:36:24 christos Exp $
+# $File: ole2compounddocs,v 1.26 2023/05/15 16:46:12 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -321,6 +321,32 @@
 >>>>>>&0	indirect	x
 #	remaining null clsid
 >>>>128 	default		x
+>>>>>0 	use		ole2-unknown
+# look for CLSID where "second" part is 0
+>>>80 	ubequad		!0x0
+#
+# Summary:	Family Tree Maker
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Family_Tree_Maker
+#		https://en.wikipedia.org/wiki/Family_Tree_Maker
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/ftw.trid.xml
+# Note		called "Family Tree Maker Family Tree" by TrID and
+#		"FamilyTree Maker Database" with version "1-4" by DROID via PUID fmt/1352
+#		tested only with version 2.0
+#		verified by Michal Mutl Structured Storage Viewer `SSView.exe my.ftw`
+#		newer versions are SQLite based and handled by ./sql
+# directory names like: IND.DB AUX.DB GENERAL.DB NAME.NDX BIRTH.NDX EXTRA.DB
+>>>>80 	ubequad		0x5702000000000000	: Family Tree Maker Windows database, version 1-4
+# look for "File Format (C) Copyright 1993 Banner Blue Software Inc. - All Rights Reserved" in GENERAL.DB
+#>>>>>0	search/0x5460c/s	F\0i\0l\0e\0\040\0F\0o\0r\0m\0a\0t\0\040\0(\0C\0)\0	\b, VERSION
+# GRR: jump to version value like 2 does not work!
+#>>>>>>&-8	ubyte		x							%u
+#!:mime	application/x-ole-storage
+!:mime	application/x-fmt
+# FBK is used for backup of FTW
+!:ext	ftw/fbk
+#
+>>>>80 	default		x
 >>>>>0 	use		ole2-unknown
 #	look for known clsid GUID
 # - Visio documents
