@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.239 2023/04/02 15:19:40 christos Exp $
+# $File: images,v 1.240 2023/05/15 16:44:53 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1710,6 +1710,19 @@
 #>32050  ubequad		!0		\b, channel directions %16.16llx
 # channel_delay[4]; 128 - channel delay, timebase 1/60 s
 #>32058  ubequad		!0		\b, channel delays %16.16llx
+
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/GED
+#		https://recoil.sourceforge.net/formats.html#Atari-8-bit
+# Reference:	https://sourceforge.net/projects/recoil/files/recoil/6.3.4/recoil-6.3.4.tar.gz
+#		recoil-6.3.4/recoil.c
+#		http://mark0.net/download/triddefs_xml.7z/defs/b/bitmap-ged.trid.xml
+# Note:		called "Atari GED bitmap" by TrID; file size 11302
+#		and verified by RECOIL graphic tool
+0	string		\xFF\xFF0SO\x7F		Atari GED bitmap, 160x200
+#!:mime	application/octet-stream
+!:mime	image/x-atari-ged
+!:ext	ged
 
 # From:		Joerg Jenderek
 # URL:		http://fileformats.archiveteam.org/wiki/ImageLab/PrintTechnic
