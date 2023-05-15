@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.58 2023/04/17 16:39:19 christos Exp $
+# $File: windows,v 1.59 2023/05/15 16:47:23 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -95,24 +95,156 @@
 >>40	lestring16	x		"%s"
 
 # Summary: Windows crash dump
-# Extension: .dmp
 # Created by: Andreas Schuster (https://computer.forensikblog.de/)
-# Reference (1): https://computer.forensikblog.de/en/2008/02/64bit_magic.html
+#		https://web.archive.org/web/20101125060849/https://computer.forensikblog.de/en/2008/02/64bit_magic.html
 # Modified by (1): Abel Cheung (Avoid match with first 4 bytes only)
+# Modified by (2): Joerg Jenderek (addtional fields, extension, URL)
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/dmp.trid.xml
+#		https://gitlab.com/qemu-project/qemu/-/blob/master/include/qemu/win_dump_defs.h
+# Note:		called "Windows memory dump" by TrID
+#		and verified by like Windows Kit `Dumpchk.exe 043022-18703-01.dmp`
+#		and partly by NirSoft `BlueScreenView.exe 043022-18703-01.dmp`
+# char Signature[4]
 0	string		PAGE
+# char ValidDump[4]
 >4	string		DUMP		MS Windows 32bit crash dump
+#!:mime	application/octet-stream
+!:mime	application/x-ms-dmp
+# like: Mini111013-01.dmp
+!:ext	dmp
+# major version like: 15
+>>8	ulelong		x		\b, version %u
+# minor version like: 2600
+>>12	ulelong		x		\b.%u
+# DirectoryTableBase like: 709000
+#>>16	ulelong		x		\b, DirectoryTableBase %#x
+# PfnDatabase like: 805620c8
+#>>20	ulelong		x		\b, PfnDatabase %#x
+# PsLoadedModuleList like: 8055d720
+#>>24	ulelong		x		\b, PsLoadedModuleList %#x
+# PsActiveProcessHead like:805638b8 
+#>>28	ulelong		x		\b, PsActiveProcessHead %#x
+# MachineImageType like: 14c (intel x86)
+>>32	ulelong		!0x14c		\b, MachineImageType %#x
+# NumberProcessors like: 2
+>>36	ulelong		x		\b, %u processors
+# BugcheckCode like: e2
+#>>40	ulelong		x		\b, BugcheckCode %#x
+# BugcheckParameter1 like: 0
+#>>44	ulelong		x		\b, BugcheckParameter1 %#x
+# BugcheckParameter2 like: 0
+#>>48	ulelong		x		\b, BugcheckParameter2 %#x
+# BugcheckParameter3 like: 0
+#>>52	ulelong		x		\b, BugcheckParameter3 %#x
+# BugcheckParameter4 like: 0
+#>>56	ulelong		x		\b, BugcheckParameter4 %#x
+# VersionUser[32]; like  "PAGEPAGEPAGEPAGEPAGEPAGEPAGEPAGE" ""
+#>>60	string		x		\b, VersionUser "%.32s"
+# uint32_t reserved0 like: 45474101
+#>>92	ulelong		x		\b, reserved0 %#x
 >>0x05c	byte            0		\b, no PAE
 >>0x05c	byte            1		\b, PAE
+# KdDebuggerDataBlock like: 8054d2e0
+#>>96	ulelong		x		\b, KdDebuggerDataBlock %#x
+# uint8_t PhysicalMemoryBlockBuffer[700]
+# WinDumpPhyMemDesc32 NumberOfRuns like: 45474150
+#>>100	ulelong		x		\b, NumberOfRuns %#x
+# WinDumpPhyMemDesc32 uint32_t NumberOfPages like: 1162297680
+#>>104	ulelong		x		\b, NumberOfPages %#x
+# WinDumpPhyMemRun32 Run[86]; 688 bytes
+#>>108	ulelong		x		\b, BasePage %#x
+#>>112	ulelong		x		\b, PageCount %#x
+# uint8_t reserved1[3200]
+#>>800	string		x		\b, reserved "%s"
+#>>4000	ulelong		x		\b, RequiredDumpSpace %#x
+# uint8_t reserved2[92];
+#>>4004	string		x		\b, reserved2 "%s"
 >>0xf88	lelong		1		\b, full dump
 >>0xf88	lelong		2		\b, kernel dump
 >>0xf88	lelong		3		\b, small dump
+# like: 4
+>>0xf88	lelong		>3		\b, dump type (%#x)
+# WinDumpPhyMemDesc32 uint32_t NumberOfPages like: 1162297680
+# GRR: IS THIS TRUE? VALUE IS SOMETIMES VERY HIGH!
+#>>104	ulelong		x		\b, NumberOfPages %#x
 >>0x068	lelong		x		\b, %d pages
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/dmp-64.trid.xml113o
+# Note:		called "Windows 64bit Memory Dump" by TrID
+# char ValidDump[4]
 >4	string		DU64		MS Windows 64bit crash dump
->>0xf98	lelong		1		\b, full dump
->>0xf98	lelong		2		\b, kernel dump
->>0xf98	lelong		3		\b, small dump
+#!:mime	application/octet-stream
+!:mime	application/x-ms-dmp
+# like: c:\Windows\Minidump\020322-18890-01.dmp c:\Windows\MEMORY.DMP
+!:ext	dmp
+# major version like: 15
+>>8	ulelong		x		\b, version %u
+# minor version like: 9600 19041 22621
+>>12	ulelong		x		\b.%u
+# DirectoryTableBase like: 001ab000
+#>>16	ulequad		x		\b, DirectoryTableBase %#llx
+# PfnDatabase like: fffffa8000000000
+#>>24	ulequad		x		\b, PfnDatabase %#llx
+# PsLoadedModuleList like: fffff800c553f650
+#>>32	ulequad		x		\b, PsLoadedModuleList %#llx
+# PsActiveProcessHead like: fffff800c5525400
+#>>40	ulequad		x		\b, PsActiveProcessHead %#llx
+# MachineImageType like: 00008664
+>>48	ulelong		!0x8664		\b, MachineImageType %#x
+# NumberProcessors like: 2 4
+>>52	ulelong		x		\b, %u processors
+# BugcheckCode like: 1000007e
+#>>56	ulelong		x		\b, BugcheckCode %#x
+# unused0
+#>>60	ulelong		x		\b, unused0 %#x
+# BugcheckParameter1 like: ffffffffc0000005
+#>>64	ulequad		x		\b, BugcheckParameter1 %#llx
+# BugcheckParameter2 like: fffff801abb2158f
+#>>72	ulequad		x		\b, BugcheckParameter2 %#llx
+# BugcheckParameter3 like: ffffd000290d4288
+#>>80	ulequad		x		\b, BugcheckParameter3 %#llx
+# BugcheckParameter4 like: ffffd000290d3aa0
+#>>88	ulequad		x		\b, BugcheckParameter4 %#llx
+# VersionUser[32]; like "" "PAGEPAGEPAGEPAGEPAGEPAGEPAGEPAGE" ""
+#>>96	string		x		\b, VersionUser "%.32s"
+# KdDebuggerDataBlock like: fffff800c550c530
+#>>128	ulequad		x		\b, KdDebuggerDataBlock %#llx
+# uint8_t PhysicalMemoryBlockBuffer[704]
+# WinDumpPhyMemDesc64 NumberOfRuns like: 6 7 0x45474150
+#>>136	ulelong		x		\b, NumberOfRuns %#x
+# WinDumpPhyMemDesc64 unused like: 0 0x45474150
+#>>140	ulelong		x		\b, unused %#x
+# WinDumpPhyMemRun64 Run[43] BasePage like: 1
+#>>152	ulequad		x		\b, BasePage %#llx
+# WinDumpPhyMemRun64 Run[43] PageCount like: 57h
+#>>160	ulequad		x		\b, PageCount %#llx
+# uint8_t ContextBuffer[3000] like: "" "\001" "\0207J\266\001\340\377\377&8\007\312"
+#>>840	string		x		\b, ContextBuffer "%s"
+# WinDumpExceptionRecord ExceptionCode
+#>>3840	ulelong		x		\b, ExceptionCode %#x
+# WinDumpExceptionRecord ExceptionFlags
+#>>3844	ulelong		x		\b, ExceptionFlags %#x
+# WinDumpExceptionRecord ExceptionRecord
+#>>3848	ulequad		x		\b, ExceptionRecord %#llx
+# WinDumpExceptionRecord ExceptionAddress
+#>>3856	ulequad		x		\b, ExceptionAddress %#llx
+# WinDumpExceptionRecord NumberParameters
+#>>3864	ulelong		x		\b, NumberParameters %#x
+# WinDumpExceptionRecord unused
+#>>3868	ulelong		x		\b, unsed %#x
+# WinDumpExceptionRecord ExceptionInformation[15]
+#>>3872	ulequad		x		\b, ExceptionInformation[0] %#llx
+# https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/memory-dump-file-options
+# but DumpType like: 4~small 5~full (MEMORY.DMP) 6~kernel (MEMORY.DMP)
+>>0xf98 ulelong	x		\b,
+>>>0xf98	lelong		5		full dump
+>>>0xf98	lelong		6		kernel dump
+>>>0xf98	lelong		4		small dump
+# This probably never occur
+>>>0xf98	default		x		DumpType
+>>>>0xf98 	ulelong		x		(%#x)
+# WinDumpPhyMemDesc64 uint64_t NumberOfPages like: 3142425 8341923 8366500 1162297680 4992030524978970960
+# GRR: IS THIS TRUE? VALUE IS SOMETIMES VERY HIGH!
 >>0x090	lequad		x		\b, %lld pages
-
 
 # Summary: Vista Event Log
 # Created by: Andreas Schuster (https://computer.forensikblog.de/)
