@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.188 2023/02/09 17:45:19 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.189 2023/05/18 13:28:16 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -42,11 +42,11 @@ FILE_RCSID("@(#)$File: readelf.c,v 1.188 2023/02/09 17:45:19 christos Exp $")
 #include "magic.h"
 
 #ifdef	ELFCORE
-file_private int dophn_core(struct magic_set *, int, int, int, off_t, int, size_t,
-    off_t, int *, uint16_t *);
+file_private int dophn_core(struct magic_set *, int, int, int, off_t, int,
+    size_t, off_t, int *, uint16_t *);
 #endif
-file_private int dophn_exec(struct magic_set *, int, int, int, off_t, int, size_t,
-    off_t, int, int *, uint16_t *);
+file_private int dophn_exec(struct magic_set *, int, int, int, off_t, int,
+    size_t, off_t, int, int *, uint16_t *);
 file_private int doshn(struct magic_set *, int, int, int, off_t, int, size_t,
     off_t, int, int, int *, uint16_t *);
 file_private size_t donote(struct magic_set *, void *, size_t, size_t, int,
@@ -1665,6 +1665,9 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	ssize_t bufsize;
 	size_t offset, align, need = 0;
 	int pie = 0, dynamic = 0;
+
+	if (ms->flags & MAGIC_MIME)
+		return 0;
 
 	if (num == 0) {
 		if (file_printf(ms, ", no program header") == -1)
