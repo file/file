@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.114 2023/03/05 19:22:47 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.115 2023/05/21 15:42:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -121,10 +121,10 @@ file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
 	int has_backspace = 0;
 	int seen_cr = 0;
 
-	int n_crlf = 0;
-	int n_lf = 0;
-	int n_cr = 0;
-	int n_nel = 0;
+	size_t n_crlf = 0;
+	size_t n_lf = 0;
+	size_t n_cr = 0;
+	size_t n_nel = 0;
 	int executable = 0;
 
 	size_t last_line_end = CAST(size_t, -1);
@@ -204,13 +204,6 @@ file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
 		if (ubuf[i] == '\b')
 			has_backspace = 1;
 	}
-
-	/* Beware, if the data has been truncated, the final CR could have
-	   been followed by a LF.  If we have ms->bytes_max bytes, it indicates
-	   that the data might have been truncated, probably even before
-	   this function was called. */
-	if (seen_cr && nbytes < ms->bytes_max)
-		n_cr++;
 
 	if (strcmp(type, "binary") == 0) {
 		rv = 0;
