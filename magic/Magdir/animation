@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.92 2022/12/28 17:49:55 christos Exp $
+# $File: animation,v 1.93 2023/05/21 17:13:19 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -18,8 +18,8 @@
 >12     string          rmra            \b multiple URLs
 4       string          mdat            Apple QuickTime movie (unoptimized)
 !:mime	video/quicktime
-#4       string          wide            Apple QuickTime movie (unoptimized)
-#!:mime	video/quicktime
+4       string          wide            Apple QuickTime movie (unoptimized)
+!:mime	video/quicktime
 #4       string          skip            Apple QuickTime movie (modified)
 #!:mime	video/quicktime
 #4       string          free            Apple QuickTime movie (modified)
