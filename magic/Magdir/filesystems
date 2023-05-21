@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.156 2023/02/20 16:23:19 christos Exp $
+# $File: filesystems,v 1.157 2023/05/21 15:25:38 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2692,3 +2692,10 @@
 >>0	ubelong	>5
 >>0	default	x	YAFFS filesystem root entry (big endian)
 >>>0	use	\^yaffs
+
+# file (1) Magic for DWARFS Compressed File System Archives
+# URL: https://github.com/mhx/dwarfs
+# From: Sooraj S <sooraj2642@gmail.com>, 2023
+0	string	DWARFS	Dwarfs Compressed File System Archive
+>6	byte	x	version %d.
+>7	byte	x	\b%d
