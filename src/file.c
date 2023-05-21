@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.214 2023/02/09 17:45:19 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.215 2023/05/21 17:08:34 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -135,6 +135,7 @@ file_private const struct {
 	{ "soft",	MAGIC_NO_CHECK_SOFT },
 	{ "tar",	MAGIC_NO_CHECK_TAR },
 	{ "json",	MAGIC_NO_CHECK_JSON },
+	{ "simh",	MAGIC_NO_CHECK_SIMH },
 	{ "text",	MAGIC_NO_CHECK_TEXT },	/* synonym for ascii */
 	{ "tokens",	MAGIC_NO_CHECK_TOKENS }, /* OBSOLETE: ignored for backwards compatibility */
 };

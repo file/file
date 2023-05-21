@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.139 2023/03/04 18:10:11 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.140 2023/05/21 17:08:34 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -401,6 +401,17 @@ file_buffer(struct magic_set *ms, int fd, struct stat *st,
 		m = file_is_csv(ms, &b, looks_text, code);
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void)fprintf(stderr, "[try csv %d]\n", m);
+		if (m) {
+			if (checkdone(ms, &rv))
+				goto done;
+		}
+	}
+
+	/* Check if we have a SIMH tape file */
+	if ((ms->flags & MAGIC_NO_CHECK_SIMH) == 0) {
+		m = file_is_simh(ms, &b);
+		if ((ms->flags & MAGIC_DEBUG) != 0)
+			(void)fprintf(stderr, "[try simh %d]\n", m);
 		if (m) {
 			if (checkdone(ms, &rv))
 				goto done;

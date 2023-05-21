@@ -1,5 +1,5 @@
-.\" $File: file.man,v 1.149 2023/02/09 17:45:53 christos Exp $
-.Dd February 9, 2023
+.\" $File: file.man,v 1.150 2023/05/21 17:08:34 christos Exp $
+.Dd May 21, 2023
 .Dt FILE __CSECTION__
 .Os
 .Sh NAME
@@ -224,6 +224,8 @@ elf magic is found.
 Examines JSON (RFC-7159) files by parsing them for compliance.
 .It soft
 Consults magic files.
+.It simh
+Examines SIMH tape files.
 .It tar
 Examines tar files by verifying the checksum of the 512 byte tar header.
 Excluding this test can provide more detailed content description by using

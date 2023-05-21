@@ -1,4 +1,8 @@
 
+2023-05-21  13:05  Christos Zoulas <christos@zoulas.com>
+	
+	* add SIMH tape format support
+
 2023-02-09  12:50  Christos Zoulas <christos@zoulas.com>
 	
 	* bump the max size of the elf section notes to be read to 128K
