@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.156 2023/01/08 18:09:16 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.157 2023/05/21 15:59:58 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -143,7 +143,6 @@ lzmacmp(const unsigned char *buf)
 }
 
 #define gzip_flags "-cd"
-#define lrzip_flags "-do"
 #define lzip_flags gzip_flags
 
 static const char *gzip_args[] = {
@@ -162,7 +161,7 @@ static const char *xz_args[] = {
 	"xz", "-cd", NULL
 };
 static const char *lrzip_args[] = {
-	"lrzip", lrzip_flags, NULL
+	"lrzip", "-qdf", "-", NULL
 };
 static const char *lz4_args[] = {
 	"lz4", "-cd", NULL
