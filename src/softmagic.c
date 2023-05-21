@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.342 2023/03/14 19:43:07 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.343 2023/05/21 16:09:44 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -298,6 +298,7 @@ flush:
 			*need_separator = 1;
 			*printed_something = 1;
 			*returnval = 1;
+			*firstline = 0;
 			return e;
 		}
 
