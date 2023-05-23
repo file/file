@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_simh.c,v 1.1 2023/05/21 17:08:34 christos Exp $")
+FILE_RCSID("@(#)$File: is_simh.c,v 1.2 2023/05/23 13:55:34 christos Exp $")
 #endif
 
 #include <string.h>
@@ -53,13 +53,13 @@ FILE_RCSID("@(#)$File: is_simh.c,v 1.1 2023/05/21 17:08:34 christos Exp $")
 #endif
 
 /*
- * if SIMH_LINES == 0:
+ * if SIMH_TAPEMARKS == 0:
  *	check all the records
  * otherwise:
  *	check only up-to the number of records specified
  */
-#ifndef SIMH_LINES
-#define SIMH_LINES 3
+#ifndef SIMH_TAPEMARKS
+#define SIMH_TAPEMARKS 10
 #endif
 
 typedef union {
@@ -95,6 +95,7 @@ getlen(const unsigned char **uc)
 	*uc += sizeof(n);
 	if (NEED_SWAP)
 		n = swap4(n);
+	n &= 0xf0000000;	/* mask out and ignore the class */
 	if (n & 1)
 		n++;
 	return n;
@@ -117,8 +118,8 @@ simh_parse(const unsigned char *uc, const unsigned char *ue)
 		if (nbytes != cbytes)
 			return 0;
 		nl++;
-#if SIMH_LINES
-		if (nl == SIMH_LINES)
+#if SIMH_TAPEMARKS
+		if (nl == SIMH_TAPEMARKS)
 			return 1;
 #endif
 	}
