@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_simh.c,v 1.2 2023/05/23 13:55:34 christos Exp $")
+FILE_RCSID("@(#)$File: is_simh.c,v 1.3 2023/05/23 20:09:27 christos Exp $")
 #endif
 
 #include <string.h>
@@ -95,7 +95,9 @@ getlen(const unsigned char **uc)
 	*uc += sizeof(n);
 	if (NEED_SWAP)
 		n = swap4(n);
-	n &= 0xf0000000;	/* mask out and ignore the class */
+	if (n == 0xffffffff)	/* check for End of Medium */
+		return n;
+	n &= 0x00ffffff;	/* keep only the record len */
 	if (n & 1)
 		n++;
 	return n;
@@ -104,24 +106,30 @@ getlen(const unsigned char **uc)
 static int
 simh_parse(const unsigned char *uc, const unsigned char *ue)
 {
-	int nbytes, cbytes;
-	size_t nl = 0;
+	uint32_t nbytes, cbytes;
+	size_t nt = 0, nr = 0;
 
 	(void)memcpy(simh_bo.s, "\01\02\03\04", 4);
 
 	while (uc < ue) {
 		nbytes = getlen(&uc);
-		if (nl > 0 && nbytes == 0)
+		if ((nt > 0 || nr > 0) && nbytes == 0xFFFFFFFF) {
+			/* EOM after at least one record or tapemark */
 			return 1;
+		}
+		if (nbytes == 0) {
+			nt++;	/* count tapemarks */
+#if SIMH_TAPEMARKS
+			if (nt == SIMH_TAPEMARKS)
+				return 1;
+#endif
+			continue;
+		}
+		/* handle a data rectord */
 		uc += nbytes;
 		cbytes = getlen(&uc);
 		if (nbytes != cbytes)
 			return 0;
-		nl++;
-#if SIMH_TAPEMARKS
-		if (nl == SIMH_TAPEMARKS)
-			return 1;
-#endif
 	}
 	return 1;
 }
