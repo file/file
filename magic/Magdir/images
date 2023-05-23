@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.241 2023/05/21 15:51:06 christos Exp $
+# $File: images,v 1.242 2023/05/23 13:37:32 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2562,7 +2562,7 @@
 # URL: http://local.wasp.uwa.edu.au/~pbourke/dataformats/pic/
 # Radiance HDR; usually has .pic or .hdr extension.
 0	string	#?RADIANCE\n	Radiance HDR image data
-!mime	image/vnd.radiance
+!:mime	image/vnd.radiance
 
 # From: Adam Buchbinder <adam.buchbinder@gmail.com>
 # URL: https://www.mpi-inf.mpg.de/resources/pfstools/pfs_format_spec.pdf

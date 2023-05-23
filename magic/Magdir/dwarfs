@@ -1,6 +1,6 @@
-`
+
 #------------------------------------------------------------------------------
-# $File: dwarfs,v 1.1 2023/05/21 17:19:08 christos Exp $
+# $File: dwarfs,v 1.2 2023/05/23 13:37:32 christos Exp $
 # dwarfs: file(1) magic for DwarFS File System Image files
 # URL: https://github.com/mhx/dwarfs for details about DwarFS
 # From: Marcus Holland-Moritz <github@mhxnet.de>
