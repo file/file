@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_simh.c,v 1.5 2023/05/24 16:54:16 christos Exp $")
+FILE_RCSID("@(#)$File: is_simh.c,v 1.6 2023/05/25 00:57:28 christos Exp $")
 #endif
 
 #include <string.h>
@@ -114,12 +114,10 @@ simh_parse(const unsigned char *uc, const unsigned char *ue)
 
 	while (uc < ue) {
 		if (ue - uc < CAST(ptrdiff_t, sizeof(nbytes)))
-			return 0;
+			break;
 		nbytes = getlen(&uc);
-		if ((nt > 0 || nr > 0) && nbytes == 0xFFFFFFFF) {
-			/* EOM after at least one record or tapemark */
-			return 1;
-		}
+		if (nbytes == 0xffffffff)
+			break;
 		if (nbytes == 0) {
 			nt++;	/* count tapemarks */
 #if SIMH_TAPEMARKS
@@ -131,12 +129,13 @@ simh_parse(const unsigned char *uc, const unsigned char *ue)
 		/* handle a data rectord */
 		uc += nbytes;
 		if (ue - uc < CAST(ptrdiff_t, sizeof(nbytes)))
-			return 0;
+			break;
 		cbytes = getlen(&uc);
 		if (nbytes != cbytes)
 			return 0;
+		nr++;
 	}
-	return 1;
+	return nr != 0;
 }
 
 #ifndef TEST
