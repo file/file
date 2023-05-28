@@ -33,15 +33,17 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_simh.c,v 1.6 2023/05/25 00:57:28 christos Exp $")
+FILE_RCSID("@(#)$File: is_simh.c,v 1.7 2023/05/28 13:58:56 christos Exp $")
 #endif
 
 #include <string.h>
 #include <stddef.h>
 #include "magic.h"
 #else
+#include <stdint.h>
 #include <sys/types.h>
 #include <string.h>
+#include <stddef.h>
 #define CAST(a, b) (a)(b)
 #endif
 
@@ -55,9 +57,9 @@ FILE_RCSID("@(#)$File: is_simh.c,v 1.6 2023/05/25 00:57:28 christos Exp $")
 
 /*
  * if SIMH_TAPEMARKS == 0:
- *	check all the records
+ *	check all the records and tapemarks
  * otherwise:
- *	check only up-to the number of records specified
+ *	check only up-to the number of tapemarks specified
  */
 #ifndef SIMH_TAPEMARKS
 #define SIMH_TAPEMARKS 10
@@ -108,25 +110,25 @@ static int
 simh_parse(const unsigned char *uc, const unsigned char *ue)
 {
 	uint32_t nbytes, cbytes;
+	const unsigned char *orig_uc = uc;
 	size_t nt = 0, nr = 0;
 
 	(void)memcpy(simh_bo.s, "\01\02\03\04", 4);
 
-	while (uc < ue) {
-		if (ue - uc < CAST(ptrdiff_t, sizeof(nbytes)))
-			break;
+	while ((uc < ue) || (ue - uc < CAST(ptrdiff_t, sizeof(nbytes)))) {
 		nbytes = getlen(&uc);
-		if (nbytes == 0xffffffff)
+		if ((nt > 0 || nr > 0) && nbytes == 0xFFFFFFFF)
+			/* EOM after at least one record or tapemark */
 			break;
 		if (nbytes == 0) {
 			nt++;	/* count tapemarks */
 #if SIMH_TAPEMARKS
 			if (nt == SIMH_TAPEMARKS)
-				return 1;
+				break;
 #endif
 			continue;
 		}
-		/* handle a data rectord */
+		/* handle a data record */
 		uc += nbytes;
 		if (ue - uc < CAST(ptrdiff_t, sizeof(nbytes)))
 			break;
@@ -135,7 +137,11 @@ simh_parse(const unsigned char *uc, const unsigned char *ue)
 			return 0;
 		nr++;
 	}
-	return nr != 0;
+	if (nt * sizeof(uint32_t) == (size_t)(uc - orig_uc))
+		return 0;	/* All examined data was tapemarks (0) */
+	if (nr == 0 && nt == 0)
+		return 0;	/* No records and no tapemarks */
+	return 1;
 }
 
 #ifndef TEST
