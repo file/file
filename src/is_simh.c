@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_simh.c,v 1.7 2023/05/28 13:58:56 christos Exp $")
+FILE_RCSID("@(#)$File: is_simh.c,v 1.8 2023/05/30 20:15:29 christos Exp $")
 #endif
 
 #include <string.h>
@@ -115,7 +115,7 @@ simh_parse(const unsigned char *uc, const unsigned char *ue)
 
 	(void)memcpy(simh_bo.s, "\01\02\03\04", 4);
 
-	while ((uc < ue) || (ue - uc < CAST(ptrdiff_t, sizeof(nbytes)))) {
+	while (ue - uc < CAST(ptrdiff_t, sizeof(nbytes))) {
 		nbytes = getlen(&uc);
 		if ((nt > 0 || nr > 0) && nbytes == 0xFFFFFFFF)
 			/* EOM after at least one record or tapemark */
@@ -137,7 +137,7 @@ simh_parse(const unsigned char *uc, const unsigned char *ue)
 			return 0;
 		nr++;
 	}
-	if (nt * sizeof(uint32_t) == (size_t)(uc - orig_uc))
+	if (nt * sizeof(uint32_t) == CAST(size_t, uc - orig_uc))
 		return 0;	/* All examined data was tapemarks (0) */
 	if (nr == 0 && nt == 0)
 		return 0;	/* No records and no tapemarks */
