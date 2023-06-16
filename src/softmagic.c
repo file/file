@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.343 2023/05/21 16:09:44 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.344 2023/06/16 19:57:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2379,7 +2379,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 	case 'x':
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "%" INT64_T_FORMAT
-			    "u == *any* = 1\n", CAST(unsigned long long, v));
+			    "u == *any* = 1", CAST(unsigned long long, v));
 		matched = 1;
 		break;
 
@@ -2387,7 +2387,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		matched = v != l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "%" INT64_T_FORMAT "u != %"
-			    INT64_T_FORMAT "u = %d\n",
+			    INT64_T_FORMAT "u = %d",
 			    CAST(unsigned long long, v),
 			    CAST(unsigned long long, l), matched);
 		break;
@@ -2396,7 +2396,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		matched = v == l;
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "%" INT64_T_FORMAT "u == %"
-			    INT64_T_FORMAT "u = %d\n",
+			    INT64_T_FORMAT "u = %d",
 			    CAST(unsigned long long, v),
 			    CAST(unsigned long long, l), matched);
 		break;
@@ -2406,7 +2406,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			matched = v > l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%" INT64_T_FORMAT
-				    "u > %" INT64_T_FORMAT "u = %d\n",
+				    "u > %" INT64_T_FORMAT "u = %d",
 				    CAST(unsigned long long, v),
 				    CAST(unsigned long long, l), matched);
 		}
@@ -2414,7 +2414,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			matched = CAST(int64_t, v) > CAST(int64_t, l);
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%" INT64_T_FORMAT
-				    "d > %" INT64_T_FORMAT "d = %d\n",
+				    "d > %" INT64_T_FORMAT "d = %d",
 				    CAST(long long, v),
 				    CAST(long long, l), matched);
 		}
@@ -2425,7 +2425,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			matched = v < l;
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%" INT64_T_FORMAT
-				    "u < %" INT64_T_FORMAT "u = %d\n",
+				    "u < %" INT64_T_FORMAT "u = %d",
 				    CAST(unsigned long long, v),
 				    CAST(unsigned long long, l), matched);
 		}
@@ -2433,7 +2433,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			matched = CAST(int64_t, v) < CAST(int64_t, l);
 			if ((ms->flags & MAGIC_DEBUG) != 0)
 				(void) fprintf(stderr, "%" INT64_T_FORMAT
-				    "d < %" INT64_T_FORMAT "d = %d\n",
+				    "d < %" INT64_T_FORMAT "d = %d",
 				     CAST(long long, v),
 				     CAST(long long, l), matched);
 		}
@@ -2444,7 +2444,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "((%" INT64_T_FORMAT "x & %"
 			    INT64_T_FORMAT "x) == %" INT64_T_FORMAT
-			    "x) = %d\n", CAST(unsigned long long, v),
+			    "x) = %d", CAST(unsigned long long, v),
 			    CAST(unsigned long long, l),
 			    CAST(unsigned long long, l),
 			    matched);
@@ -2455,7 +2455,7 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			(void) fprintf(stderr, "((%" INT64_T_FORMAT "x & %"
 			    INT64_T_FORMAT "x) != %" INT64_T_FORMAT
-			    "x) = %d\n", CAST(unsigned long long, v),
+			    "x) = %d", CAST(unsigned long long, v),
 			    CAST(unsigned long long, l),
 			    CAST(unsigned long long, l), matched);
 		break;
@@ -2464,6 +2464,10 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		file_magerror(ms, "cannot happen: invalid relation `%c'",
 		    m->reln);
 		return -1;
+	}
+	if ((ms->flags & MAGIC_DEBUG) != 0) {
+		(void) fprintf(stderr, " strength=%zu\n",
+		    file_magic_strength(m, 1));
 	}
 
 	return matched;
