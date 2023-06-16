@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.47 2023/05/21 17:08:34 christos Exp $
+.\" $File: libmagic.man,v 1.48 2023/06/16 19:39:35 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003, 2018, 2022
 .\" All Rights Reserved.
@@ -25,7 +25,7 @@
 .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 .\" SUCH DAMAGE.
 .\"
-.Dd May 21, 2023
+.Dd June 16, 2023
 .Dt LIBMAGIC 3
 .Os
 .Sh NAME
@@ -84,6 +84,8 @@
 .Fn magic_setparam "magic_t cookie" "int param" "const void *value"
 .Ft int
 .Fn magic_version "void"
+.Ft const char *
+.Fn magic_getpath "const char *magicfile" "int action"
 .Sh DESCRIPTION
 These functions
 operate on the magic database file
@@ -347,6 +349,18 @@ from
 .In magic.h .
 This can be used by client programs to verify that the version they compile
 against is the same as the version that they run against.
+.Pp
+The
+.Fn magic_getpath
+command returns the colon separated list of magic database locations. If the
+.Fa filename
+is non-NULL, then it is returned. Otherwise, if the
+.Dv MAGIC
+environment variable is defined, then it is returned.
+Otherwise, if
+.Fa action
+is 0 (meaning "file load"), then any user-specific magic database file is included.
+Otherwise, only the system default magic database path is included.
 .Sh RETURN VALUES
 The function
 .Fn magic_open
