@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.60 2023/06/16 19:31:34 christos Exp $
+# $File: windows,v 1.61 2023/06/16 19:55:54 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1814,4 +1814,3 @@
 0	string	MetaView\x20Service\x20Assurance\x20Export\x20File	MetaView SAS export
 >39     string  Version\x20
 >>47    byte    x                                                       \b, version %c
-```
