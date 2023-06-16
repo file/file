@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: c64,v 1.13 2022/11/21 22:25:37 christos Exp $
+# $File: c64,v 1.14 2023/06/16 19:24:06 christos Exp $
 # c64:  file(1) magic for various commodore 64 related files
 #
 # From: Dirk Jagdmann <doj@cubic.org>
@@ -203,6 +203,8 @@
 # TODO:		unify Commodore BASIC/program sub routines
 # Note:		"PUCrunch archive data" moved from ./archive and merged with c64-exe
 0	leshort		0x0801
+# display Commodore C64 BASIC program (strength=50) after "Lynx archive" (strength=330) handled by ./archive
+#!:strength +0
 # if first token is not SYS this implies BASIC program in most cases
 >6		ubyte		!0x9e
 # but sELF-ExTRACTING-zIP executable unzp6420.prg contains SYS token at end of second BASIC line (at 0x35)
@@ -499,33 +501,49 @@
 # pointer to memory address of beginning of "next" BASIC line
 # greater then previous offset but maximal 100h difference
 >0		uleshort	x	\b, offset %#4.4x
+# offset 0x0000 indicates the end of BASIC program; so bytes afterwards may be some other data
+>0		uleshort	0
+# not line number but first 2 data bytes 
+>>2		ubeshort	x	\b, data %#4.4x
+# not token but next 2 data bytes 
+>>4		ubeshort	x	\b%4.4x
+# not token arguments but next data bytes 
+>>6		ubequad		x 	\b%16.16llx
+>>14		ubequad		x 	\b%16.16llx...
+# like 0x0d20352020204c594e5820495820204259205749 "\r 5   LYNX IX  BY WILL CORLEY" for LyNX archive Darkon.lnx handled by ./archive
+#>>3		string		x 	"%-0.30s"
+>0		uleshort	>0
 # BASIC line number with range from 0 to 65520; practice to increment numbers by some value (5, 10 or 100)
->2		uleshort	x	\b, line %u
+>>2		uleshort	x	\b, line %u
 # https://www.c64-wiki.com/wiki/BASIC_token
 # The "high-bit" bytes from #128-#254 stood for the various BASIC commands and mathematical operators
->4		ubyte		x	\b, token (%#x)
+>>4		ubyte		x	\b, token (%#x)
 # https://www.c64-wiki.com/wiki/REM
->4		string		\x8f	REM
+>>4		string		\x8f	REM
 # remark string like: ** SYNTHESIZER BY RICOCHET **
->>5		string		>\0	%s
-#>>>&1		uleshort	x	\b, NEXT OFFSET %#4.4x
+>>>5		string		>\0	%s
+#>>>>&1		uleshort	x	\b, NEXT OFFSET %#4.4x
 # https://www.c64-wiki.com/wiki/PRINT
->4		string		\x99	PRINT
+>>4		string		\x99	PRINT
 # string like: "Hello world" "\021 \323ELF-E\330TRACTING-\332IP (64 ONLY)\016\231":\2362141
->>5		string		x	%s
-#>>>&0		ubequad		x	AFTER_PRINT=%#16.16llx
+>>>5		string		x	%s
+#>>>>&0		ubequad		x	AFTER_PRINT=%#16.16llx
 # https://www.c64-wiki.com/wiki/POKE
->4		string		\x97	POKE
+>>4		string		\x97	POKE
 # <Memory address>,<number>
->>5		regex		\^[0-9,\040]+	%s
+>>>5		regex		\^[0-9,\040]+	%s
+# BASIC command delimiter colon (:=3Ah)
+>>>>&-2		ubyte		=0x3A
+# after BASIC command delimiter colon remaining (<255) other tokenized BASIC commands
+>>>>>&0		string		x		"%s"
 # https://www.c64-wiki.com/wiki/SYS	0x9e=\236
->4		string		\x9e	SYS
+>>4		string		\x9e	SYS
 # SYS <Address> parameter is a 16-bit unsigned integer; in the range 0 - 65535
->>5		regex		\^[0-9]{1,5}	%s
+>>>5		regex		\^[0-9]{1,5}	%s
 # maybe followed by spaces, "control-characters" or colon (:) followed by next commnds or in victracker.prg
 # (\302(43)\252256\254\302(44)\25236) /T.L.R/
-#>>5		string		x	SYS_STRING="%s"
+#>>>5		string		x	SYS_STRING="%s"
 # https://www.c64-wiki.com/wiki/GOSUB
->4		string		\x8d	GOSUB
+>>4		string		\x8d	GOSUB
 # <line>
->>5		string		>\0	%s
+>>>5		string		>\0	%s

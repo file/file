@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.191 2023/05/08 01:31:46 christos Exp $
+# $File: archive,v 1.192 2023/06/16 19:24:06 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2438,7 +2438,28 @@
 >3	byte	x	version %d
 
 # LyNX archive
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Lynx_archive
+# Reference:	http://ist.uwaterloo.ca/~schepers/formats/LNX.TXT
+#		http://mark0.net/download/triddefs_xml.7z/defs/a/ark-lnx.trid.xml
+# Note:		called "Lynx archive" by TrID and "Commodore C64 BASIC program" with "POKE 53280" by ./c64
+# TODO:		merge and unify with Commodore C64 BASIC program
 56	string	USE\040LYNX\040TO\040DISSOLVE\040THIS\040FILE	 LyNX archive
+# display "Lynx archive" (strength=330) before Commodore C64 BASIC program (strength=50) handled by ./c64
+#!:strength +0
+#!:mime	application/octet-stream
+!:mime	application/x-commodore-lnx
+!:ext	lnx
+# afterwards look for BASIC tokenized GOTO (89h) 10, line terminator \0, end of programm tag \0\0 and CarriageReturn
+>86		search/10	\x8910\0\0\0\r	\b,
+# for DEBUGGING
+#>>&0		string		x	STRING="%s"
+# number in ASCII of directory blocks with spaces on both sides like: 1 2 3 5
+>>&0		regex		[0-9]{1,5}	%s directory blocks
+# signature like: "*LYNX XII BY WILL CORLEY" " LYNX IX  BY WILL CORLEY" "*LYNX BY CBMCONVERT 2.0*"
+>>>&2		regex		[^\r]{1,24}	\b, signature "%s"
+# number of files in ASCII surrounded by spaces and delimited by CR like: 2 3 6 13 69 144 (maximum?)
+>>>>&1		regex		[0-9]{1,3}	\b, %s files
 
 # From: Joerg Jenderek
 # URL: https://www.acronis.com/
