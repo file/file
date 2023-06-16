@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: printer,v 1.33 2023/01/22 15:03:03 christos Exp $
+# $File: printer,v 1.34 2023/06/16 19:27:12 christos Exp $
 # printer:  file(1) magic for printer-formatted files
 #
 
@@ -207,9 +207,13 @@
 0	string	DF;
 >0		use		hpgl
 # http://ftp.funet.fi/index/graphics/packages/hpgl2ps/hpgl2ps.tar.Z/hpgl2ps/test3.hpgl 
-# Select Pen n
+# Select Pen n; If no pen number or 0, the controller performs an end of file command; n in range between -32767 and 32768 like: 6
 0	string	SP
->0		use		hpgl
+# skip text Linux-syscall-note inside qemu sources starting with SPDX-Exception-Identifier: Linux-syscall-note
+# by checking for valid Pen number
+>2	regex	\^([0-9]{1,5})
+#>2	regex	\^([0-9]{1,5})	PEN_NUMBER=%s
+>>0		use		hpgl
 # charsize.hp pages.hp	set the scaling points (P1 and P2) to their default positions
 0	string	IP0
 >0		use		hpgl
@@ -229,8 +233,13 @@
 0	string	BP
 >0		use		hpgl
 # miter.hp
+# Plot Absolute x,y{,x,y{...}}; x and y in range between -32767 and 32768 like: PA4000,3000;
 0	string	PA
->0		use		hpgl
+# skip shell scripts test_msa_run_32r5eb.sh test_msa_run_32r5eb.sh with variable PATH_TO_QEMU
+# by checking for valid x coordinate
+>2	regex	\^([-]{0,1}[0-9]{1,5})
+#>2	regex	\^([-]{0,1}[0-9]{1,5})	COORDINATE=%s
+>>0		use		hpgl
 # pw.hpg	number of pens x
 0	string	NP
 >0		use		hpgl
