@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.90 2023/04/24 17:26:56 christos Exp $
+# $File: compress,v 1.91 2023/06/16 19:37:47 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -288,10 +288,10 @@
 
 # https://github.com/ckolivas/lrzip/blob/master/doc/magic.header.txt
 0	string		LRZI			LRZIP compressed data
+!:mime  application/x-lrzip
 >4	byte		x			- version %d
 >5	byte		x			\b.%d
 >22	byte		1			\b, encrypted
-!:mime	application/x-lrzip
 
 # https://fastcompression.blogspot.fi/2013/04/lz4-streaming-format-final.html
 0	lelong		0x184d2204	LZ4 compressed data (v1.4+)
