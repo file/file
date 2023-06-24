@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.61 2023/06/16 19:55:54 christos Exp $
+# $File: windows,v 1.62 2023/06/24 16:23:59 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1814,3 +1814,9 @@
 0	string	MetaView\x20Service\x20Assurance\x20Export\x20File	MetaView SAS export
 >39     string  Version\x20
 >>47    byte    x                                                       \b, version %c
+
+# Active Directory Group Policy Registry Policy File Format
+# From: Yuuta Liang <yuuta@yuuta.moe>
+# URL: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/registry-policy-file-format
+0	string	PReg
+>4	lelong	x	Group Policy Registry Policy, Version=%d

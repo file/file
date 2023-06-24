@@ -109,6 +109,8 @@ pnm3.testfile \
 regex-eol.magic \
 regex-eol.result \
 regex-eol.testfile \
+registry-pol.result \
+registry-pol.testfile \
 uf2.result \
 uf2.testfile \
 xclbin.result \
