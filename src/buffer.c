@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: buffer.c,v 1.12 2023/04/02 16:33:37 christos Exp $")
+FILE_RCSID("@(#)$File: buffer.c,v 1.13 2023/07/02 12:48:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -56,6 +56,8 @@ void
 buffer_fini(struct buffer *b)
 {
 	free(b->ebuf);
+	b->ebuf = NULL;
+	b->elen = 0;
 }
 
 int

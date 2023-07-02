@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.344 2023/06/16 19:57:47 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.345 2023/07/02 12:48:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1888,6 +1888,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		bb = *b;
 		bb.fbuf = s + offset;
 		bb.flen = nbytes - offset;
+		bb.ebuf = NULL;
+		bb.elen = 0;
 		rv = -1;
 		for (mlp = ms->mlist[0]->next; mlp != ms->mlist[0];
 		    mlp = mlp->next)
@@ -1898,6 +1900,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			    firstline, NULL, NULL)) != 0)
 				break;
 		}
+		buffer_fini(&bb);
 
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			fprintf(stderr, "indirect @offs=%u[%d]\n", offset, rv);
