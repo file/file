@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_csv.c,v 1.11 2023/02/20 17:09:30 christos Exp $")
+FILE_RCSID("@(#)$File: is_csv.c,v 1.12 2023/07/17 16:05:58 christos Exp $")
 #endif
 
 #include <string.h>
@@ -125,7 +125,7 @@ csv_parse(const unsigned char *uc, const unsigned char *ue)
 			break;
 		}
 	}
-	return tf && nl > 2;
+	return tf && nl >= 2;
 }
 
 #ifndef TEST
