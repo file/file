@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.62 2023/06/24 16:23:59 christos Exp $
+# $File: windows,v 1.63 2023/07/17 16:56:13 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1194,7 +1194,7 @@
 # samples with only 1 and unknown section name
 # XXX: matches a file containing '[1] 2'
 #>>>&0	default				x				Generic INItialization configuration
->>>>0	string				x				\b, 1st line "%s"
+#>>>>0	string				x				\b, 1st line "%s"
 # UTF-16 BOM
 0	ubeshort		=0xFFFE
 # look for phrase of Windows policy ADMinistrative template (UTF-16 by adm-uni.trid.xml)
