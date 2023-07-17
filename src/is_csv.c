@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_csv.c,v 1.12 2023/07/17 16:05:58 christos Exp $")
+FILE_RCSID("@(#)$File: is_csv.c,v 1.13 2023/07/17 16:08:17 christos Exp $")
 #endif
 
 #include <string.h>
@@ -155,7 +155,8 @@ file_is_csv(struct magic_set *ms, const struct buffer *b, int looks_text,
 		return 1;
 	}
 
-	if (file_printf(ms, "CSV %s", code ? code : "text") == -1)
+	if (file_printf(ms, "CSV %s%stext", code ? code : "",
+	    code ? " " : "") == -1)
 		return -1;
 
 	return 1;
