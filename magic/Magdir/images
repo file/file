@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.242 2023/05/23 13:37:32 christos Exp $
+# $File: images,v 1.243 2023/07/17 16:49:09 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4208,3 +4208,12 @@
 >4	use		rix-header
 
 0	string	RIX7	ColoRIX Slideshow
+
+# http://fileformats.archiveteam.org/wiki/PaperPort_(MAX)
+0	string 	ViG	Visioneer PaperPort
+>3	string	Ae	2
+>3	string	Be	2
+>3	string	Cj	3-4
+>3	string	Em	5-7
+>3	string	Fk	8-12
+>3	default	x	MAX
