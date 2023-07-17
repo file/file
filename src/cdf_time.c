@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf_time.c,v 1.23 2022/09/24 20:30:13 christos Exp $")
+FILE_RCSID("@(#)$File: cdf_time.c,v 1.24 2023/07/17 15:54:44 christos Exp $")
 #endif
 
 #include <time.h>
@@ -168,7 +168,7 @@ cdf_timespec_to_timestamp(cdf_timestamp_t *t, const struct timespec *ts)
 char *
 cdf_ctime(const time_t *sec, char *buf)
 {
-	char *ptr = ctime_r(sec, buf);
+	char *ptr = *sec > MAX_CTIME ? NULL : ctime_r(sec, buf);
 	if (ptr != NULL)
 		return buf;
 #ifdef WIN32

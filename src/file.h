@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.245 2023/06/16 19:57:47 christos Exp $
+ * @(#)$File: file.h,v 1.246 2023/07/17 15:54:44 christos Exp $
  */
 
 #ifndef __file_h__
@@ -154,6 +154,14 @@
 #ifndef FD_CLOEXEC
 # define FD_CLOEXEC 1
 #endif
+
+
+/*
+ * Dec 31, 23:59:59 9999
+ * we need to make sure that we don't exceed 9999 because some libc
+ * implementations like muslc crash otherwise
+ */
+#define	MAX_CTIME	CAST(time_t, 0x3afff487cfULL)
 
 #define FILE_BADSIZE CAST(size_t, ~0ul)
 #define MAXDESC	64		/* max len of text description/MIME type */
