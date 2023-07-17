@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: crypto,v 1.3 2022/12/26 19:20:56 christos Exp $
+# $File: crypto,v 1.4 2023/07/17 16:41:48 christos Exp $
 # crypto:  file(1) magic for crypto formats
 #
 # Bitcoin block files
@@ -29,3 +29,21 @@
 
 # LevelDB
 -8		lequad		0xdb4775248b80fb57	LevelDB table data
+
+# http://www.tarsnap.com/scrypt.html
+# see scryptenc_setup() in lib/scryptenc/scryptenc.c
+0	string		scrypt\0	scrypt encrypted file
+>7	byte		x		\b, N=2**%d
+>8	belong		x		\b, r=%d
+>12	belong		x		\b, p=%d
+
+# https://age-encryption.org/
+# Only the first recipient is printed in detail to prevent repetitive output
+# in extreme cases ("ssh-rsa, ssh-rsa, ssh-rsa, ...").
+0	string		age-encryption.org/v1\n age encrypted file
+>25	regex/128	\^[^\040]+	\b, %s recipient
+>>25	string		scrypt
+>>>&0 regex/64		[0-9]+\$	(N=2**%s)
+>>&0	search/256	\n->\040 	\b, among others
+
+0	string		-----BEGIN\040AGE\040ENCRYPTED\040FILE-----	age encrypted file, ASCII armored
