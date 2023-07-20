@@ -1,4 +1,4 @@
-.\" $File: libmagic.man,v 1.48 2023/06/16 19:39:35 christos Exp $
+.\" $File: libmagic.man,v 1.49 2023/07/20 14:32:07 christos Exp $
 .\"
 .\" Copyright (c) Christos Zoulas 2003, 2018, 2022
 .\" All Rights Reserved.
@@ -352,9 +352,11 @@ against is the same as the version that they run against.
 .Pp
 The
 .Fn magic_getpath
-command returns the colon separated list of magic database locations. If the
+command returns the colon separated list of magic database locations.
+If the
 .Fa filename
-is non-NULL, then it is returned. Otherwise, if the
+is non-NULL, then it is returned.
+Otherwise, if the
 .Dv MAGIC
 environment variable is defined, then it is returned.
 Otherwise, if
