@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.192 2023/06/16 19:24:06 christos Exp $
+# $File: archive,v 1.193 2023/07/27 17:55:58 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1874,7 +1874,7 @@
 #      https://standard.go.kr/KSCI/standardIntro/getStandardSearchView.do?menuId=503&topMenuId=502&ksNo=KSX6101
 #      https://e-ks.kr/streamdocs/view/sd;streamdocsId=72059197557727331
 >>50	string	hwp+zip     Hancom HWP (Hangul Word Processor) file, HWPX
-!:mime application/hwp+zip
+!:mime application/x-hwp+zip
 !:ext	hwpx
 
 # From:	Joerg Jenderek
