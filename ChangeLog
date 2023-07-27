@@ -1,3 +1,7 @@
+2023-07-27  15:45  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.45
+
 2023-07-17  11:53  Christos Zoulas <christos@zoulas.com>
 
 	* PR/465: psrok1: Avoid muslc asctime_r crash
