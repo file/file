@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.189 2023/05/18 13:28:16 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.190 2023/07/27 19:39:06 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1665,9 +1665,6 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	ssize_t bufsize;
 	size_t offset, align, need = 0;
 	int pie = 0, dynamic = 0;
-
-	if (ms->flags & MAGIC_MIME)
-		return 0;
 
 	if (num == 0) {
 		if (file_printf(ms, ", no program header") == -1)
