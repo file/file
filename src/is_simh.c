@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: is_simh.c,v 1.9 2023/05/31 15:12:15 christos Exp $")
+FILE_RCSID("@(#)$File: is_simh.c,v 1.10 2023/07/27 19:39:55 christos Exp $")
 #endif
 
 #include <string.h>
@@ -139,8 +139,8 @@ simh_parse(const unsigned char *uc, const unsigned char *ue)
 	}
 	if (nt * sizeof(uint32_t) == CAST(size_t, uc - orig_uc))
 		return 0;	/* All examined data was tapemarks (0) */
-	if (nr == 0 && nt == 0)
-		return 0;	/* No records and no tapemarks */
+	if (nr == 0)		/* No records */
+		return 0;
 	return 1;
 }
 
