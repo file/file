@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.141 2023/07/29 16:55:09 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.142 2023/07/30 14:41:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -690,12 +690,12 @@ check_regex(struct magic_set *ms, const char *pat)
 			char *ep, *eep;
 			errno = 0;
 			l = strtoul(p + 1, &ep, 10);
-			if (ep != p + 1 && l > 100)
+			if (ep != p + 1 && l > 1000)
 				goto bounds;
 
 			if (*ep == ',') {
 				l = strtoul(ep + 1, &eep, 10);
-				if (eep != ep + 1 && l > 100)
+				if (eep != ep + 1 && l > 1000)
 					goto bounds;
 			}
 		}
