@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.243 2023/07/17 16:49:09 christos Exp $
+# $File: images,v 1.244 2023/08/05 14:46:31 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4217,3 +4217,19 @@
 >3	string	Em	5-7
 >3	string	Fk	8-12
 >3	default	x	MAX
+
+
+# https://teem.sourceforge.net/nrrd/index.html
+# From: Quasar Jarosz <quasar@uams.edu>, 2023
+0	string	NRRD000				NRRD imaging data
+!:mime  image/x.nrrd
+!:ext   nrrd
+>7	string	x				\b, version %s
+>0	search	type: 
+>>&1	string	x				\b, type: %s
+>0	search	dimension: 
+>>&1	string	x				\b, dimensions: %s
+>0	search	sizes: 
+>>&1	string	x				\b, sizes: %s
+>0	search	encoding: 
+>>&1	string	x				\b, encoding: %s
