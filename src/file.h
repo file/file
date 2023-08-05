@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.248 2023/07/28 14:38:25 christos Exp $
+ * @(#)$File: file.h,v 1.249 2023/08/05 14:40:10 christos Exp $
  */
 
 #ifndef __file_h__
@@ -107,16 +107,23 @@
 
 #define file_private static
 
-#if HAVE_VISIBILITY && !defined(WIN32)
-#define file_public  __attribute__ ((__visibility__("default")))
-#ifndef file_protected
-#define file_protected __attribute__ ((__visibility__("hidden")))
-#endif
+#if HAVE_VISIBILITY
+# if defined(WIN32)
+#  define file_public  __declspec(dllexport)
+#  ifndef file_protected
+#   define file_protected
+#  endif
+# else
+#  define file_public  __attribute__((__visibility__("default")))
+#  ifndef file_protected
+#   define file_protected __attribute__((__visibility__("hidden")))
+#  endif
+# endif
 #else
-#define file_public
-#ifndef file_protected
-#define file_protected
-#endif
+# define file_public
+# ifndef file_protected
+#  define file_protected
+# endif
 #endif
 
 #ifndef __arraycount
