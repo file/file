@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.158 2023/05/21 17:19:08 christos Exp $
+# $File: filesystems,v 1.159 2023/08/05 13:48:12 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1957,7 +1957,14 @@
 >34816	string    \000CD001\001EL\ TORITO\ SPECIFICATION    (bootable)
 37633	string    CD001     ISO 9660 CD-ROM filesystem data (raw 2352 byte sectors)
 !:mime	application/x-iso9660-image
+# URL:		http://fileformats.archiveteam.org/wiki/High_Sierra
+# Update:	Joerg Jenderek
 32777	string    CDROM     High Sierra CD-ROM filesystem data
+# https://www.unix.com/man-page/OpenSolaris/7fs/hsfs/
+#!:mime	application/octet-stream
+#!:mime	application/x-hsfs-image
+# BOOKSHELF.ISO "Shareware Grab Bag.iso"
+!:ext	iso
 # "application id" which appears to be used as a volume label
 >32816	string/T  >\0       '%.32s'
 
@@ -1972,6 +1979,26 @@
 # to display CD-ROM (114=81+33) before MBR (113=40+72+1), partition-table (71=50+21) and Apple Driver Map (51)
 !:strength +35
 >0	use	cdrom
+
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Universal_Disk_Format
+#		https://en.wikipedia.org/wiki/Universal_Disk_Format
+# Reference:	https://wiki.osdev.org/UDF
+# Note:		called "UDF Disc Image" by DROID via PUID fmt/1738
+#		verified by udftools `udfinfo nero-UDFv26.iso` and 7-Zip `7z l -tUdf nero-UDF1.iso`
+# 		there seems to exist variants which are not recognized by current test lines
+#		
+# look for type descriptor at relative offset 1 of block 16 with size 2048
+# it is an extended descriptor section
+32769	string    	BEA01
+# look for type descriptor at relative offset 1 of block 17 with size 2048
+>34817	string    	NSR0	UDF filesystem data
+#!:mime	application/octet-stream
+!:mime	application/x-udf-image
+!:ext	iso/udf
+# reported as udfrev and udfwriterev by udfinfo
+>>34821	ubyte    	0x32	(version 1.x)
+>>34821	ubyte    	0x33	(version 2.x)
 
 # URL: https://en.wikipedia.org/wiki/NRG_(file_format)
 # Reference: https://dl.opendesktop.org/api/files/download/id/1460731811/
