@@ -113,6 +113,8 @@ registry-pol.result \
 registry-pol.testfile \
 uf2.result \
 uf2.testfile \
+utf16xmlsvg.textfile \
+utf16xmlsvg.result \
 xclbin.result \
 xclbin.testfile \
 zstd-3-skippable-frames.result \
