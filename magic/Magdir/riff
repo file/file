@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.46 2023/08/05 13:52:15 christos Exp $
+# $File: riff,v 1.47 2023/08/06 20:48:29 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -354,6 +354,17 @@
 >>0x31	search/256	inst		by
 # probably manufacture name like: "Unspecified Company" "NVidia Corporation"
 >>>&0x24	string	x		"%s"
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Microsoft_Flight_Simulator
+# Reference:	https://www.fsdeveloper.com/wiki/index.php?title=MDL_file_format_(FSX)
+#		http://mark0.net/download/triddefs_xml.7z/defs/m/mdl-fs-gen.trid.xml
+# Note:		called "Microsoft Flight Simulator 3D model (generic)" by TrID
+>8	string		MDL
+>>12	string		MDLH		\b, Microsoft Flight Simulator 3D model
+#!:mime	application/x-riff
+!:mime	application/x-ms-mdl
+!:ext	mdl
+#>>>8	string		MDL8		\b, version 8?
 # AVI == Audio Video Interleave
 # Reference:	http://fileformats.archiveteam.org/wiki/AVI
 >8	string		AVI\040		\b, AVI
