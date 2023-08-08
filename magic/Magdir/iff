@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: iff,v 1.18 2022/03/21 19:57:18 christos Exp $
+# $File: iff,v 1.19 2023/08/08 19:38:29 christos Exp $
 # iff:	file(1) magic for Interchange File Format (see also "audio" & "images")
 #
 # Daniel Quinlan (quinlan@yggdrasil.com) -- IFF was designed by Electronic
@@ -10,11 +10,21 @@
 # IFF files begin with an 8 byte FORM header, followed by a 4 character
 # FORM type, which is followed by the first chunk in the FORM.
 
+# URL:		http://fileformats.archiveteam.org/wiki/IFF
 0	string		FORM		IFF data
 #>4	belong		x		\b, FORM is %d bytes long
 # audio formats
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/AIFF
+#		https://en.wikipedia.org/wiki/Audio_Interchange_File_Format
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/a/audio-aiff.trid.xml
+# Note:		called "AIFF Audio Interchange File Format" by TrID and
+#		"Audio Interchange File Format" by DROID via PUID fmt/414
 >8	string		AIFF		\b, AIFF audio
 !:mime	audio/x-aiff
+# not officially registered
+#!:mime	audio/aiff
+!:ext	aiff/aif/aff
 >8	string		AIFC		\b, AIFF-C compressed audio
 !:mime	audio/x-aiff
 >8	string		8SVX		\b, 8SVX 8-bit sampled sound voice
