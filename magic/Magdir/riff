@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.47 2023/08/06 20:48:29 christos Exp $
+# $File: riff,v 1.48 2023/08/08 19:37:04 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -332,6 +332,35 @@
 # MORE TESTS NEEDED HERE!
 #>>>0	use		corel-des
 #>>>0	use		corel-draw
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/SHW_(Corel)
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/s/shw-corel.trid.xml
+# Note:		called "CorelSHOW presentation (v4)" by TrID
+#		and "Corel Presentation" by DROID via PUID fmt/877
+>8	string		shw4		\b, CorelSHOW presentation, version 4
+#!:mime	application/octet-stream
+!:mime	application/x-corel-shw
+!:ext	shw
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/s/shw-corel-5.trid.xml
+# Note:		called "CorelSHOW presentation (v5)" by TrID
+>8	string		shw5		\b, CorelSHOW presentation, version 5
+#!:mime	application/octet-stream
+!:mime	application/x-corel-shw
+!:ext	shw
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/s/shb-corel.trid.xml
+# Note:		called "CorelSHOW Background (v5)" by TrID
+>8	string		shl5		\b, CorelSHOW Background, version 5
+#!:mime	application/octet-stream
+!:mime	application/x-corel-shb
+# GRR: no example
+!:ext	shb
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/s/shr-corel.trid.xml
+# Note:		called "CorelSHOW player data (v5)" by TrID
+>8	string		shr5		\b, CorelSHOW player data, version 5
+#!:mime	application/octet-stream
+!:mime	application/x-corel-shr
+# GRR: no example
+!:ext	shr
 >8	string		NUNDROOT	\b, Steinberg CuBase
 # From:		Joerg Jenderek
 # URL:		http://fileformats.archiveteam.org/wiki/MIDI_Instrument_Definition_File
