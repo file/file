@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.249 2023/08/05 14:40:10 christos Exp $
+ * @(#)$File: file.h,v 1.250 2023/08/19 15:30:39 christos Exp $
  */
 
 #ifndef __file_h__
@@ -175,11 +175,12 @@
 #define FILE_BADSIZE CAST(size_t, ~0ul)
 #define MAXDESC	64		/* max len of text description/MIME type */
 #define MAXMIME	80		/* max len of text MIME type */
+#define MAXEXT	120		/* max len of text extensions */
 #define MAXstring 128		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	18
-#define FILE_MAGICSIZE	376
+#define VERSIONNO	19
+#define FILE_MAGICSIZE	432
 
 #define FILE_GUID_SIZE	sizeof("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
 
@@ -381,7 +382,7 @@ struct magic {
 	/* Words 61-62 */
 	char apple[8];		/* APPLE CREATOR/TYPE */
 	/* Words 63-78 */
-	char ext[64];		/* Popular extensions */
+	char ext[MAXEXT];	/* Popular extensions from old 64 raised by 56 for sqlite/sqlite3/... */
 };
 
 #define BIT(A)   (1 << (A))
