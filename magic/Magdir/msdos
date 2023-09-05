@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.170 2023/08/21 21:09:36 christos Exp $
+# $File: msdos,v 1.171 2023/09/05 14:59:00 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -117,7 +117,7 @@
 >>>(0x3c.l+0x36)	byte		2	for MS Windows
 >>>>(0x3c.l+0x3E)	ushort		!0
 >>>>>(0x3c.l+0x3F)	ubyte		x	%u
->>>>>(0x3c.l+0x3E)	ubyte		x	\b.%u
+>>>>>(0x3c.l+0x3E)	ubyte		x	\b.%02u
 >>>(0x3c.l+0x02)	ubyte		x	(Icon Library, Icon Manager by Impact Software)
 !:ext		icl
 # handle LX executable with low e_lfarlc like: PCISCAN.EXE
@@ -356,7 +356,7 @@
 !:mime	application/x-ms-ne-executable
 >>>(0x3c.l+0x02)	ubyte		x	\b version %u
 >>>(0x3c.l+0x02)	ubyte		>5
->>>>(0x3c.l+0x03)	ubyte		x	\b.%u
+>>>>(0x3c.l+0x03)	ubyte		x	\b.%02u
 # FOR DEBUGGING!
 # Reference:	https://wiki.osdev.org/NE
 # Create time for NE version <5 in FAT12 format (this timestamp format is not supported by magic yet)
@@ -438,21 +438,24 @@
 # if windows version is specified then it is windows binary
 >>>>>(0x3c.l+0x3E)	ushort		!0 for MS Windows
 >>>>>>(0x3c.l+0x3F)	ubyte		x	%u
->>>>>>(0x3c.l+0x3E)	ubyte		x	\b.%u
+>>>>>>(0x3c.l+0x3E)	ubyte		x	\b.%02u
 >>>>>>(0x3c.l+0x3F)	ubyte		<3
 >>>>>>>(0x3c.l+0x37)	byte&0x04	0	(real mode only)
 >>>>>>>(0x3c.l+0x37)	byte&0x04	!0	(real+protected mode)
 >>>>>(0x3c.l+0x3E)	ushort		0
 >>>>>>(0x3c.l+0x2a)	leshort		!0
->>>>>>>&(&-2.s-0x2a)	string/512/C	DOSCALLS for OS/2 1.x
+>>>>>>>&(&-2.s-0x2a)	search/512/C	DOSCALLS for OS/2 1.x
 >>>>>>>&(&-2.s-0x2a)	default		x for MS Windows 1.x/2.x
+>>>>>>>>(0x3c.l+0x37)	byte&0x04	0	(real mode only)
+>>>>>>>>(0x3c.l+0x37)	byte&0x04	!0	(real+protected mode)
 >>>>(0x3c.l+0x36)	byte		1 for OS/2 1.x
 >>>>(0x3c.l+0x36)	byte		2 for MS Windows
 # expctwinver; expected Windows version (minor first) like:
 # 0.0~DTM.DLL 203.4~Windows 1.03 GDI.EXE 2.1~TTY.DRV 3.0~dos737.fon FMFONT.FOT THREED.VBX 3.10~GDI.EXE 4.0~(ME) VGAFULL.3GR
 >>>>>(0x3c.l+0x3E)	ushort		!0
 >>>>>>(0x3c.l+0x3F)	ubyte		x	%u
->>>>>>(0x3c.l+0x3E)	ubyte		x	\b.%u
+>>>>>>(0x3c.l+0x3E)	ubyte		x	\b.%02u
+# Empty version is is treated by Windows 3.x OS as Windows 2.01 version and by Windows 2.x OS as Windows 1.01 version
 >>>>>(0x3c.l+0x3E)	ushort		0	1.x/2.x
 >>>>>(0x3c.l+0x3F)	ubyte		<3
 >>>>>>(0x3c.l+0x37)	byte&0x04	0	(real mode only)
@@ -461,11 +464,11 @@
 #>>>>(0x3c.l+0x36)	byte		3 for Multitasking MS-DOS
 # OS 4 was reserved for Windows/386 device drivers but Windows/386 2.x never used NE format (Xenix x.out format was used instead)
 #>>>>(0x3c.l+0x36)	byte		4 for Windows/386 device drivers
->>>>(0x3c.l+0x36)	byte		5 for Borland Operating System Services
+>>>>(0x3c.l+0x36)	byte		5 for MS-DOS, Borland Operating System Services extender
 # http://downloads.sourceforge.net/dfendreloaded/D-Fend-Reloaded-1.4.4.zip
 # D-Fend Reloaded/VirtualHD/FREEDOS/DPMILD32.EXE
 # https://www.japheth.de/HX/DPMILD32.TXT
->>>>(0x3c.l+0x36)	byte		6 for HX DOS extender (32-bit)
+>>>>(0x3c.l+0x36)	byte		6 for MS-DOS, HX DOS extender (32-bit)
 # https://en.wikipedia.org/wiki/Phar_Lap_(company)
 >>>>(0x3c.l+0x36)	byte		0x81 for MS-DOS, Phar Lap DOS extender, OS/2
 # like: CVP7.EXE
@@ -489,21 +492,22 @@
 # Multitasking MS-DOS binaries imports DOSCALLS library, so use it for distinguishing
 >>>(0x3c.l+0x02)	ubyte		<5
 >>>>(0x3c.l+0x2a)	leshort		x
->>>>>&(&-2.s-0x2a)	string/512/C	DOSCALLS for Multitasking MS-DOS
->>>>>&(&-2.s-0x2a)	default		x
+>>>>>&(&-2.s-0x2a)	search/512/C	DOSCALLS for Multitasking MS-DOS
+>>>>>&(&-2.s-0x2a)	default		x for MS Windows 1.x/2.x
 # Special case, Windows 3.x OS parse from NE version 4 binaries also following NE version 5 fields:
 # - os type if is 0 or 2
 # - bits proportional fonts and protected mode
-# Such NE version 4 binary is treated as Windows 2.x binary.
+# Such NE version 4 binary is treated by Windows 3.x OS as Windows 2.01
+# compatible binary and by Windows 2.x OS as Windows 1.01 compatible binary.
 # So if os type is correct (0 or 2; matched mask 0xfd) and at least one
 # of those bits is set and others are cleared (matched mask 0xf9) then
-# detect this as Win2.x binary. Otherwise fallback to unversioned Windows.
+# detect if binary has NE version 5 protected mode bit set.
 >>>>>>(0x3c.l+0x36)	leshort&0xf9fd	0
->>>>>>>(0x3c.l+0x37)	byte&0x06	!0	for MS Windows 1.x/2.x
+>>>>>>>(0x3c.l+0x37)	byte&0x06	!0
 >>>>>>>>(0x3c.l+0x37)	byte&0x04	0	(real mode only)
 >>>>>>>>(0x3c.l+0x37)	byte&0x04	!0	(real+protected mode)
->>>>>>>(0x3c.l+0x37)	default		x	for MS Windows 1.x/2.x (real mode only)
->>>>>>(0x3c.l+0x36)	default		x	for MS Windows 1.x/2.x (real mode only)
+>>>>>>>(0x3c.l+0x37)	default		x	(real mode only)
+>>>>>>(0x3c.l+0x36)	default		x	(real mode only)
 # DRV: Driver
 # 3GR: Grabber device driver
 # CPL: Control Panel Item
