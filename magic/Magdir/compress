@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.91 2023/06/16 19:37:47 christos Exp $
+# $File: compress,v 1.92 2023/09/14 13:23:00 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -459,3 +459,7 @@
 >-125	u8	x	NB reads: %llu,
 >-109	u8	x	NB bases: %llu.
 >-219	u4&0x02	2	File contains interleaved paired reads
+
+# https://github.com/xamarin/xamarin-android/pull/4686
+0	string	XALZ	Xamarin LZ4-compressed assembly
+>8	ulelong	x	\b, uncompressed size %u
