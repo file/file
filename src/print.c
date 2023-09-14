@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.99 2023/07/17 16:40:57 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.100 2023/09/14 13:20:19 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -289,6 +289,7 @@ file_fmtdatetime(char *buf, size_t bsize, uint64_t v, int flags)
 		goto out;
 
 	if (flags & FILE_T_LOCAL) {
+		tzset();
 		tm = localtime_r(&t, &tmz);
 	} else {
 		tm = gmtime_r(&t, &tmz);
