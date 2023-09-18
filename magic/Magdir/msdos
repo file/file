@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.171 2023/09/05 14:59:00 christos Exp $
+# $File: msdos,v 1.172 2023/09/18 15:20:47 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -521,17 +521,25 @@
 >>>>(0x3c.l+0x1c)	leshort		0
 >>>>>(0x3c.l+0x2c)	lelong		!0
 >>>>>>(&-4.l+1)		string/C	FONTRES	(DLL, font)
+!:ext	fon/fot
 >>>>>>(&-4.l+1)		default		x	(DLL, resource-only)
+!:ext	dll
 >>>>>(0x3c.l+0x2c)	lelong		0	(DLL, resource-only)
+!:ext	dll
 >>>>(0x3c.l+0x1c)	leshort		!0
 # Check description of the module, first word specifies type of the DLL library
 >>>>>(0x3c.l+0x2c)	lelong		!0
 >>>>>>(&-4.l+1)		string/C	DDRV	(DLL, driver)
+!:ext	drv
 >>>>>>(&-4.l+1)		default		x	(DLL)
+!:ext	dll/drv/3gr/cpl/vbx
 >>>>>(0x3c.l+0x2c)	lelong		0	(DLL)
-!:ext	dll/drv/3gr/cpl/vbx/fon/fot
+!:ext	dll/drv/3gr/cpl/vbx
 >>>(0x3c.l+0x0c)	leshort&0x8000	0 (EXE)
 !:ext	exe/scr
+>>>>(0x3c.l+0x0d)	ubyte&0x07	=1 (full screen)
+>>>>(0x3c.l+0x0d)	ubyte&0x07	=2 (console)
+>>>>(0x3c.l+0x0d)	ubyte&0x07	=3 (GUI)
 >>>&(&0x24.s-1)		string		ARJSFX \b, ARJ self-extracting archive
 >>>(0x3c.l+0x70)	search/0x80	WinZip(R)\ Self-Extractor \b, ZIP self-extracting archive (WinZip)
 
