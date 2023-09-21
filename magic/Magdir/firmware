@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.7 2023/03/11 18:52:03 christos Exp $
+# $File: firmware,v 1.8 2023/09/21 16:12:52 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -131,3 +131,31 @@
 >>>112	string/16	x		%s
 >>144	string/32	x		\b, IDF version: %s
 >>4	ulelong		x		\b, entry address: 0x%08X
+
+# AVR firmware
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://microchipdeveloper.com/8avr:int
+# Match 4-byte JMP for Reset, Int0-2, PcInt0-3 and WDT
+0		uleshort&0xFE0E	0x940C
+>4		uleshort&0xFE0E	0x940C
+>>8		uleshort&0XFE0E	0x940C
+>>>12		uleshort&0XFE0E	0x940C
+>>>>16		uleshort&0XFE0E	0x940C
+>>>>>20		uleshort&0XFE0E	0x940C
+>>>>>>24	uleshort&0XFE0E	0x940C
+>>>>>>>28	uleshort&0XFE0E	0x940C
+>>>>>>>>32	uleshort&0XFE0E	0x940C	AVR firmware
+# Handle only 16-bit addressing
+>>>>>>>>>0	uleshort	0x940C
+>>>>>>>>>>2	uleshort	x	\b, reset at 0x%04x
+# Match 2-byte RJMP for Reset, Int0-2, PcInt0-3 and WDT for smaller AVR
+1		byte&0xF0	0xC0
+>3		byte&0xF0	0xC0
+>>5		byte&0xF0	0xC0
+>>>7		byte&0xF0	0xC0
+>>>>9		byte&0xF0	0xC0
+>>>>>11		byte&0xF0	0xC0
+>>>>>>13	byte&0xF0	0xC0
+>>>>>>>15	byte&0xF0	0xC0
+>>>>>>>>17	byte&0xF0	0xC0	AVR firmware
+>>>>>>>>>0	uleshort&0x0FFF	x	\b, reset at 0x%04x
