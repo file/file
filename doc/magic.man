@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.103 2023/07/20 14:32:07 christos Exp $
+.\" $File: magic.man,v 1.104 2023/10/09 13:22:13 christos Exp $
 .Dd Arpil 18, 2023
 .Dt MAGIC __FSECTION__
 .Os
@@ -359,7 +359,6 @@ For example the magic entries:
 .Ed
 .It Dv octal
 A string representing an octal number.
-.El
 .El
 .Pp
 For compatibility with the Single
