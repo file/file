@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.172 2023/09/18 15:20:47 christos Exp $
+# $File: msdos,v 1.173 2023/10/13 20:15:11 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -566,13 +566,22 @@
 >>(0x3c.l)		string		W3 \b, W3 for MS Windows
 #!:mime	application/x-dosexec
 !:mime	application/x-ms-w3-executable
-!:ext	vxd/exe
+>>>(0x3c.l+0x3)		ubyte		<4 %u
+# Windows 3.x WIN386.EXE
+!:ext	exe
+>>>(0x3c.l+0x3)		ubyte		>3 %u
+# Windows 95 VMM32.VXD
+!:ext	vxd
+>>>(0x3c.l+0x2)		ubyte		x \b.%02u
+
 # W4 executable
 >>(0x3c.l)		string		W4 \b, W4 for MS Windows
 #!:mime	application/x-dosexec
 !:mime	application/x-ms-w4-executable
 # windows 98 VMM32.VXD
 !:ext	vxd
+>>>(0x3c.l+0x3)		ubyte		x %u
+>>>(0x3c.l+0x2)		ubyte		x \b.%02u
 
 >>(0x3c.l)		string		LE\0\0 \b, LE executable
 !:mime	application/x-dosexec
