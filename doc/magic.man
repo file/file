@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.105 2023/10/09 13:42:28 christos Exp $
-.Dd October 05, 2023
+.\" $File: magic.man,v 1.106 2023/10/15 19:27:37 christos Exp $
+.Dd October 15, 2023
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -634,9 +634,9 @@ A byte, id3 length, short or long is read at that offset depending on the
 .Em [bBcCeEfFgGhHiIlmsSqQ]
 type specifier.
 The value is treated as signed if
-.Dq ,
+.Dq \&,
 is specified or unsigned if
-.Dq .
+.Dq \&.
 is specified.
 The capitalized types interpret the number as a big endian
 value, whereas the small letter versions interpret the number as a little
