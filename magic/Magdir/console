@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.72 2023/06/16 19:24:06 christos Exp $
+# $File: console,v 1.73 2023/10/23 19:48:33 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -210,45 +210,45 @@
 
 # TODO: Check for 32X CD?
 # Sega Mega CD disc images: 2048-byte sectors.
-0	string	SEGADISCSYSTEM\ \ 	Sega Mega CD disc image
+0	string	SEGADISCSYSTEM\040\040	Sega Mega CD disc image
 !:mime	application/x-sega-cd-rom
 >0	use	sega-mega-drive-header
 >0	byte	x			\b, 2048-byte sectors
-0	string	SEGABOOTDISC\ \ \ \ 	Sega Mega CD disc image
+0	string	SEGABOOTDISC\040\040\040\040	Sega Mega CD disc image
 !:mime	application/x-sega-cd-rom
 >0	use	sega-mega-drive-header
 >0	byte	x			\b, 2048-byte sectors
 # Sega Mega CD disc images: 2352-byte sectors.
-0x10	string	SEGADISCSYSTEM\ \ 	Sega Mega CD disc image
+0x10	string	SEGADISCSYSTEM\040\040	Sega Mega CD disc image
 !:mime	application/x-sega-cd-rom
 >0x10	use	sega-mega-drive-header
 >0	byte	x			\b, 2352-byte sectors
-0x10	string	SEGABOOTDISC\ \ \ \ 	Sega Mega CD disc image
+0x10	string	SEGABOOTDISC\040\040\040\040	Sega Mega CD disc image
 !:mime	application/x-sega-cd-rom
 >0x10	use	sega-mega-drive-header
 >0	byte	x			\b, 2352-byte sectors
 
 # Sega Mega Drive: Identify the system ID.
 0x100		string	SEGA
->0x3C0		string	MARS\ CHECK\ MODE	Sega 32X ROM image
+>0x3C0		string	MARS\040CHECK\040MODE	Sega 32X ROM image
 !:mime		application/x-genesis-32x-rom
 >>0		use	sega-mega-drive-header
->0x104		string	\ PICO			Sega Pico ROM image
+>0x104		string	\040PICO			Sega Pico ROM image
 !:mime		application/x-sega-pico-rom
 >>0		use	sega-mega-drive-header
->0x104		string	TOYS\ PICO		Sega Pico ROM image
+>0x104		string	TOYS\040PICO		Sega Pico ROM image
 !:mime		application/x-sega-pico-rom
 >>0		use	sega-mega-drive-header
->0x104		string	\ TOYS\ PICO		Sega Pico ROM image
+>0x104		string	\040TOYS\040PICO		Sega Pico ROM image
 !:mime		application/x-sega-pico-rom
 >>0		use	sega-mega-drive-header
->0x104		string	\ IAC			Sega Pico ROM image
+>0x104		string	\040IAC			Sega Pico ROM image
 !:mime		application/x-sega-pico-rom
 >>0		use	sega-mega-drive-header
->0x104		string	\ TERA68K		Sega Teradrive (68K) ROM image
+>0x104		string	\040TERA68K		Sega Teradrive (68K) ROM image
 !:mime		application/x-sega-teradrive-rom
 >>0		use	sega-mega-drive-header
->0x104		string	\ TERA286		Sega Teradrive (286) ROM image
+>0x104		string	\040TERA286		Sega Teradrive (286) ROM image
 !:mime		application/x-sega-teradrive-rom
 >>0		use	sega-mega-drive-header
 >0x180		string	BR			Sega Mega CD Boot ROM image
@@ -259,23 +259,23 @@
 >>0		use	sega-mega-drive-header
 
 # Sega Mega Drive: Some ROMs have "SEGA" at 0x101, not 0x100.
-0x100		string	\ SEGA			Sega Mega Drive / Genesis ROM image
+0x100		string	\040SEGA			Sega Mega Drive / Genesis ROM image
 >0		use	sega-mega-drive-header
 
 # Sega Pico ROMs that don't start with "SEGA".
-0x100		string	SAMSUNG\ PICO		Samsung Pico ROM image
+0x100		string	SAMSUNG\040PICO		Samsung Pico ROM image
 !:mime		application/x-sega-pico-rom
 >0		use	sega-mega-drive-header
-0x100		string	IMA\ IKUNOUJYUKU	Samsung Pico ROM image
+0x100		string	IMA\040IKUNOUJYUKU	Samsung Pico ROM image
 !:mime		application/x-sega-pico-rom
 >0		use	sega-mega-drive-header
-0x100		string	IMA IKUNOJYUKU		Samsung Pico ROM image
+0x100		string	IMA\040IKUNOJYUKU	Samsung Pico ROM image
 !:mime		application/x-sega-pico-rom
 >0		use	sega-mega-drive-header
 
 # Sega Picture Magic (modified 32X)
-0x100		string	Picture\ Magic
->0x3C0		string	PICTURE MAGIC-01	Sega 32X ROM image
+0x100		string	Picture\040Magic
+>0x3C0		string	PICTURE\040MAGIC-01	Sega 32X ROM image
 !:mime		application/x-genesis-32x-rom
 >>0		use	sega-mega-drive-header
 
@@ -362,11 +362,11 @@
 >0x0F	byte&0x0F	0x02	(1 MB)
 
 # SMS/GG header locations.
-0x7FF0	string	TMR\ SEGA
+0x7FF0	string	TMR\040SEGA
 >0x7FF0	use	sega-master-system-rom-header
-0x3FF0	string	TMR\ SEGA
+0x3FF0	string	TMR\040SEGA
 >0x3FF0	use	sega-master-system-rom-header
-0x1FF0	string	TMR\ SEGA
+0x1FF0	string	TMR\040SEGA
 >0x1FF0	use	sega-master-system-rom-header
 
 #------------------------------------------------------------------------------
@@ -384,12 +384,12 @@
 >>0x2A	byte	0	\b)
 
 # 2048-byte sector version.
-0	string	SEGA\ SEGASATURN\ 	Sega Saturn disc image
+0	string	SEGA\040SEGASATURN\040	Sega Saturn disc image
 !:mime	application/x-saturn-rom
 >0	use	sega-saturn-disc-header
 >0	byte	x			(2048-byte sectors)
 # 2352-byte sector version.
-0x10	string	SEGA\ SEGASATURN\ 	Sega Saturn disc image
+0x10	string	SEGA\040SEGASATURN\040	Sega Saturn disc image
 !:mime	application/x-saturn-rom
 >0x10	use	sega-saturn-disc-header
 >0	byte	x			(2352-byte sectors)
@@ -410,12 +410,12 @@
 >>0x4A	byte	0	\b)
 
 # 2048-byte sector version.
-0	string	SEGA\ SEGAKATANA\ 	Sega Dreamcast disc image
+0	string	SEGA\040SEGAKATANA\040	Sega Dreamcast disc image
 !:mime	application/x-dc-rom
 >0	use	sega-dreamcast-disc-header
 >0	byte	x			(2048-byte sectors)
 # 2352-byte sector version.
-0x10	string	SEGA\ SEGAKATANA\ 	Sega Dreamcast disc image
+0x10	string	SEGA\040SEGAKATANA\040	Sega Dreamcast disc image
 !:mime	application/x-dc-rom
 >0x10	use	sega-dreamcast-disc-header
 >0	byte	x			(2352-byte sectors)
@@ -509,7 +509,7 @@
 # - https://neogpc.googlecode.com/svn-history/r10/trunk/src/core/neogpc.cpp
 # - https://www.devrs.com/ngp/files/ngpctech.txt
 #
-0x0A	string		BY\ SNK\ CORPORATION	Neo Geo Pocket
+0x0A	string		BY\040SNK\040CORPORATION	Neo Geo Pocket
 !:mime	application/x-neo-geo-pocket-rom
 >0x23	byte		0x10			Color
 >0	byte		x			ROM image
@@ -524,7 +524,7 @@
 
 #------------------------------------------------------------------------------
 # Sony Playstation executables (Adam Sjoegren <asjo@diku.dk>) :
-0	string	PS-X\ EXE	Sony Playstation executable
+0	string	PS-X\040EXE	Sony Playstation executable
 >16	lelong	x		PC=%#08x,
 >20	lelong	!0		GP=%#08x,
 >24	lelong	!0		.text=[%#08x,
@@ -728,7 +728,7 @@
 # ftp://ftp.modland.com/pub/documents/format_documentation/\
 # Gameboy%20Sound%20System%20(.gbs).txt
 0	string		GBS		Nintendo Gameboy Music/Audio Data
-#12	string		GameBoy\ Music\ Module	Nintendo Gameboy Music Module
+#12	string		GameBoy\040Music\040Module	Nintendo Gameboy Music Module
 >16	string		>\0	("%.32s" by
 >48	string		>\0	%.32s, copyright
 >80	string		>\0	%.32s),
@@ -1133,7 +1133,7 @@
 # The header is terminated with a 0, so that will
 # terminate the title as well.
 #
-0	string	g\ GCE	Vectrex ROM image
+0	string	g\040GCE	Vectrex ROM image
 >0x11	string	>\0	\b: "%.16s"
 
 #------------------------------------------------------------------------------
@@ -1213,8 +1213,8 @@
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 # References:
 # - https://problemkaputt.de/fullsnes.htm#snescartsufamiturbominicartridgeadaptor
-0	string		BANDAI\ SFC-ADX
->0x10	string		!SFC-ADX\ BACKUP	Sufami Turbo ROM image:
+0	string		BANDAI\040SFC-ADX
+>0x10	string		!SFC-ADX\040BACKUP	Sufami Turbo ROM image:
 >>0x10	string/T	x	"%.14s"
 >>0x30	byte		x	\b, ID %02X
 >>0x31	byte		x	\b%02X
