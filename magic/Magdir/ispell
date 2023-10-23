@@ -1,7 +1,7 @@
 
 #------------------------------------------------------------------------------
-# $File: ispell,v 1.9 2023/07/30 16:02:43 christos Exp $
-# ispell:  file(1) magic for ispell, MySpell and Hunspell
+# $File: ispell,v 1.10 2023/10/23 19:49:58 christos Exp $
+# ispell:  file(1) magic for ispell, MySpell, Hunspell and aspell
 #
 # Ispell 3.0 has a magic of 0x9601 and ispell 3.1 has 0x9602.  This magic
 # will match 0x9600 through 0x9603 in *both* little endian and big endian.
@@ -206,3 +206,44 @@
 >>3		string		x		\b, 1st line "%s"
 >>>&1		ubyte		>0x1F		\b, 2nd line
 >>>>&-1		string		x		"%s"
+
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/GNU_Aspell
+#		https://manpages.ubuntu.com/manpages/trusty/en/man8/aspell-autobuildhash.8.html
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/r/rws-aspell.trid.xml
+#		https://ftp.gnu.org/gnu/aspell/aspell-0.60.8.tar.gz
+#		aspell-0.60.8/modules/speller/default/data.cpp
+#		aspell-0.60.8/modules/speller/default/readonly_ws.cpp
+# Note:		called "aspell dictionary" by TrID
+0	string	aspell\040default\040speller\040rowl	aspell dictionary
+#!:mime	application/octet-stream
+!:mime	application/x-aspell-dictionary
+!:ext	rws
+# version like: 1.10 1.4
+>28	string	x					\b, version %s
+# u32int endian_check; 12345678=00BC614Eh
+#>64	ulelong	x					\b, endian_check=%u
+>>64	ulelong	12345678				\b, little endian
+# not tested
+>>64	ubelong	12345678				\b, big endian
+# older aspell version not like 0.60.8
+>>64	default	x					\b, old
+# URL:		https://en.wikipedia.org/wiki/GNU_Aspell
+# Reference	http://aspell.net/man-html/Format-of-the-Personal-and-Replacement-Dictionaries.html
+# personal_ws-1.1 lang num [encoding]
+0	string	personal_				aspell personal
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/p/pws-aspell.trid.xml
+# Note:		called "aspell Personal dictionary" by TrID
+>9	string	ws-					dictionary
+#!:mime	text/plain
+!:mime	text/x-aspell-dictionary
+# like: ~/.aspell.en.pws ~/.aspell.de_DE.pws ~/.aspell.it.pws
+!:ext	pws
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/p/prepl-aspell.trid.xml
+# Note:		called "aspell Personal Replacement dictionary" by TrID
+# personal_repl-1.1 lang num [encoding]
+>9	string	repl-					replacement dictionary
+#!:mime	text/plain
+!:mime	text/x-aspell-dictionary
+# like: ~/.aspell.en.prepl ~/.aspell.de_DE.prepl ~/.aspell.it.prepl
+!:ext	prepl
