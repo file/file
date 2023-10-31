@@ -4,6 +4,7 @@
 0	string	SSH\040PRIVATE\040KEY	OpenSSH RSA1 private key,
 >28	string	>\0			version %s
 0	string	-----BEGIN\040OPENSSH\040PRIVATE\040KEY-----	OpenSSH private key
+!:mime	application/x-pem-file
 # https://www.rfc-editor.org/rfc/rfc5958
 0	string	-----BEGIN\040PRIVATE\040KEY-----	OpenSSH private key (no password)
 0	string	-----BEGIN\040ENCRYPTED\040PRIVATE\040KEY-----	OpenSSH private key (with password)

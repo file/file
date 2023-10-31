@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.92 2023/09/14 13:23:00 christos Exp $
+# $File: compress,v 1.93 2023/10/31 21:52:20 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -203,6 +203,7 @@
 # lzop from <markus.oberhumer@jk.uni-linz.ac.at>
 0	string		\x89\x4c\x5a\x4f\x00\x0d\x0a\x1a\x0a	lzop compressed data
 !:ext	lzo
+!:mime	application/x-lzop
 >9	beshort		<0x0940
 >>9	byte&0xf0	=0x00		- version 0.
 >>9	beshort&0x0fff	x		\b%03x,
