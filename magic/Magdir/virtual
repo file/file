@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: virtual,v 1.17 2022/08/23 08:00:54 christos Exp $
+# $File: virtual,v 1.18 2023/10/31 21:47:53 christos Exp $
 # From: James Nobis <quel@quelrod.net>
 # Microsoft hard disk images for:
 # Virtual Server
@@ -298,6 +298,23 @@
 >0x46	uleshort	>0		\b, minor %u
 >0	string		>\0		(%s)
 >368	lequad		x		 \b, %lld bytes
+
+# From:		Joerg Jenderek
+# URL: 		https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifynvram
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/n/nvram-virtualbox.trid.xml
+# Note:		called "VirtualBox saved (U)EFI BIOS settings" by TrID and
+#		verfied partly by VirtualBox version 7.0.12 `VBoxManage modifynvram <uuid|vmname> listvars`
+# first 64 bytes seems to be constant
+0	long		0
+>0x28	string		_FVH
+>>0x64	beshort		0xAA55
+>>>0	use		virtualbox-nvram
+#	display information of virtualbox *.nvram
+0	name	virtualbox-nvram
+>0x64	beshort		x			VirtualBox NVRAM file
+#!:mime	application/octet-stream
+!:mime	application/x-virtualbox-nvram
+!:ext	nvram
 
 0	string/b	Bochs\ Virtual\ HD\ Image	Bochs disk image,
 >32	string	x				type %s,
