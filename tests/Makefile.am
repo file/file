@@ -111,6 +111,14 @@ regex-eol.result \
 regex-eol.testfile \
 registry-pol.result \
 registry-pol.testfile \
+rpm-v3.0-bin-powerpc64.result \
+rpm-v3.0-bin-powerpc64.testfile \
+rpm-v3.0-bin-s390x.result \
+rpm-v3.0-bin-s390x.testfile \
+rpm-v3.0-bin-x86_64.result \
+rpm-v3.0-bin-x86_64.testfile \
+rpm-v3.0-src.result \
+rpm-v3.0-src.testfile \
 uf2.result \
 uf2.testfile \
 utf16xmlsvg.textfile \
