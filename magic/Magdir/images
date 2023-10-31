@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.244 2023/08/05 14:46:31 christos Exp $
+# $File: images,v 1.245 2023/10/31 21:37:12 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -543,6 +543,23 @@
 #>10	ubyte&0x07	=0x05		64 colors
 #>10	ubyte&0x07	=0x06		128 colors
 #>10	ubyte&0x07	=0x07		256 colors
+
+# URL:		http://fileformats.archiveteam.org/wiki/Jeff%27s_Image_Format
+#		http://web.archive.org/web/20010603113404/http://jeff.cafe.net/jif
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/b/bitmap-jif.trid.xml
+#		https://www.nationalarchives.gov.uk/PRONOM/fmt/994
+# From:		Joerg Jenderek
+# Note:		nearly identical to GIF, except that it uses zlib compression instead of LZW
+#		called by TrID "Jeff's Image Format bitmap" and "Jeffs Image Format" by DROID via fmt/994
+#		verfied by XnView `nconvert -fullinfo *.jif` as "Jeff's Image Format"
+0	string		JIF99a		Jeffs Image Format data
+!:mime	image/x-jif
+# http://extension.nirsoft.net/jif
+#!:mime	image/jif
+!:apple	????JIFf
+!:ext	jif
+>6	uleshort	x		%u x
+>8	uleshort	x		%u
 
 # ITC (CMU WM) raster files.  It is essentially a byte-reversed Sun raster,
 # 1 plane, no encoding.
