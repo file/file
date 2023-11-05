@@ -111,6 +111,8 @@ regex-eol.result \
 regex-eol.testfile \
 registry-pol.result \
 registry-pol.testfile \
+rpm-v3.0-bin-aarch64.result \
+rpm-v3.0-bin-aarch64.testfile \
 rpm-v3.0-bin-powerpc64.result \
 rpm-v3.0-bin-powerpc64.testfile \
 rpm-v3.0-bin-s390x.result \
