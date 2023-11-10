@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.173 2023/10/13 20:15:11 christos Exp $
+# $File: msdos,v 1.174 2023/11/10 23:07:20 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -462,17 +462,43 @@
 >>>>>>(0x3c.l+0x37)	byte&0x04	!0	(real+protected mode)
 # OS 3 was reserved for Multitasking MS-DOS but it never used NE version 5+ (only NE version 4)
 #>>>>(0x3c.l+0x36)	byte		3 for Multitasking MS-DOS
-# OS 4 was reserved for Windows/386 device drivers but Windows/386 2.x never used NE format (Xenix x.out format was used instead)
-#>>>>(0x3c.l+0x36)	byte		4 for Windows/386 device drivers
->>>>(0x3c.l+0x36)	byte		5 for MS-DOS, Borland Operating System Services extender
+# OS 4 was reserved for MS Windows/386 device drivers but MS Windows/386 2.x never used NE format (Xenix x.out format was used instead)
+#>>>>(0x3c.l+0x36)	byte		4 for MS Windows/386 device driver
+# OS 5 is assigned to BOSS (Borland Operating System Services) but is used also by 16-bit HX DOS extender
+>>>>(0x3c.l+0x36)	byte		5 for MS-DOS
+# HDLD16.BIN
+# x86 jmp near relative (0xe9 0x?? 0x??) + string "MI" (0x4d 0x49)
+>>>>>(8.s*16)		ulequad&0xffff0000ff	=0x494d0000e9	\b, HX DOS extender 16-bit (embedded with DPMI host)
+>>>>>(8.s*16)		ulequad&0xffff0000ff	!0x494d0000e9
+# DPMIST16.BIN
+>>>>>>(8.s*16)		search/0x200	cannot\ find\ loader\ DPMILD16.EXE	\b, HX DOS extender 16-bit (stub)
+# DPMILD16.BIN
+>>>>>>(8.s*16)		search/0x4000	DPMILD16:	\b, HX DOS extender 16-bit (embedded without DPMI host)
+>>>>>>(8.s*16)		default		x	\b, Borland Operating System Services DOS extender
 # http://downloads.sourceforge.net/dfendreloaded/D-Fend-Reloaded-1.4.4.zip
 # D-Fend Reloaded/VirtualHD/FREEDOS/DPMILD32.EXE
 # https://www.japheth.de/HX/DPMILD32.TXT
->>>>(0x3c.l+0x36)	byte		6 for MS-DOS, HX DOS extender (32-bit)
+>>>>(0x3c.l+0x36)	byte		6 for MS-DOS
+# HDLD32.BIN
+# x86 jmp near relative (0xe9 0x?? 0x??) + string "MI" (0x4d 0x49)
+>>>>>(8.s*16)		ulequad&0xffff0000ff	=0x494d0000e9	\b, HX DOS extender 32-bit (embedded with DPMI host)
+>>>>>(8.s*16)		ulequad&0xffff0000ff	!0x494d0000e9
+# DPMIST32.BIN
+>>>>>>(8.s*16)		search/0x200	cannot\ find\ loader\ DPMILD32.EXE	\b, HX DOS extender 32-bit (stub)
+# DPMILD32.BIN
+>>>>>>(8.s*16)		search/0x4000	DPMILD32:	\b, HX DOS extender 32-bit (embedded without DPMI host)
+>>>>>>(8.s*16)		default		x	\b, HX DOS extender 32-bit
 # https://en.wikipedia.org/wiki/Phar_Lap_(company)
->>>>(0x3c.l+0x36)	byte		0x81 for MS-DOS, Phar Lap DOS extender, OS/2
-# like: CVP7.EXE
->>>>(0x3c.l+0x36)	byte		0x82 for MS-DOS, Phar Lap DOS extender, Windows
+# like: TELLPROT.EXE from 286DEX
+# can be created by BIND286.EXE from OS/2 NE binary
+>>>>(0x3c.l+0x36)	byte		0x81 for MS-DOS, Phar Lap 286 DOS extender, emulating OS/2 1.x
+# like: CVP7.EXE from 286DEX
+# can be created by BIND286.EXE from Windows NE binary
+>>>>(0x3c.l+0x36)	byte		0x82 for MS-DOS, Phar Lap 286 DOS extender, emulating MS Windows
+>>>>>(0x3c.l+0x3E)	ushort		0	1.x/2.x
+>>>>>(0x3c.l+0x3E)	ushort		!0
+>>>>>>(0x3c.l+0x3F)	ubyte		x	%u
+>>>>>>(0x3c.l+0x3E)	ubyte		x	\b.%02u
 >>>>(0x3c.l+0x36)	default		x
 >>>>>(0x3c.l+0x36)	ubyte		x for unknown OS %#x
 # OS2EXEFlags; other EXE flags
