@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.174 2023/11/10 23:07:20 christos Exp $
+# $File: msdos,v 1.175 2023/11/18 21:07:05 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -514,12 +514,16 @@
 >>>>(0x3c.l+0x3F)	ubyte		=3
 >>>>>0x3c		ulelong		>0x800
 >>>>>>(0x3c.l+0x37)	ubyte		&0x80	with OS/2 WLO loader
-# Detection for NE versions <5. These versions are used only by Windows 1.x/2.x and Multitasking MS-DOS
+# Detection for NE versions <5. These versions are used only by WINE, Windows 1.x/2.x and Multitasking MS-DOS
+# WINE binaries have special signature after the dos header (at fixed offset 0x40)
 # Multitasking MS-DOS binaries imports DOSCALLS library, so use it for distinguishing
 >>>(0x3c.l+0x02)	ubyte		<5
->>>>(0x3c.l+0x2a)	leshort		x
->>>>>&(&-2.s-0x2a)	search/512/C	DOSCALLS for Multitasking MS-DOS
->>>>>&(&-2.s-0x2a)	default		x for MS Windows 1.x/2.x
+# like: fakedlls/krnl386.exe16 fakedlls/gdi.exe16 fakedlls/winsock.dll16 fakedlls/winoldap.mod16 fakedlls/mouse.drv16
+>>>>0x40		string		Wine\ placeholder\ DLL for WINE
+>>>>(0x3c.l+0x2a)	default		x
+# like: HE_DAEM.EXE POPUP.EXE QUEUER.EXE
+>>>>>&(&0.s-0x2a)	search/512/C	DOSCALLS for Multitasking MS-DOS
+>>>>>&(&0.s-0x2a)	default		x for MS Windows 1.x/2.x
 # Special case, Windows 3.x OS parse from NE version 4 binaries also following NE version 5 fields:
 # - os type if is 0 or 2
 # - bits proportional fonts and protected mode
