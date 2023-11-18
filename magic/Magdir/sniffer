@@ -78,8 +78,8 @@
 #
 # "libpcap" capture files.
 # https://www.tcpdump.org/manpages/pcap-savefile.5.html
-# (We call them "tcpdump capture file(s)" for now, as "tcpdump" is
-# the main program that uses that format, but there are other programs
+# (We call them "libpcap capture file(s)", as "libpcap" is
+# the first library that uses that format, but there are other programs
 # that use "libpcap", or that use the same capture file format.)
 #
 0	name		pcap-be
