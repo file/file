@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.175 2023/11/18 21:07:05 christos Exp $
+# $File: msdos,v 1.176 2023/11/24 17:21:50 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -703,10 +703,10 @@
 >0x1c	string	LZ09 	\b, LZEXE v0.90 compressed
 >0x1c	string	LZ91 	\b, LZEXE v0.91 compressed
 >0x1c	string	tz 	\b, TinyProg compressed
->0x1e	string	Copyright\ 1989-1990\ PKWARE\ Inc.	Self-extracting PKZIP archive
+>0x1e	string	Copyright\ 1989-1990\ PKWARE\ Inc.	\b, Self-extracting PKZIP archive
 !:mime	application/zip
 # Yes, this really is "Copr", not "Corp."
->0x1e	string	PKLITE\ Copr.	Self-extracting PKZIP archive
+>0x1e	string	PKLITE\ Copr.	\b, Self-extracting PKZIP archive
 !:mime	application/zip
 # winarj stores a message in the stub instead of the sig in the MZ header
 >0x20	search/0xe0	aRJsfX \b, ARJ self-extracting archive
