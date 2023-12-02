@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.176 2023/11/24 17:21:50 christos Exp $
+# $File: msdos,v 1.177 2023/12/02 13:46:52 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1947,11 +1947,87 @@
 #!:mime	application/x-novell-msg
 !:ext	msg
 #!:ext	msg/dat
+
+# Summary:	Turbo Pascal Help
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Turbo_Pascal
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hlp-tp-2.trid.xml
+# Note:		called "Turbo Pascal Help (v2)" by TrID
+0	string		TPH2	Turbo Pascal help, version 2
+#!:mime	application/octet-stream
+!:mime	application/x-pascal-hlp
+# 4DOS help file, version 1.00 3.30
+!:ext	hlp
+# URL:		https://en.wikipedia.org/wiki/4DOS
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hlp-4dos-v2.trid.xml
+# Note:		called "4DOS Help (v2)" by TrID
+0	string	ALIAS\r\nASSIGN\r\n
+>13	search/3016	4DOS	4DOS help file, version 2.x
+#!:mime	text/plain
+!:mime	application/x-4dos-hlp
+# DOS.HLP 4DOS help file, version 2.21
+!:ext	hlp
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hlp-4dos-v4.trid.xml
+# Note:		called "4DOS Help (v4)" by TrID
+0	string		4DH4	4DOS help file, version 4.x
+#!:mime	application/octet-stream
+!:mime	application/x-4dos-hlp
+# 4dos402b.hlp
+!:ext	hlp
+# Reference:	https://4dos.info/4dsource/4helpsrc.zip/TPHELP.PAS
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hlp-4dos.trid.xml
 # 4DOS help (.HLP) files added by Joerg Jenderek from source TPHELP.PAS
 # of https://www.4dos.info/
-# pointer,HelpID[8]=4DHnnnmm
-0	ulelong	0x48443408		4DOS help file
->4	string	x			\b, version %-4.4s
+# check for valid pascal string length (6 or 8) of HelpID, 4DH magic, valid major number (5 6 7 8)
+0	ubequad&0xF1ffFFffF0000000	0x0034444830000000	4DOS help file
+#!:mime	application/octet-stream
+!:mime	application/x-4dos-hlp
+!:ext	hlp
+# pascal string length of of HelpID like: 6 8
+#>0	ubyte	x			PLENGHT=%x
+# Note:	version string correspond or is a little bit lower than value of _4VER variable or output of 4DOS command `VER /R`
+# one-digit major version number of version string
+>4	string	x			\b, version %-1.1s
+# two-digit minor version number depending on pascal string length at the beginning
+>>0	ubyte	8			\b.
+>>>5	string	x			\b%-2.2s
+# Byte at offset 7 (A=41h) and 8 (A=41h) is not Revison like C (=43h) as reported by VER /R for 4DOS602b.HLP
+# GRR: maybe this is patch level
+>>>7	string	x			%-.2s
+# few samples with string length 6 (implying exact 2 byte minor version digits) like in 4DOS500f.HLP 4dos551c_ge.hlp
+>>0	ubyte	6			\b.
+>>>5	string	x			\b%-2.2s
+# just in case pascal string length is neither 6 nor 8
+#>>0	default	x			\b.
+#>>>5	string	x			%-2.2s
+# false for version 5.52 and older, but true for version 6.02 and newer
+>4	ubeshort	>0x3535
+# HighestTopic; highest topic number
+#>>9	uleshort x			HighestTopic=%#4.4x
+# NumTopics; number of topics
+#>>11	uleshort x			NumTopics=%#4.4x
+# BiggestTopic; size of largest topic in uncompressed bytes
+#>>13	uleshort x			BiggestTopic=%#4.4x
+# NamedTopics; number of topics in help index
+#>>15	uleshort x			NamedTopics=%#4.4x
+# NameSize; Size of largest name, 0 for none
+#>>17	uleshort x			NameSize=%#4.4x
+# PickSize; size of each entry in pick table, 0 for none
+#>>18	uleshort x			PickSize=%#4.4x
+# width; width of help window, with frame if any
+#>>19	ubyte x				Width=%#2.2x
+# FirstTopic; topic to show first (0 = index)
+#>>20	uleshort x			FirstTopic=%#4.4x
+# KeysTopic; topic to show when keys help needed
+#>>22	uleshort x			KeysTopic=%#4.4x
+# ExtHelpName; string[13]; name for external help program like: HELP.COM DOSBOOK.EXE
+>>24	pstring	x			\b, external help %s
+# ExtHelpEnv; String[16]; environment variable for alternate external help program name like: DOSHELP
+>>38	pstring	x			or specified by DOS environment variable %s
+# XlateArray = array[0..29] of Byte; {Most common characters in help text}
+#>>55	ubequad x			XlateArray=%#16.16llx
+# SharewareData : SharewareDataRec; shareware info for 4DOS.COM
+#>>87	ubequad x			SharewareData=%#16.16llx
 
 # old binary Microsoft (.HLP) files added by Joerg Jenderek from http://file-extension.net/seeker/file_extension_hlp
 0	ulequad	0x3a000000024e4c	MS Advisor help file
