@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.194 2023/10/31 21:47:53 christos Exp $
+# $File: archive,v 1.195 2023/12/02 13:50:30 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -987,7 +987,45 @@
 # ZET
 0	string	OZ\xc3\x9d ZET archive data
 # TSComp
-0	string	\x65\x5d\x13\x8c\x08\x01\x03\x00 TSComp archive data
+# Update:	Joerg Jenderek 2023 Nov 
+# URL:		http://fileformats.archiveteam.org/wiki/TSComp
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/t/tscomp.trid.xml
+#		https://entropymine.com/deark/releases/deark-1.6.5.tar.gz
+#		deark-1.6.5/modules/installshld.c 
+# Note:		called "TSComp compressed data" by TrID
+#		verified by command like `deark -m tscomp -l -d2 MAKERRES.DL$`
+#		The "13" might be a version number. The "8c" is a mystery
+0	string	\x65\x5d\x13\x8c\x08\x01\x03\x00 TSComp archive
+#!:mime	application/octet-stream
+!:mime	application/x-tscomp-compressed
+# filename style: 0~old version 1~without wildcard 2~with wildcard
+#>0x08	ubyte		x				\b, filename style %u
+>0x08	ubyte		0				data, filename style 0
+# no example found
+!:ext	??$
+#>0x08	ubyte		1				data, without wildcard
+>0x08	ubyte		1				data
+# for single-file archives, often the last letter of the filename extension is changed to "$"; but also name like: BUILD3.BM!
+!:ext	??$/??!
+>0x08	ubyte		2				data, with wildcard
+# for multi-file archives common extensions seem to be .lib and .cmp, but also names like: SAMPMIF$ OTDATA.$$$ TWOFILES.TSC WIN.PAK 
+!:ext	/lib/cmp/$$$/tsc/pak
+# fnlen; pascal string length; original 1st file name like: CHFORMAT.MML
+>0x1c	pstring		x				\b, %s
+# md->fi->timestamp
+>0x16	lemsdosdate	x				\b, modified %s
+>0x18	lemsdostime	x				%s
+# 1st compressed size: like 180 (SAMPMML$$)
+>0x0E	ulelong		x				\b, compressed size %u
+# de_dbg_indent(c, 1): like: 12h
+#>0x0d	ubyte		x				b, at 0xD %#x
+# like: 0
+#>0x1A	ubeshort	x				\b, at 0x1A %#x
+# 2nd member offset
+#>0x12	ulelong		x				\b, next offset %#x
+>0x12	ulelong		>0
+# original 2nd archive member name like: FORMATS.MML
+>>(0x12.l+15)	pstring	x				\b, %s ...
 # ARQ
 0	string	gW\4\1 ARQ archive data
 # Squash
