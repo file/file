@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.245 2023/10/31 21:37:12 christos Exp $
+# $File: images,v 1.246 2023/12/10 16:12:31 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1780,8 +1780,12 @@
 
 # PCX image files
 # From: Dan Fandrich <dan@coneharvesters.com>
-# updated by Joerg Jenderek at Feb 2013 by https://de.wikipedia.org/wiki/PCX
+# updated by Joerg Jenderek at Feb 2013, Nov 2023 by https://en.wikipedia.org/wiki/PCX
 # https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
+# URL:		http://fileformats.archiveteam.org/wiki/PCX
+# Note:		called "PCX image" with acronym "PiCture eXchange" by shared MIME-info database from freedesktop.org
+#		verfied partly as pcx "Zsoft Paintbrush" format by XnView `nconvert -in pcx -fullinfo *.pcx` and
+#		by ImageMagick version 7.1.1-21 command `identify *.pcx`
 # GRR: original test was still too general as it catches xbase examples T5.DBT,T6.DBT with 0xa000000
 # test for bytes 0x0a,version byte (0,2,3,4,5),compression byte flag(0,1), bit depth (>0) of PCX or T5.DBT,T6.DBT
 0	ubelong&0xffF8fe00	0x0a000000
@@ -1789,28 +1793,39 @@
 >3	ubyte		>0
 # test for valid versions
 >>1	ubyte		<6
->>>1	ubyte		!1	PCX
-!:mime	image/x-pcx
-#!:mime	image/pcx
->>>>1	ubyte		0	ver. 2.5 image data
->>>>1	ubyte		2	ver. 2.8 image data, with palette
->>>>1	ubyte		3	ver. 2.8 image data, without palette
->>>>1	ubyte		4	for Windows image data
->>>>1	ubyte		5	ver. 3.0 image data
->>>>4	uleshort	x	bounding box [%d,
->>>>6	uleshort	x	%d] -
->>>>8	uleshort	x	[%d,
->>>>10	uleshort	x	%d],
->>>>65	ubyte		>1	%d planes each of
->>>>3	ubyte		x	%d-bit
->>>>68	ubyte		1	colour,
->>>>68	ubyte		2	grayscale,
+>>>1	ubyte		!1
+# skip DROID fmt-89-signature-id-62.pcx fmt-88-signature-id-63.pcx fmt-87-signature-id-64.pcx fmt-86-signature-id-65.pcx with invalid dimensions
+>>>>8	long		!0	PCX
+!:mime	image/vnd.zbrush.pcx
+# deprecated
+#!:mime	image/x-pcx
+!:ext	pcx/pcc
+# also examples like: abydos.st E-DIODE.ST MUSIC-13.ST ROSE.ST
+#!:ext	pcx/pcc/st
+# Note:		called as "PCX bitmap (v2.5)" by TrID via bitmap-pcx.trid.xml and "PCX" version 0 by DROID via PUID fmt/86
+>>>>>1	ubyte		0	ver. 2.5 image data
+# Note:		called as "PCX bitmap (v2.8, palette)" by TrID via bitmap-pcx-v28p.trid.xml and "PCX" version 2 by DROID via PUID fmt/87
+>>>>>1	ubyte		2	ver. 2.8 image data, with palette
+# Note:		called as "PCX bitmap (v2.8)" by TrID via bitmap-pcx-v28.trid.xml and "PCX" version 3 by DROID via PUID fmt/88
+>>>>>1	ubyte		3	ver. 2.8 image data, without palette
+# Note:		called as "PCX bitmap (Win)" by TrID via bitmap-pcx-win.trid.xml and "PCX" version 4 by DROID via PUID fmt/89
+>>>>>1	ubyte		4	for Windows image data
+# Note:		called as "PCX bitmap (v3.0) by TrID via bitmap-pcx-v30.trid.xml and "PCX" version 5 by DROID via PUID fmt/90
+>>>>>1	ubyte		5	ver. 3.0 image data
+>>>>>4	uleshort	x	bounding box [%d,
+>>>>>6	uleshort	x	%d] -
+>>>>>8	uleshort	x	[%d,
+>>>>>10	uleshort	x	%d],
+>>>>>65	ubyte		>1	%d planes each of
+>>>>>3	ubyte		x	%d-bit
+>>>>>68	ubyte		1	colour,
+>>>>>68	ubyte		2	grayscale,
 # this should not happen
->>>>68	default		x	image,
->>>>12	uleshort	>0	%d x
->>>>>14	uleshort	x	%d dpi,
->>>>2	ubyte		0	uncompressed
->>>>2	ubyte		1	RLE compressed
+>>>>>68	default		x	image,
+>>>>>12	uleshort	>0	%d x
+>>>>>>14 uleshort	x	%d dpi,
+>>>>>2	ubyte		0	uncompressed
+>>>>>2	ubyte		1	RLE compressed
 
 # Adobe Photoshop
 # From: Asbjoern Sloth Toennesen <asbjorn@lila.io>
