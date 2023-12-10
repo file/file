@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.177 2023/12/02 13:46:52 christos Exp $
+# $File: msdos,v 1.178 2023/12/10 15:29:22 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -121,8 +121,18 @@
 >>>(0x3c.l+0x02)	ubyte		x	(Icon Library, Icon Manager by Impact Software)
 !:ext		icl
 # handle LX executable with low e_lfarlc like: PCISCAN.EXE
->>(0x3c.l)	string	LX
->>>(0x3c.l)	use		lx-executable
+>>(0x3c.l)	string	LX	MS-DOS executable, LX
+>>>(0x3c.l+0x2)	uleshort	=0x0000
+>>>>(0x3c.l)	use		lx-executable
+# no examples found for big endian variant
+>>>(0x3c.l+0x2)	uleshort	=0x0101
+>>>>(0x3c.l)	use		\^lx-executable
+# no examples found for PDP-11 endian variant
+>>>(0x3c.l+0x2)	uleshort	=0x0100
+# PDP-11-endian is not supported by magic "use" keyword yet
+# no examples found for other endian variants
+>>>0		default		x
+# other endianity is not supported by magic "use" keyword
 # skip Portable Executable (PE) with low e_lfarlc here, because handled later
 # like: ext4_x64_signed.efi Shell_Full.efi WINWORD.DEV.HXS
 >>(0x3c.l)	string	PE
@@ -573,20 +583,19 @@
 >>>&(&0x24.s-1)		string		ARJSFX \b, ARJ self-extracting archive
 >>>(0x3c.l+0x70)	search/0x80	WinZip(R)\ Self-Extractor \b, ZIP self-extracting archive (WinZip)
 
->>(0x3c.l)		string		LX\0\0 \b, LX
+>>(0x3c.l)		string		LX \b, LX
 !:mime	application/x-dosexec
->>>(0x3c.l+0x0a)	leshort		<1 (unknown OS)
->>>(0x3c.l+0x0a)	leshort		1 for OS/2
->>>(0x3c.l+0x0a)	leshort		2 for MS Windows
->>>(0x3c.l+0x0a)	leshort		3 for DOS
->>>(0x3c.l+0x0a)	leshort		>3 (unknown OS)
->>>(0x3c.l+0x10)	lelong&0x28000	=0x8000 (DLL)
->>>(0x3c.l+0x10)	lelong&0x20000	>0 (device driver)
->>>(0x3c.l+0x10)	lelong&0x300	0x300 (GUI)
->>>(0x3c.l+0x10)	lelong&0x28300	<0x300 (console)
->>>(0x3c.l+0x08)	leshort		1 i80286
->>>(0x3c.l+0x08)	leshort		2 i80386
->>>(0x3c.l+0x08)	leshort		3 i80486
+>>>(0x3c.l+0x2)		uleshort	=0x0000
+>>>>(0x3c.l)		use		lx-executable
+# no examples found for big endian variant
+>>>(0x3c.l+0x2)		uleshort	=0x0101
+>>>>(0x3c.l)		use		\^lx-executable
+# no examples found for PDP-11 endian variant
+>>>(0x3c.l+0x2)		uleshort	=0x0100
+# PDP-11-endian is not supported by magic "use" keyword yet
+# no examples found for other endian variants
+>>>0			default		x
+# other endianity is not supported by magic "use" keyword
 >>>(8.s*16)		string		emx \b, emx
 >>>>&1			string		x %s
 >>>&(&0x54.l-3)		string		arjsfx \b, ARJ self-extracting archive
@@ -759,34 +768,36 @@
 # URL:		http://en.wikipedia.org/wiki/EXE
 # Reference:	http://www.textfiles.com/programming/FORMATS/lxexe.txt
 #		https://github.com/open-watcom/open-watcom-v2/blob/master/bld/watcom/h/exeflat.h
+#		https://github.com/bitwiseworks/os2tk45/blob/master/h/exe386.h
+#		https://archive.org/download/IBMOS2Warp4ToolkitDocuments2/lxref.htm
 # Note:		by dll-os2-no-dos-stub.trid.xml called "OS/2 Dynamic Link Library (no DOS stub)"
-# TODO:		unify with DOS stub variant (MZ magic)
-0	string/b	LX
->2	ushort		=0
->>0	use			lx-executable
-# no examples found for big endian variant
->2	ushort		=0x0101
->>0	use			\^lx-executable
-0       name    	lx-executable
 # similar looking like variant with MS-DOS stub (MZ magic): "MS-DOS executable, LX"
-#>0x00	uleshort		x	executable,
-# signature OSF_FLAT_LX_SIGNATURE~0x584C~LX OSF_FLAT_SIGNATURE~0x454C~LE
->0x00	uleshort		=0x584c	LX
->0x00	uleshort		=0x454C	LE
->0x00	uleshort		x	executable
+0	string/b	LX	LX executable
 #!:mime	application/x-msdownload
 !:mime	application/x-lx-executable
-!:ext	exe
-# byte order: 00h~little-endian non-zero=1~big-endian
-#>0x02	ubyte			=0		(little-endian)
->0x02	ubyte			!0		(big-endian)
+>2	uleshort	=0x0000
+>>0	use			lx-executable
+# no examples found for big endian variant
+>2	uleshort	=0x0101
+>>0	use			\^lx-executable
+# no examples found for PDP-11 endian variant
+>2	uleshort	=0x0100
+# PDP-11-endian is not supported by magic "use" keyword yet
+# no examples found for other endian variants
+>>0	default		x
+# other endianity is not supported by magic "use" keyword
+
+0       name    	lx-executable
 # FOR DEBUGGING!
-# word order: 00h~little-endian non-zero=1~big-endian
+# byte order: 00h~little-endian 01h~big-endian
+#>0x02	ubyte			=0		\b, little-endian byte order
+#>0x02	ubyte			=1		\b, big-endian word order
+# word order: 00h~little-endian 01h~big-endian
 #>0x03	ubyte			=0		\b, little-endian word order
-#>0x03	ubyte			!0		\b, big-endian word order
-# cpu_type; CPU type like: 1~286 2~386 3~486 4 20h~i860 21h~Intel N11 40h~MIPS R2000,R3000 41h~MIPS R6000 42h~MIPS R4000
+#>0x03	ubyte			=1		\b, big-endian word order
+# cpu_type; CPU type like: 1~i286 2~i386 3~i486 4~i586 20h~i860-N10 21h~i860-N11 40h~MIPS R2000,R3000 41h~MIPS R6000 42h~MIPS R4000
 #>0x08	uleshort		x		\b, CPU %u
-# os_type; target operating system like: 0~unknown 1~OS/2 2~Windows 3~DOS 4.x 4~Windows 386
+# os_type; target operating system like: 0~unknown 1~OS/2 2~Windows 16-bit 3~Multitasking MS-DOS 4.x 4~Windows 386 5~IBM Microkernel PN
 #>0x0A	leshort			x		\b, OS %u
 # flags; module type flags
 #>0x10	ulelong			x		\b, FLAGS %#8.8x
@@ -794,47 +805,75 @@
 #>0x10	ulelong			&0x00000002	\b, 2h reserved
 # OSF_INIT_INSTANCE=00000004h		~Per-Process Library Initialization; setting this bit for EXE file is invalid
 #>0x10	ulelong			&0x00000004	\b, per-process library Initialization
+#>0x10	ulelong			&0x00000008	\b, system dll
 # OSF_INTERNAL_FIXUPS_DONE=00000010h	~Internal fixups for the module have been applied
 #>0x10	ulelong			&0x00000010	\b, int. fixup
 # OSF_EXTERNAL_FIXUPS_DONE=00000020h	~External fixups for the module have been applied
 #>0x10	ulelong			&0x00000020	\b, ext. fixup
 # OSF_NOT_PM_COMPATIBLE=00000100h	~Incompatible with PM windowing 
-#>0x10	ulelong&0x00000100	=0x00000100	\b, incompatible with PM windowing
+#>0x10	ulelong&0x00000700	=0x00000100	\b, incompatible with PM windowing
 # OSF_PM_COMPATIBLE=00000200h		~Compatible with PM windowing
-#>0x10	ulelong&0x00000200	=0x00000200	\b, compatible with PM windowing
+#>0x10	ulelong&0x00000700	=0x00000200	\b, compatible with PM windowing
+#>0x10	ulelong&0x00000700	=0x00000300	\b, uses PM windowing API
+#>0x10	ulelong			&0x00002000	\b, not loadable
+#>0x10	ulelong			&0x00008000	\b, library module
 # bit 17; device driver
-#>0x10	ulelong&0x00020000	>0		\b, device driver
+#>0x10	ulelong			&0x00020000	\b, device driver
+#>0x10	ulelong			&0x00080000	\b, multiple-processor unsafe
 # Per-process Library Termination; setting this bit for EXE file is invalid
-#>0x10	ulelong&0x40000000	=0x40000000	\b, per-process library termination
+#>0x10	ulelong			&0x40000000	\b, per-process library termination
+# OS type
+>0x0a	clear			x
 >0x0a	leshort			1		for OS/2
-# no example found
->0x0a	leshort			3		for DOS
+# OS 2 was reserved for MS Windows 16-bit but it never used LX (NE format was used instead)
+#>0x0a	leshort			2		for MS Windows 16-bit
+# OS 3 was reserved for Multitasking MS-DOS but it never used LX (NE format was used instead)
+#>0x0a	leshort			3		for Multitasking MS-DOS
+# OS 4 was reserved for MS Windows device drivers but it never used LX (LE format was used instead)
+#>0x0a	leshort			4		for MS Windows
+# OS 5 was reserved for IBM Microkernel Personality Neutral but it never used LX (the only released IBM Workplace OS for PowerPC used ELF format)
+#>0x0a	leshort			5		for IBM Microkernel Personality Neutral
+>0x0a	default			x
+>>0x0a	leshort			x		for unknown OS %#x
 # http://www.ctyme.com/intr/rb-2939.htm#Table1610
 # library by module type mask 00038000h (bits 15-17); 
 # 0h ~executable Program module 
->0x10	ulelong&0x00038000	=0x00000000	(program)
-#!:ext	exe
-# OSF_IS_DLL=8000h			~Library module (DLL)
->0x10	ulelong&0x00038000	>0x00000000
-# OSF_PHYS_DEVICE=00020000h		~device driver
->>0x10	ulelong&0x00020000	>0		(device driver)
-!:ext	sys
-# if not device driver it is library (DLL)
->>0x10	ulelong&0x00020000	=0		(library)
+>0x10	ulelong&0x00038000	=0x00000000	(EXE)
+!:ext	exe
+# bits 8-10; OSF_PM_APP=700h in flags	~Uses PM windowing API; either it is GUI or console
+>>0x10	ulelong&0x00000700	=0x00000100	(full screen)
+>>0x10	ulelong&0x00000700	=0x00000200	(console)
+>>0x10	ulelong&0x00000700	=0x00000300	(GUI)
+>0x10	ulelong&0x00038000	=0x00008000	(DLL)
 !:ext	dll
-# bits 8-10; OSF_PM_APP=300h in flags	~Uses PM windowing API; either it is GUI or console
->0x10  	ulelong&0x00000300	=0x00000300	(GUI)
->0x10	ulelong&0x00000300	!0x00000300	(console)
+>0x10	ulelong&0x00038000	=0x00010000	(unknown)
+>0x10	ulelong&0x00038000	=0x00018000	(PMDLL)
+>0x10	ulelong&0x00038000	=0x00020000	(PDD)
+!:ext	sys
+>0x10	ulelong&0x00038000	=0x00028000	(VDD)
+!:ext	sys
+>0x10	ulelong&0x00038000	=0x00030000	(DLD)
+>0x10	ulelong&0x00038000	=0x00038000	(unknown)
 # CPU type
->0x08	uleshort		1		i80286
+>0x08	clear			x
+>0x08	uleshort		1		\b, Intel i286
 # all inspected examples
->0x08	uleshort		2		i80386
->0x08	uleshort		3		i80486
->0x08	uleshort		4		i80586
-# 21h 	Intel "N11" or compatible
+>0x08	uleshort		2		\b, Intel i386
+>0x08	uleshort		3		\b, Intel i486
+>0x08	uleshort		4		\b, Intel i586
+# 20h 	Intel i860 N10 or compatible
+# 21h 	Intel i860 N11 or compatible
 # 40h 	MIPS Mark I ( R2000, R3000) or compatible
 # 41h 	MIPS Mark II ( R6000 ) or compatible
 # 42h 	MIPS Mark III ( R4000 ) or compatible
+>0x08	default			x
+>>0x08	uleshort		x		\b, unknown CPU %#x
+# Endianity for debugging, there are no samples for non-little-endian
+#>0x02	clear			x
+#>0x02	uleshort		=0x0000		(little-endian)
+#>0x02	uleshort		=0x0101		(big-endian)
+#>0x02	uleshort		=0x0100		(PDP-11-endian)
+#>0x02	default			x		(unknown-endian)
 
 # added by Joerg Jenderek of https://www.freedos.org/software/?prog=kc
 # and https://www.freedos.org/software/?prog=kpdos
