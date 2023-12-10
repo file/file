@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: frame,v 1.15 2023/12/10 15:30:58 christos Exp $
+# $File: frame,v 1.16 2023/12/10 16:06:23 christos Exp $
 # frame:  file(1) magic for FrameMaker files
 #
 # This stuff came on a FrameMaker demo tape, most of which is
@@ -44,8 +44,17 @@
 0	string		\<MakerScreenFont	FrameMaker Font file
 !:mime	application/x-mif
 >17	string		1.01		 (%s)
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/m/mml-fm.trid.xml
+# Update:	Joerg Jenderek 2023 Nov
+# Note:		called "FrameMaker Maker Markup Language" by TrID and
+#		"Adobe FrameMaker document" by shared MIME-info database from freedesktop.org
 0	string		\<MML		FrameMaker MML file
-!:mime	application/x-mif
+#!:mime	text/plain
+#!:mime	application/x-mif
+!:mime	application/vnd.framemaker
+!:ext	mml
+# Note:		sometimes followed by space and version like 1.00 (formats.mml sample.mml) and more text
+>5	string		>0		 (%-0.4s)
 # URL:		http://fileformats.archiveteam.org/wiki/FrameMaker
 # Reference:	http://mark0.net/download/triddefs_xml.7z
 # 		defs/b/book-fm.trid.xml
