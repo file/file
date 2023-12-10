@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: frame,v 1.17 2023/12/10 16:07:50 christos Exp $
+# $File: frame,v 1.18 2023/12/10 16:09:17 christos Exp $
 # frame:  file(1) magic for FrameMaker files
 #
 # This stuff came on a FrameMaker demo tape, most of which is
@@ -35,9 +35,19 @@
 # comment starting with # shows the name+version number of generating program
 >13	search/3	#
 >>&0	string		x		"%s"
+# Update:	Joerg Jenderek
+# Note:		called "Adobe FrameMaker document" by shared MIME-info database from freedesktop.org
 0	search/1	\<MakerDictionary	FrameMaker Dictionary text
-!:mime	application/x-mif
+#!:mime	text/plain
+#!:mime	application/x-mif
+!:mime	application/vnd.framemaker
+# like site.dict but often extension is a 3 letters country code like in: hyphens.brt hyphens.eng
+!:ext	dict/eng/brt
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/fm-hyph-dict-30.trid.xml
+# Note:		called "FrameMaker hyphens dictionary (v3.0)" by TrID
 >17	string		3.0		 (3.0)
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/fm-hyph-dict-20.trid.xml
+# Note:		called "FrameMaker hyphens dictionary (v2.0)" by TrID
 >17	string		2.0		 (2.0)
 >17	string		1.0		 (1.x)
 # Reference:	http://mark0.net/download/triddefs_xml.7z/defs/b/bfont.trid.xml
