@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.178 2023/12/10 15:29:22 christos Exp $
+# $File: msdos,v 1.179 2023/12/10 16:11:04 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -622,17 +622,23 @@
 >>>(0x3c.l+0x3)		ubyte		x %u
 >>>(0x3c.l+0x2)		ubyte		x \b.%02u
 
->>(0x3c.l)		string		LE\0\0 \b, LE executable
+# Linear Executable (LE) in Little Endian (\0\0)
+>>(0x3c.l)		string		LE\0\0 \b, LE
 !:mime	application/x-dosexec
 >>>(0x3c.l+0x0a)	leshort		1
 # some DOS extenders use LE files with OS/2 header
->>>>0x240		search/0x100	DOS/4G for MS-DOS, DOS4GW DOS extender
->>>>0x240		search/0x200	WATCOM\ C/C++ for MS-DOS, DOS4GW DOS extender
+>>>>0x240		search/0x100	DOS/4G for MS-DOS, DOS/4G DOS extender
+>>>>0x240		search/0x200	WATCOM\ C/C++ for MS-DOS, DOS/4GW DOS extender
 >>>>0x440		search/0x100	CauseWay\ DOS\ Extender for MS-DOS, CauseWay DOS extender
 >>>>0x40		search/0x40	PMODE/W for MS-DOS, PMODE/W DOS extender
 >>>>0x40		search/0x40	STUB/32A for MS-DOS, DOS/32A DOS extender (stub)
 >>>>0x40		search/0x80	STUB/32C for MS-DOS, DOS/32A DOS extender (configurable stub)
 >>>>0x40		search/0x80	DOS/32A for MS-DOS, DOS/32A DOS extender (embedded)
+# D3XW.EXE
+>>>>(8.s*16)		string		o2LEstub for MS-DOS, D3X DOS extender
+>>>>0			default		x
+# DOS32MW.DLL
+>>>>>(0x3c.l+0x10)	lelong&0x38000	=0x18000 for MS-DOS (DLL)
 # this is a wild guess; hopefully it is a specific signature
 >>>>&0x24		lelong		<0x50
 >>>>>(&0x4c.l)		string		\xfc\xb8WATCOM
@@ -640,14 +646,27 @@
 # another wild guess: if real OS/2 LE executables exist, they probably have higher start EIP
 #>>>>(0x3c.l+0x1c)	lelong		>0x10000 for OS/2
 # fails with DOS-Extenders.
->>>(0x3c.l+0x0a)	leshort		2 for MS Windows
->>>(0x3c.l+0x0a)	leshort		3 for DOS
->>>(0x3c.l+0x0a)	leshort		4 for MS Windows (VxD)
-# VXD: VxD for Windows 95/98/Me
-# 386: VxD for Windows 2.10, 3.0, 3.1x
+# OS 2 was reserved for MS Windows 16-bit but it never used LE (NE format was used instead)
+#>>>(0x3c.l+0x0a)	leshort		2 for MS Windows 16-bit
+# OS 3 was reserved for Multitasking MS-DOS but it never used LE (NE format was used instead)
+#>>>(0x3c.l+0x0a)	leshort		3 for Multitasking MS-DOS
+>>>(0x3c.l+0x0a)	leshort		4 for MS Windows
+>>>>(0x3c.l+0xc3)	ubyte		x %u
+>>>>(0x3c.l+0xc2)	ubyte		x \b.%02u
+>>>>(0x3c.l+0x10)	lelong&0x38000	=0x08000
+# DLL module (0x08000) with no external fixups (0x20) for i386 CPU (2) is .386 VxD file for MS Windows 3.x
+>>>>>(0x3c.l+0x10)	lelong&0x20	!0
+>>>>>>(0x3c.l+0x08)	leshort		2 (VxD 386)
+!:ext	386
+>>>>(0x3c.l+0x10)	lelong&0x38000	=0x28000 (VxD static)
+# VXD: VxD for MS Windows 95/98/Me
 # PDR: Port driver
 # MPD: Miniport driver (?)
-!:ext	vxd/386/pdr/mpd
+!:ext	vxd/pdr/mpd
+>>>>(0x3c.l+0x10)	lelong&0x38000	=0x38000 (VxD dynamic)
+!:ext	vxd/pdr/mpd
+>>>(0x3c.l+0x0a)	default		x
+>>>>(0x3c.l+0x0a)	leshort		x for unknown OS %#x
 >>>(&0x7c.l+0x26)	string		UPX \b, UPX compressed
 >>>&(&0x54.l-3)		string		UNACE \b, ACE self-extracting archive
 
