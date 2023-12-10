@@ -1,13 +1,12 @@
 
 #------------------------------------------------------------------------------
-# $File: frame,v 1.16 2023/12/10 16:06:23 christos Exp $
+# $File: frame,v 1.17 2023/12/10 16:07:50 christos Exp $
 # frame:  file(1) magic for FrameMaker files
 #
 # This stuff came on a FrameMaker demo tape, most of which is
 # copyright, but this file is "published" as witness the following:
 #
-# Note that this is the Framemaker Maker Interchange Format, not the
-# Normal format which would be application/vnd.framemaker.
+# URL:		https://en.wikipedia.org/wiki/Adobe_FrameMaker
 #
 0	string		\<MakerFile	FrameMaker document
 !:mime	application/x-mif
@@ -41,8 +40,18 @@
 >17	string		3.0		 (3.0)
 >17	string		2.0		 (2.0)
 >17	string		1.0		 (1.x)
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/b/bfont.trid.xml
+# Update:	Joerg Jenderek 2023
+# Note:		called "XFrameMaker Bitmapped screen Font" by TrID and
+#		"Adobe FrameMaker font" by shared MIME-info database from freedesktop.org
 0	string		\<MakerScreenFont	FrameMaker Font file
-!:mime	application/x-mif
+#!:mime	application/octet-stream
+#!:mime	application/x-mif
+!:mime	application/x-font-framemaker
+!:ext	bfont
+# Note:		maybe also other version like: 1.x
+>17	string		!1.01
+>>17	string		x		 (%-0.4s)
 >17	string		1.01		 (%s)
 # Reference:	http://mark0.net/download/triddefs_xml.7z/defs/m/mml-fm.trid.xml
 # Update:	Joerg Jenderek 2023 Nov
