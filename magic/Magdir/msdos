@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.179 2023/12/10 16:11:04 christos Exp $
+# $File: msdos,v 1.180 2023/12/21 16:31:45 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -168,8 +168,9 @@
 #>>>(0x3c.l+92)	leshort		x	\b, SUBSYSTEM %u
 >>(0x3c.l+24)	leshort		0x020b	\b32+ executable
 #>>>(0x3c.l+92)	leshort		x	\b, SUBSYSTEM %u
->>(0x3c.l+24)	leshort		0x0107	ROM image
->>(0x3c.l+24)	default		x	Unknown PE signature
+# ROM image is without DOS MZ header and without PE\0\0 signature
+#>>(0x3c.l+24)	leshort		0x0107	ROM image
+>>(0x3c.l+24)	default		x	with unknown signature
 >>>&0 		leshort		x	%#x
 >>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
 # 0~IMAGE_SUBSYSTEM_UNKNOWN An unknown subsystem
@@ -314,10 +315,14 @@
 >>>&0		leshort		x	%#x
 >>(0x3c.l+22)	leshort&0x0200	>0	(stripped to external PDB)
 >>(0x3c.l+22)	leshort&0x1000	>0	system file
+
+# Check for presence of COM Runtime descriptor
 >>(0x3c.l+24)	leshort		0x010b
->>>(0x3c.l+232) lelong	>0	Mono/.Net assembly
+>>>(0x3c.l+116)	leshort	>14
+>>>>(0x3c.l+232) lelong	>0	Mono/.Net assembly
 >>(0x3c.l+24)	leshort		0x020b
->>>(0x3c.l+248) lelong	>0	Mono/.Net assembly
+>>>(0x3c.l+132)	leshort	>14
+>>>>(0x3c.l+248) lelong	>0	Mono/.Net assembly
 
 # hooray, there's a DOS extender using the PE format, with a valid PE
 # executable inside (which just prints a message and exits if run in win)
