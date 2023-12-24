@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.195 2023/12/02 13:50:30 christos Exp $
+# $File: archive,v 1.196 2023/12/24 20:31:45 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1690,6 +1690,18 @@
 0	string		PK\x07\x08PK\x03\x04	Zip multi-volume archive data, at least PKZIP v2.50 to extract
 !:mime	application/zip
 !:ext zip/cbz
+
+
+# IOS/IPadOS IPA file (Zip archive)
+0	string		PK\003\004
+!:strength +1
+# Starts with Payload (file name length = 19)
+>26	uleshort	8
+>>30  	string		Payload		IOS/iPadOS IPA file
+>>>&26  search/6000	PK\003\004
+>>>>&34	string		x	containing %s
+!:mime	application/x-ios-app
+!:ext	ipa
 
 # Android APK file (Zip archive)
 0	string		PK\003\004
