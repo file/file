@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.246 2023/12/10 16:12:31 christos Exp $
+# $File: images,v 1.247 2023/12/29 15:47:11 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1346,17 +1346,95 @@
 0	string		PCD_OPA		Kodak Photo CD overview pack file
 
 # FITS format.  Jeff Uphoff <juphoff@tarsier.cv.nrao.edu>
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Flexible_Image_Transport_System
+#		https://en.wikipedia.org/wiki/FITS
+# Reference:	https://mark0.net/download/triddefs_xml.7z/defs/b/bitmap-fts.trid.xml
+# Note:		called "Flexible Image Transport System bitmap" by TrID, GIMP and DROID via PUID x-fmt/383
+#		"FITS document" with expanded acronym "Flexible Image Transport System" by shared MIME-info database from freedesktop.org
+#		verified as "Flexible Image Transport System" by XnView `nconvert -fullinfo M57.FIT MOON.FTS` ,
+#		as "FTS (Flexible Image Transport System)" by ImageMagick command `identify MOON.FTS` ,
+#		by NetPBM `fitstopnm M57.FIT | file` ,
+#		falsified by `fitsverify M57.FIT MOON.FTS`
 # FITS is the Flexible Image Transport System, the de facto standard for
 # data and image transfer, storage, etc., for the astronomical community.
 # (FITS floating point formats are big-endian.)
-0	string	SIMPLE\ \ =	FITS image data
+# keyword is a 1- to 8-character, left-justified ASCII string; columns that do not contain data are filled with spaces
+# The assignment indicator (=) always occupies columns nine and ten in the card
+0	string	SIMPLE\ \ =
+# skip DROID x-fmt-383-signature-id-57.fits by check for left padding spaces of 2nd card value
+>89	ubeshort	=0x2020	FITS image
+# URL:		https://heasarc.gsfc.nasa.gov/fitsio/fpack/
+# Reference:	https://mark0.net/download/triddefs_xml.7z/defs/b/bitmap-fz.trid.xml
+#		https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/docs/fpackguide.pdf
+# Note:		called "Flexible Image Transport System bitmap (compressed)" by TrID
+>>240	search/0x4790/b	ZCMPTYPE=	data, compression type
+# fz suffix for compressed fits
+!:ext	fz
+# Flexible Image Transport System compression value (followed by optional FITS comment) like: NOCOMPRESS GZIP_1 GZIP_2 HCOMPRESS_1 PLIO_1 RICE_1
+#>>>&0	string		x		COMPRESSION=%0.13s
+>>>&0	regex		[A-Z_1-2]{4,11}	%s
+# not compressed Flexible Image Transport System with other filename suffix
+>>240	default		x		data
+!:ext	fits/fit/fts
+# five keywords that are required in every FITS file: SIMPLE, BITPIX, NAXIS, NAXISn, and END. EXTEND is also a required keyword if extensions are present in the file
+# required keyword in standard on 3rd card contains integer number of bits used to represent each data value but in 2nd card for M57.FIT
+>>80	search/81/b	BITPIX\040\040=
+#>>>&11	string	x		BIT=%-0.18s
+# this is the number of bits per pixel for image data
+>>>&20	string	8		\b, 8-bit, character or unsigned binary integer
+# few samples with more right positioned values like: M57.FIT
+# GRR: avoid warning: Magdir\images, 1380: Warning: description `, 8-bit, character or unsigned binary integer (too right positioned)' truncated
+>>>&28	string	8		\b, 8-bit, character or unsigned binary integer
+>>>>0	string	x		(too right positioned)
+# few samples not right justified positioned like: MOON.FTS
+>>>&11	string	8		\b, 8-bit, character or unsigned binary integer
+>>>>0	string	x		(too left positioned)
+# according to DROID but no examples found
+#>>>&19	string	08		\b, 8-bit, character or unsigned binary integer
+#>>>&19	string	+8		\b, 8-bit, character or unsigned binary integer
+>>>&19	string	16		\b, 16-bit, two's complement binary integer
+>>>&18	string	\04032		\b, 32-bit, two's complement binary integer
+>>>&18	string	-32		\b, 32-bit, floating point, single precision
+>>>&18	string	-64		\b, 64-bit, floating point, double precision
+# second 64-bit variant like: blank.fits
+>>>&18	string	\04064		\b, 64-bit, two's complement binary integer
+# in standard number of dimensions by keyword NAXIS on 3rd card image but in few cases on 2nd card like: M57.FIT
+>>80	search/81/b	NAXIS\040\040\040=		\b,
+# before optional comment 31 ASCII charactes left padded with spaces for integer (0-999) of data axis like: 0 (extension no data) 1 (spectrum) 2 (conventional bitmap) 3 (animated bitmap example.fit test.fits) 6 (DDTSUVDATA.fits)
+#>>>>&0	string		x		NAXIS=%-0.31s
+# single digit 0 implies no data or similar
+>>>&0	search/31/b	\0400\040	0 axes
+!:mime	application/fits
+# single digit 1 implies one-dimensional entity such as a spectrum or a time series (no example found)
+>>>&-1	search/31/b	\0401\040	1 axis
+!:mime	application/fits
+#!:mime	image/fits
+# single digit 2 implies conventional bitmap
+>>>&0	search/31/b	\0402\040	2 axes
 !:mime	image/fits
-!:ext	fits/fts
->109	string	8		\b, 8-bit, character or unsigned binary integer
->108	string	16		\b, 16-bit, two's complement binary integer
->107	string	\ 32		\b, 32-bit, two's complement binary integer
->107	string	-32		\b, 32-bit, floating point, single precision
->107	string	-64		\b, 64-bit, floating point, double precision
+# single digit 3 implies data cubes of three dimensions (animated bitmap or similar)
+>>>&0	search/31/b	\0403\040	3 axes
+!:mime	image/fits
+# data cubes more dimensions like: 5 (group.fits) 6 (DDTSUVDATA.fits)
+>>>&0	default		x
+>>>>&0	regex/31/s	=[0-9]{1,3} 	%s axis
+!:mime	application/fits
+# often NAXIS1 as 4th card but sometimes at higher offset like: 29400 (IUElwp25637mxlo.fits) 20400 (NICMOSn4hk12010_mos.fits)
+>>240	search/29400/bs	NAXIS1\040\040=		\b,
+# before optional comment 31 ASCII charactes left padded with spaces for first axis like: 192 512 1024 1200 2000 2064 3600 ...
+>>>&9	regex	=[0-9]{1,31} 	%s
+# often NAXIS2 as 5th card but sometimes not existent or at higher offset like: 29120 (IUElwp25637mxlo.fits) 20480 (NICMOSn4hk12010_mos.fits)
+>>>320	search/29120/bs	NAXIS2\040\040=		x
+# before optional comment 31 ASCII charactes left padded with spaces for second axis like: 2 4 165 512 800 1024 3600 ...
+>>>>&9	regex	=[0-9]{1,31} 	%s
+# not standard cards
+>>80	string	!BITPIX\040\040= \b, at 80
+# in M57.FIT like: "NAXIS   ="
+>>>80	string	x		"%-0.9s"
+>>160	string	!NAXIS\040\040\040= \b, at 160
+# in M57.FIT like: "BITPIX  ="
+>>>160	string	x		"%-0.9s"
 
 # other images
 0	string	This\ is\ a\ BitMap\ file	Lisp Machine bit-array-file
