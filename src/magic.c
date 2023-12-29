@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.122 2023/12/20 21:11:03 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.123 2023/12/29 18:04:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -641,6 +641,9 @@ magic_setparam(struct magic_set *ms, int param, const void *val)
 	case MAGIC_PARAM_ENCODING_MAX:
 		ms->encoding_max = v;
 		return 0;
+	case MAGIC_PARAM_MAGWARN_MAX:
+		ms->magwarn_max = v;
+		return 0;
 	default:
 		errno = EINVAL;
 		return -1;
@@ -679,6 +682,9 @@ magic_getparam(struct magic_set *ms, int param, void *val)
 		return 0;
 	case MAGIC_PARAM_ENCODING_MAX:
 		*CAST(size_t *, val) = ms->encoding_max;
+		return 0;
+	case MAGIC_PARAM_MAGWARN_MAX:
+		*CAST(size_t *, val) = ms->magwarn_max;
 		return 0;
 	default:
 		errno = EINVAL;

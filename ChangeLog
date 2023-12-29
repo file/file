@@ -1,3 +1,7 @@
+2023-12-29  12:55  Christos Zoulas <christos@zoulas.com>
+
+	* Add limit for number of magic warnings allowed
+
 2023-07-27  15:45  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.45

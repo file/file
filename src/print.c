@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.100 2023/09/14 13:20:19 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.101 2023/12/29 18:04:48 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -258,6 +258,10 @@ file_magwarn(struct magic_set *ms, const char *f, ...)
 	(void) vfprintf(stderr, f, va);
 	va_end(va);
 	(void) fputc('\n', stderr);
+	if (ms->magwarn++ >= ms->magwarn_max) {
+		(void) fprintf(stderr, "Too many warnings, exiting.\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
 file_protected const char *

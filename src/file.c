@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.215 2023/05/21 17:08:34 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.216 2023/12/29 18:04:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -166,6 +166,8 @@ file_private struct {
 	    MAGIC_PARAM_NAME_MAX, 0 },
 	{ "regex", 0, FILE_REGEX_MAX, "length limit for REGEX searches",
 	    MAGIC_PARAM_REGEX_MAX, 0 },
+	{ "magwarn", 0, FILE_MAGWARN_MAX, "maximum number of magic warnings",
+	    MAGIC_PARAM_MAGWARN_MAX, 0 },
 };
 
 file_private int posixly;

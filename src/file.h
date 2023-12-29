@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.250 2023/08/19 15:30:39 christos Exp $
+ * @(#)$File: file.h,v 1.251 2023/12/29 18:04:48 christos Exp $
  */
 
 #ifndef __file_h__
@@ -480,6 +480,7 @@ struct magic_set {
 	const char *file;
 	size_t line;			/* current magic line number */
 	mode_t mode;			/* copy of current stat mode */
+	uint16_t magwarn;		/* current number of warnings */
 
 	/* data for searches */
 	struct {
@@ -498,9 +499,10 @@ struct magic_set {
 	uint16_t elf_phnum_max;
 	uint16_t elf_notes_max;
 	uint16_t regex_max;
+	uint16_t magwarn_max;
 	size_t bytes_max;		/* number of bytes to read from file */
 	size_t encoding_max;		/* bytes to look for encoding */
-	size_t	elf_shsize_max;
+	size_t elf_shsize_max;
 #ifndef FILE_BYTES_MAX
 # define FILE_BYTES_MAX (7 * 1024 * 1024)/* how much of the file to look at */
 #endif /* above 0x6ab0f4 map offset for HelveticaNeue.dfont */
@@ -512,6 +514,7 @@ struct magic_set {
 #define	FILE_NAME_MAX			50
 #define	FILE_REGEX_MAX			8192
 #define	FILE_ENCODING_MAX		(64 * 1024)
+#define	FILE_MAGWARN_MAX		64
 #if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE)
 #define USE_C_LOCALE
 	locale_t c_lc_ctype;

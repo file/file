@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.343 2023/12/20 21:28:00 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.344 2023/12/29 18:04:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -574,6 +574,7 @@ file_ms_alloc(int flags)
 		ms->mlist[i] = NULL;
 	ms->file = "unknown";
 	ms->line = 0;
+	ms->magwarn = 0;
 	ms->indir_max = FILE_INDIR_MAX;
 	ms->name_max = FILE_NAME_MAX;
 	ms->elf_shnum_max = FILE_ELF_SHNUM_MAX;
@@ -583,6 +584,7 @@ file_ms_alloc(int flags)
 	ms->regex_max = FILE_REGEX_MAX;
 	ms->bytes_max = FILE_BYTES_MAX;
 	ms->encoding_max = FILE_ENCODING_MAX;
+	ms->magwarn_max = FILE_MAGWARN_MAX;
 #ifdef USE_C_LOCALE
 	ms->c_lc_ctype = newlocale(LC_CTYPE_MASK, "C", 0);
 	assert(ms->c_lc_ctype != NULL);
