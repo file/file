@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.247 2023/12/29 15:47:11 christos Exp $
+# $File: images,v 1.248 2024/01/02 18:13:17 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3720,7 +3720,7 @@
 
 # Microsoft Paint graphic
 # http://www.fileformat.info/format/mspaint/egff.htm
-0	string	DanM 	icrosoft Paint image data (version 1.x)
+0	string	DanM 	Microsoft Paint image data (version 1.x)
 >4	uleshort	x	(%d
 >>6	uleshort	x	x %d)
 0	string	LinS 	Microsoft Paint image data (version 2.0)
