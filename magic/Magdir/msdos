@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.181 2023/12/21 19:07:52 christos Exp $
+# $File: msdos,v 1.182 2024/01/05 16:10:29 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -183,14 +183,29 @@
 !:ext	acm/cpl/dll/drv/ds/exe/ocx/sys/tlb/vxd
 >>>0x40		string		Wine\ builtin\ DLL	\bWINE)
 !:ext	acm/cpl/dll/drv/ds/exe/ocx/sys/tlb/vxd
+>>>0		default		x
 # Summary:	Microsoft compiled help *.HXS format 2.0
 # URL:		https://en.wikipedia.org/wiki/Microsoft_Help_2
 # Reference:	http://www.russotto.net/chm/itolitlsformat.html
 #		https://mark0.net/download/triddefs_xml.7z/defs/h/hxs.trid.xml
-# Note:		2 PE sections (.rsrc, .its) implies Microsoft compiled help format; the .its section contains the help content ITOLITLS
-#		verified by command like `pelook.exe -d WINWORD.HXS & pelook.exe -h WINWORD.HXS`
->>>(0x3c.l+6)	uleshort	=2	\bMicrosoft compiled help format 2.0)
+# Note:		Microsoft compiled help format contains 2 PE32 sections (.rsrc, .its) for Intel i386;
+#		The help content is appended after the PE32 binary and starts with ITOLITLS string;
+#		End of the PE32 binary is immediately after the .its section.
+#		verified by command like:
+#		`pelook.exe -d WINWORD.HXS & pelook.exe -h WINWORD.HXS`
+#		`objdump -p -s WINWORD.HXS`
+#		`readpe WINWORD.HXS`
+>>>>(0x3c.l+6)		uleshort	=2
+# Second section for these binaries starts at fixed offset 288 (size of PE signature + size of COFF header + size
+# of PE32 optional header with all data dirs + size of first .rsrc section header = 4 + 20 + 96+8*16 + 40 = 288)
+>>>>>(0x3c.l+288)	string/b	.its\0\0\0\0
+# Read start+length of .its section and just after it
+>>>>>>(&4.l+(-4))	string		ITOLITLS	\bMicrosoft compiled help format 2.0)
 !:ext	hxs
+# Fallback for any unrecognized binary with Unknown subsystem 0
+>>>>>>0		default		x	\bunknown)
+>>>>>0		default		x	\bunknown)
+>>>>0		default		x	\bunknown)
 # 1~IMAGE_SUBSYSTEM_NATIVE device drivers and native Windows processes 
 >>(0x3c.l+92)	leshort		1
 # Native PEs include ntoskrnl.exe, hal.dll, smss.exe, autochk.exe, and all the
