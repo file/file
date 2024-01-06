@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.183 2024/01/05 20:08:37 christos Exp $
+# $File: msdos,v 1.184 2024/01/06 16:51:47 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -172,16 +172,19 @@
 #>>(0x3c.l+24)	leshort		0x0107	ROM image
 >>(0x3c.l+24)	default		x	with unknown signature
 >>>&0 		leshort		x	%#x
->>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
+
+## Start of the subsystem switch
+>>(0x3c.l+92)	clear		x
+
 # 0~IMAGE_SUBSYSTEM_UNKNOWN An unknown subsystem
->>(0x3c.l+92)	leshort		0	(
+>>(0x3c.l+92)	leshort		0
 # WINE https://www.winehq.org/ DLL libraries without subsystem, some examples:
 # fakedlls/l3codeca.acm fakedlls/msadp32.acm fakedlls/inetcpl.cpl fakedlls/inetcpl.cpl fakedlls/kernel32.dll fakedlls/user32.dll fakedlls/gdi32.dll
 # fakedlls/winex11.drv fakedlls/winspool.drv fakedlls/gphoto2.ds fakedlls/sane.ds fakedlls/ntoskrnl.exe fakedlls/dhtmled.ocx fakedlls/hhctrl.ocx
 # fakedlls/hidclass.sys fakedlls/mshtml.tlb fakedlls/stdole32.tlb fakedlls/vwin32.vxd fakedlls/vmm.vxd
->>>0x40		string		Wine\ placeholder\ DLL	\bWINE stub)
+>>>0x40		string		Wine\ placeholder\ DLL	for WINE stub (DLL)
 !:ext	acm/cpl/dll/drv/ds/exe/ocx/sys/tlb/vxd
->>>0x40		string		Wine\ builtin\ DLL	\bWINE)
+>>>0x40		string		Wine\ builtin\ DLL	for WINE (DLL)
 !:ext	acm/cpl/dll/drv/ds/exe/ocx/sys/tlb/vxd
 >>>0		default		x
 # Summary:	Microsoft compiled help *.HXS format 2.0
@@ -200,23 +203,43 @@
 # of PE32 optional header with all data dirs + size of first .rsrc section header = 4 + 20 + 96+8*16 + 40 = 288)
 >>>>>(0x3c.l+288)	string/b	.its\0\0\0\0
 # Read start+length of .its section and just after it
->>>>>>(&4.l+(-4))	string		ITOLITLS	\bMicrosoft compiled help format 2.0)
+>>>>>>(&4.l+(-4))	string		ITOLITLS	\b, Microsoft compiled help format 2.0
 !:ext	hxs
 # Fallback for any unrecognized binary with Unknown subsystem 0
->>>>>>0		default		x	\bunknown)
->>>>>0		default		x	\bunknown)
->>>>0		default		x	\bunknown)
+>>>>>>0		default		x	for Unknown subsystem 0
+>>>>>0		default		x	for Unknown subsystem 0
+>>>>0		default		x	for Unknown subsystem 0
+
 # 1~IMAGE_SUBSYSTEM_NATIVE device drivers and native Windows processes 
 >>(0x3c.l+92)	leshort		1
-# Native PEs include ntoskrnl.exe, hal.dll, smss.exe, autochk.exe, and all the
-# drivers in Windows/System32/drivers/*.sys.
+# WINE https://www.winehq.org/: fakedlls/fltmgr.sys fakedlls/mountmgr.sys fakedlls/scsiport.sys fakedlls/winebus.sys fakedlls/winehid.sys
+>>>0x40		string		Wine\ placeholder\ DLL	for WINE stub
+>>>0x40		string		Wine\ builtin\ DLL	for WINE
+>>>0		default		x	for MS Windows
+>>>>(0x3c.l+72)	leshort		x	%u
+>>>>(0x3c.l+74)	leshort		x	\b.%02u
+# Native PEs are used by:
+# - NT kernel DLLs: hal.dll, kdcom.dll, pshed.dll, bootvid.dll, ...
+# - NT kernel images: ntoskrnl.exe, ntkrnlmp.exe, ntkrnlpa.exe, ntkrpamp.exe
+# - NT kernel drivers: Windows/System32/drivers/*.sys
+# - NT native userspace DLLs: ntdll.dll, ...
+# - NT native userspace executables: smss.exe, csrss.exe, autochk.exe, ...
+# TODO: write rule to distinguish between Kernel and Native processes
+#       (the only way to do this is based on the presence of ntoskrnl.exe in import table)
 >>>(0x3c.l+22)	leshort&0x2000	>0	(native)
 !:ext	dll/sys
 >>>(0x3c.l+22)	leshort&0x2000	0	(native)
 !:ext	exe/sys
+
 # 2~IMAGE_SUBSYSTEM_WINDOWS_GUI	The Windows graphical user interface (GUI) subsystem 
 >>(0x3c.l+92)	leshort		2
->>>(0x3c.l+22)	leshort&0x2000	>0	(GUI)
+# WINE https://www.winehq.org/: fakedlls/clock.exe fakedlls/control.exe fakedlls/explorer.exe fakedlls/notepad.exe
+>>>0x40		string		Wine\ placeholder\ DLL	for WINE stub
+>>>0x40		string		Wine\ builtin\ DLL	for WINE
+>>>0		default		x	for MS Windows
+>>>>(0x3c.l+72)	leshort		x	%u
+>>>>(0x3c.l+74)	leshort		x	\b.%02u
+>>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
 # These could probably be at least partially distinguished from one another by
 # looking for specific exported functions.
 # CPL: Control Panel item
@@ -230,73 +253,105 @@
 # Screen savers typically include code from the scrnsave.lib static library, but
 # that's not guaranteed.
 !:ext	exe/scr
+
 # 3~IMAGE_SUBSYSTEM_WINDOWS_CUI	The Windows character subsystem 
 >>(0x3c.l+92)	leshort		3
->>>(0x3c.l+22)	leshort&0x2000	>0	(console)
+# WINE https://www.winehq.org/: fakedlls/cacls.exe fakedlls/cmd.exe fakedlls/expand.exe fakedlls/net.exe fakedlls/reg.exe
+>>>0x40		string		Wine\ placeholder\ DLL	for WINE stub
+>>>0x40		string		Wine\ builtin\ DLL	for WINE
+>>>0		default		x	for MS Windows
+>>>>(0x3c.l+72)	leshort		x	%u
+>>>>(0x3c.l+74)	leshort		x	\b.%02u
+>>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
 !:ext	dll/cpl/tlb/ocx/acm/ax/ime
 >>>(0x3c.l+22)	leshort&0x2000	0	(console)
 !:ext	exe/com
-# NO Windows Subsystem number 4!
->>(0x3c.l+92)	leshort		4	(Unknown subsystem 4)
-# 5~IMAGE_SUBSYSTEM_OS2_CUI The OS/2 character subsystem 
->>(0x3c.l+92)	leshort		5	(OS/2)
-# GRR: No examples found by Joerg Jenderek
-#!:ext	foo-exe-os2
+
+# 4~Old Windows CE subsystem (never used)
+#>>(0x3c.l+92)	leshort		4	for MS Windows CE OLD
+
+# 5~IMAGE_SUBSYSTEM_OS2_CUI The OS/2 character subsystem
+# Not used in image files, constant used only in in-memory structures of OS/2 subsystem as part of Windows NT
+#>>(0x3c.l+92)	leshort		5	for OS/2
+
 # NO Windows Subsystem number 6!
->>(0x3c.l+92)	leshort		6	(Unknown subsystem 6)
+#>>(0x3c.l+92)	leshort		6	for Unknown subsystem 6
+
 # 7~IMAGE_SUBSYSTEM_POSIX_CUI The Posix character subsystem 
->>(0x3c.l+92)	leshort		7	(POSIX
->>>(0x3c.l+22)	leshort&0x2000	>0	\b)
+>>(0x3c.l+92)	leshort		7	for POSIX
+>>>(0x3c.l+72)	leshort		x	%u
+>>>(0x3c.l+74)	leshort		x	\b.%02u
+>>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
 # like: PSXDLL.DLL
 !:ext	dll
->>>(0x3c.l+22)	leshort&0x2000	0	\b)
+>>>(0x3c.l+22)	leshort&0x2000	0	(EXE)
 # like: PAX.EXE
 !:ext	exe
+
 # 8~IMAGE_SUBSYSTEM_NATIVE_WINDOWS Native Win9x driver 
->>(0x3c.l+92)	leshort		8	(Win9x)
+# Win9x never used subsystem 8, all Win9x drivers are either LE/VXD or PE with native (1) subsystem
+# MSVC4 LINK.EXE can create PE binary for subsystem 8 by /SUBSYSTEM:MMOSA flag
+# MMOSA refers to Native Win32E (embedded) API, mentioned at:
+# https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-97-18.doc
+#>>(0x3c.l+92)	leshort		8	for Win9x/MMOSA
 # GRR: No examples found by Joerg Jenderek
-#!:ext	foo-exe-win98
+
 # 9~IMAGE_SUBSYSTEM_WINDOWS_CE_GUI Windows CE
->>(0x3c.l+92)	leshort		9	(Windows CE
->>>(0x3c.l+22)	leshort&0x2000	>0	\b)
+>>(0x3c.l+92)	leshort		9
+# WINE https://www.winehq.org/
+>>>0x40		string		Wine\ placeholder\ DLL	for WINE stub
+>>>0x40		string		Wine\ builtin\ DLL	for WINE
+>>>0		default		x	for MS Windows CE
+>>>>(0x3c.l+72)	leshort		x	%u
+>>>>(0x3c.l+74)	leshort		x	\b.%02u
+>>>(0x3c.l+22)	leshort&0x2000	>0	(DLL)
 # like: MCS9900Ce50.dll Mosiisr99x.dll TMCGPS.DLL
 !:ext	dll
->>>(0x3c.l+22)	leshort&0x2000	0	\b)
+>>>(0x3c.l+22)	leshort&0x2000	0	(EXE)
 # like: NNGStart.exe navigator.exe
 !:ext	exe
+
 # 10~IMAGE_SUBSYSTEM_EFI_APPLICATION An Extensible Firmware Interface (EFI) application 
->>(0x3c.l+92)	leshort		10	(EFI application)
+>>(0x3c.l+92)	leshort		10	for EFI (application)
 # like: bootmgfw.efi grub.efi gdisk_x64.efi Shell_Full.efi shim.efi syslinux.efi
 !:ext	efi
+
 # 11~IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER An EFI driver with boot services 
->>(0x3c.l+92)	leshort		11	(EFI boot service driver)
+>>(0x3c.l+92)	leshort		11	for EFI (boot service driver)
 # like: ext2_x64_signed.efi Fat_x64.efi iso9660_x64_signed.efi
 !:ext	efi
->>(0x3c.l+92)	leshort		12	(EFI runtime driver)
+
+# 12~IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER An EFI driver with run-time services
+>>(0x3c.l+92)	leshort		12	for EFI (runtime driver)
 # no sample found
 !:ext	efi
+
 # 13~IMAGE_SUBSYSTEM_EFI_ROM An EFI ROM image
->>(0x3c.l+92)	leshort		13	(EFI ROM)
+>>(0x3c.l+92)	leshort		13	for EFI (ROM)
 # no sample found
 !:ext	efi
+
 # 14~IMAGE_SUBSYSTEM_XBOX XBOX 
->>(0x3c.l+92)	leshort		14	(XBOX)
+>>(0x3c.l+92)	leshort		14	for XBOX
 #!:ext	foo-xbox
+
 # NO Windows Subsystem number 15!
->>(0x3c.l+92)	leshort		15	(Unknown subsystem 15)
+#>>(0x3c.l+92)	leshort		15	for Unknown subsystem 15
+
 # 16~IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION Windows boot application
->>(0x3c.l+92)	leshort		16	(Windows boot application
->>>(0x3c.l+22)	leshort&0x2000	>0	\b)
+>>(0x3c.l+92)	leshort		16	for MS Windows
+>>>(0x3c.l+72)	leshort		x	%u
+>>>(0x3c.l+74)	leshort		x	\b.%02u
+>>>(0x3c.l+22)	leshort&0x2000	>0	(boot DLL)
 # like: bootvhd.dll bootuwf.dll hvloader.dll tcbloader.dll bootspaces.dll
 !:ext	dll
->>>(0x3c.l+22)	leshort&0x2000	0	\b)
+>>>(0x3c.l+22)	leshort&0x2000	0	(boot application)
 # like: bootmgr.efi memtest.efi shellx64.efi memtest.exe winload.exe winresume.exe bootvhd.dll hvloader.dll
 !:ext	efi/exe
-# GRR: the next 2 lines are not executed!
-#>>(0x3c.l+92)	default		x	(Unknown subsystem
-#>>>&0		leshort		x	%#x)
->>(0x3c.l+92)	leshort		>16	(Unknown subsystem
->>>&0		leshort		x	%#x)
+
+>>(0x3c.l+92)	default		x
+>>>&0		leshort		x	for Unknown subsystem %#x
+## End of the subsystem switch
 
 >>(0x3c.l+4)	clear		x	\b,
 >>(0x3c.l+4)	leshort		0x14c	Intel 80386
@@ -364,8 +419,36 @@
 
 # hooray, there's a DOS extender using the PE format, with a valid PE
 # executable inside (which just prints a message and exits if run in win)
->>(8.s*16)		string		32STUB	\b, 32rtm DOS extender
->>(8.s*16)		string		!32STUB	\b, for MS Windows
+# FIXME: Find sample of such executable for investigation. In was introduced
+# in file version 4.14 with following check:
+# "(8.s*16) string 32STUB for MS-DOS, 32rtm DOS extender"
+# "(8.s*16) string !32STUB for MS Windows"
+# But that check is too generic and had lot of false positives. 32STUB/32rtm
+# sounds like Borland DOS extender with PE loader and Windows emulation which
+# can be injected into any valid Windows PE binary.
+# So it is needed to look at the sample of such executable and check for
+# subsystem or cpu/machine.
+
+# Detect embedded DOS extenders
+>>(8.s*16)		string		32STUB
+# BRC32.EXE, TLINK32.EXE or TASM32.EXE from TASM 5.0
+>>>(8.s*16)		search/0x50	32rtm-stub\ for\ PE\ files	\b, Borland 32rtm DOS extender (stub)
+# CL.EXE or LINK.EXE from MS Visual C++ 1.x
+>>(8.s*16)		search/0x50	Phar\ Lap\ Software,\ Inc.	\b, Phar Lap TNT DOS extender
+# ulink.exe
+>>(8.s*16)		search/0x200	Can't\ find\ DOSWIN32.RTM	\b, DosWin32 DOS extender (stub)
+>>(8.s*16)		search/0x4000	Stub\ failed\ to\ find\ DOS/4G\ extender.	\b, DOS/4G DOS extender (stub)
+# LOADPEX.BIN and HDLD32.BIN
+# x86 jmp near relative (0xe9 0x?? 0x??) + string "MI" (0x4d 0x49)
+>>(8.s*16)		ulequad&0xffff0000ff	=0x494d0000e9	\b, HX DOS extender (embedded with DPMI host)
+>>(8.s*16)		ulequad&0xffff0000ff	!0x494d0000e9
+# DPMIST32.BIN
+>>>(8.s*16)		search/0x200	cannot\ find\ loader\ DPMILD32.EXE	\b, HX DOS extender (stub)
+# LOADPE.BIN
+>>>(8.s*16)		search/0x600	PATH=HDPMI32.EXE	\b, HX DOS extender (embedded without DPMI host)
+# DPMILD32.BIN
+>>>(8.s*16)		search/0x4000	DPMILD32:	\b, HX DOS extender (embedded without DPMI host)
+
 >>(0x3c.l+0xf8)		string		UPX0 \b, UPX compressed
 >>(0x3c.l+0xf8)		search/0x140	PEC2 \b, PECompact2 compressed
 >>(0x3c.l+0xf8)		search/0x140	UPX2
