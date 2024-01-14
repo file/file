@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.186 2024/01/14 17:55:43 christos Exp $
+# $File: msdos,v 1.187 2024/01/14 17:57:17 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -836,7 +836,11 @@
 # This sequence skips to the first COFF segment, usually .text
 >(4.s*512)	leshort		0x014c \b, COFF
 !:mime	application/x-dosexec
->>(8.s*16)	string		go32stub for MS-DOS, DJGPP go32 DOS extender
+# djgpp go32 v1 COFF
+# F2C.EXE from f2c95201.zip or compress.exe from djdev112.zip
+>>(&-6.l)	string/b	StubInfoMagic!!\0 for MS-DOS
+# djgpp go32 v2 COFF
+>>(8.s*16)	string		go32stub for MS-DOS
 >>(8.s*16)	string		emx
 >>>&1		string		x for DOS, Win or OS/2, emx %s
 >>&(&0x42.l-3)	byte		x
@@ -845,6 +849,47 @@
 >>&0x2c		search/0xa0	.text
 >>>&0x0b	lelong		<0x2000
 >>>>&0		lelong		>0x6000 \b, 32lite compressed
+>(4.s*512)	leshort		0x010b \b, a.out
+# djgpp go32 v1 a.out
+>>(&-6.l)	string/b	StubInfoMagic!!\0 for MS-DOS
+
+# djgpp go32 v1
+# Note that for "redirect" binaries is offset (4.s*512) behind end-of-file, so access it via "default"
+>(4.s*512)	clear		x
+>(4.s*512)	default		x
+>>(&-4.l)	string/b	StubInfoMagic!!\0
+>>>&23		byte		x \b, DJGPP go32 v%u
+>>>&22		byte		x \b.%u
+>>>&21		byte		x \b%c DOS extender
+>>>&32		byte		!0
+# zcat.exe from djdev112.zip
+>>>>&-1		string/15	x \b, redirect to "%s"
+
+# djgpp go32 v2
+>(8.s*16)	string		go32stub
+# Version string is usually ", v 2.05", so skip leading spaces
+>>&0		string		,\ v\ 
+>>>&0		string/4	x \b, DJGPP go32 v%s DOS extender
+>>&0		default		x
+>>>&0		string/8	x \b, DJGPP go32 %s DOS extender
+>>&36		byte		0
+# check for embedded DPMI host PMODSTUB.EXE
+>>>0x1c		string		PMODSTUB.EXE (embedded PMODE/DJ)
+>>>0x1c		string		!PMODSTUB.EXE
+>>>>0x18	leshort		0
+# check for the default djgpp stub
+>>>>>0x40	search/0x80	The\ STUB.EXE\ stub\ loader (stub)
+>>>>(0x18.s)	default		x
+>>>>>&(0x6.s*4)	default		x
+# check for embedded DPMI host CWSDSTUB.EXE
+>>>>>>&0	search/16	CWSDPMI
+>>>>>>>&-7	regex/T		=^CWSDPMI(\ [^\ ]+\ )? (embedded %s)
+# check for embedded DPMI host D3XD.EXE
+>>>>>>&0	search/16	D3X
+>>>>>>>&-3	regex/T		=^D3X(\ [^\ ]+\ )? (embedded %s)
+>>&36		byte		!0
+# djtarx.exe or dxegen.exe from djdev205.zip
+>>>&-1		string/8	x \b, redirect to "%s"
 
 >(8.s*16) string $WdX \b, WDos/X DOS extender
 
