@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.185 2024/01/14 17:51:28 christos Exp $
+# $File: msdos,v 1.186 2024/01/14 17:55:43 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -795,6 +795,12 @@
 >>>>(0x3c.l+0x0a)	leshort		x for unknown OS %#x
 >>>(&0x7c.l+0x26)	string		UPX \b, UPX compressed
 >>>&(&0x54.l-3)		string		UNACE \b, ACE self-extracting archive
+
+# DOS/32A Linear Compressed file format
+>>(0x3c.l)		string		LC\0\0 \b, LC for MS-DOS
+>>>0x40			search/0x40	STUB/32A \b, DOS/32A DOS extender (stub)
+>>>0x40			search/0x80	STUB/32C \b, DOS/32A DOS extender (configurable stub)
+>>>0x40			search/0x80	DOS/32A \b, DOS/32A DOS extender (embedded)
 
 # looks like ASCII, probably some embedded copyright message.
 # and definitely not NE/LE/LX/PE
