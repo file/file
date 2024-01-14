@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.63 2023/07/17 16:56:13 christos Exp $
+# $File: windows,v 1.64 2024/01/14 17:54:13 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -603,11 +603,22 @@
 !:mime	text/plain
 !:apple	????TEXT
 !:ext	cnt
-#
+# URL:		https://en.wikipedia.org/wiki/WinHelp
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/fts.trid.xml
+# Note:		called "Windows Help Full-Text Search index" by TrID
 # Windows creates a full text search from hlp file, if the user clicks the "Find" tab and enables keyword indexing
 0	string		tfMR			MS Windows help Full Text Search index
 !:mime application/x-winhelp-fts
 !:ext	fts
+# path of corresponding MS Windows help like: "C:\CDCREATR\creatr32.hlp" "C:\PROGRAMME\IPHOTO PLUS 4\PROGRAMS\Guide.hlp"
+>16	string		>\0			for "%s"
+# From:		Joerg Jenderek
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/ftg-winhelp.trid.xml
+# Note:		called "Windows Help Full-Text search Group" by TrID
+0	string		gfMR			MS Windows help Full Text search Group
+!:mime application/x-winhelp-ftg
+!:ext	ftg
+# path of corresponding FTS like: "C:\Windows\Help\winhlp32.FTS"
 >16	string		>\0			for "%s"
 
 # Summary: Hyper terminal
