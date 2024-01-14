@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.184 2024/01/06 16:51:47 christos Exp $
+# $File: msdos,v 1.185 2024/01/14 17:51:28 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1296,7 +1296,11 @@
 >>>>>>>0		use		msdos-com
 # JMP 16bit
 0           byte    0xe9
+# display DOS executable (COM or COMBOOT 16-bit strength=40=40-0) after ESP-IDF application image (strength=40=40+0) handled by ./firmware
+#!:strength	-0
 # 16-bit offset; for DEBUGGING!; can be negative like: USBDRIVE.COM
+# 2h (CPQ0TD.DRV) 4FEh (NDN.COM) 581h (DRMOUSE.COM) 1FDh (GAG.COM) BE07h (USBDRIVE.COM)
+#>1		uleshort	x	\b, OFFSET=%#4.4x
 #>1		leshort		x	\b, OFFSET %d
 # forward jumps
 >1		leshort	>-1
@@ -1309,8 +1313,11 @@
 >>>>0			use		msdos-com
 # check for unrealistic low number of FATs. Then it is not a disk image and it is a DOS executable
 # like: GAG.COM DRMOUSE.COM NDN.COM CPQ0TD.DRV
+# or ESP-IDF application image like: WLED_0.14.0_ESP32-C3.bin opendtu-generic_esp32.bin
 >>>16		ubyte		=0
->>>>0			use		msdos-com
+# skip ESP-IDF application image handled by ./firmware with ESP_APP_DESC_MAGIC_WORD
+>>>>32	ulelong		!0xABCD5432
+>>>>>0			use		msdos-com
 # maybe disc image with valid number of FATs or DOS executable
 # like: IPXODI.COM PERUSE.COM TASKID.COM
 >>>16		default	x
