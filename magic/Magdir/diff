@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: diff,v 1.17 2020/08/22 18:16:58 christos Exp $
+# $File: diff,v 1.18 2024/01/21 19:59:40 christos Exp $
 # diff:  file(1) magic for diff(1) output
 #
 0	search/1	diff\040	diff output text
@@ -17,8 +17,28 @@
 !:mime	text/x-diff
 
 # bsdiff:  file(1) magic for bsdiff(1) output
-0	string/b	BSDIFF40	bsdiff(1) patch file
-
+# Update:	Joerg Jenderek
+# URL: 		http://www.daemonology.net/bsdiff/
+# Reference:	https://github.com/cperciva/bsdiff/blob/master/bsdiff-ra/FORMAT
+#		http://mark0.net/download/triddefs_xml.7z/defs/b/bsdiff.trid.xml
+# Note:		called "bsdiff patch" by TrID and and "BSDIFF" version 4.0 by DROID via PUID fmt/439 and
+#		"Binary differences between files" by shared MIME-info database from freedesktop.org
+0	string/b	BSDIFF40
+# skip DROID fmt-439-signature-id-672.bsdiff with invalid new file segment length 0
+>16	long		!0		bsdiff(1) patch file
+#!:mime	application/octet-stream
+!:mime	application/x-bsdiff
+!:ext	bsdiff
+# new file length
+#>>8	lequad		x		\b, new length %lld
+# new file segment length
+#>>16	lelong		x		\b, new segment length %d
+# compressed header block length
+#>>20	lelong		!0		\b, compressed header length %d
+# patch data block length
+#>>24	lequad		x		\b, data length %lld
+# look for bzip data by ./compress after message with 1 space at end
+>>0x20	indirect	x		\b, at 0x20 
 
 # unified diff
 0	search/4096	---\040
