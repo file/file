@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: diff,v 1.18 2024/01/21 19:59:40 christos Exp $
+# $File: diff,v 1.19 2024/01/28 17:40:45 christos Exp $
 # diff:  file(1) magic for diff(1) output
 #
 0	search/1	diff\040	diff output text
@@ -9,12 +9,24 @@
 >&0	search/1024	\n---\040	context diff output text
 !:mime	text/x-diff
 0	search/1	Only\040in\040 	diff output text
+# diff output text output text (strength=38=38+0) after unified diff output (strength=131=38+93)
+#!:strength +0
 !:mime	text/x-diff
+#!:mime	text/x-patch
+!:ext	diff
 0	search/1	Common\040subdirectories:\040 	diff output text
 !:mime	text/x-diff
 
+# URL: 		https://en.wikipedia.org/wiki/Diff#Extensions
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/diff-rcs.trid.xml
+# Note:		called "RCS/CVS diff output" by TrID
+#		and "Differences between files" by shared MIME-info database from freedesktop.org
 0	search/1	Index:		RCS/CVS diff output text
+# RCS/CVS diff output text (strength=36=36+0) after unified diff output (strength=131=38+93)
+#!:strength +0
 !:mime	text/x-diff
+#!:mime	text/x-patch
+!:ext	diff/patch
 
 # bsdiff:  file(1) magic for bsdiff(1) output
 # Update:	Joerg Jenderek
@@ -41,13 +53,43 @@
 >>0x20	indirect	x		\b, at 0x20 
 
 # unified diff
-0	search/4096	---\040
->&0	search/1024 	\n
->>&0	search/1 	+++\040
->>>&0	search/1024 	\n
->>>>&0	search/1	@@		unified diff output text
+# URL:		http://fileformats.archiveteam.org/wiki/Unified_diff
+#		https://en.wikipedia.org/wiki/Diff_utility#Unified_format
+# Reference:	https://www.artima.com/weblogs/viewpost.jsp?thread=164293
+#		http://mark0.net/download/triddefs_xml.7z/defs/d/diff-unified.trid.xml
+# Note:		called "unified diff output" by TrID and
+#		"Differences between files" by shared MIME-info database from freedesktop.org
+# use b flag to forces the test to be done for binary files (non ASCII text like with Ctrl-D Ctrl-V Ctrl-Z)
+0	search/4096/b	---\040
+!:strength + 93
+>0	use		diff-unified
+# most samples are just pure ASCII text like: ShellR64.patch
+0	search/11054	---\040
+# unified diff (strength=131=38+93) before
+# HTML document text (strength=170,90,71,53,52,51,49)	POSIX shell script (fix-qt5.6-build.patch strength=130 ./commands)
+# JavaScript source (strength=112,84,81,80,79,78,72,69)	C++ source (strength=71,70,69,68,67,54),
+# Python script (strength=69,67,63,60,58,57,56,54,52,37)LaTeX document text (strength=62,56,55,51,43)
+# TeX document (strength=51,38)				C source (strength=41,39,37)
+# exported SGML document (strength=39,28)		diff output text (strength=38=38+0)
+# Pascal source (strength=37)				RCS/CVS diff (strength=36=36+0),
+# Algol 68 source (strength=?)				CSV ASCII text (strength=?)
+!:strength + 93
+>0	use		diff-unified
+#	check for 3 characteristic lines of unified diff
+0	name			diff-unified
+>0	search/11084 	+++\040
+>>&0	search/1024 	\n
+# at signs line sometimes other (with 2 space chars before) like: indent-header.patch
+>>>&0	search/2	@@\040-	unified diff output text
 !:mime	text/x-diff
-!:strength + 90
+#!:mime	text/x-patch
+# https://file-extension.net/seeker/file_extension_dif file_extension_pch file_extension_rej
+!:ext	diff/patch/dif/pch/rej
+# GRR: mainly for debugging purpose for variants with text before real diff output
+>>>>0	string	!---\040
+>>>>>0	string		x	\b, 1st line "%s"
+>>>>>>&1 string		x	\b, 2nd line "%s"
+>>>>>>>&1 string	x	\b, 3rd line "%s"
 
 # librsync -- the library for network deltas
 #
