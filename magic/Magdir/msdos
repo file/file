@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.187 2024/01/14 17:57:17 christos Exp $
+# $File: msdos,v 1.188 2024/01/28 17:50:37 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -2739,3 +2739,220 @@
 # year part
 >2	uleshort/512	x	1980+%u
 #
+
+# ExcelBIFF2-8BOF.magic - Excel Binary Interchange File Format versions 2-8
+# Beginning of File records
+# See https://www.gaia-gis.it/gaia-sins/freexl-1.0.6-doxy-doc/html/Format.html
+#	Excel	Commercial	BIFF	Release
+#	Version	Name		Version	Year	Notes
+#	2.x	Excel 2.0	BIFF2	1987	Before CFBF. File is the BIFF
+#						stream, containing a single
+#						worksheet.
+#	3.0	Excel 3.0	BIFF3	1990	""
+#	4.0	Excel 4.0	BIFF4	1992	""
+#	5.0	Excel 5.0	BIFF5	1993	Starting with BIFF5, a single
+#						Workbook can internally store
+#						many individual Worksheets.
+#						The BIFF stream is stored in
+#						the CFBF file container.
+#	7.0	Excel 95	BIFF5	1995	
+#	8.0	Excel 98	BIFF8	1998	
+#	9.0	Excel 2000	BIFF8	1999	
+#	10.0	Excel XP	BIFF8	2001	
+#	11.0	Excel 2003	BIFF8	2003	
+# See https://www.openoffice.org/sc/excelfileformat.pdf#page=135
+#	5.8 BOF – Beginning of File
+# See also https://en.wikipedia.org/wiki/Microsoft_Excel;
+#	Old file extensions
+#	Format		Extension	Description
+#	Spreadsheet	.xls	Main spreadsheet format which holds data in
+#				worksheets, charts, and macros
+#	Add-in (VBA)	.xla	Adds custom functionality; written in VBA
+#	Toolbar		.xlb	The file extension where Microsoft Excel custom
+#				toolbar settings are stored.
+#	Chart		.xlc	A chart created with data from a Microsoft Excel
+#				spreadsheet that only saves the chart.
+#				To save the chart and spreadsheet save as .XLS.
+#				XLC is not supported in Excel 2007 or in any
+#				newer versions of Excel.
+#	Dialog		.xld	Used in older versions of Excel.
+#	Archive		.xlk	A backup of an Excel Spreadsheet
+#	Add-in (DLL)	.xll	Adds custom functionality; written in C++/C,
+#				Fortran, etc. and compiled in to a special
+#				dynamic-link library
+#	Macro		.xlm	A macro is created by the user or pre-installed
+#				with Excel.
+#	Template	.xlt	A pre-formatted spreadsheet created by the user
+#				or by Microsoft Excel.
+#	Module		.xlv	A module is written in VBA (Visual Basic for
+#				Applications) for Microsoft Excel
+#	Workspace	.xlw	Arrangement of the windows of multiple Workbooks
+#	Library		.DLL	Code written in VBA may access functions in a
+#				DLL, typically this is used to access the
+#				Windows API
+#!:ext	xls/xla/xlb/xlc/xld/xlk/xll/xlm/xlt/xlv/xlw
+
+#!:mime	application/vnd.ms-excel
+
+#	5.8.1 BOF Records Written by Excel
+#	Record BOF, BIFF2 (record identifier is 0009 H):
+#	Offset	Size	Contents
+#	0	2	BIFF version (not used)
+#	2	2	Type of the following data:	0010H = Sheet
+#							0020H = Chart
+#							0040H = Macro sheet
+#	e.g. 0x0009 BOF len 4 version 2 content 0x0010 Sheet
+0	uleshort	=0x0009	Excel 2 BIFF 2
+>2	uleshort	=4
+#			version
+>>4	uleshort	=0
+>>4	uleshort	=2
+>>>6	uleshort	=0x0010	Sheet
+>>>6	uleshort	=0x0020	Chart
+>>>6	uleshort	=0x0040	Macros
+
+#	Record BOF, BIFF3 (record identifier is 0209 H) and
+#	BIFF4 (record identifier is 0409H):
+#	Offset	Size	Contents
+#	0	2	BIFF version (not used)
+#	2	2	Type of the following data:	0010H = Sheet
+#							0020H = Chart
+#							0040H = Macro sheet
+#							0100H = Workspace
+#							(BIFF3W/BIFF4W only)
+#	4	2        Not used
+0	uleshort	=0x0209	Excel 3 BIFF 3
+>2	uleshort	=6
+#			version
+>>4	uleshort	=0
+>>4	uleshort	=3
+>>>6	uleshort	=0x0010	Sheet
+>>>6	uleshort	=0x0020	Chart
+>>>6	uleshort	=0x0040	Macros
+#			(BIFF3W only)
+>>>6	uleshort	=0x0100	Workspace
+
+0	uleshort	=0x0409	Excel 4 BIFF 4
+>2	uleshort	=6
+#			version
+>>4	uleshort	=0
+>>4	uleshort	=4
+>>>6	uleshort	=0x0010	Sheet
+>>>6	uleshort	=0x0020	Chart
+>>>6	uleshort	=0x0040	Macros
+#			(BIFF4W only)
+>>>6	uleshort	=0x0100	Workspace
+
+#	Record BOF, BIFF5 (record identifier is 0809 H):
+#	Offset	Size        Contents
+#	0	2	BIFF version (always 0500H for BIFF5).
+#			Should only be used, if this record is the leading
+#			workbook globals BOF (see above).
+#	2	2	Type of the following data:
+#			0005H = Workbook globals
+#			0006H = Visual Basic module
+#			0010H = Sheet or dialogue (see SHEETPR,
+#						   ➜5.97)
+#			0020H = Chart
+#			0040H = Macro sheet
+#			0100H = Workspace (BIFF5W only)
+#	4	2	Build identifier, must not be 0
+#	6	2	Build year
+0	uleshort	=0x0809	Excel 5 BIFF 5
+>2	uleshort	=8
+#			version
+>>4	uleshort	=0x0500
+>>4	uleshort	=5
+>>4	uleshort	=0
+>>>6	uleshort	=0x0005	Workbook Globals
+>>>6	uleshort	=0x0006	VB Module
+>>>6	uleshort	=0x0010	Sheet
+>>>6	uleshort	=0x0020	Chart
+>>>6	uleshort	=0x0040	Macros
+#			(BIFF5W only)
+>>>6	uleshort	=0x0100	Workspace
+>>>>8	uleshort	>0	Build %d
+>>>>>10	uleshort	>1900	Year %d
+
+#	Record BOF, BIFF8 (record identifier is 0809 H):
+#	Offset	Size	Contents
+#	 0	2	BIFF version (always 0600 H for BIFF8)
+#	 2	2	Type of the following data:
+#			0005H = Workbook globals
+#			0006H = Visual Basic module
+#			0010H = Sheet or dialogue (see SHEETPR,
+#						   ➜5.97)
+#			0020H = Chart
+#			0040H = Macro sheet
+#			0100H = Workspace (BIFF8W only)
+#	 4	2	Build identifier, must not be 0
+#	 6	2	Build year, must not be 0
+#	 8	4	File history flags
+#	12	4	Lowest Excel version that can read all records in this
+#			file
+0	uleshort	=0x0809	Excel 8 BIFF 8
+>2	uleshort	=16
+#			version
+>>4	uleshort	=0x0600
+>>4	uleshort	=8
+>>4	uleshort	=0
+>>>6	uleshort	=0x0005	Workbook Globals
+>>>6	uleshort	=0x0006	VB Module
+>>>6	uleshort	=0x0010	Sheet
+>>>6	uleshort	=0x0020	Chart
+>>>6	uleshort	=0x0040	Macros
+#			(BIFF8W only)
+>>>6	uleshort	=0x0100	Workspace
+>>>>8	uleshort	>0	Build %d
+>>>>>10	uleshort	>1900	Year %d
+>>>>>>12 ulelong	!0	File history %d
+>>>>>>16 ulelong	>0	Excel version needed %d
+
+#	5.8.2 BOF Records Written by Other External Tools
+#	Various external tools write non-standard BOF records with the record
+#	identifier 0809H (determining a BIFF5-BIFF8 BOF record), but with a
+#	different BIFF version field. In this case, the record identifier is
+#	ignored, and only the version field is used to set the BIFF version of
+#	the workbook.
+#	Record BOF (record identifier is 0809 H):
+#	Offset	Size	Contents
+#	0	2	BIFF version:			0000H = BIFF5
+#							0200H = BIFF2
+#							0300H = BIFF3
+#							0400H = BIFF4
+#							0500H = BIFF5
+#							0600H = BIFF8
+#	2	2	Type of the following data:
+#			0005H = Workbook globals
+#			0006H = Visual Basic module
+#			0010H = Sheet or dialogue (see SHEETPR,
+#						   ➜5.97)
+#			0020H = Chart
+#			0040H = Macro sheet
+#			0100H = Workspace
+#	[4]	var.	(optional) Additional fields of a BOF record,
+#			should be ignored
+0	uleshort	=0x0809
+#			>= 4
+>2	uleshort	>3
+>>4	uleshort	=0	Excel 5 BIFF 5
+>>4	uleshort	=0x0200	Excel 2 BIFF 2
+>>4	uleshort	=2	Excel 2 BIFF 2
+>>4	uleshort	=0x0300	Excel 3 BIFF 3
+>>4	uleshort	=3	Excel 3 BIFF 3
+>>4	uleshort	=0x0400	Excel 4 BIFF 4
+>>4	uleshort	=4	Excel 4 BIFF 4
+>>4	uleshort	=0x0500	Excel 5 BIFF 5
+>>4	uleshort	=5	Excel 5 BIFF 5
+>>4	uleshort	=0x0600	Excel 8 BIFF 8
+>>4	uleshort	=6	Excel 8 BIFF 8
+>>4	uleshort	=0x0800	Excel 8 BIFF 8
+>>4	uleshort	=8	Excel 8 BIFF 8
+>>>6	uleshort	=0x0005	Workbook Globals
+>>>6	uleshort	=0x0006	VB Module
+>>>6	uleshort	=0x0010	Sheet/Dialogue
+>>>6	uleshort	=0x0020	Chart
+>>>6	uleshort	=0x0040	Macros
+#			(BIFF8W only)
+>>>6	uleshort	=0x0100	Workspace
+
