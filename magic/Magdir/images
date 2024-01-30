@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.248 2024/01/02 18:13:17 christos Exp $
+# $File: images,v 1.249 2024/01/30 21:29:54 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3283,6 +3283,7 @@
 # Type: Khronos KTX texture.
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 # Reference: https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+# https://www.iana.org/assignments/media-types/image/ktx
 
 # glEnum decoding.
 # NOTE: Only the most common formats are listed here.
@@ -3357,6 +3358,8 @@
 # Main KTX header.
 # Determine endianness, then check the rest of the header.
 0	string	\xABKTX\ 11\xBB\r\n\x1A\n	Khronos KTX texture
+!:mime	image/ktx
+!:ext	ktx
 >12	ulelong	0x04030201			(little-endian)
 >>16	use	khronos-ktx-endian-header
 >12	ubelong	0x04030201			(big-endian)
@@ -3366,6 +3369,7 @@
 # From: David Korth <gerbilsoft@gerbilsoft.com>
 # Based on draft19.
 # Reference: http://github.khronos.org/KTX-Specification/
+# https://www.iana.org/assignments/media-types/image/ktx2
 
 # Supercompression enum.
 0	name	khronos-ktx2-supercompression
@@ -3627,6 +3631,8 @@
 
 # Main KTX2 header.
 0	string	\xABKTX\ 20\xBB\r\n\x1A\n	Khronos KTX2 texture
+!:mime	image/ktx2
+!:ext	ktx2
 >20	ulelong	x	\b, %u
 >24	ulelong	>1	x %u
 >28	ulelong	>1	x %u
