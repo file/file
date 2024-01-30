@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.34 2023/01/24 20:13:40 christos Exp $
+# $File: wordprocessors,v 1.35 2024/01/30 21:47:28 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -628,3 +628,5 @@
 # inspect 1st GALLERY thumbnail magic by ./images with 1 space at end
 #>11	indirect	x	\b; contains 
 
+# Atari ST Hypertext files
+0	string	HDOC\0	ST-Guide file
