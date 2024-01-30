@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.344 2023/12/29 18:04:47 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.345 2024/01/30 21:59:41 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3490,8 +3490,8 @@ mkdbname(struct magic_set *ms, const char *fn, int strip)
 
 	/* Did not find .mgc, restore q */
 	if (p >= ext)
-		while (*q)
-			q++;
+		for (q = fn; *q; q++)
+			continue;
 
 	q++;
 	/* Compatibility with old code that looked in .mime */
