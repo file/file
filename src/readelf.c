@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.190 2023/07/27 19:39:06 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.191 2024/01/30 21:43:33 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1136,10 +1136,10 @@ dodynamic(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 	switch (xdh_tag) {
 	case DT_FLAGS_1:
-		*pie = 1;
-		if (xdh_val & DF_1_PIE)
+		if (xdh_val & DF_1_PIE) {
+			*pie = 1;
 			ms->mode |= 0111;
-		else
+		} else
 			ms->mode &= ~0111;
 		break;
 	case DT_NEEDED:
