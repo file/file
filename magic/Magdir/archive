@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.196 2023/12/24 20:31:45 christos Exp $
+# $File: archive,v 1.197 2024/02/02 22:56:48 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -39,9 +39,24 @@
 # check for 1st member name with ovf suffix
 >>>>>>>>0	regex		\^.{1,96}[.](ovf)
 >>>>>>>>>0	use	tar-ova
-# if 1st member name without digits and without used image suffix, without *.ovf and TpmEmuTpms/ then it is a pure TAR archive
+# look for relative directory ./var/ or ./lte/ as 1st member name that indicates AVM firmware with other file name suffix
+>>>>>>>>0	ubequad&0xFFffE5eaE8ffFFff	0x2e2f6460602f0000
+>>>>>>>>>0	use	tar-avm
+# maybe look for AVM specific 2nd name entry
+# >>>>>>>>>517	string		/content\0	content~
+# >>>>>>>>>>0	use	tar-avm
+# >>>>>>>>>517	string		/install\0	install~
+# >>>>>>>>>>0	use	tar-avm
+# >>>>>>>>>517	string		/chksum\0	chksum~
+# >>>>>>>>>>0	use	tar-avm
+# >>>>>>>>>517	string		/modfw.nfo\0	modfw~
+# >>>>>>>>>>0	use	tar-avm
+# if 1st member name without digits and without used image suffix, without *.ovf,
+# ./var/ , ./lte/ and TpmEmuTpms/ then it is a pure TAR archive
 >>>>>>>>0	default		x
 >>>>>>>>>0	use	tar-file
+# Note:	called "TAR - Tape ARchive" by TrID, "Tape Archive Format" by DROID via PUID x-fmt/265
+#	and "Tar archive" by shared MIME-info database from freedesktop.org
 #	minimal check and then display tar archive information which can also be
 #	embedded inside others like Android Backup, Clam AntiVirus database
 0	name		tar-file
@@ -151,7 +166,7 @@
 >>265	string		>\0		\b, user %-.32s
 # group name null terminated
 >>297	string		>\0		\b, group %-.32s
-# device major minor if not zero
+# device major minor if not zero (binary or ASCII)
 >>329	ubequad&0xCFCFCFCFcFcFcFdf	!0
 >>>329	string		x		\b, devmaj %-.7s
 >>337	ubequad&0xCFCFCFCFcFcFcFdf	!0
@@ -215,6 +230,33 @@
 # assuming name[100] like: DOS-0.9.ovf FreeDOS_1.ovf Win98SE_DE.ovf
 #>0	string		>\0		\b, with %-.60s
 >0	use	tar-entry
+# Summary:	AVM firmware (FRITZ!OS) for the FRITZ!Box (router)
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Fritz!Box
+#		https://www.redteam-pentesting.de/de/advisories/rt-sa-2014-010/-avm-fritz-box-firmware-signature-bypass
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/i/image-avm.trid.xml
+# Note:		verified by 7-Zip `7z l -ttar FRITZ.Box_4040-07.57.image`
+0	name		tar-avm
+>0	string		x		AVM FRITZ!Box firmware
+#!:mime	application/x-gtar
+!:mime	application/x-avm-image
+!:ext	image
+# tar member ./var/content starts with line like "Product=Fritz_Box_HW227 (FRITZ!Box 4040)"
+>>1024	search/512	Product=Fritz_Box_
+>>>&0	string		x		%s
+# version string like: 07.57 07.58
+>>>1044	search		Version=	\b, version
+>>>>&0	string		x		%s
+# product phrase too far behind (dozen MB) in many samples like: FRITZ.Box_4040-07.12.image FRITZ.Box_6820v3_LTE-07.57.image
+# so try to look for other characteristic foo
+# >>1024	default		x		OTHER_PATTERN!
+# >>>1023	search		AVM_PATTERN	PATTERNfound
+# first name[100] like: ./var/ ./lte/ 
+>0	use	tar-entry
+# if 1st entry is directory then show 2nd entry
+>156	ubyte		0x35
+# 2nd tar member name like: ./var/content (often ) ./var/install ./var/chksum ./lte/modfw.nfo
+>>512	use	tar-entry
 
 # Incremental snapshot gnu-tar format from:
 # https://www.gnu.org/software/tar/manual/html_node/Snapshot-Files.html
