@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.94 2023/06/16 20:06:50 christos Exp $
+# $File: animation,v 1.95 2024/02/04 19:22:22 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1204,3 +1204,11 @@
 >12	leshort x	\b, %d
 >14	leshort x	\bx%d
 >24	lelong	>0	\b, %d frames
+
+
+# libplacebo cache file
+0	string	pl_cache	libplacebo cache
+>8	ulelong	x		\b, version %u
+>12	ulelong	=0		\b, empty
+>12	ulelong	=1		\b, 1 entry
+>12	ulelong	>1		\b, %u entries
