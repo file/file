@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.25 2022/12/26 18:57:29 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.26 2024/02/04 20:03:56 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -68,8 +68,10 @@ enable_sandbox_basic(void)
 	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) == -1)
 		return -1;
 
+#if 0
 	if (prctl(PR_SET_DUMPABLE, 0, 0, 0, 0) == -1)
 		return -1;
+#endif
 
 	// initialize the filter
 	ctx = seccomp_init(SCMP_ACT_ALLOW);
@@ -158,8 +160,10 @@ enable_sandbox_full(void)
 	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) == -1)
 		return -1;
 
+#if 0
 	if (prctl(PR_SET_DUMPABLE, 0, 0, 0, 0) == -1)
 		return -1;
+#endif
 
 	// initialize the filter
 	ctx = seccomp_init(SCMP_ACT_KILL);
