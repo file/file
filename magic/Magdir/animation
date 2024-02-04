@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.95 2024/02/04 19:22:22 christos Exp $
+# $File: animation,v 1.96 2024/02/04 20:00:06 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1207,8 +1207,44 @@
 
 
 # libplacebo cache file
+# https://libplacebo.org
 0	string	pl_cache	libplacebo cache
 >8	ulelong	x		\b, version %u
 >12	ulelong	=0		\b, empty
 >12	ulelong	=1		\b, 1 entry
 >12	ulelong	>1		\b, %u entries
+
+>4	byte	1		\b, version 3.00.00
+>4	byte	2		\b, version 3.03.00
+>4	byte	3		\b, version 4.00.00
+>4	byte	4		\b, version 4.02.00
+>4	byte	5		\b, version 5.00.00
+
+# live2d: file(1) magic for Live2D Cubism file formats
+# https://www.live2d.com/en/
+0	string/4	MOC3	Live2D Cubism MOC3
+>4	byte	0	\b, SDK version invalid/unknown (%d)
+>4	byte	1	\b, SDK version 3.0.00 - 3.2.07 (%d)
+>4	byte	2	\b, SDK version 3.3.00 - 3.3.03 (%d)
+>4	byte	3	\b, SDK version 4.0.00 - 4.1.05 (%d)
+>4	byte	4	\b, SDK version 4.2.00 - 4.2.02 (%d)
+>4	byte	5	\b, SDK version 5.0.00 (%d)
+>4	byte	>5	\b, SDK version unknown (%d)
+>5	byte	0	\b, little endian
+>5	byte	>0	\b, big endian
+!:mime	application/x-moc3-data
+!:ext	moc3
+
+0	string/4	CAFF	Live2D Cubism archive
+>4	ubyte	x	version %d
+>&0	ubyte	x	\b.%d
+>&1	ubyte	x	\b.%d
+>7	string/4	=----	\b, standard format
+>7	string/4	!----	\b, unknown format (%.4s)
+>11	ubyte	x	version %d
+>&0	ubyte	x	\b.%d
+>&1	ubyte	x	\b.%d
+>14	belong	=0	\b, no obfuscation
+>14	belong	!0	\b, XOR obfuscation key %d
+!:mime	application/x-cubism-archive
+!:ext	cmo3/can3
