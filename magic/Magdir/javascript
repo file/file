@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: javascript,v 1.5 2023/01/12 00:02:16 christos Exp $
+# $File: javascript,v 1.6 2024/02/04 19:17:44 christos Exp $
 # javascript:  magic for javascript and node.js scripts.
 #
 0	string/tw	#!/bin/node		Node.js script executable
@@ -47,10 +47,6 @@
 !:mime	application/javascript
 !:ext 	js
 0	regex	\^(import|export)\x20["']\\./	JavaScript source
-!:strength +30
-!:mime	application/javascript
-!:ext 	js
-0	regex	\^require\\(["']	JavaScript source
 !:strength +30
 !:mime	application/javascript
 !:ext 	js
