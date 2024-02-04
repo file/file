@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.88 2023/01/08 17:09:18 christos Exp $
+# $File: elf,v 1.89 2024/02/04 19:51:58 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -377,3 +377,26 @@
 >7	byte		97		(ARM)
 >7	byte		202		(Cafe OS)
 >7	byte		255		(embedded)
+
+# SELF Signed ELF used on the playstation
+# https://www.psdevwiki.com/ps4/SELF_File_Format#make_fself_by_flatz
+# https://www.psdevwiki.com/ps3/SELF_-_SPRX
+0	lelong		0x4F153D1D
+>4	lelong		0x00010112	PS4 Signed ELF file
+>8	byte		1		\b, SELF/SPRX signed-elf/prx
+>8	byte		2		\b, SRVK signed-revoke-list
+>8	byte		3		\b, SPKG signed-package
+>8	byte		4		\b, SSPP signed-security-policy-profile
+>8	byte		5		\b, SDIFF signed-diff
+>8	byte		6		\b, SPSFO signed-param-sfo
+>9	byte&0xf0	x		\b, version %#x	
+>9	byte&0x0f	4		\b, game
+>9	byte&0x0f	5		\b, module
+>9	byte&0x0f	6		\b, video app
+>9	byte&0x0f	8		\b, System/EX application
+>9	byte&0x0f	9		\b, System/EX module/dll
+#>12	leshort		x		\b, header size %d
+#>14	leshort		x		\b, signature size %d
+#>16	lelong		x		\b, file size %d
+#>18	leshort		x		\b, number of segments %d
+#>20	leshort		22
