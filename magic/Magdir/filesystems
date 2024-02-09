@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.159 2023/08/05 13:48:12 christos Exp $
+# $File: filesystems,v 1.160 2024/02/09 00:46:21 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2719,3 +2719,14 @@
 >>0	ubelong	>5
 >>0	default	x	YAFFS filesystem root entry (big endian)
 >>>0	use	\^yaffs
+
+# littlefs superblock
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://github.com/littlefs-project/littlefs/blob/v2.9.0/SPEC.md
+# Match first commit tag, then "littlefs" magic
+4	ulelong		0xf7ff0ff0
+>8	string		littlefs	littlefs superblock
+>>22	uleshort	x		\b, version %u
+>>20	uleshort	x		\b.%u
+>>24	ulelong		x		\b, block size: %u bytes
+>>28	ulelong		x		\b, %u blocks
