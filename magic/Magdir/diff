@@ -1,13 +1,37 @@
 
 #------------------------------------------------------------------------------
-# $File: diff,v 1.19 2024/01/28 17:40:45 christos Exp $
+# $File: diff,v 1.20 2024/02/09 00:50:24 christos Exp $
 # diff:  file(1) magic for diff(1) output
 #
+# Update:	Joerg Jenderek
+# URL: 		https://en.wikipedia.org/wiki/Diff
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/diff.trid.xml
+# Note:		called "diff output text" by TrID and
+#		"Differences between files" by shared MIME-info database from freedesktop.org
+#		According to shared MIME-info database also tabulator character instead of space character and
+#		by TrID minus character after space character
 0	search/1	diff\040	diff output text
+# diff output text (strength=40=40+0) after unified diff output (strength=131=38+93)
+#!:strength +0
 !:mime	text/x-diff
+#!:mime	text/x-patch
+!:ext	diff/patch
+# no short named pch dif examples found
+#!:ext	diff/patch/dif/pch
+# URL:		https://en.wikipedia.org/wiki/Diff_utility#Context_format
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/d/diff-context.trid.xml
+# Note:		called "context diff output" by TrID
+#		and "Differences between files" by shared MIME-info database from freedesktop.org
 0	search/1	***\040
+# context diff output text (strength=42=38+4) before
+# C source (strength=41,39,37)				exported SGML document (strength=39,28)
+!:strength +4
 >&0	search/1024	\n---\040	context diff output text
 !:mime	text/x-diff
+#!:mime	text/x-patch
+!:ext	diff/patch
+# no short named pch dif examples found
+#!:ext	diff/patch/dif/pch
 0	search/1	Only\040in\040 	diff output text
 # diff output text output text (strength=38=38+0) after unified diff output (strength=131=38+93)
 #!:strength +0
