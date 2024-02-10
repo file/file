@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.190 2024/02/10 10:43:53 christos Exp $
+# $File: msdos,v 1.191 2024/02/10 10:44:46 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -535,7 +535,7 @@
 #>>>>(0x3c.l+0x36)	byte		3 for Multitasking MS-DOS
 # OS 4 was reserved for MS Windows/386 device drivers but MS Windows/386 2.x never used NE format (Xenix x.out format was used instead)
 #>>>>(0x3c.l+0x36)	byte		4 for MS Windows/386 device driver
-# OS 5 is assigned to BOSS (Borland Operating System Services) but is used also by 16-bit HX DOS extender
+# OS 5 is assigned to BOSS (Borland Operating System Services) but is used also by other 16-bit DOS applications
 >>>>(0x3c.l+0x36)	byte		5 for MS-DOS
 # HDLD16.BIN
 # x86 jmp near relative (0xe9 0x?? 0x??) + string "MI" (0x4d 0x49)
@@ -545,7 +545,13 @@
 >>>>>>(8.s*16)		search/0x200	cannot\ find\ loader\ DPMILD16.EXE	\b, HX DOS extender 16-bit (stub)
 # DPMILD16.BIN
 >>>>>>(8.s*16)		search/0x4000	DPMILD16:	\b, HX DOS extender 16-bit (embedded without DPMI host)
->>>>>>(8.s*16)		default		x	\b, Borland Operating System Services DOS extender
+# TLINK.EXE or TD.EXE from TASM 5.0
+>>>>>>(8.s*16)		string		16STUB
+>>>>>>>(8.s*16)		search/0x1000	rtm.exe\0dpmi16bi.ovl	\b, Borland rtm DOS extender (stub)
+>>>>>>(8.s*16)		string		!16STUB
+# TLINK.EXE or BRC.EXE from Borland Pascal 7.0
+>>>>>>>(8.s*16)	search/0x1000	BOSS\ Stub\ Version	\b, Borland BOSS DOS extender (stub)
+# OS 6 is not assigned but is used by 32-bit DOS application with extender (found only with HX DOS extender 32-bit)
 # http://downloads.sourceforge.net/dfendreloaded/D-Fend-Reloaded-1.4.4.zip
 # D-Fend Reloaded/VirtualHD/FREEDOS/DPMILD32.EXE
 # https://www.japheth.de/HX/DPMILD32.TXT
@@ -558,7 +564,6 @@
 >>>>>>(8.s*16)		search/0x200	cannot\ find\ loader\ DPMILD32.EXE	\b, HX DOS extender 32-bit (stub)
 # DPMILD32.BIN
 >>>>>>(8.s*16)		search/0x4000	DPMILD32:	\b, HX DOS extender 32-bit (embedded without DPMI host)
->>>>>>(8.s*16)		default		x	\b, HX DOS extender 32-bit
 # https://en.wikipedia.org/wiki/Phar_Lap_(company)
 # like: TELLPROT.EXE from 286DEX
 # can be created by BIND286.EXE from OS/2 NE binary
@@ -590,7 +595,7 @@
 # Multitasking MS-DOS binaries imports DOSCALLS library, so use it for distinguishing
 >>>(0x3c.l+0x02)	ubyte		<5
 # like: fakedlls/krnl386.exe16 fakedlls/gdi.exe16 fakedlls/winsock.dll16 fakedlls/winoldap.mod16 fakedlls/mouse.drv16
->>>>0x40		string		Wine\ placeholder\ DLL for WINE
+>>>>0x40		string		Wine\ placeholder\ DLL for WINE stub
 >>>>(0x3c.l+0x2a)	default		x
 # like: HE_DAEM.EXE POPUP.EXE QUEUER.EXE
 >>>>>&(&0.s-0x2a)	search/512/C	DOSCALLS for Multitasking MS-DOS
