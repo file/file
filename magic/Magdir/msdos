@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.189 2024/02/10 10:42:39 christos Exp $
+# $File: msdos,v 1.190 2024/02/10 10:43:53 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -108,11 +108,14 @@
 # Microsoft compiled help format 2.0 WINWORD.DEV.HXS	e_lfarlc=0
 >0x18	uleshort <0x40
 # check magic of new second header
+# skip Portable Executable (PE) with low e_lfarlc here, because handled later
+# like: ext4_x64_signed.efi Shell_Full.efi WINWORD.DEV.HXS
+>>(0x3c.l)		string		!PE\0\0	MS-DOS executable
 # NE executable with low e_lfarlc like: WORD60.ICL
 # This is Icon Manager (IM) by Impact Software format, based on NE version 5 with cleared NE version and e_lfarlc fields
 # It can be parsed/loaded as NE version 5 binary just by skipping e_lfarlc and NE version checks
 # ICL:	Icons Library 16-bit			http://fileformats.archiveteam.org/wiki/Icon_library
->>(0x3c.l-0x02)		string		IMNE	MS-DOS executable, NE
+>>(0x3c.l-0x02)		string		IMNE	\b, NE
 >>>(0x3c.l+0x02)	ubyte		x	\b version %u
 >>>(0x3c.l+0x36)	byte		2	for MS Windows
 >>>>(0x3c.l+0x3E)	ushort		!0
@@ -121,7 +124,7 @@
 >>>(0x3c.l+0x02)	ubyte		x	(Icon Library, Icon Manager by Impact Software)
 !:ext		icl
 # handle LX executable with low e_lfarlc like: PCISCAN.EXE
->>(0x3c.l)	string	LX	MS-DOS executable, LX
+>>(0x3c.l)	string	LX	\b, LX
 >>>(0x3c.l+0x2)	uleshort	=0x0000
 >>>>(0x3c.l)	use		lx-executable
 # no examples found for big endian variant
@@ -133,24 +136,6 @@
 # no examples found for other endian variants
 >>>0		default		x
 # other endianity is not supported by magic "use" keyword
-# skip Portable Executable (PE) with low e_lfarlc here, because handled later
-# like: ext4_x64_signed.efi Shell_Full.efi WINWORD.DEV.HXS
->>(0x3c.l)	string	PE
-# not New Executable (NE) and not PE with low e_lfarlc like:
-# MACCNV55.EXE WORK_RTF.EXE TELE200.EXE NDD.EXE iflash.exe
->>(0x3c.l)	default	x	MS-DOS executable, MZ for MS-DOS
-!:mime	application/x-dosexec
-# Windows and later versions of DOS will allow .EXEs to be named with a .COM
-# extension, mostly for compatibility's sake.
-# like: EDIT.COM 4DOS.COM CMD8086.COM CMD-FR.COM SYSLINUX.COM
-# URL:		https://en.wikipedia.org/wiki/Personal_NetWare#VLM
-# Reference:	https://mark0.net/download/triddefs_xml.7z/defs/e/exe-vlm-msg.trid.xml
-# also like: BGISRV.DRV
-!:ext	exe/com/vlm/drv
-# These traditional tests usually work but not always.  When test quality support is
-# implemented these can be turned on.
-#>>0x18	leshort	0x1c	(Borland compiler)
-#>>0x18	leshort	0x1e	(MS compiler)
 
 # Maybe it's a PE?
 # URL:		http://fileformats.archiveteam.org/wiki/Portable_Executable
@@ -752,40 +737,51 @@
 >>>0x40			search/0x80	STUB/32C \b, DOS/32A DOS extender (configurable stub)
 >>>0x40			search/0x80	DOS/32A \b, DOS/32A DOS extender (embedded)
 
-# looks like ASCII, probably some embedded copyright message.
-# and definitely not NE/LE/LX/PE
->>0x3c		lelong	>0x20000000
->>>(4.s*512)	leshort !0x014c \b, MZ for MS-DOS
-!:mime	application/x-dosexec
-!:ext	exe/com
-# header data too small for extended executable
->2		long	!0
+>0		clear	x
+# Skip already parsed binary types
+# If magic in the branch is not parsed then always jumps to mz-unrecognized
+>(0x3c.l)	string	PE\0\0
+>(0x3c.l)	string	LX
+>(0x3c.l)	string	NE
+>>(0x3c.l-0x02)	string	!IMNE
+>>>0x18		uleshort <0x40
+>>>>0		use	mz-unrecognized
+>(0x3c.l)	string	W3
 >>0x18		uleshort <0x40
->>>(4.s*512)	leshort !0x014c
+>>>0		use	mz-unrecognized
+>(0x3c.l)	string	W4
+>>0x18		uleshort <0x40
+>>>0		use	mz-unrecognized
+>(0x3c.l)	string	LE\0\0
+>>0x18		uleshort <0x40
+>>>0		use	mz-unrecognized
+>(0x3c.l)	string	LC
+>>0x18		uleshort <0x40
+>>>0		use	mz-unrecognized
+>0		default	x
+# This sequence jumps to the next MZ overlay
+>>2		leshort	!0
+# FIXME: Following line does not match binaries which total size is less than (4.s*512)
+>>>(4.s*512)	leshort	x
+>>>>&(2.s-514)	leshort	x
+>>>>>&-2	use	mz-next-overlay
+>>>>>&-2	string	BW
+>>>>>>0		use	mz-bw-collection
+>>>>0		default	x
+>>>>>0		use	mz-unrecognized
+>>>0		default	x
+>>>>0		use	mz-unrecognized
+>>2		leshort	0
+>>>(4.s*512)	leshort	x
+>>>>&-2		use	mz-next-overlay
+>>>>&-2		string	BW
+>>>>>0		use	mz-bw-collection
+>>>0		default	x
+>>>>0		use	mz-unrecognized
 
->>>>&(2.s-514)	string	!LE
->>>>>&-2	string	!BW
-#>>>>>>(0x3c.l)	string		x	\b, 2ND MAGIC %.2s
-# but some LX executable appear here also like: PCISCAN.EXE
->>>>>>(0x3c.l)	string	!LX
-# because Portable Executable (PE) already done skip many here like:
-# xcopy32.exe stinger64.exe WimUtil.exe
-# NO such DOS examples found and
-# DOS examples seems to be already handled by e_lfarlc <0x40 like: CMD8086.COM CMD-FR.COM
->>>>>>>(0x3c.l)	string	!PE	\b, MZ for MS-DOS
-!:mime	application/x-dosexec
->>>>&(2.s-514)	string	LE \b, LE
->>>>>0x240	search/0x100	DOS/4G for MS-DOS, DOS4GW DOS extender
-# educated guess since indirection is still not capable enough for complex offset
-# calculations (next embedded executable would be at &(&2*512+&0-2)
-# I suspect there are only LE executables in these multi-exe files
->>>>&(2.s-514)	string	BW
->>>>>0x240	search/0x100	DOS/4G	\b, LE for MS-DOS, DOS4GW DOS extender (embedded)
->>>>>0x240	search/0x100	!DOS/4G	\b, BW collection for MS-DOS
-
-# This sequence skips to the first COFF segment, usually .text
->(4.s*512)	leshort		0x014c \b, COFF
-!:mime	application/x-dosexec
+# Parse content of the COFF, executable type was already printed in mz-next-overlay
+>(4.s*512)	leshort		0x014c
+#!:mime	application/x-dosexec
 # djgpp go32 v1 COFF
 # F2C.EXE from f2c95201.zip or compress.exe from djdev112.zip
 >>(&-6.l)	string/b	StubInfoMagic!!\0 for MS-DOS
@@ -799,7 +795,9 @@
 >>&0x2c		search/0xa0	.text
 >>>&0x0b	lelong		<0x2000
 >>>>&0		lelong		>0x6000 \b, 32lite compressed
->(4.s*512)	leshort		0x010b \b, a.out
+
+# Parse content of the a.out, executable type was already printed in mz-next-overlay
+>(4.s*512)	leshort		0x010b
 # djgpp go32 v1 a.out
 >>(&-6.l)	string/b	StubInfoMagic!!\0 for MS-DOS
 
@@ -908,6 +906,43 @@
 >49801	string	\x79\xff\x80\xff\x76\xff	\b, CODEC archive v3.21
 >>49824 leshort		=1			\b, 1 file
 >>49824 leshort		>1			\b, %u files
+
+
+# This named instance is called for multi overlay MZ executable with offset of the next overlay
+0	name	mz-next-overlay
+# BW details are printed later as they depend on the original MZ content
+>0	string	BW	\b, BW collection for MS-DOS
+# a.out details are printed later as they depend on the original MZ content
+>0	leshort	0x010b	\b, a.out
+# COFF details are printed later as they depend on the original MZ content
+>0	leshort	0x014c	\b, COFF
+>0	default	x
+>>0	use	mz-unrecognized
+
+
+# This named instance is called for unrecognized MZ DOS binary from any offset
+0	name	mz-unrecognized
+>0	default	x	\b, MZ for MS-DOS
+!:mime	application/x-dosexec
+# Windows and later versions of DOS will allow .EXEs to be named with a .COM
+# extension, mostly for compatibility's sake.
+# like: EDIT.COM 4DOS.COM CMD8086.COM CMD-FR.COM SYSLINUX.COM
+# URL:		https://en.wikipedia.org/wiki/Personal_NetWare#VLM
+# Reference:	https://mark0.net/download/triddefs_xml.7z/defs/e/exe-vlm-msg.trid.xml
+# also like: BGISRV.DRV
+!:ext	exe/com/vlm/drv
+
+
+# This named instance is called for BW collection with offset from the beginning of the file
+0	name	mz-bw-collection
+>(8.s*16)	default	x
+>>&(&0x30.s)	default	x
+>>>&0	string	DOS/16M	\b, DOS/16M DOS extender (embedded)
+>>>&-8	string	DOS/16M	\b, DOS/16M DOS extender (embedded)
+>>>&-8	string	DOS/4G	\b, DOS/4G DOS extender (embedded)
+>>>0		default	x
+>>>>(8.s*16)	search/0x4000	Stub\ failed\ to\ find\ DOS/4G\ extender.	\b, DOS/4G DOS extender (stub)
+
 
 # Summary:	OS/2 LX Library and device driver (no DOS stub)
 # From:		Joerg Jenderek
