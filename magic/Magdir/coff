@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.7 2022/11/21 22:30:22 christos Exp $
+# $File: coff,v 1.8 2024/02/10 10:42:39 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -9,6 +9,69 @@
 # https://en.wikipedia.org/wiki/COFF
 # https://de.wikipedia.org/wiki/Common_Object_File_Format
 # http://www.delorie.com/djgpp/doc/coff/filhdr.html
+# https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#coff-file-header-object-and-image
+
+# Display COFF processor type, including MS COFF and PE/COFF
+0	name				display-coff-processor
+# PE/COFF, DJGPP, i386 COFF executable, MS Windows COFF Intel i386 object file (./intel)
+>0	uleshort		0x014c	Intel i386
+>0	uleshort		0x014d	Intel i860
+>0	uleshort		0x0160	MIPS R3000 (big-endian)
+>0	uleshort		0x0162	MIPS R3000
+>0	uleshort		0x0166	MIPS R4000
+>0	uleshort		0x0168	MIPS R10000
+>0	uleshort		0x0169	MIPS WCE v2
+>0	uleshort		0x0184	Alpha 32-bit
+>0	uleshort		0x01a2	Hitachi SH3
+>0	uleshort		0x01a3	Hitachi SH3 DSP
+>0	uleshort		0x01a4	Hitachi SH4E
+>0	uleshort		0x01a6	Hitachi SH4
+>0	uleshort		0x01a8	Hitachi SH5
+>0	uleshort		0x01c0	ARMv4
+>0	uleshort		0x01c2	ARMv4T
+>0	uleshort		0x01c4	ARMv7
+>0	uleshort		0x01d3	Matsushita AM33
+# executable (RISC System/6000 V3.1) or obj module (./ibm6000), not PE/COFF
+>0	uleshort		0x01df	RISC System/6000
+>0	uleshort		0x01f0	PowerPC 32-bit (little-endian)
+>0	uleshort		0x01f1	PowerPC 32-bit with FPU (little-endian)
+>0	uleshort		0x01f2	PowerPC 64-bit (big-endian)
+>0	uleshort		0x0200	Intel Itanium
+>0	uleshort		0x0266	MIPS16
+>0	uleshort		0x0268	Motorola 68000
+>0	uleshort		0x0284	Alpha 64-bit
+>0	uleshort		0x0290	PA-RISC
+>0	uleshort		0x0366	MIPS with FPU
+>0	uleshort		0x0466	MIPS16 with FPU
+# Hitachi SH big-endian COFF (./hitachi-sh), not PE/COFF
+>0	uleshort		0x0500	Hitachi SH (big-endian)
+>0	uleshort		0x0520	Tricore
+# Hitachi SH little-endian COFF (./hitachi-sh), not PE/COFF
+>0	uleshort		0x0550	Hitachi SH (little-endian)
+>0	uleshort		0x0601	PowerPC 32-bit (big-endian)
+# Windows CE 3.0 Common Executable Format, created by linkcef.exe with /MACHINE:CEF flag
+# https://web.archive.org/web/20000819035046/http://microsoft.com/windows/embedded/ce/downloads/cef.asp
+# https://web.archive.org/web/20000914080342/http://microsoft.com/windows/embedded/ce/developer/applications/appdevelopment/cef2.asp
+# https://web.archive.org/web/20021022055906/http://msdn.microsoft.com/library/en-us/dnce30/html/cef2.asp
+>0	uleshort		0x0cef	Common Executable Format
+>0	uleshort		0x0ebc	EFI byte code
+>0	uleshort		0x3a64	ARM64 (i386 ABI)
+>0	uleshort		0x5032	RISC-V 32-bit
+>0	uleshort		0x5064	RISC-V 64-bit
+>0	uleshort		0x5128	RISC-V 128-bit
+>0	uleshort		0x6232	LoongArch 32-bit
+>0	uleshort		0x6264	LoongArch 64-bit
+>0	uleshort		0x8664	x86-64
+>0	uleshort		0x9041	Mitsubishi M32R
+>0	uleshort		0xa641	ARM64 (x86-64 ABI)
+>0	uleshort		0xa64e	ARM64 (classic + x86-64 ABI)
+# PE/COFF ARM64 classic ABI, ARM COFF (./arm)
+>0	uleshort		0xaa64	ARM64
+>0	uleshort		0xace1	OMNI VM (omniprox.dll)
+# Processor type CEE can be only in object files (created by older ilasm.exe with /OBJECT flag), not in PE executables
+>0	uleshort		0xc0ee	COM+ Execution Engine
+>0	default			x	Unknown processor
+>>0	uleshort		x	0x%04x
 
 # display name+variables+flags of Common Object Files Format (32bit)
 # Maybe used also in adi,att3b,clipper,hitachi-sh,hp,ibm6000,intel,
@@ -20,30 +83,8 @@
 >>2	uleshort	>0
 # skip ega80woa.fnt svgafix.fnt HP3FNTS1.DAT HP3FNTS2.DAT INTRO.ACT LEARN.PIF by looking for low number of sections
 >>>2	uleshort	<4207
->>>>0	clear		x
 # f_magic - magic number
-# DJGPP, 80386 COFF executable, MS Windows COFF Intel 80386 object file (./intel)
->>>>0	uleshort	0x014C		Intel 80386
-# Hitachi SH big-endian COFF (./hitachi-sh)
->>>>0	uleshort	0x0500		Hitachi SH big-endian
-# Hitachi SH little-endian COFF (./hitachi-sh)
->>>>0	uleshort	0x0550		Hitachi SH little-endian
-# executable (RISC System/6000 V3.1) or obj module (./ibm6000)
-#>>>>0	uleshort	0x01DF
-# MS Windows COFF Intel Itanium, AMD64
-# https://msdn.microsoft.com/en-us/library/windows/desktop/ms680313(v=vs.85).aspx
->>>>0	uleshort	0x0200		Intel ia64
->>>>0	uleshort	0x8664		Intel amd64
-# ARM COFF (./arm)
->>>>0	uleshort	0xaa64		Aarch64
->>>>0	uleshort	0x01c0		ARM
->>>>0	uleshort	0xa641		ARM64EC
->>>>0	uleshort	0x01c2		ARM Thumb
->>>>0	uleshort	0x01c4		ARMv7 Thumb
-# TODO for other COFFs
-#>>>>0	uleshort	0xABCD		COFF_TEMPLATE
->>>>0	default		x
->>>>>0	uleshort	x		type %#04x
+>>>>0	use		display-coff-processor
 >>>>0	uleshort	x		COFF
 # F_EXEC flag bit
 >>>>18	leshort		^0x0002		object file
