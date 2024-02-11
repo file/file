@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.8 2024/02/10 10:42:39 christos Exp $
+# $File: coff,v 1.9 2024/02/11 21:26:35 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -137,3 +137,7 @@
 # >22	leshort		>0		- version %d
 # >168	string		.lowmem		Apple toolbox
 
+# PowerPC COFF object file
+0	leshort		0x01f0
+>16	leshort		0
+>>0	use		display-coff
