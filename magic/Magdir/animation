@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.96 2024/02/04 20:00:06 christos Exp $
+# $File: animation,v 1.97 2024/02/11 15:33:43 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -927,15 +927,12 @@
 #
 # from Oskar Schirmer <schirmer@scara.com> Feb 3, 2001 (ISO 13818.1)
 # syncbyte      8 bit	0x47
-# error_ind     1 bit	-
-# payload_start 1 bit	1
-# priority      1 bit	-
-# PID          13 bit	0x0000
-# scrambling    2 bit	-
-# adaptfld_ctrl 2 bit	1 or 3
-# conti_count   4 bit	-
-0	belong&0xFF5FFF10	0x47400010
->188	byte			0x47		MPEG transport stream data
+# 188 bytes per packet
+0		byte			0x47
+>188	byte			0x47
+>>376	byte			0x47
+>>>564	byte			0x47
+>>>>752	byte			0x47		MPEG transport stream data
 !:mime  video/MP2T
 !:ext	ts
 
@@ -943,8 +940,11 @@
 # From: Alexandre Iooss <erdnaxe@crans.org>
 # URL: https://en.wikipedia.org/wiki/MPEG_transport_stream
 # Note: similar to ISO 13818.1 but with 4 extra bytes per packets
-4	belong&0xFF5FFF10	=0x47400010
->196	byte			=0x47		BDAV MPEG-2 Transport Stream (M2TS)
+4		byte			0x47
+>196	byte			0x47
+>>388	byte			0x47
+>>>580	byte			0x47
+>>>>772	byte			0x47		BDAV MPEG-2 Transport Stream (M2TS)
 !:mime	video/MP2T
 !:ext	m2ts/mts
 
