@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.191 2024/02/10 10:44:46 christos Exp $
+# $File: msdos,v 1.192 2024/02/11 21:13:55 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -742,10 +742,28 @@
 >>>0x40			search/0x80	STUB/32C \b, DOS/32A DOS extender (configurable stub)
 >>>0x40			search/0x80	DOS/32A \b, DOS/32A DOS extender (embedded)
 
+# PX\0\0 signature for 32bit DOS Applications in DOS-PE Format (https://www.japheth.de/HX.html)
+# SHDPMI.EXE, DOSTEST.EXE, GETVMODE.EXE, RMINT.EXE
+>(0x3c.l)	string		PX\0\0	\b, PE32
+>>(0x3c.l+24)	leshort		0x020b	\b+
+>>0		clear		x
+>>0		default		x	executable for MS-DOS
+# LOADPEX.BIN and HDLD32.BIN
+# x86 jmp near relative (0xe9 0x?? 0x??) + string "MI" (0x4d 0x49)
+>>(8.s*16)	ulequad&0xffff0000ff	=0x494d0000e9	\b, HX DOS extender (embedded with DPMI host)
+>>(8.s*16)	ulequad&0xffff0000ff	!0x494d0000e9
+# DPMIST32.BIN
+>>>(8.s*16)	search/0x200	cannot\ find\ loader\ DPMILD32.EXE	\b, HX DOS extender (stub)
+# LOADPE.BIN
+>>>(8.s*16)	search/0x600	PATH=HDPMI32.EXE	\b, HX DOS extender (embedded without DPMI host)
+# DPMILD32.BIN
+>>>(8.s*16)	search/0x4000	DPMILD32:	\b, HX DOS extender (embedded without DPMI host)
+
 >0		clear	x
 # Skip already parsed binary types
 # If magic in the branch is not parsed then always jumps to mz-unrecognized
 >(0x3c.l)	string	PE\0\0
+>(0x3c.l)	string	PX\0\0
 >(0x3c.l)	string	LX
 >(0x3c.l)	string	NE
 >>(0x3c.l-0x02)	string	!IMNE
