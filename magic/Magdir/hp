@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: hp,v 1.25 2019/01/13 00:32:38 christos Exp $
+# $File: hp,v 1.26 2024/02/11 21:25:17 christos Exp $
 # hp:  file(1) magic for Hewlett Packard machines (see also "printer")
 #
 # XXX - somebody should figure out whether any byte order needs to be
@@ -430,4 +430,8 @@
 >>>>>>>>>0xC4	belong	33		- received SIGXCPU
 >>>>>>>>>0xC4	belong	34		- received SIGXFSZ
 
+# PA-RISC COFF object file
+0	leshort		0x0290
+>16	leshort		0
+>>0	use		display-coff
 

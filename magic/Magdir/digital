@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: digital,v 1.12 2021/07/03 14:01:46 christos Exp $
+# $File: digital,v 1.13 2024/02/11 21:25:17 christos Exp $
 #  Digital UNIX - Info
 #
 0	string	=!<arch>\n________64E	Alpha archive
@@ -22,6 +22,11 @@
 >>27	byte		x		- version %d
 >>26	byte		x		\b.%d
 >>28	byte		x		\b-%d
+
+# Alpha COFF object file
+0	leshort		0x0184
+>16	leshort		0
+>>0	use		display-coff
 
 # Basic recognition of Digital UNIX core dumps - Mike Bremford <mike@opac.bl.uk>
 #
