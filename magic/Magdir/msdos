@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.192 2024/02/11 21:13:55 christos Exp $
+# $File: msdos,v 1.193 2024/02/11 21:15:04 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -933,12 +933,51 @@
 
 # This named instance is called for multi overlay MZ executable with offset of the next overlay
 0	name	mz-next-overlay
+>0	string	P2	\b, EXP (P2) for MS-DOS, Phar Lap 286 DOS extender
+>0	string	P3	\b, EXP (P3) for MS-DOS, Phar Lap 386 DOS extender
 # BW details are printed later as they depend on the original MZ content
 >0	string	BW	\b, BW collection for MS-DOS
 # a.out details are printed later as they depend on the original MZ content
 >0	leshort	0x010b	\b, a.out
 # COFF details are printed later as they depend on the original MZ content
 >0	leshort	0x014c	\b, COFF
+>0	default	x
+# now make offset aligned to 0x10
+>>0	offset%0x10	0x0
+# already aligned
+>>>0x0	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x1
+>>>0xf	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x2
+>>>0xe	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x3
+>>>0xd	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x4
+>>>0xc	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x5
+>>>0xb	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x6
+>>>0xa	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x7
+>>>0x9	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x8
+>>>0x8	use	mz-next-overlay-aligned
+>>0	offset%0x10	0x9
+>>>0x7	use	mz-next-overlay-aligned
+>>0	offset%0x10	0xa
+>>>0x6	use	mz-next-overlay-aligned
+>>0	offset%0x10	0xb
+>>>0x5	use	mz-next-overlay-aligned
+>>0	offset%0x10	0xc
+>>>0x4	use	mz-next-overlay-aligned
+>>0	offset%0x10	0xd
+>>>0x3	use	mz-next-overlay-aligned
+>>0	offset%0x10	0xe
+>>>0x2	use	mz-next-overlay-aligned
+>>0	offset%0x10	0xf
+>>>0x1	use	mz-next-overlay-aligned
+0	name	mz-next-overlay-aligned
+>0	string	MP	\b, EXP (MP) for MS-DOS, Phar Lap 286 DOS extender
 >0	default	x
 >>0	use	mz-unrecognized
 
