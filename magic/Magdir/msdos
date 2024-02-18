@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.195 2024/02/18 14:17:20 christos Exp $
+# $File: msdos,v 1.196 2024/02/18 22:08:40 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -813,12 +813,18 @@
 >(4.s*512)	clear		x
 >(4.s*512)	default		x
 >>(&-4.l)	string/b	StubInfoMagic!!\0
->>>&23		byte		x \b, DJGPP go32 v%u
->>>&22		byte		x \b.%u
->>>&21		byte		x \b%c DOS extender
->>>&32		byte		!0
+>>>&0		lelong		>39
+>>>>&19		byte		x \b, DJGPP go32 v%u
+>>>>&18		byte		x \b.%u
+>>>>&17		byte		x \b%c DOS extender (stub)
+>>>&0		lelong		<40 \b, DJGPP go32 v1 DOS extender (stub)
+>>>&0		lelong		>35
+>>>>&0		byte		!0
+>>>>>&-1	string/16	x \b, autoload "%s"
+>>>&0		lelong		>62
+>>>>&28		byte		!0
 # zcat.exe from djdev112.zip
->>>>&-1		string/15	x \b, redirect to "%s"
+>>>>>&-1	string/15	x \b, redirect to "%s"
 
 # djgpp go32 v2
 >(8.s*16)	string		go32stub
@@ -827,24 +833,30 @@
 >>>&0		string/4	x \b, DJGPP go32 v%s DOS extender
 >>&0		default		x
 >>>&0		string/8	x \b, DJGPP go32 %s DOS extender
->>&36		byte		0
+>>&8		lelong		>43
+>>>&24		byte		0
 # check for embedded DPMI host PMODSTUB.EXE
->>>0x1c		string		PMODSTUB.EXE (embedded PMODE/DJ)
->>>0x1c		string		!PMODSTUB.EXE
->>>>0x18	leshort		0
+>>>>0x1c		string		PMODSTUB.EXE (embedded PMODE/DJ)
+>>>>0x1c		string		!PMODSTUB.EXE
+>>>>>0x18	leshort		0
 # check for the default djgpp stub
->>>>>0x40	search/0x80	The\ STUB.EXE\ stub\ loader (stub)
->>>>(0x18.s)	default		x
->>>>>&(0x6.s*4)	default		x
+>>>>>>0x40	search/0x80	The\ STUB.EXE\ stub\ loader (stub)
+>>>>>>>(8.s*16)	default		x
+>>>>>>>>&8	lelong		>83
+>>>>>>>>>&56	byte		!0
+# show which DPMI host executable is autoloaded when none is running
+>>>>>>>>>>&-1	string/16	x \b, autoload "%s"
+>>>>>(0x18.s)	default		x
+>>>>>>&(0x6.s*4)	default		x
 # check for embedded DPMI host CWSDSTUB.EXE
->>>>>>&0	search/16	CWSDPMI
->>>>>>>&-7	regex/T		=^CWSDPMI(\ [^\ ]+\ )? (embedded %s)
+>>>>>>>&0	search/16	CWSDPMI
+>>>>>>>>&-7	regex/T		=^CWSDPMI(\ [^\ ]+\ )? (embedded %s)
 # check for embedded DPMI host D3XD.EXE
->>>>>>&0	search/16	D3X
->>>>>>>&-3	regex/T		=^D3X(\ [^\ ]+\ )? (embedded %s)
->>&36		byte		!0
+>>>>>>>&0	search/16	D3X
+>>>>>>>>&-3	regex/T		=^D3X(\ [^\ ]+\ )? (embedded %s)
+>>>&24		byte		!0
 # djtarx.exe or dxegen.exe from djdev205.zip
->>>&-1		string/8	x \b, redirect to "%s"
+>>>>&-1		string/8	x \b, redirect to "%s"
 
 >(8.s*16) string $WdX \b, WDos/X DOS extender
 
