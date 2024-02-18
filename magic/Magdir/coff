@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.9 2024/02/11 21:26:35 christos Exp $
+# $File: coff,v 1.10 2024/02/18 14:15:22 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -139,5 +139,14 @@
 
 # PowerPC COFF object file
 0	leshort		0x01f0
+>16	leshort		0
+>>0	use		display-coff
+0	leshort		0x01f1
+>16	leshort		0
+>>0	use		display-coff
+0	leshort		0x01f2
+>16	leshort		0
+>>0	use		display-coff
+0	leshort		0x0601
 >16	leshort		0
 >>0	use		display-coff

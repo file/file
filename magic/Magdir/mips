@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mips,v 1.12 2024/02/11 21:25:17 christos Exp $
+# $File: mips,v 1.13 2024/02/18 14:15:22 christos Exp $
 # mips:  file(1) magic for MIPS ECOFF and Ucode, as used in SGI IRIX
 # and DEC Ultrix
 #
@@ -74,6 +74,27 @@
 #
 # MIPS COFF object file (have zero length optional header)
 #
+0	leshort	0x0160
+>16	leshort	0
+>>0	use			display-coff
+0	leshort	0x0162
+>16	leshort	0
+>>0	use			display-coff
 0	leshort	0x0166
+>16	leshort	0
+>>0	use			display-coff
+0	leshort	0x0168
+>16	leshort	0
+>>0	use			display-coff
+0	leshort	0x0169
+>16	leshort	0
+>>0	use			display-coff
+0	leshort	0x0266
+>16	leshort	0
+>>0	use			display-coff
+0	leshort	0x0366
+>16	leshort	0
+>>0	use			display-coff
+0	leshort	0x0466
 >16	leshort	0
 >>0	use			display-coff

@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: digital,v 1.13 2024/02/11 21:25:17 christos Exp $
+# $File: digital,v 1.14 2024/02/18 14:15:22 christos Exp $
 #  Digital UNIX - Info
 #
 0	string	=!<arch>\n________64E	Alpha archive
@@ -25,6 +25,9 @@
 
 # Alpha COFF object file
 0	leshort		0x0184
+>16	leshort		0
+>>0	use		display-coff
+0	leshort		0x0284
 >16	leshort		0
 >>0	use		display-coff
 
