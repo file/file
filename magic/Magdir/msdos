@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.194 2024/02/11 21:25:17 christos Exp $
+# $File: msdos,v 1.195 2024/02/18 14:17:20 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -919,6 +919,9 @@
 0	name	mz-next-overlay
 >0	string	P2	\b, EXP (P2) for MS-DOS, Phar Lap 286 DOS extender
 >0	string	P3	\b, EXP (P3) for MS-DOS, Phar Lap 386 DOS extender
+>0	string	MT	\b, MT for MS-DOS, IGC XMLOD i386 DOS extender
+>0	string	3P	\b, 3P for MS-DOS, CauseWay 3P-format library
+>0	string	D3X1	\b, D3X1 for MS-DOS, D3X DOS extender
 # BW details are printed later as they depend on the original MZ content
 >0	string	BW	\b, BW collection for MS-DOS
 # a.out details are printed later as they depend on the original MZ content
