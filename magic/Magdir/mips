@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: mips,v 1.13 2024/02/18 14:15:22 christos Exp $
+# $File: mips,v 1.14 2024/02/18 22:07:34 christos Exp $
 # mips:  file(1) magic for MIPS ECOFF and Ucode, as used in SGI IRIX
 # and DEC Ultrix
 #
@@ -98,3 +98,12 @@
 0	leshort	0x0466
 >16	leshort	0
 >>0	use			display-coff
+#
+# MIPS COFF executable
+#
+# can be created by LINK.EXE /MACHINE:MIPSR10 /ROM
+0	leshort		0x0168
+>16	leshort		!0
+>>18	leshort		&0x0002
+>>>20	leshort		0x0107
+>>>>0	use		display-coff

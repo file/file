@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.10 2024/02/18 14:15:22 christos Exp $
+# $File: coff,v 1.11 2024/02/18 22:07:34 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -150,3 +150,17 @@
 0	leshort		0x0601
 >16	leshort		0
 >>0	use		display-coff
+
+# PowerPC COFF executable
+# can be created by: LINK.EXE /MACHINE:powerpc /ROM
+0	leshort		0x01f0
+>16	leshort		!0
+>>18	leshort		&0x0002
+>>>20	leshort		0x010b
+>>>>0	use		display-coff
+# can be created by: LINK.EXE /MACHINE:MPPC /ROM
+0	leshort		0x0601
+>16	leshort		!0
+>>18	leshort		&0x0002
+>>>20	leshort		0x010b
+>>>>0	use		display-coff

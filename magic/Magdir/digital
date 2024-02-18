@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: digital,v 1.14 2024/02/18 14:15:22 christos Exp $
+# $File: digital,v 1.15 2024/02/18 22:07:34 christos Exp $
 #  Digital UNIX - Info
 #
 0	string	=!<arch>\n________64E	Alpha archive
@@ -30,6 +30,14 @@
 0	leshort		0x0284
 >16	leshort		0
 >>0	use		display-coff
+
+# Alpha COFF executable
+# can be created by LINK.EXE /MACHINE:ALPHA /ROM
+0	leshort		0x0184
+>16	leshort		!0
+>>18	leshort		&0x0002
+>>>20	leshort		0x0107
+>>>>0	use		display-coff
 
 # Basic recognition of Digital UNIX core dumps - Mike Bremford <mike@opac.bl.uk>
 #
