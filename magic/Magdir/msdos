@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.196 2024/02/18 22:08:40 christos Exp $
+# $File: msdos,v 1.197 2024/02/29 03:42:40 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -426,9 +426,9 @@
 # >>>(0x3c.l+0x0c)	ubyte		&0x04	\b, Per-Process Library Initialization OR real mode only
 # >>>(0x3c.l+0x0c)	ubyte		&0x08	\b, Protected mode only
 # >>>(0x3c.l+0x0c)	ubyte		&0x10	\b, 8086 instructions in OS/2 app OR LIM 3.2 EMS API in Win app
-# >>>(0x3c.l+0x0c)	ubyte		&0x20	\b, 80286 instructions in OS/2 app OR each instance in separate EMS bank in Win app
-# >>>(0x3c.l+0x0c)	ubyte		&0x40	\b, 80386 instructions in OS/2 app OR private GlobalAlloc above the EMS line in Win app
-# >>>(0x3c.l+0x0c)	ubyte		&0x80	\b, 80x87 instructions
+# >>>(0x3c.l+0x0c)	ubyte		&0x20	\b, i286 instructions in OS/2 app OR each instance in separate EMS bank in Win app
+# >>>(0x3c.l+0x0c)	ubyte		&0x40	\b, i386 instructions in OS/2 app OR private GlobalAlloc above the EMS line in Win app
+# >>>(0x3c.l+0x0c)	ubyte		&0x80	\b, x87 floating point instructions
 # ApplFlags; Application flags, bitmapped
 # https://www.fileformat.info/format/exe/corion-ne.htm
 #>>>(0x3c.l+0x0D)	ubyte		x	\b, ApplFlags 0x%2.2x

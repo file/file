@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.89 2024/02/04 19:51:58 christos Exp $
+# $File: elf,v 1.90 2024/02/29 03:42:40 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -82,15 +82,15 @@
 >18	leshort		0		no machine,
 >18	leshort		1		AT&T WE32100,
 >18	leshort		2		SPARC,
->18	leshort		3		Intel 80386,
+>18	leshort		3		Intel i386,
 >18	leshort		4		Motorola m68k,
 >>4	byte		1
 >>>36	lelong		&0x01000000	68000,
 >>>36	lelong		&0x00810000	CPU32,
 >>>36	lelong		0		68020,
 >18	leshort		5		Motorola m88k,
->18	leshort		6		Intel 80486,
->18	leshort		7		Intel 80860,
+>18	leshort		6		Intel i486,
+>18	leshort		7		Intel i860,
 # The official e_machine number for MIPS is now #8, regardless of endianness.
 # The second number (#10) will be deprecated later. For now, we still
 # say something if #10 is encountered, but only gory details for #8.

@@ -1,9 +1,9 @@
 
 #------------------------------------------------------------------------------
-# $File: xenix,v 1.16 2023/12/02 13:48:56 christos Exp $
+# $File: xenix,v 1.17 2024/02/29 03:42:40 christos Exp $
 # xenix:  file(1) magic for Microsoft Xenix
 #
-# "Middle model" stuff, and "Xenix 8086 relocatable or 80286 small
+# "Middle model" stuff, and "Xenix 8086 relocatable or i286 small
 # model" lifted from "magic.xenix", with comment "derived empirically;
 # treat as folklore until proven"
 #
@@ -165,14 +165,14 @@
 >0x1e	leshort		^0x1		object file
 >0x1e	leshort		&0x4000		V2.3
 >0x1e	leshort		&0x8000		V3.0
->0x1c	byte		&0x4		86
->0x1c	byte		&0xb		186
->0x1c	byte		&0x9		286
->0x1c	byte		&0x29		286
->0x1c	byte		&0xa		386
+>0x1c	byte		&0x4		8086
+>0x1c	byte		&0xb		i186
+>0x1c	byte		&0x9		i286
+>0x1c	byte		&0x29		i286
+>0x1c	byte		&0xa		i386
 >0x1e	leshort		&0x4		Large Text
 >0x1e	leshort		&0x2		Large Data
 >0x1e	leshort		&0x102		Huge Objects Enabled
 
-0	leshort		0x580		XENIX 8086 relocatable or 80286 small model
+0	leshort		0x580		XENIX 8086 relocatable or i286 small model
 # GRR: line above is too general as it catches also all 8086 relocatable (Microsoft) with 1st record data length 5 C0M.OBJ C0T.OBJ C0S.OBJ
