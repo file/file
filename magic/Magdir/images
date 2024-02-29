@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.249 2024/01/30 21:29:54 christos Exp $
+# $File: images,v 1.250 2024/02/29 03:40:37 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -13,8 +13,10 @@
 # Targa - matches `povray', `ppmtotga' and `xv' outputs
 # by Philippe De Muyter <phdm@macqel.be>
 # URL: http://justsolve.archiveteam.org/wiki/TGA
+#      https://en.wikipedia.org/wiki/Truevision_TGA
 # Reference: http://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf
-# Update: Joerg Jenderek
+# Update: Joerg Jenderek February 2024
+# Note:		called by DROID "Truevision TGA Bitmap" version 1.0 via PUID x-fmt/367
 # at 2, byte ImgType must be 1, 2, 3, 9, 10 or 11
 #	,32 or 33 (both not observed)
 # at 1, byte CoMapType must be 1 if ImgType is 1 or 9, 0 otherwise
@@ -27,6 +29,8 @@
 # and Image Type 1 2 3 9 10 11 32 33
 # and Color Map Entry Size 0 15 16 24 32
 0	ubequad&0x00FeC400000000C0	0
+# Targa image data (strength=70=110-40) before some Commodore disc image (strength=70=70+0 ./c64) like Cabal+2-MarioSoft(1).d64
+# and some MMDF mailbox (strength=70=70+0 ./mmdf) like uupc.input.1
 # Conflict with MPEG sequences.
 !:strength -40
 # Prevent conflicts with CRI ADX.
@@ -42,7 +46,10 @@
 >>>>17	ubyte&0x0F		!11
 # skip arches.3200 , Finder.Root , Slp.1 by looking for low pixel depth 1 8 15 16 24 32
 >>>>>16	ubyte			1
->>>>>>0		use		tga-image
+# skip few Commodore D64 disc image like "The Great Gianna Sisters.d64" and 
+# few MMDF mailbox like uupc.input.1 with unlikely black&white, dimension 0101h x 0101h (257x257) and +0101h origin (+257 +257)
+>>>>>>8	quad			!0x0101010101010101
+>>>>>>>0	use		tga-image
 >>>>>16	ubyte			8
 >>>>>>0		use		tga-image
 >>>>>16	ubyte			15
@@ -57,9 +64,11 @@
 0	name				tga-image
 >2	ubyte		<34		Targa image data
 !:mime	image/x-tga
+# Apple Uniform Type Identifier:	com.truevision.tga-image
 !:apple	????TPIC
 # normal extension .tga but some Truevision products used others:
 # tpic (Apple),icb (Image Capture Board),vda (Video Display Adapter),vst (NuVista),win (UNSURE about that)
+# afi bpx
 !:ext	tga/tpic/icb/vda/vst
 # image type 1 2 3 9 10 11 32 33
 >2	ubyte&0xF7	1		- Map
@@ -110,6 +119,7 @@
 # positive length implies identification field
 >0	ubyte		>0
 >>18	string		x		"%s"
+# Note:		called by DROID "Truevision TGA Bitmap" version 2.0 via fmt/402
 # last 18 bytes of newer tga file footer signature
 >18	search/4261301/s	TRUEVISION-XFILE.\0
 # extension area offset if not 0
