@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: c64,v 1.14 2023/06/16 19:24:06 christos Exp $
+# $File: c64,v 1.15 2024/02/29 03:51:50 christos Exp $
 # c64:  file(1) magic for various commodore 64 related files
 #
 # From: Dirk Jagdmann <doj@cubic.org>
@@ -164,26 +164,112 @@
 
 0	belong		0xFF424CFF	WRAptor packer (c64)
 
-0	string		C64S\x20tape\x20file	T64 tape Image
->32	leshort		x		Version:%#x
->36	leshort		!0		Entries:%i
->40	string		x		Name:%.24s
-
-0	string		C64\x20tape\x20image\x20file\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0	T64 tape Image
->32	leshort		x		Version:%#x
->36	leshort		!0		Entries:%i
->40	string		x		Name:%.24s
-
-0	string		C64S\x20tape\x20image\x20file\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0	T64 tape Image
->32	leshort		x		Version:%#x
->36	leshort		!0		Entries:%i
->40	string		x		Name:%.24s
+# URL:		http://fileformats.archiveteam.org/wiki/T64
+# Reference:	http://ist.uwaterloo.ca/~schepers/formats/T64.TXT
+#		https://vice-emu.sourceforge.io/vice_16.html#SEC394
+#		https://www.infinite-loop.at/Power64/Documentation/Power64-ReadMe/AE-File_Formats.html
+#		http://mark0.net/download/triddefs_xml.7z/defs/e/emu-t64.trid.xml
+# Note:		called "Commodore 64 Tape container" by TrID, "T64 Tape Image Format" by DROID via PUID fmt/820 and
+# 		"T64 tape Image" by ./c64,v 1.14
+#		verified by command like `deark -m t64 -l -d2 Caitan_the_Demo.t64` and
+#		`cbmconvert -v2 -t -D4 ironmanoffroad.d64 ironmanoffroad.t64`
+# 32 byte signature starting like C64S\x20tape\x20file
+# C64\x20tape\x20image\x20file\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0
+# C64S\x20tape\x20image\x20file\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0
+0	string/b	C64
+# skip raw Commodore TAPe by check for unsed areas (\0 filled) and valid low (40h+m*20h; m=0-FFffh) offset 
+>0x46	ubequad&0xFFff1F00C0ffFFff	0	Commodore Tape image
+#!:mime	application/octet-stream
+#!:mime	application/x-commodore-tape
+!:ext	t64
+# version like: 0100h (examples found) 0101h 0200h (no examples)
+>>32	leshort		x		Version:%#x
+#>>32	leshort		!0x0100		Version:%#x
+# number of used directory entries like: 0 1 2 5
+>>36	leshort		!0		Entries:%i
+# tape container name, 24 characters (padded with 20h but with A0h for DirMaster created samples) like:
+# ->ZYRON'S PD<- IMAGETAPE MY-T64-TEST\240\240\240 OPERATIONWOLF+3-711.T64
+>>40	string/24/Tb	>\040		Name:%.24s
+# MaxFiles; maximal directory entries like: 0 1 2 5 30 (=1Eh some emulators expect exactly this value) 31 32
+>>34	uleshort	x		MaxFiles:%u
+# 1st C64 filetype: 0~free 1~normal tape file 2~tape file with header 3~memory snapshot 4~tape block 5~digitized stream 6-255~reserved
+>>0x40	ubyte		!1		\b, C64 file type %#x
+# 1st start address or load address of first entry like: 0000 (empty|snapshot) 04a0h (ironmanoffroad.t64) 0801h (typically) 1201h (3501_quizmaster_program_s1.t64)
+>>0x42	uleshort	!0x0801		\b, load address %#4.4x
+# 1st actual end address in memory
+>>0x44	uleshort	x		\b, end address %#4.4x
+# reserved; must be 0
+>>0x26	ubeshort	!0		\b, at +0x26 %#x
+# not used like: 0 (examples found and according to TrID)
+>>0x46	ubeshort	!0		\b, at 0x46 %#4.4x
+# not used like: 0 (examples found and according to TrID)
+>>0x4c	ubelong		!0		\b, at 0x4C %#8.8x
+# offset (=64+32*m) into 1st container file like: 0 (empty) 60h 80h E0h 400h 440h ...
+>>0x48	ulelong		>0		\b, at %#x
+# 1st filename (in PETASCII, padded with 20h, not A0h) like: "DRILLINSTR. /HTL" "WIZBALL+        " ...
+>>>0x50	string/16/bT	x		"%0.16s"
+# https://www.lyonlabs.org/commodore/onrequest/Inside_Commodore_Dos.pdf
+# file type like: 0~Scratched 1~SEQunclosed 81h~SEQ 82h~PRG C2h~PRGlocked ...
+>>>0x41	ubyte		x
+>>>>0x41	ubyte	=0x00		Scratched type
+>>>>0x41	ubyte	=0x01		SEQ unclosed type
+#>>>>0x41	ubyte	=0x44		foo type
+>>>>0x41	ubyte	=0x80		DEL type
+>>>>0x41	ubyte	=0x81		SEQ type
+>>>>0x41	ubyte	=0x82		PRG type
+>>>>0x41	ubyte	=0x83		USR type
+>>>>0x41	ubyte	=0x84		REL type
+>>>>0x41	ubyte	=0xC2		PRG locked type
+# other 	unusual file type
+>>>>0x41	default	x
+>>>>>0x41	ubyte	x		%#2.2x type
+# inspect 1st entry content (often Commodore C64 BASIC program *.PRG) without load adress
+#>>(0x48.l)	ubequad		x	\b, 1st data %16.16llx...
 
 # Raw tape file format (.tap files)
 # Esa Hyyti <esa@netlab.tkk.fi>
-0	string		C64-TAPE-RAW	C64 Raw Tape File (.tap),
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Tap_file
+#		https://vice-emu.sourceforge.io/vice_16.html#SEC392
+# Reference:	http://ist.uwaterloo.ca/~schepers/formats/TAP.TXT
+# Note:		called "TAP (Commodore 64)" by DROID via PUID fmt/802
+#		a variant starting with C16-TAPE-RAW should exist, but no examples found
+0	string/b	C64-TAPE-RAW	Commodore raw Tape image (platform
+#0	string		C64-TAPE-RAW	C64 Raw Tape File (.tap),
+#!:mime	application/octet-stream
+!:mime	application/x-commodore-tape
+!:ext	tap
+# According to TrID als raw suffix, but no such samples found
+#!:ext	tap/raw
+# computer platform like: 0~C64 1~VIC-20 2~C16 Plus/4 3~PET 4~C5x0 5~C6x0 C7x0
+>0xD	ubyte		0		C64
+>0xD	ubyte		1		VIC-20
+>0xD	ubyte		2		C16 Plus/4
+>0xD	ubyte		3		PET
+>0xD	ubyte		4		C5x0
+>0xD	ubyte		5		C6x0 C7x0
+# this should not happen!
+>0xD	ubyte		>5		%#2.2x
+>0xD	ubyte		x		\b),
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/t/tap.trid.xml
+#		http://mark0.net/download/triddefs_xml.7z/defs/t/tap-1.trid.xml
+# Note:		called "C64 Tape image format" (v0-original) (v1-updated)" by TrID
+# TAP version like: 0~OriginalLayout 1~Updated (often)
 >0x0c	byte		x		Version:%u,
+# file data size (not including header)
 >0x10	lelong		x		Length:%u cycles
+# video standard like: 0~PAL 1~NTSC 2~OLD NTSC 3~PALN
+>0xE	ubyte		x    		\b, video
+>0xE	ubyte		0		PAL
+>0xE	ubyte		1		NTSC
+>0xE	ubyte		2		old NTSC
+>0xE	ubyte		3		PALN
+# this should not happen!
+>0xE	ubyte		>3		%#2.2x
+# reserved for future expansion like: 0
+>0xF	ubyte		!0		\b, at 0xF %#2.2x
+# file data
+#>014	ubequad		x		\b, data %16.16llx
 
 # magic for Goattracker2, http://covertbitops.c64.org/
 # from Alex Myczko <alex@aiei.ch>
