@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.250 2024/02/29 03:40:37 christos Exp $
+# $File: images,v 1.251 2024/03/01 03:30:55 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -506,6 +506,12 @@
 !:ext   png
 !:strength +10
 >16	use		png-ihdr
+>33	string		\x00\x00\x00\x08acTL	\b, animated
+>>41	ubelong		1			(%d frame
+>>41	ubelong		>1			(%d frames
+>>45	ubelong		0			\b, infinite repetitions)
+>>45	ubelong		1			\b, %d repetition)
+>>45	ubelong		>1			\b, %d repetitions)
 
 # Apple CgBI PNG image.
 0	string		\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x04CgBI
