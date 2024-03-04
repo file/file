@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: frame,v 1.18 2023/12/10 16:09:17 christos Exp $
+# $File: frame,v 1.19 2024/03/04 00:34:31 christos Exp $
 # frame:  file(1) magic for FrameMaker files
 #
 # This stuff came on a FrameMaker demo tape, most of which is
@@ -8,15 +8,46 @@
 #
 # URL:		https://en.wikipedia.org/wiki/Adobe_FrameMaker
 #
-0	string		\<MakerFile	FrameMaker document
-!:mime	application/x-mif
->11	string		5.5		 (5.5
->11	string		5.0		 (5.0
->11	string		4.0		 (4.0
->11	string		3.0		 (3.0
->11	string		2.0		 (2.0
->11	string		1.0		 (1.0
->14	byte		x		  %c)
+# Update:	Joerg Jenderek 2024 Mar
+# URL:		http://fileformats.archiveteam.org/wiki/FrameMaker
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/f/fm.trid.xml
+# Note:		called "FrameMaker document" by TrID and "Adobe FrameMaker document" by shared MIME-info database
+# skip "text" DROID samples like: fmt-190-signature-id-840.fm fmt-533-signature-id-837.fm fmt-534-signature-id-838.fm fmt-535-signature-id-839.fm fmt-536-signature-id-841.fm
+# fmt-537-signature-id-842.fm fmt-538-signature-id-843.fm fmt-539-signature-id-844.fm x-fmt-302-signature-id-395.fm
+0	string/b	\<MakerFile	FrameMaker document
+#!:mime	application/octet-stream
+# https://www.iana.org/assignments/media-types/application/vnd.framemaker
+!:mime	application/vnd.framemaker
+# version string like 1.0 2.0 3.0 4.0 5.0 5.5 6.0 7.0 8.0 9.0 10.0
+>11	string		x		(%0.3s
+# before closing directive ">" is appended version letter like: F H J K Q Y
+>>14	ubyte		>0x40		%c
+# or last digit of 4 character version string
+>>14	ubyte		<0x41		\b%c
+# test again so that next default clause works
+>14	ubyte		x
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hlp-fm.trid.xml
+# Note:		called "FrameMaker Help" by TrID
+# look for reference to FrameMaker help name suffix like in: index1.hlp
+>>18	search/9688/s	.hlp:		 \b) help
+# the internal FrameMaker help are just FrameMaker document with hlp suffix; XREF.HLP is same as Xref-hlp.fm
+!:ext	hlp
+# For control reason show link name like:
+# "Overview" "lastpage "firstpage "Add File" "Conditional Text" "Table Format" "Creating a reference frame" "firstpageCov" "Spot Colors" "Selecting text" "proceduresbl" "lastpageu" "Introducing HelpHe" "Menu of Syntax Descriptions" "Main FrameMaker window"
+#>>>&5	string		x		 LINK_NAME "%s"
+>>>&5	string		x
+# look for gotolink or openlink keyword before help file name
+>>>&-18	search/18/s	link\040
+# link construct with help name like: "gotolink xref.hlp:Overview" "openlink syntax1.hlp:firstpage"
+>>>>&-4	regex/s		=^\[A-Za-z0-9.:\040]{1,}	with "%s"
+# if not FrameMaker Help assume it is "normal" FrameMaker document
+# shown with closing parenthesis to get look like in frame,v 1.18
+>>18	default			x	\b)
+# sometimes without suffix like: CHAPTER HARVARD LETTER MEMO1 NEWSLTR REPORT3
+# no samples found with .bk or .book extension
+# allchaps.ix (Framemaker Index) and others like:
+# title.fm4 wp.filt textre1.htr pmscript.ind change.nbh books.prd executiv.sum Hyper.Template
+!:ext	/fm/doc/toc/ix
 # URL:		http://fileformats.archiveteam.org/wiki/Maker_Interchange_Format
 # Reference:	https://help.adobe.com/en_US/framemaker/mifreference/mifref.pdf
 # Update:	Joerg Jenderek 2019 Nov
