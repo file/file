@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.198 2024/03/04 00:37:06 christos Exp $
+# $File: msdos,v 1.199 2024/03/04 00:38:27 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -785,6 +785,8 @@
 >>>>>&-2	use	mz-next-overlay
 >>>>>&-2	string	BW
 >>>>>>0		use	mz-bw-collection
+>>>>>&-2	string	3P
+>>>>>>0		use	mz-3p
 >>>>0		default	x
 >>>>>0		use	mz-unrecognized
 >>>0		default	x
@@ -794,6 +796,8 @@
 >>>>&-2		use	mz-next-overlay
 >>>>&-2		string	BW
 >>>>>0		use	mz-bw-collection
+>>>>&-2	string	3P
+>>>>>0		use	mz-3p
 >>>0		default	x
 >>>>0		use	mz-unrecognized
 
@@ -943,7 +947,15 @@
 >0	string	P2	\b, EXP (P2) for MS-DOS, Phar Lap 286 DOS extender
 >0	string	P3	\b, EXP (P3) for MS-DOS, Phar Lap 386 DOS extender
 >0	string	MT	\b, MT for MS-DOS, IGC XMLOD i386 DOS extender
->0	string	3P	\b, 3P for MS-DOS, CauseWay 3P-format library
+>0	string	3P	\b, 3P for MS-DOS
+# Other 3P details are printed later as they depend on the original MZ content
+>>32	lelong&0x00000001	!0	\b, 16-bit
+>>32	lelong&0x00000001	0
+# CWC.EXE from cw349bin.zip is 32-bit
+>>>32	lelong&0x00010000	0	\b, 32-bit
+# WL32.EXE from cw349bin.zip is dual mode
+>>>32	lelong&0x00010000	!0	\b, Dual mode
+>>32	lelong&0x80000000	!0	\b, Compressed
 >0	string	D3X1	\b, D3X1 for MS-DOS, D3X DOS extender
 # BW details are printed later as they depend on the original MZ content
 >0	string	BW	\b, BW collection for MS-DOS
@@ -1014,6 +1026,14 @@
 >>>&-8	string	DOS/4G	\b, DOS/4G DOS extender (embedded)
 >>>0		default	x
 >>>>(8.s*16)	search/0x4000	Stub\ failed\ to\ find\ DOS/4G\ extender.	\b, DOS/4G DOS extender (stub)
+
+
+# This named instance is called for CauseWay MZ 3P binary with offset from the beginning of the file
+0	name	mz-3p
+# CWC.EXE and WL32.EXE from cw349bin.bin
+>0x440	search/0x100	CauseWay\ DOS\ Extender			\b, CauseWay DOS extender
+# CWHELP.EXE from cw349bin.bin
+>0x200	search/0x100	CauseWay\ dynamic\ link\ library	\b, CauseWay DLL
 
 
 # Summary:	OS/2 LX Library and device driver (no DOS stub)
