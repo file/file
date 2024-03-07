@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: c64,v 1.15 2024/02/29 03:51:50 christos Exp $
+# $File: c64,v 1.16 2024/03/07 22:30:21 christos Exp $
 # c64:  file(1) magic for various commodore 64 related files
 #
 # From: Dirk Jagdmann <doj@cubic.org>
@@ -12,13 +12,32 @@
 
 # C64 (and other CBM) cartridges
 # Extended by David Korth <gerbilsoft@gerbilsoft.com>
+# Update:	Joerg Jenderek
 # Reference: https://vice-emu.sourceforge.io/vice_17.html#SEC391
+#		http://ist.uwaterloo.ca/~schepers/formats/CRT.TTX
+#		http://mark0.net/download/triddefs_xml.7z/defs/c/crt-c64.trid.xml
+# Note:		called "C64 Cartridge image" by TrID and
+#		"CRT C64 Cartridge Image Format" by DROID via PUID fmt/822
 
-0	string		C64\40CARTRIDGE	Commodore 64 cartridge
+0	string		C64\40CARTRIDGE
+# skip DROID fmt-822-signature-id-1179.crt with missing packet length
+>0x44	ubelong		>0x10
+>>0	use		c64-crt
+#	display Commodore 64 cartridge information
+0	name		c64-crt
+>0	string		x		Commodore 64 cartridge
+#!:mime	application/octet-stream
+!:mime	application/x-commodore-crt
+!:ext	crt
+#		http://mark0.net/download/triddefs_xml.7z/defs/c/car-ccs64.trid.xml
+#!:ext	crt/car
 >0x20	ubyte	0	\b,
 >0x20	ubyte	!0
+# 32-byte null padded cartridge name like: "BUGS BUNNY" "CART64" "EasyFlash" "FINAL CARTRIDGE" "Magic Desk" "VICE CART"
 >>0x20	string/T	x	\b: "%.32s",
+# cartridge hardware type
 >0x16	beshort	0
+# cartridge port EXROM line status
 >>0x18	beshort	0x0000	16 KB game
 >>0x18	beshort	0x0001	8 KB game
 >>0x18	beshort	0x0100	UltiMax mode
@@ -59,6 +78,7 @@
 >0x16	beshort	34	Capture
 >0x16	beshort	35	Action Replay 3
 >0x16	beshort	36
+# cartridge Hardware Revision/Subtype (usually 0) (added in v1.01)
 >>0x1A	ubyte	1	Nordic Replay
 >>0x1A	ubyte	!1	Retro Replay
 >0x16	beshort	37	MMC64
@@ -104,6 +124,24 @@
 >0x16	beshort	75	IEEE Flash! 64
 >0x16	beshort	76	Turtle Graphics II
 >0x16	beshort	77	Freeze Frame MK2
+>0x16	beshort	78	Partner 64
+# cartridge hardware type: (0-78)
+>0x16	ubeshort >78	unknown type %#x
+# Cartridge Hardware Revision/Subtype (usually 0 added in v1.01)
+>>0x1A	ubyte	>0	revision %#x
+# padded with 3 space characters for CRT but for CCS64 Cartridge (*.CAR) maybe different according to TrID
+>14	ubeshort	!0x2020	\b, at 14 %#x
+# file header length like: 20h (reported wrong) 40h (default and minimum)
+>0x10	ubelong	!0x40	\b, header length %#x
+# cartridge version like: 1.0 1.1 (adds CRT sub type/hardware revision) 2.0 (introduces VIC20, PLUS4, C128, CBM2)
+>0x14	ubeshort	!0x0100
+>>0x14	ubyte		x	\b, version %u
+>>0x15	ubyte		x	\b.%u
+# cartridge content start with ROM signature which must be CHIP
+>0x40	ubelong	!0x43484950	\b, invalid ROM signature
+>>0x40	string	x		"%0.4s"
+# total packet length (length of ROM image size and header combined) like: 2010h 4010h
+>0x44	ubelong	x	\b, packet length %#x
 
 0	string		C128\40CARTRIDGE	Commodore 128 cartridge
 >0x20	ubyte	0	\b,
