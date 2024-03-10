@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.200 2024/03/10 21:09:09 christos Exp $
+# $File: msdos,v 1.201 2024/03/10 21:10:37 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -2355,7 +2355,13 @@
 #>>87	ubequad x			SharewareData=%#16.16llx
 
 # old binary Microsoft (.HLP) files added by Joerg Jenderek from http://file-extension.net/seeker/file_extension_hlp
-0	ulequad	0x3a000000024e4c	MS Advisor help file
+# URL:		http://fileformats.archiveteam.org/wiki/Microsoft_Advisor_Help
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/h/hlp-ms-adv.trid.xml
+# Note:		called "Microsoft Advisor Help" by TrID
+0	ulequad&0xFFffFFfeFFffFFff	0x003a000000024e4c	MS Advisor help file
+#!:mime								application/octet-stream
+!:mime								application/x-ms-hlp
+!:ext								hlp
 
 # HtmlHelp files (.chm)
 0	string/b	ITSF\003\000\000\000\x60\000\000\000	MS Windows HtmlHelp Data
