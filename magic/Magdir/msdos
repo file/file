@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.199 2024/03/04 00:38:27 christos Exp $
+# $File: msdos,v 1.200 2024/03/10 21:09:09 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -497,6 +497,9 @@
 >>>>>>(0x3c.l+0x3F)	ubyte		<3
 >>>>>>>(0x3c.l+0x37)	byte&0x04	0	(real mode only)
 >>>>>>>(0x3c.l+0x37)	byte&0x04	!0	(real+protected mode)
+>>>>>>(0x3c.l+0x3E)	ushort		=0x0300
+>>>>>>>(0x3c.l+0x0c)	ubyte&0x08	0	(real+protected mode)
+>>>>>>>(0x3c.l+0x0c)	ubyte&0x08	!0	(protected mode only)
 >>>>>(0x3c.l+0x3E)	ushort		0
 >>>>>>(0x3c.l+0x2a)	leshort		0 for OS/2 1.x or MS Windows 1.x/2.x
 >>>>>>(0x3c.l+0x2a)	default		x
@@ -522,6 +525,9 @@
 >>>>>(0x3c.l+0x3F)	ubyte		<3
 >>>>>>(0x3c.l+0x37)	byte&0x04	0	(real mode only)
 >>>>>>(0x3c.l+0x37)	byte&0x04	!0	(real+protected mode)
+>>>>>(0x3c.l+0x3E)	ushort		=0x0300
+>>>>>>(0x3c.l+0x0c)	ubyte&0x08	0	(real+protected mode)
+>>>>>>(0x3c.l+0x0c)	ubyte&0x08	!0	(protected mode only)
 # OS 3 was reserved for Multitasking MS-DOS but it never used NE version 5+ (only NE version 4)
 #>>>>(0x3c.l+0x36)	byte		3 for Multitasking MS-DOS
 # OS 4 was reserved for MS Windows/386 device drivers but MS Windows/386 2.x never used NE format (Xenix x.out format was used instead)
