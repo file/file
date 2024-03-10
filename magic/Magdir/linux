@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.87 2023/10/09 13:29:04 christos Exp $
+# $File: linux,v 1.88 2024/03/10 21:12:43 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -938,3 +938,13 @@
 >124	ubyte		!0x79
 >>124	ubyte		>0x40			\b, english y is %c
 #>764	ubyte		x			\b, english Y is %c
+
+
+# From: Ben Dooks <ben.dooks@codethink.co.uk>
+# URL: https://github.com/torvalds/linux/blob/master/tools/perf/util/header.c
+# perf files for v1 and v2
+0	string		PERFFILE		Linux perf recording, version 1
+
+0	lequad		0x32454c4946524550	Linux perf recording, version 2. little endian
+
+0	bequad		0x32454c4946524550	Linux perf recording, version 2. big endian
