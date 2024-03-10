@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.160 2024/02/09 00:46:21 christos Exp $
+# $File: filesystems,v 1.161 2024/03/10 21:16:25 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1938,25 +1938,21 @@
 # defect IO.SYS+MSDOS.SYS ?
 #>>>>>0x162	use			2xDOS-filename
 
-0	name				cdrom
->38913	string   !NSR0      ISO 9660 CD-ROM filesystem data
+0	name				cdrom	ISO 9660 CD-ROM filesystem data
 !:mime	application/x-iso9660-image
 !:ext	iso/iso9660
->38913	string    NSR0      UDF filesystem data
-!:mime	application/x-iso9660-image
-!:ext	iso/udf
->>38917	string    1         (version 1.0)
->>38917	string    2         (version 1.5)
->>38917	string    3         (version 2.0)
->>38917	byte     >0x33      (unknown version, ID %#X)
->>38917	byte     <0x31      (unknown version, ID %#X)
 # The next line is not necessary because the MBR staff is done looking for boot signature
 >0x1FE	leshort  0xAA55     (DOS/MBR boot sector)
 # "application id" which appears to be used as a volume label
 >32808	string/T  >\0       '%.32s'
 >34816	string    \000CD001\001EL\ TORITO\ SPECIFICATION    (bootable)
+# check for extended area (combined ISO + UDF)
+>36865	string    BEA01     +
+>>36864	use       extendedarea
+
 37633	string    CD001     ISO 9660 CD-ROM filesystem data (raw 2352 byte sectors)
 !:mime	application/x-iso9660-image
+
 # URL:		http://fileformats.archiveteam.org/wiki/High_Sierra
 # Update:	Joerg Jenderek
 32777	string    CDROM     High Sierra CD-ROM filesystem data
@@ -1986,19 +1982,48 @@
 # Reference:	https://wiki.osdev.org/UDF
 # Note:		called "UDF Disc Image" by DROID via PUID fmt/1738
 #		verified by udftools `udfinfo nero-UDFv26.iso` and 7-Zip `7z l -tUdf nero-UDF1.iso`
-# 		there seems to exist variants which are not recognized by current test lines
 #		
-# look for type descriptor at relative offset 1 of block 16 with size 2048
-# it is an extended descriptor section
-32769	string    	BEA01
-# look for type descriptor at relative offset 1 of block 17 with size 2048
->34817	string    	NSR0	UDF filesystem data
+# look for type descriptor at relative offset 1 of block 16 if it is an extended descriptor section
+32769	string	BEA01
+>32768	use	extendedarea
+
+0	name	extendedarea
+# look for type descriptor at relative offset 1 of block 17 with size 2048 (valid for images with blocksize of 512, 1024 or 2048 bytes)
+>2049		string	NSR0
+>>2048		use	NSR0
+>2049		default	x
+# look for type descriptor at relative offset 1 of block 17 with size 4096 (valid for images with blocksize of 4096 bytes)
+>>4097		string	NSR0
+>>>4096		use	NSR0
+>>4097		default	x
+# look for type descriptor at relative offset 1 of block 17 with size 8192 (valid for images with blocksize of 8192 bytes)
+>>>8193		string	NSR0
+>>>>8192	use	NSR0
+>>>8193		default	x
+# look for type descriptor at relative offset 1 of block 17 with size 16384 (valid for images with blocksize of 16384 bytes)
+>>>>16385	string	NSR0
+>>>>>16384	use	NSR0
+>>>>16385	default	x
+# look for type descriptor at relative offset 1 of block 17 with size 32768 (valid for images with blocksize of 32768 bytes)
+>>>>>32769	string	NSR0
+>>>>>>32768	use	NSR0
+>>>>>32769	default	x
+
+0	name	NSR0
+# NSR02 indicates ISO/IEC 13346 first edition, or ECMA-167 second edition
+# OSTA UDF 1.x revisions are based on ISO/IEC 13346 first edition
+# FIXME: This detection is incorrect as it does not detect UDF 1.x, but ECMA-167 2nd
+>5	ubyte	0x32	UDF filesystem data (version 1.x)
 #!:mime	application/octet-stream
 !:mime	application/x-udf-image
 !:ext	iso/udf
-# reported as udfrev and udfwriterev by udfinfo
->>34821	ubyte    	0x32	(version 1.x)
->>34821	ubyte    	0x33	(version 2.x)
+# NSR03 indicates ISO/IEC 13346 second edition, or ECMA-167 third edition
+# OSTA UDF 2.x revisions are based on ECMA-167 third edition
+# FIXME: This detection is incorrect as it does not detect UDF 2.x, but ECMA-167 3rd
+>5	ubyte	0x33	UDF filesystem data (version 2.x)
+#!:mime	application/octet-stream
+!:mime	application/x-udf-image
+!:ext	iso/udf
 
 # URL: https://en.wikipedia.org/wiki/NRG_(file_format)
 # Reference: https://dl.opendesktop.org/api/files/download/id/1460731811/
