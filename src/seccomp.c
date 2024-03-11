@@ -279,6 +279,12 @@ enable_sandbox_full(void)
 		 goto out;
 #endif
 
+	 /* allow glibc to name malloc areas */
+	 if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(prctl), 2,
+	     SCMP_CMP32(0, SCMP_CMP_EQ, PR_SET_VMA),
+	     SCMP_CMP64(1, SCMP_CMP_EQ, PR_SET_VMA_ANON_NAME)) == -1)
+		 goto out;
+
 	// applying filter...
 	if (seccomp_load(ctx) == -1)
 		goto out;
