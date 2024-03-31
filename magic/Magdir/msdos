@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.201 2024/03/10 21:10:37 christos Exp $
+# $File: msdos,v 1.202 2024/03/31 14:21:03 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -528,6 +528,16 @@
 >>>>>(0x3c.l+0x3E)	ushort		=0x0300
 >>>>>>(0x3c.l+0x0c)	ubyte&0x08	0	(real+protected mode)
 >>>>>>(0x3c.l+0x0c)	ubyte&0x08	!0	(protected mode only)
+# Windows P-code application
+# https://web.archive.org/web/20000304044656/http://msdn.microsoft.com/library/backgrnd/html/msdn_c7pcode2.htm
+# https://library.thedatadungeon.com/msdn-1992-09/msjv7/html/msjv0g6a.content.htm
+# https://en.wikipedia.org/wiki/P-code_machine#Microsoft_P-code
+# Can be created by MSC7 or MSVC1.x CL.EXE /Oq switch which calls MPC.EXE
+# MPC.EXE (Make P-Code utility) sets bit2 in MZ e_res[2] (e_flags) field
+# Filter out false-positive Windows applications with OS/2 WLO loader as they do not have e_res[] fields
+>>>>>(0x3c.l+0x3E)	ushort		>0x0300
+>>>>>>(0x3c.l+0x37)	ubyte&0x80	0
+>>>>>>>0x20		ubyte&0x04	!0	\b, P-code application
 # OS 3 was reserved for Multitasking MS-DOS but it never used NE version 5+ (only NE version 4)
 #>>>>(0x3c.l+0x36)	byte		3 for Multitasking MS-DOS
 # OS 4 was reserved for MS Windows/386 device drivers but MS Windows/386 2.x never used NE format (Xenix x.out format was used instead)
