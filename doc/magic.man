@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.107 2024/03/01 02:57:32 christos Exp $
-.Dd February 29, 2024
+.\" $File: magic.man,v 1.108 2024/03/31 14:36:44 christos Exp $
+.Dd March 31, 2024
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -764,7 +764,7 @@ If you have a list of known values at a particular continuation level,
 and you want to provide a switch-like default case:
 .Bd -literal -offset indent
 # clear that continuation level match
-\*[Gt]18	clear
+\*[Gt]18	clear	x
 \*[Gt]18	lelong	1	one
 \*[Gt]18	lelong	2	two
 \*[Gt]18	default	x
