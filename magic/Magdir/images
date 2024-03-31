@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.251 2024/03/01 03:30:55 christos Exp $
+# $File: images,v 1.252 2024/03/31 14:55:42 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1329,20 +1329,75 @@
 
 # SGI image file format, from Daniel Quinlan (quinlan@yggdrasil.com)
 #
-# See
-#	http://reality.sgi.com/grafica/sgiimage.html
-#
-0	ubeshort		474		SGI image data
-#>2	ubyte		0		\b, verbatim
->2	ubyte		1		\b, RLE
-#>3	ubyte		1		\b, normal precision
->3	ubyte		2		\b, high precision
->4	ubeshort	x		\b, %d-D
->6	ubeshort	x		\b, %d x
->8	ubeshort	x		%d
->10	ubeshort	x		\b, %d channel
->10	ubeshort	!1		\bs
->80	string		>0		\b, "%s"
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/SGI_(image_file_format)
+#		https://en.wikipedia.org/wiki/Silicon_Graphics_Image
+# Reference:	https://paulbourke.net/dataformats/sgirgb/sgiversion.html
+#		http://mark0.net/download/triddefs_xml.7z/defs/b/bitmap-sgi.trid.xml
+# Note:		called "Silicon Graphics bitmap (generic)" by TrID,
+#		"Silicon Graphics Image" by DROID via PUID x-fmt/140 and shared MIME-info database from freedesktop.org,
+#		verfied by ImageMagick `identify -verbose *.sgi` as SGI (Irix RGB image) and
+#		verfied by XnView `nconvert -in sgi -info *.sgi` as SGI RGB
+# look for magic number (integer 474=0x01DA) + storage format (0 or 1) + number of bytes per pixel channel (1 or 2) 
+# to skip few TeX font metric data (like pxmi.tfm pxmi1.tfm eksfi8a.tfm ./tex) with invalid "high" bytes/pixel (11 12)
+0	ubelong&0xFFffFEfc	0x01da0000
+# skip DROID x-fmt-140-signature-id-623.bw with invalid "low" dimensions "0 x 0"
+>6	long			!0		SGI image data
+#!:mime	image/sgi
+!:mime	image/x-sgi
+!:apple	????.SGI
+# STORAGE format; allowed values 0~VERBATIM 1~RLE 
+#>>2	ubyte		0		\b, verbatim
+>>2	ubyte		1		\b, RLE
+#>>2	ubyte		>1		STORAGE=%#x
+# BPC; number of bytes per pixel component; allowed values 1 2
+#>>3	ubyte		1		\b, normal precision
+>>3	ubyte		2		\b, high precision
+#>>3	ubyte		x		BPC=%#x
+# DIMENSION; allowed values are 1~scanline 2~XSIZExYSIZE 3~XSIZExYSIZExZSIZE
+>>4	ubeshort	x		\b, %d-D
+# XSIZE; width of image in pixels
+>>6	ubeshort	x		\b, %d x
+# YSIZE; height of image in pixels
+>>8	ubeshort	x		%d
+# ZSIZE; number of channels in image; 1~B/W (greyscale) 3~RGB 4~RGB+ALPHA channel
+>>10	ubeshort	x		\b, %d
+# GRR: avoid
+# Magdir\images, 1347: Warning: Current entry does not yet have a description for adding a EXTENSION type
+>>>10	ubeshort	1		channel
+# GRR: exception https://sembiance.com/fileFormatSamples/image/sgi/greytest.rgb
+!:ext	bw
+# no examples found with .int suffix
+#!:ext	bw/int
+# no examples found with .inta suffix for black/white+ALPHA channel
+# no examples found with 2 channels
+#>>>10	ubeshort	2		channels
+#!:ext	sgi
+>>>10	ubeshort	3		channels
+!:ext	rgb/sgi
+>>>10	ubeshort	4		channels
+!:ext	rgba/sgi
+>>>10	default		x		channels
+# no examples found with 5 and more channels
+!:ext	sgi
+# IMAGENAME; null terminated ascii string of up to 79 characters
+>>24	string		>\0		\b, "%0.80s"
+# PINMIN; minimum pixel value in the image; often 0
+>>12	ubelong		!0		\b, %u PINMIN
+# PINMAX; maximum pixel value in the image; often 255
+>>16	ubelong		!255		\b, %u PINMAX
+# DUMMY; 4 bytes of data should be set to 0
+>>20	ubelong		!0		\b, at 20 %#x
+# COLORMAP; 0~normal 1~DITHEREDobsolete 2~SCREENobsolete 3~COLORMAP
+>>104	ubelong		!0		\b, %u COLORMAP
+# DUMMY; 404 bytes should be set to 0 but not always true; makes header exactly 512 bytes
+>>111	ubyte		!0		\b, at 111 %#x
+>>113	ubyte		!0		\b, at 113 %#x
+>>118	ubeshort	!0		\b, at 118 %#4.4x
+>>121	ubyte		!0		\b, at 121 %#x
+>>132	ubelong		!0		\b, at 132 %#8.8x
+>>135	ubyte		!0		\b, at 135 %#x
+>>137	ubequad		!0		\b, at 137 %#16.16llx
 
 0	string		IT01		FIT image data
 >4	ubelong		x		\b, %d x
