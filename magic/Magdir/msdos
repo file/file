@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.203 2024/03/31 14:21:27 christos Exp $
+# $File: msdos,v 1.204 2024/03/31 14:24:50 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -534,7 +534,8 @@
 # https://en.wikipedia.org/wiki/P-code_machine#Microsoft_P-code
 # Can be created by MSC7 or MSVC1.x CL.EXE /Oq switch which calls MPC.EXE
 # MPC.EXE (Make P-Code utility) sets bit2 in MZ e_res[2] (e_flags) field
-# Filter out false-positive Windows applications with OS/2 WLO loader as they do not have e_res[] fields
+# Filter out false-positive Windows 3.x applications with OS/2 WLO loader
+# (sets bit7 in NE ne_flagsothers) as they do not have MZ e_res[] fields
 >>>>>(0x3c.l+0x3E)	ushort		>0x0300
 >>>>>>(0x3c.l+0x37)	ubyte&0x80	0
 >>>>>>>0x20		ubyte&0x04	!0	\b, P-code application
