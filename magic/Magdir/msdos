@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.202 2024/03/31 14:21:03 christos Exp $
+# $File: msdos,v 1.203 2024/03/31 14:21:27 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -538,6 +538,14 @@
 >>>>>(0x3c.l+0x3E)	ushort		>0x0300
 >>>>>>(0x3c.l+0x37)	ubyte&0x80	0
 >>>>>>>0x20		ubyte&0x04	!0	\b, P-code application
+# 32-bit Watcom Win386 extender in 16-bit Windows 3.x NE binaries
+# https://www.os2museum.com/wp/watcom-win386/
+# https://github.com/open-watcom/open-watcom-v2/blob/master/bld/win386/
+# https://misc.daniel-marschall.de/spiele/blown_away/disassemble.php
+# Examples: BA_LITE.EXE WALDO.EXE
+>>>>>(0x3c.l+0x3E)	ushort		>0x0300
+>>>>>>0x38		ulong		!0
+>>>>>>>(0x38.l)		string		MQ	\b, Watcom Win386 extender
 # OS 3 was reserved for Multitasking MS-DOS but it never used NE version 5+ (only NE version 4)
 #>>>>(0x3c.l+0x36)	byte		3 for Multitasking MS-DOS
 # OS 4 was reserved for MS Windows/386 device drivers but MS Windows/386 2.x never used NE format (Xenix x.out format was used instead)
