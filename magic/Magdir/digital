@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: digital,v 1.15 2024/02/18 22:07:34 christos Exp $
+# $File: digital,v 1.16 2024/03/31 15:06:56 christos Exp $
 #  Digital UNIX - Info
 #
 0	string	=!<arch>\n________64E	Alpha archive
@@ -10,7 +10,12 @@
 0	leshort		0603
 >24	leshort		0410		COFF format alpha pure
 >24	leshort		0413		COFF format alpha demand paged
+# TODO: use other subroutine (./coff) to display name+flags+variables for common object formatted files
+#>0	use				display-coff-foo
 >>22	leshort&030000	!020000		executable
+#!:mime	application/x-foo-executable
+# typically no file name suffix for executables like \DEC\HH\HYPERHLP
+!:ext	/
 >>22	leshort&020000	!0		dynamically linked
 >>16	lelong		!0		not stripped
 >>16	lelong		0		stripped
