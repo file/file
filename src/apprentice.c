@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.345 2024/01/30 21:59:41 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.346 2024/04/05 16:54:20 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1137,8 +1137,12 @@ apprentice_sort(const void *a, const void *b)
 	const struct magic_entry *mb = CAST(const struct magic_entry *, b);
 	size_t sa = file_magic_strength(ma->mp, ma->cont_count);
 	size_t sb = file_magic_strength(mb->mp, mb->cont_count);
-	if (sa == sb)
-		return 0;
+	if (sa == sb) {
+		int x = memcmp(ma->mp, mb->mp, sizeof(*ma->mp));
+		if (x == 0)
+			abort();
+		return x > 0 ? -1 : 1;
+	}
 	else if (sa > sb)
 		return -1;
 	else
