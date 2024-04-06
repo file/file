@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.73 2022/11/06 18:39:23 christos Exp $
+# $File: commands,v 1.74 2024/04/06 13:54:52 christos Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
@@ -126,6 +126,9 @@
 0	string	#!
 >0	regex	\^#!.*/bin/execlineb([[:space:]].*)*$	execline script text executable
 !:mime	text/x-execline
+
+0	string	#!/nix/store/
+>&-11	string/T	x			a %s script text executable
 
 # PHP scripts
 # Ulf Harnhammar <ulfh@update.uu.se>
