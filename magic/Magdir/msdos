@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.204 2024/03/31 14:24:50 christos Exp $
+# $File: msdos,v 1.205 2024/04/06 13:29:53 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1024,7 +1024,7 @@
 >>0	offset%0x10	0xf
 >>>0x1	use	mz-next-overlay-aligned
 0	name	mz-next-overlay-aligned
->0	string	MP	\b, EXP (MP) for MS-DOS, Phar Lap 286 DOS extender
+>0	string	MP	\b, EXP (MP) for MS-DOS, Phar Lap 386 DOS extender
 >0	default	x
 >>0	use	mz-unrecognized
 
