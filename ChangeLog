@@ -2,6 +2,10 @@
 
 	* Add limit for number of magic warnings allowed
 
+2023-07-29  12:55  Christos Zoulas <christos@zoulas.com>
+
+	* check regex bounds (found by clusterfuzz)
+
 2023-07-27  15:45  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.45
