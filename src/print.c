@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.104 2024/04/07 16:00:28 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.105 2024/04/07 19:19:21 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -241,7 +241,7 @@ file_mdump(struct magic *m)
 }
 #endif
 
-static void
+static void __attribute__((__format__(__printf__, 1, 0)))
 file_vmagwarn(const char *f, va_list va)
 {
 	/* cuz we use stdout for most, stderr here */
