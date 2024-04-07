@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.347 2024/04/07 15:46:14 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.348 2024/04/07 16:00:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -496,7 +496,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	map = apprentice_map(ms, fn);
 	if (map == NULL) {
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(NULL, "using regular magic file `%s'", fn);
+			file_magwarn(ms, "using regular magic file `%s'", fn);
 		map = apprentice_load(ms, fn, action);
 		if (map == NULL)
 			return -1;
@@ -942,7 +942,7 @@ apprentice_magic_strength_1(const struct magic *m)
 	switch (m->type) {
 	case FILE_DEFAULT:	/* make sure this sorts last */
 		if (m->factor_op != FILE_FACTOR_OP_NONE) {
-			file_magwarn(NULL, "Usupported factor_op in default %d",
+			file_magwarn1("Unsupported factor_op in default %d",
 			    m->factor_op);
 		}
 		return 0;
@@ -1140,7 +1140,7 @@ apprentice_sort(const void *a, const void *b)
 	if (sa == sb) {
 		int x = memcmp(ma->mp, mb->mp, sizeof(*ma->mp));
 		if (x == 0) {
-			file_magwarn(NULL, "Duplicate magic entry `%s'",
+			file_magwarn1("Duplicate magic entry `%s'",
 			    ma->mp->desc);
 			return 0;
 		}
