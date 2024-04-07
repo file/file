@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.346 2024/04/05 16:54:20 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.347 2024/04/07 15:46:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1139,8 +1139,11 @@ apprentice_sort(const void *a, const void *b)
 	size_t sb = file_magic_strength(mb->mp, mb->cont_count);
 	if (sa == sb) {
 		int x = memcmp(ma->mp, mb->mp, sizeof(*ma->mp));
-		if (x == 0)
-			abort();
+		if (x == 0) {
+			file_magwarn(NULL, "Duplicate magic entry `%s'",
+			    ma->mp->desc);
+			return 0;
+		}
 		return x > 0 ? -1 : 1;
 	}
 	else if (sa > sb)
@@ -1336,6 +1339,8 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 	/* read and parse this file */
 	for (ms->line = 1; (len = getline(&line, &llen, f)) != -1;
 	    ms->line++) {
+		if (ms->magwarn >= ms->magwarn_max)
+			break;
 		if (len == 0) /* null line, garbage, etc */
 			continue;
 		if (line[len - 1] == '\n') {
