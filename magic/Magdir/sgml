@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sgml,v 1.50 2024/02/04 19:28:21 christos Exp $
+# $File: sgml,v 1.51 2024/04/08 17:58:42 christos Exp $
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
 0	string/bt	\<?xml\ version=
@@ -32,15 +32,24 @@
 0	string/t		\<?xml\ version="
 >19	search/4096/cWbt	\<!doctype\ html	XHTML document text
 >>15	string		>\0	(version %.3s)
-!:mime	text/html
+!:strength + 15
+!:mime	application/xhtml+xml
 0	string/t		\<?xml\ version='
 >19	search/4096/cWbt	\<!doctype\ html	XHTML document text
 >>15	string		>\0	(version %.3s)
-!:mime	text/html
+!:strength + 15
+!:mime	application/xhtml+xml
 0	string/t		\<?xml\ version="
->19	search/4096/cWbt	\<html	broken XHTML document text
+>19	search/4096/cWbt	\<html\ xmlns=		XHTML document text
 >>15	string		>\0	(version %.3s)
-!:mime	text/html
+!:strength + 15
+!:mime	application/xhtml+xml
+0	string/t		\<?xml\ version='
+>19	search/4096/cWbt	\<html\ xmlns=		XHTML document text
+>>15	string		>\0	(version %.3s)
+!:strength + 15
+!:mime	application/xhtml+xml
+
 
 #------------------------------------------------------------------------------
 # sgml:  file(1) magic for Standard Generalized Markup Language
