@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msooxml,v 1.19 2023/03/14 19:46:15 christos Exp $
+# $File: msooxml,v 1.20 2024/04/08 15:56:09 christos Exp $
 # msooxml:  file(1) magic for Microsoft Office XML
 # From: Ralf Brown <ralf.brown@gmail.com>
 
@@ -38,6 +38,8 @@
 # since some documents include a 520-byte extra field following the file
 # header, we need to scan for the next header
 >>>(18.l+49)	search/6000	PK\003\004
+>>>>&26		use		msooxml	
+>>>>&26		default		x
 # now skip to the *third* local file header; again, we need to scan due to a
 # 520-byte extra field following the file header
 >>>>&26		search/6000	PK\003\004
