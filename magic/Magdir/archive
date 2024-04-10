@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.197 2024/02/02 22:56:48 christos Exp $
+# $File: archive,v 1.198 2024/04/10 14:06:19 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1700,7 +1700,7 @@
 
 # RAR (Roshal Archive) archive
 0	string		Rar!\x1a\7\0		RAR archive data
-!:mime	application/x-rar
+!:mime	application/vnd.rar
 !:ext	rar/cbr
 # file header
 >(0xc.l+9)	byte	0x74
@@ -1712,13 +1712,13 @@
 >>7		use	rar-archive-header
 
 0	string		Rar!\x1a\7\1\0		RAR archive data, v5
-!:mime	application/x-rar
+!:mime	application/vnd.rar
 !:ext	rar
 
 # Very old RAR archive
 # https://jasonblanks.com/wp-includes/images/papers/KnowyourarchiveRAR.pdf
 0	string		RE\x7e\x5e  RAR archive data (<v1.5)
-!:mime	application/x-rar
+!:mime	application/vnd.rar
 !:ext	rar/cbr
 
 # SQUISH archiver (Greg Roelofs, newt@uchicago.edu)
