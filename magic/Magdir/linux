@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.88 2024/03/10 21:12:43 christos Exp $
+# $File: linux,v 1.89 2024/04/13 02:08:11 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -473,16 +473,44 @@
 # Linux ARM compressed kernel image
 # From: Kevin Cernekee <cernekee@gmail.com>
 # Update: Joerg Jenderek
+# Update: Luke T. Shumaker
+0	name	arm-zimage
+# Version indicators
+>0x34	lelong	0x45454545	(kernel >=v4.15)
+>0x34	lelong	!0x45454545
+>>0x30	clear	x
+>>0x30	belong	0x04030201	(kernel >=v3.17, <v4.15)
+>>0x30	lelong	0x04030201	(kernel >=v3.17, <v4.15)
+>>0x30	default x	(kernel <v3.17)
+# Endianness indicators
+#
+# The kernel has 3 endianness modes: little-endian, and 2 variants of
+# big-endian: BE-32 (ARMv5) and BE-8 (ARMv6+).
+#
+# In kernels <v3.17:
+#  - the 0x016f2818 @ 0x24 magic number indicates big-endian or
+#    little-endian (can't distinguish between BE-8 and BE-32)
+# In kernels >=v3.17:
+#  - a new 0x04030201 @ 0x30 magic number indicates big-endian or
+#    little-endian, but doesn't distinguish between BE-8 and BE-32
+#  - the old 0x016f2818 @ 0x24 magic number is little-endian for
+#    LE *and* BE-8, or big-endian for BE-32
+#
+# >=v3.17
+>0x30	clear	x
+>0x30	belong	0x04030201	(big-endian,
+>>0x24	belong	0x016f2818	BE-32, ARMv5)
+>>0x24	lelong	0x016f2818	BE-8, ARMv6+)
+>0x30	lelong	0x04030201	(little-endian)
+# <v3.17
+>0x30	default x
+>>0x24	lelong	0x016f2818	(little-endian)
+>>0x24	belong	0x016f2818	(big-endian)
+
 0x24	lelong	0x016f2818	Linux kernel ARM boot executable zImage
-# There are three possible situations: LE, BE with LE bootloader and pure BE.
-# In order to aid telling these apart a new endian flag was added. In order
-# to support kernels before the flag and BE with LE bootloader was added we'll
-# do a negative check against the BE variant of the flag when we see a LE magic.
->0x30	belong	!0x04030201	(little-endian)
-# raspian "kernel7.img", Vu+ Ultimo4K "kernel_auto.bin"
-!:ext	img/bin
->0x30	belong	0x04030201	(big-endian)
-0x24	belong	0x016f2818	Linux kernel ARM boot executable zImage (big-endian)
+>0	use	arm-zimage
+0x24	belong	0x016f2818	Linux kernel ARM boot executable zImage
+>0	use	arm-zimage
 
 ############################################################################
 # Linux AARCH64 kernel image
