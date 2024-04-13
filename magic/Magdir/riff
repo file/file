@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.48 2023/08/08 19:37:04 christos Exp $
+# $File: riff,v 1.49 2024/04/13 16:36:39 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -140,7 +140,8 @@
 >>&(4.l+4)  use riff-walk
 >0  string  fact
 >>&(4.l+4)  use riff-walk
->0  string  VP8
+# https://developers.google.com/speed/webp/docs/riff_container
+>0  string  VP8\x20
 >>11		byte		0x9d
 >>>12		byte		0x01
 >>>>13		byte		0x2a	\b, VP8 encoding
@@ -158,6 +159,20 @@
 >>>>>15		byte&0x80	=0x80	\b, bad color specification
 >>>>>15		byte&0x40	=0x40	\b, no clamping required
 >>>>>15		byte&0x40	=0x00	\b, decoders should clamp
+>0  string  VP8L
+>>8		byte		0x2f	\b, lossless
+>>>11		byte		&0x01	\b, with alpha
+>0  string  VP8X
+>>4		lelong		0x0a
+>>>8		byte		&0x02	\b, animated
+>>>8		byte		&0x04	\b, XMP metadata
+>>>8		byte		&0x08	\b, EXIF metadata
+>>>8		byte		&0x10	\b, with alpha
+>>>8		byte		&0x20	\b, ICC profile
+# TODO: These two values are off-by-one, for a 64x64 WebP they contain
+# 63x63 as there can be no 0x0 file.
+>>>12		lelong&0xffffff	x	\b, %d+1
+>>>15		lelong&0xffffff	x	\bx%d+1
 #>0  string  x		we got %s
 #>>&(4.l+4)  use riff-walk
 
