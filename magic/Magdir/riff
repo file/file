@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.49 2024/04/13 16:36:39 christos Exp $
+# $File: riff,v 1.50 2024/04/13 16:40:48 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -148,13 +148,13 @@
 >>>>>14		leshort&0x3fff	x	\b, %d
 >>>>>16		leshort&0x3fff	x	\bx%d, Scaling:
 >>>>>14		leshort&0xc000	0x0000	\b [none]
->>>>>14		leshort&0xc000	0x1000	\b [5/4]
->>>>>14		leshort&0xc000	0x2000	\b [5/3]
->>>>>14		leshort&0xc000	0x3000	\b [2]
->>>>>14		leshort&0xc000	0x0000	\bx[none]
->>>>>14		leshort&0xc000	0x1000	\bx[5/4]
->>>>>14		leshort&0xc000	0x2000	\bx[5/3]
->>>>>14		leshort&0xc000	0x3000	\bx[2]
+>>>>>14		leshort&0xc000	0x4000	\b [5/4]
+>>>>>14		leshort&0xc000	0x8000	\b [5/3]
+>>>>>14		leshort&0xc000	0xc000	\b [2]
+>>>>>16		leshort&0xc000	0x0000	\bx[none]
+>>>>>16		leshort&0xc000	0x4000	\bx[5/4]
+>>>>>16		leshort&0xc000	0x8000	\bx[5/3]
+>>>>>16		leshort&0xc000	0xc000	\bx[2]
 >>>>>15		byte&0x80	=0x00	\b, YUV color
 >>>>>15		byte&0x80	=0x80	\b, bad color specification
 >>>>>15		byte&0x40	=0x40	\b, no clamping required
