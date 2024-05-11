@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.9 2024/01/14 17:51:28 christos Exp $
+# $File: firmware,v 1.10 2024/05/11 22:49:35 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -168,3 +168,48 @@
 >>>>>>>15	byte&0xF0	0xC0
 >>>>>>>>17	byte&0xF0	0xC0	AVR firmware
 >>>>>>>>>0	uleshort&0x0FFF	x	\b, reset at 0x%04x
+
+# Summary:	Intel HEXadecimal file format
+# URL:		https://en.wikipedia.org/wiki/Intel_HEX
+# Reference:	http://www.piclist.com/techref/fileext/hex/intel.htm
+#		http://mark0.net/download/triddefs_xml.7z/defs/h/hex-intel.trid.xml
+# From:		Joerg Jenderek
+# Note:		called "Intel Hexadecimal object format" by TrID, "Intel® hexadecimal object file" on Linux
+#		and "Intel HEX binary data" by Notepad++
+# look for start code; 1 character, an ASCII colon ':'; all characters preceding this symbol should be ignored
+0	ubyte		0x3A
+# check for valid record type string with range 00 - 05 (3030h - 3035h)
+>&6	ubeshort&0xFFf8	=0x3030
+# check for valid record length string like: 02 04 08 10h 20h 03 (usbdload.hex usbdldv2.hex from Windows Vista)
+#>>1	string		x		LENGTH_STRING=%0.2s
+#>>1	ubeshort	x		LENGTH=%#4.4x
+>>&-8	ubeshort&0xFCf0	=0x3030
+>>>0	use		intel-hex
+#	display information (offset, record length and type) of Intel HEX
+0	name		intel-hex
+# RECORD MARK
+>0	ubyte		x		Intel hexadecimal object
+#!:mime	text/plain
+!:mime	text/x-hex
+!:ext	hex
+# no samples with other suffix found
+# .hex .mcs .int .ihex .ihe .ihx .h80 .h86 .a43 .a90 .obj .obl .obh .rom .eep
+# .hxl-.hxh .h00-.h15 .p00-.pff
+# RECLEN; 2 hex digits for number of bytes in 1st data field; like 0x02 0x03 0x04 0x08 0x10 0x20; maximum 255
+>1	string		x		\b, 0x%2.2s record length
+# OFFSET; 4 hex digits for 1st 16-bit memory offset of data like: 0000 (often) 1C00h 1E00h 3800h 3E00h 76EDh 7800h 7E00h ...
+>3	string		x		\b, 0x%4.4s offset
+# RECTYP; 2 hex digits (00 - 05); meaning of 1st data field; 00~DataRecord (often) 0l~EndOfFileRecord 02~ExtendedSegmentAddressRecord 03~StartSegmentAddressRecord 04~ExtendedLinearAddressRecord 05~StartLinearAddressRecord
+>7	string		x		\b, '%2.2s' type
+# DATA; n bytes of 1st data represented by 2n hex digits followed by 1 byte checksum
+>9	string		x		\b, data+checksum %s
+# last record :00000001FF with RECLEN 0, OFFSET 0, record type 01 for EndOfFile and 1 checksum byte FF
+# samples with CarriageReturnLineFeed terminator
+>-2	ubeshort	=0x0d0a
+# This should not happen!
+>>-13	string		!:00000001FF	\b, last line %s
+>-2	ubeshort	!0x0d0a
+# samples with LineFeed terminator
+>>-1	ubyte		=0x0a
+# This should not happen!
+>>>-12	string		!:00000001FF	\b, last line %s
