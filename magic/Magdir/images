@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.252 2024/03/31 14:55:42 christos Exp $
+# $File: images,v 1.253 2024/05/12 18:37:21 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -2266,43 +2266,41 @@
 
 # Hercules DASD image files
 # From Jan Jaeger <jj@septa.nl> and Jay Maynard <jaymaynard@gmail.com>
+
+# Common Hercules CKD image files
+0       name    HercCKD 
+>0      lelong  x               \b, %d heads per cylinder
+>4      lelong  x               \b, track size %d bytes
+>8      ubyte   >0x2F
+>>8     ubyte   0x45            \b, device type 9345
+>>8     ubyte   !0x45           \b, device type 33%2.2X
+>8      ubyte   <0x30           \b, device type 23%2.2X
+
 0       string  CKD_P370        Hercules CKD DASD image file
->8      lelong  x               \b, %d heads per cylinder
->12     lelong  x               \b, track size %d bytes
->16     byte    x               \b, device type 33%2.2X
+>8      use     HercCKD
 
 0       string  CKD_C370        Hercules compressed CKD DASD image file
->8      lelong  x               \b, %d heads per cylinder
->12     lelong  x               \b, track size %d bytes
->16     byte    x               \b, device type 33%2.2X
+>8      use     HercCKD
 >552    lelong  x               \b, %d total cylinders
 >>557   byte    0               \b, no compression
 >>557   byte    1               \b, ZLIB compression
 >>557   byte    2               \b, BZ2 compression
 
 0       string  CKD_S370        Hercules CKD DASD shadow file
->8      lelong  x               \b, %d heads per cylinder
->12     lelong  x               \b, track size %d bytes
->16     byte    x               \b, device type 33%2.2X
+>8      use     HercCKD
 
 0       string  CKD_P064        Hercules CKD64 DASD image file
->8      lelong  x               \b, %d heads per cylinder
->12     lelong  x               \b, track size %d bytes
->16     byte    x               \b, device type 33%2.2X
+>8      use     HercCKD
 
 0       string  CKD_C064        Hercules compressed CKD64 DASD image file
->8      lelong  x               \b, %d heads per cylinder
->12     lelong  x               \b, track size %d bytes
->16     byte    x               \b, device type 33%2.2X
+>8      use     HercCKD
 >524    lelong  x               \b, %d total cylinders
 >>585   byte    0               \b, no compression
 >>585   byte    1               \b, ZLIB compression
 >>585   byte    2               \b, BZ2 compression
 
 0       string  CKD_S064        Hercules CKD64 DASD shadow file
->8      lelong  x               \b, %d heads per cylinder
->12     lelong  x               \b, track size %d bytes
->16     byte    x               \b, device type 33%2.2X
+>8      use     HercCKD
 
 # Squeak images and programs - etoffi@softhome.net
 0	string		\146\031\0\0	Squeak image data
