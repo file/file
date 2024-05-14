@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.26 2024/02/04 20:03:56 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.27 2024/05/14 13:46:09 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -60,6 +60,26 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.26 2024/02/04 20:03:56 christos Exp $")
     while (/*CONSTCOND*/0)
 
 static scmp_filter_ctx ctx;
+
+static int
+apply_filter(void)
+{
+#if defined(PR_SET_VMA) && defined(PR_SET_VMA_ANON_NAME)
+	/* allow glibc to name malloc areas */
+	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(prctl), 2,
+	    SCMP_CMP32(0, SCMP_CMP_EQ, PR_SET_VMA),
+	    SCMP_CMP64(1, SCMP_CMP_EQ, PR_SET_VMA_ANON_NAME)) == -1)
+		return 0;
+#endif
+
+	// applying filter...
+	if (seccomp_load(ctx) == -1)
+		return 0;
+	// free ctx after the filter has been loaded into the kernel
+	seccomp_release(ctx);
+	return 1;
+}
+
 
 int
 enable_sandbox_basic(void)
@@ -133,13 +153,13 @@ enable_sandbox_basic(void)
 	DENY_RULE(vmsplice);
 
 	// blocking dangerous syscalls that file should not need
-	DENY_RULE (execve);
-	DENY_RULE (socket);
+	DENY_RULE(execve);
+	DENY_RULE(socket);
 	// ...
 
-
+	memory
 	// applying filter...
-	if (seccomp_load (ctx) == -1)
+	if (seccomp_load(ctx) == -1)
 		goto out;
 	// free ctx after the filter has been loaded into the kernel
 	seccomp_release(ctx);
@@ -279,12 +299,8 @@ enable_sandbox_full(void)
 		 goto out;
 #endif
 
-	// applying filter...
-	if (seccomp_load(ctx) == -1)
+	if (!apply_filter())
 		goto out;
-	// free ctx after the filter has been loaded into the kernel
-	seccomp_release(ctx);
-	return 0;
 
 out:
 	// something went wrong
