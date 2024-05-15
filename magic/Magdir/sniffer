@@ -198,7 +198,7 @@
 >20	belong&0x03FFFFFF		204		(PPP with direction pseudo-header
 >20	belong&0x03FFFFFF		205		(Cisco HDLC with direction pseudo-header
 >20	belong&0x03FFFFFF		206		(Frame Relay with direction pseudo-header
->20	belong&0x03FFFFFF		209		(Linux IPMB
+>20	belong&0x03FFFFFF		209		(Linux I2C
 >20	belong&0x03FFFFFF		215		(802.15.4 with non-ASK PHY header
 >20	belong&0x03FFFFFF		216		(Linux evdev events
 >20	belong&0x03FFFFFF		219		(MPLS with label as link-layer header
