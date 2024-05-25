@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ole2compounddocs,v 1.27 2023/08/05 13:53:33 christos Exp $
+# $File: ole2compounddocs,v 1.28 2024/05/25 18:31:03 christos Exp $
 # Microsoft OLE 2 Compound Documents : file(1) magic for Microsoft Structured
 # storage (https://en.wikipedia.org/wiki/Compound_File_Binary_Format)
 # Additional tests for OLE 2 Compound Documents should be under this recipe.
@@ -319,6 +319,18 @@
 #>>>>>>&0	use		PageMaker
 # THIS WORKS PARTLY!
 >>>>>>&0	indirect	x
+#
+# URL:		http://fileformats.archiveteam.org/wiki/Easy_CD_Creator
+# From:		Joerg Jenderek
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cl4.trid.xml
+# Note:		called "Easy CD Creator Layout" by TrID
+#		"newer" version 4 contain a clsid
+# Second directory entry name Contents
+>>>>128 	lestring16	Contents		: Easy CD Creator 2 Layout
+# contains also 3 strings SesnDescriptor CD_PLUS 0090
+#!:mime	application/x-ole-storage
+!:mime	application/x-corel-cl2
+!:ext	cl2
 #	remaining null clsid
 >>>>128 	default		x
 >>>>>0 	use		ole2-unknown
@@ -742,6 +754,22 @@
 #!:mime	application/x-ole-storage
 !:mime	model/x-autodesk-ipt
 !:ext	ipt
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Easy_CD_Creator
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cl4.trid.xml
+# Note:		called "Easy CD Creator Layout" by TrID,
+#		"Easy CD Creator 4" by CREATR32.exe and "Easy CD Creator Document" on Windows
+#		verified by Michal Mutl Structured Storage Viewer `SSView.exe MY_CD3.cl4`
+#		verified partly by libolecf-utils `olecfinfo -v MY_CD4.cl4`
+#		created by Adaptec Easy CD Creator 4.02b
+#		"older" version 2 contain no clsid
+>>88 	ubequad		0x893f00802964b632	: Easy
+>>>80 	ubequad		0x0293c3a90a77d111	CD Creator 4 Layout
+#!:mime	application/x-ole-storage
+!:mime	application/x-corel-cl4
+!:ext	cl4
+# maybe also suffix cl3
+#!:ext	cl3/cl4
 # remaining non null clsid
 >>88 	default		x
 >>>0 	use		ole2-unknown
