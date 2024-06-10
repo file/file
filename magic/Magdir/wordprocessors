@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.35 2024/01/30 21:47:28 christos Exp $
+# $File: wordprocessors,v 1.36 2024/06/10 23:23:55 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -26,6 +26,28 @@
 # https://www.macdisk.com/macsigen.php
 !:apple	????AWWP
 !:ext	wps
+
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Microsoft_Publisher
+# Reference:	http://fileformats.archiveteam.org/wiki/Microsoft_Publisher
+# Note:		older non OLE 2 (./ole2compounddocs) Compound based version
+0	ubelong		=0xE7AC2C00	Microsoft Publisher (1.0)
+#!:mime	application/x-mspublisher
+# Not registered at IANA but
+# https://web.archive.org/web/20200930085807/https://reposcope.com/mimetype/application/vnd.ms-publisher
+!:mime	application/vnd.ms-publisher
+!:ext	pub
+
+# From:		Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/COSMI_MultiMedia
+#		https://en.wikipedia.org/wiki/Cosmi_Corporation
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/c/cosmi.trid.xml
+# Note:		called "COSMI document (generic)" by TrID
+0	string/b	LCP		COSMI document
+#!:mime		application/octet-stream
+!:mime	application/x-cosmi
+# BCD~Business Card Maker BRO~Brochure Magic CRD~Greeting Card Magic DTP~Print Perfect PUB~Desktop Publisher
+!:ext		bcd/bro/crd/dtp/pub/
 
 # Corel/WordPerfect
 # URL:		https://en.wikipedia.org/wiki/WordPerfect

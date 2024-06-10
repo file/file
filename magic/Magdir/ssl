@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: ssl,v 1.6 2023/10/31 21:52:20 christos Exp $
+# $File: ssl,v 1.7 2024/06/10 23:23:55 christos Exp $
 # ssl:  file(1) magic for SSL file formats
 
 # Type: OpenSSL certificates/key files
@@ -10,6 +10,14 @@
 !:mime	application/x-pem-file
 0	string	-----BEGIN\040CERTIFICATE\040REQ	PEM certificate request
 !:mime	application/x-pem-file
+# Update:	Joerg Jenderek
+# Reference:	https://github.com/openssl/openssl/blob/master/include/openssl/pem.h
+#		http://mark0.net/download/triddefs_xml.7z/defs/k/key-rsa-pvt.trid.xml
+# Note:		called "ASCII armored RSA Private Key" by TrID
+0	string	-----BEGIN\040RSA\040PRIVATE	PEM RSA private key
+#!:mime		text/plain
+!:mime		text/x-ssl-private-key
+!:ext		key/priv
 0	string	-----BEGIN\040RSA\040PRIVATE	PEM RSA private key
 !:mime	application/x-pem-file
 0	string	-----BEGIN\040DSA\040PRIVATE	PEM DSA private key
@@ -18,6 +26,12 @@
 !:mime	application/x-pem-file
 0	string	-----BEGIN\040ECDSA\040PRIVATE	PEM ECDSA private key
 !:mime	application/x-pem-file
+# From:		Joerg Jenderek
+# Reference:	https://github.com/openssl/openssl/blob/master/include/openssl/pem.h
+0	string	-----BEGIN\040RSA\040PUBLIC\040KEY-----	PEM RSA public key
+#!:mime		text/plain
+!:mime		text/x-ssl-public-key
+!:ext		pub
 
 # From Luc Gommans
 # OpenSSL enc file (recognized by a magic string preceding the password's salt)
