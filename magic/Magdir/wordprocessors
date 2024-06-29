@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.36 2024/06/10 23:23:55 christos Exp $
+# $File: wordprocessors,v 1.37 2024/06/29 15:40:34 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -590,8 +590,23 @@
 !:mime	application/x-scribus
 
 # help files .hlp compiled from html and used by gfxboot added by Joerg Jenderek
+# URL: 		https://en.opensuse.org/Gfxboot
+# Reference:	https://github.com/openSUSE/gfxboot/blob/master/gfxboot
+#		http://mark0.net/download/triddefs_xml.7z/defs/h/hlp-gfxboot-main.trid.xml,hlp-gfxboot-opt.trid.xml
+# Note:		called "gfxboot compiled html help" (main),(opt) by TrID
+#		verified by command like `gfxboot --help-show en.hlp > en.html`
 # markups page=0x04,label=0x12, followed by strings like "opt" or "main" and title=0x14
-0	ulelong&0x8080FFFF	0x00001204	gfxboot compiled html help file
+0	ulelong&0x8080FFFF	0x00001204
+# display "gfxboot compiled html help file" (strength=70) after one "TeX font metric data" (tri10u.tfm strength=71=50+21) handled by ./tex
+#!:strength +0
+>2	regex			\^(main|opt)	gfxboot compiled html help file, label %s
+#!:mime	application/octet-stream
+!:mime	application/x-gfxboot-hlp
+!:ext	hlp
+# check for title token \x14
+>>&0	ubyte			0x14		\b, title
+# title text ends with \x10
+>>>&0	regex			\^[[:print:]]+	'%s'
 
 # From:		Joerg Jenderek
 # URL:		https://en.wikipedia.org/wiki/StarOffice
