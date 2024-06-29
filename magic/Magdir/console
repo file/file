@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.73 2023/10/23 19:48:33 christos Exp $
+# $File: console,v 1.74 2024/06/29 15:42:26 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -1224,3 +1224,62 @@
 >>0x34	ubyte		1	[FastROM]
 >>0x35	ubyte		1	[SRAM]
 >>0x35	ubyte		3	[Special]
+
+#------------------------------------------------------------------------------
+# Type: Super NES ROM image
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# Reference: https://snes.nesdev.org/wiki/ROM_header
+0		name		snes-rom-hdr
+# cartridge title is encoded in JIS X 0201, 21 chars padded with spaces
+>0		ubyte-0x20	<0xC0
+>>1		ubyte-0x20	<0xC0
+>>>2		ubyte-0x20	<0xC0
+>>>>3		ubyte-0x20	<0xC0
+>>>>>4		ubyte-0x20	<0xC0
+>>>>>>5		ubyte-0x20	<0xC0
+>>>>>>>6	ubyte-0x20	<0xC0
+>>>>>>>>7	ubyte-0x20	<0xC0
+>>>>>>>>>8	ubyte-0x20	<0xC0
+>>>>>>>>>>9	ubyte-0x20	<0xC0
+>>>>>>>>>>>10	ubyte-0x20	<0xC0
+>>>>>>>>>>>>21	ubyte-0x20	<0xC0		Super NES ROM image
+>>>>>>>>>>>>>0	string/21/T	x		"%s"
+>>>>>>>>>>>>>25	byte		0		(Japan)
+>>>>>>>>>>>>>25	byte		1		(USA)
+>>>>>>>>>>>>>25	byte		2		(Europe)
+>>>>>>>>>>>>>25	byte		6		(France)
+>>>>>>>>>>>>>25	byte		7		(Netherlands)
+>>>>>>>>>>>>>25	byte		9		(Germany)
+>>>>>>>>>>>>>25	byte		10		(Brazil)
+>>>>>>>>>>>>>27	byte		>0		(Rev.%02u)
+>>>>>>>>>>>>>21	byte&0xF	0x0		\b, LoROM
+>>>>>>>>>>>>>21	byte&0xF	0x1		\b, HiROM
+>>>>>>>>>>>>>21	byte&0x10	0x10		\b, FastROM
+>>>>>>>>>>>>>23	byte		8		\b, ROM size: 256KB
+>>>>>>>>>>>>>23	byte		9		\b, ROM size: 512KB
+>>>>>>>>>>>>>23	byte		10		\b, ROM size: 1024KB
+>>>>>>>>>>>>>23	byte		11		\b, ROM size: 2048KB
+>>>>>>>>>>>>>23	byte		12		\b, ROM size: 4096KB
+>>>>>>>>>>>>>24	byte		0		\b, RAM size: 1KB
+>>>>>>>>>>>>>24	byte		1		\b, RAM size: 2KB
+>>>>>>>>>>>>>24	byte		2		\b, RAM size: 4KB
+>>>>>>>>>>>>>24	byte		3		\b, RAM size: 8KB
+>>>>>>>>>>>>>24	byte		4		\b, RAM size: 16KB
+>>>>>>>>>>>>>24	byte		5		\b, RAM size: 32KB
+>>>>>>>>>>>>>24	byte		6		\b, RAM size: 64KB
+
+# header position for LoROM: $007FC0
+32725		ubyte&0xEF	0x20
+# ROM is <=4096KB, RAM is <=64KB and country<=10
+>32727		ubyte		<13
+>>32728		ubyte		<7
+>>>32729	ubyte		<11
+>>>>32704	use		snes-rom-hdr
+
+# HiROM header at $00FFC0
+65493		ubyte&0xEF	0x21
+# ROM is <=4096KB, RAM is <=64KB and country<=10
+>65495		ubyte		<13
+>>65496		ubyte		<7
+>>>65497	ubyte		<11
+>>>>65472	use		snes-rom-hdr
