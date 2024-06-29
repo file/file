@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.10 2024/05/11 22:49:35 christos Exp $
+# $File: firmware,v 1.11 2024/06/29 15:42:56 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -213,3 +213,31 @@
 >>-1	ubyte		=0x0a
 # This should not happen!
 >>>-12	string		!:00000001FF	\b, last line %s
+
+# Raspberry Pi RP2040 firmware
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# Note: RP2040 flash image starts with stage2 bootloader, then a vector table.
+# URL: https://github.com/raspberrypi/pico-sdk/tree/1.5.1/src/rp2_common/boot_stage2
+# boot2_*.S code (_stage2_boot)
+0		ulelong			0x4B32B500
+>4		ulelong			0x60582021
+>>8		ulelong			0x21026898
+# exit_from_boot2.S code (check_return) `pop {r0}; cmp r0, #0`
+>>>148		ulelong			0x2800bc01
+# Cortex-M vector table with reserved section filled with a default interrupt address
+>>>>259		byte			0x20
+# make sure required vector table entries are ARM Thumb and in flash
+>>>>>260	ulelong&0xE0000001	1
+>>>>>>264	ulelong&0xE0000001	1
+>>>>>>>268	ulelong&0xE0000001	1
+>>>>>>>>300	ulelong&0xE0000001	1
+>>>>>>>>>312	ulelong&0xE0000001	1		Raspberry Pi RP2040 firmware
+>>>>>>>>>>256	ulelong			>0		\b, initial SP at 0x%08x
+>>>>>>>>>>260	ulelong^1		x		\b, reset at 0x%08x
+>>>>>>>>>>264	ulelong^1		x		\b, NMI at 0x%08x
+>>>>>>>>>>268	ulelong^1		x		\b, HardFault at 0x%08x
+>>>>>>>>>>300	ulelong^1		x		\b, SVCall at 0x%08x
+>>>>>>>>>>312	ulelong^1		x		\b, PendSV at 0x%08x
+# optional binary_info in the first 256 bytes, used by picotool
+# https://github.com/raspberrypi/pico-sdk/blob/master/src/common/pico_binary_info/include/pico/binary_info/defs.h
+>>>>>>>>>>256	search/256		\xf2\xeb\x88\x71	\b, with binary_info
