@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.253 2024/05/12 18:37:21 christos Exp $
+# $File: images,v 1.254 2024/07/07 14:36:49 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4418,3 +4418,101 @@
 >>&1	string	x				\b, sizes: %s
 >0	search	encoding: 
 >>&1	string	x				\b, encoding: %s
+
+# From:		Joerg Jenderek
+# URL:		http://justsolve.archiveteam.org/wiki/PICT
+#		https://en.wikipedia.org/wiki/PICT
+# Reference:	https://www.fileformat.info/format/macpict/egff.htm
+#		http://mark0.net/download/triddefs_xml.7z/defs/p/pict-v2.trid.xml
+# Note: 	called "Macintosh Quickdraw/PICT drawing" by shared MIME-info database from freedesktop.org,
+#		"QuickDraw/PICT bitmap (v2)" by TrID and "Macintosh PICT Image" version 2.0 by DROID via PUID via fmt/341
+# 		verified by command like `deark -m pict -l -d2 flag_b24.pct` as PICT v2,
+#		partly by NetPBM `picttoppm venus.pct | file` as "Macintosh PICT",
+#		partly by ImageMagick `identify -verbose flag_b24.pct` as (Apple Macintosh QuickDraw/PICT) and
+#		partly by XnView `nconvert -fullinfo *.pict *.pic *.pct` as "Macintosh PICT 2"
+# look for version operator (0011h) and version number (02FFh)
+522 ubelong				0x001102ff
+# few Macintosh QuickDraw with one corner at -1/-1 coordinates like PICT_129.pict PICT_2012.pict (strength=81=70+11) before Claris clip art (strength=80 ./claris)
+!:strength +11
+# look for Version operator (0C00h)
+>526	ubeshort			0x0c00
+# skip DROID fmt-341-signature-id-468.pct with invalid dimension x=0
+>>520		ubeshort		!0
+# skip DROID variant fmt-341-signature-id-468.pct using 0xAB instead 0x0 
+>>>0		long			!0xABABABAB		Macintosh QuickDraw PICT, version 2
+#!:mime		application/octet-stream
+!:mime		image/x-pict
+!:apple		????PICT
+!:ext		pict/pic/pct
+# maybe also suffix pict2	https://www.xnview.com/de/image_formats/
+#!:ext		pict2/pict/pic/pct
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/p/pict.trid.xml
+# Note: 	called "Macintosh Quickdraw/PICT Drawing" by TrID
+#		"real" content stored by opcode 0x8200 (CompressedQuickTime *.qtif) with none, cvid or JPEG compression
+# look for LongText QuickTime followed by trademark character
+>>>>554		search/691976/b		QuickTime\252		\b, QuickTime
+# look for LongText afterwards like "and a/None|Cinepak|Photo - JPEG decompressor/are needed to see this picture"
+>>>>>&0		search/28/bs	\040decompressor	with decompressor
+>>>>>>&-4	string			None			None
+# Cinepak and "Compact Video decompressor" seems to be cvid
+>>>>>>&-7	string			Cinepak			Cinepak
+>>>>>>&-12	string			Photo\040-\040JPEG	JPEG
+>>>>>>&-13	string			Compact\040Video	cvid
+# case where decompression is not like: Cinepak None "Photo - JPEG" "Compact Video decompressor"
+>>>>>>&-6		default			x
+>>>>>>>&0	string			x			"%0.6s"
+# file size in bytes; not reliable sometimes 0 or little smaller than real size
+#>>>>512	ubeshort		x			\b, size %u
+# 8 bytes picFrame (rectangle); for most examples one corner is located at coordinates 0/0; except deark other tools fail when negative values
+# GRR: samples with coordinates -1/-1 and Y=0x01??|0x00?? are interpreted as "Claris clip art" (strength=80 ./claris)
+#>>>>518		ubeshort		x			Y=%#4.4x
+>>>>520		ubeshort		x			\b, %u
+>>>>>516	beshort			!0			\b-%d
+>>>>518		ubeshort		x			x %u
+>>>>>514	beshort			!0			\b-%d
+# Note:		at the beginning all zeros or information about the particular software like: PICT
+>>>>0		long			!0			\b, at 0
+>>>>>0		string			x			%.4s
+# version 2.0 files also have a 26-byte header following the version information
+# like: 0 FFFEh (freedesktop egff~Encyclopedia of Graphics File Formats) FFFFh (egff)
+>>>>528		ubeshort		x			\b, at 528 %#4.4x
+# 2nd opcode like: 0x0000~NOP 0x0001~Clip 0x00a0~ShortComment 0x00a1~LongComment 0x001e~DefHilite 0x001f~OpColor
+>>>>552		ubeshort		x			\b, at 552 second opcode %#4.4x
+# last opcode if not opEndPic (00FFh)
+>>>>-2		ubeshort		!0x00FF			\b, at the end %#4.4x opcode
+# Reference:	http://web.archive.org/web/20010703041301/http://developer.apple.com/technotes/qd/qd_14.html
+#		http://mark0.net/download/triddefs_xml.7z/defs/p/pict-v1.trid.xml
+# Note: 	called "QuickDraw/PICT bitmap (v1)" by TrID and "Macintosh PICT Image" version 1.0 by DROID via PUID via x-fmt/80
+# 		verified by command like `deark -m pict -l -d2 FC9.PCT` as PICT v1,
+#		by ImageMagick `identify -verbose *.pict` as PICT (Apple Macintosh QuickDraw/PICT) and
+#		by XnView `nconvert -fullinfo *.pict *.pct` as "Macintosh PICT"
+# 1 byte opcode for picversion (11h); next byte version number (1)
+522		ubeshort	0x1101
+# skip DROID x-fmt-80-signature-id-859.pct x-fmt-80-signature-id-860.pct without next opcode usually clipRgn (1h)
+>524		ubyte		=0x01
+>>0		use		mac-pict1
+#	display Macintosh PICT drawing version 1 information
+0		name		mac-pict1
+>520		ubeshort	x		Macintosh QuickDraw PICT, version 1
+#!:mime		application/octet-stream
+!:mime		image/x-pict
+!:apple		????PICT
+!:ext		pict/pct
+# maybe also suffix pict1 and pic
+#!:ext		pict1/pict/pic/pct
+# file size in bytes; not reliable sometimes 0 or smaller than real size
+#>512		ubeshort	x		\b, size %u
+# 8 bytes picFrame (rectangle)
+>520		ubeshort	x		\b, %u
+>516		ubeshort	!0		\b-%u
+>518		ubeshort	x		x %u
+>514		ubeshort	!0		\b-%u
+# Note:		According to DROID at the beginning all zeros or information about the particular software like DRWG(MD|D2)
+>0		long		!0		\b, at 0
+>>0		string		x		%.6s
+>>0		ubelong		x		%#8.8x
+>>4		ubeshort	x		\b%4.4x
+# 2nd opcode if not clipRgn (1h)
+>524		ubyte		!0x01		\b, at 524 %#2.2x opcode 
+# last opcode if not opEndPic (FFh)
+>-1		ubyte		!0xFF		\b, at the end %#2.2x opcode 
