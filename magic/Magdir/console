@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.74 2024/06/29 15:42:26 christos Exp $
+# $File: console,v 1.75 2024/07/13 14:47:09 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -723,17 +723,54 @@
 
 # From: Alex Myczko <alex@aiei.ch>
 # From: David Pflug <david@pflug.email>
+# Update:	Joerg Jenderek
+# URL:		http://fileformats.archiveteam.org/wiki/Game_Boy_Sound
+#		http://en.wikipedia.org/wiki/Game_Boy_Sound_System
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/g/gbs.trid.xml
+# Note:		called "GameBoy Sound System dump" by TrID,
+#		"Gameboy GBS rom image" by X11 Gameboy sound player xgbsplay and
+#		verified by gbsplay `LANG=C gbsinfo /usr/share/doc/gbsplay/examples/nightmode.gbs`
 # is the offset 12 or the offset 16 correct?
 # GBS (Game Boy Sound) magic
-# ftp://ftp.modland.com/pub/documents/format_documentation/\
+# http://ftp.modland.com/pub/documents/format_documentation/\
 # Gameboy%20Sound%20System%20(.gbs).txt
-0	string		GBS		Nintendo Gameboy Music/Audio Data
+# skip Grand Theft Auto 2 Style data (*.sty via sty-gta2.trid.xml) and Opera (*.patch) by check for valid "low" version
+0	string		GBS\001		Nintendo Gameboy Music/Audio Data
+!:mime		audio/x-nintendo-gbs
+# by gbsplay or xgbsplay tools
+#!:mime		audio/gbs
+#!:mime		audio/prs.gbs
+!:ext	gbs
+# fields are right null-filled; no terminating \0 if all bytes are used; if field unknown, should be set to a single ?
+# title string like: "Blues Brothers" "Bugs Bunny Crazy Castle 3"
 #12	string		GameBoy\040Music\040Module	Nintendo Gameboy Music Module
 >16	string		>\0	("%.32s" by
+# author string like: <?>, by Laxity, Justin Muir, 1993 Ocean
 >48	string		>\0	%.32s, copyright
->80	string		>\0	%.32s),
->3	byte		x	version %u,
->4	byte		x	%u tracks
+# copyright string like: empty "1991 Titus" "2001 Imagineer/KT.Kodansha/P&B" "2000 Newline, Ubisoft, D. Eclip."
+>80	string		>\0	%.32s
+# GBSVersion; 1 
+#>3	byte		!1	version %u,
+# number of songs (1-255)
+>4	ubyte		x	\b), %u track
+# plural s
+>4	ubyte		>1	\bs
+# default subsong; like: 1 (often) 2 29 60 79 82
+>5	ubyte		!1	\b, %u first
+# load address (400h-7fffh)
+>6	uleshort	x	\b, load address %#4.4x
+# init address (400h-7fffh)
+>8	uleshort	x	\b, init address %#4.4x
+# play address (400-7fffh)
+>10	uleshort	x	\b, play address %#4.4x
+# stack pointer; like: FFFEh (default) CFFFh DCFEh DDFEh DDFFh DEFFh E000h FFF4h
+>12	uleshort	x	\b, stack pointer %#4.4x
+# timer modulo; often 0
+>14	ubyte		!0	\b, timer modulo %#x
+# timer control; often 0
+>15	ubyte		!0	\b, timer control %#x
+# code and Data (see RST VECTORS)
+#>0x70	ubequad		x	\b, data %#16.16llx...
 
 # IPS Patch Files from: From: Thomas Klausner <tk@giga.or.at>
 # see https://zerosoft.zophar.net/ips.php
