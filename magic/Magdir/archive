@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.199 2024/06/19 16:05:52 christos Exp $
+# $File: archive,v 1.200 2024/07/27 14:55:32 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -51,10 +51,21 @@
 # >>>>>>>>>>0	use	tar-avm
 # >>>>>>>>>517	string		/modfw.nfo\0	modfw~
 # >>>>>>>>>>0	use	tar-avm
+# most (419/429) *.WBM (71/71) *.WBT with user name jcameron of Webmin developer Jamie Cameron in first tar archive member
+>>>>>>>>265	string		jcameron
+>>>>>>>>>0	use	tar-webmin
 # if 1st member name without digits and without used image suffix, without *.ovf,
-# ./var/ , ./lte/ and TpmEmuTpms/ then it is a pure TAR archive
+# ./var/ , ./lte/ and TpmEmuTpms/ then it is a pure TAR archive or Webmin without jcameron user name
 >>>>>>>>0	default		x
->>>>>>>>>0	use	tar-file
+# few (10/429) *.WBM without user name jcameron in 1st tar member but with WBM module.info name like:
+# apcupsd-0.81-2.wbm csavupdate.wbm cwmail.wbm dac960.wbm etcupdate.wbm logviewer.wbm memcached.wbm rinetd.wbm shoutcast.wbm vacationadmin-webmin-module-1.1.2.wbm
+# few (10/95) *.WBT without user name jcameron in 1st tar member but with WBT theme.info name like:
+# authentic-theme-21.09.5.wbt Mozilla-Modern.wbt virtual-server-theme-2.7.wbt fkn-webmintheme.0.6.0.wbt
+>>>>>>>>>512	search/210965/s	e.info\0
+>>>>>>>>>>0	use	tar-webmin
+# pure TAR
+>>>>>>>>>0	default		x
+>>>>>>>>>>0	use	tar-file
 # Note:	called "TAR - Tape ARchive" by TrID, "Tape Archive Format" by DROID via PUID x-fmt/265
 #	and "Tar archive" by shared MIME-info database from freedesktop.org
 #	minimal check and then display tar archive information which can also be
@@ -257,6 +268,56 @@
 >156	ubyte		0x35
 # 2nd tar member name like: ./var/content (often ) ./var/install ./var/chksum ./lte/modfw.nfo
 >>512	use	tar-entry
+# Summary:	Webmin Module or Theme
+# From:		Joerg Jenderek
+# URL:		https://en.wikipedia.org/wiki/Webmin
+#		https://webmin.com/docs/development/creating-modules/
+#		https://webmin.com/docs/development/creating-themes/
+# Reference:	http://mark0.net/download/triddefs_xml.7z/defs/w/wbm.trid.xml
+#		http://mark0.net/download/triddefs_xml.7z/defs/w/wbt.trid.xml
+#		http://mark0.net/download/triddefs_xml.7z/defs/w/wbt-gif.trid.xml
+# Note:		called "Webmin Module" "Webmin Theme" by TrID
+#		most verfied by 7-Zip `7z l -ttar *.wbm | grep "\module.info"` and
+#		`7z l -ttar *.wbt | grep "\theme.info"`
+0	name		tar-webmin
+>0	string		x		Webmin
+# Webmin module or theme
+>>512	search/1767941/s /module.info	Module
+!:mime	application/x-webmin-module
+!:ext	wbm
+# According to documentation module.info is mandatory but instead theme.info is found in
+# old-blue-theme.wbm old-blue-theme-1.0.wbm old-mscstyle3.wbm virtual-server-mobile.wbm
+# GRR:  maybe here wrong file name suffix WBM instead of WBT
+>>512	default		x
+>>>512	search/3149333/s /theme.info	Theme
+!:mime	application/x-webmin-theme
+!:ext	wbt
+# next 3 lines should not happen
+>>>512	default		x		Module or Theme
+!:mime	application/x-webmin
+!:ext	wbm/wbt
+# GNU or POSIX tar
+>257	string		=ustar		(
+# 2 space characters followed by a null for GNU variant for most (428/429) WBM samples
+>>261	ubelong		=0x72202000	\bGNU tar)
+#!:mime	application/x-gtar
+# UStar version variant with ASCII "00" as in few (1/429) samples like cwmail.wbm
+>>261	ubelong		0x72003030	\bPOSIX tar)
+#!:mime	application/x-ustar
+#>>>156	ubyte		x		tar archive
+# Apparently first archive member name[100] is directory like: dynbind/ ssh/ virtualmin-powerdns/ virtual-server-mobile/ vnc/
+>>0	use	tar-entry
+# look for characteristic WBM module info name starting with "module.info" for language variant like in: ssh2.wbm
+>>512	search/1767941/s /module.info
+# look for TAR magic of WBM archive module info
+>>>&0	search/257/s	ustar
+# show details for WBM archive member module info
+>>>>&-257 use	tar-entry
+# look for characteristic WBT theme info name with "theme.info" like in: authentic-theme-21.09.5.wbt
+>>512	search/3149333/s /theme.info\0
+# look for TAR magic of WBT archive theme info
+>>>&0	search/257/s	ustar
+>>>>&-257 use	tar-entry
 
 # Incremental snapshot gnu-tar format from:
 # https://www.gnu.org/software/tar/manual/html_node/Snapshot-Files.html
