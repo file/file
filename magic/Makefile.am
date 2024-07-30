@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.189 2024/06/19 16:05:52 christos Exp $
+# $File: Makefile.am,v 1.190 2024/07/30 22:25:24 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -320,6 +320,7 @@ $(MAGIC_FRAGMENT_DIR)/unknown \
 $(MAGIC_FRAGMENT_DIR)/usd \
 $(MAGIC_FRAGMENT_DIR)/uterus \
 $(MAGIC_FRAGMENT_DIR)/uuencode \
+$(MAGIC_FRAGMENT_DIR)/uxn \
 $(MAGIC_FRAGMENT_DIR)/vacuum-cleaner \
 $(MAGIC_FRAGMENT_DIR)/varied.out \
 $(MAGIC_FRAGMENT_DIR)/varied.script \
