@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.206 2024/06/18 17:05:28 christos Exp $
+# $File: msdos,v 1.207 2024/08/20 00:09:38 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -727,6 +727,14 @@
 >>>>0			default		x
 # DOS32MW.DLL
 >>>>>(0x3c.l+0x10)	lelong&0x38000	=0x18000 for MS-DOS (DLL)
+!:ext	dll
+# HPFS.386 (HPFS386 filesystem for OS/2 1.x, part of Microsoft LAN Manager)
+# https://www.os2museum.com/wp/os2-history/os2-16-bit-server/
+# EXE module (&0x38000=0x00000) with zero application type (&0x700=0x000) and
+# with no external fixups (&0x20=0x20) is .386 32-bit driver module for OS/2 1.x
+>>>>>(0x3c.l+0x10)	lelong&0x38720	=0x00020 for OS/2 1.x (driver)
+!:ext	386
+>>>>>0			default		x for unknown OS 0x1
 # this is a wild guess; hopefully it is a specific signature
 >>>>&0x24		lelong		<0x50
 >>>>>(&0x4c.l)		string		\xfc\xb8WATCOM
