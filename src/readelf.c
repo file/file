@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.191 2024/01/30 21:43:33 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.192 2024/08/24 22:20:47 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -61,6 +61,8 @@ file_private uint32_t getu32(int, uint32_t);
 file_private uint64_t getu64(int, uint64_t);
 
 #define SIZE_UNKNOWN	CAST(off_t, -1)
+#define NAMEEQUALS(n, v) \
+    (namesz == sizeof(v) && memcmp(n, v, namesz) == 0)
 
 file_private int
 toomany(struct magic_set *ms, const char *name, uint16_t num)
@@ -550,7 +552,7 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
     int swap __attribute__((__unused__)), uint32_t namesz, uint32_t descsz,
     size_t noff, size_t doff, int *flags)
 {
-	if (namesz == 4 && strcmp(RCAST(char *, &nbuf[noff]), "GNU") == 0 &&
+	if (NAMEEQUALS(RCAST(char *, &nbuf[noff]), "GNU") &&
 	    type == NT_GNU_BUILD_ID && (descsz >= 4 && descsz <= 20)) {
 		uint8_t desc[20];
 		const char *btype;
@@ -578,7 +580,7 @@ do_bid_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			return -1;
 		return 1;
 	}
-	if (namesz == 4 && strcmp(RCAST(char *, &nbuf[noff]), "Go") == 0 &&
+	if (namesz == 4 && memcmp(RCAST(char *, &nbuf[noff]), "Go", 3) == 0 &&
 	    type == NT_GO_BUILD_ID && descsz < 128) {
 		char buf[256];
 		if (file_printf(ms, ", Go BuildID=%s",
@@ -597,8 +599,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 {
 	const char *name = RCAST(const char *, &nbuf[noff]);
 
-	if (namesz == 5 && strcmp(name, "SuSE") == 0 &&
-		type == NT_GNU_VERSION && descsz == 2) {
+	if (NAMEEQUALS(name, "SuSE") && type == NT_GNU_VERSION && descsz == 2) {
 		*flags |= FLAGS_DID_OS_NOTE;
 		if (file_printf(ms, ", for SuSE %d.%d", nbuf[doff],
 		    nbuf[doff + 1]) == -1)
@@ -606,8 +607,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	    return 1;
 	}
 
-	if (namesz == 4 && strcmp(name, "GNU") == 0 &&
-	    type == NT_GNU_VERSION && descsz == 16) {
+	if (NAMEEQUALS(name, "GNU") && type == NT_GNU_VERSION && descsz == 16) {
 		uint32_t desc[4];
 		memcpy(desc, &nbuf[doff], sizeof(desc));
 
@@ -645,7 +645,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		return 1;
 	}
 
-	if (namesz == 7 && strcmp(name, "NetBSD") == 0) {
+	if (NAMEEQUALS(name, "NetBSD")) {
 	    	if (type == NT_NETBSD_VERSION && descsz == 4) {
 			*flags |= FLAGS_DID_OS_NOTE;
 			if (do_note_netbsd_version(ms, swap, &nbuf[doff]) == -1)
@@ -654,7 +654,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		}
 	}
 
-	if (namesz == 8 && strcmp(name, "FreeBSD") == 0) {
+	if (NAMEEQUALS(name, "FreeBSD")) {
 	    	if (type == NT_FREEBSD_VERSION && descsz == 4) {
 			*flags |= FLAGS_DID_OS_NOTE;
 			if (do_note_freebsd_version(ms, swap, &nbuf[doff])
@@ -664,7 +664,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		}
 	}
 
-	if (namesz == 8 && strcmp(name, "OpenBSD") == 0 &&
+	if (NAMEEQUALS(name, "OpenBSD") &&
 	    type == NT_OPENBSD_VERSION && descsz == 4) {
 		*flags |= FLAGS_DID_OS_NOTE;
 		if (file_printf(ms, ", for OpenBSD") == -1)
@@ -673,7 +673,7 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		return 1;
 	}
 
-	if (namesz == 10 && strcmp(name, "DragonFly") == 0 &&
+	if (NAMEEQUALS(name, "DragonFly") &&
 	    type == NT_DRAGONFLY_VERSION && descsz == 4) {
 		uint32_t desc;
 		*flags |= FLAGS_DID_OS_NOTE;
@@ -696,8 +696,7 @@ do_pax_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 {
 	const char *name = RCAST(const char *, &nbuf[noff]);
 
-	if (namesz == 4 && strcmp(name, "PaX") == 0 &&
-	    type == NT_NETBSD_PAX && descsz == 4) {
+	if (NAMEEQUALS(name, "PaX") && type == NT_NETBSD_PAX && descsz == 4) {
 		static const char *pax[] = {
 		    "+mprotect",
 		    "-mprotect",
@@ -753,17 +752,16 @@ do_core_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 	 * doesn't include the terminating null in the
 	 * name....
 	 */
-	if ((namesz == 4 && strncmp(name, "CORE", 4) == 0) ||
-	    (namesz == 5 && strcmp(name, "CORE") == 0)) {
+	if ((namesz == 4 && memcmp(name, "CORE", 4) == 0) ||
+	    NAMEEQUALS(name, "CORE")) {
 		os_style = OS_STYLE_SVR4;
 	}
 
-	if ((namesz == 8 && strcmp(name, "FreeBSD") == 0)) {
+	if (NAMEEQUALS(name, "FreeBSD")) {
 		os_style = OS_STYLE_FREEBSD;
 	}
 
-	if ((namesz >= 11 && strncmp(name, "NetBSD-CORE", 11)
-	    == 0)) {
+	if ((namesz >= 11 && memcmp(name, "NetBSD-CORE", 11) == 0)) {
 		os_style = OS_STYLE_NETBSD;
 	}
 
@@ -1253,7 +1251,7 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 			return offset;
 	}
 
-	if (namesz == 7 && strcmp(RCAST(char *, &nbuf[noff]), "NetBSD") == 0) {
+	if (NAMEEQUALS(RCAST(char *, &nbuf[noff]), "NetBSD")) {
 		int descw, flag;
 		const char *str, *tag;
 		if (descsz > 100)
