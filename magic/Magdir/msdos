@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.207 2024/08/20 00:09:38 christos Exp $
+# $File: msdos,v 1.208 2024/08/27 18:50:57 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1778,9 +1778,6 @@
 #512	string/b	\354\245\301			Microsoft Word Document
 #!:mime	application/msword
 
-#
-0	string/b	\xDB\xA5\x2D\x00		Microsoft WinWord 2.0 Document
-!:mime application/msword
 #
 0	string/b	\xDB\xA5\x2D\x00		Microsoft WinWord 2.0 Document
 !:mime application/msword

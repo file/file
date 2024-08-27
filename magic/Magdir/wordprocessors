@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: wordprocessors,v 1.37 2024/06/29 15:40:34 christos Exp $
+# $File: wordprocessors,v 1.38 2024/08/27 18:50:57 christos Exp $
 # wordprocessors:  file(1) magic fo word processors.
 #
 ####### PWP file format used on Smith Corona Personal Word Processors:
@@ -563,15 +563,11 @@
 0	string		DOC
 >43	byte		0x14	Just System Word Processor Ichitaro v4
 !:mime	application/x-ichitaro4
->144	string	JDASH		application/x-ichitaro4
-
-0	string		DOC
 >43	byte		0x15	Just System Word Processor Ichitaro v5
 !:mime	application/x-ichitaro5
-
-0	string		DOC
 >43	byte		0x16	Just System Word Processor Ichitaro v6
 !:mime	application/x-ichitaro6
+>144	string	JDASH		application/x-ichitaro4
 
 # Type: Freemind mindmap documents
 # From: Jamie Thompson <debian-bugs@jamie-thompson.co.uk>

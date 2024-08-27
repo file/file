@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.93 2023/10/31 21:52:20 christos Exp $
+# $File: compress,v 1.94 2024/08/27 18:50:57 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -376,14 +376,6 @@
 >6	belong		x		(%d bytes)
 
 0	string		ArC\x01		FreeArc archive <http://freearc.org>
-
-# Type:	DACT compressed files
-0	long	0x444354C3	DACT compressed data
->4	byte	>-1		(version %i.
->5	byte	>-1		%i.
->6	byte	>-1		%i)
->7	long	>0		, original size: %i bytes
->15	long	>30		, block size: %i bytes
 
 # Valve Pack (VPK) files
 0	lelong	0x55aa1234	Valve Pak file

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.200 2024/07/27 14:55:32 christos Exp $
+# $File: archive,v 1.201 2024/08/27 18:50:56 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1795,9 +1795,9 @@
 !:ext zip/cbz
 
 
-# IOS/IPadOS IPA file (Zip archive)
 0	string		PK\003\004
 !:strength +1
+# IOS/IPadOS IPA file (Zip archive)
 # Starts with Payload (file name length = 19)
 >26	uleshort	8
 >>30  	string		Payload		IOS/iPadOS IPA file
@@ -1807,8 +1807,6 @@
 !:ext	ipa
 
 # Android APK file (Zip archive)
-0	string		PK\003\004
-!:strength +1
 # Starts with AndroidManifest.xml (file name length = 19)
 >26	uleshort	19
 >>30	string	AndroidManifest.xml	Android package (APK), with AndroidManifest.xml
@@ -1891,14 +1889,6 @@
 # package containing about 150 files
 >>>>(-6.l)	search/9000	kmp.json	Keyman Compiled Package File
 !:ext kmp
-
-# Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
-0	string		PK\005\006	Zip archive data (empty)
-!:mime application/zip
-!:ext zip/cbz
-!:strength +1
-0	string		PK\003\004
-!:strength +1
 
 # Specialised zip formats which start with a member named 'mimetype'
 # (stored uncompressed, with no 'extra field') containing the file's MIME type.
@@ -2150,6 +2140,12 @@
 >>>>8	beshort		x			\b, compression method=
 >>>>8	use		zipcompression
 >>>>0x161	string		WINZIP		\b, WinZIP self-extracting
+
+# Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
+0	string		PK\005\006	Zip archive data (empty)
+!:mime application/zip
+!:ext zip/cbz
+!:strength +1
 
 # StarView Metafile
 # From Pierre Ducroquet <pinaraf@pinaraf.info>
@@ -2443,12 +2439,6 @@
 # From: Tilman Sauerbeck <tilman@code-monkey.de>
 0	belong	0x1ee7ff00	EET archive
 !:mime	application/x-eet
-
-# rzip archives
-0	string	RZIP		rzip compressed data
->4	byte	x		- version %d
->5	byte	x		\b.%d
->6	belong	x		(%d bytes)
 
 # From:		Joerg Jenderek
 # URL:		https://help.foxitsoftware.com/kb/install-fzip-file.php

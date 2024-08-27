@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.89 2024/04/13 02:08:11 christos Exp $
+# $File: linux,v 1.90 2024/08/27 18:50:57 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -620,25 +620,11 @@
 >8	lelong	x	version %d,
 >12	lelong	x	chunk_size %d
 
-# SE Linux policy database
-0	lelong	0xf97cff8c		SE Linux policy
->16	lelong	x			v%d
->20	lelong	1			MLS
->24	lelong	x			%d symbols
->28	lelong	x			%d ocons
-
 # Summary: Xen saved domain file
 # Created by: Radek Vokal <rvokal@redhat.com>
 0	string		LinuxGuestRecord	Xen saved domain
 >20	search/256	(name
 >>&1	string		x			(name %s)
-
-# Type: Xen, the virtual machine monitor
-# From: Radek Vokal <rvokal@redhat.com>
-0	string		LinuxGuestRecord	Xen saved domain
-#>2	regex		\(name\ [^)]*\)		%s
->20	search/256	(name			(name
->>&1	string		x			%s...)
 
 # Systemd journald files
 # See https://www.freedesktop.org/wiki/Software/systemd/journal-files/.

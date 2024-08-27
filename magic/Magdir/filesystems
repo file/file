@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.162 2024/06/19 16:31:14 christos Exp $
+# $File: filesystems,v 1.163 2024/08/27 18:50:57 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2245,20 +2245,6 @@
 
 # Summary: Oracle Clustered Filesystem
 # Created by: Aaron Botsis <redhat@digitalmafia.org>
-8	string		OracleCFS	Oracle Clustered Filesystem,
->4	long		x		rev %d
->0	long		x		\b.%d,
->560	string		x		label: %.64s,
->136	string		x		mountpoint: %.128s
-
-# Summary: Oracle ASM tagged volume
-# Created by: Aaron Botsis <redhat@digitalmafia.org>
-32	string		ORCLDISK	Oracle ASM Volume,
->40	string		x		Disk Name: %0.12s
-32	string		ORCLCLRD	Oracle ASM Volume (cleared),
->40	string		x		Disk Name: %0.12s
-
-# Oracle Clustered Filesystem - Aaron Botsis <redhat@digitalmafia.org>
 8	string		OracleCFS	Oracle Clustered Filesystem,
 >4	long		x		rev %d
 >0	long		x		\b.%d,
