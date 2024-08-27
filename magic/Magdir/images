@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.255 2024/08/27 18:50:57 christos Exp $
+# $File: images,v 1.256 2024/08/27 19:17:10 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3279,6 +3279,10 @@
 >>0x10	ubelong	!0x44445320		Sega PVR image:
 >>>0x10	use	sega-pvr-image-header
 >>0x08	ulelong	x	\b, global index = %u
+# Sega GVR image with GBIX.
+>0x10	string	GVRT	Sega GVR image:
+>>0x10	use	sega-gvr-image-header
+>>0x08	ubelong	x	\b, global index = %u
 
 # Sega GVR header.
 0	name	sega-gvr-image-header
@@ -3299,12 +3303,6 @@
 # Sega GVR image.
 0	string	GVRT	Sega GVR image:
 >0x10	use	sega-gvr-image-header
-
-# Sega GVR image with GBIX.
-0	string	GBIX
->0x10	string	GVRT	Sega GVR image:
->>0x10	use	sega-gvr-image-header
->>0x08	ubelong	x	\b, global index = %u
 
 # Sega GVR image with GCIX. (Wii)
 0	string	GCIX
