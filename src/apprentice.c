@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.348 2024/04/07 16:00:28 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.349 2024/08/27 18:54:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1138,18 +1138,19 @@ apprentice_sort(const void *a, const void *b)
 	size_t sa = file_magic_strength(ma->mp, ma->cont_count);
 	size_t sb = file_magic_strength(mb->mp, mb->cont_count);
 	if (sa == sb) {
-		int x = memcmp(ma->mp, mb->mp, sizeof(*ma->mp));
+		struct magic mpa = *ma->mp;
+		struct magic mpb = *mb->mp;
+		mpa.lineno = mpb.lineno = 0;
+		int x = memcmp(&mpa, &mpb, sizeof(mpa));
 		if (x == 0) {
 			file_magwarn1("Duplicate magic entry `%s'",
 			    ma->mp->desc);
+			file_mdump(ma->mp);
 			return 0;
 		}
 		return x > 0 ? -1 : 1;
 	}
-	else if (sa > sb)
-		return -1;
-	else
-		return 1;
+	return sa > sb ? -1 : 1;
 }
 
 /*
@@ -2565,7 +2566,7 @@ parse_apple(struct magic_set *ms, struct magic_entry *me, const char *line,
 {
 	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, apple)),
-	    sizeof(me->mp[0].apple), "APPLE", "!+-./?", 0);
+	    sizeof(me->mp[me->cont_count - 1].apple), "APPLE", "!+-./?", 0);
 }
 
 /*
@@ -2577,7 +2578,8 @@ parse_ext(struct magic_set *ms, struct magic_entry *me, const char *line,
 {
 	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, ext)),
-	    sizeof(me->mp[0].ext), "EXTENSION", ",!+-/@?_$&~", 0);
+	    sizeof(me->mp[me->cont_count - 1].ext), "EXTENSION", ",!+-/@?_$&~",
+	    0);
 	    /* & for b&w */
 	    /* ~ for journal~ */
 }
@@ -2592,7 +2594,8 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line,
 {
 	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, mimetype)),
-	    sizeof(me->mp[0].mimetype), "MIME", "+-/.$?:{}", 1);
+	    sizeof(me->mp[me->cont_count - 1].mimetype), "MIME", "+-/.$?:{}",
+	    1);
 }
 
 file_private int
