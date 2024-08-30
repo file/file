@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.256 2024/08/27 19:17:10 christos Exp $
+# $File: images,v 1.257 2024/08/30 17:29:28 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1204,6 +1204,22 @@
 #>>(10.l) ubequad	!0	\b, bits %#16.16llx
 # dib header size: 12~Ch~OS/2 1.x 64~40h~OS/2 2.x
 #>>14	ulelong		x		\b, dib header size %u
+# Type: Vision Research Phantom CINE Format
+# URL: https://www.phantomhighspeed.com/
+# URL2: http://phantomhighspeed.force.com/vriknowledge/servlet/fileField?id=0BEU0000000Cfyk
+# From: Harry Mallon <hjmallon at gmail.com>
+#
+# This has a short "CI" code but the 44 is the size of the struct which is
+# stable
+>2	uleshort 44		Vision Research CINE Video,
+>>4	uleshort	0		Grayscale,
+>>4	uleshort 1		JPEG Compressed,
+>>4	uleshort 2		RAW,
+>>6	uleshort x		version %d,
+>>20	ulelong	x		%d frames,
+>>48	ulelong	x		%dx
+>>52	ulelong	x		\b%d
+
 # Conflicts with other entries [BABYL]
 # URL:	http://fileformats.archiveteam.org/wiki/BMP#OS.2F2_Bitmap_Array
 # Note:	container for OS/2 icon "IC", color icon "CI", color pointer "CP" or bitmap "BM"
@@ -3319,22 +3335,6 @@
 >12	ubelong	0x00000000	Lytro Light Field Picture
 >8	ubelong	x		\b, version %d
 
-# Type: Vision Research Phantom CINE Format
-# URL: https://www.phantomhighspeed.com/
-# URL2: http://phantomhighspeed.force.com/vriknowledge/servlet/fileField?id=0BEU0000000Cfyk
-# From: Harry Mallon <hjmallon at gmail.com>
-#
-# This has a short "CI" code but the 44 is the size of the struct which is
-# stable
-0	string	CI
->2	uleshort 44		Vision Research CINE Video,
->>4	uleshort	0		Grayscale,
->>4	uleshort 1		JPEG Compressed,
->>4	uleshort 2		RAW,
->>6	uleshort x		version %d,
->>20	ulelong	x		%d frames,
->>48	ulelong	x		%dx
->>52	ulelong	x		\b%d
 
 # Type: ARRI Raw Image
 # Info: SMPTE RDD30:2014

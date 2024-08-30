@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.190 2024/07/30 22:25:24 christos Exp $
+# $File: Makefile.am,v 1.191 2024/08/30 17:29:28 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -229,13 +229,13 @@ $(MAGIC_FRAGMENT_DIR)/os2 \
 $(MAGIC_FRAGMENT_DIR)/os400 \
 $(MAGIC_FRAGMENT_DIR)/os9 \
 $(MAGIC_FRAGMENT_DIR)/osf1 \
+$(MAGIC_FRAGMENT_DIR)/pack \
 $(MAGIC_FRAGMENT_DIR)/palm \
 $(MAGIC_FRAGMENT_DIR)/parix \
 $(MAGIC_FRAGMENT_DIR)/parrot \
 $(MAGIC_FRAGMENT_DIR)/pascal \
 $(MAGIC_FRAGMENT_DIR)/pbf \
 $(MAGIC_FRAGMENT_DIR)/pbm \
-$(MAGIC_FRAGMENT_DIR)/pc88 \
 $(MAGIC_FRAGMENT_DIR)/pc98 \
 $(MAGIC_FRAGMENT_DIR)/pci_ids \
 $(MAGIC_FRAGMENT_DIR)/pcjr \
