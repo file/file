@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.48 2023/05/01 14:20:21 christos Exp $
+# $File: apple,v 1.49 2024/08/30 16:53:22 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1/t	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -192,11 +192,9 @@
 # Ref: https://github.com/peterferrie/qboot
 0	string	\x01\x4A\xA8\x69\x0F\x85\x27\xC9
 >8	string	\x12\xF0\x10\xE6\x3D\x86\xDA\x8A	Apple ][ QBoot Image
-
 # Type: Peter Ferrie 0Boot
 # From: Greg Wildman <greg@apple2.org.za>
 # Ref: https://github.com/peterferrie/0boot
-0	string	\x01\x4A\xA8\x69\x0F\x85\x27\xC9
 >8	string	\x12\xF0\x10\xE6\x3D\x86\xDA\x8A	Apple ][ 0Boot Image
 
 # Different proprietary boot sectors
