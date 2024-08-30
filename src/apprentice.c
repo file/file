@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.349 2024/08/27 18:54:00 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.350 2024/08/30 17:29:09 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1143,6 +1143,9 @@ apprentice_sort(const void *a, const void *b)
 		mpa.lineno = mpb.lineno = 0;
 		int x = memcmp(&mpa, &mpb, sizeof(mpa));
 		if (x == 0) {
+			// Don't warn for DER
+			if (mpa.type == FILE_DER)
+				return 0;
 			file_magwarn1("Duplicate magic entry `%s'",
 			    ma->mp->desc);
 			file_mdump(ma->mp);
