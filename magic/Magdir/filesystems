@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.164 2024/08/27 19:17:10 christos Exp $
+# $File: filesystems,v 1.165 2024/09/01 15:51:51 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -1282,7 +1282,7 @@
 #>>>(0x1BC.s+11)		ubyte		x			\b,cfg_def %#x
 # for older versions
 >>>(0x1BC.s+9)		ubyte		<2
-#>>>>(0x1BC.s+12)	ubyte		18			\b,%hhu/18 seconds
+#>>>>(0x1BC.s+12)	ubyte		18			\b,%u/18 seconds
 >>>>(0x1BC.s+12)	ubyte		!18			\b,%u/18 seconds
 # floppy A: or B:
 >>>>(0x1BC.s+13)	ubyte		<2			\b,floppy %#x
@@ -1401,14 +1401,14 @@
 >>>>>16		ubyte		=1		\b, FAT  %u
 >>>>>16		ubyte		>0
 >>>>>17		uleshort	>0		\b, root entries %u
-#>>>>>17	uleshort	=0		\b, root entries %hu=0 (usual Fat32)
+#>>>>>17	uleshort	=0		\b, root entries %u=0 (usual Fat32)
 >>>>>19		uleshort	>0		\b, sectors %u (volumes <=32 MB)
-#>>>>>19	uleshort	=0		\b, sectors %hu=0 (usual Fat32)
+#>>>>>19	uleshort	=0		\b, sectors %u=0 (usual Fat32)
 >>>>>21		ubyte		>0xF0		\b, Media descriptor %#x
 #>>>>>21	ubyte		=0xF0		\b, Media descriptor %#x (usual floppy)
 >>>>>21		ubyte		<0xF0		\b, Media descriptor %#x
 >>>>>22		uleshort	>0		\b, sectors/FAT %u
-#>>>>>22	uleshort	=0		\b, sectors/FAT %hu=0 (usual Fat32)
+#>>>>>22	uleshort	=0		\b, sectors/FAT %u=0 (usual Fat32)
 >>>>>24		uleshort	x		\b, sectors/track %u
 >>>>>26		ubyte		>2		\b, heads %u
 #>>>>>26	ubyte		=2		\b, heads %u (usual floppy)
@@ -1479,7 +1479,7 @@
 >>>>>>36	ulelong		x		\b, sectors/FAT %u
 # https://technet.microsoft.com/en-us/library/cc977221.aspx
 >>>>>>40	uleshort	>0		\b, extension flags %#x
-#>>>>>>40	uleshort	=0		\b, extension flags %hu
+#>>>>>>40	uleshort	=0		\b, extension flags %u
 >>>>>>42	uleshort	>0		\b, fsVersion %u
 #>>>>>>42	uleshort	=0		\b, fsVersion %u (usual)
 >>>>>>44	ulelong		>2		\b, rootdir cluster %u
