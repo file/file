@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.105 2024/04/07 19:19:21 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.106 2024/09/01 13:50:01 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -52,7 +52,8 @@ file_mdump(struct magic *m)
 	static const char optyp[] = { FILE_OPS };
 	char tbuf[256];
 
-	(void) fprintf(stderr, "%u: %.*s %d", m->lineno,
+	(void) fprintf(stderr, "%s, %u: %.*s %d", 
+	     m->desc[0] == '\0' ? m->desc + 1 : "*unknown*", m->lineno,
 	    (m->cont_level & 7) + 1, ">>>>>>>>", m->offset);
 
 	if (m->flag & INDIR) {

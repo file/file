@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.350 2024/08/30 17:29:09 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.351 2024/09/01 13:50:01 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -117,7 +117,7 @@ file_private int hextoint(int);
 file_private const char *getstr(struct magic_set *, struct magic *, const char *,
     int);
 file_private int parse(struct magic_set *, struct magic_entry *, const char *,
-    size_t, int);
+    const char *, size_t, int);
 file_private void eatsize(const char **);
 file_private int apprentice_1(struct magic_set *, const char *, int);
 file_private ssize_t apprentice_magic_strength_1(const struct magic *);
@@ -1149,6 +1149,7 @@ apprentice_sort(const void *a, const void *b)
 			file_magwarn1("Duplicate magic entry `%s'",
 			    ma->mp->desc);
 			file_mdump(ma->mp);
+			file_mdump(mb->mp);
 			return 0;
 		}
 		return x > 0 ? -1 : 1;
@@ -1389,7 +1390,7 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 			/*FALLTHROUGH*/
 		default:
 		again:
-			switch (parse(ms, &me, line, lineno, action)) {
+			switch (parse(ms, &me, fn, line, lineno, action)) {
 			case 0:
 				continue;
 			case 1:
@@ -2028,8 +2029,8 @@ out:
  * parse one line from magic file, put into magic[index++] if valid
  */
 file_private int
-parse(struct magic_set *ms, struct magic_entry *me, const char *line,
-    size_t lineno, int action)
+parse(struct magic_set *ms, struct magic_entry *me, const char *file,
+    const char *line, size_t lineno, int action)
 {
 #ifdef ENABLE_CONDITIONALS
 	static uint32_t last_cont_level = 0;
@@ -2416,6 +2417,10 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *line,
 	}
 	for (i = 0; (m->desc[i++] = *l++) != '\0' && i < sizeof(m->desc); )
 		continue;
+	if (m->desc[0] == '\0') {
+		// Tuck in the filename for debugging.
+		strlcpy(m->desc + 1, file, sizeof(m->desc) - 1);
+	}
 	if (i == sizeof(m->desc)) {
 		m->desc[sizeof(m->desc) - 1] = '\0';
 		if (ms->flags & MAGIC_CHECK)
