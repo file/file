@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.11 2024/06/29 15:42:56 christos Exp $
+# $File: firmware,v 1.12 2024/09/02 14:37:03 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -241,3 +241,24 @@
 # optional binary_info in the first 256 bytes, used by picotool
 # https://github.com/raspberrypi/pico-sdk/blob/master/src/common/pico_binary_info/include/pico/binary_info/defs.h
 >>>>>>>>>>256	search/256		\xf2\xeb\x88\x71	\b, with binary_info
+
+# Silicon Labs Gecko Bootloader update image
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# Reference: https://github.com/raboof/gbl
+#            https://github.com/dsyx/emberznet-doc
+# Note: TLV always starting with tag 0x03A617EB of length 8
+0	ulelong		0x03A617EB
+>4	ulelong		8		Silicon Labs Gecko bootloader update image
+!:ext	gbl
+>>12	byte		1		\b, encrypted (AES-CTR-128)
+>>13	byte		1		\b, signed (ECDSA-P256)
+# If not encrypted, indicate first image type
+>>16	ulelong		0xF40A0AF4	\b, application image
+>>16	ulelong		0xF50909F5	\b, bootloader image
+
+# Silicon Labs Gecko Bootloader OTA update with Zigbee EmberZNet SDK
+# URL: https://github.com/SiliconLabs/gecko_sdk
+0	ulelong		0x0BEEF11E
+>6	ulelong		0x38		Silicon Labs Gecko EmberZNet OTA image
+!:ext	ota/zigbee
+>>4	ubeshort	x		v%d
