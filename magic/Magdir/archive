@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.202 2024/09/01 15:51:51 christos Exp $
+# $File: archive,v 1.203 2024/09/02 14:35:42 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2787,3 +2787,23 @@
 >>(12.l+12)	string }}}}		Electron ASAR archive
 !:ext	asar
 >>>12		ulelong	x		\b, header length: %d bytes
+
+# Wasay ImageIt DataPack
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# URL: https://www.neowin.net/forum/topic/615151-anyone-know-what-program-opens-dsi-and-wsi-files/
+# Note: Used in Acer eRecovery and Lenovo OneKey Recovery (OKR)
+4	string		WSVD
+# bytes 3-4 are the checksum or the first 32 bytes of the file
+>0	uleshort	0x40	Wasay ImageIt DataPack
+>>8	uleshort	x	v%u
+>>10	uleshort	x	\b.%u
+>>16	lestring16/8	x	\b, "%s"
+>>12	uleshort	x	(%u)
+>>32	byte		x	\b, created on %02d
+>>33	byte		x	\b%02d
+>>34	byte		x	\b/%02d
+>>35	byte		x	\b/%02d
+>>36	byte		x	%02d
+>>37	byte		x	\b:%02d
+>>38	byte		x	\b:%02d
+>>56	ulelong		x	\b, size: %u bytes
