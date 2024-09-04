@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.50 2024/09/01 15:51:51 christos Exp $
+# $File: apple,v 1.51 2024/09/04 19:06:12 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1/t	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -445,7 +445,7 @@
 #  object is the first object (true for CoreFoundation implementation).
 # From: David Remahl <dremahl@apple.com>
 0		string	bplist
->6		byte	x	\bCoreFoundation binary property list data, version %#c
+>6		byte	x	CoreFoundation binary property list data, version %#c
 >>7		byte	x	\b%c
 >>6		string		00		\b
 >>>8		byte&0xF0	0x00	\b

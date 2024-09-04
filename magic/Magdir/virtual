@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: virtual,v 1.19 2024/08/18 16:02:09 christos Exp $
+# $File: virtual,v 1.20 2024/09/04 19:06:12 christos Exp $
 # From: James Nobis <quel@quelrod.net>
 # Microsoft hard disk images for:
 # Virtual Server
@@ -135,8 +135,8 @@
 # Reserved[4016]
 #>>0x10050	ulequad			>0	\b, Reserved %#llx
 # VHDX_REGION_TABLE_HEADER Signature 0x69676572~regi at offset 192 KB and 256 KB
->0x30000	ulelong			!0x69676572 \b, 1st region INVALID
->0x30000	ulelong			=0x69676572 \b; region
+>0x30000	ulelong			!0x69676572 Microsoft Disk Image Extended, 1st region INVALIDb, 1st region INVALID
+>0x30000	ulelong			=0x69676572 Microsoft Disk Image Extended; region
 # region Checksum. CRC-32C hash over the entire 64-KB table
 #>>0x30004	ulelong			x	\b, CRC %#x
 # The EntryCount specifies number of valid entries; Found 2; This must be =< 2047. 

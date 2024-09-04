@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------
-# $File: android,v 1.25 2024/09/01 15:51:51 christos Exp $
+# $File: android,v 1.26 2024/09/04 19:06:11 christos Exp $
 # Various android related magic entries
 #------------------------------------------------------------
 
@@ -223,7 +223,7 @@
 #            +/refs/heads/androidx-main/profileinstaller/profileinstaller/\
 #            src/main/java/androidx/profileinstaller/ProfileVersion.java
 0	string	pro\x00
->0	regex	pro\x000[0-9][0-9]\x00	Android ART profile
+>4	regex	0[0-9][0-9]	Android ART profile
 !:ext	prof
 >>4	string	001\x00	\b, version 001 N
 >>4	string	005\x00	\b, version 005 O
@@ -231,7 +231,7 @@
 >>4	string	010\x00	\b, version 010 P
 >>4	string	015\x00	\b, version 015 S
 0	string	prm\x00
->0	regex	prm\x000[0-9][0-9]\x00	Android ART profile metadata
+>0	regex	0[0-9][0-9]	Android ART profile metadata
 !:ext	profm
 >>4	string	001\x00	\b, version 001 N
 >>4	string	002\x00	\b, version 002

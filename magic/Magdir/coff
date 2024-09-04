@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.13 2024/08/30 16:53:22 christos Exp $
+# $File: coff,v 1.14 2024/09/04 19:06:12 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -135,25 +135,25 @@
 >>>>16	uleshort	=0
 # most section names start with point character except samples created by "exotic" compilers
 # first section name s_name[8] like: .text .data .debug$S .drectve .testseg .rsrc .rsrc$01 .pad
->>>>(16.s+20)	string		x		\b, 1st section name "%.8s"
+>>>>>(16.s+20)	string		x		\b, 1st section name "%.8s"
 # physical address s_paddr like: 0
-#>>>>(16.s+28)	lelong		!0		\b, s_paddr %#8.8x
+#>>>>>(16.s+28)	lelong		!0		\b, s_paddr %#8.8x
 # virtual address s_vaddr like: 0
-#>>>>(16.s+32)	lelong		!0		\b, s_vaddr %#8.8x
+#>>>>>(16.s+32)	lelong		!0		\b, s_vaddr %#8.8x
 # section size s_size
-#>>>>(16.s+36)	lelong		x		\b, s_size %#8.8x
+#>>>>>(16.s+36)	lelong		x		\b, s_size %#8.8x
 # file ptr to raw data for section s_scnpt
-#>>>>(16.s+40)	lelong		x		\b, s_scnpt %#8.8x
+#>>>>>(16.s+40)	lelong		x		\b, s_scnpt %#8.8x
 # file ptr to relocation s_relptr like: 0
-#>>>>(16.s+44)	lelong		!0		\b, s_relptr %#8.8x
+#>>>>>(16.s+44)	lelong		!0		\b, s_relptr %#8.8x
 # file ptr to gp histogram s_lnnoptr like: 0
-#>>>>(16.s+48)	lelong		!0		\b, s_lnnoptr %#8.8x
+#>>>>>(16.s+48)	lelong		!0		\b, s_lnnoptr %#8.8x
 # number of relocation entries s_nreloc like: 0 1 2 5 6 8 19h 26h 27h 38h 50h 5Fh 89h Dh 1Ch 69h A9h 1DCh 651h
-#>>>>(16.s+52)	uleshort	x		\b, s_nreloc %#4.4x
+#>>>>>(16.s+52)	uleshort	x		\b, s_nreloc %#4.4x
 # number of gp histogram entries s_nlnno like: 0
-#>>>>(16.s+54)	uleshort	!0		\b, s_nlnno %#4.4x
+#>>>>>(16.s+54)	uleshort	!0		\b, s_nlnno %#4.4x
 # flags s_flags
-#>>>>(16.s+56)	lelong		x		\b, s_flags %#8.8x
+#>>>>>(16.s+56)	lelong		x		\b, s_flags %#8.8x
 # second section name s_name[8] like: .bss .data .debug$S .rsrc$01
 >>>>2	uleshort	>1
 >>>>>(16.s+60)	string		x		\b, 2nd section name "%.8s"

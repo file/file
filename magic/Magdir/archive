@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.203 2024/09/02 14:35:42 christos Exp $
+# $File: archive,v 1.204 2024/09/04 19:06:12 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -898,7 +898,7 @@
 >>>>>>>(16.s)			uleshort	x
 >>>>>>>>&16				string	x	\b, %-.8s
 >>>>>>12			uleshort	&0x10	
->>>>>>>(16.s)			uleshort	x
+#>>>>>>>(16.s)			uleshort	x
 >>>>>>>&16				string	x	%-.8s
 >>>>>>>>&1				string	x	\b.%-.3s
 >>>12	uleshort				&0x01
@@ -1637,7 +1637,7 @@
 #	check and display information of lharc header
 0	name				lharc-header
 # header size 0x4 , 0x1b-0x61
->0	ubyte		x
+#>0	ubyte		x
 # compressed data size != compressed file size
 #>7	ulelong		x		\b, data size %d
 # attribute: 0x2~?? 0x10~symlink|target 0x20~normal

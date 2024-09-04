@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.65 2024/06/24 21:42:51 christos Exp $
+# $File: windows,v 1.66 2024/09/04 19:06:12 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1550,7 +1550,7 @@
 # Not null, but size terminated unicoded string
 >>>>>>>>(70.s)	lestring16	x		\b, name: %s
 # size of Media Label (104h)
->>>>>72	uleshort		>0
+#>>>>>72	uleshort		>0
 # offset of Media Label (C4h,C6h,CCh)
 >>>>>74		uleshort	>0
 >>>>>>48	ubyte		1
