@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.12 2024/09/02 14:37:03 christos Exp $
+# $File: firmware,v 1.13 2024/09/04 19:04:03 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -262,3 +262,16 @@
 >6	ulelong		0x38		Silicon Labs Gecko EmberZNet OTA image
 !:ext	ota/zigbee
 >>4	ubeshort	x		v%d
+
+# Device Firmware Upgrade with ST STMicroelectronics extensions
+# From: Alexandre Iooss <erdnaxe@crans.org>
+# Reference: STMicroelectronics note UM0391
+# Reference: https://dfu-util.sourceforge.net/dfuse.html
+# DFU prefix
+0	string		DfuSe\x01	DFU image (STM variant)
+!:ext	dfu
+>6	ulelong		x		\b, size: %d bytes
+# DFU suffix, specification 0x011A
+>-10	string		\x1A\x01UFD
+>>-12	uleshort	x		\b, for device %04X:
+>>-14	uleshort	x		\b%04X
