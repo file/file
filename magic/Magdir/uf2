@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: uf2,v 1.5 2024/09/04 19:02:34 christos Exp $
+# $File: uf2,v 1.6 2024/09/04 19:08:08 christos Exp $
 # uf2:  file(1) magic for UF2 firmware image files
 #
 # https://github.com/microsoft/uf2
@@ -88,8 +88,8 @@
 >>28	lelong	0xde1270b7	Boufallo 602
 >>28	lelong	0xe08f7564	Realtek AmebaZ2 RTL8720C
 >>28	lelong	0xe48bff56	Raspberry Pi RP2040
->>28	lelong	0xe48bff57	Raspberry Pi Microcontrollers: Absolute (unpartitioned) download
->>28	lelong	0xe48bff58	Raspberry Pi Microcontrollers: Data partition download
+>>28	lelong	0xe48bff57	Raspberry Pi MC: Absolute (unpartitioned) download
+>>28	lelong	0xe48bff58	Raspberry Pi MC: Data partition download
 >>28	lelong	0xe48bff59	Raspberry Pi RP2350, Secure Arm image
 >>28	lelong	0xe48bff5a	Raspberry Pi RP2350, RISC-V image
 >>28	lelong	0xe48bff5b	Raspberry Pi RP2350, Non-secure Arm image
