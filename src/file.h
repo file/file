@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.253 2024/04/07 21:27:35 christos Exp $
+ * @(#)$File: file.h,v 1.254 2024/09/29 16:49:25 christos Exp $
  */
 
 #ifndef __file_h__
@@ -691,15 +691,7 @@ const char *fmtcheck(const char *, const char *)
 #endif
 
 #ifdef HAVE_LIBSECCOMP
-// basic filter
-// this mode should not interfere with normal operations
-// only some dangerous syscalls are blacklisted
-int enable_sandbox_basic(void);
-
-// enhanced filter
-// this mode allows only the necessary syscalls used during normal operation
-// extensive testing required !!!
-int enable_sandbox_full(void);
+int enable_sandboxvoid);
 #endif
 
 file_protected const char *file_getprogname(void);
