@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.32 2024/08/30 17:29:28 christos Exp $
+# $File: games,v 1.33 2024/10/06 17:05:45 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -139,12 +139,12 @@
 
 # MAME input recordings
 
-0	string	MAMEINP\0		MAME input recording
->8	leqdate	x			at %s,
->16	leshort	x			format version %d.
->18	leshort	x			\b%d,
->20	string	x			%s driver,
->32	string	x			%s
+0	string		MAMEINP\0		MAME input recording
+>8	leqdate		x			at %s,
+>16	leshort		x			format version %d.
+>18	leshort		x			\b%d,
+>20	string/12	x			%s driver,
+>32	string/32	x			%s
 
 # doom - submitted by Jon Dowland
 
