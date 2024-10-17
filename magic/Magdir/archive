@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.204 2024/09/04 19:06:12 christos Exp $
+# $File: archive,v 1.205 2024/10/17 19:23:07 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1888,6 +1888,7 @@
 # Scan central directory for string 'kmp.json', will suffice for a
 # package containing about 150 files
 >>>>(-6.l)	search/9000	kmp.json	Keyman Compiled Package File
+!:mime	application/vnd.keyman.kmp+zip
 !:ext kmp
 
 # Specialised zip formats which start with a member named 'mimetype'
