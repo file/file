@@ -691,7 +691,7 @@ const char *fmtcheck(const char *, const char *)
 #endif
 
 #ifdef HAVE_LIBSECCOMP
-int enable_sandboxvoid);
+int enable_sandbox(void);
 #endif
 
 file_protected const char *file_getprogname(void);
