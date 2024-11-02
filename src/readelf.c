@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.192 2024/08/24 22:20:47 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.193 2024/11/02 18:34:12 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -342,8 +342,9 @@ file_private const char os_style_names[][8] = {
 #define FLAGS_DID_NETBSD_CMODEL		0x0100
 #define FLAGS_DID_NETBSD_EMULATION	0x0200
 #define FLAGS_DID_NETBSD_UNKNOWN	0x0400
-#define FLAGS_IS_CORE			0x0800
-#define FLAGS_DID_AUXV			0x1000
+#define FLAGS_DID_ANDROID_MEMTAG	0x0800
+#define FLAGS_IS_CORE			0x1000
+#define FLAGS_DID_AUXV			0x2000
 
 file_private int
 dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
@@ -645,23 +646,21 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 		return 1;
 	}
 
-	if (NAMEEQUALS(name, "NetBSD")) {
-	    	if (type == NT_NETBSD_VERSION && descsz == 4) {
-			*flags |= FLAGS_DID_OS_NOTE;
-			if (do_note_netbsd_version(ms, swap, &nbuf[doff]) == -1)
-				return -1;
-			return 1;
-		}
+	if (NAMEEQUALS(name, "NetBSD") &&
+	    type == NT_NETBSD_VERSION && descsz == 4) {
+		*flags |= FLAGS_DID_OS_NOTE;
+		if (do_note_netbsd_version(ms, swap, &nbuf[doff]) == -1)
+			return -1;
+		return 1;
 	}
 
-	if (NAMEEQUALS(name, "FreeBSD")) {
-	    	if (type == NT_FREEBSD_VERSION && descsz == 4) {
-			*flags |= FLAGS_DID_OS_NOTE;
-			if (do_note_freebsd_version(ms, swap, &nbuf[doff])
-			    == -1)
-				return -1;
-			return 1;
-		}
+	if (NAMEEQUALS(name, "FreeBSD") &&
+	    type == NT_FREEBSD_VERSION && descsz == 4) {
+		*flags |= FLAGS_DID_OS_NOTE;
+		if (do_note_freebsd_version(ms, swap, &nbuf[doff])
+		    == -1)
+			return -1;
+		return 1;
 	}
 
 	if (NAMEEQUALS(name, "OpenBSD") &&
@@ -686,6 +685,28 @@ do_os_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 			return -1;
 		return 1;
 	}
+
+	if (NAMEEQUALS(name, "Android") &&
+	    type == NT_ANDROID_VERSION && descsz >= 4) {
+		uint32_t api_level;
+		*flags |= FLAGS_DID_OS_NOTE;
+		memcpy(&api_level, &nbuf[doff], sizeof(api_level));
+		api_level = elf_getu32(swap, api_level);
+		if (file_printf(ms, ", for Android %d", api_level) == -1)
+			return -1;
+		/*
+		 * NDK r14 and later also include details of the NDK that
+		 * built the binary. OS binaries (or binaries built by older
+		 * NDKs) don't have this. The NDK release and build number
+		 * are both 64-byte strings.
+		 */
+		if (descsz >= 4 + 64 + 64) {
+			if (file_printf(ms, ", built by NDK %.64s (%.64s)",
+			    &nbuf[doff + 4], &nbuf[doff + 4 + 64]) == -1)
+				return -1;
+		}
+	}
+
 	return 0;
 }
 
@@ -721,6 +742,45 @@ do_pax_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
 				continue;
 			if (file_printf(ms, "%s%s", did++ ? "," : "",
 			    pax[i]) == -1)
+				return -1;
+		}
+		return 1;
+	}
+	return 0;
+}
+
+file_private int
+do_memtag_note(struct magic_set *ms, unsigned char *nbuf, uint32_t type,
+    int swap, uint32_t namesz, uint32_t descsz,
+    size_t noff, size_t doff, int *flags)
+{
+	const char *name = RCAST(const char *, &nbuf[noff]);
+
+	if (NAMEEQUALS(name, "Android") &&
+	    type == NT_ANDROID_MEMTAG && descsz == 4) {
+		static const char *memtag[] = {
+		    "none",
+		    "async",
+		    "sync",
+		    "heap",
+		    "stack",
+		};
+		uint32_t desc;
+		size_t i;
+		int did = 0;
+
+		*flags |= FLAGS_DID_ANDROID_MEMTAG;
+		memcpy(&desc, &nbuf[doff], sizeof(desc));
+		desc = elf_getu32(swap, desc);
+
+		if (desc && file_printf(ms, ", Android Memtag: ") == -1)
+			return -1;
+
+		for (i = 0; i < __arraycount(memtag); i++) {
+			if (((1 << CAST(int, i)) & desc) == 0)
+				continue;
+			if (file_printf(ms, "%s%s", did++ ? "," : "",
+			    memtag[i]) == -1)
 				return -1;
 		}
 		return 1;
@@ -1234,6 +1294,11 @@ donote(struct magic_set *ms, void *vbuf, size_t offset, size_t size,
 
 	if ((*flags & FLAGS_DID_NETBSD_PAX) == 0) {
 		if (do_pax_note(ms, nbuf, xnh_type, swap,
+		    namesz, descsz, noff, doff, flags))
+			return offset;
+	}
+	if ((*flags & FLAGS_DID_ANDROID_MEMTAG) == 0) {
+		if (do_memtag_note(ms, nbuf, xnh_type, swap,
 		    namesz, descsz, noff, doff, flags))
 			return offset;
 	}
