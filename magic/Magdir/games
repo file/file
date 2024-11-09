@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.34 2024/11/09 20:59:00 christos Exp $
+# $File: games,v 1.35 2024/11/09 23:04:46 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -657,3 +657,10 @@
 # https://arthran2.itch.io/encrypterator-3000
 0	string	ART\0ENCRYPTER100FREE\0VERSION\0\0\0\0	RPG Maker MV encrypted asset, Encrypterator 3000 variant.
 !:ext	png_/ogg_/m4a_/rpgmvp/rpgmvo/rpgmvm
+
+
+# http://www.shikadi.net/moddingwiki/PCX_Library
+0	string/b	pcxLib\0
+>122	ubyte		0x01	pcxLib archive
+>>144	uleshort	0	\b, uncompressed
+>>144	uleshort	!0	\b, compressed

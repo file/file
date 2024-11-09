@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.94 2024/08/27 18:50:57 christos Exp $
+# $File: compress,v 1.95 2024/11/09 23:04:46 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -416,11 +416,6 @@
 0	string	bvx1	lzfse compressed, uncompressed tables
 0	string	bvx2	lzfse compressed, compressed tables
 0	string	bvxn	lzfse encoded, lzvn compressed
-
-# pcxLib.exe compression program
-# http://www.shikadi.net/moddingwiki/PCX_Library
-0	string/b	pcxLib
->0x0A	string/b	Copyright\020(c)\020Genus\020Microprogramming,\020Inc.	pcxLib compressed
 
 # https://support-docs.illumina.com/SW/ORA_Format_Specification/Content/SW/ORA/ORAFormatSpecification.htm
 0	uleshort	0x7c49	
