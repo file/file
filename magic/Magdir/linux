@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.90 2024/08/27 18:50:57 christos Exp $
+# $File: linux,v 1.91 2024/11/09 21:15:48 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -520,6 +520,12 @@
 >0x18   lelong  &2          \b, 4K pages
 >0x18   lelong  &4          \b, 16K pages
 >0x18   lelong  &6          \b, 32K pages
+
+############################################################################
+# Linux RISC-V kernel image
+0x38	string	RSC\05		Linux kernel RISC-V boot executable Image
+>0x18	lelong	^1		\b, little-endian
+>0x18	lelong	&1		\b, big-endian
 
 ############################################################################
 # Linux 8086 executable
