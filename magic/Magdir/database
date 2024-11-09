@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.72 2024/09/13 20:05:17 christos Exp $
+# $File: database,v 1.73 2024/11/09 19:54:36 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -902,3 +902,10 @@
 !:mime	text/x-dmtf-mif
 !:ext	mif
 
+# https://github.com/boltdb/bolt
+# https://github.com/etcd-io/bbolt 
+# See magic value here: https://github.com/boltdb/bolt/blob/fd01fc79c553a8e99d512a07e8e0c63d4a3ccfc5/db.go#L24
+# The magic value is written according to endianess of the host,
+# so we check both to detect them also on hosts with differnet endianess
+16      lelong    0xED0CDAED      BoltDB database
+16      belong    0xED0CDAED      BoltDB database, big-endian
