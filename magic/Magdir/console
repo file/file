@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.79 2024/11/09 23:54:20 christos Exp $
+# $File: console,v 1.80 2024/11/09 23:55:02 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -115,11 +115,9 @@
 # gameboy: file(1) magic for the Nintendo (Color) Gameboy raw ROM format
 # Reference: http://gbdev.gg8.se/wiki/articles/The_Cartridge_Header
 #
-0x104		bequad		0xCEED6666CC0D000B
->0x143		byte&0x80	0x80	Game Boy Color ROM image
-!:mime		application/x-gameboy-color-rom
->0x143		byte&0x80	!0x80	Game Boy ROM image
-!:mime		application/x-gameboy-rom
+
+# Title (16 chars for GB; 15 chars for CGB)
+0		name		gameboy-title
 >0x143		byte&0x80	0x80
 >>0x134		string		>\0			\b: "%.15s"
 >0x143		byte&0x80	!0x80
@@ -128,6 +126,7 @@
 
 # Machine type (SGB, CGB, SGB+CGB)
 # Old licensee code 0x33 is required for SGB, but not CGB.
+0		name		gameboy-machine-type
 >0x14b		byte		0x33
 >>0x146		byte		0x03
 >>>0x143	byte&0x80	0x80	[SGB+CGB]
@@ -140,52 +139,77 @@
 >>0x143		byte&0xC0	0xC0	[CGB ONLY]
 
 # Mapper
->0x147 byte 0x00  [ROM ONLY]
->0x147 byte 0x01  [MBC1]
->0x147 byte 0x02  [MBC1+RAM]
->0x147 byte 0x03  [MBC1+RAM+BATT]
->0x147 byte 0x05  [MBC2]
->0x147 byte 0x06  [MBC2+BATTERY]
->0x147 byte 0x08  [ROM+RAM]
->0x147 byte 0x09  [ROM+RAM+BATTERY]
->0x147 byte 0x0B  [MMM01]
->0x147 byte 0x0C  [MMM01+SRAM]
->0x147 byte 0x0D  [MMM01+SRAM+BATT]
->0x147 byte 0x0F  [MBC3+TIMER+BATT]
->0x147 byte 0x10  [MBC3+TIMER+RAM+BATT]
->0x147 byte 0x11  [MBC3]
->0x147 byte 0x12  [MBC3+RAM]
->0x147 byte 0x13  [MBC3+RAM+BATT]
->0x147 byte 0x19  [MBC5]
->0x147 byte 0x1A  [MBC5+RAM]
->0x147 byte 0x1B  [MBC5+RAM+BATT]
->0x147 byte 0x1C  [MBC5+RUMBLE]
->0x147 byte 0x1D  [MBC5+RUMBLE+SRAM]
->0x147 byte 0x1E  [MBC5+RUMBLE+SRAM+BATT]
->0x147 byte 0xFC  [Pocket Camera]
->0x147 byte 0xFD  [Bandai TAMA5]
->0x147 byte 0xFE  [Hudson HuC-3]
->0x147 byte 0xFF  [Hudson HuC-1]
+0	name gameboy-mapper
+>0	byte 0x00  [ROM ONLY]
+>0	byte 0x01  [MBC1]
+>0	byte 0x02  [MBC1+RAM]
+>0	byte 0x03  [MBC1+RAM+BATT]
+>0	byte 0x05  [MBC2]
+>0	byte 0x06  [MBC2+BATTERY]
+>0	byte 0x08  [ROM+RAM]
+>0	byte 0x09  [ROM+RAM+BATTERY]
+>0	byte 0x0B  [MMM01]
+>0	byte 0x0C  [MMM01+SRAM]
+>0	byte 0x0D  [MMM01+SRAM+BATT]
+>0	byte 0x0F  [MBC3+TIMER+BATT]
+>0	byte 0x10  [MBC3+TIMER+RAM+BATT]
+>0	byte 0x11  [MBC3]
+>0	byte 0x12  [MBC3+RAM]
+>0	byte 0x13  [MBC3+RAM+BATT]
+>0	byte 0x19  [MBC5]
+>0	byte 0x1A  [MBC5+RAM]
+>0	byte 0x1B  [MBC5+RAM+BATT]
+>0	byte 0x1C  [MBC5+RUMBLE]
+>0	byte 0x1D  [MBC5+RUMBLE+SRAM]
+>0	byte 0x1E  [MBC5+RUMBLE+SRAM+BATT]
+>0	byte 0xFC  [Pocket Camera]
+>0	byte 0xFD  [Bandai TAMA5]
+>0	byte 0xFE  [Hudson HuC-3]
+>0	byte 0xFF  [Hudson HuC-1]
 
 # ROM size
->0x148 byte 0     \b, ROM: 256Kbit
->0x148 byte 1     \b, ROM: 512Kbit
->0x148 byte 2     \b, ROM: 1Mbit
->0x148 byte 3     \b, ROM: 2Mbit
->0x148 byte 4     \b, ROM: 4Mbit
->0x148 byte 5     \b, ROM: 8Mbit
->0x148 byte 6     \b, ROM: 16Mbit
->0x148 byte 7     \b, ROM: 32Mbit
->0x148 byte 0x52  \b, ROM: 9Mbit
->0x148 byte 0x53  \b, ROM: 10Mbit
->0x148 byte 0x54  \b, ROM: 12Mbit
+0	name gameboy-rom-size
+>0	byte 0     \b, ROM: 256Kbit
+>0	byte 1     \b, ROM: 512Kbit
+>0	byte 2     \b, ROM: 1Mbit
+>0	byte 3     \b, ROM: 2Mbit
+>0	byte 4     \b, ROM: 4Mbit
+>0	byte 5     \b, ROM: 8Mbit
+>0	byte 6     \b, ROM: 16Mbit
+>0	byte 7     \b, ROM: 32Mbit
+>0	byte 0x52  \b, ROM: 9Mbit
+>0	byte 0x53  \b, ROM: 10Mbit
+>0	byte 0x54  \b, ROM: 12Mbit
 
 # RAM size
->0x149 byte 1     \b, RAM: 16Kbit
->0x149 byte 2     \b, RAM: 64Kbit
->0x149 byte 3     \b, RAM: 256Kbit
->0x149 byte 4     \b, RAM: 1Mbit
->0x149 byte 5     \b, RAM: 512Kbit
+0	name	gameboy-ram-size
+>0	byte 1     \b, RAM: 16Kbit
+>0	byte 2     \b, RAM: 64Kbit
+>0	byte 3     \b, RAM: 256Kbit
+>0	byte 4     \b, RAM: 1Mbit
+>0	byte 5     \b, RAM: 512Kbit
+
+# Game Boy (Color)
+0x104		bequad		0xCEED6666CC0D000B
+>0x143		byte&0x80	0x80	Game Boy Color ROM image
+!:mime		application/x-gameboy-color-rom
+>0x143		byte&0x80	!0x80	Game Boy ROM image
+!:mime		application/x-gameboy-rom
+>0		use		gameboy-title
+>0		use		gameboy-machine-type
+>0x147		use		gameboy-mapper
+>0x148		use		gameboy-rom-size
+>0x149		use		gameboy-ram-size
+
+# Analogue Pocket
+0x104		bequad		0x0110CEEF000044AA
+>0		byte		x	Analogue Pocket ROM image
+!:mime		application/x-analogue-pocket-rom
+>0		use		gameboy-title
+>0		use		gameboy-machine-type
+>0x147		use		gameboy-mapper
+>0x148		use		gameboy-rom-size
+>0x149		use		gameboy-ram-size
 
 #------------------------------------------------------------------------------
 # genesis: file(1) magic for various Sega Mega Drive / Genesis ROM image and disc formats
