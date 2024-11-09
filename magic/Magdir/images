@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.259 2024/11/09 23:31:25 christos Exp $
+# $File: images,v 1.260 2024/11/09 23:51:35 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3148,7 +3148,8 @@
 # FIXME: Handle DX10 and XBOX formats.
 >>0x54	string	DX10
 >>>0x80	use	ms-directdraw-dx10
->>0x54	string	!DX10			\b, compressed using %.4s
+>>0x54	string	!DX10
+>>>0x54	string	x			\b, compressed using %.4s
 >0x50	ulelong&0x2	0x2		\b, alpha only
 >0x50	ulelong&0x200	0x200		\b, YUV
 >0x50	ulelong&0x20000	0x20000		\b, luminance
