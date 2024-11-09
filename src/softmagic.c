@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.346 2024/07/19 18:30:25 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.347 2024/11/09 23:00:13 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -651,6 +651,7 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_BESTRING16:
   	case FILE_LESTRING16:
 		if (m->reln == '=' || m->reln == '!') {
+fprintf(stderr, "[%s]\n", m->value.s);
 			if (file_printf(ms, F(ms, desc, "%s"),
 			    file_printable(ms, sbuf, sizeof(sbuf), m->value.s,
 			    sizeof(m->value.s))) == -1)
@@ -659,6 +660,7 @@ mprint(struct magic_set *ms, struct magic *m)
 		else {
 			char *str = p->s;
 
+fprintf(stderr, "!!!!!%s!!!\n", p->s);
 			/* compute t before we mangle the string? */
 
 			if (*m->value.s == '\0')
@@ -1417,6 +1419,7 @@ mcopy(struct magic_set *ms, union VALUETYPE *p, int type, int indir,
 				}
 			}
 			*edst = '\0';
+			*dst = '\0';
 			return 0;
 		}
 		case FILE_STRING:	/* XXX - these two should not need */
