@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.258 2024/09/01 13:49:15 christos Exp $
+# $File: images,v 1.259 2024/11/09 23:31:25 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -3329,12 +3329,9 @@
 # Light Field Picture
 # Documentation: http://optics.miloush.net/lytro/TheFileFormat.aspx
 # Typical file extensions: .lfp .lfr .lfx
-
 0	ubelong	0x894C4650
->4	ubelong	0x0D0A1A0A
->12	ubelong	0x00000000	Lytro Light Field Picture
->8	ubelong	x		\b, version %d
-
+>4	ubelong	0x0D0A1A0A	Lytro Light Field Picture
+>>8	ubelong	x		\b, version %u
 
 # Type: ARRI Raw Image
 # Info: SMPTE RDD30:2014
