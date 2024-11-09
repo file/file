@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.78 2024/11/09 23:50:58 christos Exp $
+# $File: console,v 1.79 2024/11/09 23:54:20 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -115,8 +115,10 @@
 # gameboy: file(1) magic for the Nintendo (Color) Gameboy raw ROM format
 # Reference: http://gbdev.gg8.se/wiki/articles/The_Cartridge_Header
 #
-0x104		bequad		0xCEED6666CC0D000B	Game Boy ROM image
-# TODO: application/x-gameboy-color-rom for GBC.
+0x104		bequad		0xCEED6666CC0D000B
+>0x143		byte&0x80	0x80	Game Boy Color ROM image
+!:mime		application/x-gameboy-color-rom
+>0x143		byte&0x80	!0x80	Game Boy ROM image
 !:mime		application/x-gameboy-rom
 >0x143		byte&0x80	0x80
 >>0x134		string		>\0			\b: "%.15s"
@@ -124,7 +126,7 @@
 >>0x134		string		>\0			\b: "%.16s"
 >0x14c		byte		x			(Rev.%02u)
 
-# Machine type. (SGB, CGB, SGB+CGB)
+# Machine type (SGB, CGB, SGB+CGB)
 # Old licensee code 0x33 is required for SGB, but not CGB.
 >0x14b		byte		0x33
 >>0x146		byte		0x03
@@ -137,7 +139,7 @@
 >>0x143		byte&0xC0	0x80	[CGB]
 >>0x143		byte&0xC0	0xC0	[CGB ONLY]
 
-# Mapper.
+# Mapper
 >0x147 byte 0x00  [ROM ONLY]
 >0x147 byte 0x01  [MBC1]
 >0x147 byte 0x02  [MBC1+RAM]
@@ -165,7 +167,7 @@
 >0x147 byte 0xFE  [Hudson HuC-3]
 >0x147 byte 0xFF  [Hudson HuC-1]
 
-# ROM size.
+# ROM size
 >0x148 byte 0     \b, ROM: 256Kbit
 >0x148 byte 1     \b, ROM: 512Kbit
 >0x148 byte 2     \b, ROM: 1Mbit
@@ -178,7 +180,7 @@
 >0x148 byte 0x53  \b, ROM: 10Mbit
 >0x148 byte 0x54  \b, ROM: 12Mbit
 
-# RAM size.
+# RAM size
 >0x149 byte 1     \b, RAM: 16Kbit
 >0x149 byte 2     \b, RAM: 64Kbit
 >0x149 byte 3     \b, RAM: 256Kbit
