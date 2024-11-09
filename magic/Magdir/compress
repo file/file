@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.95 2024/11/09 23:04:46 christos Exp $
+# $File: compress,v 1.96 2024/11/09 23:47:04 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -378,9 +378,14 @@
 0	string		ArC\x01		FreeArc archive <http://freearc.org>
 
 # Valve Pack (VPK) files
+# https://developer.valvesoftware.com/wiki/VPK_(file_format)#File_Format
 0	lelong	0x55aa1234	Valve Pak file
 >0x4	lelong	x		\b, version %u
->0x8	lelong	x		\b, %u entries
+>0x8	lelong	x		\b, tree size %u 
+>0x12	lelong	x		\b, file data size %u 
+>0x16	lelong	x		\b, archive MD5 size %u 
+>0x20	lelong	x		\b, other MD5 size %u 
+>0x24	lelong	x		\b, signature size %u 
 
 # Snappy framing format
 # https://code.google.com/p/snappy/source/browse/trunk/framing_format.txt
