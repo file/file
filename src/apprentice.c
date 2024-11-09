@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.351 2024/09/01 13:50:01 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.352 2024/11/09 20:47:15 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -763,7 +763,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 			return -1;
 		}
 	}
-	fn = mfn;
+	fn = mfn;	// Don't free, used in ms->file
 
 	while (fn) {
 		p = CCAST(char *, strchr(fn, PATHSEP));
@@ -775,8 +775,6 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		errs = MAX(errs, fileerr);
 		fn = p;
 	}
-
-	free(mfn);
 
 	if (errs == -1) {
 		for (i = 0; i < MAGIC_SETS; i++) {
