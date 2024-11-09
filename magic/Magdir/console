@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.77 2024/11/09 23:50:12 christos Exp $
+# $File: console,v 1.78 2024/11/09 23:50:58 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -1335,3 +1335,18 @@
 >>65496		ubyte		<7
 >>>65497	ubyte		<11
 >>>>65472	use		snes-rom-hdr
+
+#------------------------------------------------------------------------------
+# ancast: file(1) magic for Wii U firmware images, aka "ancast" images.
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# References:
+# - https://wiiubrew.org/wiki/Ancast_image
+0	ubelong	0xEFA282D9	Wii U firmware image:
+>0x20	ubelong	2		ARM
+>>0x1A4	ubelong	0x21		\b, NAND boot
+>>0x1A4	ubelong	0x22		\b, SD boot
+>>0x1A8	ubelong	1		\b, for devkits
+>>0x1A8	ubelong	2		\b, for retail
+>0x20	ubelong	1		PowerPC
+>>0xA4	ubelong	0x11		\b, Wii U mode
+>>0xA4	ubelong	0x12		\b, Wii mode
