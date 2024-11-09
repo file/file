@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.260 2024/11/09 23:51:35 christos Exp $
+# $File: images,v 1.261 2024/11/09 23:53:35 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4204,9 +4204,9 @@
 >>>13	ubyte		x	*bad colorspace %u*
 
 
-# Type: Godot 3, 4 texture (pixel format)
+# Type: Godot 3 texture (pixel format)
 # From: David Korth <gerbilsoft@gerbilsoft.com>
-0	name	godot-pixel-format
+0	name	godot-pixel-format-v3
 >0	ulelong&0xFFFFF	0	L8
 >0	ulelong&0xFFFFF	1	LA8
 >0	ulelong&0xFFFFF	2	R8
@@ -4244,7 +4244,54 @@
 >0	ulelong&0xFFFFF	34	ETC2_RGB8
 >0	ulelong&0xFFFFF	35	ETC2_RGBA8
 >0	ulelong&0xFFFFF	36	ETC2_RGB8A1
+# NOTE: This is a custom pixel format used by Sonic Colors Ultimate.
+# Godot 4 later added its own ASTC format values.
 >0	ulelong&0xFFFFF	37	ASTC_8x8
+
+# Type: Godot 4 texture (pixel format)
+# From: David Korth <gerbilsoft@gerbilsoft.com>
+# NOTE: This is a custom pixel format used by Sonic Colors Ultimate.
+# Godot 4 later added its own ASTC format values.
+0	name	godot-pixel-format-v4
+>0	ulelong&0xFFFFF	0	L8
+>0	ulelong&0xFFFFF	1	LA8
+>0	ulelong&0xFFFFF	2	R8
+>0	ulelong&0xFFFFF	3	RG8
+>0	ulelong&0xFFFFF	4	RGB8
+>0	ulelong&0xFFFFF	5	RGBA8
+>0	ulelong&0xFFFFF	6	RGBA4444
+>0	ulelong&0xFFFFF	7	RGB565
+>0	ulelong&0xFFFFF	8	RF
+>0	ulelong&0xFFFFF	9	RGF
+>0	ulelong&0xFFFFF	10	RGBF
+>0	ulelong&0xFFFFF	11	RGBAF
+>0	ulelong&0xFFFFF	12	RH
+>0	ulelong&0xFFFFF	13	RGH
+>0	ulelong&0xFFFFF	14	RGBH
+>0	ulelong&0xFFFFF	15	RGBAH
+>0	ulelong&0xFFFFF	16	RGBE9995
+>0	ulelong&0xFFFFF	17	DXT1
+>0	ulelong&0xFFFFF	18	DXT3
+>0	ulelong&0xFFFFF	19	DXT5
+>0	ulelong&0xFFFFF	20	RGTC_R
+>0	ulelong&0xFFFFF	21	RGTC_RG
+>0	ulelong&0xFFFFF	22	BPTC_RGBA
+>0	ulelong&0xFFFFF	23	BPTC_RGBF
+>0	ulelong&0xFFFFF	24	BPTC_RGBFU
+>0	ulelong&0xFFFFF	25	ETC
+>0	ulelong&0xFFFFF	36	ETC2_R11
+>0	ulelong&0xFFFFF	27	ETC2_R11S
+>0	ulelong&0xFFFFF	28	ETC2_RG11
+>0	ulelong&0xFFFFF	29	ETC2_RG11S
+>0	ulelong&0xFFFFF	30	ETC2_RGB8
+>0	ulelong&0xFFFFF	31	ETC2_RGBA8
+>0	ulelong&0xFFFFF	32	ETC2_RGB8A1
+>0	ulelong&0xFFFFF	33	ETC2_RA_AS_RG
+>0	ulelong&0xFFFFF	34	DXT5_RA_AS_RG
+>0	ulelong&0xFFFFF	35	ASTC_4x4
+>0	ulelong&0xFFFFF	36	ASTC_4x4_HDR
+>0	ulelong&0xFFFFF	37	ASTC_8x8
+>0	ulelong&0xFFFFF	38	ASTC_8x8_HDR
 
 # Type: Godot 3, 4 texture (rescale display, width)
 # From: David Korth <gerbilsoft@gerbilsoft.com>
@@ -4316,7 +4363,7 @@
 >16	ulelong&0x100000	0x100000	lossless encoding
 >16	ulelong&0x200000	0x200000	lossy encoding
 >16	ulelong&0x300000	0
->>16	use	godot-pixel-format
+>>16	use	godot-pixel-format-v3
 
 # Type: Godot 4 texture
 # From: David Korth <gerbilsoft@gerbilsoft.com>
@@ -4335,7 +4382,7 @@
 >12	use	godot-rescale-display-h
 >12	uleshort	x	\b,
 >0x2C	ulelong		>1	%u mipmaps,
->0x30	use	godot-pixel-format
+>0x30	use	godot-pixel-format-v4
 >0x24	ulelong		1	\b, embedded PNG image
 >0x24	ulelong		2	\b, embedded WebP image
 >0x24	ulelong		3	\b, Basis Universal
