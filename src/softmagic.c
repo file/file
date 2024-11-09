@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.347 2024/11/09 23:00:13 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.348 2024/11/09 23:23:39 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -651,7 +651,6 @@ mprint(struct magic_set *ms, struct magic *m)
   	case FILE_BESTRING16:
   	case FILE_LESTRING16:
 		if (m->reln == '=' || m->reln == '!') {
-fprintf(stderr, "[%s]\n", m->value.s);
 			if (file_printf(ms, F(ms, desc, "%s"),
 			    file_printable(ms, sbuf, sizeof(sbuf), m->value.s,
 			    sizeof(m->value.s))) == -1)
@@ -660,7 +659,6 @@ fprintf(stderr, "[%s]\n", m->value.s);
 		else {
 			char *str = p->s;
 
-fprintf(stderr, "!!!!!%s!!!\n", p->s);
 			/* compute t before we mangle the string? */
 
 			if (*m->value.s == '\0')
