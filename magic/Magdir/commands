@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.76 2024/11/09 21:06:02 christos Exp $
+# $File: commands,v 1.77 2024/11/10 16:55:15 christos Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
@@ -90,6 +90,11 @@
 0	string/fwt	#!\ /usr/bin/env\ bash	Bourne-Again shell script text executable
 !:mime	text/x-shellscript
 0	string/fwt	#!\ /bin/env\ bash	Bourne-Again shell script text executable
+!:mime	text/x-shellscript
+
+0	string/fwt	#!\ /bin/dash	Dash shell script text executable
+!:mime	text/x-shellscript
+0	string/fwt	#!\ /usr/bin/dash	Dash shell script text executable
 !:mime	text/x-shellscript
 
 # Fish shell magic
