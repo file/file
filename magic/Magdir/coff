@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.14 2024/09/04 19:06:12 christos Exp $
+# $File: coff,v 1.15 2024/11/10 18:54:33 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -10,6 +10,7 @@
 # https://de.wikipedia.org/wiki/Common_Object_File_Format
 # http://www.delorie.com/djgpp/doc/coff/filhdr.html
 # https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#coff-file-header-object-and-image
+# https://formats.kaitai.io/uefi_te/index.html
 
 # Display COFF processor type, including MS COFF and PE/COFF
 0	name				display-coff-processor
@@ -187,3 +188,30 @@
 >>18	leshort		&0x0002
 >>>20	leshort		0x010b
 >>>>0	use		display-coff
+
+0	name		display-subsystem
+>0	ubyte		0	unknown
+>0	ubyte		1	native
+>0	ubyte		2	windows_gui
+>0	ubyte		3	windows_cui
+>0	ubyte		7	posix_cui
+>0	ubyte		9	windows_ce_gui
+>0	ubyte		10	efi_application
+>0	ubyte		11	efi_boot_service_driver
+>0	ubyte		12	efi_runtime_driver
+>0	ubyte		13	efi_rom
+>0	ubyte		14	xbox
+>0	ubyte		16	windows_boot-application
+>0	default		x	Unknown subsystem
+>>0	ubyte		x	%#x
+
+
+# https://formats.kaitai.io/uefi_te/index.html
+0	string		VZ	TE (Terse Executable) file
+>2	use		display-coff-processor
+>4	byte		x	\b, sections %d
+>5	use		display-subsystem
+>6	uleshort	x	\b, stripped-size %u
+>8	ulelong		x	\b, entry %#x
+>12	ulelong		x	\b, base_of_code %#x
+>16	ulequad		x	\b, image_base %#llx
