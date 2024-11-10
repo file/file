@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.352 2024/11/09 20:47:15 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.353 2024/11/10 17:43:24 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2600,7 +2600,7 @@ parse_mime(struct magic_set *ms, struct magic_entry *me, const char *line,
 {
 	return parse_extra(ms, me, line, len,
 	    CAST(off_t, offsetof(struct magic, mimetype)),
-	    sizeof(me->mp[me->cont_count - 1].mimetype), "MIME", "+-/.$?:{}",
+	    sizeof(me->mp[me->cont_count - 1].mimetype), "MIME", "+-/.$?:{};=",
 	    1);
 }
 
