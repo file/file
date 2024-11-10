@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.262 2024/11/10 17:38:17 christos Exp $
+# $File: images,v 1.263 2024/11/10 20:44:30 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -337,17 +337,21 @@
 # NewSubFileType
 >0	uleshort	0xfe
 >>12	use		tiff_entry
+# Width
 >0	uleshort	0x100
 >>4	ulelong		1
->>>12	use		tiff_entry
 >>>8	uleshort	x		\b, width=%d
+>>>12	use		tiff_entry
+# Height
 >0	uleshort	0x101
 >>4	ulelong		1
 >>>8	uleshort	x		\b, height=%d
 >>>12	use		tiff_entry
+# BPS
 >0	uleshort	0x102
 >>8	uleshort	x		\b, bps=%d
 >>12	use		tiff_entry
+# Compression
 >0	uleshort	0x103
 >>4	ulelong		1		\b, compression=
 >>>8	uleshort	1		\bnone
@@ -375,6 +379,7 @@
 >>>8	default		x
 >>>>8	uleshort	x		\b(unknown %#x)
 >>>12	use		tiff_entry
+# Photometric Interpretation
 >0	uleshort	0x106		\b, PhotometricInterpretation=
 >>8	clear		x
 >>8	uleshort	0		\bWhiteIsZero
@@ -470,10 +475,8 @@
 # GPS IFD
 >0	uleshort	0x8825		\b, GPS-Data
 >>12	use		tiff_entry
-
 #>0	uleshort	x		\b, unknown=%#x
 #>>12	use		tiff_entry
-
 0	string		MM\x00\x2b	Big TIFF image data, big-endian
 !:mime	image/tiff
 0	string		II\x2b\x00	Big TIFF image data, little-endian
