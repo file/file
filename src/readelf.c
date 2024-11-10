@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.194 2024/11/10 00:30:09 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.195 2024/11/10 16:52:07 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1570,6 +1570,8 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 			for (;;) {
 				Elf32_Cap cap32;
 				Elf64_Cap cap64;
+				cap32.c_un.c_val = 0;
+				cap64.c_un.c_val = 0;
 				char cbuf[/*CONSTCOND*/
 				    MAX(sizeof(cap32), sizeof(cap64))];
 				if ((coff += xcap_sizeof) >
