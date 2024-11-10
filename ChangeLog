@@ -1,3 +1,18 @@
+2024-11-10  13:56  Christos Zoulas <christos@zoulas.com>
+	
+	* PR/562: jsummers: Search/regex offsets are absolute to the
+	  beginning of the file, so adjust them by subtracting the
+	  offset that the "use" starts so that we don't double-count it.
+
+
+2024-11-09  19:30  Christos Zoulas <christos@zoulas.com>
+ 	* PR/543: matshch: bump nbuf so we can get the flags into the buffer.
+
+
+2024-11-02  14:34  Christos Zoulas <christos@zoulas.com>
+
+ 	* Add Android elf notes (enh)
+
 2023-12-29  12:55  Christos Zoulas <christos@zoulas.com>
 
 	* Add limit for number of magic warnings allowed
