@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.261 2024/11/09 23:53:35 christos Exp $
+# $File: images,v 1.262 2024/11/10 17:38:17 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4556,3 +4556,26 @@
 >524		ubyte		!0x01		\b, at 524 %#2.2x opcode 
 # last opcode if not opEndPic (FFh)
 >-1		ubyte		!0xFF		\b, at the end %#2.2x opcode 
+
+# https://github.com/aseprite/aseprite/blob/main/docs/ase-file-specs.md
+20		ulelong		0
+>24		ulelong		0
+>>4		uleshort	0xA5E0	Aseprite asset file
+!:ext	aseprite
+>>>0		ulelong		x	\b, size %u
+>>>6		uleshort	x	\b, frames %u
+>>>8		uleshort	x	\b, size %ux
+>>>10		uleshort	x	\b%u
+>>>12		uleshort	32	\b, RGBA
+>>>12		uleshort	16	\b, Grayscale
+>>>12		uleshort	8	\b, Indexed
+>>>14		ulelong		x	\b, flags %#x
+#>>>18		uleshort	x	\b, speed %u
+>>>28		ubyte		x	\b, transparency index %u
+>>>32		uleshort	x	\b, number of colors %u
+>>>34		ubyte		>0	\b, pixel ratio %u:
+>>>>35		ubyte		x	\b%u
+>>>36		leshort		x	\b, grid position (%d, 
+>>>38		leshort		x	\b%d)
+>>>40		uleshort	x	\b, grid size %dx
+>>>42		uleshort	x	\b%d
