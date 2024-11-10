@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sgml,v 1.52 2024/08/27 19:17:11 christos Exp $
+# $File: sgml,v 1.53 2024/11/10 14:48:55 christos Exp $
 # Type:	SVG Vectorial Graphics
 # From:	Noel Torres <tecnico@ejerciciosresueltos.com>
 0	string/bt	\<?xml\ version=
@@ -57,11 +57,14 @@
 # avoid misdetection as JavaScript
 0	string/cWt	\<!doctype\ html	HTML document text
 !:mime	text/html
+!:strength + 30
 0	string/ct	\<html>	HTML document text
 !:mime	text/html
+!:strength + 30
 0	string/ct	\<!--
 >&0	search/4096/cWt	\<!doctype\ html	HTML document text
 !:mime	text/html
+!:strength + 30
 >&0	search/4096/ct	\<html>	HTML document text
 !:mime	text/html
 
@@ -69,48 +72,48 @@
 # https://www.w3.org/TR/SVG/single-page.html
 0	search/4096/cWbt	\<!doctype\ svg	SVG XML document
 !:mime  image/svg+xml
-!:strength + 15
+!:strength + 30
 
 0	search/4096/cwt	\<head\>		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cWt	\<head\ 		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cwt	\<title\>		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cWt	\<title\ 		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cwt	\<html\>		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cWt	\<html\ 		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cwt	\<script\> 		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cWt	\<script\ 		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cwt	\<style\> 		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cWt	\<style\  		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cwt	\<table\>		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 0	search/4096/cWt	\<table\ 		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 
 0	search/4096/cwt	\<a\ href=		HTML document text
 !:mime	text/html
-!:strength + 15
+!:strength + 30
 
 # Microsoft HTML Application (HTA)
 # https://learn.microsoft.com/en-us/previous-versions//ms536496(v=vs.85)
@@ -123,10 +126,10 @@
 # from Marc Prud'hommeaux (marc@apocalypse.org)
 0	search/1/cwt	\<?xml			XML document text
 !:mime	text/xml
-!:strength + 15
+!:strength + 30
 0	string/t		\<?xml\ version="	XML
 !:mime	text/xml
-!:strength + 15
+!:strength + 30
 >15	string/t	>\0			%.3s document text
 >>23	search/1	\<xsl:stylesheet	(XSL stylesheet)
 >>24	search/1	\<xsl:stylesheet	(XSL stylesheet)
