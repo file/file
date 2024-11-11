@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.195 2024/11/10 16:52:07 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.196 2024/11/11 15:49:11 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -60,6 +60,7 @@ file_private uint16_t getu16(int, uint16_t);
 file_private uint32_t getu32(int, uint32_t);
 file_private uint64_t getu64(int, uint64_t);
 
+#define NBUFSIZE 2024
 #define SIZE_UNKNOWN	CAST(off_t, -1)
 #define NAMEEQUALS(n, v) \
     (namesz == sizeof(v) && memcmp(n, v, namesz) == 0)
@@ -353,7 +354,7 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
 	size_t offset, len;
-	unsigned char nbuf[BUFSIZ];
+	unsigned char nbuf[NBUFSIZE];
 	ssize_t bufsize;
 	off_t ph_off = off, offs;
 	int ph_num = num;
@@ -1724,9 +1725,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
 	const char *linking_style;
-	unsigned char nbuf[BUFSIZ * 4];
-	char ibuf[BUFSIZ];
-	char interp[BUFSIZ];
+	unsigned char nbuf[NBUFSIZE];
+	char interp[128];
 	ssize_t bufsize;
 	size_t offset, align, need = 0;
 	int pie = 0, dynamic = 0;
@@ -1869,7 +1869,8 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		return -1;
 	if (interp[0])
 		if (file_printf(ms, ", interpreter %s", file_printable(ms,
-		    ibuf, sizeof(ibuf), interp, sizeof(interp))) == -1)
+		    CAST(char *, nbuf), sizeof(nbuf),
+		    interp, sizeof(interp))) == -1)
 			return -1;
 	return 0;
 }
