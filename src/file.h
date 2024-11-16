@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.255 2024/10/18 14:30:55 christos Exp $
+ * @(#)$File: file.h,v 1.256 2024/11/16 19:19:34 christos Exp $
  */
 
 #ifndef __file_h__
@@ -477,6 +477,7 @@ struct magic_set {
 	int flags;			/* Control magic tests. */
 	int event_flags;		/* Note things that happened. */
 #define 		EVENT_HAD_ERR		0x01
+	char *fnamebuf;			/* holding the full path/buffer */
 	const char *file;
 	size_t line;			/* current magic line number */
 	mode_t mode;			/* copy of current stat mode */

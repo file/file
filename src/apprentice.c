@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.353 2024/11/10 17:43:24 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.354 2024/11/16 19:19:34 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -540,6 +540,7 @@ file_ms_free(struct magic_set *ms)
 	free(ms->o.pbuf);
 	free(ms->o.buf);
 	free(ms->c.li);
+	free(ms->fnamebuf);
 #ifdef USE_C_LOCALE
 	freelocale(ms->c_lc_ctype);
 #endif
@@ -572,6 +573,7 @@ file_ms_alloc(int flags)
 	ms->error = -1;
 	for (i = 0; i < MAGIC_SETS; i++)
 		ms->mlist[i] = NULL;
+	ms->fnamebuf = NULL;
 	ms->file = "unknown";
 	ms->line = 0;
 	ms->magwarn = 0;
@@ -735,7 +737,7 @@ fail:
 file_protected int
 file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
-	char *p, *mfn;
+	char *p;
 	int fileerr, errs = -1;
 	size_t i, j;
 
@@ -746,7 +748,8 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 
 	init_file_tables();
 
-	if ((mfn = strdup(fn)) == NULL) {
+	free(ms->fnamebuf);
+	if ((ms->fnamebuf = strdup(fn)) == NULL) {
 		file_oomem(ms, strlen(fn));
 		return -1;
 	}
@@ -759,11 +762,10 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 				mlist_free(ms->mlist[j]);
 				ms->mlist[j] = NULL;
 			}
-			free(mfn);
 			return -1;
 		}
 	}
-	fn = mfn;	// Don't free, used in ms->file
+	fn = ms->fnamebuf;
 
 	while (fn) {
 		p = CCAST(char *, strchr(fn, PATHSEP));
