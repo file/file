@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.354 2024/11/16 19:19:34 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.355 2024/11/25 22:31:53 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -107,10 +107,10 @@ struct magic_map {
 	uint32_t nmagic[MAGIC_SETS];
 };
 
-int file_formats[FILE_NAMES_SIZE];
-const size_t file_nformats = FILE_NAMES_SIZE;
-const char *file_names[FILE_NAMES_SIZE];
-const size_t file_nnames = FILE_NAMES_SIZE;
+file_private int file_formats[FILE_NAMES_SIZE];
+file_private const size_t file_nformats = FILE_NAMES_SIZE;
+file_protected const char *file_names[FILE_NAMES_SIZE];
+file_protected const size_t file_nnames = FILE_NAMES_SIZE;
 
 file_private int getvalue(struct magic_set *ms, struct magic *, const char **, int);
 file_private int hextoint(int);

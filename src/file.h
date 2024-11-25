@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.256 2024/11/16 19:19:34 christos Exp $
+ * @(#)$File: file.h,v 1.257 2024/11/25 22:31:53 christos Exp $
  */
 
 #ifndef __file_h__
@@ -644,8 +644,8 @@ file_protected file_pushbuf_t *file_push_buffer(struct magic_set *);
 file_protected char  *file_pop_buffer(struct magic_set *, file_pushbuf_t *);
 
 #ifndef COMPILE_ONLY
-extern const char *file_names[];
-extern const size_t file_nnames;
+extern file_protected const char *file_names[];
+extern file_protected const size_t file_nnames;
 #endif
 
 #ifndef HAVE_PREAD
