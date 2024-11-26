@@ -132,7 +132,7 @@ searchbug.result \
 searchbug.testfile \
 uf2.result \
 uf2.testfile \
-utf16xmlsvg.textfile \
+utf16xmlsvg.testfile \
 utf16xmlsvg.result \
 xclbin.result \
 xclbin.testfile \
