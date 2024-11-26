@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.205 2024/10/17 19:23:07 christos Exp $
+# $File: archive,v 1.206 2024/11/26 19:39:14 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1874,12 +1874,6 @@
 !:ext	apk
 >>>>>-22	string	PK\005\006
 >>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
-# APK Signing Block
->0	default	x
->>-22	string	PK\005\006
->>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	Android package (APK), with APK Signing Block
-!:mime	application/vnd.android.package-archive
-!:ext	apk
 
 # Keyman Compiled Package File (keyman.com)
 # https://help.keyman.com/developer/current-version/reference/file-types/kmp
@@ -2141,6 +2135,12 @@
 >>>>8	beshort		x			\b, compression method=
 >>>>8	use		zipcompression
 >>>>0x161	string		WINZIP		\b, WinZIP self-extracting
+# APK Signing Block
+>0	default	x
+>>-22	string	PK\005\006
+>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	Android package (APK), with APK Signing Block
+!:mime	application/vnd.android.package-archive
+!:ext	apk
 
 # Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 0	string		PK\005\006	Zip archive data (empty)
