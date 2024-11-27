@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.355 2024/11/25 22:31:53 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.356 2024/11/27 15:37:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2127,9 +2127,9 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 	}
 
 	/* get offset, then skip over it */
-	if (*l == '-') {
+	if (*l == '-' || *l == '+') {
 		++l;            /* step over */
-		m->flag |= OFFNEGATIVE;
+		m->flag |= l[-1] == '-' ? OFFNEGATIVE : OFFPOSITIVE;
 	}
 	m->offset = CAST(int32_t, strtol(l, &t, 0));
         if (l == t) {

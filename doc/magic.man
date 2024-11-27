@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.109 2024/06/18 17:04:23 christos Exp $
-.Dd June 18, 2024
+.\" $File: magic.man,v 1.110 2024/11/27 15:37:00 christos Exp $
+.Dd November 27, 2024
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -50,6 +50,10 @@ is a regular file.
 A continuation offset relative to the end of the last up-level field
 .Dv ( \*[Am] ) .
 .El
+If the offset starts with the symbol
+.Dq + ,
+then all offsets are interpreted as from the beginning of the file (the
+default).
 .It Dv type
 The type of the data to be tested.
 The possible values are:

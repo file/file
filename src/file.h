@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.257 2024/11/25 22:31:53 christos Exp $
+ * @(#)$File: file.h,v 1.258 2024/11/27 15:37:00 christos Exp $
  */
 
 #ifndef __file_h__
@@ -179,7 +179,7 @@
 #define MAXstring 128		/* max len of "string" types */
 
 #define MAGICNO		0xF11E041C
-#define VERSIONNO	19
+#define VERSIONNO	20
 #define FILE_MAGICSIZE	432
 
 #define FILE_GUID_SIZE	sizeof("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
@@ -218,8 +218,7 @@ union VALUETYPE {
 
 struct magic {
 	/* Word 1 */
-	uint16_t cont_level;	/* level of ">" */
-	uint8_t flag;
+	uint16_t flag;
 #define INDIR		0x01	/* if '(...)' appears */
 #define OFFADD		0x02	/* if '>&' or '>...(&' appears */
 #define INDIROFFADD	0x04	/* if '>&(' appears */
@@ -229,7 +228,9 @@ struct magic {
 				   for top-level tests) */
 #define TEXTTEST	0x40	/* for passing to file_softmagic */
 #define OFFNEGATIVE	0x80	/* relative to the end of file */
+#define OFFPOSITIVE	0x100	/* relative to the beginning of file */
 
+	uint8_t cont_level;	/* level of ">" */
 	uint8_t factor;
 
 	/* Word 2 */
