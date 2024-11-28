@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.29 2024/09/29 16:49:25 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.30 2024/11/28 14:04:24 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -103,6 +103,8 @@ enable_sandbox(void)
 #ifdef __NR_getdents64
 	ALLOW_RULE(getdents64);
 #endif
+	ALLOW_RULE(getpid);	// Used by glibc in file_pipe2file()
+	ALLOW_RULE(getrandom);	// Used by glibc in file_pipe2file()
 #ifdef FIONREAD
 	// called in src/compress.c under sread
 	ALLOW_IOCTL_RULE(FIONREAD);
@@ -136,6 +138,7 @@ enable_sandbox(void)
 #ifdef __NR_readlinkat
 	ALLOW_RULE(readlinkat);
 #endif
+	ALLOW_RULE(rseq);	// Used by glibc to randomize malloc
 	ALLOW_RULE(rt_sigaction);
 	ALLOW_RULE(rt_sigprocmask);
 	ALLOW_RULE(rt_sigreturn);
@@ -145,8 +148,6 @@ enable_sandbox(void)
 	ALLOW_RULE(stat64);
 	ALLOW_RULE(sysinfo);
 	ALLOW_RULE(umask);	// Used in file_pipe2file()
-	ALLOW_RULE(getpid);	// Used by glibc in file_pipe2file()
-	ALLOW_RULE(getrandom);	// Used by glibc in file_pipe2file()
 	ALLOW_RULE(unlink);
 	ALLOW_RULE(utimes);
 	ALLOW_RULE(write);
