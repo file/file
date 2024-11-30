@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.208 2024/08/27 18:50:57 christos Exp $
+# $File: msdos,v 1.209 2024/11/30 15:28:01 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -772,7 +772,13 @@
 >>>0x40			search/0x80	STUB/32C \b, DOS/32A DOS extender (configurable stub)
 >>>0x40			search/0x80	DOS/32A \b, DOS/32A DOS extender (embedded)
 
-# PX\0\0 signature for 32bit DOS Applications in DOS-PE Format (https://www.japheth.de/HX.html)
+# PL\0\0 signature for 32-bit DOS Applications in Phar Lap TNT PE/PL Format
+# Binaries can be created by TNT MARKPHAR.EXE or by 386LINK.EXE -markphar switch
+# FULLSCR.EXE, GDEMO.EXE, MOUSE.EXE from MSVC32s SDK and from Phar Lap TNT SDK
+>(0x3c.l)	string		PL\0\0	\b, PE32 executable for MS-DOS
+>>(8.s*16)	search/0x50	Phar\ Lap\ Software,\ Inc.	\b, Phar Lap TNT DOS extender
+
+# PX\0\0 signature for 32/64-bit DOS Applications in DOS-PE Format (https://www.japheth.de/HX.html)
 # SHDPMI.EXE, DOSTEST.EXE, GETVMODE.EXE, RMINT.EXE
 >(0x3c.l)	string		PX\0\0	\b, PE32
 >>(0x3c.l+24)	leshort		0x020b	\b+
@@ -793,6 +799,7 @@
 # Skip already parsed binary types
 # If magic in the branch is not parsed then always jumps to mz-unrecognized
 >(0x3c.l)	string	PE\0\0
+>(0x3c.l)	string	PL\0\0
 >(0x3c.l)	string	PX\0\0
 >(0x3c.l)	string	LX
 >(0x3c.l)	string	NE
