@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.207 2024/11/27 15:37:46 christos Exp $
+# $File: archive,v 1.208 2024/11/30 15:38:27 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2810,3 +2810,21 @@
 >>37	byte		x	\b:%02d
 >>38	byte		x	\b:%02d
 >>56	ulelong		x	\b, size: %u bytes
+
+# Stone archive file - Serpent OS moss package manager's native format
+# https://github.com/serpent-os/tools,
+# (Ikey Doherty)
+0	string	\0mos	Stone archive
+>28	belong	1	(format v%d)
+>>27	byte	1	binary package
+!:mime	application/x-stone-binary
+!:ext	stone
+>>27	byte	2	delta package
+!:mime	application/x-stone-delta
+!:ext	stone
+>>27	byte	3	repository index
+!:mime	application/x-stone-repository
+!:ext	index
+>>27	byte	4	build manifest
+!:mime	application/x-stone-manifest
+!:ext	bin
