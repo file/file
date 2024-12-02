@@ -279,8 +279,8 @@
 >4	ubeshort	<47		
 # skip bad examples with garbage table names like in a5.show HYPERC MAC
 # tag names consist of up to four characters padded with spaces at end like
-# BASE DSIG OS/2 Zapf acnt glyf cvt vmtx xref ...
->>12	regex/4l	\^[A-Za-z][A-Za-z][A-Za-z/][A-Za-z2\ ]	
+# BASE C2PA DSIG OS/2 Zapf acnt glyf cvt vmtx xref ...
+>>12	regex/4l	\^[A-Za-z][A-Za-z2][A-Za-z/][A-Za-z2\ ]	
 #>>>0	ubelong	x	\b, sfnt version %#x
 >>>0	ubelong	!0x4f54544f	TrueType
 !:mime	font/sfnt
