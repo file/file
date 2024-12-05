@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.29 2024/12/05 18:48:24 christos Exp $
+# $File: sql,v 1.30 2024/12/05 18:49:15 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -222,6 +222,7 @@
 >>>68 belong =0x6A035744 (TeXnicard card database)
 >>>68 belong =0x43455745 Cewe Fotobuch
 >>>68 belong =0x5E96730E Corsair iCue package registry
+>>>68 belong =0xF9BEB4D9 Bitcoin wallet
 # unknown application ID
 >>>68 default x
 >>>>68 belong !0         \b, application id %u
