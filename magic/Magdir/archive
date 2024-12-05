@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.208 2024/11/30 15:38:27 christos Exp $
+# $File: archive,v 1.209 2024/12/05 19:41:12 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1795,6 +1795,17 @@
 !:ext zip/cbz
 
 
+# Generic zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
+#   Next line excludes specialized formats:
+0	name	zipgeneric
+>4	beshort		x			Zip archive data, at least
+!:mime	application/zip
+>4	use		zipversion
+>4	beshort		x			to extract
+>8	beshort		x			\b, compression method=
+>8	use		zipcompression
+>0x161	string		WINZIP		\b, WinZIP self-extracting
+
 0	string		PK\003\004
 !:strength +1
 # IOS/IPadOS IPA file (Zip archive)
@@ -2132,17 +2143,11 @@
 >>>>>>(-6.l)	search/9000	kmp.json	Keyman Compiled Package File
 !:mime	application/vnd.keyman.kmp+zip
 !:ext kmp
+>>>>>+4	default		x
+>>>>>>0	use		zipgeneric
 
-# Generic zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
-#   Next line excludes specialized formats:
 >>>>+4	default		x
->>>>>4	beshort		x			Zip archive data, at least
-!:mime	application/zip
->>>>>4	use		zipversion
->>>>>4	beshort		x			to extract
->>>>>8	beshort		x			\b, compression method=
->>>>>8	use		zipcompression
->>>>>0x161	string		WINZIP		\b, WinZIP self-extracting
+>>>>>0	use		zipgeneric
 
 # Zip archives (Greg Roelofs, c/o zip-bugs@wkuvx1.wku.edu)
 0	string		PK\005\006	Zip archive data (empty)
