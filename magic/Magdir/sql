@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.27 2023/08/19 15:33:04 christos Exp $
+# $File: sql,v 1.28 2024/12/05 18:47:18 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -220,6 +220,7 @@
 # AUDY	Audacity Project File
 >>>68 belong =0x41554459 (Audacity Project)
 >>>68 belong =0x6A035744 (TeXnicard card database)
+>>>68 belong =0x43455745 Cewe Fotobuch
 # unknown application ID
 >>>68 default x
 >>>>68 belong !0         \b, application id %u
