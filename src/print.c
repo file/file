@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.107 2024/12/05 18:44:20 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.108 2024/12/08 19:20:16 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -354,7 +354,7 @@ file_fmtdate(char *buf, size_t bsize, uint16_t v)
 	tm.tm_mon = ((v >> 5) & 0xf) - 1;
 	// Sanity check because some OS's coredump with invalid values.
 	// Yes, Cygwin I am looking at you!
-	if (tm.tm_mon < 0 && tm->tm_mon > 11)
+	if (tm.tm_mon < 0 && tm.tm_mon > 11)
 		tm.tm_mon = 0;
 	tm.tm_year = (v >> 9) + 80;
 
