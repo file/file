@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.258 2024/11/27 15:37:00 christos Exp $
+ * @(#)$File: file.h,v 1.259 2024/12/08 18:59:04 christos Exp $
  */
 
 #ifndef __file_h__
@@ -616,7 +616,7 @@ file_protected char * file_printable(struct magic_set *, char *, size_t,
     const char *, size_t);
 #ifdef __EMX__
 file_protected int file_os2_apptype(struct magic_set *, const char *,
-    const void *, size_t);
+    const struct buffer *);
 #endif /* __EMX__ */
 file_protected int file_pipe_closexec(int *);
 file_protected int file_clear_closexec(int);
