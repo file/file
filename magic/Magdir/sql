@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.32 2024/12/05 18:51:15 christos Exp $
+# $File: sql,v 1.33 2024/12/08 19:18:26 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -220,11 +220,14 @@
 # AUDY	Audacity Project File
 >>>68 belong =0x41554459 (Audacity Project)
 >>>68 belong =0x6A035744 (TeXnicard card database)
->>>68 belong =0x43455745 Cewe Fotobuch
->>>68 belong =0x5E96730E Corsair iCue package registry
->>>68 belong =0xF9BEB4D9 Bitcoin wallet
->>>68 belong =0x56333500 Vector35 Binary Ninja
->>>68 belong =0x4163726E FlyingMeat Acorn
+>>>68 belong =0x43455745 (Cewe Fotobuch)
+>>>68 belong =0x5E96730E (Corsair iCue package registry)
+>>>68 belong =0xF9BEB4D9 (Bitcoin wallet)
+>>>68 belong =0x56333500 (Vector35 Binary Ninja)
+>>>68 belong =0x4163726E (FlyingMeat Acorn)
+>>>68 belong =0x544f4952 (Riot Games patcher)
+>>>68 belong =0x544d5052 (Twinmotion project)
+>>>68 belong =0x43484557 (Chewing IME)
 # unknown application ID
 >>>68 default x
 >>>>68 belong !0         \b, application id %u
