@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.350 2024/11/27 15:37:00 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.351 2024/12/19 15:24:53 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1046,7 +1046,7 @@ cvt_flip(int type, int flip)
 		return type;
 	}
 }
-#define DO_CVT(fld, type) \
+#define DO_CVT1(fld, type) \
 	if (m->num_mask) \
 		switch (m->mask_op & FILE_OPS_MASK) { \
 		case FILE_OPAND: \
@@ -1081,31 +1081,38 @@ cvt_flip(int type, int flip)
 	if (m->mask_op & FILE_OPINVERSE) \
 		p->fld = ~p->fld \
 
+#define DO_CVT(m, fld, size) \
+	if ((m)->flag & UNSIGNED) { \
+		DO_CVT1(fld, uint##size##_t); \
+	} else { \
+		DO_CVT1(s##fld, int##size##_t); \
+	}
+
 file_private int
 cvt_8(union VALUETYPE *p, const struct magic *m)
 {
-	DO_CVT(b, uint8_t);
+	DO_CVT(m, b, 8);
 	return 0;
 }
 
 file_private int
 cvt_16(union VALUETYPE *p, const struct magic *m)
 {
-	DO_CVT(h, uint16_t);
+	DO_CVT(m, h, 16);
 	return 0;
 }
 
 file_private int
 cvt_32(union VALUETYPE *p, const struct magic *m)
 {
-	DO_CVT(l, uint32_t);
+	DO_CVT(m, l, 32);
 	return 0;
 }
 
 file_private int
 cvt_64(union VALUETYPE *p, const struct magic *m)
 {
-	DO_CVT(q, uint64_t);
+	DO_CVT(m, q, 64);
 	return 0;
 }
 

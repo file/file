@@ -1,3 +1,8 @@
+2024-12-19  14:44  Christos Zoulas <christos@zoulas.com>
+
+	* PR/592: allow + in format strings
+	* PR/592: signed operations should be done in signed context
+
 2024-11-27  14:44  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.46

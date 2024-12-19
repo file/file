@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.259 2024/12/08 18:59:04 christos Exp $
+ * @(#)$File: file.h,v 1.260 2024/12/19 15:24:53 christos Exp $
  */
 
 #ifndef __file_h__
@@ -202,6 +202,10 @@ struct buffer {
 };
 
 union VALUETYPE {
+	int8_t sb;
+	int16_t sh;
+	int32_t sl;
+	int64_t sq;
 	uint8_t b;
 	uint16_t h;
 	uint32_t l;

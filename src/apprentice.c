@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.357 2024/12/08 19:02:39 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.358 2024/12/19 15:24:53 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2649,7 +2649,7 @@ check_format_type(const char *ptr, int type, const char **estr)
 			}
 		} else
 			h = 0;
-		while (*ptr && strchr("-.#", *ptr) != NULL)
+		while (*ptr && strchr("+-.#", *ptr) != NULL)
 			ptr++;
 #define CHECKLEN() do { \
 	for (len = cnt = 0; isdigit(CAST(unsigned char, *ptr)); ptr++, cnt++) \
