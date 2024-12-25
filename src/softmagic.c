@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.351 2024/12/19 15:24:53 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.352 2024/12/25 15:17:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1088,28 +1088,31 @@ cvt_flip(int type, int flip)
 		DO_CVT1(s##fld, int##size##_t); \
 	}
 
-file_private int
+#define file_no_overflow \
+    __attribute__((__no_sanitize__("signed-integer-overflow")))
+
+file_no_overflow file_private int
 cvt_8(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(m, b, 8);
 	return 0;
 }
 
-file_private int
+file_no_overflow file_private int
 cvt_16(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(m, h, 16);
 	return 0;
 }
 
-file_private int
+file_no_overflow file_private int
 cvt_32(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(m, l, 32);
 	return 0;
 }
 
-file_private int
+file_no_overflow file_private int
 cvt_64(union VALUETYPE *p, const struct magic *m)
 {
 	DO_CVT(m, q, 64);
