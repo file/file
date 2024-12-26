@@ -1,7 +1,14 @@
+
+	
 2024-12-19  14:44  Christos Zoulas <christos@zoulas.com>
 
 	* PR/592: allow + in format strings
 	* PR/592: signed operations should be done in signed context
+
+2024-12-05  13:50 Christos Zoulas <christos@zoulas.com>
+
+	* PR/578: jsummers: Don't crash on cygwin when tm_mon == -1
+	* PR/579: net147: Fix stack overrun.
 
 2024-11-27  14:44  Christos Zoulas <christos@zoulas.com>
 
