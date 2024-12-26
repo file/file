@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.36 2024/12/26 18:56:04 christos Exp $
+# $File: sql,v 1.37 2024/12/26 19:02:02 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -237,6 +237,8 @@
 >>>>>0xEA0	search/0x10	CREATE\040TABLE\040version_table\040(\040version\040INTEGER\040NOT\040NULL\040PRIMARY\040KEY\040)	\b, Adobe SDE
 >>>>>0xA0	search/0x100 CREATE\040TABLE\040IPMMessage\040(	\b, Adobe IPM DB
 >>>>>0xC00	search/0x100 CREATE\040TABLE\040IPMMessage\040(	\b, Adobe IPM DB
+>>>>>0x200	search/0xFFFF	C\0R\0E\0A\0T\0E\0\040\0T\0A\0B\0L\0E\0\040\0A\0C\0T\0I\0O\0N\0R\0E\0C\0O\0R\0D\0S\0\040\0(	\b, Microsoft Store Database
+
 
 # The "user version" as read and set by the user_version pragma like:
 # 1 2 4 5 7 9 10 25 36 43 53 400 416 131073 131074 131075 50331648
