@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: os2,v 1.15 2024/12/15 13:04:58 christos Exp $
+# $File: os2,v 1.16 2024/12/26 19:34:28 christos Exp $
 # os2:  file(1) magic for OS/2 files
 #
 
@@ -198,3 +198,9 @@
 >>&3		ubelong		=0x770402BE	OS/2 WarpIN self-extracting archive
 !:ext exe
 >>>&0x102	string		x		\b, created with %s
+
+# EXTPROC script
+# "extproc" is the OS/2 version of Unix "#!"
+0	string/tc	extproc\x20	EXTPROC script
+>&0	string		x		executed by %s
+!:ext cmd
