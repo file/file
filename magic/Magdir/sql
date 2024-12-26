@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.37 2024/12/26 19:02:02 christos Exp $
+# $File: sql,v 1.38 2024/12/26 19:14:32 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -106,7 +106,7 @@
 # at offset 68 that is preferred over "user version" for indicating the
 # associated application.
 #
-0   string  SQLite\ format\ 3
+0   string  SQLite\040format\0403\0
 # skip DROID fmt-729-signature-id-1053.sqlite by checking for valid page size
 >16 ubeshort >0                 SQLite 3.x
 # deprecated
