@@ -193,7 +193,7 @@ check-local:
 				if [ -z "$$m" ]; then \
 					m=$$j; \
 				else \
-					m=$$m:$$j; \
+					m=$$m${PATH_SEPARATOR}$$j; \
 				fi \
 			fi \
 		done; \
