@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.91 2024/11/09 21:15:48 christos Exp $
+# $File: linux,v 1.92 2024/12/26 19:17:57 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -968,3 +968,14 @@
 0	lequad		0x32454c4946524550	Linux perf recording, version 2. little endian
 
 0	bequad		0x32454c4946524550	Linux perf recording, version 2. big endian
+
+# perf(1) (Performance analysis tools) command
+#
+# For file format details, see:
+#
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/\
+# tools/perf/Documentation/perf.data-file-format.txt
+
+# The file is normally called 'perf.data' but can take any name,
+# so only check the eye catcher value.
+0	string		PERFILE2	perf(1) data
