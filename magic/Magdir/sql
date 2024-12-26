@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.35 2024/12/26 18:46:16 christos Exp $
+# $File: sql,v 1.36 2024/12/26 18:56:04 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -235,6 +235,8 @@
 >>>>>0xC70	search/0x9000	CREATE\040TABLE\040s3api_per_key_metadata\n	\b, Archive Metadata
 >>>>>0x2A0	search/0x10	CREATE\040TABLE\040version_table\040(\040version\040INTEGER\040NOT\040NULL\040PRIMARY\040KEY\040)	\b, Adobe SDE
 >>>>>0xEA0	search/0x10	CREATE\040TABLE\040version_table\040(\040version\040INTEGER\040NOT\040NULL\040PRIMARY\040KEY\040)	\b, Adobe SDE
+>>>>>0xA0	search/0x100 CREATE\040TABLE\040IPMMessage\040(	\b, Adobe IPM DB
+>>>>>0xC00	search/0x100 CREATE\040TABLE\040IPMMessage\040(	\b, Adobe IPM DB
 
 # The "user version" as read and set by the user_version pragma like:
 # 1 2 4 5 7 9 10 25 36 43 53 400 416 131073 131074 131075 50331648
