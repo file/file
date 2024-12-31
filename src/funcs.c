@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.142 2023/07/30 14:41:14 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.143 2024/12/31 19:50:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -688,11 +688,16 @@ check_regex(struct magic_set *ms, const char *pat)
 		}
 		if (c == '{') {
 			char *ep, *eep;
+
+			if (oc == '}') {
+				file_magwarn(ms, "cascading repetition "
+				    "operators in regex `%s'", pat);
+				return -1;
+			}
 			errno = 0;
 			l = strtoul(p + 1, &ep, 10);
 			if (ep != p + 1 && l > 1000)
 				goto bounds;
-
 			if (*ep == ',') {
 				l = strtoul(ep + 1, &eep, 10);
 				if (eep != ep + 1 && l > 1000)
