@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.359 2024/12/31 19:02:48 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.360 2024/12/31 19:41:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2858,7 +2858,7 @@ check_format(struct magic_set *ms, struct magic *m)
  * pointer, according to the magic type.  Update the string pointer to point
  * just after the number read.  Return 0 for success, non-zero for failure.
  */
-file_private int
+file_no_overflow file_private int
 getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 {
 	char *ep;

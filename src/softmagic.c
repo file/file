@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.352 2024/12/25 15:17:25 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.353 2024/12/31 19:41:08 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1087,9 +1087,6 @@ cvt_flip(int type, int flip)
 	} else { \
 		DO_CVT1(s##fld, int##size##_t); \
 	}
-
-#define file_no_overflow \
-    __attribute__((__no_sanitize__("signed-integer-overflow")))
 
 file_no_overflow file_private int
 cvt_8(union VALUETYPE *p, const struct magic *m)

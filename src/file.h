@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.260 2024/12/19 15:24:53 christos Exp $
+ * @(#)$File: file.h,v 1.261 2024/12/31 19:41:08 christos Exp $
  */
 
 #ifndef __file_h__
@@ -738,5 +738,8 @@ static const char *rcsid(const char *p) { \
 #ifndef __RCSID
 #define __RCSID(a)
 #endif
+
+#define file_no_overflow \
+    __attribute__((__no_sanitize__("signed-integer-overflow")))
 
 #endif /* __file_h__ */
