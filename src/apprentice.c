@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.358 2024/12/19 15:24:53 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.359 2024/12/31 19:02:48 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2417,7 +2417,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 		++l;
 		m->flag |= NOSPACE;
 	}
-	for (i = 0; (m->desc[i++] = *l++) != '\0' && i < sizeof(m->desc); )
+	for (i = 0; i < sizeof(m->desc) && (m->desc[i++] = *l++) != '\0';)
 		continue;
 	if (m->desc[0] == '\0') {
 		// Tuck in the filename for debugging.
