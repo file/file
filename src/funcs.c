@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.143 2024/12/31 19:50:33 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.144 2024/12/31 19:57:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -674,15 +674,16 @@ check_regex(struct magic_set *ms, const char *pat)
 	unsigned char oc = '\0';
 	const char *p;
 	unsigned long l;
+	static const char wild[] = "?*+{";
 
 	for (p = pat; *p; p++) {
 		unsigned char c = *p;
-		// Avoid repetition
-		if (c == oc && strchr("?*+{", c) != NULL) {
+		// Avoid repetition of wild characters
+		if (strchr(wild, oc) != NULL && strchr(wild, c) != NULL) {
 			size_t len = strlen(pat);
 			file_magwarn(ms,
-			    "repetition-operator operand `%c' "
-			    "invalid in regex `%s'", c,
+			    "repetition-operator operand `%c%c' "
+			    "invalid in regex `%s'", oc, c,
 			    file_printable(ms, sbuf, sizeof(sbuf), pat, len));
 			return -1;
 		}
