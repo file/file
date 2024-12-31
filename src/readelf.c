@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.198 2024/12/08 19:20:16 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.199 2024/12/31 19:38:03 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1633,7 +1633,7 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 					    == -1)
 						return -1;
 					if (nbadcap++ > 2)
-						coff = xsh_size;
+						goto skip;
 					break;
 				}
 			}
