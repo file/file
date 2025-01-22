@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.360 2024/12/31 19:41:08 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.361 2025/01/22 17:58:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -58,7 +58,7 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.360 2024/12/31 19:41:08 christos Exp $")
 #endif
 
 
-#define	EATAB {while (isascii(CAST(unsigned char, *l)) && \
+#define	EATAB {while (*l && isascii(CAST(unsigned char, *l)) && \
 		      isspace(CAST(unsigned char, *l)))  ++l;}
 #define LOWCASE(l) (isupper(CAST(unsigned char, l)) ? \
 			tolower(CAST(unsigned char, l)) : (l))
@@ -2921,8 +2921,10 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			*p = ep;
 		return 0;
 	case FILE_GUID:
-		if (file_parse_guid(*p, m->value.guid) == -1)
+		if (file_parse_guid(*p, m->value.guid) == -1) {
+			file_magwarn(ms, "Error parsing guid `%s'", *p);
 			return -1;
+		}
 		*p += FILE_GUID_SIZE - 1;
 		return 0;
 	default:
