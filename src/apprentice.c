@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.362 2025/01/25 01:39:28 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.363 2025/01/25 16:11:03 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3391,7 +3391,7 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 	int i, needsbyteswap;
 
 	entries = CAST(uint32_t, map->len / sizeof(struct magic));
-	if (entries < MAGIC_SETS + 1) {
+	if (entries < MAGIC_SETS) {
 		file_error(ms, 0, "Too few magic entries %u in `%s'",
 		    entries, dbname);
 		return -1;
