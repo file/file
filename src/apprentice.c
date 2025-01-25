@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.361 2025/01/22 17:58:05 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.362 2025/01/25 01:39:28 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -341,7 +341,11 @@ get_standard_integer_type(const char *l, const char **t)
 {
 	int type;
 
-	if (isalpha(CAST(unsigned char, l[1]))) {
+	if (l[0] == '\0')
+		return FILE_INVALID;
+	if (l[1] == '\0')
+		return FILE_INVALID;
+	else if (isalpha(CAST(unsigned char, l[1]))) {
 		switch (l[1]) {
 		case 'C':
 			/* "dC" and "uC" */
@@ -2393,6 +2397,12 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 		}
 		break;
 	}
+
+	if (*l == '\0') {
+		file_magwarn(ms, "incomplete magic `%s'", line);
+		return -1;
+	}
+
 	/*
 	 * Grab the value part, except for an 'x' reln.
 	 */
