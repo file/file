@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.363 2025/01/25 16:11:03 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.364 2025/01/28 13:05:55 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2398,16 +2398,18 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 		break;
 	}
 
-	if (*l == '\0') {
-		file_magwarn(ms, "incomplete magic `%s'", line);
-		return -1;
-	}
 
 	/*
 	 * Grab the value part, except for an 'x' reln.
 	 */
-	if (m->reln != 'x' && getvalue(ms, m, &l, action))
+	if (m->reln != 'x') {
+		if (*l == '\0') {
+			file_magwarn(ms, "incomplete magic `%s'", line);
+			return -1;
+		}
+		if (getvalue(ms, m, &l, action))
 		return -1;
+	}
 
 	/*
 	 * TODO finish this macro and start using it!
