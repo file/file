@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: c-lang,v 1.32 2023/06/16 19:57:19 christos Exp $
+# $File: c-lang,v 1.33 2025/01/30 20:38:06 christos Exp $
 # c-lang:  file(1) magic for C and related languages programs
 #
 # The strength is to beat standard HTML
@@ -27,8 +27,7 @@
 >>&0	regex	\^#[[:space:]]*endif$	C source text
 !:mime	text/x-c
 0	search/8192	define
->0	regex	\^#[[:space:]]*(if\|ifn)def
->>&0	regex	\^#[[:space:]]*define	C source text
+>0	regex	\^#[[:space:]]*define	C source text
 !:mime	text/x-c
 0	search/8192	char
 >0	regex	\^[[:space:]]*char(\ \\*|\\*)(.+)(=.*)?;[[:space:]]*$			C source text
