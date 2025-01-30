@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.192 2024/10/02 01:45:32 christos Exp $
+# $File: Makefile.am,v 1.193 2025/01/30 18:51:01 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -348,6 +348,7 @@ $(MAGIC_FRAGMENT_DIR)/xenix \
 $(MAGIC_FRAGMENT_DIR)/xilinx \
 $(MAGIC_FRAGMENT_DIR)/xo65 \
 $(MAGIC_FRAGMENT_DIR)/xwindows \
+$(MAGIC_FRAGMENT_DIR)/yacc \
 $(MAGIC_FRAGMENT_DIR)/yara \
 $(MAGIC_FRAGMENT_DIR)/zfs \
 $(MAGIC_FRAGMENT_DIR)/zilog \
