@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.53 2024/12/08 19:14:24 christos Exp $
+# $File: fonts,v 1.54 2025/02/10 22:01:36 rrt Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -283,7 +283,7 @@
 >>12	regex/4l	\^[A-Za-z][A-Za-z2][A-Za-z/][A-Za-z2\ ]	
 #>>>0	ubelong	x	\b, sfnt version %#x
 >>>0	ubelong	!0x4f54544f	TrueType
-!:mime	font/sfnt
+!:mime	font/ttf
 !:apple	????tfil
 # .ttf for TrueType font
 # EUDC.tte created by privat character editor %WINDIR%\system32\eudcedit.exe
