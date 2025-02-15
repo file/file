@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.110 2024/11/27 15:37:00 christos Exp $
-.Dd November 27, 2024
+.\" $File: magic.man,v 1.111 2025/02/15 20:00:57 christos Exp $
+.Dd February 15, 2025
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -73,7 +73,8 @@ A 64-bit double precision IEEE floating point number in this machine's native by
 .It Dv string
 A string of bytes.
 The string type specification can be optionally followed by a /<width> 
-option and optionally followed by a set of flags /[bCcftTtWw]*.
+option and optionally followed by a set of flags [bCcftTtWw]*.
+Slash characters can be used to separate options for readability.
 The width limits the number of characters to be copied.
 Zero means all characters.
 The following flags are supported:
@@ -459,11 +460,12 @@ matching a file, binary patterns are tried first; if no match is
 found, and the file looks like text, then its encoding is determined
 and the text patterns are tried.
 .Pp
-The numeric types may optionally be followed by
-.Dv \*[Am]
+The numeric types may optionally be followed by an operand
 and a numeric value,
-to specify that the value is to be AND'ed with the
+to specify that the value is to be modified according to the operand and the
 numeric value before any comparisons are done.
+The following operands are supported:
+.Dv \*[Am], \*[Ba], \*[ua], +, -, \&*, /, %.
 Prepending a
 .Dv u
 to the type indicates that ordered comparisons should be unsigned.
