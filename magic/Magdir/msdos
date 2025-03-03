@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.209 2024/11/30 15:28:01 christos Exp $
+# $File: msdos,v 1.210 2025/03/03 17:02:02 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -2115,9 +2115,9 @@
 #	display shared information of cursor or icon entry
 0		name		cur-ico-entry
 >0		byte		=0		\b, 256x
->0		byte		!0		\b, %dx
+>0		ubyte		!0		\b, %dx
 >1		byte        	=0		\b256
->1		byte        	!0		\b%d
+>1		ubyte        	!0		\b%d
 # number of colors in palette
 >2		ubyte		!0		\b, %d colors
 # reserved 0 FFh
