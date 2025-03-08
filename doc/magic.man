@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.111 2025/02/15 20:00:57 christos Exp $
-.Dd February 15, 2025
+.\" $File: magic.man,v 1.112 2025/03/08 17:58:31 christos Exp $
+.Dd March 8, 2025
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -86,17 +86,22 @@ Use upper case insensitive matching: upper case
 characters in the magic match both lower and upper case characters in the
 target, whereas lower case characters in the magic only match upper case
 characters in the target.
+(not valid for regex)
 .It c
 Use lower case insensitive matching: lower case
 characters in the magic match both lower and upper case characters in the
 target, whereas upper case characters in the magic only match upper case
 characters in the target.
+(not valid for regex)
 To do a complete case insensitive match, specify both
 .Dq c
 and
 .Dq C .
 .It f
 Require that the matched string is a full word, not a partial word match.
+.It s
+Don't include the match length in the offset computation.
+(only valid for search and regex)
 .It T
 Trim the string, i.e. leading and trailing whitespace
 .It t
@@ -104,6 +109,7 @@ Force text file test.
 .It W
 Compact whitespace in the target, which must
 contain at least one whitespace character.
+(not valid for regex)
 If the magic has
 .Dv n
 consecutive blanks, the target needs at least
@@ -112,6 +118,7 @@ consecutive blanks to match.
 .It w
 Treat every blank in the magic as an optional blank.
 is deleted before the string is printed.
+(not valid for regex)
 .El
 .It Dv pstring
 A Pascal-style string where the first byte/short/int is interpreted as the
