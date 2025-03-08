@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.210 2025/03/03 17:02:02 christos Exp $
+# $File: msdos,v 1.211 2025/03/08 17:37:06 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -24,9 +24,9 @@
 # OS/2 batch files are REXX. the second regex is a bit generic, oh well
 # the matched commands seem to be common in REXX and uncommon elsewhere
 100	search/0xffff   rxfuncadd
->100	regex/c =^[\ \t]{0,10}call[\ \t]{1,10}rxfunc	OS/2 REXX batch file text
+>100	regex	=^[\ \t]{0,10}call[\ \t]{1,10}rxfunc	OS/2 REXX batch file text
 100	search/0xffff   say
->100	regex/c =^[\ \t]{0,10}say\ ['"]			OS/2 REXX batch file text
+>100	regex/	=^[\ \t]{0,10}say\ ['"]			OS/2 REXX batch file text
 
 
 # Tests for various EXE types.
@@ -510,7 +510,7 @@
 >>>>>>>(0x3c.l+0x2a)	default		x
 # Binaries with KERNEL, USER or GDI import library are for Windows
 # FIXME: names are prefixed by its length, but regex type does not support binary bytes
->>>>>>>>&(&0.s-0x29)	regex/512/C	KERNEL|USER|GDI for MS Windows 1.x/2.x
+>>>>>>>>&(&0.s-0x29)	regex/512	KERNEL|USER|GDI for MS Windows 1.x/2.x
 >>>>>>>>>(0x3c.l+0x37)	byte&0x04	0	(real mode only)
 >>>>>>>>>(0x3c.l+0x37)	byte&0x04	!0	(real+protected mode)
 # Binaries without any of those import library can be for any OS

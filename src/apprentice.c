@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.364 2025/01/28 13:05:55 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.365 2025/03/08 17:37:06 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1782,6 +1782,16 @@ string_modifier_check(struct magic_set *ms, struct magic *m)
 		if ((m->str_flags & STRING_COMPACT_OPTIONAL_WHITESPACE) != 0) {
 			file_magwarn(ms, "'/%c' not allowed on regex\n",
 			    CHAR_COMPACT_OPTIONAL_WHITESPACE);
+			return -1;
+		}
+		if ((m->str_flags & STRING_IGNORE_LOWERCASE) != 0) {
+			file_magwarn(ms, "'/%c' not allowed on regex\n",
+			    CHAR_IGNORE_LOWERCASE);
+			return -1;
+		}
+		if ((m->str_flags & STRING_IGNORE_UPPERCASE) != 0) {
+			file_magwarn(ms, "'/%c' not allowed on regex\n",
+			    CHAR_IGNORE_UPPERCASE);
 			return -1;
 		}
 		break;

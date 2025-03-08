@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.35 2024/11/09 23:04:46 christos Exp $
+# $File: games,v 1.36 2025/03/08 17:37:06 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -245,14 +245,14 @@
 # Type:	SGF Smart Game Format
 # URL:	https://www.red-bean.com/sgf/
 # From:	Eduardo Sabbatella <eduardo_sabbatella@yahoo.com.ar>
-2	regex/c	\\(;.*GM\\[[0-9]{1,2}\\]	Smart Game Format
->2	regex/c	GM\\[1\\]			- Go Game
->2	regex/c	GM\\[6\\]			- BackGammon Game
->2	regex/c	GM\\[11\\]			- Hex Game
->2	regex/c	GM\\[18\\]			- Amazons Game
->2	regex/c	GM\\[19\\]			- Octi Game
->2	regex/c	GM\\[20\\]			- Gess Game
->2	regex/c	GM\\[21\\]			- twix Game
+2	regex	\\(;.*GM\\[[0-9]{1,2}\\]	Smart Game Format
+>2	regex	GM\\[1\\]			- Go Game
+>2	regex	GM\\[6\\]			- BackGammon Game
+>2	regex	GM\\[11\\]			- Hex Game
+>2	regex	GM\\[18\\]			- Amazons Game
+>2	regex	GM\\[19\\]			- Octi Game
+>2	regex	GM\\[20\\]			- Gess Game
+>2	regex	GM\\[21\\]			- twix Game
 
 # Epic Games/Unreal Engine Package
 # URL: https://docs.unrealengine.com/udk/Three/ContentCooking.html
@@ -436,7 +436,7 @@
 0	uleshort	0x0469    	GTA2 binary mission script (SCR), Industrial area (bil)
 
 0	string   	v9.6\0\0 	GTA2 replay file (REP),
->8	regex/30c	[a-z0-9:\ ]+\0\0	created on %s
+>8	regex/30	[a-z0-9:\ ]+\0\0	created on %s
 
 # GTA 3D-Era (III/VC/SA/LCS/VCS) - used by the RenderWare engine by Criterion Games
 
