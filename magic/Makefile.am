@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.196 2025/03/10 20:12:02 christos Exp $
+# $File: Makefile.am,v 1.197 2025/03/10 21:02:05 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -41,6 +41,7 @@ $(MAGIC_FRAGMENT_DIR)/basis \
 $(MAGIC_FRAGMENT_DIR)/beetle \
 $(MAGIC_FRAGMENT_DIR)/ber \
 $(MAGIC_FRAGMENT_DIR)/bflt \
+$(MAGIC_FRAGMENT_DIR)/bgcode \
 $(MAGIC_FRAGMENT_DIR)/bhl \
 $(MAGIC_FRAGMENT_DIR)/bioinformatics \
 $(MAGIC_FRAGMENT_DIR)/biosig \
