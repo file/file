@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.165 2024/09/01 15:51:51 christos Exp $
+# $File: filesystems,v 1.166 2025/03/10 20:09:30 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2607,7 +2607,7 @@
 >12	use next
 
 # bcachefs
-# From: Thomas Weiﬂschuh <thomas@t-8ch.de>
+# From: Thomas Weissschuh <thomas@t-8ch.de>
 
 0	name	bcachefs-uuid
 >0	ubelong		x	\b%08x

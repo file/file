@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.211 2025/03/08 17:37:06 christos Exp $
+# $File: msdos,v 1.212 2025/03/10 20:09:30 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -2523,7 +2523,7 @@
 # URL:		https://en.wikipedia.org/wiki/Microsoft_OneNote#File_format
 #		http://fileformats.archiveteam.org/wiki/OneNote
 # Reference:	https://mark0.net/download/triddefs_xml.7z/defs/o/onepkg.trid.xml
-# 1st member name like: "Class Notes.one" "test-onenote.one" "Open Notebook.onetoc2" "Editor Öffnen.onetoc2"
+# 1st member name like: "Class Notes.one" "test-onenote.one" "Open Notebook.onetoc2" "Editor offnen.onetoc2"
 >>>>>&0	string/c	one		\b, OneNote Package
 !:mime	application/msonenote
 !:ext	onepkg

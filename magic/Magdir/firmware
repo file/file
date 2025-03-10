@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.14 2025/01/25 16:20:34 christos Exp $
+# $File: firmware,v 1.15 2025/03/10 20:09:30 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -174,7 +174,7 @@
 # Reference:	http://www.piclist.com/techref/fileext/hex/intel.htm
 #		http://mark0.net/download/triddefs_xml.7z/defs/h/hex-intel.trid.xml
 # From:		Joerg Jenderek
-# Note:		called "Intel Hexadecimal object format" by TrID, "Intel® hexadecimal object file" on Linux
+# Note:		called "Intel Hexadecimal object format" by TrID, "Intel(R) hexadecimal object file" on Linux
 #		and "Intel HEX binary data" by Notepad++
 # look for start code; 1 character, an ASCII colon ':'; all characters preceding this symbol should be ignored
 0	ubyte		0x3A
