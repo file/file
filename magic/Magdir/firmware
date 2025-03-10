@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: firmware,v 1.15 2025/03/10 20:09:30 christos Exp $
+# $File: firmware,v 1.16 2025/03/10 20:54:24 christos Exp $
 # firmware:  file(1) magic for firmware files
 #
 
@@ -350,3 +350,9 @@
 >>1536	use	toc1-item
 # item 5+
 >32	ulelong	>5	\b, ...
+
+# https://github.com/o-gs/dji-firmware-tools/blob/master/dji_imah_fwsig.py#L404
+0	string		IM*H	DJI firmware update
+>40	string/4	>\0	(auth %s,
+>44	string/4	>\0	enc %s)
+>44	string/4	=\0	no enc)
