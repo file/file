@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.166 2025/03/10 20:09:30 christos Exp $
+# $File: filesystems,v 1.167 2025/03/10 20:51:11 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2654,7 +2654,8 @@
 #>1060		lelong		x		\b, blocks=%d
 #>1064		lelong		x		\b, metadata@%#x
 #>1068		lelong		x		\b, xattr@%#x
->1072		guid		x		\b, uuid=%s
+>1072		guid		x		\b, uuid=
+>1072		use		bcachefs-uuid
 >1088		string		>0		\b, name=%s
 >1104		lelong		>0		\b, incompat:
 >>1104		lelong		&1		LZ4_0PADDING
