@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.109 2024/12/08 19:22:27 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.110 2025/03/20 17:46:50 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -358,7 +358,7 @@ file_fmtdate(char *buf, size_t bsize, uint16_t v)
 		tm.tm_mon = 0;
 	tm.tm_year = (v >> 9) + 80;
 
-	if (strftime(buf, bsize, "%a, %b %d %Y", &tm) == 0)
+	if (strftime(buf, bsize, "%b %d %Y", &tm) == 0)
 		goto out;
 
 	return buf;

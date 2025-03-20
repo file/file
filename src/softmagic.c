@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.353 2024/12/31 19:41:08 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.354 2025/03/20 17:46:50 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1042,6 +1042,14 @@ cvt_flip(int type, int flip)
 		return FILE_LEDOUBLE;
 	case FILE_LEDOUBLE:
 		return FILE_BEDOUBLE;
+	case FILE_BEMSDOSDATE:
+		return FILE_LEMSDOSDATE;
+	case FILE_LEMSDOSDATE:
+		return FILE_BEMSDOSDATE;
+	case FILE_BEMSDOSTIME:
+		return FILE_LEMSDOSTIME;
+	case FILE_LEMSDOSTIME:
+		return FILE_BEMSDOSTIME;
 	default:
 		return type;
 	}
@@ -1166,11 +1174,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		return 1;
 	case FILE_SHORT:
 	case FILE_MSDOSDATE:
-	case FILE_LEMSDOSDATE:
-	case FILE_BEMSDOSDATE:
 	case FILE_MSDOSTIME:
-	case FILE_LEMSDOSTIME:
-	case FILE_BEMSDOSTIME:
 		if (cvt_16(p, m) == -1)
 			goto out;
 		return 1;
@@ -1224,6 +1228,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		return 1;
 	}
 	case FILE_BESHORT:
+	case FILE_BEMSDOSDATE:
+	case FILE_BEMSDOSTIME:
 		p->h = CAST(short, BE16(p->hs));
 		if (cvt_16(p, m) == -1)
 			goto out;
@@ -1244,6 +1250,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 			goto out;
 		return 1;
 	case FILE_LESHORT:
+	case FILE_LEMSDOSDATE:
+	case FILE_LEMSDOSTIME:
 		p->h = CAST(short, LE16(p->hs));
 		if (cvt_16(p, m) == -1)
 			goto out;
