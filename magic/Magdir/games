@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.36 2025/03/08 17:37:06 christos Exp $
+# $File: games,v 1.37 2025/03/21 17:23:12 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -664,3 +664,8 @@
 >122	ubyte		0x01	pcxLib archive
 >>144	uleshort	0	\b, uncompressed
 >>144	uleshort	!0	\b, compressed
+
+# RGSSAD asset archive used in RPG Maker XP, VX and VX Ace
+0	string	RGSSAD\0
+>7	byte	x	RPG Maker RGSSAD asset archive. version %u
+!:ext rgssad/rgss2a/rgss3a
