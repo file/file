@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.212 2025/03/10 20:09:30 christos Exp $
+# $File: msdos,v 1.213 2025/03/23 18:44:01 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -2687,12 +2687,6 @@
 >16	string		x		"%s"
 # next archive member name if more files
 #>>&17	string		>\0		\b, NEXT NAME %-.50s
-
-# InstallShield Cabinet files
-0	string/b	ISc(		InstallShield Cabinet archive data
->5	byte&0xf0	=0x60		version 6,
->5	byte&0xf0	!0x60		version 4/5,
->(12.l+40)	lelong	x		%u files
 
 # Windows CE package files
 0	string/b	MSCE\0\0\0\0	Microsoft WinCE install header

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.209 2024/12/05 19:41:12 christos Exp $
+# $File: archive,v 1.210 2025/03/23 18:44:01 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1231,6 +1231,8 @@
 #>0x200	ubequad	x	\b, at 0x200 %#16.16llx
 # cab_descriptor_size like: 0 (*.cab) BD5 C8B DA5 E2A E36 116C 251D 4DA9 56F0 5CC2 6E4B 777D 779E 1F7C2
 >16	ulelong	!0	\b, descriptor size %#x
+>(12.l+40)      lelong  x               ]b, %u files
+
 # TOP4
 0	string	T4\x1a TOP4 archive data
 # BatComp left out: sig looks like COM executable
