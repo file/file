@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.199 2024/12/31 19:38:03 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.200 2025/03/29 15:16:46 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1724,7 +1724,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 {
 	Elf32_Phdr ph32;
 	Elf64_Phdr ph64;
-	const char *linking_style;
+	const char *str;
 	unsigned char nbuf[NBUFSIZE];
 	char interp[NBUFSIZE];
 	ssize_t bufsize;
@@ -1827,9 +1827,10 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				continue;
 			if (bufsize && nbuf[0]) {
 				nbuf[bufsize - 1] = '\0';
-				memcpy(interp, nbuf, CAST(size_t, bufsize));
+				str = CAST(const char *, nbuf);
 			} else
-				strlcpy(interp, "*empty*", sizeof(interp));
+				str = "*empty*";
+			strlcpy(interp, "*empty*", sizeof(interp));
 			break;
 		case PT_NOTE:
 			if (ms->flags & MAGIC_MIME)
@@ -1859,13 +1860,13 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 		return 0;
 	if (dynamic) {
 		if (pie && need == 0)
-			linking_style = "static-pie";
+			str = "static-pie";
 		else
-			linking_style = "dynamically";
+			str = "dynamically";
 	} else {
-		linking_style = "statically";
+		str = "statically";
 	}
-	if (file_printf(ms, ", %s linked", linking_style) == -1)
+	if (file_printf(ms, ", %s linked", str) == -1)
 		return -1;
 	if (interp[0])
 		if (file_printf(ms, ", interpreter %s", file_printable(ms,
