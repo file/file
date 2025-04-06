@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.200 2025/03/29 15:16:46 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.201 2025/04/06 18:58:24 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -68,8 +68,6 @@ file_private uint64_t getu64(int, uint64_t);
 file_private int
 toomany(struct magic_set *ms, const char *name, uint16_t num)
 {
-	if (ms->flags & MAGIC_MIME)
-		return 1;
 	if (file_printf(ms, ", too many %s (%u)", name, num) == -1)
 		return -1;
 	return 1;
@@ -358,9 +356,6 @@ dophn_core(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 	ssize_t bufsize;
 	off_t ph_off = off, offs;
 	int ph_num = num;
-
-	if (ms->flags & MAGIC_MIME)
-		return 0;
 
 	if (num == 0) {
 		if (file_printf(ms, ", no program header") == -1)
@@ -1425,9 +1420,6 @@ doshn(struct magic_set *ms, int clazz, int swap, int fd, off_t off, int num,
 	char name[50];
 	ssize_t namesize;
 
-	if (ms->flags & MAGIC_MIME)
-		return 0;
-
 	if (num == 0) {
 		if (file_printf(ms, ", no section header") == -1)
 			return -1;
@@ -1817,14 +1809,10 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				if (offset == 0)
 					break;
 			}
-			if (ms->flags & MAGIC_MIME)
-				continue;
 			break;
 
 		case PT_INTERP:
 			need++;
-			if (ms->flags & MAGIC_MIME)
-				continue;
 			if (bufsize && nbuf[0]) {
 				nbuf[bufsize - 1] = '\0';
 				str = CAST(const char *, nbuf);
@@ -1833,8 +1821,6 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			strlcpy(interp, "*empty*", sizeof(interp));
 			break;
 		case PT_NOTE:
-			if (ms->flags & MAGIC_MIME)
-				return 0;
 			/*
 			 * This is a PT_NOTE section; loop through all the notes
 			 * in the section.
@@ -1851,13 +1837,9 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 			}
 			break;
 		default:
-			if (ms->flags & MAGIC_MIME)
-				continue;
 			break;
 		}
 	}
-	if (ms->flags & MAGIC_MIME)
-		return 0;
 	if (dynamic) {
 		if (pie && need == 0)
 			str = "static-pie";
@@ -1897,7 +1879,7 @@ file_tryelf(struct magic_set *ms, const struct buffer *b)
 	Elf64_Ehdr elf64hdr;
 	uint16_t type, phnum, shnum, notecount;
 
-	if (ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION))
+	if (ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION|MAGIC_MIME))
 		return 0;
 	/*
 	 * ELF executables have multiple section headers in arbitrary
@@ -1942,6 +1924,7 @@ file_tryelf(struct magic_set *ms, const struct buffer *b)
 		fsize = SIZE_UNKNOWN;
 
 	clazz = buf[EI_CLASS];
+
 
 	switch (clazz) {
 	case ELFCLASS32:
