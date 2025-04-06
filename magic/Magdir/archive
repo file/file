@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.210 2025/03/23 18:44:01 christos Exp $
+# $File: archive,v 1.211 2025/04/06 20:21:25 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2835,3 +2835,13 @@
 >>27	byte	4	build manifest
 !:mime	application/x-stone-manifest
 !:ext	bin
+
+# * VOS <file_name> <sequential|relative|fixed|stream> <record_size> ,
+# * [encapsulated|not_encapsulated] =
+# * [encoded|not_encoded|seq_encoded|base64_encoded]
+0	string		VOS\040	Stratus OpenVOS EFV archive
+>4	regex	[^[:space:]]+ 	\b, (%s)
+>>&0	regex	[^[:space:]]+	\b, %s
+>>>&0	regex	[^[:space:]]+	\b, record_size=%s
+>>>>&0	regex	[^[:space:]]+	\b, %s
+>>>>>&0	regex	[^[:space:]]+	\b, %s
