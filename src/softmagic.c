@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.354 2025/03/20 17:46:50 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.355 2025/04/07 20:18:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1054,7 +1054,13 @@ cvt_flip(int type, int flip)
 		return type;
 	}
 }
-#define DO_CVT1(fld, type) \
+
+/* X86 INT_MIN / -1 traps */
+#define CHECKOVFL(type, a, b, size, sign) \
+	if (size == 32 && sign && CAST(type, a) == CAST(type, 0x80000000) \
+	    && CAST(type, b) == CAST(type, -1)) \
+		return -1
+#define DO_CVT1(fld, type, size, sign) \
 	if (m->num_mask) \
 		switch (m->mask_op & FILE_OPS_MASK) { \
 		case FILE_OPAND: \
@@ -1076,11 +1082,13 @@ cvt_flip(int type, int flip)
 			p->fld *= CAST(type, m->num_mask); \
 			break; \
 		case FILE_OPDIVIDE: \
+			CHECKOVFL(type, p->fld, m->num_mask, size, sign); \
 			if (CAST(type, m->num_mask) == 0) \
 				return -1; \
 			p->fld /= CAST(type, m->num_mask); \
 			break; \
 		case FILE_OPMODULO: \
+			CHECKOVFL(type, p->fld, m->num_mask, size, sign); \
 			if (CAST(type, m->num_mask) == 0) \
 				return -1; \
 			p->fld %= CAST(type, m->num_mask); \
@@ -1091,9 +1099,9 @@ cvt_flip(int type, int flip)
 
 #define DO_CVT(m, fld, size) \
 	if ((m)->flag & UNSIGNED) { \
-		DO_CVT1(fld, uint##size##_t); \
+		DO_CVT1(fld, uint##size##_t, size, 0); \
 	} else { \
-		DO_CVT1(s##fld, int##size##_t); \
+		DO_CVT1(s##fld, int##size##_t, size, 1); \
 	}
 
 file_no_overflow file_private int
@@ -1320,7 +1328,7 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 		return 0;
 	}
 out:
-	file_magerror(ms, "zerodivide in mconvert()");
+	file_magerror(ms, "zerodivide/overflow/underflow in mconvert()");
 	return 0;
 }
 
