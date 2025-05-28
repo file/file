@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.357 2025/05/28 19:22:22 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.358 2025/05/28 19:59:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1059,6 +1059,9 @@ cvt_flip(int type, int flip)
 /* X86 INT_MIN / -1 traps */
 #define CHECKOVFL(type, a, b, size, sign) \
 	if (size == 32 && sign && CAST(type, a) == CAST(type, 0x80000000) \
+	    && CAST(type, b) == CAST(type, -1)) \
+		return -1; \
+	if (size == 64 && sign && CAST(type, a) == CAST(type, 0x8000000000000000LL) \
 	    && CAST(type, b) == CAST(type, -1)) \
 		return -1
 #define DO_CVT1(fld, type, size, sign) \
