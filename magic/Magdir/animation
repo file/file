@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.100 2025/05/28 19:51:27 christos Exp $
+# $File: animation,v 1.101 2025/05/28 19:54:08 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1251,15 +1251,3 @@
 >14	belong	!0	\b, XOR obfuscation key %d
 !:mime	application/x-cubism-archive
 !:ext	cmo3/can3
-
-0		byte 0x47
->188		byte 0x47
->>376		byte 0x47
->>>564		byte 0x47
->>>>752		byte 0x47
->>>>>940	byte 0x47
->>>>>>1128	byte 0x47
->>>>>>>1316	byte 0x47
->>>>>>>>1504	byte 0x47
->>>>>>>>>1692	byte 0x47
->>>>>>>>>>1880	byte 0x47 MPEG-2 Transport Stream
