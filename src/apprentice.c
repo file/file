@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.365 2025/03/08 17:37:06 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.366 2025/05/28 15:54:54 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3670,15 +3670,14 @@ file_varint2uintmax_t(const unsigned char *us, int t, size_t *l)
 file_private void
 bs1(struct magic *m)
 {
-	m->cont_level = swap2(m->cont_level);
+	m->flag = swap2(m->flag);
 	m->offset = swap4(CAST(uint32_t, m->offset));
 	m->in_offset = swap4(CAST(uint32_t, m->in_offset));
 	m->lineno = swap4(CAST(uint32_t, m->lineno));
 	if (IS_STRING(m->type)) {
 		m->str_range = swap4(m->str_range);
 		m->str_flags = swap4(m->str_flags);
-	}
-	else {
+	} else {
 		m->value.q = swap8(m->value.q);
 		m->num_mask = swap8(m->num_mask);
 	}
