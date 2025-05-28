@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.211 2025/04/06 20:21:25 christos Exp $
+# $File: archive,v 1.212 2025/05/28 15:03:34 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1808,6 +1808,40 @@
 >8	use		zipcompression
 >0x161	string		WINZIP		\b, WinZIP self-extracting
 
+# Zip archives that can be either APK or JAR. Checks for resources.arsc, classes.dex, etc.
+0	name	apk_or_jar
+# Contains resources.arsc (near the end, in the central directory)
+>-512	search	resources.arsc	Android package (APK), with MANIFEST.MF and resources.arsc
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>-22	string	PK\005\006
+>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+>-512	default x
+# Contains classes.dex (near the end, in the central directory)
+>>-512	search	classes.dex	Android package (APK), with MANIFEST.MF and classes.dex
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>-22	string	PK\005\006
+>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+>>-512	default x
+# Contains lib/armeabi (near the end, in the central directory)
+>>>-512	search	lib/armeabi	Android package (APK), with MANIFEST.MF and armeabi lib
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>>-22	string	PK\005\006
+>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+>>>-512	default x
+# Contains drawables (near the end, in the central directory)
+>>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>>>-22	string	PK\005\006
+>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+# It may or may not be an APK file, but it's definitely a Java JAR file
+>>>>-512	default x	Java archive data (JAR)
+!:mime	application/java-archive
+!:ext	jar
+
 0	string		PK\003\004
 !:strength +1
 # IOS/IPadOS IPA file (Zip archive)
@@ -1843,40 +1877,14 @@
 >>>-22	string	PK\005\006
 >>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 # Starts with META-INF/MANIFEST.MF (file name length = 20)
-# NB: checks for resources.arsc, classes.dex, etc. as well to avoid matching JAR files
 >26	uleshort	20
 >>30	string	META-INF/MANIFEST.MF
-# Contains resources.arsc (near the end, in the central directory)
->>>-512	search	resources.arsc	Android package (APK), with MANIFEST.MF and resources.arsc
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>-22	string	PK\005\006
->>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
->>>-512	default x
-# Contains classes.dex (near the end, in the central directory)
->>>>-512	search	classes.dex	Android package (APK), with MANIFEST.MF and classes.dex
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>>-22	string	PK\005\006
->>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
->>>>-512	default x
-# Contains lib/armeabi (near the end, in the central directory)
->>>>>-512	search	lib/armeabi	Android package (APK), with MANIFEST.MF and armeabi lib
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>>>-22	string	PK\005\006
->>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
->>>>>-512	default x
-# Contains drawables (near the end, in the central directory)
->>>>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>>>>-22	string	PK\005\006
->>>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
-# It may or may not be an APK file, but it's definitely a Java JAR file
->>>>>>-512	default x	Java archive data (JAR)
-!:mime	application/java-archive
-!:ext	jar
+>>0	use		apk_or_jar
+# Starts with META-INF/ folder (file name length = 9)
+>26	uleshort	9
+>>30	string	META-INF/
+>>0	use		apk_or_jar
+
 # Starts with zipflinger virtual entry (28 + 104 = 132 bytes)
 # See https://github.com/obfusk/apksigcopier/blob/666f5b7/apksigcopier/__init__.py#L230
 >4	string	\x00\x00\x00\x00\x00\x00
