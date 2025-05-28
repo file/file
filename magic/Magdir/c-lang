@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: c-lang,v 1.34 2025/03/10 20:22:03 christos Exp $
+# $File: c-lang,v 1.35 2025/05/28 19:44:53 christos Exp $
 # c-lang:  file(1) magic for C and related languages programs
 #
 # The strength is to beat standard HTML
@@ -96,6 +96,23 @@
 >0	regex	\^#import[[:space:]]+["<]	Objective-C source text
 !:strength + 25
 !:mime	text/x-objective-c
+
+
+# Typst
+# https://github.com/typst/typst
+0 regex \^[[:space:]]*#(import|include)[[:space:]]+\"@[[:alnum:]\-]+    Typst source text
+!:strength + 10
+!:mime	text/vnd.typst
+!:ext typ
+0 regex \^[[:space:]]*#(import|include)[[:space:]]+\"[[:alnum:]]+.typ\"    Typst source text
+!:strength + 10
+!:mime	text/vnd.typst
+!:ext typ
+0 regex \^[[:space:]]*#(set|show|let|if)    Typst source text
+!:strength + 10
+!:mime	text/vnd.typst
+!:ext typ
+
 
 # From: Mikhail Teterin <mi@aldan.algebra.com>
 0	string		cscope		cscope reference data
