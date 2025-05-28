@@ -1,4 +1,10 @@
 
+2025-05-28  12:50  Christos Zoulas <christos@zoulas.com>
+
+	* PR/655: jsummers: Obey str_flags in strings like we do for search
+	  and regex
+	* PR/659: Pitzl: Apply MAGIC_CONTINUE to annotations; i.e. print
+	  only the first, unless -k is specified.
 	
 2024-12-19  14:44  Christos Zoulas <christos@zoulas.com>
 
