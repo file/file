@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.355 2025/04/07 20:18:59 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.356 2025/05/28 14:30:47 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -414,6 +414,7 @@ flush:
 					*need_separator = 1;
 					*printed_something = 1;
 					*returnval = 1;
+					*firstline = 0;
 					return e;
 				}
 				if (*m->desc) {
@@ -2507,6 +2508,8 @@ file_private int
 handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 {
 	if ((ms->flags & MAGIC_APPLE) && m->apple[0]) {
+		if (!firstline && !(ms->flags & MAGIC_CONTINUE))
+			return 1;
 		if (print_sep(ms, firstline) == -1)
 			return -1;
 		if (file_printf(ms, "%.8s", m->apple) == -1)
@@ -2514,6 +2517,8 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 		return 1;
 	}
 	if ((ms->flags & MAGIC_EXTENSION) && m->ext[0]) {
+		if (!firstline && !(ms->flags & MAGIC_CONTINUE))
+			return 1;
 		if (print_sep(ms, firstline) == -1)
 			return -1;
 		if (file_printf(ms, "%s", m->ext) == -1)
@@ -2523,6 +2528,8 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 	if ((ms->flags & MAGIC_MIME_TYPE) && m->mimetype[0]) {
 		char buf[1024];
 		const char *p;
+		if (!firstline && !(ms->flags & MAGIC_CONTINUE))
+			return 1;
 		if (print_sep(ms, firstline) == -1)
 			return -1;
 		if (varexpand(ms, buf, sizeof(buf), m->mimetype) == -1)
