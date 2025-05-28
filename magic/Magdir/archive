@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.212 2025/05/28 15:03:34 christos Exp $
+# $File: archive,v 1.213 2025/05/28 17:51:25 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2853,3 +2853,7 @@
 >>>&0	regex	[^[:space:]]+	\b, record_size=%s
 >>>>&0	regex	[^[:space:]]+	\b, %s
 >>>>>&0	regex	[^[:space:]]+	\b, %s
+
+
+# https://www.vm.ibm.com/devpages/bkw/vmarc.html magic in EBCDIC
+0	string	\x7a\xc3\xc6\xc6\x40\x40\x40\x40	VM Archive
