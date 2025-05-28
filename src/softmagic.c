@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.356 2025/05/28 14:30:47 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.357 2025/05/28 19:22:22 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1558,10 +1558,16 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 			    "u at level %u", o, cont_level);
 			return -1;
 		}
-		if (CAST(size_t, m->offset) > b->elen)
-			return -1;
-		buffer_init(bb, -1, NULL, b->ebuf, b->elen);
-		ms->eoffset = ms->offset = CAST(int32_t, b->elen - m->offset);
+		if (b->fd == -1) {
+			ms->eoffset = ms->offset =
+			    CAST(int32_t, b->flen - m->offset);
+		} else {
+			if (CAST(size_t, m->offset) > b->elen)
+				return -1;
+			buffer_init(bb, -1, NULL, b->ebuf, b->elen);
+			ms->eoffset = ms->offset =
+			    CAST(int32_t, b->elen - m->offset);
+		}
 	} else {
 		offset = m->offset;
 		if ((m->flag & OFFPOSITIVE) || cont_level == 0) {
@@ -1571,7 +1577,8 @@ normal:
 			ms->offset = offset;
 			ms->eoffset = 0;
 		} else {
-			ms->offset = ms->eoffset + offset;
+			if (b->fd != -1)
+				ms->offset = ms->eoffset + offset;
 		}
 	}
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
