@@ -1,4 +1,9 @@
 
+2025-05-28  15:20  Christos Zoulas <christos@zoulas.com>
+
+	PR/622: Odd_Bloke: Handle negative offsets in file_buffer(),
+	when fd is not available.
+
 2025-05-28  12:50  Christos Zoulas <christos@zoulas.com>
 
 	* PR/655: jsummers: Obey str_flags in strings like we do for search
