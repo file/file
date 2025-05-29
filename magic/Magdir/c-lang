@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: c-lang,v 1.35 2025/05/28 19:44:53 christos Exp $
+# $File: c-lang,v 1.36 2025/05/29 14:01:32 christos Exp $
 # c-lang:  file(1) magic for C and related languages programs
 #
 # The strength is to beat standard HTML
@@ -100,11 +100,11 @@
 
 # Typst
 # https://github.com/typst/typst
-0 regex \^[[:space:]]*#(import|include)[[:space:]]+\"@[[:alnum:]\-]+    Typst source text
+0 regex \^[[:space:]]*#(import|include)[[:space:]]+"@[[:alnum:]-]+    Typst source text
 !:strength + 10
 !:mime	text/vnd.typst
 !:ext typ
-0 regex \^[[:space:]]*#(import|include)[[:space:]]+\"[[:alnum:]]+.typ\"    Typst source text
+0 regex \^[[:space:]]*#(import|include)[[:space:]]+"[[:alnum:]]+.typ"    Typst source text
 !:strength + 10
 !:mime	text/vnd.typst
 !:ext typ
