@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.367 2025/05/28 16:41:05 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.368 2025/05/29 15:24:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1264,14 +1264,6 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_PSTRING:
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
-		/* Allow text overrides */
-		if (mstart->str_flags & STRING_BINTEST)
-			mstart->flag |= BINTEST;
-		if (mstart->str_flags & STRING_TEXTTEST)
-			mstart->flag |= TEXTTEST;
-		if ((mstart->flag & (TEXTTEST|BINTEST)) == 0)
-			mstart->flag |= TEXTTEST;
-		break;
 	case FILE_REGEX:
 	case FILE_SEARCH:
 		/* Check for override */
@@ -1282,6 +1274,16 @@ set_test_type(struct magic *mstart, struct magic *m)
 
 		if (mstart->flag & (TEXTTEST|BINTEST))
 			break;
+
+		/*
+		 * XXX: Compatibility: For string types assume binary match
+		 * in reality it is better in the long term to change all
+		 * the magic to be string/b where appropriate
+		 */
+		if (m->type != FILE_REGEX && m->type != FILE_SEARCH) {
+			mstart->flag |= BINTEST;
+			break;
+		}
 
 		/* binary test if pattern is not text */
 		if (file_looks_utf8(m->value.us, CAST(size_t, m->vallen), NULL,
