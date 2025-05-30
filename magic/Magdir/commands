@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.80 2025/05/30 13:53:42 christos Exp $
+# $File: commands,v 1.81 2025/05/30 13:55:02 christos Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
@@ -119,6 +119,10 @@
 !:mime  text/x-tcl
 
 0	search/1/fwt	#!\ /usr/bin/texlua	LuaTex script text executable
+!:mime	text/x-luatex
+0	search/1/fwt	#!\ /usr/bin/env\ texlua	LuaTex script text executable
+!:mime	text/x-luatex
+0	search/1/fwt	#!\ /bin/env\ texlua	LuaTex script text executable
 !:mime	text/x-luatex
 
 0	search/1/fwt	#!\ /usr/bin/luatex	LuaTex script text executable
