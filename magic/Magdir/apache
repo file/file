@@ -1,11 +1,10 @@
 
 #------------------------------------------------------------------------------
-# $File: apache,v 1.2 2025/01/30 18:51:01 christos Exp $
+# $File: apache,v 1.3 2025/05/30 13:25:13 christos Exp $
 # apache: file(1) magic for Apache Big Data formats
 
 # Avro files
-0	string		Obj		Apache Avro
->3	byte		x		version %d
+0	string		Obj\001		Apache Avro, version 1
 
 # ORC files
 # Important information is in file footer, which we can't index to :(
