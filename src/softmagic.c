@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.355 2025/04/07 20:18:59 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.358 2025/05/28 19:59:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -414,6 +414,7 @@ flush:
 					*need_separator = 1;
 					*printed_something = 1;
 					*returnval = 1;
+					*firstline = 0;
 					return e;
 				}
 				if (*m->desc) {
@@ -1059,6 +1060,9 @@ cvt_flip(int type, int flip)
 #define CHECKOVFL(type, a, b, size, sign) \
 	if (size == 32 && sign && CAST(type, a) == CAST(type, 0x80000000) \
 	    && CAST(type, b) == CAST(type, -1)) \
+		return -1; \
+	if (size == 64 && sign && CAST(type, a) == CAST(type, 0x8000000000000000LL) \
+	    && CAST(type, b) == CAST(type, -1)) \
 		return -1
 #define DO_CVT1(fld, type, size, sign) \
 	if (m->num_mask) \
@@ -1557,10 +1561,16 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 			    "u at level %u", o, cont_level);
 			return -1;
 		}
-		if (CAST(size_t, m->offset) > b->elen)
-			return -1;
-		buffer_init(bb, -1, NULL, b->ebuf, b->elen);
-		ms->eoffset = ms->offset = CAST(int32_t, b->elen - m->offset);
+		if (b->fd == -1) {
+			ms->eoffset = ms->offset =
+			    CAST(int32_t, b->flen - m->offset);
+		} else {
+			if (CAST(size_t, m->offset) > b->elen)
+				return -1;
+			buffer_init(bb, -1, NULL, b->ebuf, b->elen);
+			ms->eoffset = ms->offset =
+			    CAST(int32_t, b->elen - m->offset);
+		}
 	} else {
 		offset = m->offset;
 		if ((m->flag & OFFPOSITIVE) || cont_level == 0) {
@@ -1570,7 +1580,8 @@ normal:
 			ms->offset = offset;
 			ms->eoffset = 0;
 		} else {
-			ms->offset = ms->eoffset + offset;
+			if (b->fd != -1)
+				ms->offset = ms->eoffset + offset;
 		}
 	}
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
@@ -2507,6 +2518,8 @@ file_private int
 handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 {
 	if ((ms->flags & MAGIC_APPLE) && m->apple[0]) {
+		if (!firstline && !(ms->flags & MAGIC_CONTINUE))
+			return 1;
 		if (print_sep(ms, firstline) == -1)
 			return -1;
 		if (file_printf(ms, "%.8s", m->apple) == -1)
@@ -2514,6 +2527,8 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 		return 1;
 	}
 	if ((ms->flags & MAGIC_EXTENSION) && m->ext[0]) {
+		if (!firstline && !(ms->flags & MAGIC_CONTINUE))
+			return 1;
 		if (print_sep(ms, firstline) == -1)
 			return -1;
 		if (file_printf(ms, "%s", m->ext) == -1)
@@ -2523,6 +2538,8 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 	if ((ms->flags & MAGIC_MIME_TYPE) && m->mimetype[0]) {
 		char buf[1024];
 		const char *p;
+		if (!firstline && !(ms->flags & MAGIC_CONTINUE))
+			return 1;
 		if (print_sep(ms, firstline) == -1)
 			return -1;
 		if (varexpand(ms, buf, sizeof(buf), m->mimetype) == -1)

@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.365 2025/03/08 17:37:06 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.368 2025/05/29 15:24:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1264,12 +1264,6 @@ set_test_type(struct magic *mstart, struct magic *m)
 	case FILE_PSTRING:
 	case FILE_BESTRING16:
 	case FILE_LESTRING16:
-		/* Allow text overrides */
-		if (mstart->str_flags & STRING_TEXTTEST)
-			mstart->flag |= TEXTTEST;
-		else
-			mstart->flag |= BINTEST;
-		break;
 	case FILE_REGEX:
 	case FILE_SEARCH:
 		/* Check for override */
@@ -1280,6 +1274,16 @@ set_test_type(struct magic *mstart, struct magic *m)
 
 		if (mstart->flag & (TEXTTEST|BINTEST))
 			break;
+
+		/*
+		 * XXX: Compatibility: For string types assume binary match
+		 * in reality it is better in the long term to change all
+		 * the magic to be string/b where appropriate
+		 */
+		if (m->type != FILE_REGEX && m->type != FILE_SEARCH) {
+			mstart->flag |= BINTEST;
+			break;
+		}
 
 		/* binary test if pattern is not text */
 		if (file_looks_utf8(m->value.us, CAST(size_t, m->vallen), NULL,
@@ -3670,15 +3674,14 @@ file_varint2uintmax_t(const unsigned char *us, int t, size_t *l)
 file_private void
 bs1(struct magic *m)
 {
-	m->cont_level = swap2(m->cont_level);
+	m->flag = swap2(m->flag);
 	m->offset = swap4(CAST(uint32_t, m->offset));
 	m->in_offset = swap4(CAST(uint32_t, m->in_offset));
 	m->lineno = swap4(CAST(uint32_t, m->lineno));
 	if (IS_STRING(m->type)) {
 		m->str_range = swap4(m->str_range);
 		m->str_flags = swap4(m->str_flags);
-	}
-	else {
+	} else {
 		m->value.q = swap8(m->value.q);
 		m->num_mask = swap8(m->num_mask);
 	}

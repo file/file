@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: linux,v 1.93 2025/04/06 18:43:11 christos Exp $
+# $File: linux,v 1.94 2025/05/27 18:44:53 christos Exp $
 # linux:  file(1) magic for Linux files
 #
 # Values for Linux/i386 binaries, from Daniel Quinlan <quinlan@yggdrasil.com>
@@ -458,7 +458,7 @@
 # Created by: Jan Kaluza <jkaluza@redhat.com>
 # Update: Jens Remus <jremus@linux.ibm.com> based on Vasily Gorbik <gor@linux.ibm.com>
 # Linux kernel: arch/s390/boot/head.S and arch/s390/include/asm/setup.h
-8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux kernel S390 boot executable Image
+8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux S390
 >0x00010000 search/b/4096 \x00\x0a\x00\x00\x8b\xad\xcc\xcc
 # 64bit
 >>&0 string \xc1\x00\xef\xe3\xf0\x68\x00\x00 Z10 64bit kernel

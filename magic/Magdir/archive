@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.211 2025/04/06 20:21:25 christos Exp $
+# $File: archive,v 1.214 2025/05/31 14:57:43 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -689,7 +689,7 @@
 # TODO: idarc says "bytes 0-2 == bytes 3-5"
 # TTComp
 # URL: http://fileformats.archiveteam.org/wiki/TTComp_archive
-# Update: Joerg Jenderek
+# Update: Joerg Jenderek, A Iooss
 # GRR: line below is too general as it matches also Panorama database "TCDB 2003-10 demo.pan", others
 0	string	\0\6
 # look for first keyword of Panorama database *.pan
@@ -735,8 +735,27 @@
 #>-4	ubelong		x	LAST_BYTES=%8.8x
 >-4	ubelong&0x00FFffFF	!0
 >>0	use	ttcomp
-#	display information of TTComp archive
+# match end of TTComp to reduce false positives
+# see https://mark0.net/forum/index.php?topic=848
 0	name	ttcomp
+>-2	string	\x01\xff
+>>0	use	ttcomp-display
+>-2	string	\x80\x7f
+>>0	use	ttcomp-display
+>-2	string	\xc0\x3f
+>>0	use	ttcomp-display
+>-2	string	\xe0\x1f
+>>0	use	ttcomp-display
+>-2	string	\xf0\x0f
+>>0	use	ttcomp-display
+>-2	string	\xf8\x07
+>>0	use	ttcomp-display
+>-2	string	\xfc\x03
+>>0	use	ttcomp-display
+>-2	string	\xfe\x01
+>>0	use	ttcomp-display
+# display information of TTComp archive
+0	name	ttcomp-display
 # (version 5.25) labeled the entry as "TTComp archive data"
 >0	ubyte	x	TTComp archive data
 !:mime	application/x-compress-ttcomp
@@ -746,23 +765,10 @@
 >0	ubyte	0	\b, binary
 >0	ubyte	1	\b, ASCII
 # size of the dictionary:  4~1024 bytes 5~2048 bytes 6~4096 bytes 
->1	ubyte	4	\b, 1K
->1	ubyte	5	\b, 2K
->1	ubyte	6	\b, 4K
->1	ubyte	x	dictionary
-#	https://mark0.net/forum/index.php?topic=848
-# last 3 bytes probably have only 8 possible bit sequences
-# xxxxxxxx 0000000x 11111111	____FFh
-# xxxxxxxx 10000000 01111111	__807Fh	
-# 0xxxxxxx 11000000 00111111	__C03Fh
-# 00xxxxxx 11100000 00011111	__E01Fh
-# 000xxxxx 11110000 00001111	__F00Fh
-# 0000xxxx 11111000 00000111	__F807h
-# 00000xxx 11111100 00000011	__FC03h
-# 000000xx 11111110 00000001	__FE01h
-# but for quickgif.__d 0A7DD4h
-#>-3	ubyte		x	\b, last 3 bytes 0x%2.2x
-#>-2	ubeshort	x	\b%4.4x
+>1	ubyte	4	\b, 1K dictionary
+>1	ubyte	5	\b, 2K dictionary
+>1	ubyte	6	\b, 4K dictionary
+
 # From:		Joerg Jenderek
 # URL:		https://en.wikipedia.org/wiki/Disk_Copy
 # reference:	http://nulib.com/library/FTN.e00005.htm
@@ -1808,6 +1814,40 @@
 >8	use		zipcompression
 >0x161	string		WINZIP		\b, WinZIP self-extracting
 
+# Zip archives that can be either APK or JAR. Checks for resources.arsc, classes.dex, etc.
+0	name	apk_or_jar
+# Contains resources.arsc (near the end, in the central directory)
+>-512	search	resources.arsc	Android package (APK), with MANIFEST.MF and resources.arsc
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>-22	string	PK\005\006
+>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+>-512	default x
+# Contains classes.dex (near the end, in the central directory)
+>>-512	search	classes.dex	Android package (APK), with MANIFEST.MF and classes.dex
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>-22	string	PK\005\006
+>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+>>-512	default x
+# Contains lib/armeabi (near the end, in the central directory)
+>>>-512	search	lib/armeabi	Android package (APK), with MANIFEST.MF and armeabi lib
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>>-22	string	PK\005\006
+>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+>>>-512	default x
+# Contains drawables (near the end, in the central directory)
+>>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
+!:mime	application/vnd.android.package-archive
+!:ext	apk
+>>>>>-22	string	PK\005\006
+>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
+# It may or may not be an APK file, but it's definitely a Java JAR file
+>>>>-512	default x	Java archive data (JAR)
+!:mime	application/java-archive
+!:ext	jar
+
 0	string		PK\003\004
 !:strength +1
 # IOS/IPadOS IPA file (Zip archive)
@@ -1843,40 +1883,14 @@
 >>>-22	string	PK\005\006
 >>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
 # Starts with META-INF/MANIFEST.MF (file name length = 20)
-# NB: checks for resources.arsc, classes.dex, etc. as well to avoid matching JAR files
 >26	uleshort	20
 >>30	string	META-INF/MANIFEST.MF
-# Contains resources.arsc (near the end, in the central directory)
->>>-512	search	resources.arsc	Android package (APK), with MANIFEST.MF and resources.arsc
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>-22	string	PK\005\006
->>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
->>>-512	default x
-# Contains classes.dex (near the end, in the central directory)
->>>>-512	search	classes.dex	Android package (APK), with MANIFEST.MF and classes.dex
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>>-22	string	PK\005\006
->>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
->>>>-512	default x
-# Contains lib/armeabi (near the end, in the central directory)
->>>>>-512	search	lib/armeabi	Android package (APK), with MANIFEST.MF and armeabi lib
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>>>-22	string	PK\005\006
->>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
->>>>>-512	default x
-# Contains drawables (near the end, in the central directory)
->>>>>>-512	search	res/drawable	Android package (APK), with MANIFEST.MF and drawables
-!:mime	application/vnd.android.package-archive
-!:ext	apk
->>>>>>>-22	string	PK\005\006
->>>>>>>>(-6.l-16)	string	APK\x20Sig\x20Block\x2042	\b, with APK Signing Block
-# It may or may not be an APK file, but it's definitely a Java JAR file
->>>>>>-512	default x	Java archive data (JAR)
-!:mime	application/java-archive
-!:ext	jar
+>>0	use		apk_or_jar
+# Starts with META-INF/ folder (file name length = 9)
+>26	uleshort	9
+>>30	string	META-INF/
+>>0	use		apk_or_jar
+
 # Starts with zipflinger virtual entry (28 + 104 = 132 bytes)
 # See https://github.com/obfusk/apksigcopier/blob/666f5b7/apksigcopier/__init__.py#L230
 >4	string	\x00\x00\x00\x00\x00\x00
@@ -2845,3 +2859,7 @@
 >>>&0	regex	[^[:space:]]+	\b, record_size=%s
 >>>>&0	regex	[^[:space:]]+	\b, %s
 >>>>>&0	regex	[^[:space:]]+	\b, %s
+
+
+# https://www.vm.ibm.com/devpages/bkw/vmarc.html magic in EBCDIC
+0	string	\x7a\xc3\xc6\xc6\x40\x40\x40\x40	VM Archive
