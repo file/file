@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.213 2025/05/28 17:51:25 christos Exp $
+# $File: archive,v 1.214 2025/05/31 14:57:43 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -689,7 +689,7 @@
 # TODO: idarc says "bytes 0-2 == bytes 3-5"
 # TTComp
 # URL: http://fileformats.archiveteam.org/wiki/TTComp_archive
-# Update: Joerg Jenderek
+# Update: Joerg Jenderek, A Iooss
 # GRR: line below is too general as it matches also Panorama database "TCDB 2003-10 demo.pan", others
 0	string	\0\6
 # look for first keyword of Panorama database *.pan
@@ -735,8 +735,27 @@
 #>-4	ubelong		x	LAST_BYTES=%8.8x
 >-4	ubelong&0x00FFffFF	!0
 >>0	use	ttcomp
-#	display information of TTComp archive
+# match end of TTComp to reduce false positives
+# see https://mark0.net/forum/index.php?topic=848
 0	name	ttcomp
+>-2	string	\x01\xff
+>>0	use	ttcomp-display
+>-2	string	\x80\x7f
+>>0	use	ttcomp-display
+>-2	string	\xc0\x3f
+>>0	use	ttcomp-display
+>-2	string	\xe0\x1f
+>>0	use	ttcomp-display
+>-2	string	\xf0\x0f
+>>0	use	ttcomp-display
+>-2	string	\xf8\x07
+>>0	use	ttcomp-display
+>-2	string	\xfc\x03
+>>0	use	ttcomp-display
+>-2	string	\xfe\x01
+>>0	use	ttcomp-display
+# display information of TTComp archive
+0	name	ttcomp-display
 # (version 5.25) labeled the entry as "TTComp archive data"
 >0	ubyte	x	TTComp archive data
 !:mime	application/x-compress-ttcomp
@@ -746,23 +765,10 @@
 >0	ubyte	0	\b, binary
 >0	ubyte	1	\b, ASCII
 # size of the dictionary:  4~1024 bytes 5~2048 bytes 6~4096 bytes 
->1	ubyte	4	\b, 1K
->1	ubyte	5	\b, 2K
->1	ubyte	6	\b, 4K
->1	ubyte	x	dictionary
-#	https://mark0.net/forum/index.php?topic=848
-# last 3 bytes probably have only 8 possible bit sequences
-# xxxxxxxx 0000000x 11111111	____FFh
-# xxxxxxxx 10000000 01111111	__807Fh	
-# 0xxxxxxx 11000000 00111111	__C03Fh
-# 00xxxxxx 11100000 00011111	__E01Fh
-# 000xxxxx 11110000 00001111	__F00Fh
-# 0000xxxx 11111000 00000111	__F807h
-# 00000xxx 11111100 00000011	__FC03h
-# 000000xx 11111110 00000001	__FE01h
-# but for quickgif.__d 0A7DD4h
-#>-3	ubyte		x	\b, last 3 bytes 0x%2.2x
-#>-2	ubeshort	x	\b%4.4x
+>1	ubyte	4	\b, 1K dictionary
+>1	ubyte	5	\b, 2K dictionary
+>1	ubyte	6	\b, 4K dictionary
+
 # From:		Joerg Jenderek
 # URL:		https://en.wikipedia.org/wiki/Disk_Copy
 # reference:	http://nulib.com/library/FTN.e00005.htm
