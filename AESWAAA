@@ -1,0 +1,804 @@
+import os
+import time
+import json
+import openai
+import requests
+import speech_recognition as sr
+from pydub import AudioSegment
+from pydub.playback import play
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+import threading
+from datetime import datetime, timedelta
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# --- Configuration ---
+# Make sure to set these environment variables
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "EXAVITQu4vr4xnSDxMaL")  # Default voice ID
+
+if not OPENAI_API_KEY:
+    raise ValueError("Please set OPENAI_API_KEY environment variable")
+if not ELEVENLABS_API_KEY:
+    raise ValueError("Please set ELEVENLABS_API_KEY environment variable")
+
+# Initialize OpenAI client (updated for newer versions)
+client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+SCOPES = [
+    'https://www.googleapis.com/auth/calendar.readonly',
+    'https://www.googleapis.com/auth/gmail.readonly',
+    'https://www.googleapis.com/auth/drive.metadata.readonly',
+    'https://www.googleapis.com/auth/youtube.readonly'
+]
+
+# --- Personality + Prompts ---
+PERSONALITY = (
+    "You are AES, the Artificial Exploration System, created by Jaedyn Johnson, "
+    "owner of Skydyn Industries. AES is a friendly, intelligent personal assistant designed to help "
+    "users explore, navigate, and learn new things while managing their digital world more easily. "
+    "You are helpful, concise, and conversational. Keep responses natural and not overly formal."
+)
+
+class AESAssistant:
+    def __init__(self):
+        self.creds = None
+        self.calendar_service = None
+        self.gmail_service = None
+        self.drive_service = None
+        self.youtube_service = None
+        self.recognizer = sr.Recognizer()
+        self.microphone = sr.Microphone()
+        
+        # Test audio system first
+        self.test_audio_system()
+        
+        # Calibrate microphone for ambient noise
+        with self.microphone as source:
+            print("Calibrating microphone for ambient noise...")
+            self.recognizer.adjust_for_ambient_noise(source)
+        
+        self.setup_google_services()
+
+    def test_audio_system(self):
+        """Test if audio playback is working"""
+        try:
+            print("🔊 Testing audio system...")
+            # Create a simple test tone
+            from pydub.generators import Sine
+            test_tone = Sine(440).to_audio_segment(duration=1000)  # 1 second 440Hz tone
+            play(test_tone)
+            print("✅ Audio system test successful!")
+        except Exception as e:
+            print(f"❌ Audio system test failed: {e}")
+            print("This might explain why vocal output isn't working.")
+
+    def setup_google_services(self):
+        """Authenticate and setup Google services"""
+        try:
+            self.creds = self.google_auth()
+            self.calendar_service = build('calendar', 'v3', credentials=self.creds)
+            self.gmail_service = build('gmail', 'v1', credentials=self.creds)
+            self.drive_service = build('drive', 'v3', credentials=self.creds)
+            # YouTube service is optional
+            try:
+                self.youtube_service = build('youtube', 'v3', credentials=self.creds)
+            except Exception as e:
+                logger.warning(f"YouTube service setup failed: {e}")
+                self.youtube_service = None
+            logger.info("Google services initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to setup Google services: {e}")
+            print("Warning: Google services not available. Some features will be limited.")
+
+    def google_auth(self):
+        """Authenticate with Google services"""
+        creds = None
+        if os.path.exists('token.json'):
+            creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                try:
+                    creds.refresh(requests.Request())
+                except Exception as e:
+                    logger.error(f"Token refresh failed: {e}")
+                    creds = None
+            
+            if not creds:
+                if not os.path.exists('credentials.json'):
+                    raise FileNotFoundError(
+                        "credentials.json not found. Please download it from Google Cloud Console"
+                    )
+                flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+                creds = flow.run_local_server(port=0)
+            
+            # Save credentials for next run
+            with open('token.json', 'w') as token:
+                token.write(creds.to_json())
+        
+        return creds
+
+    def listen(self, timeout=5, phrase_timeout=1):
+        """Listen for voice input with improved error handling"""
+        try:
+            with self.microphone as source:
+                print("🎤 Listening...")
+                # Listen with timeout
+                audio = self.recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_timeout)
+            
+            print("🔄 Transcribing...")
+            text = self.recognizer.recognize_google(audio)
+            print(f"👤 You said: {text}")
+            return text
+            
+        except sr.WaitTimeoutError:
+            print("⏰ Listening timeout - no speech detected")
+            return None
+        except sr.UnknownValueError:
+            print("❓ Could not understand audio")
+            return None
+        except sr.RequestError as e:
+            print(f"❌ Speech recognition error: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error in listen(): {e}")
+            return None
+
+    def chatgpt_response(self, prompt, system_message=None):
+        """Get response from OpenAI GPT with updated API"""
+        try:
+            messages = []
+            if system_message:
+                messages.append({"role": "system", "content": system_message})
+            messages.append({"role": "user", "content": prompt})
+            
+            response = client.chat.completions.create(
+                model="gpt-4",
+                messages=messages,
+                max_tokens=500,
+                temperature=0.7
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            logger.error(f"OpenAI API error: {e}")
+            return "I'm having trouble processing that request right now."
+
+    def reword_for_speech(self, text):
+        """Reword any text through GPT to make it more natural for speech"""
+        try:
+            reword_prompt = (
+                "Reword the following text to be more natural and conversational for spoken delivery. "
+                "Make it sound like AES, a friendly AI assistant, is speaking directly to the user. "
+                "Keep the information accurate but make it flow better when spoken aloud. "
+                "Use contractions, natural pauses, and friendly language:\n\n" + text
+            )
+            
+            response = client.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": PERSONALITY},
+                    {"role": "user", "content": reword_prompt}
+                ],
+                max_tokens=600,
+                temperature=0.7
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            logger.error(f"Reword error: {e}")
+            return text  # Return original if reword fails
+
+    def speak(self, text):
+        """Convert text to speech using ElevenLabs with enhanced debugging"""
+        try:
+            print(f"🔊 Attempting to speak: '{text[:50]}...'")
+            
+            url = f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}"
+            headers = {
+                "xi-api-key": ELEVENLABS_API_KEY,
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "text": text,
+                "voice_settings": {
+                    "stability": 0.5,
+                    "similarity_boost": 0.75,
+                    "style": 0.0,
+                    "use_speaker_boost": True
+                }
+            }
+            
+            print("📡 Making request to ElevenLabs...")
+            response = requests.post(url, headers=headers, json=payload, timeout=30)
+            
+            print(f"📊 ElevenLabs response status: {response.status_code}")
+            
+            if response.status_code == 200:
+                print("✅ Successfully received audio from ElevenLabs")
+                
+                # Save audio file
+                audio_file = "aes_output.mp3"
+                with open(audio_file, "wb") as f:
+                    f.write(response.content)
+                
+                print(f"💾 Audio saved to {audio_file} ({len(response.content)} bytes)")
+                
+                # Verify file exists and has content
+                if os.path.exists(audio_file) and os.path.getsize(audio_file) > 0:
+                    print("🎵 Loading audio file...")
+                    audio = AudioSegment.from_mp3(audio_file)
+                    print(f"🎵 Audio loaded: {len(audio)}ms duration")
+                    
+                    print("🔊 Playing audio...")
+                    play(audio)
+                    print("✅ Audio playback completed")
+                else:
+                    print("❌ Audio file is empty or doesn't exist")
+                
+                # Clean up the audio file
+                try:
+                    os.remove(audio_file)
+                    print("🗑️ Audio file cleaned up")
+                except Exception as cleanup_error:
+                    print(f"⚠️ Couldn't remove audio file: {cleanup_error}")
+            else:
+                print(f"❌ ElevenLabs API Error: {response.status_code}")
+                print(f"❌ Response: {response.text}")
+                print(f"📢 AES (text fallback): {text}")  # Fallback to text output
+                
+        except requests.exceptions.Timeout:
+            print("⏰ ElevenLabs request timed out")
+            print(f"📢 AES (text fallback): {text}")
+        except requests.exceptions.ConnectionError:
+            print("🔌 Connection error to ElevenLabs")
+            print(f"📢 AES (text fallback): {text}")
+        except Exception as e:
+            logger.error(f"TTS error: {e}")
+            print(f"❌ Detailed TTS error: {str(e)}")
+            print(f"📢 AES (text fallback): {text}")  # Fallback to text output
+
+    def test_elevenlabs_connection(self):
+        """Test connection to ElevenLabs API"""
+        try:
+            print("🧪 Testing ElevenLabs connection...")
+            url = "https://api.elevenlabs.io/v1/voices"
+            headers = {"xi-api-key": ELEVENLABS_API_KEY}
+            
+            response = requests.get(url, headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                voices = response.json()
+                print(f"✅ ElevenLabs connection successful! Found {len(voices.get('voices', []))} voices")
+                
+                # Check if our voice ID exists
+                voice_ids = [v['voice_id'] for v in voices.get('voices', [])]
+                if VOICE_ID in voice_ids:
+                    print(f"✅ Voice ID {VOICE_ID} is valid")
+                else:
+                    print(f"⚠️ Voice ID {VOICE_ID} not found. Available voices:")
+                    for voice in voices.get('voices', [])[:5]:  # Show first 5
+                        print(f"   - {voice['name']}: {voice['voice_id']}")
+                
+                return True
+            else:
+                print(f"❌ ElevenLabs connection failed: {response.status_code}")
+                print(f"❌ Response: {response.text}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ ElevenLabs connection test failed: {e}")
+            return False
+
+    def detect_intent(self, text):
+        """Detect user intent from text"""
+        text_lower = text.lower()
+        
+        # Calendar-related intents
+        if any(word in text_lower for word in ["calendar", "schedule", "appointment", "meeting", "event"]):
+            # Check for specific reading requests
+            if any(phrase in text_lower for phrase in ["read", "tell me about", "details", "what's in"]):
+                return "read_calendar"
+            return "calendar"
+        
+        # Email-related intents
+        elif any(word in text_lower for word in ["email", "gmail", "mail", "inbox"]):
+            # Check for specific reading requests
+            if any(phrase in text_lower for phrase in ["read", "open", "tell me about", "what does", "content"]):
+                return "read_email"
+            return "gmail"
+        
+        # Drive-related intents
+        elif any(word in text_lower for word in ["drive", "file", "document", "folder"]):
+            return "drive"
+        
+        # YouTube-related intents
+        elif any(word in text_lower for word in ["youtube", "video", "channel", "subscriber"]):
+            return "youtube"
+        
+        # Time-related intents
+        elif any(word in text_lower for word in ["time", "date", "today", "now"]):
+            return "time"
+        
+        # Test intents
+        elif any(word in text_lower for word in ["test", "check"]):
+            return "test"
+        
+        # Exit intents
+        elif any(word in text_lower for word in ["goodbye", "bye", "exit", "quit", "stop"]):
+            return "exit"
+        
+        # Default to chat
+        else:
+            return "chat"
+
+    def handle_calendar(self):
+        """Get upcoming calendar events"""
+        try:
+            if not self.calendar_service:
+                return "Calendar service is not available."
+            
+            # Get events from now until end of week
+            now = datetime.utcnow().isoformat() + 'Z'
+            week_later = (datetime.utcnow() + timedelta(days=7)).isoformat() + 'Z'
+            
+            events_result = self.calendar_service.events().list(
+                calendarId='primary',
+                timeMin=now,
+                timeMax=week_later,
+                maxResults=10,
+                singleEvents=True,
+                orderBy='startTime'
+            ).execute()
+            
+            events = events_result.get('items', [])
+            
+            if not events:
+                return "You have no upcoming events in the next week."
+            
+            # Store events for potential reading
+            self.recent_events = events
+            
+            response = "Here are your upcoming events:\n"
+            for i, event in enumerate(events[:5]):  # Show first 5
+                start = event['start'].get('dateTime', event['start'].get('date'))
+                summary = event.get('summary', 'No title')
+                
+                # Format the datetime
+                try:
+                    if 'T' in start:
+                        dt = datetime.fromisoformat(start.replace('Z', '+00:00'))
+                        formatted_time = dt.strftime("%I:%M %p on %A, %B %d")
+                    else:
+                        formatted_time = start
+                    response += f"{i+1}. {summary} at {formatted_time}\n"
+                except:
+                    response += f"{i+1}. {summary} at {start}\n"
+            
+            if len(events) > 5:
+                response += f"\n...and {len(events) - 5} more events. Say 'read event number X' to hear details about a specific event."
+            else:
+                response += "\nSay 'read event number X' to hear details about any event."
+            
+            return response.strip()
+            
+        except Exception as e:
+            logger.error(f"Calendar error: {e}")
+            return "I'm having trouble accessing your calendar right now."
+
+    def read_specific_event(self, user_input):
+        """Read details of a specific calendar event"""
+        try:
+            if not hasattr(self, 'recent_events') or not self.recent_events:
+                return "Please ask me to check your calendar first, then I can read specific events to you."
+            
+            # Extract number from user input
+            words = user_input.lower().split()
+            event_number = None
+            
+            for i, word in enumerate(words):
+                if word.isdigit():
+                    event_number = int(word) - 1  # Convert to 0-based index
+                    break
+                elif word in ['first', 'one', '1st']:
+                    event_number = 0
+                elif word in ['second', 'two', '2nd']:
+                    event_number = 1
+                elif word in ['third', 'three', '3rd']:
+                    event_number = 2
+                elif word in ['fourth', 'four', '4th']:
+                    event_number = 3
+                elif word in ['fifth', 'five', '5th']:
+                    event_number = 4
+            
+            if event_number is None or event_number >= len(self.recent_events):
+                return f"Please specify a valid event number between 1 and {len(self.recent_events)}."
+            
+            event = self.recent_events[event_number]
+            
+            # Get detailed event information
+            summary = event.get('summary', 'No title')
+            description = event.get('description', '')
+            location = event.get('location', '')
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            end = event['end'].get('dateTime', event['end'].get('date'))
+            
+            # Format start and end times
+            try:
+                if 'T' in start:
+                    start_dt = datetime.fromisoformat(start.replace('Z', '+00:00'))
+                    end_dt = datetime.fromisoformat(end.replace('Z', '+00:00'))
+                    time_info = f"from {start_dt.strftime('%I:%M %p')} to {end_dt.strftime('%I:%M %p')} on {start_dt.strftime('%A, %B %d')}"
+                else:
+                    time_info = f"on {start}"
+            except:
+                time_info = f"at {start}"
+            
+            # Build detailed response
+            response = f"Event details for '{summary}':\n"
+            response += f"Time: {time_info}\n"
+            
+            if location:
+                response += f"Location: {location}\n"
+            
+            if description:
+                # Limit description length for speech
+                desc_preview = description[:200] + "..." if len(description) > 200 else description
+                response += f"Description: {desc_preview}\n"
+            
+            # Check for attendees
+            attendees = event.get('attendees', [])
+            if attendees:
+                attendee_names = [att.get('email', 'Unknown') for att in attendees[:3]]
+                response += f"Attendees: {', '.join(attendee_names)}"
+                if len(attendees) > 3:
+                    response += f" and {len(attendees) - 3} others"
+                response += "\n"
+            
+            return response.strip()
+            
+        except Exception as e:
+            logger.error(f"Error reading specific event: {e}")
+            return "I had trouble reading that event's details."
+
+    def handle_gmail(self):
+        """Get recent emails"""
+        try:
+            if not self.gmail_service:
+                return "Gmail service is not available."
+            
+            results = self.gmail_service.users().messages().list(
+                userId='me',
+                maxResults=10,
+                q='is:unread'  # Only unread emails
+            ).execute()
+            
+            messages = results.get('messages', [])
+            
+            if not messages:
+                return "You have no unread emails."
+            
+            # Store messages for potential reading
+            self.recent_emails = []
+            
+            response = "Here are your recent unread emails:\n"
+            for i, msg in enumerate(messages[:5]):  # Limit to 5 for display
+                try:
+                    msg_data = self.gmail_service.users().messages().get(
+                        userId='me', 
+                        id=msg['id'],
+                        format='metadata',
+                        metadataHeaders=['From', 'Subject', 'Date']
+                    ).execute()
+                    
+                    # Store full message data for reading
+                    self.recent_emails.append(msg_data)
+                    
+                    headers = msg_data['payload']['headers']
+                    subject = next((h['value'] for h in headers if h['name'] == 'Subject'), "(No subject)")
+                    sender = next((h['value'] for h in headers if h['name'] == 'From'), "Unknown sender")
+                    
+                    # Extract just the email or name from sender
+                    if '<' in sender:
+                        sender_name = sender.split('<')[0].strip()
+                        if not sender_name:
+                            sender_name = sender.split('<')[1].split('>')[0]
+                        sender = sender_name
+                    
+                    response += f"{i+1}. From {sender}: {subject}\n"
+                except Exception as e:
+                    logger.error(f"Error processing email: {e}")
+                    continue
+            
+            if len(messages) > 5:
+                response += f"\n...and {len(messages) - 5} more unread emails. Say 'read email number X' to hear the content of a specific email."
+            else:
+                response += "\nSay 'read email number X' to hear the content of any email."
+            
+            return response.strip()
+            
+        except Exception as e:
+            logger.error(f"Gmail error: {e}")
+            return "I'm having trouble accessing your emails right now."
+
+    def read_specific_email(self, user_input):
+        """Read content of a specific email"""
+        try:
+            if not hasattr(self, 'recent_emails') or not self.recent_emails:
+                return "Please ask me to check your emails first, then I can read specific emails to you."
+            
+            # Extract number from user input
+            words = user_input.lower().split()
+            email_number = None
+            
+            for word in words:
+                if word.isdigit():
+                    email_number = int(word) - 1  # Convert to 0-based index
+                    break
+                elif word in ['first', 'one', '1st']:
+                    email_number = 0
+                elif word in ['second', 'two', '2nd']:
+                    email_number = 1
+                elif word in ['third', 'three', '3rd']:
+                    email_number = 2
+                elif word in ['fourth', 'four', '4th']:
+                    email_number = 3
+                elif word in ['fifth', 'five', '5th']:
+                    email_number = 4
+            
+            if email_number is None or email_number >= len(self.recent_emails):
+                return f"Please specify a valid email number between 1 and {len(self.recent_emails)}."
+            
+            # Get full email content
+            msg_data = self.recent_emails[email_number]
+            msg_id = msg_data['id']
+            
+            # Get full message with body
+            full_msg = self.gmail_service.users().messages().get(
+                userId='me', 
+                id=msg_id,
+                format='full'
+            ).execute()
+            
+            # Extract email details
+            headers = full_msg['payload']['headers']
+            subject = next((h['value'] for h in headers if h['name'] == 'Subject'), "(No subject)")
+            sender = next((h['value'] for h in headers if h['name'] == 'From'), "Unknown sender")
+            date = next((h['value'] for h in headers if h['name'] == 'Date'), "Unknown date")
+            
+            # Clean up sender
+            if '<' in sender:
+                sender_name = sender.split('<')[0].strip()
+                if not sender_name:
+                    sender_name = sender.split('<')[1].split('>')[0]
+                sender = sender_name
+            
+            # Extract body text
+            body = self.extract_email_body(full_msg['payload'])
+            
+            # Limit body length for speech
+            if len(body) > 500:
+                body = body[:500] + "... The email continues, but I've read the first part for you."
+            
+            response = f"Email from {sender}:\n"
+            response += f"Subject: {subject}\n"
+            response += f"Date: {date}\n\n"
+            response += f"Content: {body}"
+            
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error reading specific email: {e}")
+            return "I had trouble reading that email's content."
+
+    def extract_email_body(self, payload):
+        """Extract plain text body from email payload"""
+        try:
+            # Handle multipart messages
+            if 'parts' in payload:
+                for part in payload['parts']:
+                    if part['mimeType'] == 'text/plain':
+                        if 'data' in part['body']:
+                            import base64
+                            body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
+                            return body.strip()
+                    elif part['mimeType'] == 'multipart/alternative':
+                        # Recursively check nested parts
+                        nested_body = self.extract_email_body(part)
+                        if nested_body:
+                            return nested_body
+            
+            # Handle single part messages
+            elif payload['mimeType'] == 'text/plain':
+                if 'data' in payload['body']:
+                    import base64
+                    body = base64.urlsafe_b64decode(payload['body']['data']).decode('utf-8')
+                    return body.strip()
+            
+            return "Unable to extract email content."
+            
+        except Exception as e:
+            logger.error(f"Error extracting email body: {e}")
+            return "Error reading email content."
+
+    def handle_drive(self):
+        """Get recent Drive files"""
+        try:
+            if not self.drive_service:
+                return "Drive service is not available."
+            
+            results = self.drive_service.files().list(
+                pageSize=5,
+                orderBy='modifiedTime desc',
+                fields="files(name, modifiedTime, mimeType)"
+            ).execute()
+            
+            items = results.get('files', [])
+            
+            if not items:
+                return "No recent files found in your Drive."
+            
+            response = "Your recent Drive files:\n"
+            for file in items:
+                name = file['name']
+                modified = file.get('modifiedTime', '')
+                try:
+                    if modified:
+                        dt = datetime.fromisoformat(modified.replace('Z', '+00:00'))
+                        time_str = dt.strftime("%B %d")
+                        response += f"• {name} (modified {time_str})\n"
+                    else:
+                        response += f"• {name}\n"
+                except:
+                    response += f"• {name}\n"
+            
+            return response.strip()
+            
+        except Exception as e:
+            logger.error(f"Drive error: {e}")
+            return "I'm having trouble accessing your Drive right now."
+
+    def handle_youtube(self):
+        """Get YouTube channel info"""
+        try:
+            if not self.youtube_service:
+                return "YouTube service is not available."
+            
+            request = self.youtube_service.channels().list(
+                part="snippet,statistics",
+                mine=True
+            )
+            response = request.execute()
+            
+            if not response.get('items'):
+                return "No YouTube channel found for your account."
+            
+            channel = response['items'][0]
+            stats = channel['statistics']
+            snippet = channel['snippet']
+            
+            subscriber_count = stats.get('subscriberCount', '0')
+            video_count = stats.get('videoCount', '0')
+            channel_name = snippet.get('title', 'Your channel')
+            
+            return f"{channel_name} has {subscriber_count} subscribers and {video_count} videos."
+            
+        except Exception as e:
+            logger.error(f"YouTube error: {e}")
+            return "I'm having trouble accessing your YouTube data right now."
+
+    def handle_time(self):
+        """Get current time and date"""
+        now = datetime.now()
+        return f"It's currently {now.strftime('%I:%M %p on %A, %B %d, %Y')}."
+
+    def handle_test(self):
+        """Handle test requests"""
+        print("🧪 Running comprehensive tests...")
+        
+        # Test ElevenLabs connection
+        elevenlabs_ok = self.test_elevenlabs_connection()
+        
+        if elevenlabs_ok:
+            return "All systems are working correctly! Let me test the vocal output with this message."
+        else:
+            return "There seems to be an issue with the ElevenLabs connection. Check your API key and internet connection."
+
+    def process_request(self, user_input):
+        """Process user request and return response"""
+        if not user_input:
+            return None
+        
+        # Detect intent
+        intent = self.detect_intent(user_input)
+        
+        if intent == "exit":
+            return "Goodbye! Have a great day!"
+        elif intent == "test":
+            return self.handle_test()
+        elif intent == "calendar":
+            return self.handle_calendar()
+        elif intent == "read_calendar":
+            return self.read_specific_event(user_input)
+        elif intent == "gmail":
+            return self.handle_gmail()
+        elif intent == "read_email":
+            return self.read_specific_email(user_input)
+        elif intent == "drive":
+            return self.handle_drive()
+        elif intent == "youtube":
+            return self.handle_youtube()
+        elif intent == "time":
+            return self.handle_time()
+        else:
+            # General chat using GPT
+            return self.chatgpt_response(user_input, PERSONALITY)
+
+    def run(self):
+        """Main assistant loop"""
+        print("🤖 AES Assistant starting up...")
+        print("💡 Say 'goodbye' or 'exit' to quit")
+        print("💡 Say 'test' to run system diagnostics")
+        print("=" * 50)
+        
+        # Test ElevenLabs connection at startup
+        self.test_elevenlabs_connection()
+        
+        # Initial greeting
+        greeting = "Hello! I'm AES, your personal assistant. How can I help you today?"
+        reworded_greeting = self.reword_for_speech(greeting)
+        print(f"🤖 AES: {reworded_greeting}")
+        self.speak(reworded_greeting)
+        
+        while True:
+            try:
+                # Listen for user input
+                user_input = self.listen(timeout=10, phrase_timeout=3)
+                
+                if user_input is None:
+                    continue
+                
+                # Process the request
+                response = self.process_request(user_input)
+                
+                if response:
+                    # Reword ALL responses through GPT for better speech
+                    reworded_response = self.reword_for_speech(response)
+                    print(f"🤖 AES: {reworded_response}")
+                    
+                    # Check for exit
+                    if self.detect_intent(user_input) == "exit":
+                        self.speak(reworded_response)
+                        break
+                    
+                    # Speak the reworded response
+                    self.speak(reworded_response)
+                
+                time.sleep(0.5)  # Brief pause between interactions
+                
+            except KeyboardInterrupt:
+                print("\n👋 Goodbye!")
+                break
+            except Exception as e:
+                logger.error(f"Unexpected error in main loop: {e}")
+                print("❌ An error occurred. Continuing...")
+                continue
+
+def main():
+    """Main entry point"""
+    try:
+        assistant = AESAssistant()
+        assistant.run()
+    except KeyboardInterrupt:
+        print("\n👋 Goodbye!")
+    except Exception as e:
+        logger.error(f"Failed to start assistant: {e}")
+        print(f"❌ Error starting AES: {e}")
+
+if __name__ == "__main__":
+    main()
