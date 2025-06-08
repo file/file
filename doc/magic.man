@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.112 2025/03/08 17:58:31 christos Exp $
-.Dd March 8, 2025
+.\" $File: magic.man,v 1.113 2025/06/08 14:53:11 christos Exp $
+.Dd June 8, 2025
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -261,7 +261,8 @@ magic entry, like a subroutine call.
 Named instance direct magic offsets are relative to the offset of the
 previous matched entry, but indirect offsets are relative to the beginning
 of the file as usual.
-Named magic entries always match.
+Named magic entries return true if there was a match in the evaluation
+of the entry, or if there was a previous existing match.
 .It Dv use
 Recursively call the named magic starting from the current offset.
 If the name of the referenced begins with a
