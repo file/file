@@ -1,4 +1,4 @@
-.\" $File: magic.man,v 1.113 2025/06/08 14:53:11 christos Exp $
+.\" $File: magic.man,v 1.114 2025/06/08 15:39:09 christos Exp $
 .Dd June 8, 2025
 .Dt MAGIC __FSECTION__
 .Os
@@ -229,10 +229,10 @@ than UTC.
 An eight-byte value in little-endian byte order,
 interpreted as a Windows-style date.
 .It Dv lemsdosdate
-A two-byte value in big-endian byte order,
+A two-byte value in little-endian byte order,
 interpreted as FAT/DOS-style date.
 .It Dv lemsdostime
-A two-byte value in big-endian byte order,
+A two-byte value in little-endian byte order,
 interpreted as FAT/DOS-style time.
 .It Dv lestring16
 A two-byte unicode (UCS16) string in little-endian byte order.
