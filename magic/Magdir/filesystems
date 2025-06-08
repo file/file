@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.167 2025/03/10 20:51:11 christos Exp $
+# $File: filesystems,v 1.168 2025/06/08 15:40:37 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2764,3 +2764,8 @@
 0x0		string	\x10\x00\x4e\x57\x20
 >0x10000	string	\x4e\x57\x00\x00\x01
 >0x100A2	string	\x4C\x00\x40 EldOS Corporation SolidFS, 64KiB page size
+
+# YBLOB mini object storage
+# PIN-protected storage format based on the PIV application
+# https://github.com/douzebis/yb
+0    lelong    0xF2ED5F0B    yblob object store image data
