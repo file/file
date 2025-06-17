@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.145 2025/01/22 17:58:05 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.146 2025/06/17 21:24:37 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -300,6 +300,7 @@ file_default(struct magic_set *ms, size_t nb)
 		return 1;
 	}
 	if (ms->flags & MAGIC_APPLE) {
+		// This is not a typo: Type: UNKN Creator: UNKN
 		if (file_printf(ms, "UNKNUNKN") == -1)
 			return -1;
 		return 1;
