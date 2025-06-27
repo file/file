@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.197 2025/03/10 21:02:05 christos Exp $
+# $File: Makefile.am,v 1.198 2025/06/27 15:13:53 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -283,6 +283,7 @@ $(MAGIC_FRAGMENT_DIR)/selinux \
 $(MAGIC_FRAGMENT_DIR)/sendmail \
 $(MAGIC_FRAGMENT_DIR)/sequent \
 $(MAGIC_FRAGMENT_DIR)/sereal \
+$(MAGIC_FRAGMENT_DIR)/sf3 \
 $(MAGIC_FRAGMENT_DIR)/sgi \
 $(MAGIC_FRAGMENT_DIR)/sgml \
 $(MAGIC_FRAGMENT_DIR)/sharc \
