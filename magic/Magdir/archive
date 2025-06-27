@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.214 2025/05/31 14:57:43 christos Exp $
+# $File: archive,v 1.215 2025/06/27 16:58:46 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -739,21 +739,21 @@
 # see https://mark0.net/forum/index.php?topic=848
 0	name	ttcomp
 >-2	string	\x01\xff
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 >-2	string	\x80\x7f
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 >-2	string	\xc0\x3f
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 >-2	string	\xe0\x1f
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 >-2	string	\xf0\x0f
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 >-2	string	\xf8\x07
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 >-2	string	\xfc\x03
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 >-2	string	\xfe\x01
->>0	use	ttcomp-display
+>>+0	use	ttcomp-display
 # display information of TTComp archive
 0	name	ttcomp-display
 # (version 5.25) labeled the entry as "TTComp archive data"
