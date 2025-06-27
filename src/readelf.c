@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.203 2025/05/29 16:47:35 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.204 2025/06/27 16:57:44 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -66,6 +66,7 @@ file_private uint64_t getu64(int, uint64_t);
 #define NAMEEQUALS(n, v) \
     (namesz == sizeof(v) && memcmp(n, v, namesz) == 0)
 
+__attribute__((__format__(__printf__, 2, 3)))
 file_private int
 elf_printf(struct magic_set *ms, const char *fmt, ...)
 {
