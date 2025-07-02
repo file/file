@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sniffer,v 1.38 2025/06/27 15:15:44 christos Exp $
+# $File: sniffer,v 1.39 2025/07/02 17:35:12 christos Exp $
 # sniffer:  file(1) magic for packet capture files
 #
 # From: guy@alum.mit.edu (Guy Harris)
@@ -249,7 +249,7 @@
 >20	belong&0x03FFFFFF		264		(ISO 14443 messages
 >20	belong&0x03FFFFFF		265		(IEC 62106 Radio Data System groups
 >20	belong&0x03FFFFFF		266		(USB with Darwin header
->20	belong&0x03FFFFFF		267		(OpenBSD OPENFLOW
+>20	belong&0x03FFFFFF		267		(OpenBSD OpenFlow
 >20	belong&0x03FFFFFF		268		(IBM SDLC frames
 >20	belong&0x03FFFFFF		269		(TI LLN sniffer frames
 >20	belong&0x03FFFFFF		271		(Linux vsock
