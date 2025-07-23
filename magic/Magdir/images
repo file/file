@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.264 2025/03/10 20:09:30 christos Exp $
+# $File: images,v 1.265 2025/07/23 18:44:58 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4566,6 +4566,7 @@
 >24		ulelong		0
 >>4		uleshort	0xA5E0	Aseprite asset file
 !:ext	aseprite
+!:mime	image/x-aseprite
 >>>0		ulelong		x	\b, size %u
 >>>6		uleshort	x	\b, frames %u
 >>>8		uleshort	x	\b, size %ux
