@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.215 2025/06/27 16:58:46 christos Exp $
+# $File: archive,v 1.216 2025/07/23 18:54:02 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1885,11 +1885,11 @@
 # Starts with META-INF/MANIFEST.MF (file name length = 20)
 >26	uleshort	20
 >>30	string	META-INF/MANIFEST.MF
->>0	use		apk_or_jar
+>>>0	use		apk_or_jar
 # Starts with META-INF/ folder (file name length = 9)
 >26	uleshort	9
 >>30	string	META-INF/
->>0	use		apk_or_jar
+>>>0	use		apk_or_jar
 
 # Starts with zipflinger virtual entry (28 + 104 = 132 bytes)
 # See https://github.com/obfusk/apksigcopier/blob/666f5b7/apksigcopier/__init__.py#L230
