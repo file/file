@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.261 2024/12/31 19:41:08 christos Exp $
+ * @(#)$File: file.h,v 1.262 2025/07/23 18:52:08 christos Exp $
  */
 
 #ifndef __file_h__
@@ -517,7 +517,7 @@ struct magic_set {
 #define	FILE_ELF_SHNUM_MAX		32768
 #define	FILE_ELF_SHSIZE_MAX		(128 * 1024 * 1024)
 #define	FILE_INDIR_MAX			50
-#define	FILE_NAME_MAX			100
+#define	FILE_NAME_MAX			150
 #define	FILE_REGEX_MAX			8192
 #define	FILE_ENCODING_MAX		(64 * 1024)
 #define	FILE_MAGWARN_MAX		64
