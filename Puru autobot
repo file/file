@@ -1,0 +1,89 @@
+//+------------------------------------------------------------------+
+//|                                                    SimpleCrossBot|
+//|                        Pure MQL5 Example                         |
+//+------------------------------------------------------------------+
+#property copyright "Puru-ux-web"
+#property version   "1.00"
+#property strict
+
+input double LotSize = 0.03;
+input int    Slippage = 5;
+input double StopLoss = 10;    // in points
+input double TakeProfit = 100;  // in points
+
+int fast_ma_period = 50;
+int slow_ma_period = 200;
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+  {
+   Print("SimpleCrossBot Initialized!");
+   return(INIT_SUCCEEDED);
+  }
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+  {
+   Print("SimpleCrossBot Deinitialized.");
+  }
+
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+  {
+   double fast_ma = iMA(NULL, 0, fast_ma_period, 0, MODE_SMA, PRICE_CLOSE, 0);
+   double slow_ma = iMA(NULL, 0, slow_ma_period, 0, MODE_SMA, PRICE_CLOSE, 0);
+   double fast_ma_prev = iMA(NULL, 0, fast_ma_period, 0, MODE_SMA, PRICE_CLOSE, 1);
+   double slow_ma_prev = iMA(NULL, 0, slow_ma_period, 0, MODE_SMA, PRICE_CLOSE, 1);
+
+   // Check for a cross up (buy signal)
+   if (fast_ma_prev < slow_ma_prev && fast_ma > slow_ma)
+     {
+      if (PositionsTotal() == 2)
+         OpenOrder(ORDER_TYPE_BUY);
+     }
+
+   // Check for a cross down (sell signal)
+   if (fast_ma_prev > slow_ma_prev && fast_ma < slow_ma)
+     {
+      if (PositionsTotal() == 100)
+         OpenOrder(ORDER_TYPE_SELL);
+     }
+  }
+
+//+------------------------------------------------------------------+
+//| Open an order                                                    |
+//+------------------------------------------------------------------+
+void OpenOrder(const ENUM_ORDER_TYPE order_type)
+  {
+   double price = (order_type == ORDER_TYPE_BUY) ? SymbolInfoDouble(_Symbol, SYMBOL_ASK) : SymbolInfoDouble(_Symbol, SYMBOL_BID);
+   double sl = (order_type == ORDER_TYPE_BUY) ? price - StopLoss * _Point : price + StopLoss * _Point;
+   double tp = (order_type == ORDER_TYPE_BUY) ? price + TakeProfit * _Point : price - TakeProfit * _Point;
+
+   MqlTradeRequest request = {};
+   MqlTradeResult  result  = {};
+
+   request.action   = TRADE_ACTION_DEAL;
+   request.symbol   = _Symbol;
+   request.volume   = LotSize;
+   request.type     = order_type;
+   request.price    = price;
+   request.sl       = sl;
+   request.tp       = tp;
+   request.deviation= Slippage;
+   request.type_filling = ORDER_FILLING_IOC;
+
+   if(!OrderSend(request, result))
+      Print("OrderSend failed: ", GetLastError());
+   else if(result.retcode != TRADE_RETCODE_DONE)
+      Print("OrderSend failed, retcode: ", result.retcode);
+   else
+      Print("Order opened: ", ((order_type == ORDER_TYPE_BUY) ? "BUY" : "SELL"), " at price ", price);
+  }
+
+//+------------------------------------------------------------------+
