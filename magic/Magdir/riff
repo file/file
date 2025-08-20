@@ -161,7 +161,7 @@
 >>>>>15		byte&0x40	=0x00	\b, decoders should clamp
 >0  string  VP8L
 >>8		byte		0x2f	\b, lossless
->>>11		byte		&0x01	\b, with alpha
+>>>12		byte		&0x10	\b, with alpha
 >0  string  VP8X
 >>4		lelong		0x0a
 >>>8		byte		&0x02	\b, animated
