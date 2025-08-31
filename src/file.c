@@ -522,7 +522,7 @@ unwrap(struct magic_set *ms, const char *fn)
 		f = stdin;
 	else {
 		if ((f = fopen(fn, "r")) == NULL) {
-			file_warn("Cannot open `%s'", fn);
+			file_warn("Cannot open '%s'", fn);
 			return 1;
 		}
 	}
