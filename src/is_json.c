@@ -481,10 +481,10 @@ main(int argc, char *argv[])
 	size_t stats[JSON_MAX];
 
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
-		err(EXIT_FAILURE, "Can't open `%s'", argv[1]);
+		err(EXIT_FAILURE, "Can't open '%s'", argv[1]);
 
 	if (fstat(fd, &st) == -1)
-		err(EXIT_FAILURE, "Can't stat `%s'", argv[1]);
+		err(EXIT_FAILURE, "Can't stat '%s'", argv[1]);
 
 	if ((p = CAST(char *, malloc(st.st_size))) == NULL)
 		err(EXIT_FAILURE, "Can't allocate %jd bytes",

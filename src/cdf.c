@@ -888,7 +888,7 @@ cdf_find_stream(const cdf_dir_t *dir, const char *name, int type)
 	if (i > 0)
 		return CAST(int, i);
 
-	DPRINTF(("Cannot find type %d `%s'\n", type, name));
+	DPRINTF(("Cannot find type %d '%s'\n", type, name));
 	errno = ESRCH;
 	return 0;
 }
@@ -1618,7 +1618,7 @@ main(int argc, char *argv[])
 	info.i_len = 0;
 	for (i = 1; i < argc; i++) {
 		if ((info.i_fd = open(argv[1], O_RDONLY)) == -1)
-			err(EXIT_FAILURE, "Cannot open `%s'", argv[1]);
+			err(EXIT_FAILURE, "Cannot open '%s'", argv[1]);
 
 		if (cdf_read_header(&info, &h) == -1)
 			err(EXIT_FAILURE, "Cannot read header");

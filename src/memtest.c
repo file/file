@@ -124,16 +124,16 @@ main(int argc, char *argv[])
 	if (buf) {
 		int fd = open(argv[0], O_RDONLY);
 		if (fd == -1)
-			err(EXIT_FAILURE, "Cannot open `%s'", argv[0]);
+			err(EXIT_FAILURE, "Cannot open '%s'", argv[0]);
 
 		struct stat st;
 		if (fstat(fd, &st) == -1)
-			err(EXIT_FAILURE, "Cannot stat `%s'", argv[0]);
+			err(EXIT_FAILURE, "Cannot stat '%s'", argv[0]);
 		size_t l = (size_t)st.st_size;
 		void *p = mmap(NULL, l, PROT_READ, MAP_FILE | MAP_PRIVATE, fd,
 		    (off_t)0);
 		if (p == MAP_FAILED)
-			err(EXIT_FAILURE, "Cannot map `%s'", argv[0]);
+			err(EXIT_FAILURE, "Cannot map '%s'", argv[0]);
 		close(fd);
 		r = magic_buffer(m, p, l);
 		munmap(p, l);

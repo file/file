@@ -523,7 +523,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 			if (inname == NULL && fd != STDIN_FILENO)
 				file_error(ms, errno, "cannot read fd %d", fd);
 			else
-				file_error(ms, errno, "cannot read `%s'",
+				file_error(ms, errno, "cannot read '%s'",
 				    inname == NULL ? "/dev/stdin" : inname);
 			goto done;
 		}

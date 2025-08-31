@@ -139,7 +139,7 @@ usage:
 	}
 	fp = fopen(argv[1], "r");
 	if (fp == NULL) {
-		(void)fprintf(stderr, "%s: ERROR opening `%s': %s",
+		(void)fprintf(stderr, "%s: ERROR opening '%s': %s",
 		    prog, argv[1], strerror(errno));
 		goto bad;
 	}

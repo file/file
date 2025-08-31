@@ -169,8 +169,8 @@ file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
 	ptr = fmtcheck(desc, def);
 	if (ptr == def)
 		file_magerror(ms,
-		    "%s, %" SIZE_T_FORMAT "u: format `%s' does not match"
-		    " with `%s'", file, line, desc, def);
+		    "%s, %" SIZE_T_FORMAT "u: format '%s' does not match"
+		    " with '%s'", file, line, desc, def);
 	return ptr;
 }
 #else
@@ -1971,7 +1971,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			flip = !flip;
 		}
 		if (file_magicfind(ms, rbuf, &ml) == -1) {
-			file_error(ms, 0, "cannot find entry `%s'", rbuf);
+			file_error(ms, 0, "cannot find entry '%s'", rbuf);
 			return -1;
 		}
 		if (save_cont(ms, &c) == -1) {

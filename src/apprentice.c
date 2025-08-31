@@ -500,7 +500,7 @@ apprentice_1(struct magic_set *ms, const char *fn, int action)
 	map = apprentice_map(ms, fn);
 	if (map == NULL) {
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "using regular magic file `%s'", fn);
+			file_magwarn(ms, "using regular magic file '%s'", fn);
 		map = apprentice_load(ms, fn, action);
 		if (map == NULL)
 			return -1;
@@ -1150,7 +1150,7 @@ apprentice_sort(const void *a, const void *b)
 			// Don't warn for DER
 			if (mpa.type == FILE_DER)
 				return 0;
-			file_magwarn1("Duplicate magic entry `%s'",
+			file_magwarn1("Duplicate magic entry '%s'",
 			    ma->mp->desc);
 #ifndef COMPILE_ONLY
 			file_mdump(ma->mp);
@@ -1344,7 +1344,7 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 	FILE *f = fopen(ms->file = fn, "r");
 	if (f == NULL) {
 		if (errno != ENOENT)
-			file_error(ms, errno, "cannot read magic file `%s'",
+			file_error(ms, errno, "cannot read magic file '%s'",
 				   fn);
 		(*errs)++;
 		return;
@@ -1378,7 +1378,7 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 				}
 				if (bang[i].name == NULL) {
 					file_error(ms, 0,
-					    "Unknown !: entry `%s'", line);
+					    "Unknown !: entry '%s'", line);
 					(*errs)++;
 					continue;
 				}
@@ -2154,7 +2154,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 	m->offset = CAST(int32_t, strtol(l, &t, 0));
         if (l == t) {
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "offset `%s' invalid", l);
+			file_magwarn(ms, "offset '%s' invalid", l);
 		return -1;
 	}
 
@@ -2247,7 +2247,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 			if (l == t) {
 				if (ms->flags & MAGIC_CHECK)
 					file_magwarn(ms,
-					    "in_offset `%s' invalid", l);
+					    "in_offset '%s' invalid", l);
 				return -1;
 			}
 			l = t;
@@ -2321,7 +2321,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 
 	if (m->type == FILE_INVALID) {
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "type `%s' invalid", l);
+			file_magwarn(ms, "type '%s' invalid", l);
 		return -1;
 	}
 
@@ -2418,7 +2418,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 	 */
 	if (m->reln != 'x') {
 		if (*l == '\0') {
-			file_magwarn(ms, "incomplete magic `%s'", line);
+			file_magwarn(ms, "incomplete magic '%s'", line);
 			return -1;
 		}
 		if (getvalue(ms, m, &l, action))
@@ -2452,7 +2452,7 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 	if (i == sizeof(m->desc)) {
 		m->desc[sizeof(m->desc) - 1] = '\0';
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "description `%s' truncated", m->desc);
+			file_magwarn(ms, "description '%s' truncated", m->desc);
 	}
 
         /*
@@ -2521,7 +2521,7 @@ parse_strength(struct magic_set *ms, struct magic_entry *me, const char *line,
 		goto out;
 	}
 	if (*el && !isspace(CAST(unsigned char, *el))) {
-		file_magwarn(ms, "Bad factor `%s'", l);
+		file_magwarn(ms, "Bad factor '%s'", l);
 		goto out;
 	}
 	m->factor = CAST(uint8_t, factor);
@@ -2556,7 +2556,7 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
 	if (buf[0] != '\0') {
 		len = nt ? strlen(buf) : len;
 		file_magwarn(ms, "Current entry already has a %s type "
-		    "`%.*s', new type `%s'", name, CAST(int, len), buf, l);
+		    "`%.*s', new type '%s'", name, CAST(int, len), buf, l);
 		return -1;
 	}
 
@@ -2575,11 +2575,11 @@ parse_extra(struct magic_set *ms, struct magic_entry *me, const char *line,
 		if (nt)
 			buf[len - 1] = '\0';
 		if (ms->flags & MAGIC_CHECK)
-			file_magwarn(ms, "%s type `%s' truncated %"
+			file_magwarn(ms, "%s type '%s' truncated %"
 			    SIZE_T_FORMAT "u", name, line, i);
 	} else {
 		if (!isspace(CAST(unsigned char, *l)) && !goodchar(*l, extra))
-			file_magwarn(ms, "%s type `%s' has bad char '%c'",
+			file_magwarn(ms, "%s type '%s' has bad char '%c'",
 			    name, line, *l);
 		if (nt)
 			buf[i] = '\0';
@@ -2850,8 +2850,8 @@ check_format(struct magic_set *ms, struct magic *m)
 		return -1;
 	}
 	if (file_formats[m->type] == FILE_FMT_NONE) {
-		file_magwarn(ms, "No format string for `%s' with description "
-		    "`%s'", m->desc, file_names[m->type]);
+		file_magwarn(ms, "No format string for '%s' with description "
+		    "'%s'", m->desc, file_names[m->type]);
 		return -1;
 	}
 
@@ -2862,7 +2862,7 @@ check_format(struct magic_set *ms, struct magic *m)
 		 * string is not one character long
 		 */
 		file_magwarn(ms, "Printf format is %s for type "
-		    "`%s' in description `%s'", estr,
+		    "'%s' in description '%s'", estr,
 		    file_names[m->type], m->desc);
 		return -1;
 	}
@@ -2871,7 +2871,7 @@ check_format(struct magic_set *ms, struct magic *m)
 		if (*ptr == '%') {
 			file_magwarn(ms,
 			    "Too many format strings (should have at most one) "
-			    "for `%s' with description `%s'",
+			    "for '%s' with description '%s'",
 			    file_names[m->type], m->desc);
 			return -1;
 		}
@@ -2905,7 +2905,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		*p = getstr(ms, m, *p, action == FILE_COMPILE);
 		if (*p == NULL) {
 			if (ms->flags & MAGIC_CHECK)
-				file_magwarn(ms, "cannot get string from `%s'",
+				file_magwarn(ms, "cannot get string from '%s'",
 				    m->value.s);
 			return -1;
 		}
@@ -2948,7 +2948,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		return 0;
 	case FILE_GUID:
 		if (file_parse_guid(*p, m->value.guid) == -1) {
-			file_magwarn(ms, "Error parsing guid `%s'", *p);
+			file_magwarn(ms, "Error parsing guid '%s'", *p);
 			return -1;
 		}
 		*p += FILE_GUID_SIZE - 1;
@@ -2958,7 +2958,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		ull = CAST(uint64_t, strtoull(*p, &ep, 0));
 		m->value.q = file_signextend(ms, m, ull);
 		if (*p == ep) {
-			file_magwarn(ms, "Unparsable number `%s'", *p);
+			file_magwarn(ms, "Unparsable number '%s'", *p);
 			return -1;
 		} else {
 			size_t ts = typesize(m->type);
@@ -2967,7 +2967,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 
 			if (ts == FILE_BADSIZE) {
 				file_magwarn(ms,
-				    "Expected numeric type got `%s'",
+				    "Expected numeric type got '%s'",
 				    type_tbl[m->type].name);
 				return -1;
 			}
@@ -2998,7 +2998,7 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 			}
 			if (x && y) {
 				file_magwarn(ms, "Overflow for numeric"
-				    " type `%s' value %#" PRIx64,
+				    " type '%s' value %#" PRIx64,
 				    type_tbl[m->type].name, ull);
 				return -1;
 			}
@@ -3033,7 +3033,7 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 		if (isspace(CAST(unsigned char, c)))
 			break;
 		if (p >= pmax) {
-			file_error(ms, 0, "string too long: `%s'", origs);
+			file_error(ms, 0, "string too long: '%s'", origs);
 			return NULL;
 		}
 		if (c != '\\') {
@@ -3346,11 +3346,11 @@ apprentice_map(struct magic_set *ms, const char *fn)
 		goto error;
 
 	if (fstat(fd, &st) == -1) {
-		file_error(ms, errno, "cannot stat `%s'", dbname);
+		file_error(ms, errno, "cannot stat '%s'", dbname);
 		goto error;
 	}
 	if (st.st_size < 8 || st.st_size > maxoff_t()) {
-		file_error(ms, 0, "file `%s' is too %s", dbname,
+		file_error(ms, 0, "file '%s' is too %s", dbname,
 		    st.st_size < 8 ? "small" : "large");
 		goto error;
 	}
@@ -3360,7 +3360,7 @@ apprentice_map(struct magic_set *ms, const char *fn)
 	map->type = MAP_TYPE_MMAP;
 	if ((map->p = mmap(0, CAST(size_t, st.st_size), PROT_READ|PROT_WRITE,
 	    MAP_PRIVATE|MAP_FILE, fd, CAST(off_t, 0))) == MAP_FAILED) {
-		file_error(ms, errno, "cannot map `%s'", dbname);
+		file_error(ms, errno, "cannot map '%s'", dbname);
 		goto error;
 	}
 #else
@@ -3382,7 +3382,7 @@ apprentice_map(struct magic_set *ms, const char *fn)
 	}
 #ifdef QUICK
 	if (mprotect(map->p, CAST(size_t, st.st_size), PROT_READ) == -1) {
-		file_error(ms, errno, "cannot mprotect `%s'", dbname);
+		file_error(ms, errno, "cannot mprotect '%s'", dbname);
 		goto error;
 	}
 #endif
@@ -3408,12 +3408,12 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 
 	entries = CAST(uint32_t, map->len / sizeof(struct magic));
 	if (entries < MAGIC_SETS) {
-		file_error(ms, 0, "Too few magic entries %u in `%s'",
+		file_error(ms, 0, "Too few magic entries %u in '%s'",
 		    entries, dbname);
 		return -1;
 	}
 	if ((entries * sizeof(struct magic)) != map->len) {
-		file_error(ms, 0, "Size of `%s' %" SIZE_T_FORMAT "u is not "
+		file_error(ms, 0, "Size of '%s' %" SIZE_T_FORMAT "u is not "
 		    "a multiple of %" SIZE_T_FORMAT "u",
 		    dbname, map->len, sizeof(struct magic));
 		return -1;
@@ -3422,7 +3422,7 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 	ptr = CAST(uint32_t *, map->p);
 	if (*ptr != MAGICNO) {
 		if (swap4(*ptr) != MAGICNO) {
-			file_error(ms, 0, "bad magic in `%s'", dbname);
+			file_error(ms, 0, "bad magic in '%s'", dbname);
 			return -1;
 		}
 		needsbyteswap = 1;
@@ -3434,7 +3434,7 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 		version = ptr[1];
 	if (version != VERSIONNO) {
 		file_error(ms, 0, "File %s supports only version %d magic "
-		    "files. `%s' is version %d", VERSION,
+		    "files. '%s' is version %d", VERSION,
 		    VERSIONNO, dbname, version);
 		return -1;
 	}
@@ -3450,7 +3450,7 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 		nentries += map->nmagic[i];
 	}
 	if (entries != nentries + 1) {
-		file_error(ms, 0, "Inconsistent entries in `%s' %u != %u",
+		file_error(ms, 0, "Inconsistent entries in '%s' %u != %u",
 		    dbname, entries, nentries + 1);
 		return -1;
 	}
@@ -3485,7 +3485,7 @@ apprentice_compile(struct magic_set *ms, struct magic_map *map, const char *fn)
 
 	if ((fd = open(dbname, O_WRONLY|O_CREAT|O_TRUNC|O_BINARY, 0644)) == -1)
 	{
-		file_error(ms, errno, "cannot open `%s'", dbname);
+		file_error(ms, errno, "cannot open '%s'", dbname);
 		goto out;
 	}
 	memset(&hdr, 0, sizeof(hdr));
@@ -3494,14 +3494,14 @@ apprentice_compile(struct magic_set *ms, struct magic_map *map, const char *fn)
 	memcpy(hdr.h + 2, map->nmagic, nm);
 
 	if (write(fd, &hdr, sizeof(hdr)) != CAST(ssize_t, sizeof(hdr))) {
-		file_error(ms, errno, "error writing `%s'", dbname);
+		file_error(ms, errno, "error writing '%s'", dbname);
 		goto out2;
 	}
 
 	for (i = 0; i < MAGIC_SETS; i++) {
 		len = m * map->nmagic[i];
 		if (write(fd, map->magic[i], len) != CAST(ssize_t, len)) {
-			file_error(ms, errno, "error writing `%s'", dbname);
+			file_error(ms, errno, "error writing '%s'", dbname);
 			goto out2;
 		}
 	}

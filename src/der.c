@@ -444,12 +444,12 @@ main(int argc, char *argv[])
 	void *p;
 
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
-		err(EXIT_FAILURE, "open `%s'", argv[1]);
+		err(EXIT_FAILURE, "open '%s'", argv[1]);
 	if (fstat(fd, &st) == -1)
-		err(EXIT_FAILURE, "stat `%s'", argv[1]);
+		err(EXIT_FAILURE, "stat '%s'", argv[1]);
 	l = (size_t)st.st_size;
 	if ((p = mmap(NULL, l, PROT_READ, MAP_FILE, fd, 0)) == MAP_FAILED)
-		err(EXIT_FAILURE, "mmap `%s'", argv[1]);
+		err(EXIT_FAILURE, "mmap '%s'", argv[1]);
 
 	printdata(0, p, 0, l);
 	munmap(p, l);

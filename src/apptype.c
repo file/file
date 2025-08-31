@@ -65,11 +65,11 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const struct buffer *b)
 
 	if (fn == NULL) {
 		if ((fp = fopen(path, "wb")) == NULL) {
-			file_error(ms, errno, "cannot open tmp file `%s'", path);
+			file_error(ms, errno, "cannot open tmp file '%s'", path);
 			return -1;
 		}
 		if (fwrite(b->fbuf, 1, b->flen, fp) != b->flen) {
-			file_error(ms, errno, "cannot write tmp file `%s'",
+			file_error(ms, errno, "cannot write tmp file '%s'",
 			    path);
 			(void)fclose(fp);
 			return -1;

@@ -160,10 +160,10 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 
 	if (ret) {
 		if (ms->flags & MAGIC_ERROR) {
-			file_error(ms, errno, "cannot stat `%s'", fn);
+			file_error(ms, errno, "cannot stat '%s'", fn);
 			return -1;
 		}
-		if (file_printf(ms, "cannot open `%s' (%s)",
+		if (file_printf(ms, "cannot open '%s' (%s)",
 		    fn, strerror(errno)) == -1)
 			return -1;
 		return 0;
@@ -294,7 +294,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	case S_IFLNK:
 		if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
 			if (ms->flags & MAGIC_ERROR) {
-			    file_error(ms, errno, "unreadable symlink `%s'",
+			    file_error(ms, errno, "unreadable symlink '%s'",
 				fn);
 			    return -1;
 			}
@@ -303,7 +303,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 					return -1;
 			} else if (silent) {
 			} else if (file_printf(ms,
-			    "%sunreadable symlink `%s' (%s)", COMMA, fn,
+			    "%sunreadable symlink '%s' (%s)", COMMA, fn,
 			    strerror(errno)) == -1)
 				return -1;
 			break;
@@ -333,7 +333,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				if (tmp - fn + 1 > BUFSIZ) {
 					if (ms->flags & MAGIC_ERROR) {
 						file_error(ms, 0,
-						    "path too long: `%s'", buf);
+						    "path too long: '%s'", buf);
 						return -1;
 					}
 					if (mime) {
@@ -342,7 +342,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 							return -1;
 					} else if (silent) {
 					} else if (file_printf(ms,
-					    "%spath too long: `%s'", COMMA,
+					    "%spath too long: '%s'", COMMA,
 					    fn) == -1)
 						return -1;
 					break;

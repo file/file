@@ -1191,7 +1191,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 	posix_spawn_file_actions_destroy(&fa);
 
 	if (status == -1) {
-		return makeerror(newch, n, "Cannot posix_spawn `%s', %s",
+		return makeerror(newch, n, "Cannot posix_spawn '%s', %s",
 		    compr[method].argv[0], strerror(errno));
 	}
 #else
@@ -1213,7 +1213,7 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 		DPRINTF("Executing %s\n", compr[method].argv[0]);
 
 		(void)execvp(compr[method].argv[0], args);
-		dprintf(STDERR_FILENO, "exec `%s' failed, %s",
+		dprintf(STDERR_FILENO, "exec '%s' failed, %s",
 		    compr[method].argv[0], strerror(errno));
 		_exit(EXIT_FAILURE); /* _exit(), not exit(), because of vfork */
 	}

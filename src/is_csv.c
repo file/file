@@ -182,10 +182,10 @@ main(int argc, char *argv[])
 	unsigned char *p;
 
 	if ((fd = open(argv[1], O_RDONLY)) == -1)
-		err(EXIT_FAILURE, "Can't open `%s'", argv[1]);
+		err(EXIT_FAILURE, "Can't open '%s'", argv[1]);
 
 	if (fstat(fd, &st) == -1)
-		err(EXIT_FAILURE, "Can't stat `%s'", argv[1]);
+		err(EXIT_FAILURE, "Can't stat '%s'", argv[1]);
 
 	if ((p = CAST(unsigned char *, malloc(st.st_size))) == NULL)
 		err(EXIT_FAILURE, "Can't allocate %jd bytes",

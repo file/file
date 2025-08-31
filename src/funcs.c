@@ -141,7 +141,7 @@ file_vprintf(struct magic_set *ms, const char *fmt, va_list ap)
 
 	if (file_checkfmt(tbuf, sizeof(tbuf), fmt)) {
 		file_clearbuf(ms);
-		file_error(ms, 0, "Bad magic format `%s' (%s)", fmt, tbuf);
+		file_error(ms, 0, "Bad magic format '%s' (%s)", fmt, tbuf);
 		return -1;
 	}
 
@@ -684,7 +684,7 @@ check_regex(struct magic_set *ms, const char *pat)
 			size_t len = strlen(pat);
 			file_magwarn(ms,
 			    "repetition-operator operand `%c%c' "
-			    "invalid in regex `%s'", oc, c,
+			    "invalid in regex '%s'", oc, c,
 			    file_printable(ms, sbuf, sizeof(sbuf), pat, len));
 			return -1;
 		}
@@ -693,7 +693,7 @@ check_regex(struct magic_set *ms, const char *pat)
 
 			if (oc == '}') {
 				file_magwarn(ms, "cascading repetition "
-				    "operators in regex `%s'", pat);
+				    "operators in regex '%s'", pat);
 				return -1;
 			}
 			errno = 0;
@@ -712,13 +712,13 @@ check_regex(struct magic_set *ms, const char *pat)
 			continue;
 		size_t len = strlen(pat);
 		file_magwarn(ms,
-		    "non-ascii characters in regex \\%#o `%s'",
+		    "non-ascii characters in regex \\%#o '%s'",
 		    c, file_printable(ms, sbuf, sizeof(sbuf), pat, len));
 		return -1;
 	}
 	return 0;
 bounds:
-	file_magwarn(ms, "bounds too large %ld in regex `%s'", l, pat);
+	file_magwarn(ms, "bounds too large %ld in regex '%s'", l, pat);
 	return -1;
 }
 
@@ -749,7 +749,7 @@ file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
 		char errmsg[512], buf[512];
 
 		(void)regerror(rc, rx, errmsg, sizeof(errmsg));
-		file_magerror(ms, "regex error %d for `%s', (%s)", rc, 
+		file_magerror(ms, "regex error %d for '%s', (%s)", rc, 
 		    file_printable(ms, buf, sizeof(buf), pat, strlen(pat)),
 		    errmsg);
 	}
