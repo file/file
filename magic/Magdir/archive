@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.216 2025/07/23 18:54:02 christos Exp $
+# $File: archive,v 1.217 2025/09/06 17:00:32 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -1499,22 +1499,18 @@
 >>9	ubyte		!2		\b, security version %u
 # file type; 2 in main header; 0~binary 1~7-bitText 2~comment 3~directory 4~VolumeLabel 5=ChapterLabel
 >0xA	ubyte		!2		\b, file type %u
-# date+time when original archive was created in MS-DOS format via ./msdos
->0xC	ulelong		x		\b, created
->0xC	use		dos-date
-# or date and time by new internal function
-#>0xE	lemsdosdate	x		%s
-#>0xC	lemsdostime	x		%s
+# date+time when original archive was created in MS-DOS format
+>0xE	lemsdosdate	x		\b, created %s
+>0xC	lemsdostime	x		%s
+# Archive mod time, added in format v6 (ARJ 2.39c)
+>5	ubyte		>5
+>>0x10	ulelong		>0		\b, modified
+>>>0x12	lemsdosdate	x		%s
+>>>0x10	lemsdostime	x		%s
+
 # FOR DEBUGGING
 #>0x12	uleshort	x		RAW DATE %#4.4x
 #>0x10	uleshort	x		RAW TIME %#4.4x
-# date+time when archive was last modified; sometimes nil or
-# maybe wrong like in HP4DRVR.ARJ
-#>0x10	ulelong		>0		\b, modified
-#>>0x10	use		dos-date
-# or date and time by new internal function
-#>>0x12	lemsdosdate	x		%s
-#>>0x10	lemsdostime	x		%s
 # archive size (currently used only for secured archives); MAYBE?
 #>0x14	ulelong		!0		\b, file size %u
 # security envelope file position; MAYBE?
