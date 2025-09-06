@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.31 2025/03/20 14:57:41 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.32 2025/09/06 16:54:59 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -37,6 +37,8 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.31 2025/03/20 14:57:41 christos Exp $")
 #ifdef __powerpc64__
 // See: https://sourceware.org/bugzilla/show_bug.cgi?id=32806
 # include <asm/termbits.h>
+#elif defined __linux__
+# include <linux/termios.h>
 #else
 # include <termios.h>
 #endif
@@ -121,6 +123,10 @@ enable_sandbox(void)
 #ifdef TCGETS
 	// glibc may call ioctl TCGETS on stdout on physical terminal
 	ALLOW_IOCTL_RULE(TCGETS);
+#endif
+#ifdef TCGETS2
+	// glibc may call ioctl TCGETS2 on stdout on physical terminal
+	ALLOW_IOCTL_RULE(TCGETS2);
 #endif
 	ALLOW_RULE(lseek);
  	ALLOW_RULE(_llseek);
