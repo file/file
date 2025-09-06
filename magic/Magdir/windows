@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.68 2025/03/08 17:37:06 christos Exp $
+# $File: windows,v 1.69 2025/09/06 16:58:00 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1260,7 +1260,7 @@
 >>>>>&0	ubyte				x
 # characters, digits, underscore and white space followed by right bracket
 # terminated by CR implies section line to skip BOOTLOG.TXT DETLOG.TXT
->>>>>>&-1	regex/T			\^([A-Za-z0-9_\(\)\ ]+)\]\r	Generic INItialization configuration [%-.40s
+>>>>>>&-1	regex/T			\^([A-Za-z0-9_\(\)\ ]+)\][\r\n]	Generic INItialization configuration [%-.40s
 # NETDEF.INF multiarc.ini 
 #!:mime	application/x-setupscript
 !:mime	application/x-wine-extension-ini
