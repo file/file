@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.32 2025/09/06 16:54:59 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.33 2025/09/06 17:40:48 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -37,8 +37,6 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.32 2025/09/06 16:54:59 christos Exp $")
 #ifdef __powerpc64__
 // See: https://sourceware.org/bugzilla/show_bug.cgi?id=32806
 # include <asm/termbits.h>
-#elif defined __linux__
-# include <linux/termios.h>
 #else
 # include <termios.h>
 #endif
