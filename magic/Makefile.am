@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.198 2025/06/27 15:13:53 christos Exp $
+# $File: Makefile.am,v 1.199 2025/09/11 01:49:39 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -304,6 +304,7 @@ $(MAGIC_FRAGMENT_DIR)/statistics \
 $(MAGIC_FRAGMENT_DIR)/subtitle \
 $(MAGIC_FRAGMENT_DIR)/sun \
 $(MAGIC_FRAGMENT_DIR)/svf \
+$(MAGIC_FRAGMENT_DIR)/syd \
 $(MAGIC_FRAGMENT_DIR)/sylk \
 $(MAGIC_FRAGMENT_DIR)/symbos \
 $(MAGIC_FRAGMENT_DIR)/sysex \
