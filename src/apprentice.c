@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.368 2025/05/29 15:24:18 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.369 2025/10/08 16:40:52 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -753,6 +753,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	init_file_tables();
 
 	free(ms->fnamebuf);
+	ms->file = NULL;
 	if ((ms->fnamebuf = strdup(fn)) == NULL) {
 		file_oomem(ms, strlen(fn));
 		return -1;
