@@ -1199,6 +1199,11 @@
 >4	beshort		0xFEFF
 >>0	use		\^nintendo-3ds-bcwav-fields
 
+# QOA Quite Okay Audio format
+# https://qoaformat.org/qoa-specification.pdf
+# added by alex myczko <tar@debian.org>
+0 string    qoaf  QOA audio data
+
 # Philips DSDIFF audio format (Direct Stream Digital Interchange File Format)
 # Used for DSD audio recordings and Super Audio CD (SACD) mastering annotations
 # https://dsd-guide.com/sites/default/files/white-papers/DSDIFF_1.5_Spec.pdf
