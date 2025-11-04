@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.146 2025/06/17 21:24:37 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.147 2025/11/04 20:42:42 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -99,6 +99,11 @@ file_checkfmt(char *msg, size_t mlen, const char *fmt)
 			continue;
 		if (*++p == '%')
 			continue;
+		if (*p == '\0') {
+			if (msg)
+				snprintf(msg, mlen, "incomplete %% format");
+			return -1;
+		}
 		// Skip uninteresting.
 		while (strchr("#0.'+- ", *p) != NULL)
 			p++;
