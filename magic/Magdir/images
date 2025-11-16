@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.265 2025/07/23 18:44:58 christos Exp $
+# $File: images,v 1.266 2025/11/16 15:43:37 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4584,3 +4584,38 @@
 >>>38		leshort		x	\b%d)
 >>>40		uleshort	x	\b, grid size %dx
 >>>42		uleshort	x	\b%d
+
+# Type: CIS/COD Bitmaps
+# Documentation: https://cod.igada.de/ and http://justsolve.archiveteam.org/wiki/Lightning_Strike
+# From: Robert Jäschke <robert.jaeschke@hu-berlin.de>
+0       string    CIS       CIS/COD image data,
+!:mime  image/cis-cod
+!:ext   png
+# versions 2.3 to 2.5 are different to version 3.0
+>3      regex/4   2\\.[345]  version %s,
+>>16    leshort   x         %d x
+>>18    leshort   x         %d
+# so far we know more about version 3.0
+>3      string/3  3.0       version %s,
+# width and height
+>>16    leshort   x         %d x
+>>18    leshort   x         %d x
+>>20    byte      x         %d
+# gray vs. color
+>>21    byte      0         (gray,
+>>21    byte      1         (color,
+# encoder type
+>>24    byte      1         lossy arithmetic encoder,
+>>24    byte      2         lossless arithmetic encoder,
+# compression type
+>>25    byte      1         bi-wavelet compression,
+# quantizer type
+>>26    byte      1         table quantization,
+# scb
+>>27    byte      1         SISD,
+# color space
+>>28    byte      1         YIQ RGB,
+>>28    byte      2         YUV RGB,
+>>28    byte      3         YCbCr RGB,
+# wavelet levels
+>>29    byte      x         %d wavelet levels)
