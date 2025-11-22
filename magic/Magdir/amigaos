@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.21 2025/05/28 15:29:19 christos Exp $
+# $File: amigaos,v 1.22 2025/11/22 18:04:04 rrt Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -36,7 +36,6 @@
 0	string		COSO\0		Hippel-COSO Module sound file
 # Too simple (short, pure ASCII, deep), MPi
 #26	string		V.3		Brian Postma's Soundmon Module sound file v3
-#26	string		BPSM		Brian Postma's Soundmon Module sound file v3
 #26	string		V.2		Brian Postma's Soundmon Module sound file v2
 
 # The following are from: "Stefan A. Haubenthal" <polluks@web.de>
