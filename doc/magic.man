@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.114 2025/06/08 15:39:09 christos Exp $
-.Dd June 8, 2025
+.\" $File: magic.man,v 1.115 2025/11/24 15:45:00 christos Exp $
+.Dd November 24, 2025
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -104,6 +104,7 @@ Don't include the match length in the offset computation.
 (only valid for search and regex)
 .It T
 Trim the string, i.e. leading and trailing whitespace
+is deleted before the string is printed.
 .It t
 Force text file test.
 .It W
@@ -117,7 +118,6 @@ consecutive blanks, the target needs at least
 consecutive blanks to match.
 .It w
 Treat every blank in the magic as an optional blank.
-is deleted before the string is printed.
 (not valid for regex)
 .El
 .It Dv pstring
