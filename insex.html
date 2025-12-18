@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>متجر استبرق</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    margin:0;
+    background:#f5f3ef;
+}
+
+header{
+    background:#3b2f2f;
+    color:#f4e7d3;
+    text-align:center;
+    padding:25px;
+}
+
+.products{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    flex-wrap:wrap;
+    padding:30px;
+}
+
+.product{
+    background:white;
+    width:230px;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+
+.product img{
+    width:100%;
+    border-radius:8px;
+}
+
+.price{
+    color:#8b6f4e;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+button{
+    background:#3b2f2f;
+    color:#f4e7d3;
+    border:none;
+    padding:10px;
+    width:100%;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#5a4a42;
+}
+
+.cart{
+    background:white;
+    margin:20px;
+    padding:20px;
+    border-radius:10px;
+}
+
+footer{
+    text-align:center;
+    padding:15px;
+    background:#eee;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>متجر استبرق</h1>
+    <p>أناقة محتشمة بذوق راقٍ</p>
+</header>
+
+<section class="products">
+
+<div class="product">
+    <img src="https://via.placeholder.com/200">
+    <h3>عباية فاخرة</h3>
+    <p class="price">120 ₪</p>
+    <button onclick="addToCart('عباية فاخرة',120)">أضف للسلة</button>
+</div>
+
+<div class="product">
+    <img src="https://via.placeholder.com/200">
+    <h3>فستان محتشم</h3>
+    <p class="price">150 ₪</p>
+    <button onclick="addToCart('فستان محتشم',150)">أضف للسلة</button>
+</div>
+
+<div class="product">
+    <img src="https://via.placeholder.com/200">
+    <h3>حجاب حرير</h3>
+    <p class="price">45 ₪</p>
+    <button onclick="addToCart('حجاب حرير',45)">أضف للسلة</button>
+</div>
+
+</section>
+
+<div class="cart">
+    <h2>🛒 سلة المشتريات</h2>
+    <ul id="cartItems"></ul>
+    <p id="total"></p>
+    <button onclick="sendWhatsApp()">إرسال الطلب عبر واتساب</button>
+</div>
+
+<footer>
+    © 2025 متجر استبرق
+</footer>
+
+<script>
+let cart=[];
+let total=0;
+
+function addToCart(name,price){
+    cart.push(name + " - " + price + " ₪");
+    total += price;
+    displayCart();
+}
+
+function displayCart(){
+    let items="";
+    cart.forEach(item => {
+        items += "<li>"+item+"</li>";
+    });
+    document.getElementById("cartItems").innerHTML = items;
+    document.getElementById("total").innerText = "المجموع: " + total + " ₪";
+}
+
+function sendWhatsApp(){
+    let message = "طلب من متجر استبرق:%0A";
+    cart.forEach(item => {
+        message += "- " + item + "%0A";
+    });
+    message += "المجموع: " + total + " ₪";
+
+    window.open(
+      "https://wa.me/972544204029?text=" + message,
+      "_blank"
+    );
+}
+</script>
+
+</body>
+</html>
