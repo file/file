@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.147 2025/11/04 20:42:42 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.148 2026/01/10 16:18:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -105,7 +105,7 @@ file_checkfmt(char *msg, size_t mlen, const char *fmt)
 			return -1;
 		}
 		// Skip uninteresting.
-		while (strchr("#0.'+- ", *p) != NULL)
+		while (*p != '\0' && strchr("#0.'+- ", *p) != NULL)
 			p++;
 		if (*p == '*') {
 			if (msg)
