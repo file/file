@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.217 2025/09/06 17:00:32 christos Exp $
+# $File: archive,v 1.218 2026/01/10 16:16:27 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2859,3 +2859,23 @@
 
 # https://www.vm.ibm.com/devpages/bkw/vmarc.html magic in EBCDIC
 0	string	\x7a\xc3\xc6\xc6\x40\x40\x40\x40	VM Archive
+
+# https://pbs.proxmox.com/docs/file-formats.html
+0	string	\x42\xab\x38\x07\xbe\x83\x70\xa1 Proxmox Backup Server unencrypted uncompressed blob
+
+0	string	\x31\xb9\x58\x42\x6f\xb6\xa3\x7f Proxmox Backup Server unencrypted compressed blob
+
+0	string	\x7b\x67\x85\xbe\x22\x2d\x4c\xf0 Proxmox Backup Server encrypted uncompressed blob
+
+0	string	\xe6\x59\x1b\xbf\x0b\xbf\xd8\x0b Proxmox Backup Server encrypted compressed blob
+
+0	string	\x2f\x7f\x41\xed\x91\xfd\x0f\xcd Proxmox Backup Server fixed index
+
+0	string	\x1c\x91\x4e\xa5\x19\xba\xb3\xcd Proxmox Backup Server dynamic index
+
+0	string	\xef\xac\x88\xe5\x74\x64\x95\xd5 Proxmox File Archive Format v1 / pxar
+
+0	string	\x0d\xa4\x16\xdf\x75\x6c\x0f\x73\x18\x00\x00\x00\x00\x00\x00\x00\x02 Proxmox File Archive Format v2+ / mpxar
+
+0	string	\xd2\x4e\x4a\x19\xc2\x68\x4c\x83\x10 Proxmox File Archive Format payload stream / ppxar
+
