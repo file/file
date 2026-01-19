@@ -1,4 +1,7 @@
 
+2026-01-19  14:00  Christos Zoulas <christos@zoulas.com>
+	* if stat fails, don't attempt to restore times (Steven Grubb)
+
 2025-05-28  15:20  Christos Zoulas <christos@zoulas.com>
 
 	PR/622: Odd_Bloke: Handle negative offsets in file_buffer(),
