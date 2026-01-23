@@ -1,0 +1,5 @@
+0   string MDF\x20\x20\x20\x20\x20    ASAM/MDF measurement file Version
+>8  regex  .\\... %s
+>12 string \x20\x20\x20\x20
+>62 byte !0                           (unfinalized)
+>64 string ##HD

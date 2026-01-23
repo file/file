@@ -32,6 +32,7 @@ $(MAGIC_FRAGMENT_DIR)/archive \
 $(MAGIC_FRAGMENT_DIR)/aria \
 $(MAGIC_FRAGMENT_DIR)/arm \
 $(MAGIC_FRAGMENT_DIR)/asf \
+$(MAGIC_FRAGMENT_DIR)/asammdf \
 $(MAGIC_FRAGMENT_DIR)/assembler \
 $(MAGIC_FRAGMENT_DIR)/asterix \
 $(MAGIC_FRAGMENT_DIR)/att3b \
