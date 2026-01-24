@@ -29,3 +29,4 @@
 >4	byte		0x52			version 5.2
 >4	byte		0x53			version 5.3
 >4	byte		0x54			version 5.4
+>4	byte		0x55			version 5.5
