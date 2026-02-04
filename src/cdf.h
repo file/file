@@ -323,6 +323,7 @@ file_protected int cdf_read_user_stream(const cdf_info_t *,
     const cdf_stream_t *, const cdf_dir_t *, const char *, cdf_stream_t *);
 file_protected int cdf_find_stream(const cdf_dir_t *, const char *, int);
 file_protected int cdf_zero_stream(cdf_stream_t *);
+file_protected int cdf_namecmp(const char *d, const uint16_t *s, size_t l);
 file_protected int cdf_read_doc_summary_info(const cdf_info_t *,
     const cdf_header_t *, const cdf_sat_t *, const cdf_sat_t *,
     const cdf_stream_t *, const cdf_dir_t *, cdf_stream_t *);
