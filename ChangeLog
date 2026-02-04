@@ -1,4 +1,8 @@
 
+2026-02-04  09:54  Christos Zoulas <christos@zoulas.com>
+	* Better multi-compound document identification by following the
+	  order of the directories entries. (Thomas Ledoux)
+
 2026-01-19  14:00  Christos Zoulas <christos@zoulas.com>
 	* if stat fails, don't attempt to restore times (Steven Grubb)
 
