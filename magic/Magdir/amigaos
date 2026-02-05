@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.22 2025/11/22 18:04:04 rrt Exp $
+# $File: amigaos,v 1.23 2026/02/05 18:49:06 christos Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -194,8 +194,7 @@
 0	string		LZX		LZX compressed archive (Amiga)
 
 # From: Przemek Kramarczyk <pkramarczyk@gmail.com>
-0	string 		.KEY		AmigaDOS script
-0	string 		.key		AmigaDOS script
+0	string/c	.key		AmigaDOS script
 
 # AMOS Basic file formats
 # https://www.exotica.org.uk/wiki/AMOS_file_formats
