@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.35 2026/02/05 18:55:44 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.36 2026/02/06 14:04:20 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -108,6 +108,7 @@ enable_sandbox(void)
 	ALLOW_RULE(getrandom);	// Used by glibc in file_pipe2file()
 #ifdef __NR_getcwd
 	ALLOW_RULE(getcwd);	// GCONV_PATH=
+#endif
 #ifdef FIONREAD
 	// called in src/compress.c under sread
 	ALLOW_IOCTL_RULE(FIONREAD);
