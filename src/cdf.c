@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.125 2026/02/04 14:56:28 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.126 2026/02/09 17:10:42 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -880,12 +880,12 @@ cdf_find_stream(const cdf_dir_t *dir, const char *name, int type)
 {
 	size_t i, name_len = strlen(name) + 1;
 
-	for (i = 0; i < dir->dir_len; i++)
-		if (dir->dir_tab[i].d_type == type &&
-		    cdf_namecmp(name, dir->dir_tab[i].d_name, name_len)
+	for (i = 1; i <= dir->dir_len; i++)
+		if (dir->dir_tab[i-1].d_type == type &&
+		    cdf_namecmp(name, dir->dir_tab[i-1].d_name, name_len)
 		    == 0)
 			break;
-	if (i > 0)
+	if (i <= dir->dir_len)
 		return CAST(int, i);
 
 	DPRINTF(("Cannot find type %d `%s'\n", type, name));
