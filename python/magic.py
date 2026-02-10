@@ -132,7 +132,8 @@ class Magic(object):
         """
         Closes the magic database and deallocates any resources used.
         """
-        _close(self._magic_t)
+        if _close:
+            _close(self._magic_t)
 
     @staticmethod
     def __tostr(s):
