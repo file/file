@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.214 2025/09/06 17:00:32 christos Exp $
+# $File: msdos,v 1.215 2026/02/27 14:52:30 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -1506,7 +1506,7 @@
 >1		leshort	<-259
 # that offset must be accessible
 # add 10000h to jump at end of 64 KiB segment, add 1 for jump instruction and 2 for 16-bit offset
->>(1,s+65539)   byte    x
+>>(1.s+65539)   byte    x
 # after jump next instruction for DEBUGGING!
 #>>>&-1		ubelong	x	\b, NEXT instruction %#8.8x
 >>>0        use msdos-com
