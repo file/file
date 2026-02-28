@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: readelf.c,v 1.204 2025/06/27 16:57:44 christos Exp $")
+FILE_RCSID("@(#)$File: readelf.c,v 1.205 2026/02/28 16:14:12 christos Exp $")
 #endif
 
 #ifdef BUILTIN_ELF
@@ -1839,7 +1839,7 @@ dophn_exec(struct magic_set *ms, int clazz, int swap, int fd, off_t off,
 				continue;
 			if (bufsize && nbuf[0]) {
 				nbuf[bufsize - 1] = '\0';
-				str = CAST(const char *, nbuf);
+				str = RCAST(const char *, nbuf);
 			} else
 				str = "*empty*";
 			strlcpy(interp, str, sizeof(interp));
