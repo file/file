@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.359 2025/06/08 14:42:11 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.360 2026/02/28 16:15:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -49,15 +49,15 @@ file_private int match(struct magic_set *, struct magic *, file_regex_t **, size
     const struct buffer *, size_t, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *, int *, int *);
 file_private int mget(struct magic_set *, struct magic *, const struct buffer *,
-    const unsigned char *, size_t,
-    size_t, unsigned int, int, int, int, uint16_t *,
+    const struct buffer *, size_t, unsigned int, int, int, int, uint16_t *,
     uint16_t *, int *, int *, int *, int *, int *);
 file_private int msetoffset(struct magic_set *, struct magic *, struct buffer *,
     const struct buffer *, size_t, unsigned int);
-file_private int magiccheck(struct magic_set *, struct magic *, file_regex_t **);
+file_private int magiccheck(struct magic_set *, struct magic *,
+    file_regex_t **);
 file_private int mprint(struct magic_set *, struct magic *);
 file_private int moffset(struct magic_set *, struct magic *,
-    const struct buffer *, size_t, int32_t *);
+    size_t, size_t, int32_t *);
 file_private void mdebug(uint32_t, const char *, size_t);
 file_private int mcopy(struct magic_set *, union VALUETYPE *, int, int,
     const unsigned char *, uint32_t, size_t, struct magic *);
@@ -255,8 +255,7 @@ flush:
 		ms->line = m->lineno;
 
 		/* if main entry matches, print it... */
-		switch (mget(ms, m, b, CAST(const unsigned char *, bb.fbuf),
-		    bb.flen, offset, cont_level,
+		switch (mget(ms, m, b, &bb, offset, cont_level,
 		    mode, text, flip, indir_count, name_count,
 		    printed_something, need_separator, firstline, returnval,
 		    found_match))
@@ -319,7 +318,8 @@ flush:
 			}
 		}
 
-		switch (moffset(ms, m, &bb, offset, &ms->c.li[cont_level].off)) {
+		switch (moffset(ms, m, bb.flen, offset,
+		    &ms->c.li[cont_level].off)) {
 		case -1:
 		case 0:
 			goto flush;
@@ -367,8 +367,7 @@ flush:
 					continue;
 			}
 #endif
-			switch (mget(ms, m, b, CAST(const unsigned char *,
-			    bb.fbuf), bb.flen, offset,
+			switch (mget(ms, m, b, &bb, offset,
 			    cont_level, mode, text, flip, indir_count,
 			    name_count, printed_something, need_separator,
 			    firstline, returnval, found_match)) {
@@ -450,7 +449,7 @@ flush:
 					*need_separator = 1;
 				}
 
-				switch (moffset(ms, m, &bb, offset,
+				switch (moffset(ms, m, bb.flen, offset,
 				    &ms->c.li[cont_level].off)) {
 				case -1:
 				case 0:
@@ -833,11 +832,11 @@ mprint(struct magic_set *ms, struct magic *m)
 }
 
 file_private int
-moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
+moffset(struct magic_set *ms, struct magic *m, size_t nbytes,
     size_t offset, int32_t *op)
 {
-	size_t nbytes = b->flen;
 	int32_t o;
+	size_t vlen;
 
   	switch (m->type) {
   	case FILE_BYTE:
@@ -930,18 +929,15 @@ moffset(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		break;
 
 	case FILE_REGEX:
-		if ((m->str_flags & REGEX_OFFSET_START) != 0)
-			o = CAST(int32_t, ms->search.offset - offset);
-		else
-			o = CAST(int32_t,
-			    (ms->search.offset + ms->search.rm_len - offset));
+		/* Why is regex and search different? */
+		vlen = (m->str_flags & REGEX_OFFSET_START) == 0 ?
+		    ms->search.rm_len : 0;
+		o = CAST(int32_t, ms->search.offset + vlen - offset);
 		break;
 
 	case FILE_SEARCH:
-		if ((m->str_flags & REGEX_OFFSET_START) != 0)
-			o = CAST(int32_t, ms->search.offset - offset);
-		else
-			o = CAST(int32_t, (ms->search.offset + m->vallen - offset));
+		vlen = (m->str_flags & REGEX_OFFSET_START) == 0 ? m->vallen : 0;
+		o = CAST(int32_t, ms->search.offset + vlen - offset);
 		break;
 
 	case FILE_CLEAR:
@@ -1564,6 +1560,7 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 		if (b->fd == -1) {
 			ms->eoffset = ms->offset =
 			    CAST(int32_t, b->flen - m->offset);
+			memset(bb, 0, sizeof(*bb));
 		} else {
 			if (CAST(size_t, m->offset) > b->elen)
 				return -1;
@@ -1580,6 +1577,7 @@ normal:
 			ms->offset = offset;
 			ms->eoffset = 0;
 		} else {
+			memset(bb, 0, sizeof(*bb));
 			if (b->fd != -1)
 				ms->offset = ms->eoffset + offset;
 		}
@@ -1618,13 +1616,13 @@ restore_cont(struct magic_set *ms, struct cont *c)
 
 file_private int
 mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
-    const unsigned char *s, size_t nbytes, size_t o, unsigned int cont_level,
+    const struct buffer *bb, size_t o, unsigned int cont_level,
     int mode, int text, int flip, uint16_t *indir_count, uint16_t *name_count,
     int *printed_something, int *need_separator, int *firstline, int *returnval,
     int *found_match)
 {
 	uint32_t eoffset, offset = ms->offset;
-	struct buffer bb;
+	struct buffer sbb;
 	intmax_t lhs;
 	file_pushbuf_t *pb;
 	int rv, oneed_separator, in_type, nfound_match;
@@ -1632,6 +1630,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	union VALUETYPE *p = &ms->ms_value;
 	struct mlist ml, *mlp;
 	struct cont c;
+	const unsigned char *s = CAST(const unsigned char *, bb->fbuf);
+	size_t nbytes = bb->flen;
 
 	if (*indir_count >= ms->indir_max) {
 		file_error(ms, 0, "indirect count (%hu) exceeded",
@@ -1923,22 +1923,22 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			return -1;
 
 		(*indir_count)++;
-		bb = *b;
-		bb.fbuf = s + offset;
-		bb.flen = nbytes - offset;
-		bb.ebuf = NULL;
-		bb.elen = 0;
+		sbb = *b;
+		sbb.fbuf = s + offset;
+		sbb.flen = nbytes - offset;
+		sbb.ebuf = NULL;
+		sbb.elen = 0;
 		rv = -1;
 		for (mlp = ms->mlist[0]->next; mlp != ms->mlist[0];
 		    mlp = mlp->next)
 		{
 			if ((rv = match(ms, mlp->magic, mlp->magic_rxcomp,
-			    mlp->nmagic, &bb, 0, BINTEST, text, 0, indir_count,
+			    mlp->nmagic, &sbb, 0, BINTEST, text, 0, indir_count,
 			    name_count, printed_something, need_separator,
 			    firstline, NULL, NULL)) != 0)
 				break;
 		}
-		buffer_fini(&bb);
+		buffer_fini(&sbb);
 
 		if ((ms->flags & MAGIC_DEBUG) != 0)
 			fprintf(stderr, "indirect @offs=%u[%d]\n", offset, rv);
