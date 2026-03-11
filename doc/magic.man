@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.115 2025/11/24 15:45:00 christos Exp $
-.Dd November 24, 2025
+.\" $File: magic.man,v 1.116 2026/03/11 19:11:07 christos Exp $
+.Dd March 11, 2026
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -86,17 +86,17 @@ Use upper case insensitive matching: upper case
 characters in the magic match both lower and upper case characters in the
 target, whereas lower case characters in the magic only match upper case
 characters in the target.
-(not valid for regex)
+For regex, this turns on REG_ICASE.
 .It c
 Use lower case insensitive matching: lower case
 characters in the magic match both lower and upper case characters in the
 target, whereas upper case characters in the magic only match upper case
 characters in the target.
-(not valid for regex)
 To do a complete case insensitive match, specify both
 .Dq c
 and
 .Dq C .
+For regex, this turns on REG_ICASE.
 .It f
 Require that the matched string is a full word, not a partial word match.
 .It s

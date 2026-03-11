@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.262 2025/07/23 18:52:08 christos Exp $
+ * @(#)$File: file.h,v 1.263 2026/03/11 19:11:07 christos Exp $
  */
 
 #ifndef __file_h__
@@ -427,6 +427,7 @@ struct magic {
 #define CHAR_PSTRING_4_LE			'l'
 #define CHAR_PSTRING_LENGTH_INCLUDES_ITSELF     'J'
 #define STRING_IGNORE_CASE		(STRING_IGNORE_LOWERCASE|STRING_IGNORE_UPPERCASE)
+#define	REGEX_ICASE(m) (((m)->str_flags & STRING_IGNORE_CASE) ? REG_ICASE : 0)
 #define STRING_DEFAULT_RANGE		100
 
 #define	INDIRECT_RELATIVE			BIT(0)

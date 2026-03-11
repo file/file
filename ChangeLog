@@ -1,3 +1,7 @@
+2026-03-11  15:14 Christos Zoulas <christos@zoulas.com>
+
+	* PR/728: Anton Monroe: Reinstate regex/c
+
 2026-02-26  11:32  Christos Zoulas <christos@zoulas.com>
 
 	* release 5.47
@@ -11,8 +15,8 @@
 
 2025-05-28  15:20  Christos Zoulas <christos@zoulas.com>
 
-	PR/622: Odd_Bloke: Handle negative offsets in file_buffer(),
-	when fd is not available.
+	* PR/622: Odd_Bloke: Handle negative offsets in file_buffer(),
+	  when fd is not available.
 
 2025-05-28  12:50  Christos Zoulas <christos@zoulas.com>
 

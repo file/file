@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.360 2026/02/28 16:15:59 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.361 2026/03/11 19:11:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2122,7 +2122,7 @@ alloc_regex(struct magic_set *ms, struct magic *m)
 	}
 
 	rc = file_regcomp(ms, rx, m->value.s, REG_EXTENDED | REG_NEWLINE |
-	    ((m->str_flags & STRING_IGNORE_CASE) ? REG_ICASE : 0));
+	    REGEX_ICASE(m));
 	if (rc == 0)
 		return rx;
 

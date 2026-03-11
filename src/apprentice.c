@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.369 2025/10/08 16:40:52 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.370 2026/03/11 19:11:07 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1789,16 +1789,6 @@ string_modifier_check(struct magic_set *ms, struct magic *m)
 			    CHAR_COMPACT_OPTIONAL_WHITESPACE);
 			return -1;
 		}
-		if ((m->str_flags & STRING_IGNORE_LOWERCASE) != 0) {
-			file_magwarn(ms, "'/%c' not allowed on regex\n",
-			    CHAR_IGNORE_LOWERCASE);
-			return -1;
-		}
-		if ((m->str_flags & STRING_IGNORE_UPPERCASE) != 0) {
-			file_magwarn(ms, "'/%c' not allowed on regex\n",
-			    CHAR_IGNORE_UPPERCASE);
-			return -1;
-		}
 		break;
 	default:
 		file_magwarn(ms, "coding error: m->type=%d\n",
@@ -2912,8 +2902,8 @@ getvalue(struct magic_set *ms, struct magic *m, const char **p, int action)
 		}
 		if (m->type == FILE_REGEX) {
 			file_regex_t rx;
-			int rc =
-			    file_regcomp(ms, &rx, m->value.s, REG_EXTENDED);
+			int rc = file_regcomp(ms, &rx, m->value.s,
+			    REG_EXTENDED | REGEX_ICASE(m));
 			if (rc == 0) {
 				file_regfree(&rx);
 			}
