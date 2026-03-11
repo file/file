@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.215 2026/02/27 14:52:30 christos Exp $
+# $File: msdos,v 1.216 2026/03/11 20:05:18 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -24,9 +24,9 @@
 # OS/2 batch files are REXX. the second regex is a bit generic, oh well
 # the matched commands seem to be common in REXX and uncommon elsewhere
 100	search/0xffff   rxfuncadd
->100	regex	=^[\ \t]{0,10}call[\ \t]{1,10}rxfunc	OS/2 REXX batch file text
+>100	regex/c	=^[\ \t]{0,10}call[\ \t]{1,10}rxfunc	OS/2 REXX batch file text
 100	search/0xffff   say
->100	regex/	=^[\ \t]{0,10}say\ ['"]			OS/2 REXX batch file text
+>100	regex/c	=^[\ \t]{0,10}say\ ['"]			OS/2 REXX batch file text
 
 
 # Tests for various EXE types.
