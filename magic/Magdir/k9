@@ -9,7 +9,7 @@
 # They begin with the ASCII magic number "K9!" (0x4B 0x39 0x21) and use a
 # tiered security model: Kennel (data only), Yard (validation), Hunt (full
 # execution with cryptographic signature).
-# Specification: https://github.com/hyperpolymath/k9-svc/blob/main/SPEC.adoc
+# Specification: https://github.com/hyperpolymath/standards/blob/main/k9-svc/SPEC.adoc
 # MIME type: application/vnd.k9+nickel
 
 # K9 magic number: "K9!" at byte offset 0
