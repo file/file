@@ -443,6 +443,15 @@
 0	string/b	BZ3v1	bzip3 compressed data
 >5	ulelong		x	\b, blocksize %u
 
+#------------------------------------------------------------------------------
+# ZXC:  ZXC compressed data
+# From: Bertrand Lebonnois <zxc.codec@gmail.com>
+# https://github.com/hellobertrand/zxc
+0       lelong      0x9CB02EF5  ZXC compressed data
+!:mime  application/x-zxc
+!:ext   zxc
+>4      byte        x           \b (v%u)
+>6      byte        &0x80       \b, checksum enabled
 
 # https://support-docs.illumina.com/SW/ORA_Format_Specification/Content/\
 # SW/ORA/ORAFormatSpecification.htm
