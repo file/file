@@ -1,8 +1,8 @@
 
 #------------------------------------------------------------------------------
-# $File: a2ml,v 1.1 2026/03/20 13:59:12 christos Exp $
+# $File: a2ml,v 1.1 2026/03/16 00:00:00 christos Exp $
 # a2ml:  file(1) magic for A2ML (Attested Markup Language) files
-# URL:   https://github.com/hyperpolymath/a2ml
+# URL:   https://github.com/hyperpolymath/standards/tree/main/a2ml
 # From:  Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 # A2ML is a lightweight attested markup format with a typed, formally
@@ -29,7 +29,7 @@
 !:ext	a2ml
 
 # Heading line followed by @abstract deeper in the file
-0	string	#\\
+0	string	#\
 >&0	search/512	\n@abstract:	A2ML Attested Markup Language document
 !:mime	application/vnd.a2ml
 !:ext	a2ml
