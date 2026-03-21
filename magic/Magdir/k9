@@ -16,25 +16,13 @@
 0	string	K9!	K9 Self-Validating Component
 !:mime	application/vnd.k9+nickel
 !:ext	k9
-
 # Detect security level from content following the magic number
-0	string	K9!
->&0	search/1024	security_level:\ 'Kennel	K9 Self-Validating Component (Kennel level, data only)
-!:mime	application/vnd.k9+nickel
-!:ext	k9
-
-0	string	K9!
->&0	search/1024	security_level:\ 'Yard	K9 Self-Validating Component (Yard level, validation)
-!:mime	application/vnd.k9+nickel
-!:ext	k9
-
-0	string	K9!
->&0	search/1024	security_level:\ 'Hunt	K9 Self-Validating Component (Hunt level, executable)
-!:mime	application/vnd.k9+nickel
-!:ext	k9
+>3	search/1024	security_level:\ 'Kennel	\b, Kennel level (data only)
+>3	search/1024	security_level:\ 'Yard	\b, Yard level (validation)
+>3	search/1024	security_level:\ 'Hunt	\b, Hunt level (executable)
 
 # K9 Nickel contract files (.k9.ncl) -- pedigree definition
 0	search/256	K9Pedigree	K9 Nickel contract (pedigree definition)
 !:mime	application/vnd.k9+nickel
-!:ext	k9.ncl/ncl
+!:ext	ncl
 !:strength -10

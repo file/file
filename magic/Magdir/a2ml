@@ -28,12 +28,6 @@
 !:mime	application/vnd.a2ml
 !:ext	a2ml
 
-# Heading line followed by @abstract deeper in the file
-0	string	#\
->&0	search/512	\n@abstract:	A2ML Attested Markup Language document
-!:mime	application/vnd.a2ml
-!:ext	a2ml
-
 # @opaque directive with language annotation (A2ML code block)
 0	search/512	@opaque(lang=	A2ML Attested Markup Language document
 !:mime	application/vnd.a2ml
