@@ -1,0 +1,40 @@
+= File Pr Fix — Maintainer Quickstart
+:toc: preamble
+
+Packaging, deployment, and release management.
+
+== Prerequisites
+
+* Git 2.40+
+* just (command runner)
+* Familiarity with the project (run `just tour` first)
+
+== CI/CD
+
+This project uses GitHub Actions. Workflows are in `.github/workflows/`.
+
+Key workflows:
+
+* `hypatia-scan.yml` — Neurosymbolic security scanning
+* `codeql.yml` — Code analysis
+* `scorecard.yml` — OpenSSF Scorecard
+* `mirror.yml` — GitLab/Bitbucket mirroring
+
+== Releasing
+
+1. Update version in project config
+2. Update CHANGELOG.md
+3. Tag: `git tag -s v<VERSION>`
+4. Push: `git push origin main --tags`
+
+== Container Build (if applicable)
+
+[source,bash]
+----
+podman build -f Containerfile -t file-pr-fix:latest .
+----
+
+== Mirrors
+
+This repo is mirrored to GitLab and Bitbucket (hyperpolymath accounts)
+via the `mirror.yml` workflow.

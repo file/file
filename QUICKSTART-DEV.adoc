@@ -1,0 +1,39 @@
+= File Pr Fix — Developer Quickstart
+:toc: preamble
+
+Clone, build, test, contribute.
+
+== Prerequisites
+
+* Git 2.40+
+* just (command runner)
+* See `just doctor` output for language-specific requirements
+
+== Setup
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/file-pr-fix
+cd file-pr-fix
+just doctor    # verify toolchain
+just heal      # auto-install missing tools
+----
+
+== Development Workflow
+
+[source,bash]
+----
+just tour      # understand the codebase
+just help-me   # see available commands
+----
+
+== Before Committing
+
+[source,bash]
+----
+just assail    # run panic-attacker security scan
+----
+
+== Contributing
+
+See link:CONTRIBUTING.md[CONTRIBUTING.md] for guidelines.

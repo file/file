@@ -1,0 +1,33 @@
+= File Pr Fix — User Quickstart
+:toc: preamble
+
+Get up and running in 60 seconds.
+
+== Prerequisites
+
+* Git 2.40+
+* just (command runner) — https://just.systems
+
+== Install
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/file-pr-fix
+cd file-pr-fix
+just doctor    # check toolchain
+just heal      # auto-install missing tools
+----
+
+== First Run
+
+[source,bash]
+----
+just tour      # guided project tour
+just help-me   # see common workflows
+----
+
+== Get Help
+
+* `just help-me` — common workflows
+* `just doctor` — diagnose toolchain issues
+* https://github.com/hyperpolymath/file-pr-fix/issues — report bugs
