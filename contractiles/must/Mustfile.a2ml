@@ -28,7 +28,7 @@ that MUST hold at all times.
 
 ### no-hardcoded-paths
 - description: No hardcoded developer paths
-- run: "! grep -rn '/home/hyper\|/mnt/eclipse' --include='*.rs' --include='*.res' --include='*.ex' --include='*.gleam' --include='*.zig' --include='*.sh' . 2>/dev/null | grep -v '.git/' | grep -v 'ux-rollout.jl' | head -1"
+- run: "! grep -rn '$HOME\|$ECLIPSE_DIR' --include='*.rs' --include='*.res' --include='*.ex' --include='*.gleam' --include='*.zig' --include='*.sh' . 2>/dev/null | grep -v '.git/' | grep -v 'ux-rollout.jl' | head -1"
 - severity: critical
 
 ### no-dockerfiles
