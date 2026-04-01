@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.201 2026/02/01 16:25:09 christos Exp $
+# $File: Makefile.am,v 1.202 2026/03/20 13:59:12 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -10,6 +10,7 @@ pkgdata_DATA = magic.mgc
 MAGIC_FRAGMENTS = \
 $(MAGIC_DIR)/Header \
 $(MAGIC_DIR)/Localstuff \
+$(MAGIC_FRAGMENT_DIR)/a2ml \
 $(MAGIC_FRAGMENT_DIR)/acorn \
 $(MAGIC_FRAGMENT_DIR)/adi \
 $(MAGIC_FRAGMENT_DIR)/adventure \
@@ -156,6 +157,7 @@ $(MAGIC_FRAGMENT_DIR)/isz \
 $(MAGIC_FRAGMENT_DIR)/java \
 $(MAGIC_FRAGMENT_DIR)/javascript \
 $(MAGIC_FRAGMENT_DIR)/jpeg \
+$(MAGIC_FRAGMENT_DIR)/k9 \
 $(MAGIC_FRAGMENT_DIR)/karma \
 $(MAGIC_FRAGMENT_DIR)/kde \
 $(MAGIC_FRAGMENT_DIR)/keepass \
@@ -267,13 +269,13 @@ $(MAGIC_FRAGMENT_DIR)/python \
 $(MAGIC_FRAGMENT_DIR)/qt \
 $(MAGIC_FRAGMENT_DIR)/r \
 $(MAGIC_FRAGMENT_DIR)/revision \
-$(MAGIC_FRAGMENT_DIR)/ringdove \
 $(MAGIC_FRAGMENT_DIR)/riff \
+$(MAGIC_FRAGMENT_DIR)/ringdove \
 $(MAGIC_FRAGMENT_DIR)/rpi \
 $(MAGIC_FRAGMENT_DIR)/rpm \
 $(MAGIC_FRAGMENT_DIR)/rpmsg \
-$(MAGIC_FRAGMENT_DIR)/rtf \
 $(MAGIC_FRAGMENT_DIR)/rst \
+$(MAGIC_FRAGMENT_DIR)/rtf \
 $(MAGIC_FRAGMENT_DIR)/ruby \
 $(MAGIC_FRAGMENT_DIR)/rust \
 $(MAGIC_FRAGMENT_DIR)/sc \
@@ -342,8 +344,8 @@ $(MAGIC_FRAGMENT_DIR)/vmware \
 $(MAGIC_FRAGMENT_DIR)/vorbis \
 $(MAGIC_FRAGMENT_DIR)/vxl \
 $(MAGIC_FRAGMENT_DIR)/warc \
-$(MAGIC_FRAGMENT_DIR)/web \
 $(MAGIC_FRAGMENT_DIR)/weak \
+$(MAGIC_FRAGMENT_DIR)/web \
 $(MAGIC_FRAGMENT_DIR)/webassembly \
 $(MAGIC_FRAGMENT_DIR)/windows \
 $(MAGIC_FRAGMENT_DIR)/wireless \

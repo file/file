@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.361 2026/03/11 19:11:07 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.362 2026/03/23 14:23:11 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -218,6 +218,7 @@ match(struct magic_set *ms, struct magic *magic, file_regex_t **magic_rxcomp,
 	struct buffer bb;
 	int print = (ms->flags & MAGIC_NODESC) == 0;
 
+	(void)memset(&bb, 0, sizeof(bb));
 	/*
 	 * returnval can be 0 if a match is found, but there was no
 	 * annotation to be printed.
@@ -1560,7 +1561,6 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 		if (b->fd == -1) {
 			ms->eoffset = ms->offset =
 			    CAST(int32_t, b->flen - m->offset);
-			memset(bb, 0, sizeof(*bb));
 		} else {
 			if (CAST(size_t, m->offset) > b->elen)
 				return -1;
@@ -1577,7 +1577,6 @@ normal:
 			ms->offset = offset;
 			ms->eoffset = 0;
 		} else {
-			memset(bb, 0, sizeof(*bb));
 			if (b->fd != -1)
 				ms->offset = ms->eoffset + offset;
 		}

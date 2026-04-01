@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.96 2024/11/09 23:47:04 christos Exp $
+# $File: compress,v 1.97 2026/03/20 13:42:47 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -443,6 +443,15 @@
 0	string/b	BZ3v1	bzip3 compressed data
 >5	ulelong		x	\b, blocksize %u
 
+#------------------------------------------------------------------------------
+# ZXC:  ZXC compressed data
+# From: Bertrand Lebonnois <zxc.codec@gmail.com>
+# https://github.com/hellobertrand/zxc
+0       lelong      0x9CB02EF5  ZXC compressed data
+!:mime  application/x-zxc
+!:ext   zxc
+>4      byte        x           \b (v%u)
+>6      byte        &0x80       \b, checksum enabled
 
 # https://support-docs.illumina.com/SW/ORA_Format_Specification/Content/\
 # SW/ORA/ORAFormatSpecification.htm
