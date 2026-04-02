@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.148 2026/01/10 16:18:18 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.149 2026/04/02 01:52:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -992,6 +992,8 @@ file_strtrim(char *str)
 	last = str;
 	while (*last)
 		last++;
+	if (last == str)
+		return str;
 	--last;
 	while (isspace(CAST(unsigned char, *last)))
 		last--;
