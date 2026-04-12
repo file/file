@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.362 2026/03/23 14:23:11 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.363 2026/04/12 22:15:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1577,8 +1577,7 @@ normal:
 			ms->offset = offset;
 			ms->eoffset = 0;
 		} else {
-			if (b->fd != -1)
-				ms->offset = ms->eoffset + offset;
+			ms->offset = ms->eoffset + offset;
 		}
 	}
 	if ((ms->flags & MAGIC_DEBUG) != 0) {
