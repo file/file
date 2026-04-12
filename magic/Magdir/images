@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.267 2025/11/24 14:22:31 christos Exp $
+# $File: images,v 1.268 2026/04/12 22:23:50 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1734,10 +1734,14 @@
 >>>-0		offset	=32066
 # like: spider.pi1 pinkgirl.pi1 frog3.pi1
 >>>>0		use		degas-bitmap
-# about 55 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 32128
+# file size 32128 is always Atari NEOchrome, not DEGAS.
+# NEOchrome files have a 128-byte header (vs DEGAS 34-byte header)
+# and are always exactly 32128 bytes (128 + 32000 pixel data).
+# DEGAS uncompressed is 32034, DEGAS Elite uncompressed is 32066.
+# URL:		http://fileformats.archiveteam.org/wiki/NEOchrome
+# Reference:	https://wiki.multimedia.cx/index.php?title=Neochrome
 >>>-0		offset	=32128
-# like: mountain.pi1 bigspid.pi1 alf33.pi1
->>>>0		use		degas-bitmap
+>>>>0		use		neochrome-bitmap
 # 1 DEGAS Elite low-res uncompressed bitmap *.pi1 with file size 44834
 >>>-0		offset	=44834
 # like: kenshin.pi1
@@ -1768,7 +1772,11 @@
 #    http://www.atari-wiki.com/?title=IMG_file (XIMG, STTT)
 #    http://www.fileformat.info/format/gemraster/spec/index.htm (XIMG, STTT)
 #    http://sylvana.net/1stguide/1STGUIDE.ENG (TIMG)
+# Note: GEM v1 checks must be a separate top-level entry from DEGAS mid-res
+# above, because the >>-0 offset (end-of-file) tests for DEGAS file sizes
+# corrupt the offset context for sibling > checks at level 1.
 # header_size
+0	beshort		0x0001
 >2      beshort     0x0008
 >>0     use gem_info
 >2      beshort     0x0009
@@ -1841,6 +1849,13 @@
 # skip some (36/212) Python Pickle (factor_cache.pickle environment.pickle) with invalid 1st atari color entry (2863 6363 7d71)
 >2		ubeshort&0xF000		0
 >>0		use		degas-bitmap
+# display information of Atari NEOchrome bitmap images
+# NEOchrome files are always 32128 bytes (128-byte header + 32000 pixel data)
+# and always 320x200 at 16 colours (low-res only)
+0	name		neochrome-bitmap
+>0	ubyte		x		Atari NEOchrome bitmap 320 x 200 x 16
+!:mime	image/x-neo
+!:ext	neo
 # display information of Atari DEGAS and DEGAS Elite bitmap images
 0	name		degas-bitmap
 >0	ubyte		x		Atari DEGAS
