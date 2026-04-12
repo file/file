@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.97 2026/03/20 13:42:47 christos Exp $
+# $File: compress,v 1.98 2026/04/12 21:14:24 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -465,3 +465,17 @@
 # https://github.com/xamarin/xamarin-android/pull/4686
 0	string	XALZ	Xamarin LZ4-compressed assembly
 >8	ulelong	x	\b, uncompressed size %u
+
+#------------------------------------------------------------------------------
+# Kanzi:  Kanzi compressed data
+# From: Frederic Langlet <flanglet@gmail.com>
+# https://github.com/flanglet/kanzi-cpp/wiki/Bitstream-Format
+0       belong      0x4B414E5A  kanzi compressed data
+!:mime  application/x-knz
+!:ext   knz
+>4  byte/16     x       \b, version %u
+
+# Branch for Version > 5 (Uses Bits 3 and 2 for checksum)
+>4      byte/16         >5
+>>4     byte&0x0C       0x04            \b, 32-bit checksum
+>>4     byte&0x0C       0x08            \b, 64-bit checksum
