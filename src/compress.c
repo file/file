@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.158 2024/11/10 16:52:27 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.159 2026/04/13 16:35:09 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -1190,9 +1190,9 @@ uncompressbuf(int fd, size_t bytes_max, size_t method, int nofork,
 
 	posix_spawn_file_actions_destroy(&fa);
 
-	if (status == -1) {
+	if (status != 0) {
 		return makeerror(newch, n, "Cannot posix_spawn `%s', %s",
-		    compr[method].argv[0], strerror(errno));
+		    compr[method].argv[0], strerror(status));
 	}
 #else
 	/* For processes with large mapped virtual sizes, vfork
