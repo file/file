@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.270 2026/04/15 22:26:36 christos Exp $
+# $File: images,v 1.271 2026/04/15 22:31:03 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -1776,25 +1776,26 @@
 # above, because the >>-0 offset (end-of-file) tests for DEGAS file sizes
 # corrupt the offset context for sibling > checks at level 1.
 # header_size
-0	beshort		0x0001
->2      beshort     0x0008
->>0     use gem_info
->2      beshort     0x0009
->>0     use gem_info
-# no example for NOSIG
->2      beshort     24
->>0     use gem_info
-# no example for HYPERPAINT
->2      beshort     25
->>0     use gem_info
-16      string      XIMG\0
->0      use gem_info
-# no example
+# commented out, dup warning should be fixed differently
+#0	beshort		0x0001
+#>2      beshort     0x0008
+#>>0     use gem_info
+#>2      beshort     0x0009
+#>>0     use gem_info
+## no example for NOSIG
+#>2      beshort     24
+#>>0     use gem_info
+## no example for HYPERPAINT
+#>2      beshort     25
+#>>0     use gem_info
+#16      string      XIMG\0
+#>0      use gem_info
+## no example
 16      string      STTT\0\x10
->0      use gem_info
-# no example or description
-16      string      TIMG\0
->0      use gem_info
+#>0      use gem_info
+## no example or description
+#16      string      TIMG\0
+#>0      use gem_info
 
 # DEGAS high-res uncompressed bitmap *.pi3
 0	beshort		0x0002
