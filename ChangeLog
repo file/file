@@ -1,5 +1,7 @@
 2026-04-15  12:40 Christos Zoulas <christos@zoulas.com>
 
+	* PR/745: streamout: Don't flush when trying to set negative offsets
+	          on pipes, just continue, fixes 'cat file.zip | file -'
 	* PR/753: vmihalko: Fix race is magic_getpath()
 
 2026-03-11  15:14 Christos Zoulas <christos@zoulas.com>

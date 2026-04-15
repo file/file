@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.363 2026/04/12 22:15:14 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.364 2026/04/15 20:00:20 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -245,14 +245,19 @@ match(struct magic_set *ms, struct magic *magic, file_regex_t **magic_rxcomp,
 flush:
 			/* Skip sub-tests */
 			while (magindex < nmagic - 1 &&
-			    magic[magindex + 1].cont_level != 0)
+			    magic[magindex + 1].cont_level != 0) {
 				magindex++;
+			}
 			cont_level = 0;
 			continue; /* Skip to next top-level test*/
 		}
 
-		if (msetoffset(ms, m, &bb, b, offset, cont_level) == -1)
-			goto flush;
+		if (msetoffset(ms, m, &bb, b, offset, cont_level) == -1) {
+			if (b->elen == FILE_BADSIZE)
+				continue;
+			else
+				goto flush;
+		}
 		ms->line = m->lineno;
 
 		/* if main entry matches, print it... */
@@ -347,8 +352,13 @@ flush:
 				 */
 				cont_level = m->cont_level;
 			}
-			if (msetoffset(ms, m, &bb, b, offset, cont_level) == -1)
-				goto flush;
+			if (msetoffset(ms, m, &bb, b, offset, cont_level)
+			    == -1) {
+				if (b->elen == FILE_BADSIZE)
+					continue;
+				else
+					goto flush;
+			}
 			if (m->flag & OFFADD) {
 				if (cont_level == 0) {
 					if ((ms->flags & MAGIC_DEBUG) != 0)
