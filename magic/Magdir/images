@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.269 2026/04/15 22:16:46 christos Exp $
+# $File: images,v 1.270 2026/04/15 22:26:36 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4651,3 +4651,17 @@
 0	string	FirstName:	Usenix FaceSaver image data
 !:mime	image/x-facesaver
 !:ext	face/fs
+
+# CompuServe RLE (CIS) - monochrome bitmap, predecessor to GIF
+# Created by CompuServe Inc., specified October 1986 by Chris Hopkins.
+# Spec: https://www.brutman.com/RLE/RLESTND.TXT
+# ESC G H = high-res (256x192), ESC G M = medium-res (128x96)
+# Files use .rle extension (clashes with Utah RLE and others)
+
+0	string	\x1bGH	CompuServe RLE image data, 256 x 192
+!:mime	image/x-compuserve-rle
+!:ext	rle/cis
+
+0	string	\x1bGM	CompuServe RLE image data, 128 x 96
+!:mime	image/x-compuserve-rle
+!:ext	rle/cis
