@@ -1,3 +1,7 @@
+2026-04-15  12:40 Christos Zoulas <christos@zoulas.com>
+
+	* PR/753: vmihalko: Fix race is magic_getpath()
+
 2026-03-11  15:14 Christos Zoulas <christos@zoulas.com>
 
 	* PR/728: Anton Monroe: Reinstate regex/c

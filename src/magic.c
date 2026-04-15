@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.125 2026/01/19 18:53:58 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.126 2026/04/15 16:53:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -72,7 +72,7 @@ FILE_RCSID("@(#)$File: magic.c,v 1.125 2026/01/19 18:53:58 christos Exp $")
 file_private void close_and_restore(const struct magic_set *, const char *, int,
     const struct stat *);
 file_private int unreadable_info(struct magic_set *, mode_t, const char *);
-file_private const char* get_default_magic(void);
+file_private const char *get_default_magic(void);
 #ifndef COMPILE_ONLY
 file_private const char *file_or_fd(struct magic_set *, const char *, int);
 #endif
@@ -176,15 +176,11 @@ get_default_magic(void)
 {
 	static const char hmagic[] = "/.magic/magic.mgc";
 	static char *default_magic;
-	char *home, *hmagicpath;
+	char *home, *hmagicpath, *tmp_magic;
 
 #ifndef WIN32
 	struct stat st;
 
-	if (default_magic) {
-		free(default_magic);
-		default_magic = NULL;
-	}
 	if ((home = getenv("HOME")) == NULL)
 		return MAGIC;
 
@@ -205,8 +201,11 @@ get_default_magic(void)
 		}
 	}
 
-	if (asprintf(&default_magic, "%s%c%s", hmagicpath, PATHSEP, MAGIC) < 0)
+	if (asprintf(&tmp_magic, "%s%c%s", hmagicpath, PATHSEP, MAGIC) < 0)
 		goto out;
+	free(hmagicpath);
+	hmagicpath = default_magic;
+	default_magic = tmp_magic;
 	free(hmagicpath);
 	return default_magic;
 out:
@@ -245,7 +244,9 @@ out:
         _w32_get_magic_relative_to(&hmagicpath, _w32_dll_instance);
 
 	/* Avoid MAGIC constant - it likely points to a file within MSys tree */
+	tmp_magic = default_magic;
 	default_magic = hmagicpath;
+	free(tmp_magic);
 	return default_magic;
 #endif
 }
