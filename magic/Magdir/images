@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.268 2026/04/12 22:23:50 christos Exp $
+# $File: images,v 1.269 2026/04/15 22:16:46 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4640,3 +4640,14 @@
 >>>>>28     byte      3         \b, YCbCr RGB
 # wavelet levels
 >>>>>29     ubyte     x         \b, %u wavelet levels
+
+# Usenix FaceSaver - grayscale face image format
+# Created by Metron Computerware Ltd., used at USENIX conferences from 1987.
+# ASCII format: header lines (FirstName:, LastName:, PicData:, Image:, etc.)
+# followed by hex-encoded pixel data.
+# Spec: https://www.fileformat.info/format/facesaver/egff.htm
+# Netpbm: fstopgm, pgmtofs
+
+0	string	FirstName:	Usenix FaceSaver image data
+!:mime	image/x-facesaver
+!:ext	face/fs
