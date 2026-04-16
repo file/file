@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.273 2026/04/16 15:01:10 christos Exp $
+# $File: images,v 1.274 2026/04/16 19:46:30 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4682,3 +4682,8 @@
 
 0	string	Fiasco		FIASCO basis (dictionary) file
 !:ext	fco
+
+0	string	Jasc\040Paint\040Shop\040Pro\040Browser\040Cache\040File	Jasc Paint Shop Pro Browser Cache
+>40	string  %s	(version %s)
+# Magic file for older Jasc Paint Shop Pro Browser Cache files (.jbf)
+0	string	JASC\040BROWS\040FILE	Jasc Paint Shop Pro Browser Cache (old format)
