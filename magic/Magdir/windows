@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.71 2026/03/25 22:10:22 christos Exp $
+# $File: windows,v 1.72 2026/04/16 20:21:26 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1915,3 +1915,6 @@
 
 # MSFT format
 0	string	MSFT\x02\x00\x01\x00	Type Library (MSFT format)
+
+# Magic file for OllyDbg 2.01 Module Info files (.udd)
+0   string      Mod\x00             OllyDbg 2.0 Module Info File
