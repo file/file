@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.116 2026/03/11 19:11:07 christos Exp $
-.Dd March 11, 2026
+.\" $File: magic.man,v 1.117 2026/04/16 17:27:00 christos Exp $
+.Dd April 16, 2026
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -90,7 +90,7 @@ For regex, this turns on REG_ICASE.
 .It c
 Use lower case insensitive matching: lower case
 characters in the magic match both lower and upper case characters in the
-target, whereas upper case characters in the magic only match upper case
+target, whereas upper case characters in the magic only match lower case
 characters in the target.
 To do a complete case insensitive match, specify both
 .Dq c
@@ -296,7 +296,7 @@ The
 modifier, changes the limit of length to mean number of lines instead of a
 byte count.
 Lines are delimited by the platforms native line delimiter.
-When a line count is specified, an implicit byte count also computed assuming
+When a line count is specified, an implicit byte count is also computed assuming
 each line is 80 characters long.
 If neither a byte or line count is specified, the search is limited automatically
 to 8KiB.
@@ -376,7 +376,7 @@ the field width in bytes.
 .It Dv guid
 A Globally Unique Identifier, parsed and printed as
 XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX.
-It's format is a string.
+Its format is a string.
 .It Dv offset
 This is a quad value indicating the current offset of the file.
 It can be used to determine the size of the file or the magic buffer.
@@ -602,7 +602,7 @@ the current magic description using the following format:
 !:strength OP VALUE
 .Ed
 .Pp
-The operand
+The operator
 .Dv OP
 can be:
 .Dv + ,
@@ -613,7 +613,7 @@ or
 and
 .Dv VALUE
 is a constant between 0 and 255.
-This constant is applied using the specified operand
+This constant is applied using the specified operator
 to the currently computed default magic strength.
 .Pp
 Some file formats contain additional information which is to be printed
@@ -709,7 +709,7 @@ That way variable length structures can be examined:
 .Pp
 This strategy of examining has a drawback: you must make sure that you
 eventually print something, or users may get empty output (such as when
-there is neither PE\e0\e0 nor LE\e0\e0 in the above example).
+there is neither PE\e0\e0 nor LX\e0\e0 in the above example).
 .Pp
 If this indirect offset cannot be used directly, simple calculations are
 possible: appending
