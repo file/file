@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.23 2026/02/05 18:49:06 christos Exp $
+# $File: amigaos,v 1.24 2026/04/16 17:32:24 christos Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -11,6 +11,7 @@
 0	belong		0x000003e7	AmigaOS object/library data
 #
 0	beshort		0xe310		Amiga Workbench
+!:mime image/x-amiga-icon
 >2	beshort		1
 >>48	byte		1		disk icon
 >>48	byte		2		drawer icon
