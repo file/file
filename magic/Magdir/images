@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.271 2026/04/15 22:31:03 christos Exp $
+# $File: images,v 1.272 2026/04/16 14:54:52 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4666,3 +4666,10 @@
 0	string	\x1bGM	CompuServe RLE image data, 128 x 96
 !:mime	image/x-compuserve-rle
 !:ext	rle/cis
+
+# Created by Russell Marks in 1997 for zgv (https://en.wikipedia.org/wiki/Zgv)
+0	string	MRF1	MRF image data,
+!:mime	image/x-mrf
+!:ext	mrf
+>4	belong	x		%d x
+>8	belong	x		%d
