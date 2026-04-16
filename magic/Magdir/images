@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.272 2026/04/16 14:54:52 christos Exp $
+# $File: images,v 1.273 2026/04/16 15:01:10 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4673,3 +4673,12 @@
 !:ext	mrf
 >4	belong	x		%d x
 >8	belong	x		%d
+
+# FIASCO - Fractal Image And Sequence Codec
+# Author: Ullrich Hafner, Univ. Würzburg (1999)
+# Source: https://github.com/l-tamas/Fiasco codec/wfa.h
+0	string	FIASCO\n	FIASCO fractal compressed image data
+!:ext	wfa/fco
+
+0	string	Fiasco		FIASCO basis (dictionary) file
+!:ext	fco
