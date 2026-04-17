@@ -1,3 +1,7 @@
+2026-04-17  11:05 Christos Zoulas <christos@zoulas.com>
+
+	* multiple fixes to prevent integer overflow in 32 bits (kerwin)
+
 2026-04-15  12:40 Christos Zoulas <christos@zoulas.com>
 
 	* PR/745: streamout: Don't flush when trying to set negative offsets
