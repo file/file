@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.371 2026/03/20 13:55:27 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.372 2026/04/17 14:55:18 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3436,6 +3436,11 @@ check_buffer(struct magic_set *ms, struct magic_map *map, const char *dbname)
 			map->nmagic[i] = swap4(ptr[i + 2]);
 		else
 			map->nmagic[i] = ptr[i + 2];
+		if (map->nmagic[i] > entries) {
+			file_error(ms, 0, "nmagic[%u] too large in `%s'", i,
+			    dbname);
+			return -1;
+		}
 		if (i != MAGIC_SETS - 1)
 			map->magic[i + 1] = map->magic[i] + map->nmagic[i];
 		nentries += map->nmagic[i];
