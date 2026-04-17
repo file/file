@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.218 2026/01/10 16:16:27 christos Exp $
+# $File: archive,v 1.219 2026/04/17 13:35:33 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2569,6 +2569,30 @@
 # From: Adam Buchbinder <adam.buchbinder@gmail.com>
 12	string	BB02		Bacula volume
 >20	bedate	x		\b, started %s
+
+# Bareos volume format.
+# URL:
+# https://docs.bareos.org/DeveloperGuide/mediaformat.html#volume-label-format
+# From: Bruno Fiedmann <bruno.friedmann@bareos.com>
+# Note: label_btime (local time) is stored as 8-byte big-endian microseconds;
+# must divide by 1000000 for Unix seconds
+# Note: MediaType detected using search; ProgVersion start at 142
+# (typically after LabelProg field)
+# Note: ProgVersion start at 142, but we want to remove 'Ver. ' anyways
+12	string			BB02		Bareos Volume
+>36	string			Bareos		2.0 immortal
+>93	string  		x		\b, Volume Name: %s
+>100	search/100		File\0		\b, Media Type: File
+>100	search/100		Tape\0		\b, Media Type: Tape
+>100	search/100		VTape\0		\b, Media Type: VTape
+>100	search/100		Fifo\0		\b, Media Type: Fifo
+>61	beqldate/1000000	x		\b, Label Date: %s
+>147	string			x		\b, Version: %s
+
+# Bareos Disaster Recovery Image
+# URL: https://doc.bareos.org/
+# From: Bruno Friedmann <bruno.friedmann@bareos.com>
+0	string			barrifil	Bareos Disaster Recovery Image
 
 # ePub is XHTML + XML inside a ZIP archive.  The first member of the
 #   archive must be an uncompressed file called 'mimetype' with contents
