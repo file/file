@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.274 2026/04/16 19:46:30 christos Exp $
+# $File: images,v 1.275 2026/04/17 15:18:41 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -490,6 +490,7 @@
 #
 
 # IHDR parser
+# https://www.w3.org/TR/png-3/#11IHDR
 0	name		png-ihdr
 >0	ubelong		x		\b, %d x
 >4	ubelong		x		%d,
@@ -499,29 +500,49 @@
 >9	ubyte		3		colormap,
 >9	ubyte		4		gray+alpha,
 >9	ubyte		6		\b/color RGBA,
+>9	default		x		invalid color type,
 #>10	ubyte		0		deflate/32K,
+>10	ubyte		!0		invalid compression,
+#>11	ubyte		0		adaptive,
+>11	ubyte		!0		invalid filter method,
 >12	ubyte		0		non-interlaced
 >12	ubyte		1		interlaced
+>12	ubyte		>1		invalid interlace method
+
+# APNG acTL parser
+# https://www.w3.org/TR/png-3/#acTL-chunk
+0	name		apng-actl
+>0	ubelong		1			\b, %d frame
+>0	ubelong		>1			\b, %d frames
+>4	ubelong		0			\b, play indefinitely
+>4	ubelong		1			\b, %d play
+>4	ubelong		>1			\b, %d plays
+
+# PNG image.
+0	string		\x89PNG\x0d\x0a\x1a\x0a
+!:strength +10
+>8	clear		x
+
+# Mozilla APNG image.
+>33	search/16384		\x00\x00\x00\x08acTL	Animated PNG image data
+!:mime	image/apng
+!:ext	apng/png
+>>8	string		\x00\x00\x00\x0DIHDR
+>>>16	use		png-ihdr
+>>&0	use		apng-actl
 
 # Standard PNG image.
-0	string		\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0DIHDR	PNG image data
+>8	default		x
+>>8	string		\x00\x00\x00\x0DIHDR	PNG image data
 !:mime	image/png
-!:ext   png
-!:strength +10
->16	use		png-ihdr
->33	string		\x00\x00\x00\x08acTL	\b, animated
->>41	ubelong		1			(%d frame
->>41	ubelong		>1			(%d frames
->>45	ubelong		0			\b, infinite repetitions)
->>45	ubelong		1			\b, %d repetition)
->>45	ubelong		>1			\b, %d repetitions)
+!:ext	png
+>>>16	use		png-ihdr
 
 # Apple CgBI PNG image.
-0	string		\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x04CgBI
+>8	string		\x00\x00\x00\x04CgBI
 >24	string  	\x00\x00\x00\x0DIHDR	PNG image data (CgBI)
 !:mime	image/png
-!:ext   png
-!:strength +10
+!:ext	png
 >>32	use		png-ihdr
 
 # possible GIF replacements; none yet released!
