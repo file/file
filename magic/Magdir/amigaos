@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.24 2026/04/16 17:32:24 christos Exp $
+# $File: amigaos,v 1.25 2026/04/17 15:08:14 christos Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -219,3 +219,17 @@
 
 # https://github.com/alb42/Leu/blob/master/TCDReaderUnit.pas
 3	string		TURBOCALC		TurboCalc spreadsheet
+
+# MOST was a text/image viewer for AmigaOS, CFF is its compressed file format
+
+# Text format (CFF\x00)
+0	string	CFF\0	MOST compressed text data
+!:ext cff
+>0x30	beshort	x	\b, %u bytes compressed
+>0x34	beshort	x	\b, %u bytes uncompressed
+
+# Image format (CFF\x01)
+0	string	CFF\1	MOST compressed image data
+!:ext cff
+>0x32	beshort	x	\b, %u wide
+>0x34	beshort	x	\b, %u tall
