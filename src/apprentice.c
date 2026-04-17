@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.372 2026/04/17 14:55:18 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.373 2026/04/17 14:58:57 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1488,11 +1488,17 @@ file_private int
 coalesce_entries(struct magic_set *ms, struct magic_entry *me, uint32_t nme,
     struct magic **ma, uint32_t *nma)
 {
-	uint32_t i, mentrycount = 0;
+	uint32_t i;
+	size_t mentrycount = 0;
 	size_t slen;
 
 	for (i = 0; i < nme; i++)
 		mentrycount += me[i].cont_count;
+
+	if (mentrycount > UINT32_MAX / sizeof(**ma)) {
+		file_error(ms, 0, "too many magic entries (%zu)", mentrycount);
+		return -1;
+	}
 
 	if (mentrycount == 0) {
 		*ma = NULL;
