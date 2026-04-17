@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.364 2026/04/15 20:00:20 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.365 2026/04/17 15:04:21 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1675,11 +1675,14 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		intmax_t off = m->in_offset;
 		const int sgn = m->in_op & FILE_OPSIGNED;
 		if (m->in_op & FILE_OPINDIRECT) {
-			
-			uint8_t *hb = CCAST(uint8_t *, s + offset + off);
+			uint8_t *hb;
 			uint16_t hs;
 			uint32_t hl;
 			int op;
+
+			if (OFFSET_OOB(nbytes, offset + off, 0))
+				return 0;
+			hb = CCAST(uint8_t *, s + offset + off);
 			switch (op = cvt_flip(m->in_type, flip)) {
 			case FILE_BYTE:
 				if (OFFSET_OOB(nbytes, offset + off, 1))
