@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.98 2026/04/12 21:14:24 christos Exp $
+# $File: compress,v 1.99 2026/04/17 12:52:29 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -479,3 +479,10 @@
 >4      byte/16         >5
 >>4     byte&0x0C       0x04            \b, 32-bit checksum
 >>4     byte&0x0C       0x08            \b, 64-bit checksum
+
+# DTSZ (Data Transformer Standard Zip)
+# Maintainer: Arie Abraham Benichou
+0	belong&0xFFFF8000	0x020208000	DTSZ compressed data
+>2	byte&0x7F		x		\b, version %d
+!:mime	application/x-dtsz
+!:ext	dtsz
