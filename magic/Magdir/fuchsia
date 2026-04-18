@@ -1,0 +1,18 @@
+
+#------------------------------------------------------------------------------
+# $File: fuchsia,v 1 2026/04/19 00:01:05 Yuvraj Saxena $
+# Various fuchsia os related magic entries
+#
+# From:  ysaxenax@gmail.com (Yuvraj Saxena)
+#------------------------------------------------------------------------------
+
+# FAR Archive magic
+#
+# The Fuchsia archive format (FAR) is a specific container format used by the 
+# Fuchsia operating system to store directory trees, typically for software packages.
+#
+# https://fuchsia.dev/fuchsia-src/development/source_code/archive_format
+#
+# From <ysaxenax@gmail.com> "Yuvraj Saxena"
+#
+0 ubequad 0xc8bf0b48adabc511	 Fuchsia OS FAR Archive
