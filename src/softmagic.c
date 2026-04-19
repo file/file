@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.365 2026/04/17 15:04:21 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.366 2026/04/19 19:56:49 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -812,7 +812,13 @@ mprint(struct magic_set *ms, struct magic *m)
 			return -1;
 		break;
 	case FILE_GUID:
-		(void) file_print_guid(buf, sizeof(buf), ms->ms_value.guid);
+	case FILE_LEGUID:
+		(void) file_print_leguid(buf, sizeof(buf), ms->ms_value.guid);
+		if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
+			return -1;
+		break;
+	case FILE_BEGUID:
+		(void) file_print_beguid(buf, sizeof(buf), ms->ms_value.guid);
 		if (file_printf(ms, F(ms, desc, "%s"), buf) == -1)
 			return -1;
 		break;
@@ -972,6 +978,8 @@ moffset(struct magic_set *ms, struct magic *m, size_t nbytes,
 		}
 		break;
 
+	case FILE_BEGUID:
+	case FILE_LEGUID:
 	case FILE_GUID:
 		o = CAST(int32_t, (ms->offset + 2 * sizeof(uint64_t)));
 		break;
@@ -1333,6 +1341,8 @@ mconvert(struct magic_set *ms, struct magic *m, int flip)
 	case FILE_USE:
 	case FILE_DER:
 	case FILE_GUID:
+	case FILE_LEGUID:
+	case FILE_BEGUID:
 		return 1;
 	default:
 		file_magerror(ms, "invalid type %d in mconvert()", m->type);
@@ -1903,6 +1913,8 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			return 0;
 		break;
 
+	case FILE_LEGUID:
+	case FILE_BEGUID:
 	case FILE_GUID:
 		if (OFFSET_OOB(nbytes, offset, 16))
 			return 0;
@@ -2416,6 +2428,8 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 			return 0;
 		}
 		return matched;
+	case FILE_BEGUID:
+	case FILE_LEGUID:
 	case FILE_GUID:
 		l = 0;
 		v = memcmp(m->value.guid, p->guid, sizeof(p->guid));

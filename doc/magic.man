@@ -1,5 +1,5 @@
-.\" $File: magic.man,v 1.117 2026/04/16 17:27:00 christos Exp $
-.Dd April 16, 2026
+.\" $File: magic.man,v 1.118 2026/04/19 19:56:49 christos Exp $
+.Dd April 19, 2026
 .Dt MAGIC __FSECTION__
 .Os
 .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
@@ -373,7 +373,9 @@ The DER types are:
 .Dv rel-oid-iri .
 These types can be followed by an optional numeric size, which indicates
 the field width in bytes.
-.It Dv guid
+.It Dv guid ,
+.It Dv leguid ,
+.It Dv beguid 
 A Globally Unique Identifier, parsed and printed as
 XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX.
 Its format is a string.
