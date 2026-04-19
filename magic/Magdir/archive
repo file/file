@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.220 2026/04/19 19:14:57 christos Exp $
+# $File: archive,v 1.221 2026/04/19 19:57:35 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2911,12 +2911,6 @@
 !:ext	zim
 >4	uleshort	x		\b, version %u
 >6	uleshort	x		\b.%u
-# Required to parse UUID with proper order (guid type is incorrect)
->8	ubelong	 	x		\b, UUID %08x
->12	ubeshort	x		\b-%04x
->14	ubeshort	x		\b-%04x
->16	ubeshort	x		\b-%04x
->18	ubelong		x		\b-%08x
->22	ubeshort	x		\b%04x
+>8	beguid		x		\b, UUID %s
 >24	ulelong		x		\b, %u entries
 >28	ulelong		x		\b, %u clusters
