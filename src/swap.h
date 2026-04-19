@@ -36,7 +36,7 @@
 #if defined(HAVE_BYTESWAP_H)
 #define file_swap2(x)	bswap_16(x)
 #define file_swap4(x)	bswap_32(x)
-#define swap8(x)	bswap_64(x)
+#define file_swap8(x)	bswap_64(x)
 #elif defined(HAVE_SYS_BSWAP_H)
 #define file_swap2(x)	bswap16(x)
 #define file_swap4(x)	bswap32(x)
