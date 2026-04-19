@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.219 2026/04/17 13:35:33 christos Exp $
+# $File: archive,v 1.220 2026/04/19 19:14:57 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2903,3 +2903,20 @@
 
 0	string	\xd2\x4e\x4a\x19\xc2\x68\x4c\x83\x10 Proxmox File Archive Format payload stream / ppxar
 
+
+# ZIM (Zeno IMproved) file - Archive format used by Kiwix for offline browsing
+# Reference: https://wiki.openzim.org/wiki/ZIM_file_format
+0	ulelong		0x044D495A	ZIM archive data
+!:mime	application/x-zim
+!:ext	zim
+>4	uleshort	x		\b, version %u
+>6	uleshort	x		\b.%u
+# Required to parse UUID with proper order (guid type is incorrect)
+>8	ubelong	 	x		\b, UUID %08x
+>12	ubeshort	x		\b-%04x
+>14	ubeshort	x		\b-%04x
+>16	ubeshort	x		\b-%04x
+>18	ubelong		x		\b-%08x
+>22	ubeshort	x		\b%04x
+>24	ulelong		x		\b, %u entries
+>28	ulelong		x		\b, %u clusters
