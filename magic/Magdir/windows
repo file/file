@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: windows,v 1.72 2026/04/16 20:21:26 christos Exp $
+# $File: windows,v 1.73 2026/04/20 14:53:18 christos Exp $
 # windows:  file(1) magic for Microsoft Windows
 #
 # This file is mainly reserved for files where programs
@@ -1918,3 +1918,8 @@
 
 # Magic file for OllyDbg 2.01 Module Info files (.udd)
 0   string      Mod\x00             OllyDbg 2.0 Module Info File
+
+# COFF object files for OMNI VM
+# MSVC6.0 CVTRES.EXE can create COFF binary for OMNI by /MACHINE:OMNI flag
+0	leshort		=0xace1
+>0	use				display-coff
