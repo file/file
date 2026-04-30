@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.203 2026/04/16 15:13:19 christos Exp $
+# $File: Makefile.am,v 1.204 2026/04/30 16:16:47 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -36,6 +36,7 @@ $(MAGIC_FRAGMENT_DIR)/arm \
 $(MAGIC_FRAGMENT_DIR)/asf \
 $(MAGIC_FRAGMENT_DIR)/assembler \
 $(MAGIC_FRAGMENT_DIR)/asterix \
+$(MAGIC_FRAGMENT_DIR)/atari \
 $(MAGIC_FRAGMENT_DIR)/att3b \
 $(MAGIC_FRAGMENT_DIR)/audio \
 $(MAGIC_FRAGMENT_DIR)/avm \
