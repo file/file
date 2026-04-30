@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: atari,v 1.1 2026/04/30 16:16:47 christos Exp $
+# $File: atari,v 1.2 2026/04/30 18:40:15 christos Exp $
 # atari:  file(1) magic for Atari formats:
 
 # Operating system ROMs for the Atari ST series of computers, including a
@@ -23,30 +23,51 @@
 0		beshort	0x1111
 >0x02		beshort	0x4EF9
 >>0xD2		beshort	0x602E
->>>0xD2		use	atari-tos-rom
+>>>0xD2		use	atari-tos-versions
 
-0		name	atari-tos-rom
+0		name	atari-tos-versions
+# Enumerate all known versions
 >0x02		beshort	0x0100		Atari TOS ROM 1.00
+>>0		use	atari-tos-rom
 # EmuTOS uses 1.04 for 192kB ROMs, and 2.06 for >=256kB ROMs
 >0x02		beshort	0x0102		Atari TOS ROM 1.02
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0104		Atari TOS ROM 1.04
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0106		Atari TOS ROM 1.06
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0162		Atari TOS ROM 1.62
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0205		Atari TOS ROM 2.05
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0206
 # ST-Book TOS 2.08 header says 2.06, identify it by release date
 >>0x18		belong	0x03101992	Atari TOS ROM 2.08
+>>>0		use	atari-tos-rom
 >>0x18		belong	!0x03101992	Atari TOS ROM 2.06
+>>>0		use	atari-tos-rom
 >0x02		beshort	0x0207		Atari TOS ROM 2.07
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0208		Atari TOS ROM 2.08
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0300		Atari TOS ROM 3.00
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0301		Atari TOS ROM 3.01
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0305		Atari TOS ROM 3.05
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0306		Atari TOS ROM 3.06
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0400		Atari TOS ROM 4.00
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0401		Atari TOS ROM 4.01
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0402		Atari TOS ROM 4.02
+>>0		use	atari-tos-rom
 >0x02		beshort	0x0404		Atari TOS ROM 4.04
+>>0		use	atari-tos-rom
+
+0		name	atari-tos-rom
 # Release date, display using ISO 8601 date
 # Year
 >0x1A		beshort	x		%.4x
