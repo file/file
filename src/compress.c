@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.159 2026/04/13 16:35:09 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.160 2026/05/09 22:04:06 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -868,6 +868,7 @@ uncompresslrzip(const unsigned char *old, unsigned char **newch,
 		res = makeerror(newch, n, "unable to add input file");
 		goto out2;
 	}
+	free(*newch);
 	*newch = calloc(*n = 2 * bytes_max, 1);
 	if (*newch == NULL) {
 		res = makeerror(newch, n, "unable to allocate output buffer");
