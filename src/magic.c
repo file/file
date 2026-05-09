@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.126 2026/04/15 16:53:40 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.127 2026/05/09 22:30:16 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -608,6 +608,30 @@ file_public int
 magic_version(void)
 {
 	return MAGIC_VERSION;
+}
+
+file_public ssize_t
+magic_getmaxparam(struct magic_set *ms, int param)
+{
+	if (ms == NULL)
+		return -1;
+	switch (param) {
+	case MAGIC_PARAM_INDIR_MAX:
+	case MAGIC_PARAM_NAME_MAX:
+	case MAGIC_PARAM_ELF_PHNUM_MAX:
+	case MAGIC_PARAM_ELF_SHNUM_MAX:
+	case MAGIC_PARAM_ELF_SHSIZE_MAX:
+	case MAGIC_PARAM_ELF_NOTES_MAX:
+	case MAGIC_PARAM_REGEX_MAX:
+		return 0xffff;
+	case MAGIC_PARAM_BYTES_MAX:
+	case MAGIC_PARAM_ENCODING_MAX:
+	case MAGIC_PARAM_MAGWARN_MAX:
+		return 0x7fffffff;
+	default:
+		errno = EINVAL;
+		return -1;
+	}
 }
 
 file_public int
