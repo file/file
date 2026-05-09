@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.375 2026/05/09 22:41:29 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.376 2026/05/09 22:44:32 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -112,7 +112,7 @@ file_private int hextoint(int);
 file_private const char *getstr(struct magic_set *, struct magic *, const char *,
     int);
 file_private int parse(struct magic_set *, struct magic_entry *, const char *,
-    const char *, size_t, int);
+    const char *, size_t, size_t, int);
 file_private void eatsize(const char **);
 file_private int apprentice_1(struct magic_set *, const char *, int);
 file_private ssize_t apprentice_magic_strength_1(const struct magic *);
@@ -1390,7 +1390,7 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 			/*FALLTHROUGH*/
 		default:
 		again:
-			switch (parse(ms, &me, fn, line, lineno, action)) {
+			switch (parse(ms, &me, fn, line, llen, lineno, action)) {
 			case 0:
 				continue;
 			case 1:
@@ -2038,14 +2038,14 @@ out:
  */
 file_private int
 parse(struct magic_set *ms, struct magic_entry *me, const char *file,
-    const char *line, size_t lineno, int action)
+    const char *line, size_t llen, size_t lineno, int action)
 {
 #ifdef ENABLE_CONDITIONALS
 	static uint32_t last_cont_level = 0;
 #endif
 	size_t i;
 	struct magic *m;
-	const char *l = line;
+	const char *l = line, *el = line + llen;
 	char *t;
 	int op;
 	uint32_t cont_level;
@@ -2057,6 +2057,8 @@ parse(struct magic_set *ms, struct magic_entry *me, const char *file,
 	 * Parse the offset.
 	 */
 	while (*l == '>') {
+		if (l >= el)
+			return -1;
 		++l;		/* step over */
 		cont_level++;
 	}
