@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.367 2026/05/09 22:14:09 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.368 2026/05/09 22:17:17 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -69,7 +69,6 @@ file_private int cvt_16(union VALUETYPE *, const struct magic *);
 file_private int cvt_32(union VALUETYPE *, const struct magic *);
 file_private int cvt_64(union VALUETYPE *, const struct magic *);
 
-#define OFFSET_OOB(n, o, i)	((n) < CAST(uint32_t, (o)) || (i) > ((n) - (o)))
 #define BE64(p) ( \
     (CAST(uint64_t, (p)[0])<<56)| \
     (CAST(uint64_t, (p)[1])<<48)| \
@@ -109,6 +108,16 @@ file_private int cvt_64(union VALUETYPE *, const struct magic *);
 #define SEXT(s,v,p) ((s) ? \
 	CAST(intmax_t, CAST(int##v##_t, p)) : \
 	CAST(intmax_t, CAST(uint##v##_t, p)))
+
+static inline int
+offset_oob(size_t n, intmax_t o, size_t i)
+ {
+	if (o < 0)
+		return 1;
+        if ((uintmax_t)o > n)
+		return 1;
+        return i > n - (uintmax_t)o;
+}
 
 /*
  * softmagic - lookup one file in parsed, in-memory copy of database
@@ -1692,66 +1701,66 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			uint32_t hl;
 			int op;
 
-			if (OFFSET_OOB(nbytes, offset + off, 0))
+			if (offset_oob(nbytes, offset + off, 0))
 				return 0;
 			hb = CCAST(uint8_t *, s + offset + off);
 			switch (op = cvt_flip(m->in_type, flip)) {
 			case FILE_BYTE:
-				if (OFFSET_OOB(nbytes, offset + off, 1))
+				if (offset_oob(nbytes, offset + off, 1))
 					return 0;
 				off = SEXT(sgn,8,hb[0]);
 				break;
 			case FILE_SHORT:
-				if (OFFSET_OOB(nbytes, offset + off, 2))
+				if (offset_oob(nbytes, offset + off, 2))
 					return 0;
 				memcpy(&hs, hb, sizeof(hs));
 				off = SEXT(sgn,16,hs);
 				break;
 			case FILE_BESHORT:
-				if (OFFSET_OOB(nbytes, offset + off, 2))
+				if (offset_oob(nbytes, offset + off, 2))
 					return 0;
 				off = SEXT(sgn,16,BE16(hb));
 				break;
 			case FILE_LESHORT:
-				if (OFFSET_OOB(nbytes, offset + off, 2))
+				if (offset_oob(nbytes, offset + off, 2))
 					return 0;
 				off = SEXT(sgn,16,LE16(hb));
 				break;
 			case FILE_LONG:
-				if (OFFSET_OOB(nbytes, offset + off, 4))
+				if (offset_oob(nbytes, offset + off, 4))
 					return 0;
 				memcpy(&hl, hb, sizeof(hl));
 				off = SEXT(sgn,32,hl);
 				break;
 			case FILE_BELONG:
 			case FILE_BEID3:
-				if (OFFSET_OOB(nbytes, offset + off, 4))
+				if (offset_oob(nbytes, offset + off, 4))
 					return 0;
 				off = SEXT(sgn,32,BE32(hb));
 				break;
 			case FILE_LEID3:
 			case FILE_LELONG:
-				if (OFFSET_OOB(nbytes, offset + off, 4))
+				if (offset_oob(nbytes, offset + off, 4))
 					return 0;
 				off = SEXT(sgn,32,LE32(hb));
 				break;
 			case FILE_MELONG:
-				if (OFFSET_OOB(nbytes, offset + off, 4))
+				if (offset_oob(nbytes, offset + off, 4))
 					return 0;
 				off = SEXT(sgn,32,ME32(hb));
 				break;
 			case FILE_BEQUAD:
-				if (OFFSET_OOB(nbytes, offset + off, 8))
+				if (offset_oob(nbytes, offset + off, 8))
 					return 0;
 				off = SEXT(sgn,64,BE64(hb));
 				break;
 			case FILE_LEQUAD:
-				if (OFFSET_OOB(nbytes, offset + off, 8))
+				if (offset_oob(nbytes, offset + off, 8))
 					return 0;
 				off = SEXT(sgn,64,LE64(hb));
 				break;
 			case FILE_OCTAL:
-				if (OFFSET_OOB(nbytes, offset, m->vallen))
+				if (offset_oob(nbytes, offset, m->vallen))
 					return 0;
 				off = SEXT(sgn,64,strtoull(p->s, NULL, 8));
 				break;
@@ -1765,32 +1774,32 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		}
 		switch (in_type = cvt_flip(m->in_type, flip)) {
 		case FILE_BYTE:
-			if (OFFSET_OOB(nbytes, offset, 1))
+			if (offset_oob(nbytes, offset, 1))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,8,p->b), off))
 				return 0;
 			break;
 		case FILE_BESHORT:
-			if (OFFSET_OOB(nbytes, offset, 2))
+			if (offset_oob(nbytes, offset, 2))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,16,BE16(p->hs)), off))
 				return 0;
 			break;
 		case FILE_LESHORT:
-			if (OFFSET_OOB(nbytes, offset, 2))
+			if (offset_oob(nbytes, offset, 2))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,16,LE16(p->hs)), off))
 				return 0;
 			break;
 		case FILE_SHORT:
-			if (OFFSET_OOB(nbytes, offset, 2))
+			if (offset_oob(nbytes, offset, 2))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,16,p->h), off))
 				return 0;
 			break;
 		case FILE_BELONG:
 		case FILE_BEID3:
-			if (OFFSET_OOB(nbytes, offset, 4))
+			if (offset_oob(nbytes, offset, 4))
 				return 0;
 			lhs = BE32(p->hl);
 			if (in_type == FILE_BEID3)
@@ -1800,7 +1809,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			break;
 		case FILE_LELONG:
 		case FILE_LEID3:
-			if (OFFSET_OOB(nbytes, offset, 4))
+			if (offset_oob(nbytes, offset, 4))
 				return 0;
 			lhs = LE32(p->hl);
 			if (in_type == FILE_LEID3)
@@ -1809,31 +1818,31 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 				return 0;
 			break;
 		case FILE_MELONG:
-			if (OFFSET_OOB(nbytes, offset, 4))
+			if (offset_oob(nbytes, offset, 4))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,32,ME32(p->hl)), off))
 				return 0;
 			break;
 		case FILE_LONG:
-			if (OFFSET_OOB(nbytes, offset, 4))
+			if (offset_oob(nbytes, offset, 4))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,32,p->l), off))
 				return 0;
 			break;
 		case FILE_LEQUAD:
-			if (OFFSET_OOB(nbytes, offset, 8))
+			if (offset_oob(nbytes, offset, 8))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,64,LE64(p->hq)), off))	
 				return 0;
 			break;
 		case FILE_BEQUAD:
-			if (OFFSET_OOB(nbytes, offset, 8))
+			if (offset_oob(nbytes, offset, 8))
 				return 0;
 			if (do_ops(ms, m, &offset, SEXT(sgn,64,BE64(p->hq)), off))
 				return 0;
 			break;
 		case FILE_OCTAL:
-			if (OFFSET_OOB(nbytes, offset, m->vallen))
+			if (offset_oob(nbytes, offset, m->vallen))
 				return 0;
 			if(do_ops(ms, m, &offset,
 			    SEXT(sgn,64,strtoull(p->s, NULL, 8)), off))
@@ -1878,14 +1887,14 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	/* Verify we have enough data to match magic type */
 	switch (m->type) {
 	case FILE_BYTE:
-		if (OFFSET_OOB(nbytes, offset, 1))
+		if (offset_oob(nbytes, offset, 1))
 			return 0;
 		break;
 
 	case FILE_SHORT:
 	case FILE_BESHORT:
 	case FILE_LESHORT:
-		if (OFFSET_OOB(nbytes, offset, 2))
+		if (offset_oob(nbytes, offset, 2))
 			return 0;
 		break;
 
@@ -1904,21 +1913,21 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	case FILE_FLOAT:
 	case FILE_BEFLOAT:
 	case FILE_LEFLOAT:
-		if (OFFSET_OOB(nbytes, offset, 4))
+		if (offset_oob(nbytes, offset, 4))
 			return 0;
 		break;
 
 	case FILE_DOUBLE:
 	case FILE_BEDOUBLE:
 	case FILE_LEDOUBLE:
-		if (OFFSET_OOB(nbytes, offset, 8))
+		if (offset_oob(nbytes, offset, 8))
 			return 0;
 		break;
 
 	case FILE_LEGUID:
 	case FILE_BEGUID:
 	case FILE_GUID:
-		if (OFFSET_OOB(nbytes, offset, 16))
+		if (offset_oob(nbytes, offset, 16))
 			return 0;
 		break;
 
@@ -1926,7 +1935,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 	case FILE_PSTRING:
 	case FILE_SEARCH:
 	case FILE_OCTAL:
-		if (OFFSET_OOB(nbytes, offset, m->vallen))
+		if (offset_oob(nbytes, offset, m->vallen))
 			return 0;
 		break;
 
