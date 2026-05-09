@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.218 2026/05/09 22:30:16 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.219 2026/05/09 22:34:29 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -477,7 +477,7 @@ setparam(const char *p)
 		if (strncmp(p, pm[i].name, s - p) != 0)
 			continue;
 		par = atoi(s + 1);
-		mpar = magic_getmaxparam(NULL, pm[i].tag);
+		mpar = magic_getmaxparam(pm[i].tag);
 		if (par < 0 || par > mpar)
 			file_err(EXIT_FAILURE, "Out of bounds value %d for %s",
 			    par, pm[i].name);

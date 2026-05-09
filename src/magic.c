@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.127 2026/05/09 22:30:16 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.128 2026/05/09 22:34:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -611,10 +611,8 @@ magic_version(void)
 }
 
 file_public ssize_t
-magic_getmaxparam(struct magic_set *ms, int param)
+magic_getmaxparam(int param)
 {
-	if (ms == NULL)
-		return -1;
 	switch (param) {
 	case MAGIC_PARAM_INDIR_MAX:
 	case MAGIC_PARAM_NAME_MAX:
@@ -637,8 +635,10 @@ magic_getmaxparam(struct magic_set *ms, int param)
 file_public int
 magic_setparam(struct magic_set *ms, int param, const void *val)
 {
-	if (ms == NULL)
+	if (ms == NULL || val == NULL) {
+		errno = EFAULT;
 		return -1;
+	}
 	const size_t v = *CAST(const size_t *, val);
 	switch (param) {
 	case MAGIC_PARAM_INDIR_MAX:
@@ -680,8 +680,10 @@ magic_setparam(struct magic_set *ms, int param, const void *val)
 file_public int
 magic_getparam(struct magic_set *ms, int param, void *val)
 {
-	if (ms == NULL)
+	if (ms == NULL || val == NULL) {
+		errno = EFAULT;
 		return -1;
+	}
 	switch (param) {
 	case MAGIC_PARAM_INDIR_MAX:
 		*CAST(size_t *, val) = ms->indir_max;
