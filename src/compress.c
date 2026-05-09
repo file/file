@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.160 2026/05/09 22:04:06 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.161 2026/05/09 22:11:41 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -859,7 +859,7 @@ uncompresslrzip(const unsigned char *old, unsigned char **newch,
 		goto out0;
 	}
 	lrzip_config_env(lr);
-	in = fmemopen(RCAST(void *, old), bytes_max, "r");
+	in = fmemopen(RCAST(void *, old), *n, "r");
 	if (in == NULL) {
 		res = makeerror(newch, n, "unable to construct input file");
 		goto out1;
