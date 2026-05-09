@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.374 2026/04/19 19:56:49 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.375 2026/05/09 22:41:29 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -3173,10 +3173,14 @@ getstr(struct magic_set *ms, struct magic *m, const char *s, int warn)
 	--s;
 out:
 	*p = '\0';
+	if (CAST(size_t, (p - origp)) > sizeof(m->value.s))
+		return NULL;
 	m->vallen = CAST(unsigned char, (p - origp));
 	if (m->type == FILE_PSTRING) {
 		size_t l =  file_pstring_length_size(ms, m);
 		if (l == FILE_BADSIZE)
+			return NULL;
+		if (m->vallen + l > sizeof(m->value.s))
 			return NULL;
 		m->vallen += CAST(unsigned char, l);
 	}
