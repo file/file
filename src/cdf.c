@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.126 2026/02/09 17:10:42 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.127 2026/05/09 22:06:12 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1196,6 +1196,8 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 	const uint16_t *np;
 
 	for (nr = 0;; nr++) {
+		if (b + sizeof(reclen) > eb)
+			break;
 		memcpy(&reclen, b, sizeof(reclen));
 		reclen = CDF_TOLE2(reclen);
 		if (reclen == 0)
