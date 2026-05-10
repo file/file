@@ -365,7 +365,7 @@ main(int argc, char *argv[])
 		return e;
 
 #ifdef HAVE_LIBSECCOMP
-	if (sandbox && enable_sandbox() == -1)
+	if (sandbox && enable_sandbox(flags, action) == -1)
 		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
 	if (sandbox)
 		flags |= MAGIC_NO_COMPRESS_FORK;
