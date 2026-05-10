@@ -20,7 +20,7 @@ MINGWLIBS =
 endif
 libmagic_la_LIBADD = -lm $(LTLIBOBJS) $(MINGWLIBS)
 
-file_SOURCES = file.c seccomp.c
+file_SOURCES = file.c seccomp.c landlock.c
 file_LDADD = libmagic.la -lm
 CLEANFILES = magic.h
 EXTRA_DIST = magic.h.in cdf.mk BNF memtest.c

@@ -704,6 +704,10 @@ const char *fmtcheck(const char *, const char *)
 int enable_sandbox(void);
 #endif
 
+#ifdef HAVE_LINUX_LANDLOCK_H
+int enable_landlock(int, int);
+#endif
+
 file_protected const char *file_getprogname(void);
 file_protected void file_setprogname(const char *);
 file_protected void file_err(int, const char *, ...)

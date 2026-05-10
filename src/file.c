@@ -336,6 +336,9 @@ main(int argc, char *argv[])
 #ifdef HAVE_LIBSECCOMP
 			(void)fprintf(stdout, "seccomp support included\n");
 #endif
+#ifdef HAVE_LINUX_LANDLOCK_H
+			(void)fprintf(stdout, "Landlock support included\n");
+#endif
 			return 0;
 		case 'z':
 			flags |= MAGIC_COMPRESS;
@@ -363,6 +366,11 @@ main(int argc, char *argv[])
 	}
 	if (e)
 		return e;
+
+#ifdef HAVE_LINUX_LANDLOCK_H
+	if (sandbox && enable_landlock(flags, action) == -1)
+		file_err(EXIT_FAILURE, "Landlock initialisation failed");
+#endif /* HAVE_LINUX_LANDLOCK_H */
 
 #ifdef HAVE_LIBSECCOMP
 	if (sandbox && enable_sandbox() == -1)
