@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: archive,v 1.222 2026/05/10 01:15:16 christos Exp $
+# $File: archive,v 1.223 2026/05/10 01:23:57 christos Exp $
 # archive:  file(1) magic for archive formats (see also "msdos" for self-
 #           extracting compressed archives)
 #
@@ -2915,13 +2915,13 @@
 >24	ulelong		x		\b, %u entries
 >28	ulelong		x		\b, %u clusters
 
-+# FAR Archive magic
-+#
-+# The Fuchsia archive format (FAR) is a specific container format used by the 
-+# Fuchsia operating system to store directory trees, typically for software packages.
-+#
-+# https://fuchsia.dev/fuchsia-src/development/source_code/archive_format
-+#
-+# From <ysaxenax@gmail.com> "Yuvraj Saxena"
-+#
-+0	ubequad	0xc8bf0b48adabc511	 Fuchsia OS FAR Archive
+# FAR Archive magic
+#
+# The Fuchsia archive format (FAR) is a specific container format used by the 
+# Fuchsia operating system to store directory trees, typically for software packages.
+#
+# https://fuchsia.dev/fuchsia-src/development/source_code/archive_format
+#
+# From <ysaxenax@gmail.com> "Yuvraj Saxena"
+#
+0	ubequad	0xc8bf0b48adabc511	 Fuchsia OS FAR Archive
