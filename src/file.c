@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.219 2026/05/09 22:34:29 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.220 2026/05/11 16:06:03 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -365,7 +365,7 @@ main(int argc, char *argv[])
 		return e;
 
 #ifdef HAVE_LIBSECCOMP
-	if (sandbox && enable_sandbox() == -1)
+	if (sandbox && enable_sandbox(flags, action) == -1)
 		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
 	if (sandbox)
 		flags |= MAGIC_NO_COMPRESS_FORK;

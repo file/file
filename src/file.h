@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.264 2026/04/19 19:56:49 christos Exp $
+ * @(#)$File: file.h,v 1.265 2026/05/11 16:06:03 christos Exp $
  */
 
 #ifndef __file_h__
@@ -701,7 +701,7 @@ const char *fmtcheck(const char *, const char *)
 #endif
 
 #ifdef HAVE_LIBSECCOMP
-int enable_sandbox(void);
+int enable_sandbox(int, int);
 #endif
 
 file_protected const char *file_getprogname(void);
