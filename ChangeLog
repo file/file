@@ -1,3 +1,7 @@
+2026-05-11  15:55 Christos Zoulas <christos@zoulas.com>
+
+	* add landlock support (valoq)
+
 2026-04-19  15:55 Christos Zoulas <christos@zoulas.com>
 
 	* add BE/LE GUID
