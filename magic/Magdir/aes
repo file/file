@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: aes,v 1.3 2026/05/11 17:00:20 christos Exp $
+# $File: aes,v 1.4 2026/05/13 17:57:13 christos Exp $
 #
 # aes: magic file for AES encrypted files
 
@@ -20,8 +20,8 @@
 #!:mime	application/aes
 !:mime	application/x-aes-encrypted
 !:ext	aes
-# For Version 2 the encrypted file can have text tags
->>>>3	ubyte		=2
+# Since Version 2 the encrypted file can have text tags
+>>3	ubyte		>1
 # length of an extension identifier and contents like: 0 24 33 38
 #>>>>5	ubeshort	x		\b, tag length %u
 #>>>>5	pstring/H	x		'%s'
