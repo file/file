@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.221 2026/05/11 16:19:42 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.222 2026/05/14 18:54:27 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -199,7 +199,7 @@ main(int argc, char *argv[])
 	size_t i, j, wid, nw;
 	int action = 0, didsomefiles = 0, errflg = 0;
 	int flags = 0, e = 0;
-#ifdef HAVE_LIBSECCOMP
+#if defined(HAVE_LIBSECCOMP) || defined(HAVE_LINUX_LANDLOCK_H)
 	int sandbox = 1;
 #endif
 	struct magic_set *magic = NULL;
