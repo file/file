@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: aes,v 1.4 2026/05/13 17:57:13 christos Exp $
+# $File: aes,v 1.5 2026/05/14 02:00:00 christos Exp $
 #
 # aes: magic file for AES encrypted files
 
@@ -26,9 +26,9 @@
 #>>>>5	ubeshort	x		\b, tag length %u
 #>>>>5	pstring/H	x		'%s'
 # standard extension tags like CREATED_BY
->>>>>7	string		CREATED_BY	\b, created by
+>>>7	string		CREATED_BY	\b, created by
 # software product, manufacturer like "SharpAESCrypt v1.3.3.0" "aescrypt (Windows GUI) 3.10" ...
->>>>>>&1	string		x		"%.64s"
+>>>>&1	string		x		"%.64s"
 # TODO: more other tags
 # tag CREATED_DATE like YYYY-MM-DD
 # tag CREATED_TIME like HH:MM:SS
