@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.368 2026/05/09 22:17:17 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.369 2026/05/16 15:21:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -508,19 +508,18 @@ file_private int
 check_fmt(struct magic_set *ms, const char *fmt)
 {
 	file_regex_t rx;
-	int rc, rv = -1;
+	int rc;
         const char* pat = "%[-0-9\\.]*s";
 
 	if (strchr(fmt, '%') == NULL)
 		return 0;
 
 	rc = file_regcomp(ms, &rx, pat, REG_EXTENDED|REG_NOSUB);
-	if (rc == 0) {
-		rc = file_regexec(ms, &rx, fmt, 0, 0, 0);
-		rv = !rc;
-	}
+	if (rc != 0)
+		return -1;
+	rc = !file_regexec(ms, &rx, fmt, 0, 0, 0);
 	file_regfree(&rx);
-	return rv;
+	return rc;
 }
 
 #if !defined(HAVE_STRNDUP) || defined(__aiws__) || defined(_AIX)

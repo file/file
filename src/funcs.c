@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.150 2026/04/19 19:56:49 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.151 2026/05/16 15:21:40 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -654,24 +654,23 @@ file_protected int
 file_replace(struct magic_set *ms, const char *pat, const char *rep)
 {
 	file_regex_t rx;
-	int rc, rv = -1;
+	int nm;
+	regmatch_t rm;
 
-	rc = file_regcomp(ms, &rx, pat, REG_EXTENDED);
-	if (rc == 0) {
-		regmatch_t rm;
-		int nm = 0;
-		while (file_regexec(ms, &rx, ms->o.buf, 1, &rm, 0) == 0) {
-			ms->o.buf[rm.rm_so] = '\0';
-			if (file_printf(ms, "%s%s", rep,
-			    rm.rm_eo != 0 ? ms->o.buf + rm.rm_eo : "") == -1)
-				goto out;
-			nm++;
-		}
-		rv = nm;
+	nm = file_regcomp(ms, &rx, pat, REG_EXTENDED);
+	if (nm != 0)
+		return -1;
+
+	while (file_regexec(ms, &rx, ms->o.buf, 1, &rm, 0) == 0) {
+		ms->o.buf[rm.rm_so] = '\0';
+		if (file_printf(ms, "%s%s", rep,
+		    rm.rm_eo != 0 ? ms->o.buf + rm.rm_eo : "") == -1)
+			goto out;
+		nm++;
 	}
 out:
 	file_regfree(&rx);
-	return rv;
+	return nm;
 }
 
 file_private int
