@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.266 2026/05/11 16:19:42 christos Exp $
+ * @(#)$File: file.h,v 1.267 2026/05/17 17:10:25 christos Exp $
  */
 
 #ifndef __file_h__
@@ -597,6 +597,7 @@ file_protected uint64_t file_signextend(struct magic_set *, struct magic *,
 file_protected uintmax_t file_varint2uintmax_t(const unsigned char *, int,
     size_t *);
 
+file_protected int file_bigendian(void);
 file_protected void file_badread(struct magic_set *);
 file_protected void file_badseek(struct magic_set *);
 file_protected void file_oomem(struct magic_set *, size_t);

@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.151 2026/05/16 15:21:40 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.152 2026/05/17 17:10:25 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -51,6 +51,18 @@ FILE_RCSID("@(#)$File: funcs.c,v 1.151 2026/05/16 15:21:40 christos Exp $")
 #ifndef SIZE_MAX
 #define SIZE_MAX	((size_t)~0)
 #endif
+
+file_protected int
+file_bigendian(void)
+{
+	union {
+		unsigned short x;
+		unsigned char s[sizeof(unsigned short)];
+	} u;
+
+	u.x = 1;
+	return u.s[0] != 1;
+}
 
 file_protected char *
 file_copystr(char *buf, size_t blen, size_t width, const char *str)
@@ -931,6 +943,13 @@ file_parse_guid(const char *s, uint64_t *guid)
 	    !getxvalue(&g->data4[6], s + 8, 2) ||
 	    !getxvalue(&g->data4[7], s + 10, 2))
 		return -1;
+
+	if (file_bigendian()) {
+		g->data1 = file_swap4(g->data1);
+		g->data2 = file_swap2(g->data2);
+		g->data3 = file_swap2(g->data3);
+
+	}
 	return 0;
 }
 

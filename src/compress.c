@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.161 2026/05/09 22:11:41 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.162 2026/05/17 17:10:25 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -125,12 +125,11 @@ static const char *zlib_args[] = { "python", "-c", zlibcode, NULL };
 static int
 zlibcmp(const unsigned char *buf)
 {
-	unsigned short x = 1;
-	unsigned char *s = CAST(unsigned char *, CAST(void *, &x));
+	unsigned short x;
 
 	if ((buf[0] & 0xf) != 8 || (buf[0] & 0x80) != 0)
 		return 0;
-	if (s[0] != 1)	/* endianness test */
+	if (file_bigendian())	/* endianness test */
 		x = buf[0] | (buf[1] << 8);
 	else
 		x = buf[1] | (buf[0] << 8);
