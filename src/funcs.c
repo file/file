@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.152 2026/05/17 17:10:25 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.153 2026/05/25 14:07:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -90,8 +90,11 @@ file_checkfield(char *msg, size_t mlen, const char *what, const char **pp)
 	const char *p = *pp;
 	int fw = 0;
 
-	while (*p && isdigit((unsigned char)*p))
+	while (*p && isdigit((unsigned char)*p)) {
 		fw = fw * 10 + (*p++ - '0');
+		if (fw > 1024)
+			break;
+	}
 
 	*pp = p;
 
