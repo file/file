@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: ascmagic.c,v 1.117 2026/04/17 14:47:03 christos Exp $")
+FILE_RCSID("@(#)$File: ascmagic.c,v 1.118 2026/06/02 19:58:38 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -207,6 +207,9 @@ file_ascmagic_with_encoding(struct magic_set *ms, const struct buffer *b,
 		if (ubuf[i] == '\b')
 			has_backspace = 1;
 	}
+
+	if (seen_cr && n_cr == 0 && n_crlf == 0)
+		n_cr++;
 
 	if (strcmp(type, "binary") == 0) {
 		rv = 0;
