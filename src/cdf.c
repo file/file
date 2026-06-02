@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.127 2026/05/09 22:06:12 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.128 2026/06/02 17:26:42 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -491,6 +491,11 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 	}
 
 	sat->sat_len = h->h_num_sectors_in_master_sat * nsatpersec + i;
+#defile CDF_SAT_LIMIT	(16 * 1024 * 1024)
+	if (ss != 0 && sat->sat_len > CDF_SAT_LIMIT / ss) {
+		errno = EFTYPE;
+		return -1;
+	}
 	DPRINTF(("sat_len = %" SIZE_T_FORMAT "u ss = %" SIZE_T_FORMAT "u\n",
 	    sat->sat_len, ss));
 	if ((sat->sat_tab = CAST(cdf_secid_t *, CDF_CALLOC(sat->sat_len, ss)))
