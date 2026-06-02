@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: images,v 1.275 2026/04/17 15:18:41 christos Exp $
+# $File: images,v 1.276 2026/06/02 17:44:28 christos Exp $
 # images:  file(1) magic for image formats (see also "iff", and "c-lang" for
 # XPM bitmaps)
 #
@@ -4708,3 +4708,12 @@
 >40	string  %s	(version %s)
 # Magic file for older Jasc Paint Shop Pro Browser Cache files (.jbf)
 0	string	JASC\040BROWS\040FILE	Jasc Paint Shop Pro Browser Cache (old format)
+
+# SBIG CCDOPS - CCD astronomical camera image format.
+# Created by Santa Barbara Instrument Group (SBIG), 1988.
+# Header line 1 is always "ST-N Image" where N is the camera model
+# number (4, 5, 6, 7, 8, 9, 10, 237, 402, etc.)
+# Spec formerly at sbig.com. Netpbm: sbigtopgm, pgmtosbig
+0	string	ST-
+>&0	regex	[0-9]+\040Image	SBIG CCDOPS camera image
+!:mime image/x-sbig
