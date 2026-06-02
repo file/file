@@ -1,5 +1,4 @@
-/*-
- * Copyright (c) 2008 Christos Zoulas
+/*- * Copyright (c) 2008 Christos Zoulas
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +34,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.128 2026/06/02 17:26:42 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.129 2026/06/02 17:57:22 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -491,7 +490,7 @@ cdf_read_sat(const cdf_info_t *info, cdf_header_t *h, cdf_sat_t *sat)
 	}
 
 	sat->sat_len = h->h_num_sectors_in_master_sat * nsatpersec + i;
-#defile CDF_SAT_LIMIT	(16 * 1024 * 1024)
+#define CDF_SAT_LIMIT	(16 * 1024 * 1024)
 	if (ss != 0 && sat->sat_len > CDF_SAT_LIMIT / ss) {
 		errno = EFTYPE;
 		return -1;
