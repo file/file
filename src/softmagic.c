@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.369 2026/05/16 15:21:40 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.370 2026/06/02 17:16:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -785,6 +785,9 @@ mprint(struct magic_set *ms, struct magic *m)
 	case FILE_REGEX: {
 		char *cp, *scp;
 		int rval;
+
+		if (ms->search.s == NULL)
+			break;
 
 		cp = strndup(RCAST(const char *, ms->search.s),
 		    ms->search.rm_len);
