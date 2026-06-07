@@ -1,3 +1,7 @@
+2026-05-07  11:32  Christos Zoulas <christos@zoulas.com>
+
+	* release 5.48
+
 2026-05-11  15:55 Christos Zoulas <christos@zoulas.com>
 
 	* add landlock support (valoq)
