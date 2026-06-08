@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.165 2026/06/08 21:05:38 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.166 2026/06/08 22:16:44 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -96,6 +96,7 @@ typedef void (*sig_t)(int);
 #if defined(HAVE_LRZIP_H) && defined(LRZIPLIBSUPPORT)
 #define BUILTIN_LRZIP
 #include <Lrzip.h>
+#endif
 #endif
 
 #if defined(HAVE_LZ4FRAME_H) && defined(LZ4LIBSUPPORT)
