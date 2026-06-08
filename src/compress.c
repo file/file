@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.164 2026/06/08 20:27:11 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.165 2026/06/08 21:05:38 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -91,6 +91,8 @@ typedef void (*sig_t)(int);
 #include <lzlib.h>
 #endif
 
+#ifdef notyet
+/* uses fmemopen and friends, not good enough or we need more autoconf glue */
 #if defined(HAVE_LRZIP_H) && defined(LRZIPLIBSUPPORT)
 #define BUILTIN_LRZIP
 #include <Lrzip.h>
@@ -906,7 +908,7 @@ out0:
 #endif
 
 #ifdef BUILTIN_LZ4LIB
-static int
+file_private int
 uncompresslz4(const unsigned char *old, unsigned char **newch,
     size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
 {
