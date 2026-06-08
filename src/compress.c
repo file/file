@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.162 2026/05/17 17:10:25 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.164 2026/06/08 20:27:11 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -91,11 +91,14 @@ typedef void (*sig_t)(int);
 #include <lzlib.h>
 #endif
 
-#ifdef notyet
 #if defined(HAVE_LRZIP_H) && defined(LRZIPLIBSUPPORT)
 #define BUILTIN_LRZIP
 #include <Lrzip.h>
 #endif
+
+#if defined(HAVE_LZ4FRAME_H) && defined(LZ4LIBSUPPORT)
+#define BUILTIN_LZ4LIB
+#include <lz4frame.h>
 #endif
 
 #ifdef DEBUG
@@ -194,6 +197,7 @@ file_private const struct {
 #define METH_XZ		9
 #define METH_LZIP	8
 #define METH_LRZIP	10
+#define	METH_LZ4	11
 #define METH_ZSTD	12
 #define METH_LZMA	13
 #define METH_ZLIB	14
@@ -253,6 +257,10 @@ file_private int uncompresslzlib(const unsigned char *, unsigned char **, size_t
 #endif
 #ifdef BUILTIN_LRZIP
 file_private int uncompresslrzip(const unsigned char *, unsigned char **, size_t,
+    size_t *, int);
+#endif
+#ifdef BUILTIN_LZ4LIB
+file_private int uncompresslz4(const unsigned char *, unsigned char **, size_t,
     size_t *, int);
 #endif
 
@@ -897,6 +905,39 @@ out0:
 }
 #endif
 
+#ifdef BUILTIN_LZ4LIB
+static int
+uncompresslz4(const unsigned char *old, unsigned char **newch,
+    size_t bytes_max, size_t *n, int extra __attribute__((__unused__)))
+{
+	LZ4F_decompressionContext_t dctx;
+	size_t src_read = *n;
+	size_t dst_written = bytes_max;
+	int res;
+	
+	LZ4F_errorCode_t ret = LZ4F_createDecompressionContext(&dctx,
+	    LZ4F_VERSION);
+	if (LZ4F_isError(ret)) {
+		res = makeerror(newch, n, "unable to create an lz4 decoder");
+		goto out;
+	}
+
+	/* Decode the lz4 frame into our destination buffer */
+	ret = LZ4F_decompress(dctx, *newch, &dst_written, old, &src_read, NULL);
+	
+
+	if (LZ4F_isError(ret) || dst_written == 0) {
+		res = makeerror(newch, n, "unable to decompress file");
+	} else {
+		*n = dst_written;
+		res = OKDATA;
+	}
+out:
+	LZ4F_freeDecompressionContext(dctx);
+	return res;
+}
+#endif
+
 static int
 makeerror(unsigned char **buf, size_t *len, const char *fmt, ...)
 {
@@ -1114,6 +1155,10 @@ getdecompressor(size_t method))(const unsigned char *, unsigned char **, size_t,
 #ifdef BUILTIN_LRZIP
 	case METH_LRZIP:
 		return uncompresslrzip;
+#endif
+#ifdef BUILTIN_LZ4LIB
+	case METH_LZ4:
+		return uncompresslz4;
 #endif
 	default:
 		return NULL;
