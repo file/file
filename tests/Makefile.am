@@ -157,6 +157,8 @@ searchbug.result \
 searchbug.testfile \
 uf2.result \
 uf2.testfile \
+utf16nul.result \
+utf16nul.testfile \
 utf16xmlsvg.testfile \
 utf16xmlsvg.result \
 xclbin.result \

@@ -515,7 +515,8 @@ looks_ucs16(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
 			uc = 0x10000 + 0x400 * (hi - 1) + (uc - 0xdc00);
 			hi = 0;
 		}
-		if (uc < 128 && text_chars[CAST(size_t, uc)] != T)
+		if (uc < 128 && text_chars[CAST(size_t, uc)] != T
+		    && uc != '\0')
 			return 0;
 		ubf[(*ulen)++] = uc;
 		if (UCS16_HISURR(uc))
@@ -563,7 +564,8 @@ looks_ucs32(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
 		if (ubf[*ulen - 1] == 0xfffe)
 			return 0;
 		if (ubf[*ulen - 1] < 128 &&
-		    text_chars[CAST(size_t, ubf[*ulen - 1])] != T)
+		    text_chars[CAST(size_t, ubf[*ulen - 1])] != T &&
+		    ubf[*ulen - 1] != '\0')
 			return 0;
 	}
 
