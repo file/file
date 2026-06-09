@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.45 2026/06/02 17:19:02 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.46 2026/06/09 20:39:31 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -466,6 +466,8 @@ looks_utf7(const unsigned char *buf, size_t nbytes, file_unichar_t *ubuf,
 #define UCS16_NOCHAR(c) ((c) >= 0xfdd0 && (c) <= 0xfdef)
 #define UCS16_HISURR(c) ((c) >= 0xd800 && (c) <= 0xdbff)
 #define UCS16_LOSURR(c) ((c) >= 0xdc00 && (c) <= 0xdfff)
+#define NOTTEXT(C) \
+    ((C) < 128 && text_chars[CAST(size_t, (C))] != T && (C) != '\0')
 
 file_private int
 looks_ucs16(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
@@ -515,7 +517,7 @@ looks_ucs16(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
 			uc = 0x10000 + 0x400 * (hi - 1) + (uc - 0xdc00);
 			hi = 0;
 		}
-		if (uc < 128 && text_chars[CAST(size_t, uc)] != T)
+		if (NOTTEXT(uc))
 			return 0;
 		ubf[(*ulen)++] = uc;
 		if (UCS16_HISURR(uc))
@@ -527,11 +529,13 @@ looks_ucs16(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
 	return 1 + bigend;
 }
 
+
 file_private int
 looks_ucs32(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
     size_t *ulen)
 {
 	int bigend;
+	file_unichar_t uc;
 	size_t i;
 
 	if (nbytes < 4)
@@ -560,10 +564,8 @@ looks_ucs32(const unsigned char *bf, size_t nbytes, file_unichar_t *ubf,
 			    | (CAST(file_unichar_t, bf[i + 2]) << 16)
 			    | (CAST(file_unichar_t, bf[i + 3]) << 24);
 
-		if (ubf[*ulen - 1] == 0xfffe)
-			return 0;
-		if (ubf[*ulen - 1] < 128 &&
-		    text_chars[CAST(size_t, ubf[*ulen - 1])] != T)
+		uc = ubf[*ulen - 1];
+		if (uc == 0xfffe || NOTTEXT(uc))
 			return 0;
 	}
 
