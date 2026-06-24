@@ -1,0 +1,43 @@
+
+#------------------------------------------------------------------------------
+# $File: sysstat,v 1.2 2026/06/22 00:00:00 Exp $
+# sysstat:  file(1) magic for sysstat system activity data files (sar/sadc)
+#
+# URL: https://github.com/sysstat/sysstat
+# Reference: sysstat sa.h struct file_magic / file_header
+#
+# file_magic layout (all fields in native byte order of the recording host):
+#   offset 0:   sysstat_magic uint16 = 0xd596
+#   offset 2:   format_magic uint16 = 0x2175 (current), 0x2173, 0x2171 (older)
+#
+# file_header begins at offset 76 (FILE_MAGIC_SIZE).
+# sa_nodename (hostname, char[65]) is at file_header offset 132,
+# giving absolute file offset 208.  This offset is arch-independent
+# because __attribute__((aligned(8))) on sa_hz and sa_cpu_nr produces
+# identical struct layout on both 32-bit and 64-bit hosts.
+
+# Little-endian hosts (x86, ARM, etc.) — bytes 0-3: 96 d5 <fmt_lo> <fmt_hi>
+0	lelong		0x2175d596	sysstat sar data
+>2	leshort		x		(format 0x%x)
+>208	string		>\0		\b, host: %s
+
+0	lelong		0x2173d596	sysstat sar data
+>2	leshort		x		(format 0x%x)
+>208	string		>\0		\b, host: %s
+
+0	lelong		0x2171d596	sysstat sar data
+>2	leshort		x		(format 0x%x)
+>208	string		>\0		\b, host: %s
+
+# Big-endian hosts (SPARC, PowerPC, etc.) — bytes 0-3: d5 96 <fmt_hi> <fmt_lo>
+0	belong		0xd5962175	sysstat sar data (big-endian)
+>2	beshort		x		(format 0x%x)
+>208	string		>\0		\b, host: %s
+
+0	belong		0xd5962173	sysstat sar data (big-endian)
+>2	beshort		x		(format 0x%x)
+>208	string		>\0		\b, host: %s
+
+0	belong		0xd5962171	sysstat sar data (big-endian)
+>2	beshort		x		(format 0x%x)
+>208	string		>\0		\b, host: %s
