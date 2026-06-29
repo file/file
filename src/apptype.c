@@ -58,7 +58,7 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const struct buffer *b)
 	}
 	/* qualify the filename to prevent extraneous searches */
 	_splitpath(filename, drive, dir, fname, ext);
-	(void)sprintf(path, "%s%s%s%s", drive,
+	(void)snprintf(path, sizeof(path), "%s%s%s%s", drive,
 		(*dir == '\0') ? "./" : dir,
 		fname,
 		(*ext == '\0') ? "." : ext);
