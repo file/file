@@ -38,6 +38,7 @@
 # X bitmap https://en.wikipedia.org/wiki/X_BitMap
 0	search/2048	#define\040
 >&0	regex		[a-zA-Z0-9]+_width\040	xbm image
+!:mime	image/x-xbitmap
 >>&0	regex		[0-9]+			(%sx
 >>>&0	string		\n#define\040
 >>>>&0	regex		[a-zA-Z0-9]+_height\040
