@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: database,v 1.75 2025/11/10 16:06:19 christos Exp $
+# $File: database,v 1.76 2026/07/06 14:44:41 christos Exp $
 # database:  file(1) magic for various databases
 #
 # extracted from header/code files by Graeme Wilford (eep2gw@ee.surrey.ac.uk)
@@ -1009,3 +1009,11 @@
 0     name  pgwal     WAL segment file
 >0x18 quad  x         (System ID %lld,
 >0x04 long  x         Timeline %d)
+
+# LMDB from des at FreeBSD
+0	ulong	=0xbeefc0de	LMDB lock file
+>&0	ulong	x		\b, format %x
+>>&0	ulong	x		\b, last txn %u
+
+0x10	ulong	=0xbeefc0de	LMDB data file
+>&0	ulong	x		\b, version %u
