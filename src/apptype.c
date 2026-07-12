@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apptype.c,v 1.18 2024/12/08 18:59:04 christos Exp $")
+FILE_RCSID("@(#)$File: apptype.c,v 1.19 2026/07/12 11:32:02 christos Exp $")
 #endif /* lint */
 
 #include <stdlib.h>
@@ -58,7 +58,7 @@ file_os2_apptype(struct magic_set *ms, const char *fn, const struct buffer *b)
 	}
 	/* qualify the filename to prevent extraneous searches */
 	_splitpath(filename, drive, dir, fname, ext);
-	(void)sprintf(path, "%s%s%s%s", drive,
+	(void)snprintf(path, sizeof(path), "%s%s%s%s", drive,
 		(*dir == '\0') ? "./" : dir,
 		fname,
 		(*ext == '\0') ? "." : ext);
