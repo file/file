@@ -375,7 +375,7 @@
 >5	byte		x		\b.%d
 >6	belong		x		(%d bytes)
 
-0	string		ArC\x01		FreeArc archive <http://freearc.org>
+0	string		ArC\x01		FreeArc archive
 
 # Valve Pack (VPK) files
 # https://developer.valvesoftware.com/wiki/VPK_(file_format)#File_Format
