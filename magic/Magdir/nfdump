@@ -1,0 +1,17 @@
+
+#------------------------------------------------------------------------------
+# $File: nfdump,v 1.1 2026/07/31 16:46:15 christos Exp $
+
+# Type:  nfdump binary flow data
+# URL:   https://github.com/phaag/nfdump
+# Maintainer: Peter Haag <peter@epyxis.ch>
+
+0	leshort	0xA50C    
+>2	leshort	>0	nfdump binary flow data (little-endian)
+!:mime application/x-nfdump
+!:ext nf,nfd,nfdump
+
+0	beshort	0xA50C    
+>2	beshort	>0	nfdump binary flow data (big-endian)
+!:mime application/x-nfdump
+!:ext nf,nfd,nfdump
