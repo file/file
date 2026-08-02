@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: compress,v 1.99 2026/04/17 12:52:29 christos Exp $
+# $File: compress,v 1.100 2026/08/02 11:55:45 christos Exp $
 # compress:  file(1) magic for pure-compression formats (no archives)
 #
 # compress, gzip, pack, compact, huf, squeeze, crunch, freeze, yabba, etc.
@@ -375,7 +375,7 @@
 >5	byte		x		\b.%d
 >6	belong		x		(%d bytes)
 
-0	string		ArC\x01		FreeArc archive <http://freearc.org>
+0	string		ArC\x01		FreeArc archive
 
 # Valve Pack (VPK) files
 # https://developer.valvesoftware.com/wiki/VPK_(file_format)#File_Format
