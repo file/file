@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.171 2026/05/17 17:30:59 christos Exp $
+# $File: filesystems,v 1.172 2026/08/03 08:07:26 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2361,7 +2361,8 @@
 >>&36	lelong	>0	(compressed)
 
 # LFS
-0	lelong	0x070162	LFS filesystem image
+# Do not match MIPS COFF with 7 sections as it starts with words: 0x0162 0x0007
+0	lequad&0xfffffffcffffffff	0x070162	LFS filesystem image
 >4	lelong	1		version 1,
 >>8	lelong	x		\b blocks %u,
 >>12	lelong	x		\b blocks per segment %u,
