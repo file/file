@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: coff,v 1.16 2026/04/20 14:53:18 christos Exp $
+# $File: coff,v 1.17 2026/08/05 07:29:07 christos Exp $
 # coff: file(1) magic for Common Object Files not specific to known cpu types or manufactures
 #
 # COFF
@@ -79,86 +79,83 @@
 # Maybe used also in adi,att3b,clipper,hitachi-sh,hp,ibm6000,intel,
 # mips,motorola,msdos,osf1,sharc,varied.out,vax
 0	name				display-coff
-# test for unused flag bits (0x8000,x0080) in f_flags
-# flag bits (0x0800,0x0400,0x0200) now seems to be used in RISC System/6000 V3.1
->18	uleshort&0x8080	0
 # skip DOCTOR.DAILY READER.NDA REDBOX.ROOT by looking for positive number of sections
->>2	uleshort	>0
+>2	uleshort	>0
 # skip ega80woa.fnt svgafix.fnt HP3FNTS1.DAT HP3FNTS2.DAT INTRO.ACT LEARN.PIF by looking for low number of sections
->>>2	uleshort	<4207
+>>2	uleshort	<4207
 # f_magic - magic number
->>>>0	use		display-coff-processor
->>>>0	uleshort	x		COFF
+>>>0	use		display-coff-processor
+>>>0	uleshort	x		COFF
 # F_EXEC flag bit
->>>>18	leshort		^0x0002		object file
+>>>18	leshort		^0x0002		object file
 !:mime	application/x-coff
 !:ext	o/obj/lib
 # no cof sample found
 #!:ext	cof/o/obj/lib
->>>>18	leshort		&0x0002		executable
+>>>18	leshort		&0x0002		executable
 #!:mime	application/x-coffexec
 !:mime	application/x-coff-executable
 # typically no file name suffix for executables
 !:ext	/
 # F_RELFLG flag bit,static object
->>>>18	leshort		&0x0001		\b, no relocation info
+>>>18	leshort		&0x0001		\b, no relocation info
 # F_LNNO flag bit
->>>>18	leshort		&0x0004		\b, no line number info
+>>>18	leshort		&0x0004		\b, no line number info
 # F_LSYMS flag bit
->>>>18	leshort		&0x0008		\b, stripped
->>>>18	leshort		^0x0008		\b, not stripped
+>>>18	leshort		&0x0008		\b, stripped
+>>>18	leshort		^0x0008		\b, not stripped
 # flags in other COFF versions
 #0x0010    F_FDPR_PROF
 #0x0020    F_FDPR_OPTI
 #0x0040    F_DSA
 # F_AR32WR flag bit
-#>>>>18	leshort		&0x0100		\b, 32 bit little endian
+#>>>18	leshort		&0x0100		\b, 32 bit little endian
 #0x1000    F_DYNLOAD
 #0x2000    F_SHROBJ
 #0x4000    F_LOADONLY
 # f_nscns - number of sections like: 1 2 3 4 5 7 8 9 11 12 15 16 19 20 21 22 26 30 36 40 42 56 80 89 96 124
->>>>2	uleshort	<2		\b, %u section
->>>>2	uleshort	>1		\b, %u sections
+>>>2	uleshort	<2		\b, %u section
+>>>2	uleshort	>1		\b, %u sections
 # f_symptr - symbol table pointer, only for not stripped
 # like: 0 0x7c 0xf4 0x104 0x182 0x1c2 0x1c6 0x468 0x948 0x416e 0x149a6 0x1c9d8 0x23a68 0x35120 0x7afa0
->>>>8	ulelong		>0		\b, symbol offset=%#x
+>>>8	ulelong		>0		\b, symbol offset=%#x
 # f_nsyms - number of symbols, only for not stripped
 # like: 0 2 7 9 10 11 20 35 41 63 71 80 105 146 153 158 170 208 294 572 831 1546
->>>>12	ulelong		>0		\b, %d symbols
+>>>12	ulelong		>0		\b, %d symbols
 # f_opthdr - optional header size. An object file should have a value of 0
 # like: 72 (IBM\HH\HYPERHLP)
->>>>16	uleshort	>0		\b, optional header size %u
+>>>16	uleshort	>0		\b, optional header size %u
 # f_timdat - file time & date stamp
->>>>4	ledate		>0		\b, created %s
+>>>4	ledate		>0		\b, created %s
 # at offset 20 can be optional header, extra bytes FILHSZ-20 because
 # do not rely on sizeof(FILHDR) to give the correct size for header.
 # or first section header
 # additional variables for other COFF files
->>>>16	uleshort	=0
+>>>16	uleshort	=0
 # most section names start with point character except samples created by "exotic" compilers
 # first section name s_name[8] like: .text .data .debug$S .drectve .testseg .rsrc .rsrc$01 .pad
->>>>>(16.s+20)	string		x		\b, 1st section name "%.8s"
+>>>>(16.s+20)	string		x		\b, 1st section name "%.8s"
 # physical address s_paddr like: 0
-#>>>>>(16.s+28)	lelong		!0		\b, s_paddr %#8.8x
+#>>>>(16.s+28)	lelong		!0		\b, s_paddr %#8.8x
 # virtual address s_vaddr like: 0
-#>>>>>(16.s+32)	lelong		!0		\b, s_vaddr %#8.8x
+#>>>>(16.s+32)	lelong		!0		\b, s_vaddr %#8.8x
 # section size s_size
-#>>>>>(16.s+36)	lelong		x		\b, s_size %#8.8x
+#>>>>(16.s+36)	lelong		x		\b, s_size %#8.8x
 # file ptr to raw data for section s_scnpt
-#>>>>>(16.s+40)	lelong		x		\b, s_scnpt %#8.8x
+#>>>>(16.s+40)	lelong		x		\b, s_scnpt %#8.8x
 # file ptr to relocation s_relptr like: 0
-#>>>>>(16.s+44)	lelong		!0		\b, s_relptr %#8.8x
+#>>>>(16.s+44)	lelong		!0		\b, s_relptr %#8.8x
 # file ptr to gp histogram s_lnnoptr like: 0
-#>>>>>(16.s+48)	lelong		!0		\b, s_lnnoptr %#8.8x
+#>>>>(16.s+48)	lelong		!0		\b, s_lnnoptr %#8.8x
 # number of relocation entries s_nreloc like: 0 1 2 5 6 8 19h 26h 27h 38h 50h 5Fh 89h Dh 1Ch 69h A9h 1DCh 651h
-#>>>>>(16.s+52)	uleshort	x		\b, s_nreloc %#4.4x
+#>>>>(16.s+52)	uleshort	x		\b, s_nreloc %#4.4x
 # number of gp histogram entries s_nlnno like: 0
-#>>>>>(16.s+54)	uleshort	!0		\b, s_nlnno %#4.4x
+#>>>>(16.s+54)	uleshort	!0		\b, s_nlnno %#4.4x
 # flags s_flags
-#>>>>>(16.s+56)	lelong		x		\b, s_flags %#8.8x
+#>>>>(16.s+56)	lelong		x		\b, s_flags %#8.8x
 # second section name s_name[8] like: .bss .data .debug$S .rsrc$01
->>>>2	uleshort	>1
->>>>>(16.s+60)	string		x		\b, 2nd section name "%.8s"
+>>>2	uleshort	>1
+>>>>(16.s+60)	string		x		\b, 2nd section name "%.8s"
 # >20	beshort		0407		(impure)
 # >20	beshort		0410		(pure)
 # >20	beshort		0413		(demand paged)
