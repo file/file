@@ -1,8 +1,13 @@
 
 #------------------------------------------------------------------------------
-# $File: typeset,v 1.8 2009/09/19 16:28:13 christos Exp $
+# $File: typeset,v 1.9 2026/08/17 08:58:26 christos Exp $
 # typeset:  file(1) magic for other typesetting
 #
-0	string		Interpress/Xerox	Xerox InterPress data
->16	string		/			(version
->>17	string		>\0			%s)
+0	string	Interpress/Xerox	Xerox InterPress data
+>16	string	/			(version
+>>17	string	>\0			%s)
+
+0	string 	FABYLON_BOOK_02!	Fabylon FAB2 book container
+!:ext	fab
+0	string	FABYLON_REALM_01	Fabylon book container (legacy)
+!:ext	fab
