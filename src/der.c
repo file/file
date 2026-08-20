@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: der.c,v 1.29 2026/06/02 16:56:40 christos Exp $")
+FILE_RCSID("@(#)$File: der.c,v 1.30 2026/08/20 14:30:08 christos Exp $")
 #endif
 #else
 #define SIZE_T_FORMAT "z"
@@ -78,7 +78,7 @@ static const char der_type[] = "PC";
 #define	DER_TAG_EOC			0x00
 #define	DER_TAG_BOOLEAN			0x01
 #define	DER_TAG_INTEGER			0x02
-#define	DER_TAG_BIT STRING		0x03
+#define	DER_TAG_BIT_STRING		0x03
 #define	DER_TAG_OCTET_STRING		0x04
 #define	DER_TAG_NULL			0x05
 #define	DER_TAG_OBJECT_IDENTIFIER	0x06
