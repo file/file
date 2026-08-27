@@ -108,7 +108,9 @@ enable_landlock(int flags, int action)
 
 	(void)memset(&attr, 0, sizeof(attr));
 	attr.handled_access_fs =
+#if 0
 	    LANDLOCK_ACCESS_FS_EXECUTE |
+#endif
 	    LANDLOCK_ACCESS_FS_WRITE_FILE |
 	    LANDLOCK_ACCESS_FS_READ_FILE |
 	    LANDLOCK_ACCESS_FS_READ_DIR |
