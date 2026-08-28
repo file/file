@@ -145,11 +145,11 @@ usage:
 	}
 	desired = slurp(fp, &desired_len);
 	fclose(fp);
-	(void)printf("%s: %s\n", argv[0], result);
+	(void)printf("%s: [%s]\n", argv[0], result);
 	if (strcmp(result, desired) != 0) {
 	    result_len = strlen(result);
-	    (void)fprintf(stderr, "%s: ERROR: result was (len %zu)\n%s\n"
-		"expected (len %zu)\n%s\n", prog, result_len, result,
+	    (void)fprintf(stderr, "%s: ERROR: result was (len %zu)\n[%s]\n"
+		"expected (len %zu)\n[%s]\n", prog, result_len, result,
 		desired_len, desired);
 	    goto bad;
 	}
