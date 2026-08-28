@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: msdos,v 1.217 2026/08/03 08:04:54 christos Exp $
+# $File: msdos,v 1.218 2026/08/28 15:48:22 christos Exp $
 # msdos:  file(1) magic for MS-DOS files
 #
 
@@ -121,10 +121,71 @@
 >>>0		default		x
 # other endianity is not supported by magic "use" keyword
 
+
 # Maybe it's a PE?
+>(0x3c.l)	string		PE\0\0
+
+
+# Detect old PE non-COFF executables which are used by:
+# - Windows NT 3.1 ePDK (September 1991, build 196)
+# - Windows NT 3.1 PDK1 (October 1991)
+# - Microsoft C/C++ 7.0
+# These executables have SignatureBytes "PE\0\0" but do not follow the COFF structure
+# This PE structure and field names can be dumped by NT 3.1 PDK1 tools: i386kd.exe, coff.exe, hdr.exe
+# First WORD after SignatureBytes has upper 14 bits reserved which should be 0 and NumberOfSpecialRVAs should be 7
+>>(0x3c.l+4)		ushort&0xfffc	0
+>>>(0x3c.l+108)		lelong		7	PE non-COFF executable
+# OSType
+# 2 - used by Microsoft C/C++ 7.0 files (CL.EXE, C1XX3216.EXE, C13216.EXE, C23216.EXE, C33216.EXE, MS32EM87.DLL, MS32KRNL.DLL)
+>>>>(0x3c.l+8)		uleshort	2	for MS Windows
+# 4 - used by Windows NT 3.1 ePDK / PDK1 files (CMD.EXE, CALC.EXE, BASE.DLL, GDI.DLL, ...)
+>>>>(0x3c.l+8)		uleshort	4
+# SubSystem
+# 1 - NT OS/2 subsystem (LOADER.EXE)
+>>>>>(0x3c.l+10)	uleshort	1	for OS/2
+# 2 - console (CL.EXE, CMD.EXE, FIND.EXE) or GUI (CALC.EXE, CLOCK.EXE)
+>>>>>(0x3c.l+10)	uleshort	2	for MS Windows
+# 4 - native (AUTOCHK.EXE, CSRSS.EXE, SMSS.EXE, OS2SS.EXE)
+>>>>>(0x3c.l+10)	uleshort	4	for MS Windows
+# 5 - NT POSIX subsystem (no sample)
+>>>>>(0x3c.l+10)	uleshort	5	for POSIX
+>>>>>(0x3c.l+10)	default		x
+>>>>>>(0x3c.l+10)	uleshort	x	for Unknown subsystem %#x
+>>>>(0x3c.l+8)		default		x
+>>>>>(0x3c.l+8)		uleshort	x	for Unknown OS %#x
+# ModuleFlags (seems to match module type flags in lx-executable)
+#>>>>(0x3c.l+24)	ulelong		x		\b, ModuleFlags %#x
+>>>>(0x3c.l+24)		ulelong&0x38000	0x08000	(DLL)
+!:ext	dll
+>>>>(0x3c.l+24)		ulelong&0x38000	0x00000
+>>>>>(0x3c.l+8)		ulelong		0x40004	(native)
+!:ext	exe
+>>>>>(0x3c.l+8)		ulelong		!0x40004
+>>>>>>(0x3c.l+24)	ulelong&0x0700	0x0200	(console)
+!:ext	exe
+>>>>>>(0x3c.l+24)	ulelong&0x0700	0x0300	(GUI)
+!:ext	exe
+>>>>>>(0x3c.l+24)	default		x	(EXE)
+!:ext	exe
+# CPUType (seems to match CPU type in lx-executable)
+>>>>(0x3c.l+6)		uleshort	0x02	\b, Intel i386
+>>>>(0x3c.l+6)		uleshort	0x20	\b, Intel i860
+>>>>(0x3c.l+6)		uleshort	0x40	\b, MIPS
+>>>>(0x3c.l+6)		default		x
+>>>>>(0x3c.l+6)		uleshort	x	\b, unknown CPU %#x
+# Endian (there are no samples for non-little-endian)
+#>>>>(0x3c.l+4)		ubyte&0x3	=0x0	(little-endian)
+#>>>>(0x3c.l+4)		ubyte&0x3	=0x1	(PDP-11-endian)
+#>>>>(0x3c.l+4)		ubyte&0x3	=0x3	(big-endian)
+#>>>>(0x3c.l+4)		default		x	(unknown-endian)
+
+# Detect embedded DOSX32 extender inside Microsoft C/C++ 7.0 (CL.EXE, C1XX3216.EXE, C13216.EXE, C23216.EXE, C33216.EXE)
+>>>(8.s*16)		search/0x400	cannot\ find\ file\ :\ MS32KRNL.DLL	\b, MS DOSX32 DOS extender
+
+
+# Standard PE/COFF executables
 # URL:		http://fileformats.archiveteam.org/wiki/Portable_Executable
 # Reference:	https://docs.microsoft.com/de-de/windows/win32/debug/pe-format
->(0x3c.l)	string		PE\0\0
 # Portable Executable has Windows COFF Optional Header which is at least 96 bytes long
 >>(0x3c.l+20)	ushort		>95	PE
 !:mime	application/vnd.microsoft.portable-executable
