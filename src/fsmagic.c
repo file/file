@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.88 2026/08/28 15:26:23 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.89 2026/08/28 15:33:00 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -478,6 +478,28 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 				return -1;
 			break;
 		}
+#ifdef HAVE_STRUCT_STAT_ST_FLAGS
+#ifdef SF_SNAPSHOT
+		if ((ms->flags & MAGIC_DEVICES) == 0 &&
+		    (sb->st_flags & SF_SNAPSHOT) != 0) {
+			char tbuf[256];
+
+			if (mime) {
+				if (handle_mime(ms, mime, "x-fs-snapshot")
+				    == -1)
+					return -1;
+			} else if (silent) {
+			} else if (file_printf(ms,
+				"%sinternal file system snapshot taken at %s",
+				COMMA,
+				file_fmtdatetime(tbuf, sizeof(tbuf),
+				    sb->st_mtime, 0))
+			    == -1)
+				return -1;
+			break;
+		}
+#endif
+#endif
 		ret = 0;
 		break;
 
