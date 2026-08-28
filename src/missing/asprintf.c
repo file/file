@@ -29,7 +29,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: asprintf.c,v 1.7 2022/09/24 20:30:13 christos Exp $")
+FILE_RCSID("@(#)$File: asprintf.c,v 1.1 2026/08/28 13:35:35 christos Exp $")
 #endif
 
 int asprintf(char **ptr, const char *fmt, ...)

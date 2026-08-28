@@ -219,6 +219,7 @@ dnl Checks for functions
 AC_CHECK_FUNCS(strndup mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale memmem pipe2 posix_spawnp qsort_r)
 
 dnl Provide implementation of some required functions if necessary
+AC_CONFIG_LIBOBJ_DIR([src/missing])
 AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline ctime_r asctime_r localtime_r gmtime_r pread strcasestr fmtcheck dprintf)
 
 dnl Checks for libraries

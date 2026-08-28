@@ -1,6 +1,6 @@
 #include "file.h"
 #ifndef lint
-FILE_RCSID("@(#)$File: pread.c,v 1.5 2022/09/24 20:30:13 christos Exp $")
+FILE_RCSID("@(#)$File: pread.c,v 1.1 2026/08/28 13:35:36 christos Exp $")
 #endif  /* lint */
 #include <fcntl.h>
 #include <unistd.h>
