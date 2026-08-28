@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: commands,v 1.82 2026/02/16 14:39:53 christos Exp $
+# $File: commands,v 1.83 2026/08/28 17:27:14 christos Exp $
 # commands:  file(1) magic for various shells and interpreters
 #
 #0	string/w	:			shell archive or script for antique kernel text
@@ -39,6 +39,8 @@
 !:mime	text/x-shellscript
 0	string/fwt	#!\ /usr/bin/env\ zsh	Paul Falstad's zsh script text executable
 !:mime	text/x-shellscript
+0	string/fwt	#!\ /usr/bin/env\ -S\ zsh 	Paul Falstad's zsh script text executable
+!:mime	text/x-shellscript
 
 0	string/fwt	#!\ /bin/ash		Neil Brown's ash script text executable
 !:mime	text/x-shellscript
@@ -75,6 +77,11 @@
 !:mime	text/x-lua
 0	string/fwt	#!\ /bin/env\ lua	Lua script text executable
 !:mime	text/x-lua
+0	string/fwt	#!\ /usr/bin/env\ -S\ lua 	Lua script text executable
+!:mime	text/x-lua
+0	string/fwt	#!\ /bin/env\ -S\ lua 	Lua script text executable
+!:mime	text/x-lua
+
 
 # AT&T Bell Labs' Plan 9 shell
 0	string/fwt	#!\ /bin/rc	Plan 9 rc shell script text executable
@@ -100,6 +107,11 @@
 !:mime	text/x-shellscript
 0	string/fwt	#!\ /bin/env\ bash	Bourne-Again shell script text executable
 !:mime	text/x-shellscript
+0	string/fwt	#!\ /usr/bin/env\ -S\ bash 	Bourne-Again shell script text executable
+!:mime	text/x-shellscript
+0	string/fwt	#!\ /bin/env\ -S\ bash 	Bourne-Again shell script text executable
+!:mime	text/x-shellscript
+
 
 0	string/fwt	#!\ /bin/dash	Dash shell script text executable
 !:mime	text/x-shellscript
@@ -114,6 +126,8 @@
 !:mime	text/x-shellscript
 0	string/fwt	#!\ /usr/bin/env\ fish		fish shell script text executable
 !:mime	text/x-shellscript
+0	string/fwt	#!\ /usr/bin/env\ -S\ fish 		fish shell script text executable
+!:mime	text/x-shellscript
 
 0	search/1/fwt	#!\ /usr/bin/tclsh	Tcl/Tk script text executable
 !:mime	text/x-tcl
@@ -123,6 +137,10 @@
 0	search/1/fwt	#!\ /usr/bin/env\ texlua	LuaTex script text executable
 !:mime	text/x-luatex
 0	search/1/fwt	#!\ /bin/env\ texlua	LuaTex script text executable
+!:mime	text/x-luatex
+0	search/1/fwt	#!\ /usr/bin/env\ -S\ texlua 	LuaTex script text executable
+!:mime	text/x-luatex
+0	search/1/fwt	#!\ /bin/env\ -S\ texlua 	LuaTex script text executable
 !:mime	text/x-luatex
 
 0	search/1/fwt	#!\ /usr/bin/luatex	LuaTex script text executable
@@ -150,6 +168,8 @@
 0	string/fwt	#!\ /usr/bin/execlineb		execline script text executable
 !:mime	text/x-execline
 0	string/fwt	#!\ /usr/bin/env\ execlineb		execline script text executable
+!:mime	text/x-execline
+0	string/fwt	#!\ /usr/bin/env\ -S\ execlineb 		execline script text executable
 !:mime	text/x-execline
 
 0	string	#!
@@ -230,4 +250,7 @@
 
 0	string/fwt	#!\ /usr/bin/env\ runghc	GHC script executable
 0	string/fwt	#!\ /usr/bin/env\ runhaskell	Haskell script executable
-0	string/fwt	#!\ /usr/bin/env\ julia Julia script executable
+0	string/fwt	#!\ /usr/bin/env\ julia	Julia script executable
+0	string/fwt	#!\ /usr/bin/env\ -S\ runghc 	GHC script executable
+0	string/fwt	#!\ /usr/bin/env\ -S\ runhaskell 	Haskell script executable
+0	string/fwt	#!\ /usr/bin/env\ -S\ julia 	Julia script executable
