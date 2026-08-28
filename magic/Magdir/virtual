@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: virtual,v 1.23 2026/04/15 16:56:41 christos Exp $
+# $File: virtual,v 1.24 2026/08/28 15:37:16 christos Exp $
 # From: James Nobis <quel@quelrod.net>
 # Microsoft hard disk images for:
 # Virtual Server
@@ -345,3 +345,92 @@
 # Parallels disk image
 0	string	WithoutFreeSpace	Parallels disk image
 0	string	WithouFreSpacExt	Parallels disk image (extended) 
+
+# AaruFormat image
+# Instead of listing every possible media type (CD-R and CD-RW, for
+# instance), broad types are identified by range.
+0	string	AARUFRMT	AaruFormat
+>76	ulelong	0	\b (unknown disk type image)
+>76	ulelong	1	\b (unknown magneto-optical disk image)
+>76	ulelong	2	\b (hard disk image)
+>76	ulelong	3	\b (Microdrive disk image)
+>76	ulelong	4	\b (Zoned hard disk image)
+>76	ulelong	5	\b (USB flash drive image)
+>76	ulelong	6	\b (Unknown tape image)
+>76 ulelong >9
+>>76	ulelong	<40	\b (CD image)
+>76 ulelong >39
+>>76	ulelong	<51	\b (DVD image)
+>76 ulelong >50
+>>76	ulelong	<60	\b (HD DVD image)
+>76 ulelong >59
+>>76	ulelong	<70	\b (Blu-ray image)
+>76	ulelong	>69
+>>76	ulelong	<80	\b (rare optical image)
+>76	ulelong	>79
+>>76	ulelong	<90	\b (LaserDisc image)
+>76	ulelong	>89
+>>76	ulelong	<100	\b (MiniDisc image)
+>76	ulelong	>99
+>>76	ulelong	<110	\b (UDO image)
+>76	ulelong	>109
+>>76	ulelong	<130	\b (PlayStation disc image)
+>76	ulelong	>129
+>>76	ulelong	<150	\b (Xbox disc image)
+>76	ulelong	>149
+>>76	ulelong	<170	\b (Sega game image)
+>76	ulelong	>169
+>>76	ulelong	<180	\b (console game image)
+>76	ulelong	>179
+>>76	ulelong	<310	\b (floppy image)
+>76	ulelong	>309	\b (misc data image)
+# V1 application name is UTF-16LE, V2 is UTF-8
+>72	byte	1
+>>8	lestring16	x	\b, created by %.32s
+>72	byte	2
+>>8	string	x	\b, created by %.64s
+>74	byte	x	\b %d
+>75	byte	x	\b.%d
+!:mime	application/x-aaruformat
+!:ext	aaruf/aaruformat/aif
+
+0	string	DICMFRMT	DiscImageChef image
+>76	ulelong	0	\b (unknown disk type image)
+>76	ulelong	1	\b (unknown magneto-optical disk image)
+>76	ulelong	2	\b (hard disk image)
+>76	ulelong	3	\b (Microdrive disk image)
+>76	ulelong	4	\b (Zoned hard disk image)
+>76	ulelong	5	\b (USB flash drive image)
+>76	ulelong	6	\b (Unknown tape image)
+>76 ulelong >9
+>>76	ulelong	<40	\b (CD image)
+>76 ulelong >39
+>>76	ulelong	<51	\b (DVD image)
+>76 ulelong >50
+>>76	ulelong	<60	\b (HD DVD image)
+>76 ulelong >59
+>>76	ulelong	<70	\b (Blu-ray image)
+>76	ulelong	>69
+>>76	ulelong	<80	\b (rare optical image)
+>76	ulelong	>79
+>>76	ulelong	<90	\b (LaserDisc image)
+>76	ulelong	>89
+>>76	ulelong	<100	\b (MiniDisc image)
+>76	ulelong	>99
+>>76	ulelong	<110	\b (UDO image)
+>76	ulelong	>109
+>>76	ulelong	<130	\b (PlayStation disc image)
+>76	ulelong	>129
+>>76	ulelong	<150	\b (Xbox disc image)
+>76	ulelong	>149
+>>76	ulelong	<170	\b (Sega game image)
+>76	ulelong	>169
+>>76	ulelong	<180	\b (console game image)
+>76	ulelong	>179
+>>76	ulelong	<310	\b (floppy image)
+>76	ulelong	>309	\b (misc data image)
+>8	lestring16	x	\b, created by %.32s
+>74	byte	x	\b %d
+>75	byte	x	\b.%d
+!:mime	application/x-discimagechef
+!:ext	dicf
