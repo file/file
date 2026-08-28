@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.87 2026/08/28 15:12:29 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.88 2026/08/28 15:26:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -354,7 +354,9 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 			return -1;
 		break;
 #endif
-#ifdef	S_IFLNK
+/* Resolving a symlink needs readlink(2); without it fall through to the
+ * generic handling rather than failing to link. */
+#if defined(S_IFLNK) && defined(HAVE_READLINK)
 	case S_IFLNK:
 		if ((nch = readlink(fn, buf, BUFSIZ-1)) <= 0) {
 			if (ms->flags & MAGIC_ERROR) {

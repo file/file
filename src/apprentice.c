@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.376 2026/05/09 22:44:32 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.377 2026/08/28 15:26:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -49,7 +49,9 @@ FILE_RCSID("@(#)$File: apprentice.c,v 1.376 2026/05/09 22:44:32 christos Exp $")
 #ifdef QUICK
 #include <sys/mman.h>
 #endif
+#ifdef HAVE_DIRENT_H
 #include <dirent.h>
+#endif
 #include <limits.h>
 
 
@@ -1532,8 +1534,10 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 	struct stat st;
 	struct magic_map *map;
 	struct magic_entry_set mset[MAGIC_SETS];
+#ifdef HAVE_DIRENT_H
 	DIR *dir;
 	struct dirent *d;
+#endif
 
 	memset(mset, 0, sizeof(mset));
 	ms->flags |= MAGIC_CHECK;	/* Enable checks for parsed files */
@@ -1551,6 +1555,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 		(void)fprintf(stderr, "%s\n", usg_hdr);
 
 	/* load directory or file */
+#ifdef HAVE_DIRENT_H
 	if (stat(fn, &st) == 0 && S_ISDIR(st.st_mode)) {
 		dir = opendir(fn);
 		if (!dir) {
@@ -1599,6 +1604,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 			filearr = NULL;
 		}
 	} else
+#endif
 		load_1(ms, action, fn, &errs, mset);
 	if (errs)
 		goto out;

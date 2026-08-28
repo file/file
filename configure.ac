@@ -107,6 +107,117 @@ esac
 AC_SUBST(MINGW)
 AM_CONDITIONAL(MINGW, test "$MINGW" = 1)
 
+dnl ---------------------------------------------------------------------------
+dnl AmigaOS m68k ABI selection
+dnl
+dnl Mirrors the M68K_CRT / M68K_CPU / M68K_BASEREL options of the json-c Amiga
+dnl port. These three flags change the ABI, so they are appended to $CC right
+dnl after AC_PROG_CC below -- that way every feature test in this file runs with
+dnl the same flags the library is finally built with, which matters because the
+dnl CRT choice selects a different set of target headers.
+dnl ---------------------------------------------------------------------------
+AC_ARG_WITH([m68k-crt],
+  [AS_HELP_STRING([--with-m68k-crt=CRT],
+    [AmigaOS m68k C runtime: newlib, nix20, nix13, ixemul or clib2 @<:@default=newlib@:>@])],
+  [m68k_crt=$withval], [m68k_crt=newlib])
+AC_ARG_WITH([m68k-cpu],
+  [AS_HELP_STRING([--with-m68k-cpu=CPU],
+    [AmigaOS m68k CPU target, e.g. 68000, 68020, 68040, 68060 @<:@default=compiler default@:>@])],
+  [m68k_cpu=$withval], [m68k_cpu=])
+AC_ARG_WITH([m68k-baserel],
+  [AS_HELP_STRING([--with-m68k-baserel=MODE],
+    [AmigaOS m68k base-relative addressing: baserel, baserel32 or off @<:@default=off@:>@])],
+  [m68k_baserel=$withval], [m68k_baserel=off])
+
+dnl Which Amiga flavour are we targeting? --host=m68k-*-amigaos and
+dnl --host=ppc-amigaos both normalise to host_os=amigaos, so split on the CPU.
+AMIGA_TARGET=
+case "$host_os:$host_cpu" in
+  amigaos*:m68k*)                 AMIGA_TARGET=m68k ;;
+  amigaos*:powerpc*|amigaos*:ppc*) AMIGA_TARGET=os4 ;;
+  morphos*:*)                     AMIGA_TARGET=morphos ;;
+esac
+
+AC_ARG_WITH([ppc-crt],
+  [AS_HELP_STRING([--with-ppc-crt=CRT],
+    [AmigaOS 4 C runtime: newlib, clib2 or clib4 @<:@default=newlib@:>@])],
+  [ppc_crt=$withval], [ppc_crt=newlib])
+AC_ARG_WITH([morphos-clib],
+  [AS_HELP_STRING([--with-morphos-clib=LIB],
+    [MorphOS C library: default or libnix @<:@default=default@:>@])],
+  [morphos_clib=$withval], [morphos_clib=default])
+AC_ARG_WITH([morphos-baserel32],
+  [AS_HELP_STRING([--with-morphos-baserel32],
+    [MorphOS: build with -mbaserel32 @<:@default=no@:>@])],
+  [morphos_baserel32=$withval], [morphos_baserel32=no])
+
+AMIGA_M68K_ABI_FLAGS=
+AMIGA_M68K_EXTRA_LIBS=
+
+case "$AMIGA_TARGET" in
+  os4)
+    case "$ppc_crt" in
+      newlib) ;;
+      clib2|clib4) AMIGA_M68K_ABI_FLAGS="-mcrt=$ppc_crt" ;;
+      *) AC_MSG_ERROR([--with-ppc-crt must be newlib, clib2 or clib4 (got: $ppc_crt)]) ;;
+    esac
+    ;;
+  morphos)
+    case "$morphos_clib" in
+      default) ;;
+      libnix)  AMIGA_M68K_ABI_FLAGS="-mclib=libnix" ;;
+      *) AC_MSG_ERROR([--with-morphos-clib must be default or libnix (got: $morphos_clib)]) ;;
+    esac
+    if test "x$morphos_baserel32" = xyes; then
+      AMIGA_M68K_ABI_FLAGS="$AMIGA_M68K_ABI_FLAGS -mbaserel32"
+    fi
+    ;;
+esac
+
+case "$host_os" in
+  amigaos*)
+    if test "x$AMIGA_TARGET" != xm68k; then :; else
+    case "$m68k_crt" in
+      newlib|nix20|nix13|ixemul)
+        AMIGA_M68K_ABI_FLAGS="-mcrt=$m68k_crt" ;;
+      clib2)
+        dnl clib2 keeps its POSIX layer (getopt_long, utime, ...) in libunix,
+        dnl which is not linked by default. Without it configure mis-detects
+        dnl those functions as missing and builds replacements that then clash
+        dnl with clib2's own prototypes. Applied together with the ABI flags
+        dnl after AC_PROG_CC -- adding it any earlier makes AC_PROG_CC's own
+        dnl link test fail, since -mcrt=clib2 is not in $CC yet.
+        AMIGA_M68K_ABI_FLAGS="-mcrt=$m68k_crt"
+        AMIGA_M68K_EXTRA_LIBS="-lunix" ;;
+      *)
+        AC_MSG_ERROR([--with-m68k-crt must be newlib, nix20, nix13, ixemul or clib2 (got: $m68k_crt)]) ;;
+    esac
+
+    case "$m68k_cpu" in
+      "")   ;;
+      -m*)  AMIGA_M68K_ABI_FLAGS="$AMIGA_M68K_ABI_FLAGS $m68k_cpu" ;;
+      m*)   AMIGA_M68K_ABI_FLAGS="$AMIGA_M68K_ABI_FLAGS -$m68k_cpu" ;;
+      *)    AMIGA_M68K_ABI_FLAGS="$AMIGA_M68K_ABI_FLAGS -m$m68k_cpu" ;;
+    esac
+
+    dnl -fbaserel32 is only available on 68020 and later.
+    case "$m68k_baserel" in
+      off) ;;
+      baserel)
+        AMIGA_M68K_ABI_FLAGS="$AMIGA_M68K_ABI_FLAGS -fbaserel" ;;
+      baserel32)
+        case "$m68k_cpu" in
+          ""|*68000*|*68010*)
+            AC_MSG_ERROR([--with-m68k-baserel=baserel32 requires --with-m68k-cpu=68020 or later]) ;;
+        esac
+        AMIGA_M68K_ABI_FLAGS="$AMIGA_M68K_ABI_FLAGS -fbaserel32" ;;
+      *)
+        AC_MSG_ERROR([--with-m68k-baserel must be baserel, baserel32 or off (got: $m68k_baserel)]) ;;
+    esac
+    fi
+    ;;
+esac
+
 AC_SUBST([pkgdatadir], ['$(datadir)/misc'])
 AC_SUBST(fsect)
 AM_CONDITIONAL(FSECT5, test x$fsect = x5)
@@ -115,6 +226,11 @@ AC_SUBST(WARNINGS)
 
 dnl Checks for programs.
 AC_PROG_CC
+if test -n "$AMIGA_M68K_ABI_FLAGS"; then
+  CC="$CC $AMIGA_M68K_ABI_FLAGS"
+  test -n "$AMIGA_M68K_EXTRA_LIBS" && LIBS="$LIBS $AMIGA_M68K_EXTRA_LIBS"
+  AC_MSG_NOTICE([Amiga target=$AMIGA_TARGET flags:$AMIGA_M68K_ABI_FLAGS $AMIGA_M68K_EXTRA_LIBS])
+fi
 AC_USE_SYSTEM_EXTENSIONS
 AM_PROG_CC_C_O
 AC_C_BIGENDIAN
@@ -215,12 +331,24 @@ else
    AC_MSG_RESULT(no)
 fi])
 
+dnl newlib for m68k-amigaos ships a <dirent.h> that is a hard #error, so this
+dnl must be a compile test rather than a presence test.
+AC_CHECK_HEADERS([dirent.h])
+AC_CHECK_HEADERS([regex.h])
+
 dnl Checks for functions
-AC_CHECK_FUNCS(strndup mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale memmem pipe2 posix_spawnp qsort_r)
+AC_CHECK_FUNCS(strndup mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale memmem pipe pipe2 posix_spawnp qsort_r select sigaction pathconf fork ioctl readlink tzset)
+
+dnl MorphOS links fork() but does not prototype it, so the presence of the
+dnl function and the presence of its declaration have to be probed separately.
+AC_CHECK_DECLS([fork])
 
 dnl Provide implementation of some required functions if necessary
 AC_CONFIG_LIBOBJ_DIR([src/missing])
-AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline ctime_r asctime_r localtime_r gmtime_r pread strcasestr fmtcheck dprintf)
+AC_REPLACE_FUNCS(getopt_long asprintf vasprintf strlcpy strlcat getline ctime_r asctime_r localtime_r gmtime_r pread strcasestr fmtcheck dprintf reallocarray)
+
+dnl Some targets (e.g. AmigaOS libnix) have no POSIX regex implementation.
+AC_REPLACE_FUNCS(regcomp regexec regerror regfree)
 
 dnl Checks for libraries
 if test "$enable_zlib" != "no"; then

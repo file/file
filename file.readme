@@ -1,0 +1,57 @@
+Short: Determine file MIME type from its contents
+Author: Ian Darwin, Christos Zoulas et al
+Uploader: Cameron Armstrong (Nightfox) <cameronscottarmstrong@gmail.com>
+Type: util/misc
+Version: 5.48
+Architecture: m68k-amigaos >= 2.0; ppc-amigaos; ppc-morphos
+
+Amiga port of the "file" UNIX app. It identifies the type of a file by
+inspecting its contents rather than trusting its name or filenote. It
+recognises several thousand formats, from Amiga hunk executables and IFF
+containers through to modern archive, image, audio and document types.
+
+This is a port of the standard Unix file(1), version 5.48. Native binaries
+are included for AmigaOS 3 (68k), AmigaOS 4 (PPC) and MorphOS (PPC).
+
+
+Installation
+
+    Copy the contents of the C/ directory for your system to C:, e.g. on
+    AmigaOS 3:
+
+        copy file/AmigaOS3/C/#? C:
+
+    Both the "file" command and its magic database "magic.mgc" belong in C:.
+    The command looks for the database next to itself, so keeping them
+    together is all that is required.
+
+
+Usage
+
+    file <name>            identify one or more files
+    file -i <name>         print a MIME type instead of a description
+    file -b <name>         omit the filename from the output
+    file --help            full option list
+
+    Examples:
+
+        1> file C:file
+        C:file: AmigaOS loadseg()ble executable/binary
+
+        1> file -i Work:Pictures/photo.jpg
+        Work:Pictures/photo.jpg: image/jpeg
+
+
+Notes
+
+    Compressed-file inspection using external decompressors is not available:
+    AmigaOS provides no sigaction(), and clib2 no pipe(), so that code path is
+    compiled out. Reading compressed files directly is unaffected.
+
+    The developer SDK (static libmagic.a libraries and magic.h) is distributed
+    separately as magic.lha.
+
+
+Licence
+
+    BSD-style; see COPYING in the source distribution.

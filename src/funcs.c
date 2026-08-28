@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.153 2026/05/25 14:07:05 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.154 2026/08/28 15:26:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1001,6 +1001,14 @@ file_pipe_closexec(int *fds)
 	return 0;
 #elif defined(HAVE_PIPE2)
 	return pipe2(fds, O_CLOEXEC);
+#elif !defined(HAVE_PIPE)
+	/*
+	 * No pipe(2) at all -- e.g. AmigaOS clib2. Only the external
+	 * decompressor path needs pipes, so report failure and let the
+	 * caller fall back rather than failing to link.
+	 */
+	(void)fds;
+	return -1;
 #else
 	if (pipe(fds) == -1)
 		return -1;

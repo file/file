@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.267 2026/05/17 17:10:25 christos Exp $
+ * @(#)$File: file.h,v 1.268 2026/08/28 15:26:23 christos Exp $
  */
 
 #ifndef __file_h__
@@ -79,7 +79,15 @@
 #include <stdio.h>	/* Include that here, to make sure __P gets defined */
 #include <errno.h>
 #include <fcntl.h>	/* For open and flags */
+/* Some AmigaOS C runtimes (AmigaOS 4 newlib and clib2) ship no <regex.h> at
+ * all. AC_REPLACE_FUNCS supplies the four regex functions from the bundled BSD
+ * sources in that case, but those sources come with no public header, so use
+ * the matching 4.4BSD one vendored alongside them. */
+#ifdef HAVE_REGEX_H
 #include <regex.h>
+#else
+#include "regex-bsd.h"
+#endif
 #include <time.h>
 #include <sys/types.h>
 #ifndef WIN32
@@ -99,7 +107,7 @@
 #define MAGIC "/etc/magic"
 #endif
 
-#if defined(__EMX__) || defined (WIN32)
+#if defined(__EMX__) || defined (WIN32) || defined(__amigaos__)
 #define PATHSEP	';'
 #else
 #define PATHSEP	':'
@@ -673,6 +681,9 @@ int dprintf(int, const char *, ...);
 
 #ifndef HAVE_STRLCPY
 size_t strlcpy(char *, const char *, size_t);
+#endif
+#ifndef HAVE_REALLOCARRAY
+void *reallocarray(void *, size_t, size_t);
 #endif
 #ifndef HAVE_STRLCAT
 size_t strlcat(char *, const char *, size_t);

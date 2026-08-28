@@ -1,0 +1,88 @@
+Short: magic file MIME type detection static library
+Author: Ian Darwin, Christos Zoulas et al. (see COPYING)
+Uploader: Cameron Armstrong (Nightfox) <cameronscottarmstrong@gmail.com>
+Type: dev/lib
+Version: 5.48
+Architecture:  m68k-amigaos >= 2.0; ppc-amigaos; ppc-morphos
+Requires: an Amiga gcc cross compiler (bebbo/amiga-gcc, adtools, MorphOS SDK)
+
+magic (libmagic.a) is a static library that identifies the MIME type of a file, or
+of a buffer in memory, by inspecting the content. This archive contains static
+libraries and the public header for AmigaOS 3 (68k), AmigaOS 4 (PPC) and
+MorphOS (PPC) development, plus the magic database the library needs at run
+time.
+
+Contents
+
+    magic.readme                       this file
+    magic/C/magic.mgc                  the compiled magic database (shared by
+                                       all systems -- it is not machine code)
+
+    magic/AmigaOS3/libnix/             header and libraries, libnix
+    magic/AmigaOS3/clib2/              header and libraries, clib2
+    magic/AmigaOS4/                    header and libraries, clib4
+    magic/MorphOS/                     header and libraries, both ABIs
+
+    Each of those directories holds include/magic.h plus a lib/ tree in the
+    gcc multilib layout, so it can be copied straight over an existing SDK.
+
+    Note the difference between the two architectures. On m68k each C runtime
+    is a separate tree, so libnix/ and clib2/ each carry their own include/
+    and lib/. On PPC the runtime is instead a multilib slot beneath a shared
+    lib/, and headers come from the one shared include/.
+
+    AmigaOS 3 slots (inside libnix/ and clib2/):
+
+        lib/                   68000, absolute addressing
+        lib/libm020/           68020, absolute addressing
+        lib/libb/              68000, -fbaserel
+        lib/libb/libm020/      68020, -fbaserel
+        lib/libb32/libm020/    68020, -fbaserel32
+
+    AmigaOS 4 slots:
+
+        lib/clib4/             clib4
+
+    MorphOS slots:
+
+        lib/                   ixemul
+        lib/libb32/            ixemul, -mbaserel32
+        lib/libnix/            native C library (-noixemul)
+        lib/libb32/libnix/     native C library, -mbaserel32
+
+        -mclib=libnix and -noixemul select the same multilib. That ABI is the
+        self-contained one -- an ixemul build needs ixemul.library on the
+        target machine -- so prefer lib/libnix/ for new code.
+
+
+Installation
+
+    Copy the tree for your target into the matching cross compiler
+    directory, e.g.
+
+        cp -a magic/AmigaOS3/libnix /opt/amiga/m68k-amigaos/
+        cp -a magic/AmigaOS3/clib2  /opt/amiga/m68k-amigaos/
+        cp -a magic/AmigaOS4/*      /opt/amiga/ppc-amigaos/
+        cp -a magic/MorphOS/*       /opt/amiga/ppc-morphos/
+
+    Then copy C/magic.mgc to C: on the target machine, or ship it with your
+    application. Point the library at it with magic_load().
+
+
+Usage
+
+    #include <magic.h>
+
+    magic_t m = magic_open(MAGIC_MIME_TYPE);
+    magic_load(m, NULL);                  /* or "C:magic.mgc" */
+    const char *type = magic_file(m, "Work:something");
+    magic_close(m);
+
+    Link with -lmagic -lm, and put them *after* your own objects on the
+    command line. For clib2 add -lunix after -lmagic, since clib2 keeps its
+    POSIX layer there.
+
+
+Licence
+
+    BSD-style; see COPYING in the source distribution.

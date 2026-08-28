@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.128 2026/05/09 22:34:30 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.129 2026/08/28 15:26:23 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -62,7 +62,7 @@ FILE_RCSID("@(#)$File: magic.c,v 1.128 2026/05/09 22:34:30 christos Exp $")
 
 #ifndef PIPE_BUF
 /* Get the PIPE_BUF from pathconf */
-#ifdef _PC_PIPE_BUF
+#if defined(_PC_PIPE_BUF) && defined(HAVE_PATHCONF)
 #define PIPE_BUF pathconf(".", _PC_PIPE_BUF)
 #else
 #define PIPE_BUF 512
@@ -385,7 +385,7 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 	utsbuf[1].tv_sec = sb->st_mtime;
 
 	(void) utimes(name, utsbuf); /* don't care if loses */
-#elif defined(HAVE_UTIME_H) || defined(HAVE_SYS_UTIME_H)
+#elif defined(HAVE_UTIME) && (defined(HAVE_UTIME_H) || defined(HAVE_SYS_UTIME_H))
 	struct utimbuf  utbuf;
 
 	(void)memset(&utbuf, 0, sizeof(utbuf));

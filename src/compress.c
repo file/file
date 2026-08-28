@@ -34,8 +34,20 @@
  */
 #include "file.h"
 
+/*
+ * Only the external decompressor path uses fork(). AmigaOS has no fork()
+ * at all, so the call is stubbed to fail at run time rather than failing
+ * to build; MorphOS provides the symbol but no prototype, so declare it.
+ * config.h already maps vfork to fork where needed.
+ */
+#ifndef HAVE_FORK
+#define fork() (-1)
+#elif !defined(HAVE_DECL_FORK) || !HAVE_DECL_FORK
+extern pid_t fork(void);
+#endif
+
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.166 2026/06/08 22:16:44 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.167 2026/08/28 15:26:23 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -302,7 +314,9 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
 	int sa_saved = 0;
+#ifdef HAVE_SIGACTION
 	struct sigaction sig_act;
+#endif
 
 	if ((ms->flags & MAGIC_COMPRESS) == 0)
 		return 0;
@@ -321,6 +335,7 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 		if (!zm)
 			continue;
 
+#ifdef HAVE_SIGACTION
 		/* Prevent SIGPIPE death if child dies unexpectedly */
 		if (!sa_saved) {
 			//We can use sig_act for both new and old, but
@@ -329,6 +344,7 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 			new_act.sa_handler = SIG_IGN;
 			sa_saved = sigaction(SIGPIPE, &new_act, &sig_act) != -1;
 		}
+#endif
 
 		nsz = nbytes;
 		free(newbuf);
@@ -390,8 +406,10 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 out:
 	DPRINTF("rv = %d\n", rv);
 
+#ifdef HAVE_SIGACTION
 	if (sa_saved && sig_act.sa_handler != SIG_IGN)
 		(void)sigaction(SIGPIPE, &sig_act, NULL);
+#endif
 
 	free(newbuf);
 	ms->flags |= MAGIC_COMPRESS;
@@ -431,7 +449,7 @@ file_protected ssize_t
 sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
 {
 	ssize_t rv;
-#if defined(FIONREAD) && !defined(__MINGW32__)
+#if defined(FIONREAD) && defined(HAVE_IOCTL) && !defined(__MINGW32__)
 	int t = 0;
 #endif
 	size_t rn = n;
@@ -439,9 +457,9 @@ sread(int fd, void *buf, size_t n, int canbepipe __attribute__((__unused__)))
 	if (fd == STDIN_FILENO)
 		goto nocheck;
 
-#if defined(FIONREAD) && !defined(__MINGW32__)
+#if defined(FIONREAD) && defined(HAVE_IOCTL) && !defined(__MINGW32__)
 	if (canbepipe && (ioctl(fd, FIONREAD, &t) == -1 || t == 0)) {
-#ifdef FD_ZERO
+#if defined(FD_ZERO) && defined(HAVE_SELECT)
 		ssize_t cnt;
 		for (cnt = 0;; cnt++) {
 			fd_set check;

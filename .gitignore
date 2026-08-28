@@ -2,6 +2,8 @@
 *.[oa]
 *.l[ao]
 
+.DS_Store
+
 .deps
 .libs
 
@@ -42,3 +44,13 @@ Makefile.in
 /src/magic.h
 
 /tests/test
+
+/build-amiga
+/build-native
+/out-amiga
+
+# AmigaOS packaging output
+dist/
+pkg-*/
+bld-*/
+build-amiga-*/

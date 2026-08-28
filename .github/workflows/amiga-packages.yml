@@ -1,0 +1,147 @@
+# Build the two AmigaOS distribution archives and publish them as run artifacts.
+#
+# Runs on every push to master, so the commit gets a tick when both archives
+# build and verify and a cross when anything fails.
+#
+# LHa for UNIX is built from source on purpose: Debian and Ubuntu only ship
+# `lhasa`, which extracts .lha but cannot create one, and package-amiga.sh
+# needs `lha -aq2` to write the archives.
+name: Amiga packages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: amiga-packages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: magic.lha and file.lha
+    runs-on: ubuntu-latest
+    # 16 cross-built library variants plus 3 file(1) binaries, and three
+    # toolchain images to pull before any of that starts.
+    timeout-minutes: 90
+    env:
+      # jca02266/lha == LHa for UNIX 1.14i, the implementation these archives
+      # have always been made with. 72b97b87a131e88cc95b9068d521f3ecb56af9db
+      LHA_TAG: release-20211125
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+              build-essential autoconf automake libtool
+
+      - name: Build and install lha
+        run: |
+          set -e
+          git clone -q --depth 1 --branch "$LHA_TAG" \
+              https://github.com/jca02266/lha.git /tmp/lha
+          cd /tmp/lha
+          autoreconf -is
+          ./configure
+          make -j"$(nproc)"
+          sudo install -m 0755 src/lha /usr/local/bin/lha
+          command -v lha
+          lha | head -6
+
+      - name: autoreconf
+        # configure is not checked in, and package-amiga.sh refuses to run
+        # without it.
+        run: autoreconf -i
+
+      - name: Build native file(1) and magic.mgc
+        # magic.mgc is data, not machine code, so the host copy is what gets
+        # shipped to every Amiga target; package-amiga.sh takes it from here.
+        run: |
+          set -e
+          mkdir -p build-native
+          cd build-native
+          ../configure --disable-shared --enable-static --disable-dependency-tracking
+          make -j"$(nproc)" -C src
+          make -C magic magic.mgc
+          ls -l src/file magic/magic.mgc
+
+      - name: Package for AmigaOS 3, AmigaOS 4 and MorphOS
+        run: ./package-amiga.sh
+
+      - name: Verify archive contents
+        # A cross-build that fails now exits package-amiga.sh non-zero, but a
+        # copy that silently went missing would still leave a valid, incomplete
+        # archive -- so assert on what is actually inside, with the expected
+        # counts derived from the variant table rather than hardcoded.
+        run: |
+          set -uo pipefail
+          # Without the variant table every expected count would be 0 and the
+          # job would go green on an empty archive, so failing to read it is
+          # fatal rather than something the counts have to catch.
+          source ./amiga-variants.sh || exit 1
+          declare -p variants_AmigaOS3 >/dev/null 2>&1 || \
+              { echo "amiga-variants.sh defined no variant table" >&2; exit 1; }
+          OSES=(AmigaOS3 AmigaOS4 MorphOS)
+
+          exp_libs=0
+          for os in "${OSES[@]}"; do
+            eval "vars=(\"\${variants_$os[@]}\")"
+            exp_libs=$((exp_libs + ${#vars[@]}))
+          done
+          # One magic.h per per-OS tree (m68k has libnix/ and clib2/, PPC has
+          # a single shared include/).
+          exp_hdrs=$(for os in "${OSES[@]}"; do
+              eval "vars=(\"\${variants_$os[@]}\")"
+              for v in "${vars[@]}"; do IFS='|' read -r tree _ _ <<<"$v"; echo "$os/$tree"; done
+            done | sort -u | wc -l | tr -d " ")
+
+          lha l dist/magic.lha | tee "$RUNNER_TEMP/magic.list"
+          lha l dist/file.lha  | tee "$RUNNER_TEMP/file.list"
+
+          n() { grep -c "$1" "$2" || true; }
+          rc=0
+          check() {
+            if [[ "$2" -ne "$3" ]]; then
+              echo "FAIL: $1: found $2, expected $3" >&2; rc=1
+            else
+              echo "ok:   $1: $2"
+            fi
+          }
+          check 'libmagic.a in magic.lha'   "$(n 'libmagic\.a$'        "$RUNNER_TEMP/magic.list")" "$exp_libs"
+          check 'magic.h in magic.lha'      "$(n 'magic\.h$'           "$RUNNER_TEMP/magic.list")" "$exp_hdrs"
+          check 'magic.mgc in magic.lha'    "$(n 'magic/C/magic\.mgc$' "$RUNNER_TEMP/magic.list")" 1
+          check 'magic.readme'              "$(n 'magic\.readme$'      "$RUNNER_TEMP/magic.list")" 1
+          check 'file binaries in file.lha' "$(n '/C/file$'            "$RUNNER_TEMP/file.list")"  "${#OSES[@]}"
+          check 'magic.mgc in file.lha'     "$(n '/C/magic\.mgc$'      "$RUNNER_TEMP/file.list")"  "${#OSES[@]}"
+          check 'file.readme'               "$(n 'file\.readme$'       "$RUNNER_TEMP/file.list")"  1
+
+          {
+            echo '## Amiga archives'
+            echo
+            echo '```'
+            ls -l dist/*.lha
+            echo '```'
+          } >>"$GITHUB_STEP_SUMMARY"
+          exit $rc
+
+      # Downloading an artifact gives a zip with the .lha inside it; GitHub
+      # always wraps artifacts, so the archive itself is untouched.
+      - name: Upload magic.lha
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic-lha
+          path: dist/magic.lha
+          if-no-files-found: error
+
+      - name: Upload file.lha
+        uses: actions/upload-artifact@v4
+        with:
+          name: file-lha
+          path: dist/file.lha
+          if-no-files-found: error
