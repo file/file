@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: geos,v 1.5 2024/04/07 17:56:40 christos Exp $
+# $File: geos,v 1.6 2026/08/28 17:18:01 christos Exp $
 # GEOS files (Vidar Madsen, vidar@gimp.org)
 # semi-commonly used in embedded and handheld systems.
 0	belong	0xc745c153	GEOS
@@ -18,6 +18,11 @@
 #>52	short	x	\b, proto %d
 #>54	short	x	\br%d
 #>168	string	>\0	\b, copyright "%s"
+
+# https://github.com/bluewaysw/pcgeos/blob/master/Appl/NinFnt/ninfntConstant.def#L196
+0	string	BSWF	PC/GEOS bitmap font,
+>5	byte	x	version %d.
+>4	byte	x	\b%d
 
 30	string	PRG\ formatted\ GEOS\ file	Formatted GEOS file
 >22	byte	6	\b, APPLICATION
