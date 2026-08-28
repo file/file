@@ -1,4 +1,5 @@
-/*- * Copyright (c) 2008 Christos Zoulas
+/*-
+ * Copyright (c) 2008 Christos Zoulas
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.129 2026/06/02 17:57:22 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.130 2026/08/28 15:45:34 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -563,8 +564,12 @@ size_t
 cdf_count_chain(const cdf_sat_t *sat, cdf_secid_t sid, size_t size)
 {
 	size_t i, j;
-	cdf_secid_t maxsector = CAST(cdf_secid_t, (sat->sat_len * size)
-	    / sizeof(maxsector));
+	cdf_secid_t maxsector;
+
+	if (size == 0 || sat->sat_len > SIZE_MAX / size)
+		goto out;
+	maxsector = CAST(cdf_secid_t, (sat->sat_len * size) /
+	    sizeof(maxsector));
 
 	DPRINTF(("Chain:"));
 	if (sid == CDF_SECID_END_OF_CHAIN) {
@@ -577,6 +582,10 @@ cdf_count_chain(const cdf_sat_t *sat, cdf_secid_t sid, size_t size)
 		DPRINTF((" %d", sid));
 		if (j >= CDF_LOOP_LIMIT) {
 			DPRINTF(("Counting chain loop limit"));
+			goto out;
+		}
+		if (i >= CDF_MEMORY_LIMIT / size) {
+			DPRINTF(("Counting chain size limit"));
 			goto out;
 		}
 		if (sid >= maxsector) {
@@ -715,6 +724,11 @@ cdf_read_dir(const cdf_info_t *info, const cdf_header_t *h,
 		return -1;
 
 	nd = ss / CDF_DIRECTORY_SIZE;
+	if (nd != 0 && ns > CDF_MEMORY_LIMIT / nd / sizeof(dir->dir_tab[0])) {
+		DPRINTF(("Directory size limit"));
+		errno = EFTYPE;
+		return -1;
+	}
 
 	dir->dir_len = ns * nd;
 	dir->dir_tab = CAST(cdf_directory_t *,
