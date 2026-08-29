@@ -218,6 +218,19 @@ case "$host_os" in
     ;;
 esac
 
+dnl On Amiga systems there is no /usr/local/share/misc to install into, and
+dnl the archives ship file and magic.mgc together in C:. Default the magic
+dnl path to PROGDIR: (the drawer the running binary was loaded from, which is
+dnl C: for a normal install) with a C: fallback, so file(1) finds its database
+dnl with no -m and no MAGIC set. PATHSEP is ';' on AmigaOS, so a ':' inside an
+dnl AmigaDOS path does not split the list.
+AMIGA_DEFAULT_MAGIC=
+if test -n "$AMIGA_TARGET"; then
+  AMIGA_DEFAULT_MAGIC='PROGDIR:magic.mgc;C:magic.mgc'
+fi
+AC_SUBST([AMIGA_DEFAULT_MAGIC])
+AM_CONDITIONAL([AMIGA_MAGIC_PATH], [test -n "$AMIGA_DEFAULT_MAGIC"])
+
 AC_SUBST([pkgdatadir], ['$(datadir)/misc'])
 AC_SUBST(fsect)
 AM_CONDITIONAL(FSECT5, test x$fsect = x5)

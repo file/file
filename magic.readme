@@ -2,9 +2,10 @@ Short: magic file MIME type detection static library
 Author: Ian Darwin, Christos Zoulas et al. (see COPYING)
 Uploader: Cameron Armstrong (Nightfox) <cameronscottarmstrong@gmail.com>
 Type: dev/lib
-Version: 5.48
+Version: 5.48-1
 Architecture:  m68k-amigaos >= 2.0; ppc-amigaos; ppc-morphos
 Requires: an Amiga gcc cross compiler (bebbo/amiga-gcc, adtools, MorphOS SDK)
+Replaces: dev/lib/magic.lha
 
 magic (libmagic.a) is a static library that identifies the MIME type of a file, or
 of a buffer in memory, by inspecting the content. This archive contains static

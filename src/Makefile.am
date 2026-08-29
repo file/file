@@ -1,4 +1,10 @@
+if AMIGA_MAGIC_PATH
+# Amiga installs ship file and magic.mgc side by side in C: rather than under
+# a datadir, so the built-in path points at the binary's own drawer.
+MAGIC = @AMIGA_DEFAULT_MAGIC@
+else
 MAGIC = $(pkgdatadir)/magic
+endif
 
 lib_LTLIBRARIES = libmagic.la
 nodist_include_HEADERS = magic.h

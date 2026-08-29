@@ -1,6 +1,6 @@
 ## README for file(1) Command and the libmagic(3) library ##
 
-    @(#) $File: README.md,v 1.8 2026/08/28 15:26:23 christos Exp $
+    @(#) $File: README.md,v 1.9 2026/08/29 14:48:46 christos Exp $
 
 - Bug Tracker: <https://bugs.astron.com/>
 - Build Status: <https://travis-ci.org/file/file>
@@ -200,6 +200,10 @@ file.readme
 file/{AmigaOS3,AmigaOS4,MorphOS}/C/{file,magic.mgc}
 ```
 
+The `file` archive is `file_ca.lha` because `file.lha` is taken on Aminet, and
+its readme is kept in the repo as `file_ca.readme` so the upload pair matches;
+`package-amiga.sh` stages it into the archive under the plain `file.readme`.
+
 `package-amiga.sh` needs a native `magic.mgc` to ship, so build the host copy
 into `build-native/` first; it is refused otherwise.
 
@@ -217,9 +221,9 @@ finds.
 `.github/workflows/amiga-packages.yml` runs the whole packaging path on every
 push to `master` (and on demand via *Run workflow*), so the commit gets a tick
 when both archives build and verify and a cross when anything fails. It
-uploads `magic.lha` and `file.lha` as run artifacts, named `magic-lha` and
-`file-lha`; GitHub always wraps an artifact in a zip, so the download is a zip
-containing the untouched `.lha`.
+uploads `magic.lha` and `file_ca.lha` as run artifacts, named `magic-lha` and
+`file-ca-lha`; GitHub always wraps an artifact in a zip, so the download is a
+zip containing the untouched `.lha`.
 
 The runner builds *LHa for UNIX* (`jca02266/lha`, pinned to a release tag) from
 source, because Debian and Ubuntu only ship `lhasa`, which extracts `.lha` but

@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   package:
-    name: magic.lha and file.lha
+    name: magic.lha and file_ca.lha
     runs-on: ubuntu-latest
     # 16 cross-built library variants plus 3 file(1) binaries, and three
     # toolchain images to pull before any of that starts.
@@ -102,7 +102,7 @@ jobs:
             done | sort -u | wc -l | tr -d " ")
 
           lha l dist/magic.lha | tee "$RUNNER_TEMP/magic.list"
-          lha l dist/file.lha  | tee "$RUNNER_TEMP/file.list"
+          lha l dist/file_ca.lha | tee "$RUNNER_TEMP/file.list"
 
           n() { grep -c "$1" "$2" || true; }
           rc=0
@@ -117,9 +117,9 @@ jobs:
           check 'magic.h in magic.lha'      "$(n 'magic\.h$'           "$RUNNER_TEMP/magic.list")" "$exp_hdrs"
           check 'magic.mgc in magic.lha'    "$(n 'magic/C/magic\.mgc$' "$RUNNER_TEMP/magic.list")" 1
           check 'magic.readme'              "$(n 'magic\.readme$'      "$RUNNER_TEMP/magic.list")" 1
-          check 'file binaries in file.lha' "$(n '/C/file$'            "$RUNNER_TEMP/file.list")"  "${#OSES[@]}"
-          check 'magic.mgc in file.lha'     "$(n '/C/magic\.mgc$'      "$RUNNER_TEMP/file.list")"  "${#OSES[@]}"
-          check 'file.readme'               "$(n 'file\.readme$'       "$RUNNER_TEMP/file.list")"  1
+          check 'file binaries in file_ca.lha' "$(n '/C/file$'         "$RUNNER_TEMP/file.list")"  "${#OSES[@]}"
+          check 'magic.mgc in file_ca.lha'  "$(n '/C/magic\.mgc$'      "$RUNNER_TEMP/file.list")"  "${#OSES[@]}"
+          check 'file.readme in file_ca.lha' "$(n 'file\.readme$'      "$RUNNER_TEMP/file.list")"  1
 
           {
             echo '## Amiga archives'
@@ -139,9 +139,9 @@ jobs:
           path: dist/magic.lha
           if-no-files-found: error
 
-      - name: Upload file.lha
+      - name: Upload file_ca.lha
         uses: actions/upload-artifact@v4
         with:
-          name: file-lha
-          path: dist/file.lha
+          name: file-ca-lha
+          path: dist/file_ca.lha
           if-no-files-found: error
