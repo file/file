@@ -100,6 +100,15 @@ enable_sandbox(int flags, int action)
 	ALLOW_RULE(brk);
 	ALLOW_RULE(close);
 	ALLOW_RULE(dup2);
+#ifdef __NR_dup3
+	/*
+	 * Some architectures have no dup2 syscall -- notably those whose
+	 * syscall table comes from asm-generic/unistd.h (aarch64, riscv64,
+	 * loongarch64) -- and glibc and musl implement dup2(old, new)
+	 * there as dup3(old, new, 0).  Used in file_pipe2file().
+	 */
+	ALLOW_RULE(dup3);
+#endif
 	ALLOW_RULE(exit);
 	ALLOW_RULE(exit_group);
 #ifdef __NR_faccessat
