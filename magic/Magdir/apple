@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: apple,v 1.54 2026/06/02 17:32:17 christos Exp $
+# $File: apple,v 1.55 2026/09/20 17:52:25 christos Exp $
 # apple:  file(1) magic for Apple file formats
 #
 0	search/1/t	FiLeStArTfIlEsTaRt	binscii (apple ][) text
@@ -798,6 +798,11 @@
 >8	belong		>0		\b, (flags %#x)
 >12	belong		>0		\b, block size: %d
 >24	bequad		>0		\b, capacity: %lld bytes
+
+# Apple Sparse Image Format
+# Located at the start of the file
+0	string		shdw		Apple Sparse Image Format
+>4	belong		>0		\b, version %d
 
 # DMG image
 -512	string	koly
