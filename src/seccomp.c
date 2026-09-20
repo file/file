@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.37 2026/05/11 16:06:03 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.38 2026/09/20 19:02:14 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -100,6 +100,12 @@ enable_sandbox(int flags, int action)
 	ALLOW_RULE(brk);
 	ALLOW_RULE(close);
 	ALLOW_RULE(dup2);
+	/*
+	 * Architectures using asm-generic/unistd.h (aarch64, riscv64,
+	 * loongarch64) have no dup2 syscall; glibc and musl implement
+	 * dup2() there as dup3(old, new, 0).  Used in file_pipe2file().
+	 */
+	ALLOW_RULE(dup3);
 	ALLOW_RULE(exit);
 	ALLOW_RULE(exit_group);
 #ifdef __NR_faccessat
