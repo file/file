@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.130 2026/08/28 15:45:34 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.131 2026/09/28 15:48:36 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1458,6 +1458,7 @@ cdf_dump_dir(const cdf_info_t *info, const cdf_header_t *h,
 		d = &dir->dir_tab[i];
 		for (j = 0; j < sizeof(name); j++)
 			name[j] = (char)CDF_TOLE2(d->d_name[j]);
+		name[sizeof(name} - 1] = '\0';
 		(void)fprintf(stderr, "Directory %" SIZE_T_FORMAT "u: %s\n",
 		    i, name);
 		if (d->d_type < __arraycount(types))
