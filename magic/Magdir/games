@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: games,v 1.40 2026/04/16 20:25:40 christos Exp $
+# $File: games,v 1.41 2026/09/28 20:02:56 christos Exp $
 # games:  file(1) for games
 
 # Fabio Bonelli <fabiobonelli@libero.it>
@@ -134,8 +134,18 @@
 0	string	5\x0aSANDRA'S_LADDER		 Quake I save: ddm7 Sandra's ladder
 
 
-0	string	MComprHD	MAME CHD compressed hard disk image,
->12	belong	x		version %u
+0	string	MComprHD	MAME CHD compressed hard disk image
+>12	belong	x		\b, version %u
+>12	belong	>4
+>>16	string	zlib		\b, zlib deflate
+>>16	string	zstd		\b, Zstandard
+>>16	string	huff		\b, Huffman coding
+>>16	string	flac		\b, Free Lossless Audio Codec
+>>16	string	cdzl		\b, zlib deflate for CD-ROM data
+>>16	string	cdzs		\b, Zstandard for CD-ROM data
+>>16	string	cdlz		\b, Lempel-Ziv-Markov chain algorithm/zlib deflate (CD-ROM)
+>>16	string	cdfl		\b, Free Lossless Audio Codec/zlib deflate (CD-ROM)
+>>16	string	avhu		\b, Huffman coding for audio-visual data
 
 # MAME input recordings
 
