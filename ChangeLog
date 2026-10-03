@@ -1,3 +1,7 @@
+2026-10-03  15:06  Christos Zoulas <christos@zoulas.com>
+	
+	* disable seccomp when LD_PRELOAD is set (wehrwolfmann)
+
 2026-08-28  11:33  Christos Zoulas <christos@zoulas.com>
 
 	* teach file about snapshots (Taylor Campbell)
