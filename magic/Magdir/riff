@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: riff,v 1.53 2026/04/16 17:09:52 christos Exp $
+# $File: riff,v 1.54 2026/10/03 18:53:32 christos Exp $
 # riff:  file(1) magic for RIFF format
 # See
 #
@@ -161,7 +161,7 @@
 >>>>>15		byte&0x40	=0x00	\b, decoders should clamp
 >0  string  VP8L
 >>8		byte		0x2f	\b, lossless
->>>11		byte		&0x01	\b, with alpha
+>>>12		byte		&0x10	\b, with alpha
 >0  string  VP8X
 >>4		lelong		0x0a
 >>>8		byte		&0x02	\b, animated
