@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.222 2026/05/14 18:54:27 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.223 2026/10/03 18:56:14 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -201,6 +201,9 @@ main(int argc, char *argv[])
 	int flags = 0, e = 0;
 #if defined(HAVE_LIBSECCOMP) || defined(HAVE_LINUX_LANDLOCK_H)
 	int sandbox = 1;
+#endif
+#ifdef HAVE_LIBSECCOMP
+	const char *preload;
 #endif
 	struct magic_set *magic = NULL;
 	int longindex;
@@ -373,6 +376,16 @@ main(int argc, char *argv[])
 #endif /* HAVE_LINUX_LANDLOCK_H */
 
 #ifdef HAVE_LIBSECCOMP
+	/*
+	 * A preloaded library (fakeroot, the Gentoo sandbox) makes syscalls
+	 * of its own that we don't allow, and the filter kills us instead of
+	 * failing the call. Don't install the syscall filter when we see one;
+	 * the Landlock sandbox above, if any, still applies.
+	 */
+	preload = getenv("LD_PRELOAD");
+	if (preload != NULL && *preload != '\0')
+		sandbox = 0;
+
 	if (sandbox && enable_sandbox(flags, action) == -1)
 		file_err(EXIT_FAILURE, "SECCOMP initialisation failed");
 	if (sandbox)
