@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.38 2026/09/20 19:02:14 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.39 2026/10/03 19:03:10 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -45,26 +45,26 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.38 2026/09/20 19:02:14 christos Exp $")
 
 #define DENY_RULE(call) \
     do \
-	if (seccomp_rule_add (ctx, SCMP_ACT_KILL, SCMP_SYS(call), 0) == -1) \
+	if (seccomp_rule_add (ctx, SCMP_ACT_KILL, SCMP_SYS(call), 0) != 0) \
 	    goto out; \
     while (/*CONSTCOND*/0)
 #define ALLOW_RULE(call) \
     do \
-	if (seccomp_rule_add (ctx, SCMP_ACT_ALLOW, SCMP_SYS(call), 0) == -1) \
+	if (seccomp_rule_add (ctx, SCMP_ACT_ALLOW, SCMP_SYS(call), 0) != 0) \
 	    goto out; \
     while (/*CONSTCOND*/0)
 /* ENOSYS makes glibc try an older syscall instead of dying. */
 #define ERRNO_RULE(call) \
     do \
 	if (seccomp_rule_add(ctx, SCMP_ACT_ERRNO(ENOSYS), SCMP_SYS(call), 0) \
-	    == -1) goto out; \
+	    != 0) goto out; \
     while (/*CONSTCOND*/0)
 
 #define ALLOW_IOCTL_RULE(param) \
     do \
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(ioctl), 1, \
 	    SCMP_CMP(1, SCMP_CMP_EQ, (scmp_datum_t)param, \
-		     (scmp_datum_t)0)) == -1) \
+		     (scmp_datum_t)0)) != 0) \
 		goto out; \
     while (/*CONSTCOND*/0)
 
@@ -84,11 +84,11 @@ enable_sandbox(int flags, int action)
 	    S_ISFIFO(sb.st_mode))
 		needs_write = 1;
 
-	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) == -1)
+	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) != 0)
 		return -1;
 
 #if 0
-	if (prctl(PR_SET_DUMPABLE, 0, 0, 0, 0) == -1)
+	if (prctl(PR_SET_DUMPABLE, 0, 0, 0, 0) != 0)
 		return -1;
 #endif
 
@@ -163,25 +163,25 @@ enable_sandbox(int flags, int action)
 	/* Read-only opens are always fine. Writes are allowed when we
 	   need them, otherwise return EACCES instead of killing. */
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 1,
-	    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) == -1)
+	    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) != 0)
 		goto out;
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(openat), 1,
-	    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) == -1)
+	    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) != 0)
 		goto out;
 	{
 		uint32_t act = needs_write ? SCMP_ACT_ALLOW
 		                           : SCMP_ACT_ERRNO(EACCES);
 		if (seccomp_rule_add(ctx, act, SCMP_SYS(open), 1,
-		    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) == -1)
+		    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) != 0)
 			goto out;
 		if (seccomp_rule_add(ctx, act, SCMP_SYS(open), 1,
-		    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) == -1)
+		    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) != 0)
 			goto out;
 		if (seccomp_rule_add(ctx, act, SCMP_SYS(openat), 1,
-		    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) == -1)
+		    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) != 0)
 			goto out;
 		if (seccomp_rule_add(ctx, act, SCMP_SYS(openat), 1,
-		    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) == -1)
+		    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) != 0)
 			goto out;
 	}
 	ALLOW_RULE(pread64);
@@ -233,31 +233,31 @@ enable_sandbox(int flags, int action)
 #if 0
 	 /* special restrictions for socket, only allow AF_UNIX/AF_LOCAL */
 	 if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(socket), 1,
-	     SCMP_CMP(0, SCMP_CMP_EQ, AF_UNIX)) == -1)
+	     SCMP_CMP(0, SCMP_CMP_EQ, AF_UNIX)) != 0)
 	 	goto out;
 
 	 if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(socket), 1,
-	     SCMP_CMP(0, SCMP_CMP_EQ, AF_LOCAL)) == -1)
+	     SCMP_CMP(0, SCMP_CMP_EQ, AF_LOCAL)) != 0)
 	 	goto out;
 
 
 	 /* special restrictions for open, prevent opening files for writing */
 	 if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 1,
-	     SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) == -1)
+	     SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) != 0)
 	 	goto out;
 
 	 if (seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EACCES), SCMP_SYS(open), 1,
-	     SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) == -1)
+	     SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) != 0)
 	 	goto out;
 
 	 if (seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EACCES), SCMP_SYS(open), 1,
-	     SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) == -1)
+	     SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) != 0)
 	 	goto out;
 
 
 	 /* allow stderr */
 	 if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(write), 1,
-	     SCMP_CMP(0, SCMP_CMP_EQ, 2)) == -1)
+	     SCMP_CMP(0, SCMP_CMP_EQ, 2)) != 0)
 		 goto out;
 #endif
 
@@ -265,12 +265,12 @@ enable_sandbox(int flags, int action)
 	/* allow glibc to name malloc areas */
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(prctl), 2,
 	    SCMP_CMP32(0, SCMP_CMP_EQ, PR_SET_VMA),
-	    SCMP_CMP64(1, SCMP_CMP_EQ, PR_SET_VMA_ANON_NAME)) == -1)
+	    SCMP_CMP64(1, SCMP_CMP_EQ, PR_SET_VMA_ANON_NAME)) != 0)
 		goto out;
 #endif
 
 	// applying filter...
-	if (seccomp_load(ctx) == -1)
+	if (seccomp_load(ctx) != 0)
 		goto out;
 	// free ctx after the filter has been loaded into the kernel
 	seccomp_release(ctx);
