@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: plan9,v 1.7 2024/02/29 03:42:40 christos Exp $
+# $File: plan9,v 1.8 2026/10/04 20:51:43 christos Exp $
 # plan9:  file(1) magic for AT&T Bell Labs' Plan 9 executables and object files
 # From: "Stefan A. Haubenthal" <polluks@web.de>
 #
@@ -9,7 +9,7 @@
 0	belong		0x000001EB	Plan 9 executable, Intel i386
 0	belong		0x00000247	Plan 9 executable, Intel i960
 0	belong		0x000002AB	Plan 9 executable, SPARC
-0	belong		0x00000407	Plan 9 executable, MIPS R3000
+0	belong		0x00000407	Plan 9 executable, MIPS R3000 BE
 0	belong		0x0000048B	Plan 9 executable, AT&T DSP 3210
 0	belong		0x00000517	Plan 9 executable, MIPS R4000 BE
 0	belong		0x000005AB	Plan 9 executable, AMD 29000
@@ -17,6 +17,11 @@
 0	belong		0x000006EB	Plan 9 executable, PowerPC
 0	belong		0x00000797	Plan 9 executable, MIPS R4000 LE
 0	belong		0x0000084B	Plan 9 executable, DEC Alpha
+0	belong		0x00000907	Plan 9 executable, MIPS R3000 LE
+0	belong		0x000009CB	Plan 9 executable, SPARC V9
+0	belong		0x00008A97	Plan 9 executable, x86-64
+0	belong		0x00008B6B	Plan 9 executable, 64-bit PowerPC
+0	belong		0x00008C47	Plan 9 executable, ARM aarch64
 
 0	belong		0x3A11013C	Plan 9 object file, MIPS R3000
 0	belong		0x430D013C	Plan 9 object file, AT&T Hobbit
