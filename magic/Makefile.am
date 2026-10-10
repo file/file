@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.208 2026/07/31 16:46:15 christos Exp $
+# $File: Makefile.am,v 1.209 2026/10/10 15:47:56 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -318,6 +318,7 @@ $(MAGIC_FRAGMENT_DIR)/symbos \
 $(MAGIC_FRAGMENT_DIR)/sysex \
 $(MAGIC_FRAGMENT_DIR)/sysstat \
 $(MAGIC_FRAGMENT_DIR)/tapebackup \
+$(MAGIC_FRAGMENT_DIR)/tarantool \
 $(MAGIC_FRAGMENT_DIR)/tcl \
 $(MAGIC_FRAGMENT_DIR)/teapot \
 $(MAGIC_FRAGMENT_DIR)/terminfo \

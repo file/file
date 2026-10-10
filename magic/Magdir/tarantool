@@ -1,0 +1,41 @@
+
+#------------------------------------------------------------------------------
+# $File: tarantool,v 1.1 2026/10/10 15:47:56 christos Exp $
+# tarantool:  file(1) magic for Tarantool database files
+#
+# Tarantool (https://www.tarantool.io/) has its own storage formats.
+# Every file starts with a textual header:
+#
+#	<type>\n
+#	<format version>\n
+#	Version: <tarantool version>\n
+#	Instance: <uuid>\n
+#	[VClock: {...}\n]
+#	[PrevVClock: {...}\n]
+#	\n
+#
+# followed by binary data.  The type is one of SNAP (snapshot),
+# XLOG (write-ahead log), RUN (vinyl data file), INDEX (vinyl page
+# index) or VYLOG (vinyl log).
+#
+# A bare type line is not specific enough: SNAP, RUN and the other
+# words are common, so every entry also matches the mandatory parts
+# of the header that follow it: the format version, the "Version:"
+# line and the "Instance:" (or "Server:" in the old format) line
+# with the instance UUID.  The "bt" flags make the test run for both
+# binary files (real Tarantool data) and header-only text files.
+
+0	regex/bt/512	SNAP\n[0-9]+\\.[0-9]+\nVersion:\ [^\n]+\n(Instance|Server):\ [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\n	Tarantool snapshot
+>5	regex/16	[0-9]+\\.[0-9]+		\b, format version %s
+
+0	regex/bt/512	XLOG\n[0-9]+\\.[0-9]+\nVersion:\ [^\n]+\n(Instance|Server):\ [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\n	Tarantool write-ahead log
+>5	regex/16	[0-9]+\\.[0-9]+		\b, format version %s
+
+0	regex/bt/512	RUN\n[0-9]+\\.[0-9]+\nVersion:\ [^\n]+\n(Instance|Server):\ [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\n	Tarantool vinyl run
+>4	regex/16	[0-9]+\\.[0-9]+		\b, format version %s
+
+0	regex/bt/512	INDEX\n[0-9]+\\.[0-9]+\nVersion:\ [^\n]+\n(Instance|Server):\ [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\n	Tarantool vinyl index
+>6	regex/16	[0-9]+\\.[0-9]+		\b, format version %s
+
+0	regex/bt/512	VYLOG\n[0-9]+\\.[0-9]+\nVersion:\ [^\n]+\n(Instance|Server):\ [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\n	Tarantool vinyl log
+>6	regex/16	[0-9]+\\.[0-9]+		\b, format version %s
