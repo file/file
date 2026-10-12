@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: console,v 1.82 2026/06/02 16:59:22 christos Exp $
+# $File: console,v 1.83 2026/10/12 16:16:56 christos Exp $
 # Console game magic
 # Toby Deshane <hac@shoelace.digivill.net>
 
@@ -505,7 +505,7 @@
 # Updated version from: David Korth <gerbilsoft@gerbilsoft.com>
 #
 0xC0	bequad	0x24FFAE51699AA221	Nintendo DS ROM image
-!:mime	application/x-nintendo-ds-rom
+!:mime	application/vnd.nintendo.nitro.rom
 >0x00	string	>\0		\b: "%.12s"
 >0x0C	string	x		(%.6s
 >0x1E	byte	x		\b, Rev.%02u)
@@ -526,7 +526,7 @@
 # This is also used for loading .nds files using the MSET exploit on 3DS.
 # Reference: https://github.com/devkitPro/ndstool/blob/master/source/ndscreate.cpp
 0xC0	bequad	0xC8604FE201708FE2	Nintendo DS Slot-2 ROM image (PassMe)
-!:mime	application/x-nintendo-ds-rom
+!:mime	application/vnd.nintendo.nitro.rom
 
 #------------------------------------------------------------------------------
 # ngp: file(1) magic for the Neo Geo Pocket (Color) raw ROM format.
