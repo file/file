@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: sql,v 1.38 2024/12/26 19:14:32 christos Exp $
+# $File: sql,v 1.39 2026/10/12 16:18:39 christos Exp $
 # sql:  file(1) magic for SQL files
 #
 # From: "Marty Leisner" <mleisner@eng.mc.xerox.com>
@@ -228,6 +228,7 @@
 >>>68 belong =0x544f4952 (Riot Games patcher)
 >>>68 belong =0x544d5052 (Twinmotion project)
 >>>68 belong =0x43484557 (Chewing IME)
+>>>68 belong =0x4E444442 (NeverSight NeverD database)
 # unknown application ID
 >>>68 default x
 >>>>68 belong !0         \b, application id %u
