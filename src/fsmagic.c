@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.89 2026/08/28 15:33:00 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.90 2026/10/13 15:54:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -124,7 +124,7 @@ static const struct vn sflags[] = {
 };
 #endif
 
-#ifdef	S_IFLNK
+#if defined(S_IFLNK) && defined(HAVE_READLINK)
 file_private int
 bad_link(struct magic_set *ms, int err, char *buf)
 {
@@ -179,7 +179,7 @@ file_fsmagic(struct magic_set *ms, const char *fn, struct stat *sb)
 	int ret, didv = 0, *did;
 	int mime = ms->flags & MAGIC_MIME;
 	int silent = ms->flags & (MAGIC_APPLE|MAGIC_EXTENSION);
-#ifdef	S_IFLNK
+#if defined(S_IFLNK) && defined(HAVE_READLINK)
 	char buf[BUFSIZ+4];
 	ssize_t nch;
 	struct stat tstatbuf;

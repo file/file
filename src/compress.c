@@ -47,7 +47,7 @@ extern pid_t fork(void);
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.167 2026/08/28 15:26:23 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.168 2026/10/13 15:54:30 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -313,8 +313,8 @@ file_zmagic(struct magic_set *ms, const struct buffer *b, const char *name)
 	int fd = b->fd;
 	const unsigned char *buf = CAST(const unsigned char *, b->fbuf);
 	size_t nbytes = b->flen;
-	int sa_saved = 0;
 #ifdef HAVE_SIGACTION
+	int sa_saved = 0;
 	struct sigaction sig_act;
 #endif
 

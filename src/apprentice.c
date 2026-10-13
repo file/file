@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.377 2026/08/28 15:26:23 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.378 2026/10/13 15:54:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1410,6 +1410,7 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 	(void)fclose(f);
 }
 
+#ifdef HAVE_DIRENT_H
 /*
  * parse a file or directory of files
  * const char *fn: name of magic file or directory
@@ -1419,6 +1420,7 @@ cmpstrp(const void *p1, const void *p2)
 {
         return strcmp(*RCAST(char *const *, p1), *RCAST(char *const *, p2));
 }
+#endif
 
 
 file_private uint32_t
@@ -1529,14 +1531,14 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 {
 	int errs = 0;
 	uint32_t i, j;
-	size_t files = 0, maxfiles = 0;
-	char **filearr = NULL, *mfn;
-	struct stat st;
 	struct magic_map *map;
 	struct magic_entry_set mset[MAGIC_SETS];
 #ifdef HAVE_DIRENT_H
+	struct stat st;
+	size_t files = 0, maxfiles = 0;
 	DIR *dir;
 	struct dirent *d;
+	char **filearr = NULL; *mfn;
 #endif
 
 	memset(mset, 0, sizeof(mset));
@@ -1640,7 +1642,9 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 	}
 
 out:
+#ifdef HAVE_DIRENT_H
 	free(filearr);
+#endif
 	for (j = 0; j < MAGIC_SETS; j++)
 		magic_entry_free(mset[j].me, mset[j].count);
 
