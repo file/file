@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: zip,v 1.10 2025/10/22 19:31:31 christos Exp $
+# $File: zip,v 1.11 2026/10/13 16:15:52 christos Exp $
 # zip:  file(1) magic for zip files; this is not use
 # Note the version of magic in archive is currently stronger, this is
 # just an example until negative offsets are supported better
@@ -111,6 +111,7 @@
 # Zip End Of Central Directory record
 # GRR: wrong for ZIP with comment archive
 -22	string		PK\005\006
+!:strength +50
 #>4	uleshort	!0xFFff		\b, %u disks
 #>6	uleshort	!0xFFff		\b, central directory disk %u
 #>8	uleshort	!0xFFff		\b, %u central directories on this disk
