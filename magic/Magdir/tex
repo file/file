@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: tex,v 1.25 2026/06/02 18:16:34 christos Exp $
+# $File: tex,v 1.26 2026/10/13 18:39:56 christos Exp $
 # tex:  file(1) magic for TeX files
 #
 # XXX - needs byte-endian stuff (big-endian and little-endian DVI?)
@@ -48,10 +48,13 @@
 !:mime	text/x-texinfo
 0	search/b/1	This\ is\ Info\ file	GNU Info text
 !:mime	text/x-info
-0	search/b/10	INFO-DIR-SECTION	GNU Info text
+!:ext info
+0	search/b/4096	\x0AINFO-DIR-SECTION	GNU Info text
 !:mime	text/x-info
-0	search/b/10	START-INFO-DIR-ENTRY	GNU Info text
+!:ext info
+0	search/b/4096	\x0ASTART-INFO-DIR-ENTRY	GNU Info text
 !:mime	text/x-info
+!:ext info
 
 0	string		%!TEX\040root	TeX Document text
 !:mime	text/x-tex
