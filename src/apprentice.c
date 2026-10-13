@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.378 2026/10/13 15:54:30 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.379 2026/10/13 15:59:45 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1538,7 +1538,7 @@ apprentice_load(struct magic_set *ms, const char *fn, int action)
 	size_t files = 0, maxfiles = 0;
 	DIR *dir;
 	struct dirent *d;
-	char **filearr = NULL; *mfn;
+	char **filearr = NULL, *mfn;
 #endif
 
 	memset(mset, 0, sizeof(mset));
