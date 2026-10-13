@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: amigaos,v 1.26 2026/04/17 15:13:18 christos Exp $
+# $File: amigaos,v 1.27 2026/10/13 15:56:01 christos Exp $
 # amigaos:  file(1) magic for AmigaOS binary formats:
 
 #
@@ -272,3 +272,10 @@
 0	string		crm2		Crunch-Mania data, LZH, sampled, encrypted
 !:ext	crm
 >6	belong		x		\b, %u bytes uncompressed
+
+#------------------------------------------------------------------------------
+# Autodocs:
+# https://wiki.amigaos.net/wiki/Autodoc_Style_Guide
+#------------------------------------------------------------------------------
+0	string		TABLE\ OF\ CONTENTS	Amiga Autodoc file
+!:ext	doc
