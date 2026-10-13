@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.379 2026/10/13 15:59:45 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.380 2026/10/13 17:45:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -726,7 +726,7 @@ fail:
 file_protected int
 file_apprentice(struct magic_set *ms, const char *fn, int action)
 {
-	char *p;
+	char *p, *sfn;
 	int fileerr, errs = -1;
 	size_t i, j;
 
@@ -740,7 +740,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 	free(ms->fnamebuf);
 	ms->file = NULL;
 	if ((ms->fnamebuf = strdup(fn)) == NULL) {
-		file_oomem(ms, strlen(fn));
+out:		file_oomem(ms, strlen(fn));
 		return -1;
 	}
 
@@ -755,7 +755,9 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 			return -1;
 		}
 	}
-	fn = ms->fnamebuf;
+	fn = sfn = strdup(ms->fnamebuf);
+	if (fn == NULL)
+		goto out;
 
 	while (fn) {
 		p = CCAST(char *, strchr(fn, PATHSEP));
@@ -767,6 +769,7 @@ file_apprentice(struct magic_set *ms, const char *fn, int action)
 		errs = MAX(errs, fileerr);
 		fn = p;
 	}
+	free(sfn);
 
 	if (errs == -1) {
 		for (i = 0; i < MAGIC_SETS; i++) {
