@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: blender,v 1.10 2026/01/10 14:38:14 christos Exp $
+# $File: blender,v 1.11 2026/10/13 14:17:13 christos Exp $
 # blender: file(1) magic for Blender 3D related files
 #
 # Native format rule v1.2. For questions use the developers list
@@ -50,7 +50,7 @@
 >>10		byte	x		format version %c
 >>>11		byte	x		\b%c
 >>>>13		byte	x		app version %c
->>>>>14		byte	x		\b%c
+>>>>>14		byte	x		\b%c.
 >>>>>>15		byte	x		\b%c
 >>>>>>>16		byte	x		\b%c
 #
