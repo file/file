@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: apprentice.c,v 1.380 2026/10/13 17:45:51 christos Exp $")
+FILE_RCSID("@(#)$File: apprentice.c,v 1.381 2026/10/13 18:38:06 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -1351,12 +1351,9 @@ load_1(struct magic_set *ms, int action, const char *fn, int *errs,
 	    ms->line++) {
 		if (ms->magwarn >= ms->magwarn_max)
 			break;
+		len = file_trimline(line, len, &lineno);
 		if (len == 0) /* null line, garbage, etc */
 			continue;
-		if (line[len - 1] == '\n') {
-			lineno++;
-			line[len - 1] = '\0'; /* delete newline */
-		}
 		switch (line[0]) {
 		case '\0':	/* empty, do not parse */
 		case '#':	/* comment, do not parse */

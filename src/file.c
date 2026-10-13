@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.223 2026/10/03 18:56:14 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.224 2026/10/13 18:38:06 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -540,7 +540,7 @@ unwrap(struct magic_set *ms, const char *fn)
 	FILE *f;
 	ssize_t len;
 	char *line = NULL;
-	size_t llen = 0;
+	size_t llen = 0, lineno = 0;
 	int wid = 0, cwid;
 	int e = 0;
 	size_t fi = 0, fimax = 0;
@@ -556,8 +556,7 @@ unwrap(struct magic_set *ms, const char *fn)
 	}
 
 	while ((len = getline(&line, &llen, f)) > 0) {
-		if (line[len - 1] == '\n')
-			line[len - 1] = '\0';
+		len = file_trimline(line, len, &lineno);
 		cwid = file_mbswidth(ms, line);
 		if (nobuffer) {
 			e |= process(ms, line, cwid);

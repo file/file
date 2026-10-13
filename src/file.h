@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.268 2026/08/28 15:26:23 christos Exp $
+ * @(#)$File: file.h,v 1.269 2026/10/13 18:38:06 christos Exp $
  */
 
 #ifndef __file_h__
@@ -730,6 +730,7 @@ file_protected void file_warn(const char *, ...)
     __attribute__((__format__(__printf__, 1, 2)));
 file_protected void file_warnx(const char *, ...)
     __attribute__((__format__(__printf__, 1, 2)));
+file_protected ssize_t file_getline(char **, size_t *, size_t *, FILE *);
 
 #if defined(HAVE_MMAP) && defined(HAVE_SYS_MMAN_H) && !defined(QUICK)
 #define QUICK
@@ -761,5 +762,25 @@ static const char *rcsid(const char *p) { \
 
 #define file_no_overflow \
     __attribute__((__no_sanitize__("signed-integer-overflow")))
+
+static inline ssize_t
+file_trimline(char *line, size_t len, size_t *lineno)
+{
+	while (len) {
+		switch (line[len - 1]) {
+		case '\n':
+			(*lineno)++;
+#ifdef __OS2__
+		case '\r':
+		case 0x1a:
+#endif
+			line[--len] = '\0';
+			break;
+		default:
+			return CAST(ssize_t, len);
+		}
+	}
+	return CAST(ssize_t, len);
+}
 
 #endif /* __file_h__ */
