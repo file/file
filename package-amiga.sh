@@ -9,7 +9,7 @@
 #     magic/<OS>/<crt>/{include,lib}/      per-OS libraries and headers
 #
 #     file.readme                          at the archive root (staged from
-#                                          file_ca.readme, which keeps the
+#                                          file.readme, which keeps the
 #                                          Aminet upload name in the repo)
 #     file/<OS>/C/{file,magic.mgc}         a complete drop-in per machine
 set -uo pipefail
@@ -45,7 +45,8 @@ SL=$DIST/stage-magic; SF=$DIST/stage-file
 mkdir -p "$SL/magic/C"
 cp "$MGC" "$SL/magic/C/magic.mgc"
 cp "$ROOT/magic.readme" "$SL/magic.readme"
-cp "$ROOT/file_ca.readme"  "$SF/file.readme" 2>/dev/null || { mkdir -p "$SF"; cp "$ROOT/file_ca.readme" "$SF/file.readme"; }
+mkdir -p "$SF"
+cp "$ROOT/file.readme" "$SF/file.readme"
 
 libs=0; apps=0; failed=()
 for os in "${OSES[@]}"; do
