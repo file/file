@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.132 2026/10/13 16:26:49 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.133 2026/10/14 16:54:08 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1243,6 +1243,9 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 		extract_catalog_field(uint16_t, ce_num, 4);
 		extract_catalog_field(uint64_t, ce_timestamp, 8);
 		reclen = cep->ce_namlen;
+
+		if (reclen == 0)
+			break;
 
 		if (reclen < 14) {
 			cep->ce_namlen = 0;
