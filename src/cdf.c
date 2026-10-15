@@ -1009,7 +1009,7 @@ file_protected int
 cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
     uint32_t offs, cdf_property_info_t **info, size_t *count, size_t *maxcount)
 {
-	const cdf_section_header_t *shp;
+	const char *shp;
 	cdf_section_header_t sh;
 	const uint8_t *p, *q, *e;
 	size_t i, o4, nelements, j, slen, left;
@@ -1019,18 +1019,17 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		errno = EFTYPE;
 		goto out;
 	}
-	shp = CAST(const cdf_section_header_t *,
-	    cdf_offset(sst->sst_tab, offs));
-	memcpy(&sh, shp, sizeof(sh));
-	if (cdf_check_stream_offset(sst, h, &sh, sizeof(sh), __LINE__) == -1)
+	shp = CAST(const char *, cdf_offset(sst->sst_tab, offs));
+	if (cdf_check_stream_offset(sst, h, shp, sizeof(sh), __LINE__) == -1)
 		goto out;
+	memcpy(&sh, shp, sizeof(sh));
 	sh.sh_len = CDF_TOLE4(sh.sh_len);
 	if (sh.sh_len > CDF_SHLEN_LIMIT) {
 		errno = EFTYPE;
 		goto out;
 	}
 
-	if (cdf_check_stream_offset(sst, h, &sh, sh.sh_len, __LINE__) == -1)
+	if (cdf_check_stream_offset(sst, h, shp, sh.sh_len, __LINE__) == -1)
 		goto out;
 
 	sh.sh_properties = CDF_TOLE4(sh.sh_properties);
@@ -1044,7 +1043,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 	inp += *count;
 	*count += sh.sh_properties;
 	p = CAST(const uint8_t *, cdf_offset(sst->sst_tab, offs + sizeof(sh)));
-	e = CAST(const uint8_t *, cdf_offset(&sh, sh.sh_len));
+	e = CAST(const uint8_t *, cdf_offset(shp, sh.sh_len));
 	if (p >= e || cdf_check_stream_offset(sst, h, e, 0, __LINE__) == -1)
 		goto out;
 
