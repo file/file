@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.133 2026/10/14 16:54:08 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.134 2026/10/16 14:19:05 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1021,9 +1021,9 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 	}
 	shp = CAST(const cdf_section_header_t *,
 	    cdf_offset(sst->sst_tab, offs));
-	memcpy(&sh, shp, sizeof(sh));
 	if (cdf_check_stream_offset(sst, h, &sh, sizeof(sh), __LINE__) == -1)
 		goto out;
+	memcpy(&sh, shp, sizeof(sh));
 	sh.sh_len = CDF_TOLE4(sh.sh_len);
 	if (sh.sh_len > CDF_SHLEN_LIMIT) {
 		errno = EFTYPE;
