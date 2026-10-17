@@ -144,7 +144,10 @@
 >>>36	lelong		&0x00800000	BE8
 >>>36	lelong		&0x00400000	LE8
 >18	leshort		41		Alpha,
+# SH4A no-FPU ELF identification contributed by Artem Novak, 2026.
 >18	leshort		42		Renesas SH,
+>>4	byte		1
+>>>36	lelong&0x1f	0x11	SH4A no-FPU,
 >18	leshort		43		SPARC V9,
 >>4	byte		2
 >>>48	use		elf-sparc
