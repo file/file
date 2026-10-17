@@ -544,7 +544,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 #else
 	{
 		int te;
-		mode_t ou = umask(0);
+		mode_t ou = umask(0177);
 		tfd = mkstemp(buf);
 		(void)umask(ou);
 		te = errno;
