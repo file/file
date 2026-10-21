@@ -1,0 +1,1 @@
+cv.write_bytes(b"%PDF-")

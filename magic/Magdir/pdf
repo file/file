@@ -13,24 +13,21 @@
 !:mime	application/pdf
 !:strength +60
 !:ext	pdf
->5	byte		x		\b, version %c
->7	byte		x		\b.%c
+>5	regex		\^[0-9][.][0-9]	\b, version %s
 >0	use		pdf
 
 0	string		\012%PDF-	PDF document
 !:mime	application/pdf
 !:strength +60
 !:ext	pdf
->6	byte		x		\b, version %c
->8	byte		x		\b.%c
+>6	regex		\^[0-9][.][0-9]	\b, version %s
 >0	use		pdf
 
 0	string		\xef\xbb\xbf%PDF-	PDF document (UTF-8)
 !:mime	application/pdf
 !:strength +60
 !:ext	pdf
->6	byte		x		\b, version %c
->8	byte		x		\b.%c
+>8	regex		\^[0-9][.][0-9]	\b, version %s
 >0	use		pdf
 
 # From: Nick Schmalenberger <nick@schmalenberger.us>
@@ -46,6 +43,5 @@
 !:mime	application/pdf
 !:strength +60
 !:ext	pdf
->&0	byte		x		\b, version %c
->&2	byte		x		\b.%c
+>&0	regex		\^[0-9][.][0-9]	\b, version %s
 >0	use		pdf

@@ -115,6 +115,10 @@ multiple.result \
 multiple.testfile \
 pcjr.result \
 pcjr.testfile \
+pdf-no-version.result \
+pdf-no-version.testfile \
+pdf-utf8-bom.result \
+pdf-utf8-bom.testfile \
 pgp-binary-key-v2-phil.result \
 pgp-binary-key-v2-phil.testfile \
 pgp-binary-key-v3-lutz.result \
