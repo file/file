@@ -47,7 +47,7 @@ extern pid_t fork(void);
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.168 2026/10/13 15:54:30 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.169 2026/10/22 15:44:03 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -544,7 +544,7 @@ file_pipe2file(struct magic_set *ms, int fd, const void *startbuf,
 #else
 	{
 		int te;
-		mode_t ou = umask(0);
+		mode_t ou = umask(0177);
 		tfd = mkstemp(buf);
 		(void)umask(ou);
 		te = errno;
