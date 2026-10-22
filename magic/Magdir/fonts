@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: fonts,v 1.55 2026/03/24 22:28:58 christos Exp $
+# $File: fonts,v 1.56 2026/10/22 15:55:33 christos Exp $
 # fonts:  file(1) magic for font data
 #
 0	search/1	FONT		ASCII vfont text
@@ -283,13 +283,13 @@
 >>12	regex/4l	\^[A-Za-z][A-Za-z2][A-Za-z/\ ][A-Za-z2\ ]	
 #>>>0	ubelong		x	\b, sfnt version %#x
 >>>0	ubelong		!0x4f54544f	TrueType
-# fontkit FK
->>>>12	ubelong		0x464b2020	(FontKit)
 !:mime	font/ttf
 !:apple	????tfil
 # .ttf for TrueType font
 # EUDC.tte created by privat character editor %WINDIR%\system32\eudcedit.exe
 !:ext	ttf/tte
+# fontkit FK
+>>>>12	ubelong		0x464b2020	(FontKit)
 # sfnt version 4F54544Fh~OTTO
 >>>0	ubelong		=0x4f54544f	OpenType
 !:mime	font/otf
@@ -304,7 +304,7 @@
 #>>>4	ubeshort	<10		TMIN
 #>>>4	ubeshort	>24		TBIG
 # table directory entries
->>>12	ubelong		!0x464b2020	(FontKit)
+>>>12	ubelong		!0x464b2020
 >>>>12	string		x		\b, 1st "%4.4s"
 
 #	search and display 1st name in sfnt font which is often copyright text
