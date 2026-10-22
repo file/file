@@ -3,6 +3,18 @@ test_LDADD = $(top_builddir)/src/libmagic.la
 test_CPPFLAGS = -I$(top_builddir)/src
 
 EXTRA_DIST = \
+sh4a-nofpu-be.result \
+sh4a-nofpu-be.testfile \
+sh4a-nofpu-le.result \
+sh4a-nofpu-le.testfile \
+sh4a-extra-be.result \
+sh4a-extra-be.testfile \
+sh4a-extra-le.result \
+sh4a-extra-le.testfile \
+sh-other-be.result \
+sh-other-be.testfile \
+sh-other-le.result \
+sh-other-le.testfile \
 android-vdex-1.result \
 android-vdex-1.testfile \
 android-vdex-2.result \

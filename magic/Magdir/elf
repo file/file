@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.91 2024/11/09 23:52:23 christos Exp $
+# $File: elf,v 1.92 2026/10/22 15:53:54 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -144,7 +144,10 @@
 >>>36	lelong		&0x00800000	BE8
 >>>36	lelong		&0x00400000	LE8
 >18	leshort		41		Alpha,
+# SH4A no-FPU ELF identification contributed by Artem Novak, 2026.
 >18	leshort		42		Renesas SH,
+>>4	byte		1
+>>>36	lelong&0xff	0x11	SH4A no-FPU,
 >18	leshort		43		SPARC V9,
 >>4	byte		2
 >>>48	use		elf-sparc
