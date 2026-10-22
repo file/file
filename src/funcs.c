@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: funcs.c,v 1.154 2026/08/28 15:26:23 christos Exp $")
+FILE_RCSID("@(#)$File: funcs.c,v 1.155 2026/10/22 19:08:56 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -754,7 +754,10 @@ file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
 	assert(old != NULL);
 #else
 	char old[1024];
-	strlcpy(old, setlocale(LC_CTYPE, NULL), sizeof(old));
+	const char *ol = setlocale(LC_CTYPE, NULL);
+	if (ol != NULL)
+		strlcpy(old, ol, sizeof(old));
+
 	(void)setlocale(LC_CTYPE, "C");
 #endif
 	int rc;
@@ -763,7 +766,8 @@ file_regcomp(struct magic_set *ms file_locale_used, file_regex_t *rx,
 #ifdef USE_C_LOCALE
 	uselocale(old);
 #else
-	(void)setlocale(LC_CTYPE, old);
+	if (ol)
+		(void)setlocale(LC_CTYPE, old);
 #endif
 	if (rc > 0 && (ms->flags & MAGIC_CHECK)) {
 		char errmsg[512], buf[512];
@@ -786,7 +790,10 @@ file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
 	assert(old != NULL);
 #else
 	char old[1024];
-	strlcpy(old, setlocale(LC_CTYPE, NULL), sizeof(old));
+	const char *ol = setlocale(LC_CTYPE, NULL);
+	if (ol != NULL)
+		strlcpy(old, ol, sizeof(old));
+
 	(void)setlocale(LC_CTYPE, "C");
 #endif
 	int rc;
@@ -797,7 +804,8 @@ file_regexec(struct magic_set *ms file_locale_used, file_regex_t *rx,
 #ifdef USE_C_LOCALE
 	uselocale(old);
 #else
-	(void)setlocale(LC_CTYPE, old);
+	if (ol)
+		(void)setlocale(LC_CTYPE, old);
 #endif
 	return rc;
 }

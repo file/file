@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.371 2026/10/13 18:03:46 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.372 2026/10/22 19:08:56 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -2407,6 +2407,14 @@ magiccheck(struct magic_set *ms, struct magic *m, file_regex_t **m_cache)
 		free(copy);
 		switch (rc) {
 		case 0:
+			/* Sanity check */
+			if (pmatch.rm_so < 0 || pmatch.rm_eo < 0 ||
+			    pmatch.rm_eo < pmatch.rm_so ||
+			    CAST(size_t, pmatch.rm_eo) > slen) {
+				v = 1;
+				break;
+			}
+
 			ms->search.s += CAST(int, pmatch.rm_so);
 			ms->search.offset += CAST(size_t, pmatch.rm_so);
 			ms->search.rm_len = CAST(size_t,
