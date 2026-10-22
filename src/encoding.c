@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: encoding.c,v 1.46 2026/06/09 20:39:31 christos Exp $")
+FILE_RCSID("@(#)$File: encoding.c,v 1.47 2026/10/22 16:10:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -219,9 +219,9 @@ file_encoding(struct magic_set *ms, const struct buffer *b,
  * set instead of the ASCII set, but it's got to be included in *something*
  * we recognize or EBCDIC files aren't going to be considered textual.
  * Some old Unix source files use SO/SI (^N/^O) to shift between Greek
- * and Latin characters, so these should possibly be allowed.  But they
- * make a real mess on VT100-style displays if they're not paired properly,
- * so we are probably better off not calling them text.
+ * and Latin characters, and terminfo entries such as linux (sgr0) emit SI
+ * after the escape sequences that reset attributes (e.g. pod2text -t,
+ * man, ls --color output), so SO and SI are considered text, like ESC.
  *
  * A file is considered to be ISO-8859 text if its characters are all
  * either ASCII, according to the above definition, or printing characters
@@ -244,8 +244,8 @@ file_encoding(struct magic_set *ms, const struct buffer *b,
  * NEL (next line 0x85) is considered in ECMAScript as whitespace
  */
 file_private char text_chars[256] = {
-	/*                  BEL BS HT LF VT FF CR    */
-	F, F, F, F, F, F, F, T, T, T, T, T, T, T, F, F,  /* 0x0X */
+	/*                  BEL BS HT LF VT FF CR SO SI */
+	F, F, F, F, F, F, F, T, T, T, T, T, T, T, T, T,  /* 0x0X */
 	/*                           SUB ESC          */
 	F, F, F, F, F, F, F, F, F, F, T, T, F, F, F, F,  /* 0x1X */
 	T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T,  /* 0x2X */

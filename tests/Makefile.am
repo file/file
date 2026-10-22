@@ -9,6 +9,8 @@ android-vdex-2.result \
 android-vdex-2.testfile \
 arj.result \
 arj.testfile \
+ascii-escape-so-si.result \
+ascii-escape-so-si.testfile \
 bcachefs.result \
 bcachefs.testfile \
 bcachefs2.result \
