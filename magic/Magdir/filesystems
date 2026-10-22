@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# $File: filesystems,v 1.172 2026/08/03 08:07:26 christos Exp $
+# $File: filesystems,v 1.173 2026/10/22 19:10:22 christos Exp $
 # filesystems:  file(1) magic for different filesystems
 #
 0	name	partid
@@ -2792,3 +2792,14 @@
 # PIN-protected storage format based on the PIV application
 # https://github.com/douzebis/yb
 0    lelong    0xF2ED5F0B    yblob object store image data
+
+# YBLOB post-quantum object storage
+# The same storage, protected by the FIDO2 application (hmac-secret)
+# https://github.com/douzebis/yb (docs/YBLOB_FORMAT.md, section 11)
+0    lelong    0xF2EDF0B2    yblob post-quantum object store image data
+>5   ubyte     1             \b, store descriptor
+>>6  ubyte     x             \b, version %u
+>>4  ubyte     x             \b, %u chunks
+>5   ubyte     0             \b, chunk
+>>9  ubyte     x             \b, in use
+>>9  default   x             \b, empty
