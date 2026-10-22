@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: cad,v 1.32 2026/04/16 15:06:17 christos Exp $
+# $File: cad,v 1.33 2026/10/22 19:11:42 christos Exp $
 # autocad:  file(1) magic for cad files
 #
 
@@ -447,3 +447,11 @@
 >17	byte	0x56				version 2
 >29	leshort	0x1234				\b, little-endian
 >29	beshort	0x1234				\b, big-endian
+
+
+# STEP file
+# Data interchange format common in 3D CAD software.
+# Spec: https://www.loc.gov/preservation/digital/formats/fdd/fdd000448.shtml
+0	string	ISO-10303-21;	STEP File
+!:mime	model/step
+!:ext	step/stp/p21/210/stpnc
