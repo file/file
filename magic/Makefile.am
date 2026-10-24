@@ -191,6 +191,7 @@ $(MAGIC_FRAGMENT_DIR)/marc21 \
 $(MAGIC_FRAGMENT_DIR)/mathcad \
 $(MAGIC_FRAGMENT_DIR)/mathematica \
 $(MAGIC_FRAGMENT_DIR)/matroska \
+$(MAGIC_FRAGMENT_DIR)/mcap \
 $(MAGIC_FRAGMENT_DIR)/mcrypt \
 $(MAGIC_FRAGMENT_DIR)/measure \
 $(MAGIC_FRAGMENT_DIR)/mercurial \
