@@ -22,11 +22,9 @@
 # skip profile if empty
 >>>&0	ulelong		>0
 >>>>&-4	pstring/l	x		\b, profile "%s"
-# skip over profile again when parsing library
->>>&0	pstring/l	x
 # skip library if empty
->>>>&0	ulelong		>0
->>>>>&-4	pstring/l	x		\b, library "%s"
+>>>&(&0.l+4)	ulelong		>0
+>>>>&-4	pstring/l	x		\b, library "%s"
 
 # Check for a valid footer and trailing magic, or print a message if missing
 # or invalid (common when a process crashes while writing the file).
