@@ -86,7 +86,8 @@ buffer_fill(const struct buffer *bb)
 		goto out;
 
 	b->eoff = b->st.st_size - b->elen;
-	if (pread(b->fd, b->ebuf, b->elen, b->eoff) == -1) {
+	if (pread(b->fd, b->ebuf, b->elen, b->eoff) !=
+	    CAST(ssize_t, b->elen)) {
 		free(b->ebuf);
 		b->ebuf = NULL;
 		goto out;
