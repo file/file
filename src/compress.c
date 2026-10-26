@@ -904,18 +904,16 @@ uncompresslrzip(const unsigned char *old, unsigned char **newch,
 	}
 	out = fmemopen(*newch, *n, "w");
 	if (out == NULL) {
-		free(*newch);
 		res = makeerror(newch, n, "unable to allocate output file");
 		goto out2;
 	}
 	lrzip_outfile_set(lr, out);
-	if (lrzip_run(lr)) {
-		free(*newch);
+	if (!lrzip_run(lr)) {
+		fclose(out);
 		res = makeerror(newch, n, "unable to decompress file");
-		goto out3;
+		goto out2;
 	}
 	*n = (size_t)ftell(out);
-out3:
 	fclose(out);
 out2:
 	fclose(in);
