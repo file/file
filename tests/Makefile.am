@@ -3,6 +3,8 @@ test_LDADD = $(top_builddir)/src/libmagic.la
 test_CPPFLAGS = -I$(top_builddir)/src
 
 EXTRA_DIST = \
+casio-g1a.result \
+casio-g1a.testfile \
 android-vdex-1.result \
 android-vdex-1.testfile \
 android-vdex-2.result \
