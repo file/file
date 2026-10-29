@@ -1,0 +1,17 @@
+
+#------------------------------------------------------------------------------
+# $File: casio,v 1.1 2026/10/29 18:58:30 christos Exp $
+# CASIO graphing calculator files
+# https://next.cahute.org/topics/file-formats/container.html
+#
+# The CASIO container header is bitwise-inverted on disk.
+# The decoded identifier is "USBPower".
+
+0       string  \252\254\275\257\220\210\232\215
+>9      string  \377\357\377\357\377
+>>8     byte    0x0c    Casio fx-9860G add-in application
+!:ext   g1a
+>>8     byte    0x9d    Casio graphing calculator main memory archive
+!:ext   g1m/g1r/g2m/g2r
+>>8     byte    0xce    Casio graphing calculator main memory archive
+!:ext   g1m/g1r/g2m/g2r

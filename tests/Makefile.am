@@ -3,6 +3,8 @@ test_LDADD = $(top_builddir)/src/libmagic.la
 test_CPPFLAGS = -I$(top_builddir)/src
 
 EXTRA_DIST = \
+casio-g1a.result \
+casio-g1a.testfile \
 android-vdex-1.result \
 android-vdex-1.testfile \
 android-vdex-2.result \
@@ -110,18 +112,6 @@ keyman-2.result \
 keyman-2.testfile \
 matilde.arm.result \
 matilde.arm.testfile \
-mcap-nodata-truncated.result \
-mcap-nodata-truncated.testfile \
-mcap-nodata.result \
-mcap-nodata.testfile \
-mcap-onemessage-truncated.result \
-mcap-onemessage-truncated.testfile \
-mcap-onemessage.result \
-mcap-onemessage.testfile \
-mcap-profile.result \
-mcap-profile.testfile \
-mcap-v1.result \
-mcap-v1.testfile \
 multiple-A.magic \
 multiple-B.magic \
 multiple.flags \
