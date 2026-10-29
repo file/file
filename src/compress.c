@@ -47,7 +47,7 @@ extern pid_t fork(void);
 #endif
 
 #ifndef lint
-FILE_RCSID("@(#)$File: compress.c,v 1.170 2026/10/29 18:49:48 christos Exp $")
+FILE_RCSID("@(#)$File: compress.c,v 1.171 2026/10/29 19:07:45 christos Exp $")
 #endif
 
 #include "magic.h"
@@ -910,8 +910,9 @@ uncompresslrzip(const unsigned char *old, unsigned char **newch,
 	lrzip_outfile_set(lr, out);
 	fprintf(stderr, "frun\n");
 	if (!lrzip_run(lr)) {
+		fclose(out);
 		res = makeerror(newch, n, "unable to decompress file");
-		goto out3;
+		goto out2;
 	}
 	*n = (size_t)ftell(out);
 out3:
