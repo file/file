@@ -1,0 +1,44 @@
+#------------------------------------------------------------------------------
+# $File$
+# mcap:  file(1) magic for MCAP files
+# https://mcap.dev/spec
+
+# Start-of-file magic is "\x89MCAP<major version byte>\r\n".
+0	string		\x89MCAP
+>6	string		\r\n		MCAP data
+!:mime	application/vnd.mcap
+!:ext	mcap
+>>5	byte		x		(v%c)
+>>5	string		0
+>>>0	use		mcap-v0
+
+# Version 0 files are required to start with leading magic, then a Header record
+# (profile + library), and end with a Footer + trailing magic.
+0	name		mcap-v0
+# header opcode
+>8	byte		0x01
+# header record length
+>>&0	ulequad		x
+# skip profile if empty
+>>>&0	ulelong		>0
+>>>>&-4	pstring/l	x		\b, profile "%s"
+# skip library if empty
+>>>&(&0.l+4)	ulelong		>0
+>>>>&-4	pstring/l	x		\b, library "%s"
+
+# Check for a valid footer and trailing magic, or print a message if missing
+# or invalid (common when a process crashes while writing the file).
+>0	clear		x
+# ensure the file is long enough to contain a footer and trailing magic:
+# 1 (opcode) + 8 (length) + 8 (summary_start) + 8 (summary_offset_start)
+# + 4 (summary_crc) + 8 (magic) = 37 bytes.
+>+36	byte		x
+>>-8	string		\x89MCAP0\r\n
+# footer opcode
+>>>-37	byte		0x02
+# footer record length (always 8+8+4 = 20 for v0)
+>>>>-36	ulequad		20
+>>>>-36	default		x		\b, missing footer
+>>>-37	default		x		\b, missing footer
+>>-8	default		x		\b, missing footer
+>0	default		x		\b, missing footer
