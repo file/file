@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.39 2026/10/03 19:03:10 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.40 2026/11/03 12:55:04 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -42,6 +42,9 @@ FILE_RCSID("@(#)$File: seccomp.c,v 1.39 2026/10/03 19:03:10 christos Exp $")
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
+
+/* with _LARGEFILE64_SOURCE musl's unistd.h does #define pread64 pread so: */
+#undef pread64
 
 #define DENY_RULE(call) \
     do \
@@ -219,9 +222,15 @@ enable_sandbox(int flags, int action)
 	ALLOW_RULE(writev);
 
 	/* Newer variants we don't use. ENOSYS lets glibc fall back. */
+#ifdef __NR_openat2
 	ERRNO_RULE(openat2);
+#endif
+#ifdef __NR_faccessat2
 	ERRNO_RULE(faccessat2);
+#endif
+#ifdef __NR_close_range
 	ERRNO_RULE(close_range);
+#endif
 
 
 #if 0
