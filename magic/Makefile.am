@@ -1,5 +1,5 @@
 #
-# $File: Makefile.am,v 1.211 2026/10/29 18:58:30 christos Exp $
+# $File: Makefile.am,v 1.212 2026/11/03 20:58:12 christos Exp $
 #
 MAGIC_FRAGMENT_BASE = Magdir
 MAGIC_DIR = $(top_srcdir)/magic
@@ -192,6 +192,7 @@ $(MAGIC_FRAGMENT_DIR)/marc21 \
 $(MAGIC_FRAGMENT_DIR)/mathcad \
 $(MAGIC_FRAGMENT_DIR)/mathematica \
 $(MAGIC_FRAGMENT_DIR)/matroska \
+$(MAGIC_FRAGMENT_DIR)/mcap \
 $(MAGIC_FRAGMENT_DIR)/mcrypt \
 $(MAGIC_FRAGMENT_DIR)/measure \
 $(MAGIC_FRAGMENT_DIR)/mercurial \
