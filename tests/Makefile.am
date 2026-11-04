@@ -41,6 +41,9 @@ escapevel.result \
 escapevel.testfile \
 ext4.result \
 ext4.testfile \
+filetime-overflow.magic \
+filetime-overflow.result \
+filetime-overflow.testfile \
 fit-map-data.result \
 cl8m8ocofedso.result \
 cl8m8ocofedso.testfile \
