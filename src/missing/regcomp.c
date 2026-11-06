@@ -403,7 +403,11 @@ regcomp_internal(regex_t * __restrict preg,
 		computejumps(p, g);
 		computematchjumps(p, g);
 		if(g->matchjump == NULL && g->charjump != NULL) {
-			free(g->charjump);
+			/* g->charjump was adjusted to &g->charjump[-(CHAR_MIN)]
+			 * in computejumps() so it can be indexed by signed
+			 * chars; un-adjust back to the real allocation base
+			 * before freeing it, same as regfree() does. */
+			free(&g->charjump[CHAR_MIN]);
 			g->charjump = NULL;
 		}
 	}
