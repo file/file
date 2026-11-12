@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: animation,v 1.101 2025/05/28 19:54:08 christos Exp $
+# $File: animation,v 1.102 2026/11/12 20:26:12 christos Exp $
 # animation:  file(1) magic for animation/movie formats
 #
 # animation formats
@@ -1251,3 +1251,54 @@
 >14	belong	!0	\b, XOR obfuscation key %d
 !:mime	application/x-cubism-archive
 !:ext	cmo3/can3
+
+# magic for RV565 video for microcontroller displays
+#
+# A little-endian header ("RV5", version, width, height, frames per second,
+# flags, frame count) followed by one length-prefixed record per frame.
+# Version 6 frames are zlib streams of big-endian RGB565 pixels. Version 7
+# adds the header size, a pixel format, a codec (stored or zlib) and a
+# keyframe interval; each record starts with a frame type byte.
+# Specification: https://github.com/elixpo/rv565/blob/main/docs/FORMAT.md
+# Paper: https://arxiv.org/abs/2610.35935
+#
+# The 3-byte magic is short, so also require the version, a valid frame rate
+# and, in version 6, a zlib header (0x78) on the first frame, or in version 7,
+# valid header fields and a keyframe as the first frame.
+0	string		RV5
+>3	byte		6
+>>8	ubyte		>0
+>>>8	ubyte		<31
+>>>>16	ubyte		0x78		RV565 video
+!:mime	video/x-rv565
+!:ext	rv565
+>>>>>4		uleshort	x		\b, %u
+>>>>>6		uleshort	x		\bx%u
+>>>>>8		ubyte		x		\b, %u fps
+>>>>>10		uleshort	x		\b, %u frames
+>3	byte		7
+>>8	ubyte		>0
+>>>8	ubyte		<61
+>>>>12	ubyte		>15
+>>>>>13	ubyte		<9
+>>>>>>14	ubyte		<2
+>>>>>>>15	ubyte		>0
+>>>>>>>>(12.b+4)	ubyte	0	RV565 video
+!:mime	video/x-rv565
+!:ext	rv565
+>>>>>>>>>4	uleshort	x		\b, %u
+>>>>>>>>>6	uleshort	x		\bx%u
+>>>>>>>>>8	ubyte		x		\b, %u fps
+>>>>>>>>>10	uleshort	x		\b, %u frames
+>>>>>>>>>13	ubyte		0		\b, rgb565be
+>>>>>>>>>13	ubyte		1		\b, rgb565le
+>>>>>>>>>13	ubyte		2		\b, rgb444
+>>>>>>>>>13	ubyte		3		\b, rgb666
+>>>>>>>>>13	ubyte		4		\b, rgb888
+>>>>>>>>>13	ubyte		5		\b, gray8
+>>>>>>>>>13	ubyte		6		\b, gray4
+>>>>>>>>>13	ubyte		7		\b, mono
+>>>>>>>>>13	ubyte		8		\b, mono_vpage
+>>>>>>>>>14	ubyte		0		\b, stored
+>>>>>>>>>14	ubyte		1		\b, zlib
+>>>>>>>>>15	ubyte		>1		\b, keyframe every %u frames

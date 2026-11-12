@@ -160,6 +160,10 @@ rpm-v3.0-bin-x86_64.result \
 rpm-v3.0-bin-x86_64.testfile \
 rpm-v3.0-src.result \
 rpm-v3.0-src.testfile \
+rv565-v7.result \
+rv565-v7.testfile \
+rv565.result \
+rv565.testfile \
 searchbug.magic \
 searchbug.result \
 searchbug.testfile \
