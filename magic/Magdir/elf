@@ -344,6 +344,7 @@
 >18	leshort		0xfeba		Vitesse IQ2000 (unofficial),
 >18	leshort		0xfebb		NIOS (unofficial),
 >18	leshort		0xfeed		Moxie (unofficial),
+>18     leshort         0xffff9916      Sunway,
 >18	default		x
 >>18	leshort		x		*unknown arch %#x*
 >20	lelong		0		invalid version
