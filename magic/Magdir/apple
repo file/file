@@ -808,3 +808,30 @@
 -512	string	koly
 >-504	belong	512	Apple DMG
 >>-508	belong	x	\b, version %d
+
+# Apple Photos property list journal (PLJ).
+# Reverse engineered references and public fixtures:
+# https://github.com/dgleich/apple-plj-format
+# https://github.com/RhetTbull/apple-plj-parser
+# Records: 0x40, CRC-16/ARC (big endian), protobuf length (big endian u16),
+# protobuf header, optional binary plist payload. CRCs are not checked here.
+# UUID-keyed create/update records, with payload at the declared header end.
+0	ubyte	0x40
+>5	ubyte	0x08
+>>6	ubyte	<2
+>>>7	beshort	0x1210
+>>>>(3.S+5)	string	bplist00	Apple Photos property list journal
+!:mime	application/x-apple-photos-journal
+!:ext	plj
+# String-keyed create/update records (e.g. MigrationHistory).
+>>>7	ubyte	0x1a
+>>>>(3.S+5)	string	bplist00	Apple Photos property list journal
+!:mime	application/x-apple-photos-journal
+!:ext	plj
+# A journal may start with a UUID-keyed deletion, which has no plist payload.
+>>6	ubyte	2
+>>>3	beshort	20
+>>>>7	beshort	0x1210
+>>>>>24	ubyte	x	Apple Photos property list journal
+!:mime	application/x-apple-photos-journal
+!:ext	plj
