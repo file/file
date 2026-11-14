@@ -835,3 +835,23 @@
 >>>>>24	ubyte	x	Apple Photos property list journal
 !:mime	application/x-apple-photos-journal
 !:ext	plj
+# UUID-keyed nil-property-only updates omit payload length/CRC and plist.
+# Observed payload versions use one- or two-byte varints. Require the full
+# declared header, field 4 (version), and field 7 (nil properties).
+0	ubyte	0x40
+>5	ubyte	0x08
+>>6	ubyte	1
+>>>7	beshort	0x1210
+>>>>3	beshort	>22
+>>>>>25	ubyte	0x20
+>>>>>>26	ubyte	<0x80
+>>>>>>>27	ubyte	0x3a
+>>>>>>>>(3.S+4)	ubyte	x	Apple Photos property list journal
+!:mime	application/x-apple-photos-journal
+!:ext	plj
+>>>>>>26	ubyte&0x80	0x80
+>>>>>>>27	ubyte	<0x80
+>>>>>>>>28	ubyte	0x3a
+>>>>>>>>>(3.S+4)	ubyte	x	Apple Photos property list journal
+!:mime	application/x-apple-photos-journal
+!:ext	plj
