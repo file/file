@@ -1,6 +1,6 @@
 
 #------------------------------------------------------------------------------
-# $File: elf,v 1.92 2026/10/22 15:53:54 christos Exp $
+# $File: elf,v 1.93 2026/11/14 15:27:46 christos Exp $
 # elf:  file(1) magic for ELF executables
 #
 # We have to check the byte order flag to see what byte order all the
@@ -344,6 +344,7 @@
 >18	leshort		0xfeba		Vitesse IQ2000 (unofficial),
 >18	leshort		0xfebb		NIOS (unofficial),
 >18	leshort		0xfeed		Moxie (unofficial),
+>18	leshort		0xffff9916	Sunway (unofficial),
 >18	default		x
 >>18	leshort		x		*unknown arch %#x*
 >20	lelong		0		invalid version
