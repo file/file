@@ -336,6 +336,12 @@ file_fmtdatetime(char *buf, size_t bsize, uint64_t v, int flags)
 	}
 	if (tm == NULL)
 		goto out;
+	/*
+	 * asctime_r() only fits a 4 character year in its 26 byte buffer;
+	 * MAX_CTIME does not cover negative times or the local timezone.
+	 */
+	if (tm->tm_year < -999 - 1900 || tm->tm_year > 9999 - 1900)
+		goto out;
 	pp = asctime_r(tm, buf);
 
 	if (pp == NULL)
