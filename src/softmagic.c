@@ -1764,6 +1764,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 			case FILE_OCTAL:
 				if (offset_oob(nbytes, offset, m->vallen))
 					return 0;
+				p->s[sizeof(p->s) - 1] = '\0';
 				off = SEXT(sgn,64,strtoull(p->s, NULL, 8));
 				break;
 			default:
@@ -1846,6 +1847,7 @@ mget(struct magic_set *ms, struct magic *m, const struct buffer *b,
 		case FILE_OCTAL:
 			if (offset_oob(nbytes, offset, m->vallen))
 				return 0;
+			p->s[sizeof(p->s) - 1] = '\0';
 			if(do_ops(ms, m, &offset,
 			    SEXT(sgn,64,strtoull(p->s, NULL, 8)), off))
 				return 0;
