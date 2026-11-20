@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.130 2026/11/09 18:36:40 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.131 2026/11/20 14:47:05 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -367,10 +367,11 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 {
 	if (fd == STDIN_FILENO || name == NULL)
 		return;
-	(void) close(fd);
 
-	if (sb == NULL || (ms->flags & MAGIC_PRESERVE_ATIME) == 0)
+	if (sb == NULL || (ms->flags & MAGIC_PRESERVE_ATIME) == 0) {
+		(void) close(fd);
 		return;
+	}
 
 	/*
 	 * Try to restore access, modification times if read it.
@@ -378,8 +379,21 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 	 * time of the file... And of course this will affect
 	 * backup programs
 	 */
-#ifdef HAVE_UTIMES
+#ifdef HAVE_FUTIMENS
+	/*
+	 * Use the descriptor we read from; name may now point
+	 * somewhere else (e.g. replaced by a symlink).
+	 */
+	struct timespec tsbuf[2];
+	(void)memset(tsbuf, 0, sizeof(tsbuf));
+	tsbuf[0].tv_sec = sb->st_atime;
+	tsbuf[1].tv_sec = sb->st_mtime;
+
+	(void) futimens(fd, tsbuf); /* don't care if loses */
+	(void) close(fd);
+#elif defined(HAVE_UTIMES)
 	struct timeval  utsbuf[2];
+	(void) close(fd);
 	(void)memset(utsbuf, 0, sizeof(utsbuf));
 	utsbuf[0].tv_sec = sb->st_atime;
 	utsbuf[1].tv_sec = sb->st_mtime;
@@ -388,10 +402,13 @@ close_and_restore(const struct magic_set *ms, const char *name, int fd,
 #elif defined(HAVE_UTIME) && (defined(HAVE_UTIME_H) || defined(HAVE_SYS_UTIME_H))
 	struct utimbuf  utbuf;
 
+	(void) close(fd);
 	(void)memset(&utbuf, 0, sizeof(utbuf));
 	utbuf.actime = sb->st_atime;
 	utbuf.modtime = sb->st_mtime;
 	(void) utime(name, &utbuf); /* don't care if loses */
+#else
+	(void) close(fd);
 #endif
 }
 

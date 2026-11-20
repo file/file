@@ -350,7 +350,7 @@ AC_CHECK_HEADERS([dirent.h])
 AC_CHECK_HEADERS([regex.h])
 
 dnl Checks for functions
-AC_CHECK_FUNCS(strndup mkstemp mkostemp utimes utime wcwidth strtof newlocale uselocale freelocale memmem pipe pipe2 posix_spawnp qsort_r select sigaction pathconf fork ioctl readlink tzset)
+AC_CHECK_FUNCS(strndup mkstemp mkostemp futimens utimes utime wcwidth strtof newlocale uselocale freelocale memmem pipe pipe2 posix_spawnp qsort_r select sigaction pathconf fork ioctl readlink tzset)
 
 dnl MorphOS links fork() but does not prototype it, so the presence of the
 dnl function and the presence of its declaration have to be probed separately.
