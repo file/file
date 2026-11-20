@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: fsmagic.c,v 1.90 2026/10/13 15:54:30 christos Exp $")
+FILE_RCSID("@(#)$File: fsmagic.c,v 1.91 2026/11/20 14:38:33 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -119,7 +119,7 @@ static const struct vn sflags[] = {
 	{ SF_LOG, "slog" },
 #endif
 #ifdef SF_SNAPINVAL
-	{ SF_LOG, "ssnapinval" },
+	{ SF_SNAPINVAL, "ssnapinval" },
 #endif
 };
 #endif
@@ -168,7 +168,7 @@ pr_flags(struct magic_set *ms, uint32_t flag, const struct vn *nvlist,
 {
 	for (size_t i = 0; i < nvsize; i++)
 		if (flag & nvlist[i].v)
-			if (file_printf(ms, "%s%s", nvlist[i].s, COMMA) == -1)
+			if (file_printf(ms, "%s%s", COMMA, nvlist[i].s) == -1)
 				return -1;
 	return 0;
 }
