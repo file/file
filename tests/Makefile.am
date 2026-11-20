@@ -167,6 +167,8 @@ rpm-v3.0-src.result \
 rpm-v3.0-src.testfile \
 rv565-v7.result \
 rv565-v7.testfile \
+rv565-v8.result \
+rv565-v8.testfile \
 rv565.result \
 rv565.testfile \
 searchbug.magic \
