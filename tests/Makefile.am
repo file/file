@@ -19,6 +19,8 @@ bcachefs2.result \
 bcachefs2.testfile \
 bgcode.result \
 bgcode.testfile \
+cdf-title.result \
+cdf-title.testfile \
 cl8m8ocofedso.result \
 cl8m8ocofedso.testfile \
 cmd1.result \
