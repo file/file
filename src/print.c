@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: print.c,v 1.112 2026/08/28 15:26:23 christos Exp $")
+FILE_RCSID("@(#)$File: print.c,v 1.113 2026/11/20 14:54:54 christos Exp $")
 #endif  /* lint */
 
 #include <string.h>
@@ -335,6 +335,12 @@ file_fmtdatetime(char *buf, size_t bsize, uint64_t v, int flags)
 		tm = gmtime_r(&t, &tmz);
 	}
 	if (tm == NULL)
+		goto out;
+	/*
+	 * asctime_r() only fits a 4 character year in its 26 byte buffer;
+	 * MAX_CTIME does not cover negative times or the local timezone.
+	 */
+	if (tm->tm_year < -999 - 1900 || tm->tm_year > 9999 - 1900)
 		goto out;
 	pp = asctime_r(tm, buf);
 

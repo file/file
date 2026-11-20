@@ -147,6 +147,9 @@ pnm2.result \
 pnm2.testfile \
 pnm3.result \
 pnm3.testfile \
+qdate-negative.magic \
+qdate-negative.result \
+qdate-negative.testfile \
 regex-eol.magic \
 regex-eol.result \
 regex-eol.testfile \
