@@ -27,9 +27,6 @@ jobs:
     # 16 cross-built library variants plus 3 file(1) binaries, and three
     # toolchain images to pull before any of that starts.
     timeout-minutes: 90
-    env:
-      # jca02266/lha == LHa for UNIX 1.14i, the implementation these archives
-      # have always been made with. 72b97b87a131e88cc95b9068d521f3ecb56af9db
 
     steps:
       - uses: actions/checkout@v4
