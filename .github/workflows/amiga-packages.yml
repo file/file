@@ -30,7 +30,6 @@ jobs:
     env:
       # jca02266/lha == LHa for UNIX 1.14i, the implementation these archives
       # have always been made with. 72b97b87a131e88cc95b9068d521f3ecb56af9db
-      LHA_TAG: release-20211125
 
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +43,7 @@ jobs:
       - name: Build and install lha
         run: |
           set -e
-          git clone -q --depth 1 --branch "$LHA_TAG" \
+          git clone -q --depth 1 \
               https://github.com/jca02266/lha.git /tmp/lha
           cd /tmp/lha
           autoreconf -is
