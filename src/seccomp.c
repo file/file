@@ -27,7 +27,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: seccomp.c,v 1.40 2026/11/03 12:55:04 christos Exp $")
+FILE_RCSID("@(#)$File: seccomp.c,v 1.41 2026/11/24 18:30:14 christos Exp $")
 #endif	/* lint */
 
 #if HAVE_LIBSECCOMP
@@ -164,28 +164,33 @@ enable_sandbox(int flags, int action)
 #endif
 
 	/* Read-only opens are always fine. Writes are allowed when we
-	   need them, otherwise return EACCES instead of killing. */
+	   need them, otherwise return EACCES instead of killing.
+	   O_CREAT and O_TRUNC modify the filesystem even with O_RDONLY
+	   (Linux truncates on O_RDONLY|O_TRUNC), so they count as writes. */
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 1,
-	    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) != 0)
+	    SCMP_CMP(1, SCMP_CMP_MASKED_EQ,
+	    O_WRONLY | O_RDWR | O_CREAT | O_TRUNC, 0)) != 0)
 		goto out;
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(openat), 1,
-	    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) != 0)
+	    SCMP_CMP(2, SCMP_CMP_MASKED_EQ,
+	    O_WRONLY | O_RDWR | O_CREAT | O_TRUNC, 0)) != 0)
 		goto out;
 	{
+		static const int wflags[] = {
+		    O_WRONLY, O_RDWR, O_CREAT, O_TRUNC
+		};
 		uint32_t act = needs_write ? SCMP_ACT_ALLOW
 		                           : SCMP_ACT_ERRNO(EACCES);
-		if (seccomp_rule_add(ctx, act, SCMP_SYS(open), 1,
-		    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) != 0)
-			goto out;
-		if (seccomp_rule_add(ctx, act, SCMP_SYS(open), 1,
-		    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) != 0)
-			goto out;
-		if (seccomp_rule_add(ctx, act, SCMP_SYS(openat), 1,
-		    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_WRONLY, O_WRONLY)) != 0)
-			goto out;
-		if (seccomp_rule_add(ctx, act, SCMP_SYS(openat), 1,
-		    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_RDWR, O_RDWR)) != 0)
-			goto out;
+		for (size_t i = 0; i < __arraycount(wflags); i++) {
+			if (seccomp_rule_add(ctx, act, SCMP_SYS(open), 1,
+			    SCMP_CMP(1, SCMP_CMP_MASKED_EQ, wflags[i],
+			    wflags[i])) != 0)
+				goto out;
+			if (seccomp_rule_add(ctx, act, SCMP_SYS(openat), 1,
+			    SCMP_CMP(2, SCMP_CMP_MASKED_EQ, wflags[i],
+			    wflags[i])) != 0)
+				goto out;
+		}
 	}
 	ALLOW_RULE(pread64);
 	ALLOW_RULE(read);
