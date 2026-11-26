@@ -33,7 +33,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: magic.c,v 1.131 2026/11/20 14:47:05 christos Exp $")
+FILE_RCSID("@(#)$File: magic.c,v 1.132 2026/11/26 14:53:30 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -273,6 +273,10 @@ magic_open(int flags)
 file_private int
 unreadable_info(struct magic_set *ms, mode_t md, const char *file)
 {
+	if (ms->flags & MAGIC_ERROR) {
+		file_error(ms, 0, "Unreadable file");
+		return -1;
+	}
 	if (file) {
 		/* We cannot open it, but we were able to stat it. */
 		if (access(file, W_OK) == 0)
