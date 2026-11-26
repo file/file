@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: file.c,v 1.224 2026/10/13 18:38:06 christos Exp $")
+FILE_RCSID("@(#)$File: file.c,v 1.225 2026/11/26 14:59:51 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -488,8 +488,8 @@ setparam(const char *p)
 {
 	size_t i;
 	ssize_t mpar;
-	int par;
-	char *s;
+	long par;
+	char *s, *e;
 
 	if ((s = CCAST(char *, strchr(p, '='))) == NULL)
 		goto badparm;
@@ -497,12 +497,21 @@ setparam(const char *p)
 	for (i = 0; i < __arraycount(pm); i++) {
 		if (strncmp(p, pm[i].name, s - p) != 0)
 			continue;
-		par = atoi(s + 1);
+		errno = 0;
+		par = strtol(s + 1, &e, 0);
+		if (e == s + 1)
+			file_err(EXIT_FAILURE, "Not a number `%s'", s + 1);
+		if (*e)
+			file_err(EXIT_FAILURE, "Trailing junk in number `%s'",
+			    e);
+		if (errno)
+			file_err(EXIT_FAILURE, "Out of range number `%s'",
+			    s + 1);
 		mpar = magic_getmaxparam(pm[i].tag);
 		if (par < 0 || par > mpar)
-			file_err(EXIT_FAILURE, "Out of bounds value %d for %s",
+			file_err(EXIT_FAILURE, "Out of bounds value %ld for %s",
 			    par, pm[i].name);
-		pm[i].value = par;
+		pm[i].value = CAST(ssize_t, par);
 		pm[i].set = 1;
 		return;
 	}
