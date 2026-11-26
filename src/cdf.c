@@ -35,7 +35,7 @@
 #include "file.h"
 
 #ifndef lint
-FILE_RCSID("@(#)$File: cdf.c,v 1.136 2026/11/20 14:42:38 christos Exp $")
+FILE_RCSID("@(#)$File: cdf.c,v 1.137 2026/11/26 14:39:31 christos Exp $")
 #endif
 
 #include <assert.h>
@@ -1009,7 +1009,7 @@ file_protected int
 cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
     uint32_t offs, cdf_property_info_t **info, size_t *count, size_t *maxcount)
 {
-	const cdf_section_header_t *shp;
+	const uint8_t *shp;
 	cdf_section_header_t sh;
 	const uint8_t *p, *q, *e;
 	size_t i, o4, nelements, j, slen, left;
@@ -1019,8 +1019,7 @@ cdf_read_property_info(const cdf_stream_t *sst, const cdf_header_t *h,
 		errno = EFTYPE;
 		goto out;
 	}
-	shp = CAST(const cdf_section_header_t *,
-	    cdf_offset(sst->sst_tab, offs));
+	shp = CAST(const uint8_t *, cdf_offset(sst->sst_tab, offs));
 	if (cdf_check_stream_offset(sst, h, shp, sizeof(sh), __LINE__) == -1)
 		goto out;
 	memcpy(&sh, shp, sizeof(sh));
@@ -1209,10 +1208,10 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 	size_t ss = cdf_check_stream(sst, h);
 	const char *b = CAST(const char *, sst->sst_tab);
 	const char *nb, *eb = b + ss * sst->sst_len;
-	size_t nr, i, j, k;
+	size_t nr, i, j;
 	cdf_catalog_entry_t *ce;
 	uint16_t reclen;
-	const uint16_t *np;
+	const char *np;
 
 	for (nr = 0;; nr++) {
 		if (b + sizeof(reclen) > eb)
@@ -1257,16 +1256,16 @@ cdf_unpack_catalog(const cdf_header_t *h, const cdf_stream_t *sst,
 		if (cep->ce_namlen > rlen)
 			cep->ce_namlen = rlen;
 
-		np = CAST(const uint16_t *, CAST(const void *, (b + 16)));
-		nb = CAST(const char *, CAST(const void *,
-		    (np + cep->ce_namlen)));
+		np = b + 16;
+		nb = np + cep->ce_namlen * sizeof(cep->ce_name[0]);
 		if (nb > eb) {
 			cep->ce_namlen = 0;
 			break;
 		}
 
-		for (k = 0; k < cep->ce_namlen; k++)
-			cep->ce_name[k] = np[k]; /* XXX: CDF_TOLE2? */
+		/* XXX: CDF_TOLE2? */
+		(void)memcpy(cep->ce_name, np,
+		    cep->ce_namlen * sizeof(cep->ce_name[0]));
 		cep->ce_name[cep->ce_namlen] = 0;
 		j = i;
 		i++;
